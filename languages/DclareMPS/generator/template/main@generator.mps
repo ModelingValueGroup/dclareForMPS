@@ -1340,6 +1340,58 @@
         <ref role="2AI5Lk" to="wyt6:~Override" resolve="Override" />
       </node>
     </node>
+    <node concept="2tJIrI" id="4u5d7LekoOL" role="jymVt" />
+    <node concept="3clFb_" id="4u5d7Lekwya" role="jymVt">
+      <property role="1EzhhJ" value="false" />
+      <property role="TrG5h" value="getRepositoryRules" />
+      <property role="DiZV1" value="false" />
+      <property role="od$2w" value="false" />
+      <node concept="3Tm1VV" id="4u5d7Lekwyb" role="1B3o_S" />
+      <node concept="3uibUv" id="4u5d7Lekwyd" role="3clF45">
+        <ref role="3uigEE" to="33ny:~List" resolve="List" />
+        <node concept="3uibUv" id="4u5d7Lekwye" role="11_B2D">
+          <ref role="3uigEE" to="82uw:~Consumer" resolve="Consumer" />
+          <node concept="3uibUv" id="4u5d7Lekwyf" role="11_B2D">
+            <ref role="3uigEE" to="lui2:~SRepository" resolve="SRepository" />
+          </node>
+        </node>
+      </node>
+      <node concept="3clFbS" id="4u5d7Lekwyg" role="3clF47">
+        <node concept="3cpWs8" id="4u5d7LekCoz" role="3cqZAp">
+          <node concept="3cpWsn" id="4u5d7LekCo$" role="3cpWs9">
+            <property role="TrG5h" value="rules" />
+            <node concept="3uibUv" id="4u5d7LekCo_" role="1tU5fm">
+              <ref role="3uigEE" to="33ny:~List" resolve="List" />
+              <node concept="3uibUv" id="4u5d7LekCoA" role="11_B2D">
+                <ref role="3uigEE" to="82uw:~Consumer" resolve="Consumer" />
+                <node concept="3uibUv" id="4u5d7LekCDa" role="11_B2D">
+                  <ref role="3uigEE" to="lui2:~SRepository" resolve="SRepository" />
+                </node>
+              </node>
+            </node>
+            <node concept="2ShNRf" id="4u5d7LekCoC" role="33vP2m">
+              <node concept="1pGfFk" id="4u5d7LekCoD" role="2ShVmc">
+                <ref role="37wK5l" to="33ny:~ArrayList.&lt;init&gt;()" resolve="ArrayList" />
+                <node concept="3uibUv" id="4u5d7LekCoE" role="1pMfVU">
+                  <ref role="3uigEE" to="82uw:~Consumer" resolve="Consumer" />
+                  <node concept="3uibUv" id="4u5d7LekCNW" role="11_B2D">
+                    <ref role="3uigEE" to="lui2:~SRepository" resolve="SRepository" />
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="3cpWs6" id="4u5d7LekCZB" role="3cqZAp">
+          <node concept="37vLTw" id="4u5d7LekGSd" role="3cqZAk">
+            <ref role="3cqZAo" node="4u5d7LekCo$" resolve="rules" />
+          </node>
+        </node>
+      </node>
+      <node concept="2AHcQZ" id="4u5d7Lekwyh" role="2AJF6D">
+        <ref role="2AI5Lk" to="wyt6:~Override" resolve="Override" />
+      </node>
+    </node>
     <node concept="3Tm1VV" id="1$veQIxmo8z" role="1B3o_S" />
     <node concept="n94m4" id="1$veQIxmo8$" role="lGtFl">
       <ref role="n9lRv" to="7ggn:4SfaQIrYs9U" resolve="RuleSet" />
