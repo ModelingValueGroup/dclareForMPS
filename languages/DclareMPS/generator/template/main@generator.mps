@@ -1162,12 +1162,6 @@
           </node>
         </node>
       </node>
-      <node concept="37vLTG" id="1$veQIxmolt" role="3clF46">
-        <property role="TrG5h" value="language" />
-        <node concept="3uibUv" id="1$veQIxmolu" role="1tU5fm">
-          <ref role="3uigEE" to="c17a:~SLanguage" resolve="SLanguage" />
-        </node>
-      </node>
       <node concept="3clFbS" id="1$veQIxmolv" role="3clF47">
         <node concept="3cpWs8" id="1$veQIxrZyZ" role="3cqZAp">
           <node concept="3cpWsn" id="1$veQIxrZz0" role="3cpWs9">
@@ -1296,12 +1290,6 @@
           <node concept="3uibUv" id="1$veQIxmoeG" role="11_B2D">
             <ref role="3uigEE" to="lui2:~SModule" resolve="SModule" />
           </node>
-        </node>
-      </node>
-      <node concept="37vLTG" id="1$veQIxmoeH" role="3clF46">
-        <property role="TrG5h" value="language" />
-        <node concept="3uibUv" id="1$veQIxmoeI" role="1tU5fm">
-          <ref role="3uigEE" to="c17a:~SLanguage" resolve="SLanguage" />
         </node>
       </node>
       <node concept="3clFbS" id="1$veQIxmoeJ" role="3clF47">
