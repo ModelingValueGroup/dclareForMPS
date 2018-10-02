@@ -245,15 +245,6 @@
       </node>
     </node>
   </node>
-  <node concept="24kQdi" id="MxZDaxjEul">
-    <ref role="1XX52x" to="7ggn:MxZDaxjDpA" resolve="RuleSetType" />
-    <node concept="3EZMnI" id="MxZDaxjEun" role="2wV5jI">
-      <node concept="3F0ifn" id="MxZDaxjEuu" role="3EZMnx">
-        <property role="3F0ifm" value="RuleSetType" />
-      </node>
-      <node concept="l2Vlx" id="MxZDaxjEuq" role="2iSdaV" />
-    </node>
-  </node>
   <node concept="24kQdi" id="5myXc37OIoi">
     <ref role="1XX52x" to="7ggn:5myXc37OIo9" resolve="ModuleType" />
     <node concept="3EZMnI" id="5myXc37OIou" role="2wV5jI">

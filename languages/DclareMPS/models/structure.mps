@@ -116,11 +116,6 @@
     <property role="R5$K2" value="false" />
     <ref role="1TJDcQ" to="tpck:gw2VY9q" resolve="BaseConcept" />
   </node>
-  <node concept="1TIwiD" id="MxZDaxjDpA">
-    <property role="EcuMT" value="910288505430513254" />
-    <property role="TrG5h" value="RuleSetType" />
-    <ref role="1TJDcQ" to="tpee:fz3vP1H" resolve="Type" />
-  </node>
   <node concept="1TIwiD" id="5myXc37OIo9">
     <property role="EcuMT" value="6170763548274386441" />
     <property role="TrG5h" value="ModuleType" />
