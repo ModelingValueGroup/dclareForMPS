@@ -245,25 +245,6 @@
       </node>
     </node>
   </node>
-  <node concept="24kQdi" id="jVwYUSQQ_z">
-    <ref role="1XX52x" to="7ggn:jVwYUSQMg8" resolve="NewNodeExpression" />
-    <node concept="3EZMnI" id="jVwYUSQQ_C" role="2wV5jI">
-      <node concept="l2Vlx" id="jVwYUSQQ_I" role="2iSdaV" />
-      <node concept="3F0ifn" id="jVwYUSQQ__" role="3EZMnx">
-        <property role="3F0ifm" value="node" />
-      </node>
-      <node concept="1iCGBv" id="jVwYUSQQ_P" role="3EZMnx">
-        <ref role="1NtTu8" to="7ggn:g$ehGDh" resolve="concept" />
-        <node concept="1sVBvm" id="jVwYUSQQ_R" role="1sWHZn">
-          <node concept="3F0A7n" id="jVwYUSQQ_Z" role="2wV5jI">
-            <property role="1Intyy" value="true" />
-            <property role="39s7Ar" value="true" />
-            <ref role="1NtTu8" to="tpck:h0TrG11" resolve="name" />
-          </node>
-        </node>
-      </node>
-    </node>
-  </node>
   <node concept="24kQdi" id="MxZDaxjEul">
     <ref role="1XX52x" to="7ggn:MxZDaxjDpA" resolve="RuleSetType" />
     <node concept="3EZMnI" id="MxZDaxjEun" role="2wV5jI">
@@ -273,22 +254,32 @@
       <node concept="l2Vlx" id="MxZDaxjEuq" role="2iSdaV" />
     </node>
   </node>
-  <node concept="24kQdi" id="MxZDaxk0Dl">
-    <ref role="1XX52x" to="7ggn:MxZDaxjDpz" resolve="RuleSetReference" />
-    <node concept="3EZMnI" id="MxZDaxk0Dn" role="2wV5jI">
-      <node concept="3F0ifn" id="MxZDaxk0Du" role="3EZMnx">
-        <property role="3F0ifm" value="ruleset" />
+  <node concept="24kQdi" id="5myXc37OIoi">
+    <ref role="1XX52x" to="7ggn:5myXc37OIo9" resolve="ModuleType" />
+    <node concept="3EZMnI" id="5myXc37OIou" role="2wV5jI">
+      <node concept="2iRfu4" id="5myXc37OIov" role="2iSdaV" />
+      <node concept="3F0ifn" id="5myXc37OIow" role="3EZMnx">
+        <property role="3F0ifm" value="for" />
+        <ref role="1k5W1q" to="tpen:hgVS8CF" resolve="KeyWord" />
       </node>
-      <node concept="1iCGBv" id="MxZDaxk0D$" role="3EZMnx">
-        <ref role="1NtTu8" to="7ggn:MxZDaxjDp$" resolve="ruleset" />
-        <node concept="1sVBvm" id="MxZDaxk0DA" role="1sWHZn">
-          <node concept="3F0A7n" id="MxZDaxk0DI" role="2wV5jI">
-            <property role="1Intyy" value="true" />
-            <ref role="1NtTu8" to="tpck:h0TrG11" resolve="name" />
-          </node>
-        </node>
+      <node concept="3F0ifn" id="5myXc37OIox" role="3EZMnx">
+        <property role="3F0ifm" value="module" />
+        <ref role="1k5W1q" to="tpen:hgVS8CF" resolve="KeyWord" />
       </node>
-      <node concept="l2Vlx" id="MxZDaxk0Dq" role="2iSdaV" />
+    </node>
+  </node>
+  <node concept="24kQdi" id="5myXc37Ppy8">
+    <ref role="1XX52x" to="7ggn:5myXc37PpxZ" resolve="RepositoryType" />
+    <node concept="3EZMnI" id="5myXc37Ppya" role="2wV5jI">
+      <node concept="2iRfu4" id="5myXc37Ppyb" role="2iSdaV" />
+      <node concept="3F0ifn" id="5myXc37Ppyc" role="3EZMnx">
+        <property role="3F0ifm" value="for" />
+        <ref role="1k5W1q" to="tpen:hgVS8CF" resolve="KeyWord" />
+      </node>
+      <node concept="3F0ifn" id="5myXc37Ppyd" role="3EZMnx">
+        <property role="3F0ifm" value="repository" />
+        <ref role="1k5W1q" to="tpen:hgVS8CF" resolve="KeyWord" />
+      </node>
     </node>
   </node>
 </model>

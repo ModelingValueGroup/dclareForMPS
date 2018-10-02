@@ -116,51 +116,5 @@
       </node>
     </node>
   </node>
-  <node concept="1M2fIO" id="jVwYUSRaK7">
-    <ref role="1M2myG" to="7ggn:jVwYUSQMg8" resolve="NewNodeExpression" />
-    <node concept="9S07l" id="jVwYUSRaK8" role="9Vyp8">
-      <node concept="3clFbS" id="jVwYUSRaK9" role="2VODD2">
-        <node concept="3clFbF" id="jVwYUSRaRr" role="3cqZAp">
-          <node concept="3y3z36" id="jVwYUSRaRt" role="3clFbG">
-            <node concept="10Nm6u" id="jVwYUSRaRu" role="3uHU7w" />
-            <node concept="2OqwBi" id="jVwYUSRaRv" role="3uHU7B">
-              <node concept="nLn13" id="jVwYUSRaRw" role="2Oq$k0" />
-              <node concept="2Xjw5R" id="jVwYUSRaRx" role="2OqNvi">
-                <node concept="1xMEDy" id="jVwYUSRaRy" role="1xVPHs">
-                  <node concept="chp4Y" id="jVwYUSRaRz" role="ri$Ld">
-                    <ref role="cht4Q" to="7ggn:1Sb3mAPvh8b" resolve="Rule" />
-                  </node>
-                </node>
-                <node concept="1xIGOp" id="jVwYUSRaR$" role="1xVPHs" />
-              </node>
-            </node>
-          </node>
-        </node>
-      </node>
-    </node>
-  </node>
-  <node concept="1M2fIO" id="MxZDaxjDpB">
-    <ref role="1M2myG" to="7ggn:MxZDaxjDpz" resolve="RuleSetReference" />
-    <node concept="9S07l" id="MxZDaxjDpC" role="9Vyp8">
-      <node concept="3clFbS" id="MxZDaxjDpD" role="2VODD2">
-        <node concept="3clFbF" id="MxZDaxjDKU" role="3cqZAp">
-          <node concept="3y3z36" id="MxZDaxjDKW" role="3clFbG">
-            <node concept="10Nm6u" id="MxZDaxjDKX" role="3uHU7w" />
-            <node concept="2OqwBi" id="MxZDaxjDKY" role="3uHU7B">
-              <node concept="nLn13" id="MxZDaxjDKZ" role="2Oq$k0" />
-              <node concept="2Xjw5R" id="MxZDaxjDL0" role="2OqNvi">
-                <node concept="1xMEDy" id="MxZDaxjDL1" role="1xVPHs">
-                  <node concept="chp4Y" id="MxZDaxjEhr" role="ri$Ld">
-                    <ref role="cht4Q" to="tgbt:qKmr2orM1i" resolve="ProjectPluginDeclaration" />
-                  </node>
-                </node>
-                <node concept="1xIGOp" id="MxZDaxjDL3" role="1xVPHs" />
-              </node>
-            </node>
-          </node>
-        </node>
-      </node>
-    </node>
-  </node>
 </model>
 

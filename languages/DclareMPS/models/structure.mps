@@ -109,18 +109,6 @@
     <property role="34LRSv" value="this" />
     <ref role="1TJDcQ" to="tpee:fz3vP1J" resolve="Expression" />
   </node>
-  <node concept="1TIwiD" id="jVwYUSQMg8">
-    <property role="EcuMT" value="359025656632910856" />
-    <property role="TrG5h" value="NewNodeExpression" />
-    <property role="34LRSv" value="node" />
-    <ref role="1TJDcQ" to="tpee:fz3vP1J" resolve="Expression" />
-    <node concept="1TJgyj" id="g$ehGDh" role="1TKVEi">
-      <property role="20kJfa" value="concept" />
-      <property role="IQ2ns" value="1138405853777" />
-      <property role="20lbJX" value="0..1" />
-      <ref role="20lvS9" to="tpce:h0PkWnZ" resolve="AbstractConceptDeclaration" />
-    </node>
-  </node>
   <node concept="1TIwiD" id="jVwYUSRkKt">
     <property role="EcuMT" value="359025656633052189" />
     <property role="TrG5h" value="ContextType" />
@@ -128,23 +116,20 @@
     <property role="R5$K2" value="false" />
     <ref role="1TJDcQ" to="tpck:gw2VY9q" resolve="BaseConcept" />
   </node>
-  <node concept="1TIwiD" id="MxZDaxjDpz">
-    <property role="EcuMT" value="910288505430513251" />
-    <property role="TrG5h" value="RuleSetReference" />
-    <property role="34LRSv" value="ruleset" />
-    <ref role="1TJDcQ" to="tpee:fz3vP1J" resolve="Expression" />
-    <node concept="1TJgyj" id="MxZDaxjDp$" role="1TKVEi">
-      <property role="IQ2ns" value="910288505430513252" />
-      <property role="20lmBu" value="reference" />
-      <property role="20kJfa" value="ruleset" />
-      <property role="20lbJX" value="1" />
-      <ref role="20lvS9" node="4SfaQIrYs9U" resolve="RuleSet" />
-    </node>
-  </node>
   <node concept="1TIwiD" id="MxZDaxjDpA">
     <property role="EcuMT" value="910288505430513254" />
     <property role="TrG5h" value="RuleSetType" />
     <ref role="1TJDcQ" to="tpee:fz3vP1H" resolve="Type" />
+  </node>
+  <node concept="1TIwiD" id="5myXc37OIo9">
+    <property role="EcuMT" value="6170763548274386441" />
+    <property role="TrG5h" value="ModuleType" />
+    <ref role="1TJDcQ" node="jVwYUSRkKt" resolve="ContextType" />
+  </node>
+  <node concept="1TIwiD" id="5myXc37PpxZ">
+    <property role="EcuMT" value="6170763548274563199" />
+    <property role="TrG5h" value="RepositoryType" />
+    <ref role="1TJDcQ" node="jVwYUSRkKt" resolve="ContextType" />
   </node>
 </model>
 
