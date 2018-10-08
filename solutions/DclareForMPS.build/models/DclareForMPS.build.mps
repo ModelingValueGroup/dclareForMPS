@@ -18,6 +18,9 @@
         <reference id="5617550519002745380" name="script" index="1l3spb" />
         <child id="4129895186893471026" name="artifacts" index="2JcizS" />
       </concept>
+      <concept id="2750015747481074431" name="jetbrains.mps.build.structure.BuildLayout_Files" flags="ng" index="2HvfSZ">
+        <child id="2750015747481074432" name="path" index="2HvfZ0" />
+      </concept>
       <concept id="4380385936562003279" name="jetbrains.mps.build.structure.BuildString" flags="ng" index="NbPM2">
         <child id="4903714810883783243" name="parts" index="3MwsjC" />
       </concept>
@@ -134,6 +137,19 @@
         </node>
         <node concept="m$_wl" id="5TmHY1kYrbj" role="39821P">
           <ref role="m_rDy" node="5TmHY1kYrb6" resolve="DclareForMPS" />
+          <node concept="2HvfSZ" id="7dEOGAXaJA$" role="39821P">
+            <node concept="55IIr" id="7dEOGAXaKLy" role="2HvfZ0">
+              <node concept="2Ry0Ak" id="7dEOGAXaKLT" role="iGT6I">
+                <property role="2Ry0Am" value="solutions" />
+                <node concept="2Ry0Ak" id="7dEOGAXaKLY" role="2Ry0An">
+                  <property role="2Ry0Am" value="DclareMPS" />
+                  <node concept="2Ry0Ak" id="7dEOGAXaKM3" role="2Ry0An">
+                    <property role="2Ry0Am" value="lib" />
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
         </node>
       </node>
     </node>
@@ -300,14 +316,14 @@
         </node>
         <node concept="1SiIV0" id="5TmHY1kYrc8" role="3bR37C">
           <node concept="1BurEX" id="5TmHY1kYrc9" role="1SiIV1">
-            <node concept="55IIr" id="5TmHY1kYrc3" role="1BurEY">
-              <node concept="2Ry0Ak" id="5TmHY1kYrc4" role="iGT6I">
+            <node concept="55IIr" id="7GFT0aymk3N" role="1BurEY">
+              <node concept="2Ry0Ak" id="7GFT0aymk4t" role="iGT6I">
                 <property role="2Ry0Am" value="solutions" />
-                <node concept="2Ry0Ak" id="5TmHY1kYrc5" role="2Ry0An">
+                <node concept="2Ry0Ak" id="7GFT0aymk56" role="2Ry0An">
                   <property role="2Ry0Am" value="DclareMPS" />
-                  <node concept="2Ry0Ak" id="5TmHY1kYrc6" role="2Ry0An">
+                  <node concept="2Ry0Ak" id="7GFT0aymk5J" role="2Ry0An">
                     <property role="2Ry0Am" value="lib" />
-                    <node concept="2Ry0Ak" id="5TmHY1kYrc7" role="2Ry0An">
+                    <node concept="2Ry0Ak" id="7GFT0aymk6o" role="2Ry0An">
                       <property role="2Ry0Am" value="DclareMps.jar" />
                     </node>
                   </node>
