@@ -17,6 +17,7 @@
       <concept id="1071666914219" name="jetbrains.mps.lang.editor.structure.ConceptEditorDeclaration" flags="ig" index="24kQdi" />
       <concept id="1176897764478" name="jetbrains.mps.lang.editor.structure.QueryFunction_NodeFactory" flags="in" index="4$FPG" />
       <concept id="1140524381322" name="jetbrains.mps.lang.editor.structure.CellModel_ListWithRole" flags="ng" index="2czfm3">
+        <property id="1140524450557" name="separatorText" index="2czwfO" />
         <child id="1176897874615" name="nodeFactory" index="4_6I_" />
         <child id="1140524464360" name="cellLayout" index="2czzBx" />
         <child id="1140524464359" name="emptyCellModel" index="2czzBI" />
@@ -269,6 +270,36 @@
       </node>
       <node concept="3F0ifn" id="5myXc37Ppyd" role="3EZMnx">
         <property role="3F0ifm" value="repository" />
+        <ref role="1k5W1q" to="tpen:hgVS8CF" resolve="KeyWord" />
+      </node>
+    </node>
+  </node>
+  <node concept="24kQdi" id="3qVwZ8swPye">
+    <ref role="1XX52x" to="7ggn:3qVwZ8swO_Y" resolve="NodeDeclarationExpression" />
+    <node concept="3EZMnI" id="3qVwZ8swPyg" role="2wV5jI">
+      <node concept="l2Vlx" id="3qVwZ8swPyh" role="2iSdaV" />
+      <node concept="3F1sOY" id="3qVwZ8swZ58" role="3EZMnx">
+        <ref role="1NtTu8" to="7ggn:3qVwZ8swVPC" resolve="nodeConcept" />
+      </node>
+      <node concept="3F0ifn" id="3qVwZ8sK$$B" role="3EZMnx">
+        <property role="3F0ifm" value="{" />
+      </node>
+      <node concept="3F2HdR" id="3qVwZ8sK$$T" role="3EZMnx">
+        <property role="2czwfO" value="," />
+        <ref role="1NtTu8" to="7ggn:3qVwZ8sJmTV" resolve="initializers" />
+        <node concept="l2Vlx" id="3qVwZ8sK$$V" role="2czzBx" />
+      </node>
+      <node concept="3F0ifn" id="3qVwZ8sK$$J" role="3EZMnx">
+        <property role="3F0ifm" value="}" />
+      </node>
+    </node>
+  </node>
+  <node concept="24kQdi" id="3qVwZ8sKKeF">
+    <ref role="1XX52x" to="7ggn:3qVwZ8sKKey" resolve="NodeExpression" />
+    <node concept="3EZMnI" id="3qVwZ8sKKeH" role="2wV5jI">
+      <node concept="l2Vlx" id="3qVwZ8sKKeI" role="2iSdaV" />
+      <node concept="3F0ifn" id="3qVwZ8sKKeJ" role="3EZMnx">
+        <property role="3F0ifm" value="node" />
         <ref role="1k5W1q" to="tpen:hgVS8CF" resolve="KeyWord" />
       </node>
     </node>
