@@ -131,37 +131,16 @@
     <property role="34LRSv" value="repository" />
     <ref role="1TJDcQ" node="jVwYUSRkKt" resolve="ContextType" />
   </node>
-  <node concept="1TIwiD" id="3qVwZ8swO_Y">
-    <property role="EcuMT" value="3943890974576691582" />
-    <property role="TrG5h" value="NodeDeclarationExpression" />
-    <property role="34LRSv" value="node&lt;&gt; {}" />
-    <ref role="1TJDcQ" to="tpee:fz3vP1J" resolve="Expression" />
-    <node concept="1TJgyj" id="3qVwZ8swVPC" role="1TKVEi">
-      <property role="IQ2ns" value="3943890974576721256" />
-      <property role="20lmBu" value="aggregation" />
-      <property role="20kJfa" value="nodeConcept" />
-      <property role="20lbJX" value="1" />
-      <ref role="20lvS9" to="tp25:hbzrR4P" resolve="SNodeCreator" />
-    </node>
-    <node concept="1TJgyj" id="3qVwZ8sJmTV" role="1TKVEi">
-      <property role="IQ2ns" value="3943890974580502139" />
-      <property role="20lmBu" value="aggregation" />
-      <property role="20kJfa" value="initializers" />
-      <property role="20lbJX" value="0..n" />
-      <ref role="20lvS9" node="3qVwZ8sHWnm" resolve="RuleAssignmentExpression" />
-    </node>
-  </node>
   <node concept="1TIwiD" id="3qVwZ8sHWnm">
     <property role="EcuMT" value="3943890974580131286" />
     <property role="TrG5h" value="RuleAssignmentExpression" />
     <property role="34LRSv" value=":=" />
     <ref role="1TJDcQ" to="tpee:fz7vLUm" resolve="AssignmentExpression" />
   </node>
-  <node concept="1TIwiD" id="3qVwZ8sKKey">
-    <property role="EcuMT" value="3943890974580868002" />
-    <property role="TrG5h" value="NodeExpression" />
-    <property role="34LRSv" value="node" />
-    <ref role="1TJDcQ" to="tpee:fz3vP1J" resolve="Expression" />
+  <node concept="1TIwiD" id="29R9$zYWiFR">
+    <property role="EcuMT" value="2483495814474836727" />
+    <property role="TrG5h" value="OppositeLinkAccess" />
+    <ref role="1TJDcQ" to="tp25:gzTsc4p" resolve="SLinkListAccess" />
   </node>
 </model>
 
