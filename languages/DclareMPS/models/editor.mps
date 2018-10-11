@@ -351,5 +351,97 @@
       </node>
     </node>
   </node>
+  <node concept="24kQdi" id="29R9$zZUo3g">
+    <ref role="1XX52x" to="7ggn:29R9$zZU3__" resolve="ConceptRule" />
+    <node concept="3EZMnI" id="29R9$zZUo3i" role="2wV5jI">
+      <node concept="3F0ifn" id="29R9$zZUo3j" role="3EZMnx">
+        <property role="3F0ifm" value="rule" />
+        <ref role="1k5W1q" to="tpen:hgVS8CF" resolve="KeyWord" />
+      </node>
+      <node concept="3F0A7n" id="29R9$zZUo3k" role="3EZMnx">
+        <ref role="1NtTu8" to="tpck:h0TrG11" resolve="name" />
+        <node concept="OXEIz" id="29R9$zZUo3l" role="P5bDN" />
+      </node>
+      <node concept="PMmxH" id="29R9$zZUo3q" role="3EZMnx">
+        <ref role="PMmxG" to="tpen:5UYpxeVafB6" resolve="BaseMethodDeclaration_BodyComponent" />
+      </node>
+      <node concept="l2Vlx" id="29R9$zZUo3r" role="2iSdaV" />
+      <node concept="3F0ifn" id="29R9$zZUo3s" role="3EZMnx">
+        <node concept="ljvvj" id="29R9$zZUo3t" role="3F10Kt">
+          <property role="VOm3f" value="true" />
+        </node>
+      </node>
+    </node>
+  </node>
+  <node concept="24kQdi" id="29R9$$00xIe">
+    <ref role="1XX52x" to="7ggn:29R9$zZU3_j" resolve="ConceptRuleSet" />
+    <node concept="3EZMnI" id="29R9$$00xIg" role="2wV5jI">
+      <node concept="3F0ifn" id="29R9$$00xIh" role="3EZMnx">
+        <property role="3F0ifm" value="ruleset" />
+        <ref role="1k5W1q" to="tpen:hgVS8CF" resolve="KeyWord" />
+      </node>
+      <node concept="l2Vlx" id="29R9$$00xIj" role="2iSdaV" />
+      <node concept="3F0ifn" id="29R9$$00xND" role="3EZMnx">
+        <property role="3F0ifm" value="for" />
+      </node>
+      <node concept="1iCGBv" id="29R9$$00xP6" role="3EZMnx">
+        <ref role="1NtTu8" to="7ggn:29R9$zZU3_y" resolve="concept" />
+        <node concept="1sVBvm" id="29R9$$00xP8" role="1sWHZn">
+          <node concept="3F0A7n" id="29R9$$00xPY" role="2wV5jI">
+            <property role="1Intyy" value="true" />
+            <ref role="1NtTu8" to="tpck:h0TrG11" resolve="name" />
+          </node>
+        </node>
+      </node>
+      <node concept="3F0ifn" id="29R9$$00xIk" role="3EZMnx">
+        <property role="3F0ifm" value="{" />
+        <ref role="1k5W1q" to="tpen:hFD5onb" resolve="LeftBrace" />
+        <node concept="ljvvj" id="29R9$$00xIl" role="3F10Kt">
+          <property role="VOm3f" value="true" />
+        </node>
+      </node>
+      <node concept="3EZMnI" id="29R9$$00xIm" role="3EZMnx">
+        <node concept="VPM3Z" id="29R9$$00xIn" role="3F10Kt">
+          <property role="VOm3f" value="false" />
+        </node>
+        <node concept="3F0ifn" id="29R9$$00xIo" role="3EZMnx">
+          <node concept="ljvvj" id="29R9$$00xIp" role="3F10Kt">
+            <property role="VOm3f" value="true" />
+          </node>
+        </node>
+        <node concept="3F2HdR" id="29R9$$00xIq" role="3EZMnx">
+          <ref role="1NtTu8" to="7ggn:29R9$zZU3_D" resolve="rules" />
+          <node concept="l2Vlx" id="29R9$$00xIr" role="2czzBx" />
+          <node concept="lj46D" id="29R9$$00xIs" role="3F10Kt">
+            <property role="VOm3f" value="true" />
+          </node>
+          <node concept="3F0ifn" id="29R9$$00xIt" role="2czzBI">
+            <property role="ilYzB" value="&lt;rules&gt;" />
+          </node>
+          <node concept="4$FPG" id="29R9$$00xIu" role="4_6I_">
+            <node concept="3clFbS" id="29R9$$00xIv" role="2VODD2">
+              <node concept="3clFbF" id="29R9$$00xIw" role="3cqZAp">
+                <node concept="2ShNRf" id="29R9$$00xIx" role="3clFbG">
+                  <node concept="3zrR0B" id="29R9$$00xIy" role="2ShVmc">
+                    <node concept="3Tqbb2" id="29R9$$00xIz" role="3zrR0E">
+                      <ref role="ehGHo" to="7ggn:29R9$zZU3__" resolve="ConceptRule" />
+                    </node>
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="l2Vlx" id="29R9$$00xI$" role="2iSdaV" />
+      </node>
+      <node concept="3F0ifn" id="29R9$$00xI_" role="3EZMnx">
+        <property role="3F0ifm" value="}" />
+        <ref role="1k5W1q" to="tpen:hFD5_7H" resolve="RightBrace" />
+        <node concept="pVoyu" id="29R9$$00xIA" role="3F10Kt">
+          <property role="VOm3f" value="true" />
+        </node>
+      </node>
+    </node>
+  </node>
 </model>
 

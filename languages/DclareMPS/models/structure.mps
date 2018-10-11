@@ -64,19 +64,13 @@
     <property role="R5$K7" value="false" />
     <property role="R5$K2" value="false" />
     <property role="19KtqR" value="true" />
-    <ref role="1TJDcQ" to="tpck:gw2VY9q" resolve="BaseConcept" />
+    <ref role="1TJDcQ" node="29R9$zZUovD" resolve="AbstractRuleSet" />
     <node concept="1TJgyj" id="1Sb3mAPvInz" role="1TKVEi">
       <property role="IQ2ns" value="2164838793549374947" />
       <property role="20lmBu" value="aggregation" />
       <property role="20kJfa" value="rules" />
       <property role="20lbJX" value="0..n" />
       <ref role="20lvS9" node="1Sb3mAPvh8b" resolve="Rule" />
-    </node>
-    <node concept="PrWs8" id="7UtH1mcE0IS" role="PzmwI">
-      <ref role="PrY4T" to="tpee:hoSGL_l" resolve="IMemberContainer" />
-    </node>
-    <node concept="PrWs8" id="7UtH1mcE0IY" role="PzmwI">
-      <ref role="PrY4T" to="tpck:h0TrEE$" resolve="INamedConcept" />
     </node>
     <node concept="1QGGSu" id="59OKK4YdX$X" role="rwd14">
       <property role="1iqoE4" value="${module}/icons/Dclare.png" />
@@ -86,16 +80,13 @@
     <property role="EcuMT" value="2164838793549255179" />
     <property role="TrG5h" value="Rule" />
     <property role="34LRSv" value="Rule" />
-    <ref role="1TJDcQ" to="tpee:fzclF7W" resolve="BaseMethodDeclaration" />
+    <ref role="1TJDcQ" node="29R9$zZUovC" resolve="AbstractRule" />
     <node concept="1TJgyj" id="1Sb3mAPxB$N" role="1TKVEi">
       <property role="IQ2ns" value="2164838793549871411" />
       <property role="20lmBu" value="aggregation" />
       <property role="20kJfa" value="context" />
       <property role="20lbJX" value="1" />
       <ref role="20lvS9" node="jVwYUSRkKt" resolve="ContextType" />
-    </node>
-    <node concept="PrWs8" id="7UtH1mcDNAf" role="PzmwI">
-      <ref role="PrY4T" to="tpck:h0TrEE$" resolve="INamedConcept" />
     </node>
   </node>
   <node concept="1TIwiD" id="1Sb3mAPxLpZ">
@@ -156,6 +147,62 @@
       <node concept="ROjv2" id="29R9$zZN5nH" role="ROhUF">
         <property role="1W_73P" value="~" />
       </node>
+    </node>
+  </node>
+  <node concept="1TIwiD" id="29R9$zZU3_j">
+    <property role="EcuMT" value="2483495814491027795" />
+    <property role="TrG5h" value="ConceptRuleSet" />
+    <property role="19KtqR" value="true" />
+    <ref role="1TJDcQ" node="29R9$zZUovD" resolve="AbstractRuleSet" />
+    <node concept="1TJgyj" id="29R9$zZU3_y" role="1TKVEi">
+      <property role="IQ2ns" value="2483495814491027810" />
+      <property role="20lmBu" value="reference" />
+      <property role="20kJfa" value="concept" />
+      <property role="20lbJX" value="1" />
+      <ref role="20lvS9" to="tpce:h0PkWnZ" resolve="AbstractConceptDeclaration" />
+    </node>
+    <node concept="1TJgyj" id="29R9$zZU3_D" role="1TKVEi">
+      <property role="IQ2ns" value="2483495814491027817" />
+      <property role="20lmBu" value="aggregation" />
+      <property role="20kJfa" value="rules" />
+      <property role="20lbJX" value="0..n" />
+      <ref role="20lvS9" node="29R9$zZU3__" resolve="ConceptRule" />
+    </node>
+    <node concept="PrWs8" id="29R9$zZUow3" role="PzmwI">
+      <ref role="PrY4T" to="tpce:2hxg_BDjKM4" resolve="IConceptAspect" />
+    </node>
+    <node concept="1QGGSu" id="29R9$$0yHdg" role="rwd14">
+      <property role="1iqoE4" value="${module}/icons/Dclare.png" />
+    </node>
+  </node>
+  <node concept="1TIwiD" id="29R9$zZU3__">
+    <property role="EcuMT" value="2483495814491027813" />
+    <property role="TrG5h" value="ConceptRule" />
+    <property role="34LRSv" value="Rule" />
+    <ref role="1TJDcQ" node="29R9$zZUovC" resolve="AbstractRule" />
+  </node>
+  <node concept="1TIwiD" id="29R9$zZUovC">
+    <property role="EcuMT" value="2483495814491113448" />
+    <property role="TrG5h" value="AbstractRule" />
+    <property role="R5$K7" value="true" />
+    <property role="R5$K2" value="false" />
+    <ref role="1TJDcQ" to="tpee:fzclF7W" resolve="BaseMethodDeclaration" />
+    <node concept="PrWs8" id="29R9$zZUovE" role="PzmwI">
+      <ref role="PrY4T" to="tpck:h0TrEE$" resolve="INamedConcept" />
+    </node>
+  </node>
+  <node concept="1TIwiD" id="29R9$zZUovD">
+    <property role="EcuMT" value="2483495814491113449" />
+    <property role="TrG5h" value="AbstractRuleSet" />
+    <property role="R5$K7" value="true" />
+    <property role="R5$K2" value="false" />
+    <property role="19KtqR" value="true" />
+    <ref role="1TJDcQ" to="tpck:gw2VY9q" resolve="BaseConcept" />
+    <node concept="PrWs8" id="29R9$zZUovH" role="PzmwI">
+      <ref role="PrY4T" to="tpee:hoSGL_l" resolve="IMemberContainer" />
+    </node>
+    <node concept="PrWs8" id="29R9$zZUovP" role="PzmwI">
+      <ref role="PrY4T" to="tpck:h0TrEE$" resolve="INamedConcept" />
     </node>
   </node>
 </model>

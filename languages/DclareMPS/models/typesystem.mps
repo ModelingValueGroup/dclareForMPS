@@ -290,25 +290,20 @@
         </node>
         <node concept="mw_s8" id="6XkcKt_fb1s" role="1ZfhKB">
           <node concept="2OqwBi" id="jVwYUSRmbU" role="mwGJk">
-            <node concept="2OqwBi" id="6XkcKt_fgzp" role="2Oq$k0">
-              <node concept="2OqwBi" id="6XkcKt_fb1u" role="2Oq$k0">
-                <node concept="1YBJjd" id="jVwYUSQ_XT" role="2Oq$k0">
-                  <ref role="1YBMHb" node="jVwYUSQ_Ce" resolve="thisExpression" />
-                </node>
-                <node concept="2Xjw5R" id="6XkcKt_fgzk" role="2OqNvi">
-                  <node concept="1xMEDy" id="6XkcKt_fgzl" role="1xVPHs">
-                    <node concept="chp4Y" id="jVwYUSQA7t" role="ri$Ld">
-                      <ref role="cht4Q" to="7ggn:1Sb3mAPvh8b" resolve="Rule" />
-                    </node>
+            <node concept="2OqwBi" id="6XkcKt_fb1u" role="2Oq$k0">
+              <node concept="1YBJjd" id="jVwYUSQ_XT" role="2Oq$k0">
+                <ref role="1YBMHb" node="jVwYUSQ_Ce" resolve="thisExpression" />
+              </node>
+              <node concept="2Xjw5R" id="6XkcKt_fgzk" role="2OqNvi">
+                <node concept="1xMEDy" id="6XkcKt_fgzl" role="1xVPHs">
+                  <node concept="chp4Y" id="29R9$$00xom" role="ri$Ld">
+                    <ref role="cht4Q" to="7ggn:29R9$zZUovC" resolve="AbstractRule" />
                   </node>
                 </node>
               </node>
-              <node concept="3TrEf2" id="jVwYUSQDbI" role="2OqNvi">
-                <ref role="3Tt5mk" to="7ggn:1Sb3mAPxB$N" resolve="context" />
-              </node>
             </node>
             <node concept="2qgKlT" id="jVwYUSRmqo" role="2OqNvi">
-              <ref role="37wK5l" to="us1s:jVwYUSRkJq" resolve="getType" />
+              <ref role="37wK5l" to="us1s:29R9$zZWsRH" resolve="getType" />
             </node>
           </node>
         </node>
