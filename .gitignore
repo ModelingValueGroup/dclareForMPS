@@ -1,0 +1,9 @@
+classes_gen
+source_gen
+source_gen.caches
+test_gen.caches
+workspace.xml
+artifacts
+tmp
+/build/
+.DS_Store
