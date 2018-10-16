@@ -219,12 +219,6 @@
             <ref role="3bR37D" to="ffeo:7Kfy9QB6L8Y" resolve="jetbrains.mps.lang.project" />
           </node>
         </node>
-        <node concept="1SiIV0" id="5TmHY1kYrby" role="3bR37C">
-          <node concept="3bR9La" id="5TmHY1kYrbz" role="1SiIV1">
-            <property role="3bR36h" value="false" />
-            <ref role="3bR37D" to="ffeo:7Kfy9QB6LaO" resolve="jetbrains.mps.lang.structure" />
-          </node>
-        </node>
         <node concept="1SiIV0" id="5TmHY1kYrb$" role="3bR37C">
           <node concept="3bR9La" id="5TmHY1kYrb_" role="1SiIV1">
             <property role="3bR36h" value="false" />
@@ -299,6 +293,17 @@
               <ref role="3bR37D" to="ffeo:7Kfy9QB6LaO" resolve="jetbrains.mps.lang.structure" />
             </node>
           </node>
+          <node concept="1SiIV0" id="3QNBbOrV1ra" role="3bR37C">
+            <node concept="3bR9La" id="3QNBbOrV1rb" role="1SiIV1">
+              <property role="3bR36h" value="false" />
+              <ref role="3bR37D" to="ffeo:7Kfy9QB6L9c" resolve="jetbrains.mps.lang.quotation" />
+            </node>
+          </node>
+          <node concept="1SiIV0" id="3QNBbOrV1rd" role="3bR37C">
+            <node concept="3bR9La" id="3QNBbOrV1rc" role="1SiIV1">
+              <ref role="3bR37D" to="ffeo:7YI57w6K0pv" resolve="jetbrains.mps.lang.quotation#1196351859310" />
+            </node>
+          </node>
         </node>
         <node concept="1SiIV0" id="5TmHY1l0vf9" role="3bR37C">
           <node concept="3bR9La" id="5TmHY1l0vfa" role="1SiIV1">
@@ -312,6 +317,17 @@
         <node concept="1SiIV0" id="29R9$zZ7tZE" role="3bR37C">
           <node concept="1Busua" id="29R9$zZ7tZF" role="1SiIV1">
             <ref role="1Busuk" to="ffeo:7Kfy9QB6L9O" resolve="jetbrains.mps.lang.smodel" />
+          </node>
+        </node>
+        <node concept="1SiIV0" id="3QNBbOrV1r6" role="3bR37C">
+          <node concept="3bR9La" id="3QNBbOrV1r7" role="1SiIV1">
+            <property role="3bR36h" value="false" />
+            <ref role="3bR37D" to="ffeo:7Kfy9QB6L9c" resolve="jetbrains.mps.lang.quotation" />
+          </node>
+        </node>
+        <node concept="1SiIV0" id="3QNBbOrV1r8" role="3bR37C">
+          <node concept="1Busua" id="3QNBbOrV1r9" role="1SiIV1">
+            <ref role="1Busuk" to="ffeo:7Kfy9QB6LaO" resolve="jetbrains.mps.lang.structure" />
           </node>
         </node>
       </node>
