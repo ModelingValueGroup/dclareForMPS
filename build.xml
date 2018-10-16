@@ -70,6 +70,7 @@
     </echoxml>
     <jar destfile="${build.tmp}/default/DclareForMPS.zip/DclareForMPS/languages/DclareForMPS/DclareMPS.jar" duplicate="preserve">
       <fileset dir="${build.tmp}/java/out/DclareMPS" />
+      <fileset dir="${basedir}/languages/DclareMPS" includes="icons/**" />
       <fileset dir="${basedir}/languages/DclareMPS/source_gen" includes="**/trace.info, **/exports, **/*.mps, **/checkpoints" />
       <fileset dir="${build.tmp}/default/DclareMPS.jar" />
     </jar>
@@ -398,8 +399,6 @@
         <fileset file="${artifacts.mps}/languages/languageDesign/jetbrains.mps.lang.descriptor-generator.jar" />
         <fileset file="${artifacts.mps}/languages/languageDesign/jetbrains.mps.lang.modelapi.jar" />
         <fileset file="${artifacts.mps}/languages/languageDesign/jetbrains.mps.lang.project.jar" />
-        <fileset file="${artifacts.mps}/languages/languageDesign/jetbrains.mps.lang.quotation.jar" />
-        <fileset file="${artifacts.mps}/languages/languageDesign/jetbrains.mps.lang.quotation-generator.jar" />
         <fileset file="${artifacts.mps}/languages/languageDesign/jetbrains.mps.lang.smodel.jar" />
         <fileset file="${artifacts.mps}/languages/languageDesign/jetbrains.mps.lang.smodel-generator.jar" />
         <fileset file="${artifacts.mps}/languages/languageDesign/jetbrains.mps.lang.structure.jar" />
