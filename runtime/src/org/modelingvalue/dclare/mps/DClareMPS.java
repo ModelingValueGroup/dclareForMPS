@@ -97,7 +97,9 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, DeployList
     }
 
     public void schedule(Runnable action) {
-        imperative.schedule(action);
+        if (imperative != null) {
+            imperative.schedule(action);
+        }
     }
 
     @SuppressWarnings("unchecked")
