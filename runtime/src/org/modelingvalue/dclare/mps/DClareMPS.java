@@ -39,7 +39,7 @@ import jetbrains.mps.smodel.language.LanguageRegistry;
 
 public class DClareMPS implements BiConsumer<State, State>, DeployListener {
 
-    public static final boolean                                TRACE         = Boolean.parseBoolean(System.getProperty("TRACE_DCLARE", "true"));
+    public static final boolean                                TRACE         = Boolean.parseBoolean(System.getProperty("TRACE_DCLARE", "false"));
 
     private static final ThreadLocal<Boolean>                  COMMITTING    = new ThreadLocal<Boolean>() {
                                                                                  @Override
