@@ -237,9 +237,6 @@
       <concept id="1138056143562" name="jetbrains.mps.lang.smodel.structure.SLinkAccess" flags="nn" index="3TrEf2">
         <reference id="1138056516764" name="link" index="3Tt5mk" />
       </concept>
-      <concept id="1138056282393" name="jetbrains.mps.lang.smodel.structure.SLinkListAccess" flags="nn" index="3Tsc0h">
-        <reference id="1138056546658" name="link" index="3TtcxE" />
-      </concept>
     </language>
     <language id="ceab5195-25ea-4f22-9b92-103b95ca8c0c" name="jetbrains.mps.lang.core">
       <concept id="1133920641626" name="jetbrains.mps.lang.core.structure.BaseConcept" flags="ng" index="2VYdi">
@@ -296,8 +293,8 @@
               </node>
               <node concept="2Xjw5R" id="6XkcKt_fgzk" role="2OqNvi">
                 <node concept="1xMEDy" id="6XkcKt_fgzl" role="1xVPHs">
-                  <node concept="chp4Y" id="29R9$$00xom" role="ri$Ld">
-                    <ref role="cht4Q" to="7ggn:29R9$zZUovC" resolve="AbstractRule" />
+                  <node concept="chp4Y" id="61p65V8x_eO" role="ri$Ld">
+                    <ref role="cht4Q" to="7ggn:61p65V8x$6I" resolve="ThisContext" />
                   </node>
                 </node>
               </node>
@@ -328,14 +325,14 @@
             </node>
             <node concept="2Xjw5R" id="2TGnmG1_7BQ" role="2OqNvi">
               <node concept="1xMEDy" id="2TGnmG1_7BS" role="1xVPHs">
-                <node concept="chp4Y" id="2TGnmG1_7Eo" role="ri$Ld">
-                  <ref role="cht4Q" to="7ggn:4SfaQIrYs9U" resolve="RuleSet" />
+                <node concept="chp4Y" id="5ZOs9JxrAIv" role="ri$Ld">
+                  <ref role="cht4Q" to="7ggn:29R9$zZUovD" resolve="AbstractRuleSet" />
                 </node>
               </node>
             </node>
           </node>
-          <node concept="3Tsc0h" id="2TGnmG1_818" role="2OqNvi">
-            <ref role="3TtcxE" to="7ggn:1Sb3mAPvInz" resolve="rules" />
+          <node concept="2qgKlT" id="5ZOs9Jxr_Ov" role="2OqNvi">
+            <ref role="37wK5l" to="us1s:29R9$$07oyq" resolve="getRules" />
           </node>
         </node>
         <node concept="3clFbS" id="2TGnmG1_6Hd" role="2LFqv$">
@@ -430,7 +427,7 @@
     </node>
     <node concept="1YaCAy" id="2TGnmG1_6H0" role="1YuTPh">
       <property role="TrG5h" value="rule" />
-      <ref role="1YaFvo" to="7ggn:1Sb3mAPvh8b" resolve="Rule" />
+      <ref role="1YaFvo" to="7ggn:29R9$zZUovC" resolve="AbstractRule" />
     </node>
   </node>
   <node concept="1YbPZF" id="3qVwZ8sOU$P">

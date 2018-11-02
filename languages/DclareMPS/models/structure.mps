@@ -9,6 +9,7 @@
     <import index="tpee" ref="r:00000000-0000-4000-0000-011c895902ca(jetbrains.mps.baseLanguage.structure)" />
     <import index="tpce" ref="r:00000000-0000-4000-0000-011c89590292(jetbrains.mps.lang.structure.structure)" />
     <import index="tp25" ref="r:00000000-0000-4000-0000-011c89590301(jetbrains.mps.lang.smodel.structure)" />
+    <import index="tp3r" ref="r:00000000-0000-4000-0000-011c8959034b(jetbrains.mps.lang.quotation.structure)" />
     <import index="tpck" ref="r:00000000-0000-4000-0000-011c89590288(jetbrains.mps.lang.core.structure)" implicit="true" />
   </imports>
   <registry>
@@ -25,6 +26,7 @@
         <property id="5092175715804935370" name="conceptAlias" index="34LRSv" />
         <child id="1071489727083" name="linkDeclaration" index="1TKVEi" />
       </concept>
+      <concept id="1169125989551" name="jetbrains.mps.lang.structure.structure.InterfaceConceptDeclaration" flags="ig" index="PlHQZ" />
       <concept id="1169127622168" name="jetbrains.mps.lang.structure.structure.InterfaceConceptReference" flags="ig" index="PrWs8">
         <reference id="1169127628841" name="intfc" index="PrY4T" />
       </concept>
@@ -68,9 +70,9 @@
     <node concept="1TJgyj" id="1Sb3mAPvInz" role="1TKVEi">
       <property role="IQ2ns" value="2164838793549374947" />
       <property role="20lmBu" value="aggregation" />
-      <property role="20kJfa" value="rules" />
+      <property role="20kJfa" value="elements" />
       <property role="20lbJX" value="0..n" />
-      <ref role="20lvS9" node="1Sb3mAPvh8b" resolve="Rule" />
+      <ref role="20lvS9" node="5ZOs9JxpqPX" resolve="RuleSetElement" />
     </node>
     <node concept="1QGGSu" id="59OKK4YdX$X" role="rwd14">
       <property role="1iqoE4" value="${module}/icons/Dclare.png" />
@@ -87,6 +89,9 @@
       <property role="20kJfa" value="context" />
       <property role="20lbJX" value="1" />
       <ref role="20lvS9" node="jVwYUSRkKt" resolve="ContextType" />
+    </node>
+    <node concept="PrWs8" id="5ZOs9JxpqPY" role="PzmwI">
+      <ref role="PrY4T" node="5ZOs9JxpqPX" resolve="RuleSetElement" />
     </node>
   </node>
   <node concept="1TIwiD" id="1Sb3mAPxLpZ">
@@ -164,9 +169,9 @@
     <node concept="1TJgyj" id="29R9$zZU3_D" role="1TKVEi">
       <property role="IQ2ns" value="2483495814491027817" />
       <property role="20lmBu" value="aggregation" />
-      <property role="20kJfa" value="rules" />
+      <property role="20kJfa" value="elements" />
       <property role="20lbJX" value="0..n" />
-      <ref role="20lvS9" node="29R9$zZU3__" resolve="ConceptRule" />
+      <ref role="20lvS9" node="5ZOs9JxpqQ1" resolve="ConceptRuleSetElement" />
     </node>
     <node concept="PrWs8" id="29R9$zZUow3" role="PzmwI">
       <ref role="PrY4T" to="tpce:2hxg_BDjKM4" resolve="IConceptAspect" />
@@ -180,6 +185,9 @@
     <property role="TrG5h" value="ConceptRule" />
     <property role="34LRSv" value="Rule" />
     <ref role="1TJDcQ" node="29R9$zZUovC" resolve="AbstractRule" />
+    <node concept="PrWs8" id="5ZOs9JxpqQ2" role="PzmwI">
+      <ref role="PrY4T" node="5ZOs9JxpqQ1" resolve="ConceptRuleSetElement" />
+    </node>
   </node>
   <node concept="1TIwiD" id="29R9$zZUovC">
     <property role="EcuMT" value="2483495814491113448" />
@@ -187,6 +195,9 @@
     <property role="R5$K7" value="true" />
     <property role="R5$K2" value="false" />
     <ref role="1TJDcQ" to="tpee:fzclF7W" resolve="BaseMethodDeclaration" />
+    <node concept="PrWs8" id="61p65V8xB87" role="PzmwI">
+      <ref role="PrY4T" node="61p65V8x$6I" resolve="ThisContext" />
+    </node>
     <node concept="PrWs8" id="29R9$zZUovE" role="PzmwI">
       <ref role="PrY4T" to="tpck:h0TrEE$" resolve="INamedConcept" />
     </node>
@@ -204,6 +215,54 @@
     <node concept="PrWs8" id="29R9$zZUovP" role="PzmwI">
       <ref role="PrY4T" to="tpck:h0TrEE$" resolve="INamedConcept" />
     </node>
+  </node>
+  <node concept="PlHQZ" id="61p65V8x$6I">
+    <property role="EcuMT" value="6942607095938564526" />
+    <property role="TrG5h" value="ThisContext" />
+  </node>
+  <node concept="1TIwiD" id="5ZOs9JxpqPU">
+    <property role="EcuMT" value="6914275142724332922" />
+    <property role="TrG5h" value="Mapping" />
+    <property role="34LRSv" value="Mapping" />
+    <ref role="1TJDcQ" to="tp3r:4IP40Bi2$Ew" resolve="NodeBuilderNode" />
+    <node concept="PrWs8" id="5ZOs9Jxw8Kv" role="PzmwI">
+      <ref role="PrY4T" node="5ZOs9JxpqPX" resolve="RuleSetElement" />
+    </node>
+    <node concept="PrWs8" id="5ZOs9JxyS4g" role="PzmwI">
+      <ref role="PrY4T" node="61p65V8x$6I" resolve="ThisContext" />
+    </node>
+  </node>
+  <node concept="1TIwiD" id="5ZOs9JxpqPV">
+    <property role="EcuMT" value="6914275142724332923" />
+    <property role="TrG5h" value="LinkMapping" />
+    <property role="34LRSv" value="LinkMappping" />
+    <ref role="1TJDcQ" to="tp3r:4IP40Bi38Sq" resolve="NodeBuilderInitLink" />
+    <node concept="PrWs8" id="5ZOs9JxpqQ4" role="PzmwI">
+      <ref role="PrY4T" node="5ZOs9JxpqQ1" resolve="ConceptRuleSetElement" />
+    </node>
+    <node concept="PrWs8" id="5ZOs9JxyS4r" role="PzmwI">
+      <ref role="PrY4T" node="61p65V8x$6I" resolve="ThisContext" />
+    </node>
+  </node>
+  <node concept="1TIwiD" id="5ZOs9JxpqPW">
+    <property role="EcuMT" value="6914275142724332924" />
+    <property role="TrG5h" value="PropertyMapping" />
+    <property role="34LRSv" value="PropertyMapping" />
+    <ref role="1TJDcQ" to="tp3r:4IP40Bi2Kc_" resolve="NodeBuilderInitProperty" />
+    <node concept="PrWs8" id="5ZOs9JxpqQ6" role="PzmwI">
+      <ref role="PrY4T" node="5ZOs9JxpqQ1" resolve="ConceptRuleSetElement" />
+    </node>
+    <node concept="PrWs8" id="5ZOs9JxyS4G" role="PzmwI">
+      <ref role="PrY4T" node="61p65V8x$6I" resolve="ThisContext" />
+    </node>
+  </node>
+  <node concept="PlHQZ" id="5ZOs9JxpqPX">
+    <property role="EcuMT" value="6914275142724332925" />
+    <property role="TrG5h" value="RuleSetElement" />
+  </node>
+  <node concept="PlHQZ" id="5ZOs9JxpqQ1">
+    <property role="EcuMT" value="6914275142724332929" />
+    <property role="TrG5h" value="ConceptRuleSetElement" />
   </node>
 </model>
 
