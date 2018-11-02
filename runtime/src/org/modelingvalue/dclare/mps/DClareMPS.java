@@ -15,7 +15,6 @@ package org.modelingvalue.dclare.mps;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
@@ -23,6 +22,7 @@ import org.jetbrains.mps.openapi.project.Project;
 import org.jetbrains.mps.openapi.util.ProgressMonitor;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
+import org.modelingvalue.collections.util.TriConsumer;
 import org.modelingvalue.transactions.Imperative;
 import org.modelingvalue.transactions.Observed;
 import org.modelingvalue.transactions.Root;
@@ -37,7 +37,7 @@ import jetbrains.mps.ide.MPSCoreComponents;
 import jetbrains.mps.module.ReloadableModule;
 import jetbrains.mps.smodel.language.LanguageRegistry;
 
-public class DClareMPS implements BiConsumer<State, State>, DeployListener {
+public class DClareMPS implements TriConsumer<State, State, Boolean>, DeployListener {
 
     public static final boolean                                TRACE         = Boolean.parseBoolean(System.getProperty("TRACE_DCLARE", "false"));
 
@@ -126,7 +126,7 @@ public class DClareMPS implements BiConsumer<State, State>, DeployListener {
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
-    public void accept(State pre, State post) {
+    public void accept(State pre, State post, Boolean last) {
         COMMITTING.set(true);
         try {
             pre.diff(post, o -> o instanceof DObject, p -> p instanceof MPSObserved).forEach(e0 -> {
