@@ -145,8 +145,8 @@
     <node concept="1TJgyj" id="1lQ5DPQzdHE" role="1TKVEi">
       <property role="IQ2ns" value="1546448387602963306" />
       <property role="20lmBu" value="reference" />
-      <property role="20kJfa" value="extraCondition" />
-      <ref role="20lvS9" node="4$MeK2bmw9s" resolve="AbstractAttribute" />
+      <property role="20kJfa" value="originalContext" />
+      <ref role="20lvS9" to="tp3r:4IP40Bi2$Ew" resolve="NodeBuilderNode" />
     </node>
     <node concept="1TJgyj" id="1pPEdD6OAAJ" role="1TKVEi">
       <property role="IQ2ns" value="1618385296554092975" />
@@ -305,12 +305,6 @@
     <property role="R5$K7" value="true" />
     <property role="R5$K2" value="false" />
     <ref role="1TJDcQ" to="tpck:gw2VY9q" resolve="BaseConcept" />
-    <node concept="1TJgyj" id="1lQ5DPQx9aH" role="1TKVEi">
-      <property role="IQ2ns" value="1546448387602420397" />
-      <property role="20lmBu" value="reference" />
-      <property role="20kJfa" value="derivedFrom" />
-      <ref role="20lvS9" to="tp3r:4IP40Bi2$Ew" resolve="NodeBuilderNode" />
-    </node>
     <node concept="PrWs8" id="4$MeK2bmw9t" role="PzmwI">
       <ref role="PrY4T" to="tpck:h0TrEE$" resolve="INamedConcept" />
     </node>
