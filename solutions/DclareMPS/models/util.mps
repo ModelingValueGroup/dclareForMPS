@@ -538,7 +538,7 @@
                 </node>
               </node>
               <node concept="liA8E" id="1lQ5DPQtxzb" role="2OqNvi">
-                <ref role="37wK5l" to="t4tl:~MPSObserved.get(org.modelingvalue.dclare.mps.DObject):java.lang.Object" resolve="get" />
+                <ref role="37wK5l" to="t4tl:~MPSAttribute.get(org.modelingvalue.dclare.mps.DObject):java.lang.Object" resolve="get" />
                 <node concept="10QFUN" id="1lQ5DPQ_8v7" role="37wK5m">
                   <node concept="37vLTw" id="1lQ5DPQtxFz" role="10QFUP">
                     <ref role="3cqZAo" node="1lQ5DPQtsij" resolve="object" />
