@@ -542,4 +542,16 @@ public class DNode extends DObject<SNode> implements SNode {
         return ist;
     }
 
+    public void clearAllFeatures() {
+        SConcept concept = getConcept();
+        for (SProperty p : concept.getProperties()) {
+            setProperty(p, null);
+        }
+        for (SReferenceLink r : concept.getReferenceLinks()) {
+            setReferenceTarget(r, null);
+        }
+        for (SNode child : getChildren()) {
+            removeChild(child);
+        }
+    }
 }

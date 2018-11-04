@@ -150,6 +150,12 @@
         <child id="1163668922816" name="ifTrue" index="3K4E3e" />
         <child id="1163668934364" name="ifFalse" index="3K4GZi" />
       </concept>
+      <concept id="6329021646629104957" name="jetbrains.mps.baseLanguage.structure.TextCommentPart" flags="nn" index="3SKdUq">
+        <property id="6329021646629104958" name="text" index="3SKdUp" />
+      </concept>
+      <concept id="6329021646629104954" name="jetbrains.mps.baseLanguage.structure.SingleLineComment" flags="nn" index="3SKdUt">
+        <child id="6329021646629175155" name="commentPart" index="3SKWNk" />
+      </concept>
       <concept id="1146644602865" name="jetbrains.mps.baseLanguage.structure.PublicVisibility" flags="nn" index="3Tm1VV" />
       <concept id="1170345865475" name="jetbrains.mps.baseLanguage.structure.AnonymousClass" flags="ig" index="1Y3b0j">
         <reference id="1170346070688" name="classifier" index="1Y3XeK" />
@@ -253,17 +259,9 @@
                     <node concept="17QB3L" id="2GrW9c4gq8i" role="1tU5fm" />
                   </node>
                   <node concept="3clFbS" id="2GrW9c4gq7W" role="3clF47">
-                    <node concept="3clFbF" id="2GrW9c4gqB8" role="3cqZAp">
-                      <node concept="2OqwBi" id="2GrW9c4gr0l" role="3clFbG">
-                        <node concept="37vLTw" id="2GrW9c4gqB7" role="2Oq$k0">
-                          <ref role="3cqZAo" node="2GrW9c4gq7O" resolve="tx" />
-                        </node>
-                        <node concept="liA8E" id="2GrW9c4gruc" role="2OqNvi">
-                          <ref role="37wK5l" to="dy39:~AbstractLeaf.clear(java.lang.Object):void" resolve="clear" />
-                          <node concept="37vLTw" id="2GrW9c4grwZ" role="37wK5m">
-                            <ref role="3cqZAo" node="2GrW9c4gq7Q" resolve="o" />
-                          </node>
-                        </node>
+                    <node concept="3SKdUt" id="2RClDtprF1U" role="3cqZAp">
+                      <node concept="3SKdUq" id="2RClDtprF1V" role="3SKWNk">
+                        <property role="3SKdUp" value="TODO: Clean state except BUILDER_TYPE" />
                       </node>
                     </node>
                   </node>
