@@ -142,6 +142,18 @@
     <property role="TrG5h" value="RuleAssignmentExpression" />
     <property role="34LRSv" value=":=" />
     <ref role="1TJDcQ" to="tpee:fz7vLUm" resolve="AssignmentExpression" />
+    <node concept="1TJgyj" id="1lQ5DPQzdHE" role="1TKVEi">
+      <property role="IQ2ns" value="1546448387602963306" />
+      <property role="20lmBu" value="reference" />
+      <property role="20kJfa" value="extraCondition" />
+      <ref role="20lvS9" node="4$MeK2bmw9s" resolve="AbstractAttribute" />
+    </node>
+    <node concept="1TJgyj" id="1pPEdD6OAAJ" role="1TKVEi">
+      <property role="IQ2ns" value="1618385296554092975" />
+      <property role="20lmBu" value="reference" />
+      <property role="20kJfa" value="originalRight" />
+      <ref role="20lvS9" to="tpee:fz3vP1J" resolve="Expression" />
+    </node>
   </node>
   <node concept="1TIwiD" id="29R9$zYWiFR">
     <property role="EcuMT" value="2483495814474836727" />
@@ -263,6 +275,70 @@
   <node concept="PlHQZ" id="5ZOs9JxpqQ1">
     <property role="EcuMT" value="6914275142724332929" />
     <property role="TrG5h" value="ConceptRuleSetElement" />
+  </node>
+  <node concept="1TIwiD" id="4$MeK2bmkiB">
+    <property role="EcuMT" value="5274342987128194215" />
+    <property role="TrG5h" value="Attribute" />
+    <ref role="1TJDcQ" node="4$MeK2bmw9s" resolve="AbstractAttribute" />
+    <node concept="PrWs8" id="4$MeK2bmw99" role="PzmwI">
+      <ref role="PrY4T" node="5ZOs9JxpqPX" resolve="RuleSetElement" />
+    </node>
+    <node concept="1TJgyj" id="4$MeK2bmypm" role="1TKVEi">
+      <property role="IQ2ns" value="5274342987128251990" />
+      <property role="20lmBu" value="aggregation" />
+      <property role="20kJfa" value="context" />
+      <property role="20lbJX" value="1" />
+      <ref role="20lvS9" node="jVwYUSRkKt" resolve="ContextType" />
+    </node>
+  </node>
+  <node concept="1TIwiD" id="4$MeK2bmw9b">
+    <property role="EcuMT" value="5274342987128242763" />
+    <property role="TrG5h" value="ConceptAttribute" />
+    <ref role="1TJDcQ" node="4$MeK2bmw9s" resolve="AbstractAttribute" />
+    <node concept="PrWs8" id="4$MeK2bmw9c" role="PzmwI">
+      <ref role="PrY4T" node="5ZOs9JxpqQ1" resolve="ConceptRuleSetElement" />
+    </node>
+  </node>
+  <node concept="1TIwiD" id="4$MeK2bmw9s">
+    <property role="EcuMT" value="5274342987128242780" />
+    <property role="TrG5h" value="AbstractAttribute" />
+    <property role="R5$K7" value="true" />
+    <property role="R5$K2" value="false" />
+    <ref role="1TJDcQ" to="tpck:gw2VY9q" resolve="BaseConcept" />
+    <node concept="1TJgyj" id="1lQ5DPQx9aH" role="1TKVEi">
+      <property role="IQ2ns" value="1546448387602420397" />
+      <property role="20lmBu" value="reference" />
+      <property role="20kJfa" value="derivedFrom" />
+      <ref role="20lvS9" to="tp3r:4IP40Bi2$Ew" resolve="NodeBuilderNode" />
+    </node>
+    <node concept="PrWs8" id="4$MeK2bmw9t" role="PzmwI">
+      <ref role="PrY4T" to="tpck:h0TrEE$" resolve="INamedConcept" />
+    </node>
+    <node concept="PrWs8" id="4$MeK2bmzF2" role="PzmwI">
+      <ref role="PrY4T" node="61p65V8x$6I" resolve="ThisContext" />
+    </node>
+    <node concept="1TJgyj" id="4$MeK2bmw9x" role="1TKVEi">
+      <property role="IQ2ns" value="5274342987128242785" />
+      <property role="20lmBu" value="aggregation" />
+      <property role="20kJfa" value="type" />
+      <property role="20lbJX" value="1" />
+      <ref role="20lvS9" to="tpee:fz3vP1H" resolve="Type" />
+    </node>
+  </node>
+  <node concept="1TIwiD" id="4$MeK2bvRdy">
+    <property role="EcuMT" value="5274342987130696546" />
+    <property role="TrG5h" value="AttributeCall" />
+    <ref role="1TJDcQ" to="tpck:gw2VY9q" resolve="BaseConcept" />
+    <node concept="PrWs8" id="4$MeK2bvUee" role="PzmwI">
+      <ref role="PrY4T" to="tpee:hqOqG0K" resolve="IOperation" />
+    </node>
+    <node concept="1TJgyj" id="4$MeK2bvUeg" role="1TKVEi">
+      <property role="IQ2ns" value="5274342987130708880" />
+      <property role="20lmBu" value="reference" />
+      <property role="20kJfa" value="attribute" />
+      <property role="20lbJX" value="1" />
+      <ref role="20lvS9" node="4$MeK2bmw9s" resolve="AbstractAttribute" />
+    </node>
   </node>
 </model>
 

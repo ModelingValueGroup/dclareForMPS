@@ -18,4 +18,9 @@ public class MPSAttribute<O extends DObject, T> extends MPSObserved<O, T> {
         }, null);
     }
 
+    @Override
+    public T get(O object) {
+        return object == null ? null : super.get(object);
+    }
+
 }

@@ -300,7 +300,7 @@
               </node>
             </node>
             <node concept="2qgKlT" id="jVwYUSRmqo" role="2OqNvi">
-              <ref role="37wK5l" to="us1s:29R9$zZWsRH" resolve="getType" />
+              <ref role="37wK5l" to="us1s:29R9$zZWsRH" resolve="getContextType" />
             </node>
           </node>
         </node>
@@ -1218,6 +1218,34 @@
     <node concept="1YaCAy" id="29R9$zZ99Zn" role="1YuTPh">
       <property role="TrG5h" value="op" />
       <ref role="1YaFvo" to="7ggn:29R9$zYWiFR" resolve="OppositeLinkAccess" />
+    </node>
+  </node>
+  <node concept="1YbPZF" id="4$MeK2bsLcP">
+    <property role="TrG5h" value="typeof_AbstractAttribute" />
+    <node concept="3clFbS" id="4$MeK2bsLcQ" role="18ibNy">
+      <node concept="1Z5TYs" id="4$MeK2bsLiw" role="3cqZAp">
+        <node concept="mw_s8" id="4$MeK2bsLix" role="1ZfhK$">
+          <node concept="1Z2H0r" id="4$MeK2bsLiy" role="mwGJk">
+            <node concept="1YBJjd" id="4$MeK2bsLxM" role="1Z2MuG">
+              <ref role="1YBMHb" node="4$MeK2bsLcS" resolve="abstractAttribute" />
+            </node>
+          </node>
+        </node>
+        <node concept="mw_s8" id="4$MeK2bsLi$" role="1ZfhKB">
+          <node concept="2OqwBi" id="4$MeK2bsLi_" role="mwGJk">
+            <node concept="1YBJjd" id="4$MeK2bsLwA" role="2Oq$k0">
+              <ref role="1YBMHb" node="4$MeK2bsLcS" resolve="abstractAttribute" />
+            </node>
+            <node concept="2qgKlT" id="4$MeK2bsLiF" role="2OqNvi">
+              <ref role="37wK5l" to="us1s:29R9$zZWsRH" resolve="getContextType" />
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+    <node concept="1YaCAy" id="4$MeK2bsLcS" role="1YuTPh">
+      <property role="TrG5h" value="abstractAttribute" />
+      <ref role="1YaFvo" to="7ggn:4$MeK2bmw9s" resolve="AbstractAttribute" />
     </node>
   </node>
 </model>
