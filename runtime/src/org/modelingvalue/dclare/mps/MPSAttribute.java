@@ -3,6 +3,7 @@ package org.modelingvalue.dclare.mps;
 import org.modelingvalue.collections.util.QuadConsumer;
 import org.modelingvalue.transactions.AbstractLeaf;
 import org.modelingvalue.transactions.ConstantSetable;
+import org.modelingvalue.transactions.EmptyMandatoryException;
 import org.modelingvalue.transactions.Getable;
 
 @SuppressWarnings("rawtypes")
@@ -23,7 +24,12 @@ public class MPSAttribute<O, T> extends MPSObserved<O, T> {
 
     @Override
     public T get(O object) {
-        return object == null ? null : super.get(object);
+        T result = object == null ? null : super.get(object);
+        if (result == null) {
+            throw new EmptyMandatoryException();
+        } else {
+            return result;
+        }
     }
 
 }
