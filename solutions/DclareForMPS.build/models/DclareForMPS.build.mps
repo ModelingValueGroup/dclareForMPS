@@ -305,12 +305,6 @@
               <ref role="3bR37D" to="ffeo:7YI57w6K0rx" resolve="jetbrains.mps.lang.smodel#1139186730696" />
             </node>
           </node>
-          <node concept="1SiIV0" id="29R9$zZ7tZK" role="3bR37C">
-            <node concept="3bR9La" id="29R9$zZ7tZL" role="1SiIV1">
-              <property role="3bR36h" value="false" />
-              <ref role="3bR37D" to="ffeo:7Kfy9QB6Lg8" resolve="jetbrains.mps.runtime" />
-            </node>
-          </node>
           <node concept="1SiIV0" id="29R9$zZ7tZM" role="3bR37C">
             <node concept="3bR9La" id="29R9$zZ7tZN" role="1SiIV1">
               <property role="3bR36h" value="false" />
@@ -333,12 +327,6 @@
             <node concept="3bR9La" id="7r$hcUuYol_" role="1SiIV1">
               <property role="3bR36h" value="false" />
               <ref role="3bR37D" to="ffeo:7YI57w6K0pv" resolve="jetbrains.mps.lang.quotation#1196351859310" />
-            </node>
-          </node>
-          <node concept="1SiIV0" id="7r$hcUuYolA" role="3bR37C">
-            <node concept="3bR9La" id="7r$hcUuYolB" role="1SiIV1">
-              <property role="3bR36h" value="false" />
-              <ref role="3bR37D" to="ffeo:1TaHNgiIbIQ" resolve="MPS.Core" />
             </node>
           </node>
           <node concept="1SiIV0" id="7r$hcUuYolD" role="3bR37C">
@@ -396,6 +384,24 @@
         <node concept="1SiIV0" id="7r$hcUuYolu" role="3bR37C">
           <node concept="1Busua" id="7r$hcUuYolv" role="1SiIV1">
             <ref role="1Busuk" to="ffeo:7Kfy9QB6L9c" resolve="jetbrains.mps.lang.quotation" />
+          </node>
+        </node>
+        <node concept="1SiIV0" id="30GBB6YPHGB" role="3bR37C">
+          <node concept="3bR9La" id="30GBB6YPHGC" role="1SiIV1">
+            <property role="3bR36h" value="false" />
+            <ref role="3bR37D" to="ffeo:7Kfy9QB6L4j" resolve="jetbrains.mps.lang.actions" />
+          </node>
+        </node>
+        <node concept="1SiIV0" id="30GBB6YPHGD" role="3bR37C">
+          <node concept="3bR9La" id="30GBB6YPHGE" role="1SiIV1">
+            <property role="3bR36h" value="false" />
+            <ref role="3bR37D" node="5TmHY1kYraS" resolve="DclareMPS" />
+          </node>
+        </node>
+        <node concept="1SiIV0" id="30GBB6YPHGF" role="3bR37C">
+          <node concept="3bR9La" id="30GBB6YPHGG" role="1SiIV1">
+            <property role="3bR36h" value="false" />
+            <ref role="3bR37D" to="ffeo:1TaHNgiIbIQ" resolve="MPS.Core" />
           </node>
         </node>
       </node>

@@ -12,6 +12,8 @@
     <import index="tpeq" ref="r:00000000-0000-4000-0000-011c895902fe(jetbrains.mps.lang.smodel.typesystem)" />
     <import index="tpce" ref="r:00000000-0000-4000-0000-011c89590292(jetbrains.mps.lang.structure.structure)" />
     <import index="tpcn" ref="r:00000000-0000-4000-0000-011c8959028b(jetbrains.mps.lang.structure.behavior)" />
+    <import index="tp3r" ref="r:00000000-0000-4000-0000-011c8959034b(jetbrains.mps.lang.quotation.structure)" />
+    <import index="tp3q" ref="r:00000000-0000-4000-0000-011c8959034a(jetbrains.mps.lang.quotation.typesystem)" />
     <import index="7ggn" ref="r:38c3b7db-3776-47fb-ba27-a4f002c4edc7(DclareMPS.structure)" implicit="true" />
     <import index="us1s" ref="r:e7d7a1fa-fb58-4cf6-bc1d-e5ed722e0c61(DclareMPS.behavior)" implicit="true" />
     <import index="tpck" ref="r:00000000-0000-4000-0000-011c89590288(jetbrains.mps.lang.core.structure)" implicit="true" />
@@ -1220,32 +1222,43 @@
       <ref role="1YaFvo" to="7ggn:29R9$zYWiFR" resolve="OppositeLinkAccess" />
     </node>
   </node>
-  <node concept="1YbPZF" id="4$MeK2bsLcP">
-    <property role="TrG5h" value="typeof_AbstractAttribute" />
-    <node concept="3clFbS" id="4$MeK2bsLcQ" role="18ibNy">
-      <node concept="1Z5TYs" id="4$MeK2bsLiw" role="3cqZAp">
-        <node concept="mw_s8" id="4$MeK2bsLix" role="1ZfhK$">
-          <node concept="1Z2H0r" id="4$MeK2bsLiy" role="mwGJk">
-            <node concept="1YBJjd" id="4$MeK2bsLxM" role="1Z2MuG">
-              <ref role="1YBMHb" node="4$MeK2bsLcS" resolve="abstractAttribute" />
+  <node concept="1YbPZF" id="30GBB6Y$wDB">
+    <property role="TrG5h" value="typeof_NodeBuilderInitAttribute" />
+    <node concept="3clFbS" id="30GBB6Y$wDC" role="18ibNy">
+      <node concept="1ZobV4" id="76efOMRBDoH" role="3cqZAp">
+        <property role="3wDh2S" value="true" />
+        <node concept="mw_s8" id="76efOMRBDr9" role="1ZfhKB">
+          <node concept="2OqwBi" id="30GBB6Y$_GU" role="mwGJk">
+            <node concept="2OqwBi" id="30GBB6Y$$St" role="2Oq$k0">
+              <node concept="1YBJjd" id="30GBB6Y$$JM" role="2Oq$k0">
+                <ref role="1YBMHb" node="30GBB6Y$wDE" resolve="val" />
+              </node>
+              <node concept="3TrEf2" id="30GBB6Y$_kb" role="2OqNvi">
+                <ref role="3Tt5mk" to="7ggn:30GBB6Y$wtJ" resolve="attribute" />
+              </node>
+            </node>
+            <node concept="3TrEf2" id="30GBB6Y$A8t" role="2OqNvi">
+              <ref role="3Tt5mk" to="tpee:4VkOLwjf83e" resolve="type" />
             </node>
           </node>
         </node>
-        <node concept="mw_s8" id="4$MeK2bsLi$" role="1ZfhKB">
-          <node concept="2OqwBi" id="4$MeK2bsLi_" role="mwGJk">
-            <node concept="1YBJjd" id="4$MeK2bsLwA" role="2Oq$k0">
-              <ref role="1YBMHb" node="4$MeK2bsLcS" resolve="abstractAttribute" />
-            </node>
-            <node concept="2qgKlT" id="4$MeK2bsLiF" role="2OqNvi">
-              <ref role="37wK5l" to="us1s:29R9$zZWsRH" resolve="getContextType" />
+        <node concept="mw_s8" id="76efOMRBDoK" role="1ZfhK$">
+          <node concept="1Z2H0r" id="76efOMRBDop" role="mwGJk">
+            <node concept="2OqwBi" id="76efOMRBDnV" role="1Z2MuG">
+              <node concept="1YBJjd" id="30GBB6Y$$bU" role="2Oq$k0">
+                <ref role="1YBMHb" node="30GBB6Y$wDE" resolve="val" />
+              </node>
+              <node concept="3TrEf2" id="76efOMRBDo1" role="2OqNvi">
+                <ref role="3Tt5mk" to="tp3r:4IP40Bi2KcQ" resolve="expression" />
+              </node>
             </node>
           </node>
         </node>
       </node>
     </node>
-    <node concept="1YaCAy" id="4$MeK2bsLcS" role="1YuTPh">
-      <property role="TrG5h" value="abstractAttribute" />
-      <ref role="1YaFvo" to="7ggn:4$MeK2bmw9s" resolve="AbstractAttribute" />
+    <node concept="1YaCAy" id="30GBB6Y$wDE" role="1YuTPh">
+      <property role="TrG5h" value="val" />
+      <ref role="1YaFvo" to="7ggn:30GBB6Y$vTM" resolve="NodeBuilderInitAttribute" />
     </node>
   </node>
 </model>

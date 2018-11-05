@@ -48,6 +48,7 @@
         <property id="1071599893252" name="sourceCardinality" index="20lbJX" />
         <property id="1071599937831" name="metaClass" index="20lmBu" />
         <property id="241647608299431140" name="linkId" index="IQ2ns" />
+        <reference id="1071599698500" name="specializedLink" index="20ksaX" />
         <reference id="1071599976176" name="target" index="20lvS9" />
       </concept>
     </language>
@@ -304,30 +305,33 @@
     <property role="TrG5h" value="AbstractAttribute" />
     <property role="R5$K7" value="true" />
     <property role="R5$K2" value="false" />
-    <ref role="1TJDcQ" to="tpck:gw2VY9q" resolve="BaseConcept" />
-    <node concept="PrWs8" id="4$MeK2bmw9t" role="PzmwI">
-      <ref role="PrY4T" to="tpck:h0TrEE$" resolve="INamedConcept" />
-    </node>
+    <ref role="1TJDcQ" to="tpee:fz3uBXI" resolve="VariableDeclaration" />
     <node concept="PrWs8" id="4$MeK2bmzF2" role="PzmwI">
       <ref role="PrY4T" node="61p65V8x$6I" resolve="ThisContext" />
-    </node>
-    <node concept="1TJgyj" id="4$MeK2bmw9x" role="1TKVEi">
-      <property role="IQ2ns" value="5274342987128242785" />
-      <property role="20lmBu" value="aggregation" />
-      <property role="20kJfa" value="type" />
-      <property role="20lbJX" value="1" />
-      <ref role="20lvS9" to="tpee:fz3vP1H" resolve="Type" />
     </node>
   </node>
   <node concept="1TIwiD" id="4$MeK2bvRdy">
     <property role="EcuMT" value="5274342987130696546" />
     <property role="TrG5h" value="AttributeCall" />
-    <ref role="1TJDcQ" to="tpck:gw2VY9q" resolve="BaseConcept" />
+    <ref role="1TJDcQ" to="tpee:fz7vLUo" resolve="VariableReference" />
     <node concept="PrWs8" id="4$MeK2bvUee" role="PzmwI">
       <ref role="PrY4T" to="tpee:hqOqG0K" resolve="IOperation" />
     </node>
     <node concept="1TJgyj" id="4$MeK2bvUeg" role="1TKVEi">
       <property role="IQ2ns" value="5274342987130708880" />
+      <property role="20lmBu" value="reference" />
+      <property role="20kJfa" value="attribute" />
+      <property role="20lbJX" value="1" />
+      <ref role="20lvS9" node="4$MeK2bmw9s" resolve="AbstractAttribute" />
+      <ref role="20ksaX" to="tpee:fzcqZ_w" resolve="variableDeclaration" />
+    </node>
+  </node>
+  <node concept="1TIwiD" id="30GBB6Y$vTM">
+    <property role="EcuMT" value="3471323624161541746" />
+    <property role="TrG5h" value="NodeBuilderInitAttribute" />
+    <ref role="1TJDcQ" to="tp3r:4IP40Bi2KcT" resolve="NodeBuilderInitPart" />
+    <node concept="1TJgyj" id="30GBB6Y$wtJ" role="1TKVEi">
+      <property role="IQ2ns" value="3471323624161544047" />
       <property role="20lmBu" value="reference" />
       <property role="20kJfa" value="attribute" />
       <property role="20lbJX" value="1" />
