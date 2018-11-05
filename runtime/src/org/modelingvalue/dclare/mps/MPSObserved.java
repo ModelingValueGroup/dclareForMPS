@@ -29,13 +29,13 @@ import org.modelingvalue.transactions.Observed;
 import org.modelingvalue.transactions.Observer;
 
 @SuppressWarnings("rawtypes")
-public class MPSObserved<O extends DObject, T> extends Observed<O, T> {
+public class MPSObserved<O, T> extends Observed<O, T> {
 
-    public static <C extends DObject, V> MPSObserved<C, V> of(Object id, V def, boolean mandatory, TriConsumer<C, V, V> toMPS) {
+    public static <C, V> MPSObserved<C, V> of(Object id, V def, boolean mandatory, TriConsumer<C, V, V> toMPS) {
         return of(id, def, mandatory, toMPS, null);
     }
 
-    public static <C extends DObject, V> MPSObserved<C, V> of(Object id, V def, boolean mandatory, TriConsumer<C, V, V> toMPS, QuadConsumer<AbstractLeaf, C, V, V> changed) {
+    public static <C, V> MPSObserved<C, V> of(Object id, V def, boolean mandatory, TriConsumer<C, V, V> toMPS, QuadConsumer<AbstractLeaf, C, V, V> changed) {
         return new MPSObserved<C, V>(id, def, mandatory, toMPS, changed);
     }
 
