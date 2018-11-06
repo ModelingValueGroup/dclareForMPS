@@ -149,12 +149,6 @@
       <property role="20kJfa" value="originalContext" />
       <ref role="20lvS9" to="tp3r:4IP40Bi2$Ew" resolve="NodeBuilderNode" />
     </node>
-    <node concept="1TJgyj" id="1pPEdD6OAAJ" role="1TKVEi">
-      <property role="IQ2ns" value="1618385296554092975" />
-      <property role="20lmBu" value="reference" />
-      <property role="20kJfa" value="originalRight" />
-      <ref role="20lvS9" to="tpee:fz3vP1J" resolve="Expression" />
-    </node>
   </node>
   <node concept="1TIwiD" id="29R9$zYWiFR">
     <property role="EcuMT" value="2483495814474836727" />
