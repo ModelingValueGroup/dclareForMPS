@@ -18,7 +18,7 @@ public class MPSAttribute<O, T> extends MPSObserved<O, T> {
     }
 
     public MPSAttribute(Object id, T def, QuadConsumer<AbstractLeaf, O, T, T> changed) {
-        super(id, def, false, (o, b, a) -> {
+        super(id, def, false, false, (o, b, a) -> {
         }, changed);
     }
 

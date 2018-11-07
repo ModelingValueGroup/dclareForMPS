@@ -129,7 +129,11 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, DeployList
     public void accept(State pre, State post, Boolean last) {
         COMMITTING.set(true);
         try {
-            pre.diff(post, o -> o instanceof DObject, p -> p instanceof MPSObserved).forEach(e0 -> {
+            pre.diff(post, o -> o instanceof DObject, p -> p instanceof MPSObserved && !((MPSObserved) p).isDeferred()).forEach(e0 -> {
+                DObject dObjecct = (DObject) e0.getKey();
+                e0.getValue().forEach(e1 -> ((MPSObserved) e1.getKey()).toMPS(dObjecct, e1.getValue().a(), e1.getValue().b()));
+            });
+            pre.diff(post, o -> o instanceof DObject, p -> p instanceof MPSObserved && ((MPSObserved) p).isDeferred()).forEach(e0 -> {
                 DObject dObjecct = (DObject) e0.getKey();
                 e0.getValue().forEach(e1 -> ((MPSObserved) e1.getKey()).toMPS(dObjecct, e1.getValue().a(), e1.getValue().b()));
             });

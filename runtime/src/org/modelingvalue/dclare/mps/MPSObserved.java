@@ -31,21 +31,27 @@ import org.modelingvalue.transactions.Observer;
 @SuppressWarnings("rawtypes")
 public class MPSObserved<O, T> extends Observed<O, T> {
 
-    public static <C, V> MPSObserved<C, V> of(Object id, V def, boolean mandatory, TriConsumer<C, V, V> toMPS) {
-        return of(id, def, mandatory, toMPS, null);
+    public static <C, V> MPSObserved<C, V> of(Object id, V def, boolean mandatory, boolean deferred, TriConsumer<C, V, V> toMPS) {
+        return of(id, def, mandatory, deferred, toMPS, null);
     }
 
-    public static <C, V> MPSObserved<C, V> of(Object id, V def, boolean mandatory, TriConsumer<C, V, V> toMPS, QuadConsumer<AbstractLeaf, C, V, V> changed) {
-        return new MPSObserved<C, V>(id, def, mandatory, toMPS, changed);
+    public static <C, V> MPSObserved<C, V> of(Object id, V def, boolean mandatory, boolean deferred, TriConsumer<C, V, V> toMPS, QuadConsumer<AbstractLeaf, C, V, V> changed) {
+        return new MPSObserved<C, V>(id, def, mandatory, deferred, toMPS, changed);
     }
 
     private final TriConsumer<O, T, T> toMPS;
     private final boolean              mandatory;
+    private final boolean              deferred;
 
-    protected MPSObserved(Object id, T def, boolean mandatory, TriConsumer<O, T, T> toMPS, QuadConsumer<AbstractLeaf, O, T, T> changed) {
+    protected MPSObserved(Object id, T def, boolean mandatory, boolean deferred, TriConsumer<O, T, T> toMPS, QuadConsumer<AbstractLeaf, O, T, T> changed) {
         super(Pair.of(id, mandatory), def, changed);
         this.toMPS = toMPS;
         this.mandatory = mandatory;
+        this.deferred = deferred;
+    }
+
+    public boolean isDeferred() {
+        return deferred;
     }
 
     public void toMPS(O object, T pre, T post) {

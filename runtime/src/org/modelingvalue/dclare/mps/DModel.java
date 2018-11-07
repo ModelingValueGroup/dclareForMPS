@@ -53,7 +53,7 @@ public class DModel extends DObject<SModel> implements SModelListener, SNodeChan
 
     public static final Getable<Pair<DClareMPS, SModel>, DModel> DMODEL         = ConstantSetable.of("DMODEL", p -> new DModel(p.a(), p.b()));
 
-    public static final Observed<DModel, Set<DNode>>             ROOTS          = MPSObserved.of("ROOTS", Set.of(), false, (dModel, pre, post) -> {
+    public static final Observed<DModel, Set<DNode>>             ROOTS          = MPSObserved.of("ROOTS", Set.of(), false, false, (dModel, pre, post) -> {
                                                                                     MPSObserved.map(DModel.roots(dModel.original()), post.map(DNode::original).toSet(),      //
                                                                                             a -> dModel.original().addRootNode(a), r -> dModel.original().removeRootNode(r));
                                                                                 }, (tx, o, b, a) -> {
