@@ -133,8 +133,9 @@ public class DModule extends DObject<SModule> implements SModuleListener, SModul
         return tx;
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
-    protected void exit() {
+    protected void exit(DObject parent) {
         original().removeModuleListener(this);
     }
 

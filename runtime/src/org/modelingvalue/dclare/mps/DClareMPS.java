@@ -164,7 +164,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, DeployList
     public void stop() {
         System.err.println("STOP Dclare");
         imperative = null;
-        root.put("stopDclareMPS", () -> repository.deactivate());
+        root.put("stopDclareMPS", () -> repository.deactivate(null, root));
         root.stop();
     }
 

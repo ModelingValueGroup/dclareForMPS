@@ -87,8 +87,9 @@ public class DRepository extends DObject<SRepository> implements SRepositoryList
         return Collection.of(dClareMPS.project.getProjectModules()).toSet();
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
-    protected void exit() {
+    protected void exit(DObject parent) {
         removeRepositoryListener(this);
     }
 

@@ -129,8 +129,9 @@ public class DModel extends DObject<SModel> implements SModelListener, SNodeChan
         return tx;
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
-    protected void exit() {
+    protected void exit(DObject parent) {
         original().removeModelListener(this);
         original().removeChangeListener(this);
     }

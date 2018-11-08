@@ -15,6 +15,7 @@ package org.modelingvalue.dclare.mps;
 
 import java.util.Arrays;
 import java.util.ConcurrentModificationException;
+import java.util.Objects;
 
 import org.modelingvalue.collections.ContainingCollection;
 import org.modelingvalue.collections.Set;
@@ -37,7 +38,7 @@ public abstract class DObject<O> {
 
     public static final Setable<DObject, Set<? extends DObject>> CHILDREN       = Observed.of("CHILDREN", Set.of(), (tx, o, b, a) -> {
                                                                                     Setable.<Set<? extends DObject>, DObject> diff(Set.of(), b, a,                   //
-                                                                                            e -> e.activate(o, tx.parent()), e -> e.deactivate());
+                                                                                            e -> e.activate(o, tx.parent()), e -> e.deactivate(o, tx.parent()));
                                                                                 });
 
     @SuppressWarnings("unchecked")
@@ -138,13 +139,14 @@ public abstract class DObject<O> {
         return tx;
     }
 
-    protected void exit() {
-        PARENT.set(this, null);
+    protected void exit(DObject parent) {
+        if (Objects.equals(parent, PARENT.get(this))) {
+            PARENT.set(this, null);
+        }
     }
 
-    protected void deactivate() {
-        dClareMPS.schedule(this::exit);
-        Leaf.getCurrent().clear(this);
+    protected void deactivate(DObject parent, Compound parentTx) {
+        dClareMPS.schedule(() -> this.exit(parent));
     }
 
     protected boolean isComplete() {

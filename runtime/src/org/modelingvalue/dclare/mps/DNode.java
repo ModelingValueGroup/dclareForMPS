@@ -174,8 +174,9 @@ public class DNode extends DObject<SNode> implements SNode {
         return tx;
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
-    protected void exit() {
+    protected void exit(DObject parent) {
     }
 
     @Override
