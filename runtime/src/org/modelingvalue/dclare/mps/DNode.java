@@ -90,7 +90,7 @@ public class DNode extends DObject<SNode> implements SNode {
                                                                                                  return Observed.<DNode, Set<DNode>> of(Pair.of(sr, "OPPOSITE"), Set.of());
                                                                                              });
     public static final Getable<SProperty, Observed<DNode, String>>             PROPERTY     = ConstantSetable.of("PROPERTY", sp -> {
-                                                                                                 return MPSObserved.<DNode, String> of(sp, null, false, true,                                                     //
+                                                                                                 return MPSObserved.<DNode, String> of(sp, null, false, false,                                                    //
                                                                                                          (dNode, pre, post) -> {
                                                                                                              if (!Objects.equals(dNode.original().getProperty(sp), post)) {
                                                                                                                  dNode.original().setProperty(sp, post);

@@ -4,9 +4,9 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/org.modelingvalue.collections"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.modelingvalue.transactions"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jdk1.8.0_102"/>
-	<classpathentry kind="lib" path="C:/Users/Wim Bast/AppData/Local/JetBrains/Toolbox/apps/MPS/ch-0/182.1542/lib/mps-core.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Wim Bast/AppData/Local/JetBrains/Toolbox/apps/MPS/ch-0/182.1542/lib/mps-openapi.jar" sourcepath="C:/Users/Wim Bast/AppData/Local/JetBrains/Toolbox/apps/MPS/ch-0/182.1460/lib/mps-openapi.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Wim Bast/AppData/Local/JetBrains/Toolbox/apps/MPS/ch-0/182.1542/lib/platform-api.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Wim Bast/AppData/Local/JetBrains/Toolbox/apps/MPS/ch-0/182.1542/lib/mps-platform.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Wim Bast/AppData/Local/JetBrains/Toolbox/apps/MPS/ch-0/182.1490/lib/mps-core.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Wim Bast/AppData/Local/JetBrains/Toolbox/apps/MPS/ch-0/182.1490/lib/mps-openapi.jar" sourcepath="C:/Users/Wim Bast/AppData/Local/JetBrains/Toolbox/apps/MPS/ch-0/182.1460/lib/mps-openapi.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Wim Bast/AppData/Local/JetBrains/Toolbox/apps/MPS/ch-0/182.1490/lib/platform-api.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Wim Bast/AppData/Local/JetBrains/Toolbox/apps/MPS/ch-0/182.1490/lib/mps-platform.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

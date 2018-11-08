@@ -21,7 +21,9 @@ import org.jetbrains.mps.openapi.language.SLanguage;
 import org.jetbrains.mps.openapi.project.Project;
 import org.jetbrains.mps.openapi.util.ProgressMonitor;
 import org.modelingvalue.collections.Collection;
+import org.modelingvalue.collections.Map;
 import org.modelingvalue.collections.Set;
+import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.collections.util.TriConsumer;
 import org.modelingvalue.transactions.Imperative;
 import org.modelingvalue.transactions.Observed;
@@ -124,19 +126,31 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, DeployList
         }
     }
 
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    private final Map<Pair<DObject, MPSObserved>, Pair<Object, Object>>[] deferred = new Map[]{Map.of()};
+
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     public void accept(State pre, State post, Boolean last) {
         COMMITTING.set(true);
         try {
-            pre.diff(post, o -> o instanceof DObject, p -> p instanceof MPSObserved && !((MPSObserved) p).isDeferred()).forEach(e0 -> {
-                DObject dObjecct = (DObject) e0.getKey();
-                e0.getValue().forEach(e1 -> ((MPSObserved) e1.getKey()).toMPS(dObjecct, e1.getValue().a(), e1.getValue().b()));
+            pre.diff(post, o -> o instanceof DObject, p -> p instanceof MPSObserved).forEach(e0 -> {
+                DObject dObject = (DObject) e0.getKey();
+                e0.getValue().forEach(e1 -> {
+                    MPSObserved mpsObserved = (MPSObserved) e1.getKey();
+                    if (mpsObserved.isDeferred()) {
+                        Pair<DObject, MPSObserved> slot = Pair.of(dObject, mpsObserved);
+                        Pair<Object, Object> old = deferred[0].get(slot);
+                        deferred[0] = deferred[0].put(slot, old != null ? Pair.of(old.a(), e1.getValue().b()) : Pair.of(e1.getValue().a(), e1.getValue().b()));
+                    } else {
+                        mpsObserved.toMPS(dObject, e1.getValue().a(), e1.getValue().b());
+                    }
+                });
             });
-            pre.diff(post, o -> o instanceof DObject, p -> p instanceof MPSObserved && ((MPSObserved) p).isDeferred()).forEach(e0 -> {
-                DObject dObjecct = (DObject) e0.getKey();
-                e0.getValue().forEach(e1 -> ((MPSObserved) e1.getKey()).toMPS(dObjecct, e1.getValue().a(), e1.getValue().b()));
-            });
+            if (last) {
+                deferred[0].forEach(e -> e.getKey().b().toMPS(e.getKey().a(), e.getValue().a(), e.getValue().b()));
+                deferred[0] = Map.of();
+            }
         } finally {
             COMMITTING.set(false);
         }

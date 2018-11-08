@@ -121,4 +121,9 @@ public class MPSObserved<O, T> extends Observed<O, T> {
         return result;
     }
 
+    @Override
+    public String toString() {
+        return ((Pair) id).a().toString();
+    }
+
 }

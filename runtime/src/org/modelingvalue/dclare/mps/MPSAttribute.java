@@ -32,4 +32,9 @@ public class MPSAttribute<O, T> extends MPSObserved<O, T> {
         }
     }
 
+    @Override
+    public String toString() {
+        return id.toString();
+    }
+
 }
