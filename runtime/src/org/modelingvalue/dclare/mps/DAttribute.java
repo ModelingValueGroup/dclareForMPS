@@ -32,9 +32,4 @@ public class DAttribute<O, T> extends DObserved<O, T> {
         }
     }
 
-    @Override
-    public String toString() {
-        return id.toString();
-    }
-
 }
