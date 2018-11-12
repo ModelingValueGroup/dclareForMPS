@@ -54,7 +54,7 @@ public class DModel extends DObject<SModel> implements SModelListener, SNodeChan
     public static final Getable<Pair<DClareMPS, SModel>, DModel> DMODEL         = ConstantSetable.of("DMODEL", p -> new DModel(p.a(), p.b()));
 
     public static final Observed<DModel, Set<DNode>>             ROOTS          = DObserved.of("ROOTS", Set.of(), false, false, (dModel, pre, post) -> {
-                                                                                    DObserved.map(DModel.roots(dModel.original()), post.map(DNode::original).toSet(),      //
+                                                                                    DObserved.map(DModel.roots(dModel.original()), post.map(DNode::original).toSet(),        //
                                                                                             a -> dModel.original().addRootNode(a), r -> dModel.original().removeRootNode(r));
                                                                                 }, (tx, o, b, a) -> {
                                                                                     Setable.<Set<DNode>, DNode> diff(Set.of(), b, a,                                         //
@@ -142,7 +142,8 @@ public class DModel extends DObject<SModel> implements SModelListener, SNodeChan
 
     @SuppressWarnings("rawtypes")
     @Override
-    protected void exit(DObject parent) {
+    protected void exit(DObject parent, Compound parentTx) {
+        super.exit(parent, parentTx);
         original().removeModelListener(this);
         original().removeChangeListener(this);
     }

@@ -27,6 +27,7 @@ import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.ContainingCollection;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
+import org.modelingvalue.transactions.Compound;
 import org.modelingvalue.transactions.ConstantSetable;
 import org.modelingvalue.transactions.Getable;
 import org.modelingvalue.transactions.Observed;
@@ -100,7 +101,8 @@ public class DRepository extends DObject<SRepository> implements SRepositoryList
 
     @SuppressWarnings("rawtypes")
     @Override
-    protected void exit(DObject parent) {
+    protected void exit(DObject parent, Compound parentTx) {
+        super.exit(parent, parentTx);
         removeRepositoryListener(this);
     }
 

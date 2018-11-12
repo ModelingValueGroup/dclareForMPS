@@ -132,40 +132,43 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, DeployList
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     public void accept(State pre, State post, Boolean last) {
-        COMMITTING.set(true);
-        try {
-            pre.diff(post, o -> o instanceof DObject, p -> p instanceof DObserved).forEach(e0 -> {
-                DObject dObject = (DObject) e0.getKey();
-                e0.getValue().forEach(e1 -> {
-                    DObserved mpsObserved = (DObserved) e1.getKey();
-                    if (mpsObserved.isDeferred()) {
-                        Pair<DObject, DObserved> slot = Pair.of(dObject, mpsObserved);
-                        Pair<Object, Object> old = deferred[0].get(slot);
-                        deferred[0] = deferred[0].put(slot, old != null ? Pair.of(old.a(), e1.getValue().b()) : Pair.of(e1.getValue().a(), e1.getValue().b()));
-                    } else {
-                        mpsObserved.toMPS(dObject, e1.getValue().a(), e1.getValue().b());
-                    }
+        if (imperative != null) {
+            COMMITTING.set(true);
+            try {
+                pre.diff(post, o -> o instanceof DObject, p -> p instanceof DObserved).forEach(e0 -> {
+                    DObject dObject = (DObject) e0.getKey();
+                    e0.getValue().forEach(e1 -> {
+                        DObserved mpsObserved = (DObserved) e1.getKey();
+                        if (mpsObserved.isDeferred()) {
+                            Pair<DObject, DObserved> slot = Pair.of(dObject, mpsObserved);
+                            Pair<Object, Object> old = deferred[0].get(slot);
+                            deferred[0] = deferred[0].put(slot, old != null ? Pair.of(old.a(), e1.getValue().b()) : Pair.of(e1.getValue().a(), e1.getValue().b()));
+                        } else {
+                            mpsObserved.toMPS(dObject, e1.getValue().a(), e1.getValue().b());
+                        }
+                    });
                 });
-            });
-            if (last) {
-                deferred[0].forEach(e -> e.getKey().b().toMPS(e.getKey().a(), e.getValue().a(), e.getValue().b()));
-                deferred[0] = Map.of();
+                if (last) {
+                    deferred[0].forEach(e -> e.getKey().b().toMPS(e.getKey().a(), e.getValue().a(), e.getValue().b()));
+                    deferred[0] = Map.of();
+                }
+            } finally {
+                COMMITTING.set(false);
             }
-        } finally {
-            COMMITTING.set(false);
         }
     }
 
     public void start() {
-        System.err.println("START Dclare");
+        System.err.println("DCLARE START");
         root.put("startDclareMPS", () -> repository.activate(null, root));
     }
 
     public void stop() {
-        System.err.println("STOP Dclare");
+        System.err.println("DCLARE STOP");
         imperative = null;
-        root.put("stopDclareMPS", () -> repository.deactivate(null, root));
+        root.put("stopDclareMPS", () -> repository.stop());
         root.stop();
+        root.waitForEnd();
     }
 
     private void start(SLanguage language) {

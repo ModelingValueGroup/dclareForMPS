@@ -177,14 +177,25 @@ public abstract class DObject<O> {
         return tx;
     }
 
-    protected void exit(DObject parent) {
+    protected void exit(DObject parent, Compound parentTx) {
         if (Objects.equals(parent, PARENT.get(this))) {
             PARENT.set(this, null);
+        }
+        if (Objects.equals(parentTx, TRANSACTION.get(this).parent())) {
+            TRANSACTION.set(this, null);
+        }
+    }
+
+    protected void stop() {
+        System.err.println("!!!!! STOP " + this);
+        exit(null, null);
+        for (DObject child : CHILDREN.get(this)) {
+            child.stop();
         }
     }
 
     protected void deactivate(DObject parent, Compound parentTx) {
-        dClareMPS.schedule(() -> this.exit(parent));
+        dClareMPS.schedule(() -> init(parent));
     }
 
     protected boolean isComplete() {
