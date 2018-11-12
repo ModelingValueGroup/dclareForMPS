@@ -332,5 +332,14 @@
       <ref role="20lvS9" node="4$MeK2bmw9s" resolve="AbstractAttribute" />
     </node>
   </node>
+  <node concept="1TIwiD" id="4Y8BM43ogq1">
+    <property role="EcuMT" value="5731005489968383617" />
+    <property role="TrG5h" value="Attributes" />
+    <property role="34LRSv" value="attributes" />
+    <ref role="1TJDcQ" to="tpck:gw2VY9q" resolve="BaseConcept" />
+    <node concept="PrWs8" id="4Y8BM43ogqf" role="PzmwI">
+      <ref role="PrY4T" to="tpee:hqOqG0K" resolve="IOperation" />
+    </node>
+  </node>
 </model>
 

@@ -194,7 +194,7 @@
       <property role="3TUv4t" value="true" />
       <node concept="3Tm1VV" id="1pPEdD75SSn" role="1B3o_S" />
       <node concept="3uibUv" id="1pPEdD75T2F" role="1tU5fm">
-        <ref role="3uigEE" to="t4tl:~MPSAttribute" resolve="MPSAttribute" />
+        <ref role="3uigEE" to="t4tl:~DAttribute" resolve="DAttribute" />
         <node concept="3uibUv" id="30GBB6YdBqM" role="11_B2D">
           <ref role="3uigEE" to="t4tl:~DNode" resolve="DNode" />
         </node>
@@ -202,7 +202,7 @@
       </node>
       <node concept="2ShNRf" id="2GrW9c4eWaM" role="33vP2m">
         <node concept="1pGfFk" id="2GrW9c4eW9V" role="2ShVmc">
-          <ref role="37wK5l" to="t4tl:~MPSAttribute.&lt;init&gt;(java.lang.Object,java.lang.Object,org.modelingvalue.collections.util.QuadConsumer)" resolve="MPSAttribute" />
+          <ref role="37wK5l" to="t4tl:~DAttribute.&lt;init&gt;(java.lang.Object,java.lang.Object,org.modelingvalue.collections.util.QuadConsumer)" resolve="DAttribute" />
           <node concept="Xl_RD" id="1pPEdD75Tle" role="37wK5m">
             <property role="Xl_RC" value="&lt;BUILDER_TYPE&gt;" />
           </node>
@@ -434,6 +434,57 @@
       <node concept="3cqZAl" id="30fQumnGyFh" role="3clF45" />
     </node>
     <node concept="2tJIrI" id="29R9$zZo$v9" role="jymVt" />
+    <node concept="2YIFZL" id="4Y8BM43o88y" role="jymVt">
+      <property role="TrG5h" value="getAttributes" />
+      <property role="od$2w" value="false" />
+      <property role="DiZV1" value="false" />
+      <property role="2aFKle" value="false" />
+      <node concept="37vLTG" id="4Y8BM43o88_" role="3clF46">
+        <property role="TrG5h" value="object" />
+        <node concept="3uibUv" id="4Y8BM43o88A" role="1tU5fm">
+          <ref role="3uigEE" to="wyt6:~Object" resolve="Object" />
+        </node>
+      </node>
+      <node concept="3clFbS" id="4Y8BM43o88B" role="3clF47">
+        <node concept="3clFbF" id="4Y8BM43o9KK" role="3cqZAp">
+          <node concept="10QFUN" id="4Y8BM43oaMd" role="3clFbG">
+            <node concept="2OqwBi" id="4Y8BM43oaqz" role="10QFUP">
+              <node concept="1eOMI4" id="4Y8BM43oadw" role="2Oq$k0">
+                <node concept="10QFUN" id="4Y8BM43oagw" role="1eOMHV">
+                  <node concept="16syzq" id="4Y8BM43oai2" role="10QFUM">
+                    <ref role="16sUi3" node="4Y8BM43o88O" resolve="O" />
+                  </node>
+                  <node concept="37vLTw" id="4Y8BM43o9KJ" role="10QFUP">
+                    <ref role="3cqZAo" node="4Y8BM43o88_" resolve="object" />
+                  </node>
+                </node>
+              </node>
+              <node concept="liA8E" id="4Y8BM43oaxi" role="2OqNvi">
+                <ref role="37wK5l" to="t4tl:~DObject.getAttributes():java.util.List" resolve="getAttributes" />
+              </node>
+            </node>
+            <node concept="A3Dl8" id="4Y8BM43oaMe" role="10QFUM">
+              <node concept="3uibUv" id="4Y8BM43odSo" role="A3Ik2">
+                <ref role="3uigEE" to="t4tl:~DAttribute" resolve="DAttribute" />
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+      <node concept="3Tm1VV" id="4Y8BM43o88M" role="1B3o_S" />
+      <node concept="A3Dl8" id="4Y8BM43o9lz" role="3clF45">
+        <node concept="3uibUv" id="4Y8BM43oeiT" role="A3Ik2">
+          <ref role="3uigEE" to="t4tl:~DAttribute" resolve="DAttribute" />
+        </node>
+      </node>
+      <node concept="16euLQ" id="4Y8BM43o88O" role="16eVyc">
+        <property role="TrG5h" value="O" />
+        <node concept="3uibUv" id="4Y8BM43o88P" role="3ztrMU">
+          <ref role="3uigEE" to="t4tl:~DObject" resolve="DObject" />
+        </node>
+      </node>
+    </node>
+    <node concept="2tJIrI" id="4Y8BM43o7rh" role="jymVt" />
     <node concept="2YIFZL" id="1lQ5DPQts7D" role="jymVt">
       <property role="TrG5h" value="getAttributeValue" />
       <property role="od$2w" value="false" />
@@ -456,14 +507,14 @@
           <node concept="10QFUN" id="1lQ5DPQtA3I" role="3clFbG">
             <node concept="2OqwBi" id="1lQ5DPQtwTS" role="10QFUP">
               <node concept="2YIFZM" id="1lQ5DPQtwia" role="2Oq$k0">
-                <ref role="1Pybhc" to="t4tl:~MPSAttribute" resolve="MPSAttribute" />
-                <ref role="37wK5l" to="t4tl:~MPSAttribute.of(java.lang.Object):org.modelingvalue.dclare.mps.MPSAttribute" resolve="of" />
+                <ref role="1Pybhc" to="t4tl:~DAttribute" resolve="DAttribute" />
+                <ref role="37wK5l" to="t4tl:~DAttribute.of(java.lang.Object):org.modelingvalue.dclare.mps.DAttribute" resolve="of" />
                 <node concept="37vLTw" id="1lQ5DPQtwl4" role="37wK5m">
                   <ref role="3cqZAo" node="1lQ5DPQtstn" resolve="attributeId" />
                 </node>
               </node>
               <node concept="liA8E" id="1lQ5DPQtxzb" role="2OqNvi">
-                <ref role="37wK5l" to="t4tl:~MPSAttribute.get(java.lang.Object):java.lang.Object" resolve="get" />
+                <ref role="37wK5l" to="t4tl:~DAttribute.get(java.lang.Object):java.lang.Object" resolve="get" />
                 <node concept="10QFUN" id="1lQ5DPQ_8v7" role="37wK5m">
                   <node concept="37vLTw" id="1lQ5DPQtxFz" role="10QFUP">
                     <ref role="3cqZAo" node="1lQ5DPQtsij" resolve="object" />
@@ -522,8 +573,8 @@
         <node concept="3clFbF" id="1lQ5DPQt_oe" role="3cqZAp">
           <node concept="2OqwBi" id="1lQ5DPQt_of" role="3clFbG">
             <node concept="2YIFZM" id="1lQ5DPQt_og" role="2Oq$k0">
-              <ref role="1Pybhc" to="t4tl:~MPSAttribute" resolve="MPSAttribute" />
-              <ref role="37wK5l" to="t4tl:~MPSAttribute.of(java.lang.Object):org.modelingvalue.dclare.mps.MPSAttribute" resolve="of" />
+              <ref role="1Pybhc" to="t4tl:~DAttribute" resolve="DAttribute" />
+              <ref role="37wK5l" to="t4tl:~DAttribute.of(java.lang.Object):org.modelingvalue.dclare.mps.DAttribute" resolve="of" />
               <node concept="37vLTw" id="1lQ5DPQt_oh" role="37wK5m">
                 <ref role="3cqZAo" node="1lQ5DPQt_o9" resolve="attributeId" />
               </node>

@@ -1421,5 +1421,12 @@
       </node>
     </node>
   </node>
+  <node concept="24kQdi" id="4Y8BM43ogqa">
+    <ref role="1XX52x" to="7ggn:4Y8BM43ogq1" resolve="Attributes" />
+    <node concept="3F0ifn" id="4Y8BM43ogqc" role="2wV5jI">
+      <property role="3F0ifm" value="attributes" />
+      <ref role="1k5W1q" to="tpen:hgVS8CF" resolve="KeyWord" />
+    </node>
+  </node>
 </model>
 

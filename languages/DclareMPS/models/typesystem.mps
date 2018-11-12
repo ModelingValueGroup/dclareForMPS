@@ -14,6 +14,7 @@
     <import index="tpcn" ref="r:00000000-0000-4000-0000-011c8959028b(jetbrains.mps.lang.structure.behavior)" />
     <import index="tp3r" ref="r:00000000-0000-4000-0000-011c8959034b(jetbrains.mps.lang.quotation.structure)" />
     <import index="tp3q" ref="r:00000000-0000-4000-0000-011c8959034a(jetbrains.mps.lang.quotation.typesystem)" />
+    <import index="t4tl" ref="55d6b6f5-8095-4cd0-a39b-779da8d12940/java:org.modelingvalue.dclare.mps(DclareMPSRuntime/)" />
     <import index="7ggn" ref="r:38c3b7db-3776-47fb-ba27-a4f002c4edc7(DclareMPS.structure)" implicit="true" />
     <import index="us1s" ref="r:e7d7a1fa-fb58-4cf6-bc1d-e5ed722e0c61(DclareMPS.behavior)" implicit="true" />
     <import index="tpck" ref="r:00000000-0000-4000-0000-011c89590288(jetbrains.mps.lang.core.structure)" implicit="true" />
@@ -101,6 +102,9 @@
       <concept id="1204053956946" name="jetbrains.mps.baseLanguage.structure.IMethodCall" flags="ng" index="1ndlxa">
         <reference id="1068499141037" name="baseMethodDeclaration" index="37wK5l" />
         <child id="1068499141038" name="actualArgument" index="37wK5m" />
+      </concept>
+      <concept id="1107535904670" name="jetbrains.mps.baseLanguage.structure.ClassifierType" flags="in" index="3uibUv">
+        <reference id="1107535924139" name="classifier" index="3uigEE" />
       </concept>
       <concept id="1081773326031" name="jetbrains.mps.baseLanguage.structure.BinaryOperation" flags="nn" index="3uHJSO">
         <child id="1081773367579" name="rightExpression" index="3uHU7w" />
@@ -1259,6 +1263,33 @@
     <node concept="1YaCAy" id="30GBB6Y$wDE" role="1YuTPh">
       <property role="TrG5h" value="val" />
       <ref role="1YaFvo" to="7ggn:30GBB6Y$vTM" resolve="NodeBuilderInitAttribute" />
+    </node>
+  </node>
+  <node concept="1YbPZF" id="4Y8BM43ogqn">
+    <property role="TrG5h" value="typeof_Attributes" />
+    <node concept="3clFbS" id="4Y8BM43ogqo" role="18ibNy">
+      <node concept="1Z5TYs" id="4Y8BM43ohbx" role="3cqZAp">
+        <node concept="mw_s8" id="4Y8BM43ohbP" role="1ZfhKB">
+          <node concept="2c44tf" id="4Y8BM43ohbL" role="mwGJk">
+            <node concept="A3Dl8" id="4Y8BM43ohcP" role="2c44tc">
+              <node concept="3uibUv" id="4Y8BM43ohf2" role="A3Ik2">
+                <ref role="3uigEE" to="t4tl:~DAttribute" resolve="DAttribute" />
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="mw_s8" id="4Y8BM43ohb$" role="1ZfhK$">
+          <node concept="1Z2H0r" id="4Y8BM43ogqu" role="mwGJk">
+            <node concept="1YBJjd" id="4Y8BM43ogsg" role="1Z2MuG">
+              <ref role="1YBMHb" node="4Y8BM43ogqq" resolve="attributes" />
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+    <node concept="1YaCAy" id="4Y8BM43ogqq" role="1YuTPh">
+      <property role="TrG5h" value="attributes" />
+      <ref role="1YaFvo" to="7ggn:4Y8BM43ogq1" resolve="Attributes" />
     </node>
   </node>
 </model>
