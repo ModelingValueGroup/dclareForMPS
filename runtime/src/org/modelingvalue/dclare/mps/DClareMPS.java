@@ -80,7 +80,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, DeployList
         waitForEndThread.start();
         root.put("init", () -> {
             imperative = root.addIntegration("MPSNative", this, r -> {
-                if (!COMMITTING.get()) {
+                if (imperative != null && !COMMITTING.get()) {
                     project.getModelAccess().executeCommandInEDT(r);
                 }
             });

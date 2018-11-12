@@ -187,7 +187,6 @@ public abstract class DObject<O> {
     }
 
     protected void stop() {
-        System.err.println("!!!!! STOP " + this);
         exit(null, null);
         for (DObject child : CHILDREN.get(this)) {
             child.stop();
