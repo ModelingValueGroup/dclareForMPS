@@ -16,7 +16,10 @@ package org.modelingvalue.dclare.mps;
 import java.util.Arrays;
 import java.util.ConcurrentModificationException;
 import java.util.Objects;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
+import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.ContainingCollection;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.ContextThread;
@@ -33,6 +36,28 @@ import org.modelingvalue.transactions.TransactionException;
 
 @SuppressWarnings("rawtypes")
 public abstract class DObject<O> {
+
+    public static final Setable<DObject, DType>                  TYPE           = Observed.of("TYPE", new DType() {
+                                                                                    @Override
+                                                                                    public Set<Consumer> getRules(Set<IRuleSet> ruleSets) {
+                                                                                        return Set.of();
+                                                                                    }
+
+                                                                                    @Override
+                                                                                    public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
+                                                                                        return Set.of();
+                                                                                    }
+
+                                                                                    @Override
+                                                                                    public Set<SLanguage> getLanguages() {
+                                                                                        return Set.of();
+                                                                                    }
+
+                                                                                    @Override
+                                                                                    public Object getIdentity() {
+                                                                                        return "<DUMMY_TYPE>";
+                                                                                    }
+                                                                                }, (tx, o, b, a) -> DClareMPS.TYPES.set(o.dClareMPS, Set::add, a));
 
     public static final Setable<DObject, DObject>                PARENT         = Observed.of("PARENT", null);
 
@@ -91,25 +116,38 @@ public abstract class DObject<O> {
         return original().toString();
     }
 
+    public java.util.List<DAttribute> getAttributes() {
+        return TYPE.get(this).getAttributes().collect(Collectors.toList());
+    }
+
     protected abstract ContainingCollection<? extends DObject> getChildren();
 
     protected void init(DObject parent) {
         PARENT.set(this, parent);
     }
 
+    @SuppressWarnings("unchecked")
     protected Compound activate(DObject parent, Compound parentTx) {
         dClareMPS.schedule(() -> init(parent));
         Compound tx = Compound.of(this, parentTx);
         TRANSACTION.set(this, tx);
+        Observer.of(TYPE, tx, () -> {
+            if (tx.equals(DObject.TRANSACTION.get(this))) {
+                if (isComplete()) {
+                    TYPE.set(this, getType());
+                }
+            } else {
+                TYPE.set(this, TYPE.getDefault());
+                throw new StopObserverException("Stopped");
+            }
+        }).trigger();
         Observer.of(RULE_INSTANCES, tx, () -> {
             if (tx.equals(TRANSACTION.get(this))) {
                 if (isComplete()) {
-                    DType type = getType();
-                    DClareMPS.TYPES.set(dClareMPS, Set::add, type);
-                    RULE_INSTANCES.set(this, type.getDerivedRules().map(r -> Observer.of(r, tx, () -> {
+                    RULE_INSTANCES.set(this, TYPE.get(this).getRules().map(r -> Observer.of(r, tx, () -> {
                         if (tx.equals(TRANSACTION.get(this))) {
                             if (isComplete()) {
-                                if (DClareMPS.TRACE) {
+                                if (DClareMPS.TRACE.get(dClareMPS)) {
                                     Leaf.getCurrent().runNonObserving(() -> {
                                         System.err.println("DCLARE " + ContextThread.getNr() + " RUN RULE " + r + " for " + DObject.this);
                                     });

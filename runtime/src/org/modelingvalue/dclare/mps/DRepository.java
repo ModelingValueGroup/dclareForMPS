@@ -59,8 +59,19 @@ public class DRepository extends DObject<SRepository> implements SRepositoryList
 
             @SuppressWarnings({"rawtypes", "unchecked"})
             @Override
-            public Set<Consumer<DObject>> getRules() {
-                return (Set) allLanguages.flatMap(l -> DClareMPS.RULE_SETS.get(l).flatMap(rs -> Collection.of(rs.getRepositoryRules()))).toSet();
+            public Set<Consumer> getRules(Set<IRuleSet> ruleSets) {
+                return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getRepositoryRules())).toSet();
+            }
+
+            @SuppressWarnings({"rawtypes", "unchecked"})
+            @Override
+            public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
+                return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getRepositoryAttributes())).toSet();
+            }
+
+            @Override
+            public Set<SLanguage> getLanguages() {
+                return allLanguages;
             }
 
             @Override

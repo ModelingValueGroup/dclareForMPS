@@ -41,7 +41,7 @@ import jetbrains.mps.smodel.language.LanguageRegistry;
 
 public class DClareMPS implements TriConsumer<State, State, Boolean>, DeployListener {
 
-    public static final boolean                                TRACE         = Boolean.parseBoolean(System.getProperty("TRACE_DCLARE", "false"));
+    public static final Setable<DClareMPS, Boolean>            TRACE         = Setable.of("TRACE", false);
 
     private static final ThreadLocal<Boolean>                  COMMITTING    = new ThreadLocal<Boolean>() {
                                                                                  @Override
@@ -127,19 +127,19 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, DeployList
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    private final Map<Pair<DObject, MPSObserved>, Pair<Object, Object>>[] deferred = new Map[]{Map.of()};
+    private final Map<Pair<DObject, DObserved>, Pair<Object, Object>>[] deferred = new Map[]{Map.of()};
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     public void accept(State pre, State post, Boolean last) {
         COMMITTING.set(true);
         try {
-            pre.diff(post, o -> o instanceof DObject, p -> p instanceof MPSObserved).forEach(e0 -> {
+            pre.diff(post, o -> o instanceof DObject, p -> p instanceof DObserved).forEach(e0 -> {
                 DObject dObject = (DObject) e0.getKey();
                 e0.getValue().forEach(e1 -> {
-                    MPSObserved mpsObserved = (MPSObserved) e1.getKey();
+                    DObserved mpsObserved = (DObserved) e1.getKey();
                     if (mpsObserved.isDeferred()) {
-                        Pair<DObject, MPSObserved> slot = Pair.of(dObject, mpsObserved);
+                        Pair<DObject, DObserved> slot = Pair.of(dObject, mpsObserved);
                         Pair<Object, Object> old = deferred[0].get(slot);
                         deferred[0] = deferred[0].put(slot, old != null ? Pair.of(old.a(), e1.getValue().b()) : Pair.of(e1.getValue().a(), e1.getValue().b()));
                     } else {
@@ -189,4 +189,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, DeployList
     public void onUnloaded(java.util.Set<ReloadableModule> arg0, ProgressMonitor arg1) {
     }
 
+    public void setTrace(boolean trace) {
+        schedule(() -> TRACE.set(this, trace));
+    }
 }

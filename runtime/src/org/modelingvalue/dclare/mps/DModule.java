@@ -45,7 +45,7 @@ public class DModule extends DObject<SModule> implements SModuleListener, SModul
     public static final Getable<Pair<DClareMPS, SModule>, DModule> DMODULE   = ConstantSetable.of("DMODULE", p -> new DModule(p.a(), p.b()));
 
     public static final Observed<DModule, Boolean>                 ACTIVE    = Observed.of("ACTIVE", false, (tx, o, b, a) -> {
-                                                                                 if (DClareMPS.TRACE) {
+                                                                                 if (DClareMPS.TRACE.get(o.dClareMPS)) {
                                                                                      tx.runNonObserving(                                                             //
                                                                                              () -> {
                                                                                                  if (a) {
@@ -84,8 +84,19 @@ public class DModule extends DObject<SModule> implements SModuleListener, SModul
         return new DType() {
             @SuppressWarnings({"unchecked", "rawtypes"})
             @Override
-            public Set<Consumer<DObject>> getRules() {
-                return (Set) usedLanguages.flatMap(l -> DClareMPS.RULE_SETS.get(l).flatMap(rs -> Collection.of(rs.getModuleRules()))).toSet();
+            public Set<Consumer> getRules(Set<IRuleSet> ruleSets) {
+                return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getModuleRules())).toSet();
+            }
+
+            @SuppressWarnings({"rawtypes", "unchecked"})
+            @Override
+            public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
+                return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getModuleAttributes())).toSet();
+            }
+
+            @Override
+            public Set<SLanguage> getLanguages() {
+                return usedLanguages;
             }
 
             @Override

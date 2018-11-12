@@ -15,6 +15,7 @@ package org.modelingvalue.dclare.mps;
 
 import java.util.function.Consumer;
 
+import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.transactions.Compound;
 import org.modelingvalue.transactions.Observed;
@@ -25,12 +26,24 @@ import org.modelingvalue.transactions.Setable;
 @SuppressWarnings("rawtypes")
 public abstract class DType {
 
-    private static final Setable<DType, Set<Consumer<DObject>>> RULES = Observed.of("RULES", Set.of());
+    private static final Setable<DType, Set<Consumer>>   RULES          = Observed.of("RULES", Set.of());
 
-    public abstract Set<Consumer<DObject>> getRules();
+    private static final Setable<DType, Set<DAttribute>> ATTRIBUTES     = Observed.of("ATTRIBUTES", Set.of());
 
-    public Set<Consumer<DObject>> getDerivedRules() {
+    private static final Setable<DType, Set<IRuleSet>>   TYPE_RULE_SETS = Observed.of("TYPE_RULE_SETS", Set.of());
+
+    public abstract Set<Consumer> getRules(Set<IRuleSet> ruleSets);
+
+    public abstract Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets);
+
+    public abstract Set<SLanguage> getLanguages();
+
+    public final Set<Consumer> getRules() {
         return RULES.get(this);
+    }
+
+    public final Set<DAttribute> getAttributes() {
+        return ATTRIBUTES.get(this);
     }
 
     public abstract Object getIdentity();
@@ -47,11 +60,9 @@ public abstract class DType {
 
     public void start(Root root) {
         Compound tx = Compound.of(this, root);
-        Observer.of(RULES, tx, this::refresh).trigger();
-    }
-
-    public void refresh() {
-        RULES.set(DType.this, getRules());
+        Observer.of(TYPE_RULE_SETS, tx, () -> TYPE_RULE_SETS.set(this, getLanguages().flatMap(l -> DClareMPS.RULE_SETS.get(l)).toSet())).trigger();
+        Observer.of(RULES, tx, () -> RULES.set(this, getRules(TYPE_RULE_SETS.get(this)))).trigger();
+        Observer.of(ATTRIBUTES, tx, () -> ATTRIBUTES.set(this, getAttributes(TYPE_RULE_SETS.get(this)))).trigger();
     }
 
     public void stop(Root root) {

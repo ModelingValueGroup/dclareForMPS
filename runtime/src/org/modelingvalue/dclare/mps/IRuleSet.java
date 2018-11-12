@@ -21,6 +21,15 @@ import org.jetbrains.mps.openapi.model.SModel;
 import org.jetbrains.mps.openapi.model.SNode;
 
 public interface IRuleSet {
+
+    List<DAttribute<SNode, ?>> getNodeAttributes(SAbstractConcept concept);
+
+    List<DAttribute<SModel, ?>> getModelAttributes();
+
+    List<DAttribute<DModule, ?>> getModuleAttributes();
+
+    List<DAttribute<DRepository, ?>> getRepositoryAttributes();
+
     List<Consumer<SNode>> getNodeRules(SAbstractConcept concept);
 
     List<Consumer<SModel>> getModelRules();
@@ -28,4 +37,5 @@ public interface IRuleSet {
     List<Consumer<DModule>> getModuleRules();
 
     List<Consumer<DRepository>> getRepositoryRules();
+
 }

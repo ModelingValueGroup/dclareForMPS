@@ -56,9 +56,9 @@ public class DNode extends DObject<SNode> implements SNode {
     public static final Observed<DNode, Map<Object, Object>>                    USER_OBJECTS = Observed.of("USER_OBJECTS", Map.of());
 
     public static final Getable<SContainmentLink, Observed<DNode, List<DNode>>> CONTAINMENT  = ConstantSetable.of("CONTAINMENT", sc -> {
-                                                                                                 return MPSObserved.<DNode, List<DNode>> of(sc, List.of(), !sc.isOptional(), false,                               //
+                                                                                                 return DObserved.<DNode, List<DNode>> of(sc, List.of(), !sc.isOptional(), false,                               //
                                                                                                          (dNode, pre, post) -> {
-                                                                                                             MPSObserved.map(DNode.children(dNode.original(), sc), post.map(DNode::original).toList(),            //
+                                                                                                             DObserved.map(DNode.children(dNode.original(), sc), post.map(DNode::original).toList(),            //
                                                                                                                      (n, a) -> dNode.original().insertChildAfter(sc, n, a), r -> dNode.original().removeChild(r));
                                                                                                          },                                                                                                       //
                                                                                                          (tx, o, b, a) -> {
@@ -69,7 +69,7 @@ public class DNode extends DObject<SNode> implements SNode {
                                                                                              });
     public static final Getable<SReferenceLink, Observed<DNode, DNode>>         REFERENCE    = ConstantSetable.of("REFERENCE", sr -> {
                                                                                                  Observed<DNode, Set<DNode>> oppos = DNode.OPPOSITE.get(sr);
-                                                                                                 return MPSObserved.<DNode, DNode> of(sr, null, !sr.isOptional(), true,                                           //
+                                                                                                 return DObserved.<DNode, DNode> of(sr, null, !sr.isOptional(), true,                                           //
                                                                                                          (dNode, pre, post) -> {
                                                                                                              SNode ref = post != null ? post.original() : null;
                                                                                                              if (!Objects.equals(dNode.original().getReferenceTarget(sr), ref)) {
@@ -90,7 +90,7 @@ public class DNode extends DObject<SNode> implements SNode {
                                                                                                  return Observed.<DNode, Set<DNode>> of(Pair.of(sr, "OPPOSITE"), Set.of());
                                                                                              });
     public static final Getable<SProperty, Observed<DNode, String>>             PROPERTY     = ConstantSetable.of("PROPERTY", sp -> {
-                                                                                                 return MPSObserved.<DNode, String> of(sp, null, false, false,                                                    //
+                                                                                                 return DObserved.<DNode, String> of(sp, null, false, false,                                                    //
                                                                                                          (dNode, pre, post) -> {
                                                                                                              if (!Objects.equals(dNode.original().getProperty(sp), post)) {
                                                                                                                  dNode.original().setProperty(sp, post);
@@ -117,8 +117,19 @@ public class DNode extends DObject<SNode> implements SNode {
         return new DType() {
             @SuppressWarnings({"unchecked", "rawtypes"})
             @Override
-            public Set<Consumer<DObject>> getRules() {
-                return (Set) usedLanguages.flatMap(l -> DClareMPS.RULE_SETS.get(l).flatMap(rs -> Collection.of(rs.getNodeRules(concept)))).toSet();
+            public Set<Consumer> getRules(Set<IRuleSet> ruleSets) {
+                return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getNodeRules(concept))).toSet();
+            }
+
+            @SuppressWarnings({"unchecked", "rawtypes"})
+            @Override
+            public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
+                return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getNodeAttributes(concept))).toSet();
+            }
+
+            @Override
+            public Set<SLanguage> getLanguages() {
+                return usedLanguages;
             }
 
             @Override

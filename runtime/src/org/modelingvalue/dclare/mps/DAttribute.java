@@ -7,17 +7,17 @@ import org.modelingvalue.transactions.EmptyMandatoryException;
 import org.modelingvalue.transactions.Getable;
 
 @SuppressWarnings("rawtypes")
-public class MPSAttribute<O, T> extends MPSObserved<O, T> {
+public class DAttribute<O, T> extends DObserved<O, T> {
 
     @SuppressWarnings("unchecked")
-    private static final Getable<Object, MPSAttribute> MPS_ATTRIBUTE = ConstantSetable.of("MPS_ATTRIBUTE", id -> new MPSAttribute(id, null, null));
+    private static final Getable<Object, DAttribute> ATTRIBUTE = ConstantSetable.of("ATTRIBUTE", id -> new DAttribute(id, null, null));
 
     @SuppressWarnings("unchecked")
-    public static <C, V> MPSAttribute<C, V> of(Object id) {
-        return MPS_ATTRIBUTE.get(id);
+    public static <C, V> DAttribute<C, V> of(Object id) {
+        return ATTRIBUTE.get(id);
     }
 
-    public MPSAttribute(Object id, T def, QuadConsumer<AbstractLeaf, O, T, T> changed) {
+    public DAttribute(Object id, T def, QuadConsumer<AbstractLeaf, O, T, T> changed) {
         super(id, def, false, false, (o, b, a) -> {
         }, changed);
     }

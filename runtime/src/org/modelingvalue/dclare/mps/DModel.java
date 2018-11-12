@@ -53,8 +53,8 @@ public class DModel extends DObject<SModel> implements SModelListener, SNodeChan
 
     public static final Getable<Pair<DClareMPS, SModel>, DModel> DMODEL         = ConstantSetable.of("DMODEL", p -> new DModel(p.a(), p.b()));
 
-    public static final Observed<DModel, Set<DNode>>             ROOTS          = MPSObserved.of("ROOTS", Set.of(), false, false, (dModel, pre, post) -> {
-                                                                                    MPSObserved.map(DModel.roots(dModel.original()), post.map(DNode::original).toSet(),      //
+    public static final Observed<DModel, Set<DNode>>             ROOTS          = DObserved.of("ROOTS", Set.of(), false, false, (dModel, pre, post) -> {
+                                                                                    DObserved.map(DModel.roots(dModel.original()), post.map(DNode::original).toSet(),      //
                                                                                             a -> dModel.original().addRootNode(a), r -> dModel.original().removeRootNode(r));
                                                                                 }, (tx, o, b, a) -> {
                                                                                     Setable.<Set<DNode>, DNode> diff(Set.of(), b, a,                                         //
@@ -84,8 +84,19 @@ public class DModel extends DObject<SModel> implements SModelListener, SNodeChan
         return new DType() {
             @SuppressWarnings({"unchecked", "rawtypes"})
             @Override
-            public Set<Consumer<DObject>> getRules() {
-                return (Set) usedLanguages.flatMap(l -> DClareMPS.RULE_SETS.get(l).flatMap(rs -> Collection.of(rs.getModelRules()))).toSet();
+            public Set<Consumer> getRules(Set<IRuleSet> ruleSets) {
+                return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getModelRules())).toSet();
+            }
+
+            @SuppressWarnings({"rawtypes", "unchecked"})
+            @Override
+            public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
+                return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getModelAttributes())).toSet();
+            }
+
+            @Override
+            public Set<SLanguage> getLanguages() {
+                return usedLanguages;
             }
 
             @Override

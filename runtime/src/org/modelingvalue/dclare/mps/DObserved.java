@@ -29,21 +29,21 @@ import org.modelingvalue.transactions.Observed;
 import org.modelingvalue.transactions.Observer;
 
 @SuppressWarnings("rawtypes")
-public class MPSObserved<O, T> extends Observed<O, T> {
+public class DObserved<O, T> extends Observed<O, T> {
 
-    public static <C, V> MPSObserved<C, V> of(Object id, V def, boolean mandatory, boolean deferred, TriConsumer<C, V, V> toMPS) {
+    public static <C, V> DObserved<C, V> of(Object id, V def, boolean mandatory, boolean deferred, TriConsumer<C, V, V> toMPS) {
         return of(id, def, mandatory, deferred, toMPS, null);
     }
 
-    public static <C, V> MPSObserved<C, V> of(Object id, V def, boolean mandatory, boolean deferred, TriConsumer<C, V, V> toMPS, QuadConsumer<AbstractLeaf, C, V, V> changed) {
-        return new MPSObserved<C, V>(id, def, mandatory, deferred, toMPS, changed);
+    public static <C, V> DObserved<C, V> of(Object id, V def, boolean mandatory, boolean deferred, TriConsumer<C, V, V> toMPS, QuadConsumer<AbstractLeaf, C, V, V> changed) {
+        return new DObserved<C, V>(id, def, mandatory, deferred, toMPS, changed);
     }
 
     private final TriConsumer<O, T, T> toMPS;
     private final boolean              mandatory;
     private final boolean              deferred;
 
-    protected MPSObserved(Object id, T def, boolean mandatory, boolean deferred, TriConsumer<O, T, T> toMPS, QuadConsumer<AbstractLeaf, O, T, T> changed) {
+    protected DObserved(Object id, T def, boolean mandatory, boolean deferred, TriConsumer<O, T, T> toMPS, QuadConsumer<AbstractLeaf, O, T, T> changed) {
         super(Pair.of(id, mandatory), def, changed);
         this.toMPS = toMPS;
         this.mandatory = mandatory;
@@ -55,8 +55,9 @@ public class MPSObserved<O, T> extends Observed<O, T> {
     }
 
     public void toMPS(O object, T pre, T post) {
-        if (DClareMPS.TRACE) {
-            Leaf.getCurrent().runNonObserving(() -> {
+        AbstractLeaf tx = Leaf.getCurrent();
+        if (DClareMPS.TRACE.get((DClareMPS) tx.root().getId())) {
+            tx.runNonObserving(() -> {
                 System.err.println("DCLARE TO MPS " + object + "." + this + "=" + pre + "->" + post);
             });
         }
@@ -101,7 +102,7 @@ public class MPSObserved<O, T> extends Observed<O, T> {
     @Override
     protected void changed(AbstractLeaf tx, O object, T pre, T post) {
         super.changed(tx, object, pre, post);
-        if (DClareMPS.TRACE && Thread.currentThread() instanceof ContextThread) {
+        if (DClareMPS.TRACE.get((DClareMPS) tx.root().getId())) {
             tx.runNonObserving(() -> {
                 if (Leaf.getCurrent() instanceof Observer) {
                     System.err.println("DCLARE " + ContextThread.getNr() + " CHANGED " + object + "." + this + "=" + pre + "->" + post);
