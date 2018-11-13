@@ -24,6 +24,7 @@
     <import index="tpck" ref="r:00000000-0000-4000-0000-011c89590288(jetbrains.mps.lang.core.structure)" />
     <import index="19uv" ref="r:f4b34c7d-c02f-43b9-b6e7-feff8966461c(jetbrains.mps.lang.quotation.intentions)" />
     <import index="wyt6" ref="6354ebe7-c22a-4a0f-ac54-50b52ab9b065/java:java.lang(JDK/)" implicit="true" />
+    <import index="guwi" ref="6354ebe7-c22a-4a0f-ac54-50b52ab9b065/java:java.io(JDK/)" implicit="true" />
   </imports>
   <registry>
     <language id="af65afd8-f0dd-4942-87d9-63a55f2a9db1" name="jetbrains.mps.lang.behavior">
@@ -69,6 +70,9 @@
       </concept>
       <concept id="1070475926800" name="jetbrains.mps.baseLanguage.structure.StringLiteral" flags="nn" index="Xl_RD">
         <property id="1070475926801" name="value" index="Xl_RC" />
+      </concept>
+      <concept id="1070533707846" name="jetbrains.mps.baseLanguage.structure.StaticFieldReference" flags="nn" index="10M0yZ">
+        <reference id="1144433057691" name="classifier" index="1PxDUh" />
       </concept>
       <concept id="1070534058343" name="jetbrains.mps.baseLanguage.structure.NullLiteral" flags="nn" index="10Nm6u" />
       <concept id="1070534644030" name="jetbrains.mps.baseLanguage.structure.BooleanType" flags="in" index="10P_77" />
@@ -1313,6 +1317,45 @@
         </node>
       </node>
       <node concept="3cqZAl" id="5r_35Ihc8Wv" role="3clF45" />
+    </node>
+    <node concept="13i0hz" id="3E71z7ubDIs" role="13h7CS">
+      <property role="TrG5h" value="canBeAppliedToNode" />
+      <property role="2Ki8OM" value="true" />
+      <ref role="13i0hy" to="tpcn:7IH442d05tK" resolve="canBeAppliedToNode" />
+      <node concept="3clFbS" id="3E71z7ubDIv" role="3clF47">
+        <node concept="3clFbF" id="3E71z7ubGpa" role="3cqZAp">
+          <node concept="2OqwBi" id="3E71z7ubGp7" role="3clFbG">
+            <node concept="10M0yZ" id="3E71z7ubGp8" role="2Oq$k0">
+              <ref role="1PxDUh" to="wyt6:~System" resolve="System" />
+              <ref role="3cqZAo" to="wyt6:~System.err" resolve="err" />
+            </node>
+            <node concept="liA8E" id="3E71z7ubGp9" role="2OqNvi">
+              <ref role="37wK5l" to="guwi:~PrintStream.println(java.lang.String):void" resolve="println" />
+              <node concept="3cpWs3" id="3E71z7ubHrY" role="37wK5m">
+                <node concept="37vLTw" id="3E71z7ubHvr" role="3uHU7w">
+                  <ref role="3cqZAo" node="3E71z7ubEDB" resolve="candidate" />
+                </node>
+                <node concept="Xl_RD" id="3E71z7ubGqx" role="3uHU7B">
+                  <property role="Xl_RC" value="!!!!!!!!!!!!!!!!!!!! " />
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="3clFbF" id="3E71z7ubGkZ" role="3cqZAp">
+          <node concept="3clFbT" id="3E71z7ubGkY" role="3clFbG">
+            <property role="3clFbU" value="true" />
+          </node>
+        </node>
+      </node>
+      <node concept="37vLTG" id="3E71z7ubEDB" role="3clF46">
+        <property role="TrG5h" value="candidate" />
+        <node concept="3Tqbb2" id="3E71z7ubEDC" role="1tU5fm">
+          <ref role="ehGHo" to="tpce:h0PkWnZ" resolve="AbstractConceptDeclaration" />
+        </node>
+      </node>
+      <node concept="10P_77" id="3E71z7ubEDD" role="3clF45" />
+      <node concept="3Tm1VV" id="3E71z7ubEDE" role="1B3o_S" />
     </node>
     <node concept="13i0hz" id="29R9$zZUnz_" role="13h7CS">
       <property role="13i0iv" value="false" />
