@@ -3,7 +3,6 @@ package org.modelingvalue.dclare.mps;
 import org.modelingvalue.collections.util.QuadConsumer;
 import org.modelingvalue.transactions.AbstractLeaf;
 import org.modelingvalue.transactions.ConstantSetable;
-import org.modelingvalue.transactions.EmptyMandatoryException;
 import org.modelingvalue.transactions.Getable;
 
 @SuppressWarnings("rawtypes")
@@ -25,11 +24,10 @@ public class DAttribute<O, T> extends DObserved<O, T> {
     @Override
     public T get(O object) {
         T result = object == null ? null : super.get(object);
-        if (result == null) {
-            throw new EmptyMandatoryException();
-        } else {
-            return result;
+        if (object != null && result == null) {
+            DObject.EMPTY_ATTRIBUTE.set(true);
         }
+        return result;
     }
 
 }

@@ -49,6 +49,8 @@ import org.modelingvalue.transactions.Observer;
 import org.modelingvalue.transactions.Setable;
 import org.modelingvalue.transactions.StopObserverException;
 
+import jetbrains.mps.extapi.model.SModelBase;
+
 public class DModel extends DObject<SModel> implements SModelListener, SNodeChangeListener, SModel {
 
     public static final Getable<Pair<DClareMPS, SModel>, DModel> DMODEL         = ConstantSetable.of("DMODEL", p -> new DModel(p.a(), p.b()));
@@ -62,7 +64,12 @@ public class DModel extends DObject<SModel> implements SModelListener, SNodeChan
                                                                                             });
                                                                                 });
 
-    public static final Observed<DModel, Set<SLanguage>>         USED_LANGUAGES = Observed.of("USED_LANGUAGES", Set.of());
+    public static final Observed<DModel, Set<SLanguage>>         USED_LANGUAGES = DObserved.of("USED_LANGUAGES", Set.of(), false, false, (dModel, pre, post) -> {
+                                                                                    SModelBase sModel = (SModelBase) dModel.original();
+                                                                                    for (SLanguage l : post) {
+                                                                                        sModel.addLanguage(l);
+                                                                                    }
+                                                                                });
 
     public static final Observed<DModel, ModelRoot>              MODEL_ROOT     = Observed.of("MODEL_ROOT", null);
 

@@ -40,6 +40,9 @@ import org.modelingvalue.transactions.Observer;
 import org.modelingvalue.transactions.Setable;
 import org.modelingvalue.transactions.StopObserverException;
 
+import jetbrains.mps.extapi.model.SModelBase;
+import jetbrains.mps.extapi.module.SModuleBase;
+
 public class DModule extends DObject<SModule> implements SModuleListener, SModule {
 
     public static final Getable<Pair<DClareMPS, SModule>, DModule> DMODULE   = ConstantSetable.of("DMODULE", p -> new DModule(p.a(), p.b()));
@@ -329,7 +332,7 @@ public class DModule extends DObject<SModule> implements SModuleListener, SModul
         return langs.anyMatch(l -> !DClareMPS.RULE_SETS.get(l).isEmpty()) && !langs.anyMatch(l -> l.getQualifiedName().contains("jetbrains.mps.lang"));
     }
 
-    public DModel findOrAddModel(String name) {
+    public DModel findOrAddModel(String name, boolean temporal) {
         DModel found = null;
         for (DModel dModel : MODELS.get(this)) {
             if (dModel.getName().getSimpleName().equals(name)) {
@@ -337,13 +340,17 @@ public class DModule extends DObject<SModule> implements SModuleListener, SModul
             }
         }
         if (found == null) {
-            found = DModel.of(dClareMPS, dClareMPS.run(() -> {
-                ModelRoot root = original().getModelRoots().iterator().next();
-                return root.createModel(name);
-            }));
+            SModuleBase sModule = (SModuleBase) original();
+            SModelBase sModel = dClareMPS.run(temporal ? () -> {
+                return new DTempModel(name, sModule);
+            } : () -> {
+                return (SModelBase) sModule.getModelRoots().iterator().next().createModel(name);
+            });
+            found = DModel.of(dClareMPS, sModel);
             MODELS.set(this, Set::add, found);
         }
         return found;
+
     }
 
     @Override
