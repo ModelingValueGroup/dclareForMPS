@@ -59,6 +59,7 @@
         <property id="1176718929932" name="isFinal" index="3TUv4t" />
         <child id="1068431790190" name="initializer" index="33vP2m" />
       </concept>
+      <concept id="1068431790189" name="jetbrains.mps.baseLanguage.structure.Type" flags="in" index="33vP2l" />
       <concept id="1068498886296" name="jetbrains.mps.baseLanguage.structure.VariableReference" flags="nn" index="37vLTw">
         <reference id="1068581517664" name="variableDeclaration" index="3cqZAo" />
       </concept>
@@ -129,6 +130,7 @@
         <child id="1196350785111" name="expression" index="2c44t1" />
       </concept>
       <concept id="1196350785117" name="jetbrains.mps.lang.quotation.structure.ReferenceAntiquotation" flags="ng" index="2c44tb" />
+      <concept id="1196350785112" name="jetbrains.mps.lang.quotation.structure.Antiquotation" flags="ng" index="2c44te" />
       <concept id="1196350785113" name="jetbrains.mps.lang.quotation.structure.Quotation" flags="nn" index="2c44tf">
         <child id="1196350785114" name="quotedNode" index="2c44tc" />
       </concept>
@@ -231,6 +233,7 @@
       <concept id="1180636770613" name="jetbrains.mps.lang.smodel.structure.SNodeCreator" flags="nn" index="3zrR0B">
         <child id="1180636770616" name="createdType" index="3zrR0E" />
       </concept>
+      <concept id="1144146199828" name="jetbrains.mps.lang.smodel.structure.Node_CopyOperation" flags="nn" index="1$rogu" />
       <concept id="1140137987495" name="jetbrains.mps.lang.smodel.structure.SNodeTypeCastExpression" flags="nn" index="1PxgMI">
         <property id="1238684351431" name="asCast" index="1BlNFB" />
       </concept>
@@ -1412,6 +1415,50 @@
     <node concept="1YaCAy" id="6HWpSUECLO7" role="1YuTPh">
       <property role="TrG5h" value="attribute" />
       <ref role="1YaFvo" to="7ggn:4$MeK2bmw9s" resolve="Attribute" />
+    </node>
+  </node>
+  <node concept="1YbPZF" id="7VpGsFQRU17">
+    <property role="TrG5h" value="typeof_AttributeImplicitSelect" />
+    <node concept="3clFbS" id="7VpGsFQRU18" role="18ibNy">
+      <node concept="1Z5TYs" id="7iAolAiLAFI" role="3cqZAp">
+        <node concept="mw_s8" id="7iAolAiLAGu" role="1ZfhKB">
+          <node concept="2c44tf" id="7iAolAiLAGv" role="mwGJk">
+            <node concept="A3Dl8" id="7iAolAiLAGx" role="2c44tc">
+              <node concept="33vP2l" id="7VpGsFQRWSW" role="A3Ik2">
+                <node concept="2c44te" id="7VpGsFQRWTE" role="lGtFl">
+                  <node concept="2OqwBi" id="7VpGsFQRXwa" role="2c44t1">
+                    <node concept="2OqwBi" id="7VpGsFQRWfv" role="2Oq$k0">
+                      <node concept="2OqwBi" id="7iAolAiLBJr" role="2Oq$k0">
+                        <node concept="1YBJjd" id="7VpGsFQRUUx" role="2Oq$k0">
+                          <ref role="1YBMHb" node="7VpGsFQRU1a" resolve="attributeImplicitSelect" />
+                        </node>
+                        <node concept="3TrEf2" id="7VpGsFQRV9d" role="2OqNvi">
+                          <ref role="3Tt5mk" to="7ggn:35Jy4LMD1u3" resolve="attribute" />
+                        </node>
+                      </node>
+                      <node concept="3TrEf2" id="7VpGsFQRWE_" role="2OqNvi">
+                        <ref role="3Tt5mk" to="tpee:4VkOLwjf83e" resolve="type" />
+                      </node>
+                    </node>
+                    <node concept="1$rogu" id="7VpGsFQRXM6" role="2OqNvi" />
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="mw_s8" id="7iAolAiLAFL" role="1ZfhK$">
+          <node concept="1Z2H0r" id="7iAolAiLAFF" role="mwGJk">
+            <node concept="1YBJjd" id="7VpGsFQRUNU" role="1Z2MuG">
+              <ref role="1YBMHb" node="7VpGsFQRU1a" resolve="attributeImplicitSelect" />
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+    <node concept="1YaCAy" id="7VpGsFQRU1a" role="1YuTPh">
+      <property role="TrG5h" value="attributeImplicitSelect" />
+      <ref role="1YaFvo" to="7ggn:35Jy4LMD1lX" resolve="AttributeImplicitSelect" />
     </node>
   </node>
 </model>
