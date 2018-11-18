@@ -12,13 +12,10 @@
     <import index="tp25" ref="r:00000000-0000-4000-0000-011c89590301(jetbrains.mps.lang.smodel.structure)" />
     <import index="tpee" ref="r:00000000-0000-4000-0000-011c895902ca(jetbrains.mps.baseLanguage.structure)" />
     <import index="7ggn" ref="r:38c3b7db-3776-47fb-ba27-a4f002c4edc7(DclareMPS.structure)" />
-    <import index="lui2" ref="8865b7a8-5271-43d3-884c-6fd1d9cfdd34/java:org.jetbrains.mps.openapi.module(MPS.OpenAPI/)" />
     <import index="t4tl" ref="55d6b6f5-8095-4cd0-a39b-779da8d12940/java:org.modelingvalue.dclare.mps(DclareMPSRuntime/)" />
     <import index="mhbf" ref="8865b7a8-5271-43d3-884c-6fd1d9cfdd34/java:org.jetbrains.mps.openapi.model(MPS.OpenAPI/)" />
-    <import index="c17a" ref="8865b7a8-5271-43d3-884c-6fd1d9cfdd34/java:org.jetbrains.mps.openapi.language(MPS.OpenAPI/)" />
     <import index="tpeu" ref="r:00000000-0000-4000-0000-011c895902fa(jetbrains.mps.lang.smodel.behavior)" />
     <import index="tpce" ref="r:00000000-0000-4000-0000-011c89590292(jetbrains.mps.lang.structure.structure)" />
-    <import index="tpcu" ref="r:00000000-0000-4000-0000-011c89590282(jetbrains.mps.lang.core.behavior)" />
     <import index="tpcn" ref="r:00000000-0000-4000-0000-011c8959028b(jetbrains.mps.lang.structure.behavior)" />
     <import index="tp3r" ref="r:00000000-0000-4000-0000-011c8959034b(jetbrains.mps.lang.quotation.structure)" />
     <import index="tpck" ref="r:00000000-0000-4000-0000-011c89590288(jetbrains.mps.lang.core.structure)" />
@@ -1187,7 +1184,7 @@
                       <node concept="2pIpSj" id="30GBB6Y_6GS" role="2pJxcM">
                         <ref role="2pIpSl" to="tpee:hqOqNr4" resolve="operation" />
                         <node concept="2pJPED" id="30GBB6Y_6GT" role="2pJxcZ">
-                          <ref role="2pJxaS" to="7ggn:4$MeK2bvRdy" resolve="AttributeCall" />
+                          <ref role="2pJxaS" to="7ggn:4$MeK2bvRdy" resolve="AttributeOperation" />
                           <node concept="2pIpSj" id="30GBB6Y_6GU" role="2pJxcM">
                             <ref role="2pIpSl" to="7ggn:4$MeK2bvUeg" resolve="attribute" />
                             <node concept="36biLy" id="30GBB6Y_6GV" role="2pJxcZ">
@@ -1373,7 +1370,7 @@
               <node concept="3cpWs6" id="30GBB6YOa6$" role="3cqZAp">
                 <node concept="2pJPEk" id="30GBB6YOaxo" role="3cqZAk">
                   <node concept="2pJPED" id="30GBB6YOaUe" role="2pJPEn">
-                    <ref role="2pJxaS" to="7ggn:4$MeK2bvRdy" resolve="AttributeCall" />
+                    <ref role="2pJxaS" to="7ggn:4$MeK2bvRdy" resolve="AttributeOperation" />
                     <node concept="2pIpSj" id="30GBB6YObKd" role="2pJxcM">
                       <ref role="2pIpSl" to="7ggn:4$MeK2bvUeg" resolve="attribute" />
                       <node concept="36biLy" id="30GBB6YOcc4" role="2pJxcZ">
@@ -1744,7 +1741,7 @@
                 <node concept="2pIpSj" id="30GBB6YAFil" role="2pJxcM">
                   <ref role="2pIpSl" to="tpee:hqOqNr4" resolve="operation" />
                   <node concept="2pJPED" id="30GBB6YAFjZ" role="2pJxcZ">
-                    <ref role="2pJxaS" to="7ggn:4$MeK2bvRdy" resolve="AttributeCall" />
+                    <ref role="2pJxaS" to="7ggn:4$MeK2bvRdy" resolve="AttributeOperation" />
                     <node concept="2pIpSj" id="30GBB6YAFkz" role="2pJxcM">
                       <ref role="2pIpSl" to="7ggn:4$MeK2bvUeg" resolve="attribute" />
                       <node concept="36biLy" id="30GBB6YAFkX" role="2pJxcZ">
@@ -1857,12 +1854,12 @@
           <node concept="3cpWsn" id="hEwJ4yJ" role="3cpWs9">
             <property role="TrG5h" value="ref" />
             <node concept="3Tqbb2" id="hEwJ4yK" role="1tU5fm">
-              <ref role="ehGHo" to="7ggn:4$MeK2bvRdy" resolve="AttributeCall" />
+              <ref role="ehGHo" to="7ggn:4$MeK2bvRdy" resolve="AttributeOperation" />
             </node>
             <node concept="2ShNRf" id="hEwJ4yL" role="33vP2m">
               <node concept="3zrR0B" id="hEwJ4yM" role="2ShVmc">
                 <node concept="3Tqbb2" id="hEwJ4yN" role="3zrR0E">
-                  <ref role="ehGHo" to="7ggn:4$MeK2bvRdy" resolve="AttributeCall" />
+                  <ref role="ehGHo" to="7ggn:4$MeK2bvRdy" resolve="AttributeOperation" />
                 </node>
               </node>
             </node>
@@ -2014,7 +2011,7 @@
     </node>
   </node>
   <node concept="13h7C7" id="30GBB6YI50h">
-    <ref role="13h7C2" to="7ggn:4$MeK2bvRdy" resolve="AttributeCall" />
+    <ref role="13h7C2" to="7ggn:4$MeK2bvRdy" resolve="AttributeOperation" />
     <node concept="13i0hz" id="hEwIBRP" role="13h7CS">
       <property role="13i0is" value="false" />
       <property role="TrG5h" value="getVariableExpectedName" />

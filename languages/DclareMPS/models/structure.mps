@@ -157,7 +157,7 @@
   </node>
   <node concept="1TIwiD" id="4$MeK2bvRdy">
     <property role="EcuMT" value="5274342987130696546" />
-    <property role="TrG5h" value="AttributeCall" />
+    <property role="TrG5h" value="AttributeOperation" />
     <ref role="1TJDcQ" to="tpee:fz7vLUo" resolve="VariableReference" />
     <node concept="PrWs8" id="4$MeK2bvUee" role="PzmwI">
       <ref role="PrY4T" to="tpee:hqOqG0K" resolve="IOperation" />
@@ -256,6 +256,19 @@
     </node>
     <node concept="PrWs8" id="fZiK5FHvrE" role="PzmwI">
       <ref role="PrY4T" to="tpee:hqOqG0K" resolve="IOperation" />
+    </node>
+  </node>
+  <node concept="1TIwiD" id="4wbMdoKd7ev">
+    <property role="EcuMT" value="5191463817731928991" />
+    <property role="TrG5h" value="AttributeReference" />
+    <ref role="1TJDcQ" to="tpee:fz7vLUo" resolve="VariableReference" />
+    <node concept="1TJgyj" id="4wbMdoKd7ex" role="1TKVEi">
+      <property role="IQ2ns" value="5191463817731928993" />
+      <property role="20lmBu" value="reference" />
+      <property role="20kJfa" value="attribute" />
+      <property role="20lbJX" value="1" />
+      <ref role="20lvS9" node="4$MeK2bmw9s" resolve="Attribute" />
+      <ref role="20ksaX" to="tpee:fzcqZ_w" resolve="variableDeclaration" />
     </node>
   </node>
 </model>

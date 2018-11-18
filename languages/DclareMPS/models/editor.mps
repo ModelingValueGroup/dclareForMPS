@@ -14,7 +14,6 @@
     <import index="tp3r" ref="r:00000000-0000-4000-0000-011c8959034b(jetbrains.mps.lang.quotation.structure)" />
     <import index="tpce" ref="r:00000000-0000-4000-0000-011c89590292(jetbrains.mps.lang.structure.structure)" />
     <import index="tpee" ref="r:00000000-0000-4000-0000-011c895902ca(jetbrains.mps.baseLanguage.structure)" />
-    <import index="tpdr" ref="r:00000000-0000-4000-0000-011c895902a3(jetbrains.mps.lang.actions.behavior)" />
     <import index="tpek" ref="r:00000000-0000-4000-0000-011c895902c0(jetbrains.mps.baseLanguage.behavior)" />
     <import index="z1c3" ref="6ed54515-acc8-4d1e-a16c-9fd6cfe951ea/java:jetbrains.mps.project(MPS.Core/)" />
     <import index="w1kc" ref="6ed54515-acc8-4d1e-a16c-9fd6cfe951ea/java:jetbrains.mps.smodel(MPS.Core/)" />
@@ -382,7 +381,7 @@
     </node>
   </node>
   <node concept="24kQdi" id="4$MeK2bvUKZ">
-    <ref role="1XX52x" to="7ggn:4$MeK2bvRdy" resolve="AttributeCall" />
+    <ref role="1XX52x" to="7ggn:4$MeK2bvRdy" resolve="AttributeOperation" />
     <node concept="1iCGBv" id="4$MeK2bvUL1" role="2wV5jI">
       <ref role="1NtTu8" to="7ggn:4$MeK2bvUeg" resolve="attribute" />
       <node concept="1sVBvm" id="4$MeK2bvUL3" role="1sWHZn">
@@ -831,7 +830,7 @@
     </node>
   </node>
   <node concept="IW6AY" id="5oSrT6JjrFk">
-    <ref role="aqKnT" to="7ggn:4$MeK2bvRdy" resolve="AttributeCall" />
+    <ref role="aqKnT" to="7ggn:4$MeK2bvRdy" resolve="AttributeOperation" />
     <node concept="1Qtc8_" id="5oSrT6JjrFl" role="IW6Ez">
       <node concept="3cWJ9i" id="5oSrT6JjrFr" role="1Qtc8$">
         <node concept="CtIbL" id="5oSrT6JjrFz" role="CtIbM">
@@ -1179,6 +1178,18 @@
       <ref role="1NtTu8" to="7ggn:35Jy4LMD1u3" resolve="attribute" />
       <node concept="1sVBvm" id="7VpGsFQROY8" role="1sWHZn">
         <node concept="3F0A7n" id="7VpGsFQROYi" role="2wV5jI">
+          <property role="1Intyy" value="true" />
+          <ref role="1NtTu8" to="tpck:h0TrG11" resolve="name" />
+        </node>
+      </node>
+    </node>
+  </node>
+  <node concept="24kQdi" id="4wbMdoKd7eY">
+    <ref role="1XX52x" to="7ggn:4wbMdoKd7ev" resolve="AttributeReference" />
+    <node concept="1iCGBv" id="4wbMdoKd7f0" role="2wV5jI">
+      <ref role="1NtTu8" to="7ggn:4wbMdoKd7ex" resolve="attribute" />
+      <node concept="1sVBvm" id="4wbMdoKd7f1" role="1sWHZn">
+        <node concept="3F0A7n" id="4wbMdoKd7f2" role="2wV5jI">
           <property role="1Intyy" value="true" />
           <ref role="1NtTu8" to="tpck:h0TrG11" resolve="name" />
         </node>
