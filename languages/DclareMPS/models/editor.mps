@@ -22,6 +22,7 @@
     <import index="tp25" ref="r:00000000-0000-4000-0000-011c89590301(jetbrains.mps.lang.smodel.structure)" implicit="true" />
     <import index="tpcn" ref="r:00000000-0000-4000-0000-011c8959028b(jetbrains.mps.lang.structure.behavior)" implicit="true" />
     <import index="tpck" ref="r:00000000-0000-4000-0000-011c89590288(jetbrains.mps.lang.core.structure)" implicit="true" />
+    <import index="tpco" ref="r:00000000-0000-4000-0000-011c89590284(jetbrains.mps.lang.core.editor)" implicit="true" />
   </imports>
   <registry>
     <language id="13744753-c81f-424a-9c1b-cf8943bf4e86" name="jetbrains.mps.lang.sharedConcepts">
@@ -80,6 +81,9 @@
       </concept>
       <concept id="1186403694788" name="jetbrains.mps.lang.editor.structure.ColorStyleClassItem" flags="ln" index="VaVBg">
         <property id="1186403713874" name="color" index="Vb096" />
+      </concept>
+      <concept id="1186403751766" name="jetbrains.mps.lang.editor.structure.FontStyleStyleClassItem" flags="ln" index="Vb9p2">
+        <property id="1186403771423" name="style" index="Vbekb" />
       </concept>
       <concept id="1186404549998" name="jetbrains.mps.lang.editor.structure.ForegroundColorStyleClassItem" flags="ln" index="VechU" />
       <concept id="1186414536763" name="jetbrains.mps.lang.editor.structure.BooleanStyleSheetItem" flags="ln" index="VOi$J">
@@ -854,13 +858,6 @@
       </node>
     </node>
   </node>
-  <node concept="24kQdi" id="4Y8BM43ogqa">
-    <ref role="1XX52x" to="7ggn:4Y8BM43ogq1" resolve="Attributes" />
-    <node concept="3F0ifn" id="4Y8BM43ogqc" role="2wV5jI">
-      <property role="3F0ifm" value="attributes" />
-      <ref role="1k5W1q" to="tpen:hgVS8CF" resolve="KeyWord" />
-    </node>
-  </node>
   <node concept="24kQdi" id="6HWpSUEvRz5">
     <ref role="1XX52x" to="7ggn:29R9$zZUovC" resolve="Rule" />
     <node concept="3EZMnI" id="5UYpxeVafB8" role="2wV5jI">
@@ -1193,6 +1190,16 @@
           <property role="1Intyy" value="true" />
           <ref role="1NtTu8" to="tpck:h0TrG11" resolve="name" />
         </node>
+      </node>
+    </node>
+  </node>
+  <node concept="24kQdi" id="4wbMdoKMegI">
+    <ref role="1XX52x" to="7ggn:4Y8BM43ogq1" resolve="Attributes" />
+    <node concept="PMmxH" id="2wdLO7KhY6P" role="2wV5jI">
+      <property role="1cu_pB" value="0" />
+      <ref role="PMmxG" to="tpco:2wZex4PafBj" resolve="alias" />
+      <node concept="Vb9p2" id="2wdLO7KhY6S" role="3F10Kt">
+        <property role="Vbekb" value="BOLD" />
       </node>
     </node>
   </node>
