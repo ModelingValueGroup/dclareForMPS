@@ -306,7 +306,7 @@
       <property role="IQ2ns" value="4435611260584155570" />
       <property role="20lmBu" value="reference" />
       <property role="20kJfa" value="class" />
-      <property role="20lbJX" value="1" />
+      <property role="20lbJX" value="0..1" />
       <ref role="20lvS9" node="3Qetf3cPkTM" resolve="ClassRuleSet" />
     </node>
   </node>

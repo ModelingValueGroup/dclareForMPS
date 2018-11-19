@@ -4,4 +4,6 @@ public interface SClassObject {
 
     SClass getDClass();
 
+    Object[] getIdentity();
+
 }

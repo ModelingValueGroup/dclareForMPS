@@ -1342,17 +1342,12 @@
                           </node>
                           <node concept="2qgKlT" id="4wbMdoKdaUA" role="2OqNvi">
                             <ref role="37wK5l" to="tpek:hKBOZqh" resolve="isSupersetOf" />
-                            <node concept="10QFUN" id="4wbMdoKdaUB" role="37wK5m">
-                              <node concept="3Tqbb2" id="4wbMdoKdaUC" role="10QFUM">
-                                <ref role="ehGHo" to="tpee:fz3vP1H" resolve="Type" />
+                            <node concept="2OqwBi" id="4wbMdoKdhLe" role="37wK5m">
+                              <node concept="37vLTw" id="4wbMdoKdhn_" role="2Oq$k0">
+                                <ref role="3cqZAo" node="4wbMdoKd9i0" resolve="context" />
                               </node>
-                              <node concept="2OqwBi" id="4wbMdoKdhLe" role="10QFUP">
-                                <node concept="37vLTw" id="4wbMdoKdhn_" role="2Oq$k0">
-                                  <ref role="3cqZAo" node="4wbMdoKd9i0" resolve="context" />
-                                </node>
-                                <node concept="2qgKlT" id="4wbMdoKdidK" role="2OqNvi">
-                                  <ref role="37wK5l" to="us1s:29R9$zZWsRH" resolve="getContextType" />
-                                </node>
+                              <node concept="2qgKlT" id="4wbMdoKdidK" role="2OqNvi">
+                                <ref role="37wK5l" to="us1s:29R9$zZWsRH" resolve="getContextType" />
                               </node>
                             </node>
                           </node>
@@ -1537,6 +1532,28 @@
             <node concept="2c44tf" id="4wbMdoKR8Wi" role="2Oq$k0">
               <node concept="3uibUv" id="4wbMdoKR9Ii" role="2c44tc">
                 <ref role="3uigEE" to="lui2:~SRepository" resolve="SRepository" />
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="3clFbJ" id="745HIYNAUkH" role="3cqZAp">
+          <node concept="3clFbS" id="745HIYNAUkJ" role="3clFbx">
+            <node concept="3cpWs6" id="745HIYNAX1P" role="3cqZAp">
+              <node concept="3clFbT" id="745HIYNAXtm" role="3cqZAk">
+                <property role="3clFbU" value="true" />
+              </node>
+            </node>
+          </node>
+          <node concept="2OqwBi" id="745HIYNAVBT" role="3clFbw">
+            <node concept="2pJPEk" id="745HIYNAUHF" role="2Oq$k0">
+              <node concept="2pJPED" id="745HIYNAV64" role="2pJPEn">
+                <ref role="2pJxaS" to="7ggn:3Qetf3cPPAL" resolve="ClassRuleSetType" />
+              </node>
+            </node>
+            <node concept="2qgKlT" id="745HIYNAWa9" role="2OqNvi">
+              <ref role="37wK5l" to="tpek:hKBOZqh" resolve="isSupersetOf" />
+              <node concept="37vLTw" id="745HIYNAWAA" role="37wK5m">
+                <ref role="3cqZAo" node="4wbMdoKMOMp" resolve="type" />
               </node>
             </node>
           </node>

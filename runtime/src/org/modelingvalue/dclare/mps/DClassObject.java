@@ -69,4 +69,9 @@ public class DClassObject extends DObject<SClassObject> implements SClassObject 
         return original().getDClass();
     }
 
+    @Override
+    public Object[] getIdentity() {
+        return original().getIdentity();
+    }
+
 }
