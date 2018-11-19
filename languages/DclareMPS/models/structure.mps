@@ -25,6 +25,7 @@
         <property id="4628067390765956802" name="abstract" index="R5$K7" />
         <property id="5092175715804935370" name="conceptAlias" index="34LRSv" />
         <child id="1071489727083" name="linkDeclaration" index="1TKVEi" />
+        <child id="1071489727084" name="propertyDeclaration" index="1TKVEl" />
       </concept>
       <concept id="1169125989551" name="jetbrains.mps.lang.structure.structure.InterfaceConceptDeclaration" flags="ig" index="PlHQZ" />
       <concept id="1169127622168" name="jetbrains.mps.lang.structure.structure.InterfaceConceptReference" flags="ig" index="PrWs8">
@@ -43,6 +44,10 @@
         <reference id="1071489389519" name="extends" index="1TJDcQ" />
         <child id="6327362524875300597" name="icon" index="rwd14" />
         <child id="1169129564478" name="implements" index="PzmwI" />
+      </concept>
+      <concept id="1071489288299" name="jetbrains.mps.lang.structure.structure.PropertyDeclaration" flags="ig" index="1TJgyi">
+        <property id="241647608299431129" name="propertyId" index="IQ2nx" />
+        <reference id="1082985295845" name="dataType" index="AX2Wp" />
       </concept>
       <concept id="1071489288298" name="jetbrains.mps.lang.structure.structure.LinkDeclaration" flags="ig" index="1TJgyj">
         <property id="1071599776563" name="role" index="20kJfa" />
@@ -153,6 +158,11 @@
     <ref role="1TJDcQ" to="tpee:fz3uBXI" resolve="VariableDeclaration" />
     <node concept="PrWs8" id="6HWpSUEwIUY" role="PzmwI">
       <ref role="PrY4T" node="61p65V8x$6I" resolve="ThisContext" />
+    </node>
+    <node concept="1TJgyi" id="3Qetf3dy0jT" role="1TKVEl">
+      <property role="IQ2nx" value="4435611260595733753" />
+      <property role="TrG5h" value="composite" />
+      <ref role="AX2Wp" to="tpck:fKAQMTB" resolve="boolean" />
     </node>
   </node>
   <node concept="1TIwiD" id="4$MeK2bvRdy">
@@ -269,6 +279,59 @@
       <property role="20lbJX" value="1" />
       <ref role="20lvS9" node="4$MeK2bmw9s" resolve="Attribute" />
       <ref role="20ksaX" to="tpee:fzcqZ_w" resolve="variableDeclaration" />
+    </node>
+  </node>
+  <node concept="1TIwiD" id="3Qetf3cPkTM">
+    <property role="EcuMT" value="4435611260584021618" />
+    <property role="TrG5h" value="ClassRuleSet" />
+    <property role="19KtqR" value="true" />
+    <property role="34LRSv" value="Class RuleSet" />
+    <ref role="1TJDcQ" node="29R9$zZUovD" resolve="RuleSet" />
+    <node concept="1TJgyj" id="3Qetf3cPp0s" role="1TKVEi">
+      <property role="IQ2ns" value="4435611260584038428" />
+      <property role="20lmBu" value="aggregation" />
+      <property role="20kJfa" value="extends" />
+      <property role="20lbJX" value="0..n" />
+      <ref role="20lvS9" node="3Qetf3dC4N5" resolve="ClassRuleSetReference" />
+    </node>
+    <node concept="1QGGSu" id="3Qetf3diZ3y" role="rwd14">
+      <property role="1iqoE4" value="${module}/icons/Dclare.png" />
+    </node>
+  </node>
+  <node concept="1TIwiD" id="3Qetf3cPPAL">
+    <property role="EcuMT" value="4435611260584155569" />
+    <property role="TrG5h" value="ClassRuleSetType" />
+    <ref role="1TJDcQ" to="tpee:fz3vP1H" resolve="Type" />
+    <node concept="1TJgyj" id="3Qetf3cPPAM" role="1TKVEi">
+      <property role="IQ2ns" value="4435611260584155570" />
+      <property role="20lmBu" value="reference" />
+      <property role="20kJfa" value="class" />
+      <property role="20lbJX" value="1" />
+      <ref role="20lvS9" node="3Qetf3cPkTM" resolve="ClassRuleSet" />
+    </node>
+  </node>
+  <node concept="1TIwiD" id="3Qetf3d9slq">
+    <property role="EcuMT" value="4435611260589294938" />
+    <property role="TrG5h" value="NewClassRuleSetInstance" />
+    <ref role="1TJDcQ" to="tpee:fz3vP1J" resolve="Expression" />
+    <node concept="1TJgyj" id="3Qetf3d9slr" role="1TKVEi">
+      <property role="IQ2ns" value="4435611260589294939" />
+      <property role="20lmBu" value="reference" />
+      <property role="20kJfa" value="class" />
+      <property role="20lbJX" value="1" />
+      <ref role="20lvS9" node="3Qetf3cPkTM" resolve="ClassRuleSet" />
+    </node>
+  </node>
+  <node concept="1TIwiD" id="3Qetf3dC4N5">
+    <property role="EcuMT" value="4435611260597324997" />
+    <property role="TrG5h" value="ClassRuleSetReference" />
+    <ref role="1TJDcQ" to="tpck:gw2VY9q" resolve="BaseConcept" />
+    <node concept="1TJgyj" id="3Qetf3dC4N6" role="1TKVEi">
+      <property role="IQ2ns" value="4435611260597324998" />
+      <property role="20lmBu" value="reference" />
+      <property role="20kJfa" value="class" />
+      <property role="20lbJX" value="1" />
+      <ref role="20lvS9" node="3Qetf3cPkTM" resolve="ClassRuleSet" />
     </node>
   </node>
 </model>

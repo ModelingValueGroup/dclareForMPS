@@ -14,7 +14,7 @@
     <import index="tpcn" ref="r:00000000-0000-4000-0000-011c8959028b(jetbrains.mps.lang.structure.behavior)" />
     <import index="tp3r" ref="r:00000000-0000-4000-0000-011c8959034b(jetbrains.mps.lang.quotation.structure)" />
     <import index="t4tl" ref="55d6b6f5-8095-4cd0-a39b-779da8d12940/java:org.modelingvalue.dclare.mps(DclareMPSRuntime/)" />
-    <import index="7ggn" ref="r:38c3b7db-3776-47fb-ba27-a4f002c4edc7(DclareMPS.structure)" implicit="true" />
+    <import index="7ggn" ref="r:38c3b7db-3776-47fb-ba27-a4f002c4edc7(DclareMPS.structure)" />
     <import index="us1s" ref="r:e7d7a1fa-fb58-4cf6-bc1d-e5ed722e0c61(DclareMPS.behavior)" implicit="true" />
     <import index="tpck" ref="r:00000000-0000-4000-0000-011c89590288(jetbrains.mps.lang.core.structure)" implicit="true" />
     <import index="wyt6" ref="6354ebe7-c22a-4a0f-ac54-50b52ab9b065/java:java.lang(JDK/)" implicit="true" />
@@ -132,6 +132,22 @@
       <concept id="1196350785112" name="jetbrains.mps.lang.quotation.structure.Antiquotation" flags="ng" index="2c44te" />
       <concept id="1196350785113" name="jetbrains.mps.lang.quotation.structure.Quotation" flags="nn" index="2c44tf">
         <child id="1196350785114" name="quotedNode" index="2c44tc" />
+      </concept>
+      <concept id="5455284157994012186" name="jetbrains.mps.lang.quotation.structure.NodeBuilderInitLink" flags="ng" index="2pIpSj">
+        <reference id="5455284157994012188" name="link" index="2pIpSl" />
+      </concept>
+      <concept id="5455284157993911097" name="jetbrains.mps.lang.quotation.structure.NodeBuilderInitPart" flags="ng" index="2pJxcK">
+        <child id="5455284157993911094" name="expression" index="2pJxcZ" />
+      </concept>
+      <concept id="5455284157993863837" name="jetbrains.mps.lang.quotation.structure.NodeBuilder" flags="nn" index="2pJPEk">
+        <child id="5455284157993863838" name="quotedNode" index="2pJPEn" />
+      </concept>
+      <concept id="5455284157993863840" name="jetbrains.mps.lang.quotation.structure.NodeBuilderNode" flags="nn" index="2pJPED">
+        <reference id="5455284157993910961" name="concept" index="2pJxaS" />
+        <child id="5455284157993911099" name="values" index="2pJxcM" />
+      </concept>
+      <concept id="8182547171709752110" name="jetbrains.mps.lang.quotation.structure.NodeBuilderExpression" flags="nn" index="36biLy">
+        <child id="8182547171709752112" name="expression" index="36biLW" />
       </concept>
     </language>
     <language id="7a5dda62-9140-4668-ab76-d5ed1746f2b2" name="jetbrains.mps.lang.typesystem">
@@ -1458,6 +1474,44 @@
     <node concept="1YaCAy" id="7VpGsFQRU1a" role="1YuTPh">
       <property role="TrG5h" value="attributeImplicitSelect" />
       <ref role="1YaFvo" to="7ggn:35Jy4LMD1lX" resolve="AttributeImplicitSelect" />
+    </node>
+  </node>
+  <node concept="1YbPZF" id="3Qetf3d9sml">
+    <property role="TrG5h" value="typeof_NewClassInstance" />
+    <node concept="3clFbS" id="3Qetf3d9smm" role="18ibNy">
+      <node concept="1Z5TYs" id="3Qetf3d9sUc" role="3cqZAp">
+        <node concept="mw_s8" id="3Qetf3d9sUu" role="1ZfhKB">
+          <node concept="2pJPEk" id="3Qetf3d9sVd" role="mwGJk">
+            <node concept="2pJPED" id="3Qetf3d9sVJ" role="2pJPEn">
+              <ref role="2pJxaS" to="7ggn:3Qetf3cPPAL" resolve="ClassRuleSetType" />
+              <node concept="2pIpSj" id="3Qetf3d9sWy" role="2pJxcM">
+                <ref role="2pIpSl" to="7ggn:3Qetf3cPPAM" resolve="class" />
+                <node concept="36biLy" id="3Qetf3d9sWV" role="2pJxcZ">
+                  <node concept="2OqwBi" id="3Qetf3d9t6D" role="36biLW">
+                    <node concept="1YBJjd" id="3Qetf3d9sX6" role="2Oq$k0">
+                      <ref role="1YBMHb" node="3Qetf3d9smo" resolve="newClassInstance" />
+                    </node>
+                    <node concept="3TrEf2" id="3Qetf3d9tf$" role="2OqNvi">
+                      <ref role="3Tt5mk" to="7ggn:3Qetf3d9slr" resolve="class" />
+                    </node>
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="mw_s8" id="3Qetf3d9sUf" role="1ZfhK$">
+          <node concept="1Z2H0r" id="3Qetf3d9sms" role="mwGJk">
+            <node concept="1YBJjd" id="3Qetf3d9soe" role="1Z2MuG">
+              <ref role="1YBMHb" node="3Qetf3d9smo" resolve="newClassInstance" />
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+    <node concept="1YaCAy" id="3Qetf3d9smo" role="1YuTPh">
+      <property role="TrG5h" value="newClassInstance" />
+      <ref role="1YaFvo" to="7ggn:3Qetf3d9slq" resolve="NewClassRuleSetInstance" />
     </node>
   </node>
 </model>

@@ -50,6 +50,10 @@
         <reference id="1144433194310" name="classConcept" index="1Pybhc" />
       </concept>
       <concept id="1070534058343" name="jetbrains.mps.baseLanguage.structure.NullLiteral" flags="nn" index="10Nm6u" />
+      <concept id="1070534644030" name="jetbrains.mps.baseLanguage.structure.BooleanType" flags="in" index="10P_77" />
+      <concept id="1070534760951" name="jetbrains.mps.baseLanguage.structure.ArrayType" flags="in" index="10Q1$e">
+        <child id="1070534760952" name="componentType" index="10Q1$1" />
+      </concept>
       <concept id="1070534934090" name="jetbrains.mps.baseLanguage.structure.CastExpression" flags="nn" index="10QFUN">
         <child id="1070534934091" name="type" index="10QFUM" />
         <child id="1070534934092" name="expression" index="10QFUP" />
@@ -99,6 +103,9 @@
       </concept>
       <concept id="1068580123136" name="jetbrains.mps.baseLanguage.structure.StatementList" flags="sn" stub="5293379017992965193" index="3clFbS">
         <child id="1068581517665" name="statement" index="3cqZAp" />
+      </concept>
+      <concept id="1068580123137" name="jetbrains.mps.baseLanguage.structure.BooleanConstant" flags="nn" index="3clFbT">
+        <property id="1068580123138" name="value" index="3clFbU" />
       </concept>
       <concept id="1068580320020" name="jetbrains.mps.baseLanguage.structure.IntegerConstant" flags="nn" index="3cmrfG">
         <property id="1068580320021" name="value" index="3cmrfH" />
@@ -202,12 +209,15 @@
       </node>
       <node concept="2ShNRf" id="2GrW9c4eWaM" role="33vP2m">
         <node concept="1pGfFk" id="2GrW9c4eW9V" role="2ShVmc">
-          <ref role="37wK5l" to="t4tl:~DAttribute.&lt;init&gt;(java.lang.Object,java.lang.String,java.lang.Object,org.modelingvalue.collections.util.QuadConsumer)" resolve="DAttribute" />
+          <ref role="37wK5l" to="t4tl:~DAttribute.&lt;init&gt;(java.lang.Object,java.lang.String,boolean,java.lang.Object,org.modelingvalue.collections.util.QuadConsumer)" resolve="DAttribute" />
           <node concept="Xl_RD" id="1pPEdD75Tle" role="37wK5m">
             <property role="Xl_RC" value="&lt;PATTERN_TYPE&gt;" />
           </node>
           <node concept="Xl_RD" id="4wbMdoJjL2k" role="37wK5m">
             <property role="Xl_RC" value="patternType" />
+          </node>
+          <node concept="3clFbT" id="3Qetf3dxY8D" role="37wK5m">
+            <property role="3clFbU" value="false" />
           </node>
           <node concept="Xl_RD" id="2ADKImQ6Cxp" role="37wK5m">
             <property role="Xl_RC" value="" />
@@ -497,6 +507,10 @@
         <property role="TrG5h" value="name" />
         <node concept="17QB3L" id="4wbMdoJjOZH" role="1tU5fm" />
       </node>
+      <node concept="37vLTG" id="3Qetf3dxTNo" role="3clF46">
+        <property role="TrG5h" value="composite" />
+        <node concept="10P_77" id="3Qetf3dxTRx" role="1tU5fm" />
+      </node>
       <node concept="37vLTG" id="1lQ5DPQtsij" role="3clF46">
         <property role="TrG5h" value="object" />
         <node concept="3uibUv" id="1lQ5DPQ_8lM" role="1tU5fm">
@@ -509,12 +523,15 @@
             <node concept="2OqwBi" id="1lQ5DPQtwTS" role="10QFUP">
               <node concept="2YIFZM" id="1lQ5DPQtwia" role="2Oq$k0">
                 <ref role="1Pybhc" to="t4tl:~DAttribute" resolve="DAttribute" />
-                <ref role="37wK5l" to="t4tl:~DAttribute.of(java.lang.Object,java.lang.String):org.modelingvalue.dclare.mps.DAttribute" resolve="of" />
+                <ref role="37wK5l" to="t4tl:~DAttribute.of(java.lang.Object,java.lang.String,boolean):org.modelingvalue.dclare.mps.DAttribute" resolve="of" />
                 <node concept="37vLTw" id="1lQ5DPQtwl4" role="37wK5m">
                   <ref role="3cqZAo" node="1lQ5DPQtstn" resolve="attributeId" />
                 </node>
                 <node concept="37vLTw" id="4wbMdoJjP92" role="37wK5m">
                   <ref role="3cqZAo" node="4wbMdoJjOKU" resolve="name" />
+                </node>
+                <node concept="37vLTw" id="3Qetf3dxU10" role="37wK5m">
+                  <ref role="3cqZAo" node="3Qetf3dxTNo" resolve="composite" />
                 </node>
               </node>
               <node concept="liA8E" id="1lQ5DPQtxzb" role="2OqNvi">
@@ -554,6 +571,10 @@
         <property role="TrG5h" value="name" />
         <node concept="17QB3L" id="4wbMdoJjOXu" role="1tU5fm" />
       </node>
+      <node concept="37vLTG" id="3Qetf3dxVkN" role="3clF46">
+        <property role="TrG5h" value="composite" />
+        <node concept="10P_77" id="3Qetf3dxVoy" role="1tU5fm" />
+      </node>
       <node concept="37vLTG" id="1lQ5DPQt_ob" role="3clF46">
         <property role="TrG5h" value="object" />
         <node concept="3uibUv" id="1lQ5DPQ_8op" role="1tU5fm">
@@ -571,12 +592,15 @@
           <node concept="2OqwBi" id="1lQ5DPQt_of" role="3clFbG">
             <node concept="2YIFZM" id="1lQ5DPQt_og" role="2Oq$k0">
               <ref role="1Pybhc" to="t4tl:~DAttribute" resolve="DAttribute" />
-              <ref role="37wK5l" to="t4tl:~DAttribute.of(java.lang.Object,java.lang.String):org.modelingvalue.dclare.mps.DAttribute" resolve="of" />
+              <ref role="37wK5l" to="t4tl:~DAttribute.of(java.lang.Object,java.lang.String,boolean):org.modelingvalue.dclare.mps.DAttribute" resolve="of" />
               <node concept="37vLTw" id="1lQ5DPQt_oh" role="37wK5m">
                 <ref role="3cqZAo" node="1lQ5DPQt_o9" resolve="attributeId" />
               </node>
               <node concept="37vLTw" id="4wbMdoJjPkh" role="37wK5m">
                 <ref role="3cqZAo" node="4wbMdoJjOTa" resolve="name" />
+              </node>
+              <node concept="37vLTw" id="3Qetf3dxVzT" role="37wK5m">
+                <ref role="3cqZAo" node="3Qetf3dxVkN" resolve="composite" />
               </node>
             </node>
             <node concept="liA8E" id="1lQ5DPQt_oi" role="2OqNvi">
@@ -742,27 +766,6 @@
       <node concept="H_c77" id="7fAqG1ai96" role="3clF45" />
       <node concept="3Tm1VV" id="7fAqG1ai97" role="1B3o_S" />
     </node>
-    <node concept="2tJIrI" id="56O9viirgpu" role="jymVt" />
-    <node concept="2YIFZL" id="2_8jVv8mttu" role="jymVt">
-      <property role="TrG5h" value="dModel" />
-      <node concept="3Tm1VV" id="2_8jVv8mttv" role="1B3o_S" />
-      <node concept="3clFbS" id="2_8jVv8mttw" role="3clF47">
-        <node concept="3clFbF" id="2_8jVv8mttx" role="3cqZAp">
-          <node concept="2YIFZM" id="2_8jVv8mttz" role="3clFbG">
-            <ref role="1Pybhc" to="t4tl:~DModel" resolve="DModel" />
-            <ref role="37wK5l" to="t4tl:~DModel.wrap(org.jetbrains.mps.openapi.model.SModel):org.modelingvalue.dclare.mps.DModel" resolve="wrap" />
-            <node concept="37vLTw" id="2_8jVv8mtt$" role="37wK5m">
-              <ref role="3cqZAo" node="2_8jVv8mttD" resolve="model" />
-            </node>
-          </node>
-        </node>
-      </node>
-      <node concept="37vLTG" id="2_8jVv8mttD" role="3clF46">
-        <property role="TrG5h" value="model" />
-        <node concept="H_c77" id="2_8jVv8mtCs" role="1tU5fm" />
-      </node>
-      <node concept="H_c77" id="2_8jVv8mtJ0" role="3clF45" />
-    </node>
     <node concept="2tJIrI" id="2_8jVv8mtqm" role="jymVt" />
     <node concept="2YIFZL" id="MxZDaxdenI" role="jymVt">
       <property role="TrG5h" value="dNode" />
@@ -870,6 +873,105 @@
       <node concept="37vLTG" id="2ADKImQ6r5F" role="3clF46">
         <property role="TrG5h" value="builderType" />
         <node concept="17QB3L" id="2ADKImQ6rkP" role="1tU5fm" />
+      </node>
+    </node>
+    <node concept="2tJIrI" id="3Qetf3dy94$" role="jymVt" />
+    <node concept="2YIFZL" id="3Qetf3dBkKx" role="jymVt">
+      <property role="TrG5h" value="sClass" />
+      <property role="od$2w" value="false" />
+      <property role="DiZV1" value="false" />
+      <property role="2aFKle" value="false" />
+      <node concept="3clFbS" id="3Qetf3dBkK$" role="3clF47">
+        <node concept="3clFbF" id="3Qetf3dBlui" role="3cqZAp">
+          <node concept="2YIFZM" id="3Qetf3dBlvO" role="3clFbG">
+            <ref role="37wK5l" to="t4tl:~SClass.of(java.lang.Object,java.lang.String,org.modelingvalue.dclare.mps.SClass...):org.modelingvalue.dclare.mps.SClass" resolve="of" />
+            <ref role="1Pybhc" to="t4tl:~SClass" resolve="SClass" />
+            <node concept="37vLTw" id="3Qetf3dBlyc" role="37wK5m">
+              <ref role="3cqZAo" node="3Qetf3dBlad" resolve="classId" />
+            </node>
+            <node concept="37vLTw" id="3Qetf3dBlBV" role="37wK5m">
+              <ref role="3cqZAo" node="3Qetf3dBlcn" resolve="name" />
+            </node>
+            <node concept="37vLTw" id="3Qetf3dBlFm" role="37wK5m">
+              <ref role="3cqZAo" node="3Qetf3dBljs" resolve="supers" />
+            </node>
+          </node>
+        </node>
+      </node>
+      <node concept="3Tm1VV" id="3Qetf3dBklf" role="1B3o_S" />
+      <node concept="3uibUv" id="3Qetf3dBkJ3" role="3clF45">
+        <ref role="3uigEE" to="t4tl:~SClass" resolve="SClass" />
+      </node>
+      <node concept="37vLTG" id="3Qetf3dBlad" role="3clF46">
+        <property role="TrG5h" value="classId" />
+        <node concept="3uibUv" id="3Qetf3dBlac" role="1tU5fm">
+          <ref role="3uigEE" to="wyt6:~Object" resolve="Object" />
+        </node>
+      </node>
+      <node concept="37vLTG" id="3Qetf3dBlcn" role="3clF46">
+        <property role="TrG5h" value="name" />
+        <node concept="17QB3L" id="3Qetf3dBloA" role="1tU5fm" />
+      </node>
+      <node concept="37vLTG" id="3Qetf3dBljs" role="3clF46">
+        <property role="TrG5h" value="supers" />
+        <node concept="10Q1$e" id="3Qetf3dBlmk" role="1tU5fm">
+          <node concept="3uibUv" id="3Qetf3dBlmm" role="10Q1$1">
+            <ref role="3uigEE" to="t4tl:~SClass" resolve="SClass" />
+          </node>
+        </node>
+      </node>
+    </node>
+    <node concept="2tJIrI" id="3Qetf3dBjVM" role="jymVt" />
+    <node concept="2YIFZL" id="3Qetf3dya9w" role="jymVt">
+      <property role="TrG5h" value="dObject" />
+      <property role="od$2w" value="false" />
+      <property role="DiZV1" value="false" />
+      <property role="2aFKle" value="false" />
+      <node concept="3clFbS" id="3Qetf3dya9z" role="3clF47">
+        <node concept="3clFbF" id="3Qetf3dya$d" role="3cqZAp">
+          <node concept="2YIFZM" id="3Qetf3dymIp" role="3clFbG">
+            <ref role="37wK5l" to="t4tl:~DClassObject.wrap(org.modelingvalue.dclare.mps.SClassObject):org.modelingvalue.dclare.mps.DClassObject" resolve="wrap" />
+            <ref role="1Pybhc" to="t4tl:~DClassObject" resolve="DClassObject" />
+            <node concept="2ShNRf" id="3Qetf3dymIq" role="37wK5m">
+              <node concept="YeOm9" id="3Qetf3dymIr" role="2ShVmc">
+                <node concept="1Y3b0j" id="3Qetf3dymIs" role="YeSDq">
+                  <property role="2bfB8j" value="true" />
+                  <ref role="1Y3XeK" to="t4tl:~SClassObject" resolve="SClassObject" />
+                  <ref role="37wK5l" to="wyt6:~Object.&lt;init&gt;()" resolve="Object" />
+                  <node concept="3Tm1VV" id="3Qetf3dymIt" role="1B3o_S" />
+                  <node concept="3clFb_" id="3Qetf3dymIu" role="jymVt">
+                    <property role="1EzhhJ" value="false" />
+                    <property role="TrG5h" value="getDClass" />
+                    <property role="DiZV1" value="false" />
+                    <property role="od$2w" value="false" />
+                    <node concept="3Tm1VV" id="3Qetf3dymIv" role="1B3o_S" />
+                    <node concept="3uibUv" id="3Qetf3dymIw" role="3clF45">
+                      <ref role="3uigEE" to="t4tl:~SClass" resolve="SClass" />
+                    </node>
+                    <node concept="3clFbS" id="3Qetf3dymIx" role="3clF47">
+                      <node concept="3clFbF" id="3Qetf3dymIy" role="3cqZAp">
+                        <node concept="37vLTw" id="3Qetf3dymIz" role="3clFbG">
+                          <ref role="3cqZAo" node="3Qetf3dyi_B" resolve="cls" />
+                        </node>
+                      </node>
+                    </node>
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+      <node concept="3Tm1VV" id="3Qetf3dy9Mh" role="1B3o_S" />
+      <node concept="3uibUv" id="3Qetf3dyiwS" role="3clF45">
+        <ref role="3uigEE" to="t4tl:~DClassObject" resolve="DClassObject" />
+      </node>
+      <node concept="37vLTG" id="3Qetf3dyi_B" role="3clF46">
+        <property role="TrG5h" value="cls" />
+        <property role="3TUv4t" value="true" />
+        <node concept="3uibUv" id="3Qetf3dyi_A" role="1tU5fm">
+          <ref role="3uigEE" to="t4tl:~SClass" resolve="SClass" />
+        </node>
       </node>
     </node>
     <node concept="2tJIrI" id="MxZDaxacnh" role="jymVt" />
