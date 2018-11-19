@@ -30,6 +30,8 @@ public interface IRuleSet {
 
     List<DAttribute<DRepository, ?>> getRepositoryAttributes();
 
+    List<DAttribute<SClassObject, ?>> getClassAttributes(SClass cls);
+
     List<Consumer<SNode>> getNodeRules(SAbstractConcept concept);
 
     List<Consumer<SModel>> getModelRules();
@@ -37,5 +39,7 @@ public interface IRuleSet {
     List<Consumer<DModule>> getModuleRules();
 
     List<Consumer<DRepository>> getRepositoryRules();
+
+    List<Consumer<SClassObject>> getClassRules(SClass cls);
 
 }

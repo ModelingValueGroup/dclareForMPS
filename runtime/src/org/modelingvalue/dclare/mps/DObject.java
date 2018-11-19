@@ -20,6 +20,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
+import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.ContainingCollection;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Context;
@@ -75,7 +76,7 @@ public abstract class DObject<O> {
                                                                                          Observer.of(CHILDREN, a,                                                     //
                                                                                                  () -> {
                                                                                                      if (a.equals(DObject.TRANSACTION.get(o))) {
-                                                                                                         CHILDREN.set(o, o.getChildren().toSet());
+                                                                                                         CHILDREN.set(o, o.getAllChildren().toSet());
                                                                                                      } else {
                                                                                                          CHILDREN.set(o, Set.of());
                                                                                                          throw new StopObserverException("Stopped");
@@ -123,7 +124,26 @@ public abstract class DObject<O> {
         return TYPE.get(this).getAttributes().collect(Collectors.toList());
     }
 
+    @SuppressWarnings("unchecked")
+    public ContainingCollection<? extends DNode> getAllChildren() {
+        return getContained().addAll((ContainingCollection) getChildren());
+    }
+
     protected abstract ContainingCollection<? extends DObject> getChildren();
+
+    @SuppressWarnings("unchecked")
+    private ContainingCollection<? extends DObject> getContained() {
+        return getType().getAttributes().filter(DAttribute::isComposite).flatMap(a -> {
+            Object v = a.get(this);
+            if (v instanceof Collection) {
+                return (Collection) v;
+            } else if (v instanceof java.util.Collection) {
+                return Set.of((java.util.Collection) v);
+            } else {
+                return v == null ? Set.of() : Set.of((DObject) v);
+            }
+        }).toSet();
+    }
 
     protected void init(DObject parent) {
         PARENT.set(this, parent);
