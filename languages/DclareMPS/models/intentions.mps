@@ -58,6 +58,9 @@
       </concept>
     </language>
     <language id="ceab5195-25ea-4f22-9b92-103b95ca8c0c" name="jetbrains.mps.lang.core">
+      <concept id="1133920641626" name="jetbrains.mps.lang.core.structure.BaseConcept" flags="ng" index="2VYdi">
+        <property id="1193676396447" name="virtualPackage" index="3GE5qa" />
+      </concept>
       <concept id="1169194658468" name="jetbrains.mps.lang.core.structure.INamedConcept" flags="ng" index="TrEIO">
         <property id="1169194664001" name="name" index="TrG5h" />
       </concept>
@@ -66,6 +69,7 @@
   <node concept="2S6QgY" id="3Qetf3e5wvc">
     <property role="TrG5h" value="AddComposite" />
     <property role="2ZfUl0" value="true" />
+    <property role="3GE5qa" value="attributes" />
     <ref role="2ZfgGC" to="7ggn:4$MeK2bmw9s" resolve="Attribute" />
     <node concept="2S6ZIM" id="3Qetf3e5wvd" role="2ZfVej">
       <node concept="3clFbS" id="3Qetf3e5wve" role="2VODD2">
@@ -111,6 +115,7 @@
   <node concept="2S6QgY" id="3Qetf3e5FGJ">
     <property role="TrG5h" value="RemoveComposite" />
     <property role="2ZfUl0" value="true" />
+    <property role="3GE5qa" value="attributes" />
     <ref role="2ZfgGC" to="7ggn:4$MeK2bmw9s" resolve="Attribute" />
     <node concept="2S6ZIM" id="3Qetf3e5FGK" role="2ZfVej">
       <node concept="3clFbS" id="3Qetf3e5FGL" role="2VODD2">

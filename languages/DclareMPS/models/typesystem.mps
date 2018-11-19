@@ -1288,6 +1288,7 @@
   </node>
   <node concept="1YbPZF" id="4Y8BM43ogqn">
     <property role="TrG5h" value="typeof_Attributes" />
+    <property role="3GE5qa" value="attributes" />
     <node concept="3clFbS" id="4Y8BM43ogqo" role="18ibNy">
       <node concept="1Z5TYs" id="4Y8BM43ohbx" role="3cqZAp">
         <node concept="mw_s8" id="4Y8BM43ohbP" role="1ZfhKB">
@@ -1315,6 +1316,7 @@
   </node>
   <node concept="18kY7G" id="6HWpSUECLNn">
     <property role="TrG5h" value="attributeNameUnique" />
+    <property role="3GE5qa" value="attributes" />
     <node concept="3clFbS" id="6HWpSUECLNo" role="18ibNy">
       <node concept="2Gpval" id="6HWpSUECLNp" role="3cqZAp">
         <node concept="2GrKxI" id="6HWpSUECLNq" role="2Gsz3X">
@@ -1434,6 +1436,7 @@
   </node>
   <node concept="1YbPZF" id="7VpGsFQRU17">
     <property role="TrG5h" value="typeof_AttributeImplicitSelect" />
+    <property role="3GE5qa" value="attributes" />
     <node concept="3clFbS" id="7VpGsFQRU18" role="18ibNy">
       <node concept="1Z5TYs" id="7iAolAiLAFI" role="3cqZAp">
         <node concept="mw_s8" id="7iAolAiLAGu" role="1ZfhKB">
@@ -1478,6 +1481,7 @@
   </node>
   <node concept="1YbPZF" id="3Qetf3d9sml">
     <property role="TrG5h" value="typeof_NewClassInstance" />
+    <property role="3GE5qa" value="classes" />
     <node concept="3clFbS" id="3Qetf3d9smm" role="18ibNy">
       <node concept="1Z5TYs" id="3Qetf3d9sUc" role="3cqZAp">
         <node concept="mw_s8" id="3Qetf3d9sUu" role="1ZfhKB">

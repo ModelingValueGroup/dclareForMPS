@@ -259,6 +259,7 @@
     </language>
     <language id="ceab5195-25ea-4f22-9b92-103b95ca8c0c" name="jetbrains.mps.lang.core">
       <concept id="1133920641626" name="jetbrains.mps.lang.core.structure.BaseConcept" flags="ng" index="2VYdi">
+        <property id="1193676396447" name="virtualPackage" index="3GE5qa" />
         <child id="5169995583184591170" name="smodelAttribute" index="lGtFl" />
       </concept>
       <concept id="1169194658468" name="jetbrains.mps.lang.core.structure.INamedConcept" flags="ng" index="TrEIO">
@@ -587,6 +588,7 @@
     </node>
   </node>
   <node concept="1M2fIO" id="4$MeK2bmADe">
+    <property role="3GE5qa" value="attributes" />
     <ref role="1M2myG" to="7ggn:4$MeK2bmw9s" resolve="Attribute" />
     <node concept="9SQb8" id="6HWpSUFysdu" role="9SGkC">
       <node concept="3clFbS" id="6HWpSUFysdv" role="2VODD2">
@@ -685,6 +687,7 @@
     </node>
   </node>
   <node concept="1M2fIO" id="30GBB6YznfE">
+    <property role="3GE5qa" value="attributes" />
     <ref role="1M2myG" to="7ggn:4$MeK2bvRdy" resolve="AttributeOperation" />
     <node concept="1N5Pfh" id="30GBB6YznfF" role="1Mr941">
       <ref role="1N5Vy1" to="7ggn:4$MeK2bvUeg" resolve="attribute" />
@@ -1043,6 +1046,7 @@
     </node>
   </node>
   <node concept="1M2fIO" id="6HWpSUESFQd">
+    <property role="3GE5qa" value="models" />
     <ref role="1M2myG" to="7ggn:6HWpSUEuark" resolve="ConceptRuleSet" />
     <node concept="EnEH3" id="6HWpSUESFQe" role="1MhHOB">
       <ref role="EomxK" to="tpck:h0TrG11" resolve="name" />
@@ -1071,6 +1075,7 @@
     </node>
   </node>
   <node concept="1M2fIO" id="6HWpSUESUy3">
+    <property role="3GE5qa" value="models" />
     <ref role="1M2myG" to="7ggn:6HWpSUEu3T2" resolve="ModelRuleSet" />
     <node concept="EnEH3" id="6HWpSUESUy4" role="1MhHOB">
       <ref role="EomxK" to="tpck:h0TrG11" resolve="name" />
@@ -1086,6 +1091,7 @@
     </node>
   </node>
   <node concept="1M2fIO" id="6HWpSUESXnm">
+    <property role="3GE5qa" value="models" />
     <ref role="1M2myG" to="7ggn:6HWpSUEu3U0" resolve="ModuleRuleSet" />
     <node concept="EnEH3" id="6HWpSUESXnn" role="1MhHOB">
       <ref role="EomxK" to="tpck:h0TrG11" resolve="name" />
@@ -1101,6 +1107,7 @@
     </node>
   </node>
   <node concept="1M2fIO" id="6HWpSUESYb4">
+    <property role="3GE5qa" value="models" />
     <ref role="1M2myG" to="7ggn:6HWpSUEu3U3" resolve="RepositoryRuleSet" />
     <node concept="EnEH3" id="6HWpSUESYb5" role="1MhHOB">
       <ref role="EomxK" to="tpck:h0TrG11" resolve="name" />
@@ -1116,6 +1123,7 @@
     </node>
   </node>
   <node concept="1M2fIO" id="7VpGsFQRPqA">
+    <property role="3GE5qa" value="attributes" />
     <ref role="1M2myG" to="7ggn:35Jy4LMD1lX" resolve="AttributeImplicitSelect" />
     <node concept="1N5Pfh" id="7VpGsFQRPOA" role="1Mr941">
       <ref role="1N5Vy1" to="7ggn:35Jy4LMD1u3" resolve="attribute" />
@@ -1278,6 +1286,7 @@
     </node>
   </node>
   <node concept="1M2fIO" id="4wbMdoKd7Ry">
+    <property role="3GE5qa" value="attributes" />
     <ref role="1M2myG" to="7ggn:4wbMdoKd7ev" resolve="AttributeReference" />
     <node concept="1N5Pfh" id="4wbMdoKd8sf" role="1Mr941">
       <ref role="1N5Vy1" to="7ggn:4wbMdoKd7ex" resolve="attribute" />
@@ -1388,6 +1397,7 @@
     </node>
   </node>
   <node concept="1M2fIO" id="4wbMdoKMKy_">
+    <property role="3GE5qa" value="attributes" />
     <ref role="1M2myG" to="7ggn:4Y8BM43ogq1" resolve="Attributes" />
     <node concept="9S07l" id="4wbMdoKMKNv" role="9Vyp8">
       <node concept="3clFbS" id="4wbMdoKMKNw" role="2VODD2">

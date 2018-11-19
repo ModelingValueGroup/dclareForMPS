@@ -60,6 +60,7 @@
     </language>
     <language id="ceab5195-25ea-4f22-9b92-103b95ca8c0c" name="jetbrains.mps.lang.core">
       <concept id="1133920641626" name="jetbrains.mps.lang.core.structure.BaseConcept" flags="ng" index="2VYdi">
+        <property id="1193676396447" name="virtualPackage" index="3GE5qa" />
         <child id="5169995583184591170" name="smodelAttribute" index="lGtFl" />
       </concept>
       <concept id="1169194658468" name="jetbrains.mps.lang.core.structure.INamedConcept" flags="ng" index="TrEIO">
@@ -155,6 +156,7 @@
     <property role="R5$K7" value="false" />
     <property role="R5$K2" value="false" />
     <property role="34LRSv" value="attribute" />
+    <property role="3GE5qa" value="attributes" />
     <ref role="1TJDcQ" to="tpee:fz3uBXI" resolve="VariableDeclaration" />
     <node concept="PrWs8" id="6HWpSUEwIUY" role="PzmwI">
       <ref role="PrY4T" node="61p65V8x$6I" resolve="ThisContext" />
@@ -168,6 +170,7 @@
   <node concept="1TIwiD" id="4$MeK2bvRdy">
     <property role="EcuMT" value="5274342987130696546" />
     <property role="TrG5h" value="AttributeOperation" />
+    <property role="3GE5qa" value="attributes" />
     <ref role="1TJDcQ" to="tpee:fz7vLUo" resolve="VariableReference" />
     <node concept="PrWs8" id="4$MeK2bvUee" role="PzmwI">
       <ref role="PrY4T" to="tpee:hqOqG0K" resolve="IOperation" />
@@ -197,6 +200,7 @@
     <property role="EcuMT" value="5731005489968383617" />
     <property role="TrG5h" value="Attributes" />
     <property role="34LRSv" value="attributes" />
+    <property role="3GE5qa" value="attributes" />
     <ref role="1TJDcQ" to="tpck:gw2VY9q" resolve="BaseConcept" />
     <node concept="PrWs8" id="4wbMdoKMetb" role="PzmwI">
       <ref role="PrY4T" to="tpee:hqOqG0K" resolve="IOperation" />
@@ -207,6 +211,7 @@
     <property role="TrG5h" value="ModelRuleSet" />
     <property role="19KtqR" value="true" />
     <property role="34LRSv" value="Model RuleSet" />
+    <property role="3GE5qa" value="models" />
     <ref role="1TJDcQ" node="29R9$zZUovD" resolve="RuleSet" />
     <node concept="1QGGSu" id="6HWpSUEu3T6" role="rwd14">
       <property role="1iqoE4" value="${module}/icons/Dclare.png" />
@@ -217,6 +222,7 @@
     <property role="TrG5h" value="ModuleRuleSet" />
     <property role="19KtqR" value="true" />
     <property role="34LRSv" value="Module RuleSet" />
+    <property role="3GE5qa" value="models" />
     <ref role="1TJDcQ" node="29R9$zZUovD" resolve="RuleSet" />
     <node concept="1QGGSu" id="6HWpSUEu3U2" role="rwd14">
       <property role="1iqoE4" value="${module}/icons/Dclare.png" />
@@ -227,6 +233,7 @@
     <property role="TrG5h" value="RepositoryRuleSet" />
     <property role="19KtqR" value="true" />
     <property role="34LRSv" value="Repository RuleSet" />
+    <property role="3GE5qa" value="models" />
     <ref role="1TJDcQ" node="29R9$zZUovD" resolve="RuleSet" />
     <node concept="1QGGSu" id="6HWpSUEu3U5" role="rwd14">
       <property role="1iqoE4" value="${module}/icons/Dclare.png" />
@@ -237,6 +244,7 @@
     <property role="TrG5h" value="ConceptRuleSet" />
     <property role="19KtqR" value="true" />
     <property role="34LRSv" value="Concept RuleSet" />
+    <property role="3GE5qa" value="models" />
     <ref role="1TJDcQ" node="29R9$zZUovD" resolve="RuleSet" />
     <node concept="PrWs8" id="6HWpSUEuarl" role="PzmwI">
       <ref role="PrY4T" to="tpce:2hxg_BDjKM4" resolve="IConceptAspect" />
@@ -256,6 +264,7 @@
     <property role="TrG5h" value="AttributeImplicitSelect" />
     <property role="2_RsDV" value="none" />
     <property role="EcuMT" value="3562215692195599741" />
+    <property role="3GE5qa" value="attributes" />
     <ref role="1TJDcQ" to="tpck:gw2VY9q" resolve="BaseConcept" />
     <node concept="1TJgyj" id="35Jy4LMD1u3" role="1TKVEi">
       <property role="20lmBu" value="reference" />
@@ -271,6 +280,7 @@
   <node concept="1TIwiD" id="4wbMdoKd7ev">
     <property role="EcuMT" value="5191463817731928991" />
     <property role="TrG5h" value="AttributeReference" />
+    <property role="3GE5qa" value="attributes" />
     <ref role="1TJDcQ" to="tpee:fz7vLUo" resolve="VariableReference" />
     <node concept="1TJgyj" id="4wbMdoKd7ex" role="1TKVEi">
       <property role="IQ2ns" value="5191463817731928993" />
@@ -286,6 +296,7 @@
     <property role="TrG5h" value="ClassRuleSet" />
     <property role="19KtqR" value="true" />
     <property role="34LRSv" value="Class RuleSet" />
+    <property role="3GE5qa" value="classes" />
     <ref role="1TJDcQ" node="29R9$zZUovD" resolve="RuleSet" />
     <node concept="1TJgyj" id="3Qetf3cPp0s" role="1TKVEi">
       <property role="IQ2ns" value="4435611260584038428" />
@@ -294,6 +305,13 @@
       <property role="20lbJX" value="0..n" />
       <ref role="20lvS9" node="3Qetf3dC4N5" resolve="ClassRuleSetReference" />
     </node>
+    <node concept="1TJgyj" id="745HIYNPptd" role="1TKVEi">
+      <property role="IQ2ns" value="8144116641799968589" />
+      <property role="20lmBu" value="aggregation" />
+      <property role="20kJfa" value="identity" />
+      <property role="20lbJX" value="0..n" />
+      <ref role="20lvS9" node="745HIYNPptg" resolve="Identity" />
+    </node>
     <node concept="1QGGSu" id="3Qetf3diZ3y" role="rwd14">
       <property role="1iqoE4" value="${module}/icons/Dclare.png" />
     </node>
@@ -301,6 +319,7 @@
   <node concept="1TIwiD" id="3Qetf3cPPAL">
     <property role="EcuMT" value="4435611260584155569" />
     <property role="TrG5h" value="ClassRuleSetType" />
+    <property role="3GE5qa" value="classes" />
     <ref role="1TJDcQ" to="tpee:fz3vP1H" resolve="Type" />
     <node concept="1TJgyj" id="3Qetf3cPPAM" role="1TKVEi">
       <property role="IQ2ns" value="4435611260584155570" />
@@ -313,6 +332,7 @@
   <node concept="1TIwiD" id="3Qetf3d9slq">
     <property role="EcuMT" value="4435611260589294938" />
     <property role="TrG5h" value="NewClassRuleSetInstance" />
+    <property role="3GE5qa" value="classes" />
     <ref role="1TJDcQ" to="tpee:fz3vP1J" resolve="Expression" />
     <node concept="1TJgyj" id="3Qetf3d9slr" role="1TKVEi">
       <property role="IQ2ns" value="4435611260589294939" />
@@ -321,10 +341,18 @@
       <property role="20lbJX" value="1" />
       <ref role="20lvS9" node="3Qetf3cPkTM" resolve="ClassRuleSet" />
     </node>
+    <node concept="1TJgyj" id="745HIYNPcqg" role="1TKVEi">
+      <property role="IQ2ns" value="8144116641799915152" />
+      <property role="20lmBu" value="aggregation" />
+      <property role="20kJfa" value="identity" />
+      <property role="20lbJX" value="0..n" />
+      <ref role="20lvS9" to="tpee:fz3vP1J" resolve="Expression" />
+    </node>
   </node>
   <node concept="1TIwiD" id="3Qetf3dC4N5">
     <property role="EcuMT" value="4435611260597324997" />
     <property role="TrG5h" value="ClassRuleSetReference" />
+    <property role="3GE5qa" value="classes" />
     <ref role="1TJDcQ" to="tpck:gw2VY9q" resolve="BaseConcept" />
     <node concept="1TJgyj" id="3Qetf3dC4N6" role="1TKVEi">
       <property role="IQ2ns" value="4435611260597324998" />
@@ -333,6 +361,12 @@
       <property role="20lbJX" value="1" />
       <ref role="20lvS9" node="3Qetf3cPkTM" resolve="ClassRuleSet" />
     </node>
+  </node>
+  <node concept="1TIwiD" id="745HIYNPptg">
+    <property role="EcuMT" value="8144116641799968592" />
+    <property role="TrG5h" value="Identity" />
+    <property role="3GE5qa" value="classes" />
+    <ref role="1TJDcQ" to="tpee:fz3uBXI" resolve="VariableDeclaration" />
   </node>
 </model>
 

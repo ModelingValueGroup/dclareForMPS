@@ -237,6 +237,9 @@
       </concept>
     </language>
     <language id="ceab5195-25ea-4f22-9b92-103b95ca8c0c" name="jetbrains.mps.lang.core">
+      <concept id="1133920641626" name="jetbrains.mps.lang.core.structure.BaseConcept" flags="ng" index="2VYdi">
+        <property id="1193676396447" name="virtualPackage" index="3GE5qa" />
+      </concept>
       <concept id="1169194658468" name="jetbrains.mps.lang.core.structure.INamedConcept" flags="ng" index="TrEIO">
         <property id="1169194664001" name="name" index="TrG5h" />
       </concept>
@@ -1836,6 +1839,7 @@
     </node>
   </node>
   <node concept="13h7C7" id="4$MeK2bmypo">
+    <property role="3GE5qa" value="attributes" />
     <ref role="13h7C2" to="7ggn:4$MeK2bmw9s" resolve="Attribute" />
     <node concept="13i0hz" id="hEwJ4yp" role="13h7CS">
       <property role="13i0is" value="false" />
@@ -2017,6 +2021,7 @@
     </node>
   </node>
   <node concept="13h7C7" id="30GBB6YI50h">
+    <property role="3GE5qa" value="attributes" />
     <ref role="13h7C2" to="7ggn:4$MeK2bvRdy" resolve="AttributeOperation" />
     <node concept="13i0hz" id="hEwIBRP" role="13h7CS">
       <property role="13i0is" value="false" />
@@ -2061,6 +2066,7 @@
     </node>
   </node>
   <node concept="13h7C7" id="6HWpSUEu9kB">
+    <property role="3GE5qa" value="models" />
     <ref role="13h7C2" to="7ggn:6HWpSUEu3T2" resolve="ModelRuleSet" />
     <node concept="13i0hz" id="6HWpSUEu9kM" role="13h7CS">
       <property role="TrG5h" value="getContextType" />
@@ -2085,6 +2091,7 @@
     </node>
   </node>
   <node concept="13h7C7" id="6HWpSUEuabt">
+    <property role="3GE5qa" value="models" />
     <ref role="13h7C2" to="7ggn:6HWpSUEu3U0" resolve="ModuleRuleSet" />
     <node concept="13i0hz" id="6HWpSUEuacZ" role="13h7CS">
       <property role="TrG5h" value="getContextType" />
@@ -2109,6 +2116,7 @@
     </node>
   </node>
   <node concept="13h7C7" id="6HWpSUEuarn">
+    <property role="3GE5qa" value="models" />
     <ref role="13h7C2" to="7ggn:6HWpSUEuark" resolve="ConceptRuleSet" />
     <node concept="13i0hz" id="6HWpSUF4vHG" role="13h7CS">
       <property role="TrG5h" value="setBaseConcept" />
@@ -2191,6 +2199,7 @@
     </node>
   </node>
   <node concept="13h7C7" id="6HWpSUEubs1">
+    <property role="3GE5qa" value="models" />
     <ref role="13h7C2" to="7ggn:6HWpSUEu3U3" resolve="RepositoryRuleSet" />
     <node concept="13i0hz" id="6HWpSUEubsc" role="13h7CS">
       <property role="TrG5h" value="getContextType" />
@@ -2215,6 +2224,7 @@
     </node>
   </node>
   <node concept="13h7C7" id="3Qetf3cPI4Z">
+    <property role="3GE5qa" value="classes" />
     <ref role="13h7C2" to="7ggn:3Qetf3cPkTM" resolve="ClassRuleSet" />
     <node concept="13i0hz" id="3Qetf3cPI5a" role="13h7CS">
       <property role="TrG5h" value="getContextType" />
@@ -2304,6 +2314,7 @@
     </node>
   </node>
   <node concept="13h7C7" id="3Qetf3dk3dk">
+    <property role="3GE5qa" value="classes" />
     <ref role="13h7C2" to="7ggn:3Qetf3cPPAL" resolve="ClassRuleSetType" />
     <node concept="13i0hz" id="3Qetf3dk3dv" role="13h7CS">
       <property role="TrG5h" value="isSupersetOf" />
