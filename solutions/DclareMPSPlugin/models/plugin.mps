@@ -551,7 +551,7 @@
   </node>
   <node concept="2E2WTH" id="3E71z7ucbEa">
     <property role="TrG5h" value="Rules" />
-    <property role="2E2WTP" value="r" />
+    <property role="2E2WTP" value="R" />
     <ref role="2E2WTM" to="tpce:h0PkWnZ" resolve="AbstractConceptDeclaration" />
     <node concept="2E2X7d" id="2erTeUVFa2z" role="2E2Kf0">
       <node concept="3clFbS" id="2erTeUVFa2$" role="2VODD2">
@@ -863,12 +863,45 @@
         </node>
       </node>
     </node>
-    <node concept="2vPdvu" id="4P8eRtO8wIu" role="2E2X74">
-      <node concept="2vPdvi" id="4P8eRtO8Cmi" role="2vPdvg">
+    <node concept="2vPdvu" id="7POWRVZLtOx" role="2E2X74">
+      <node concept="2vPdvi" id="7POWRVZLtOy" role="2vPdvg">
+        <ref role="2vPdvl" to="w88:7POWRVZMxkx" resolve="Structure" />
+      </node>
+      <node concept="2vPdvi" id="7POWRVZLtOz" role="2vPdvg">
+        <ref role="2vPdvl" to="w88:2erTeUVF9WV" resolve="Editor" />
+      </node>
+      <node concept="2vPdvi" id="7POWRVZLtO$" role="2vPdvg">
+        <ref role="2vPdvl" to="w88:2erTeUVFa2t" resolve="Constraints" />
+      </node>
+      <node concept="2vPdvi" id="7POWRVZLtO_" role="2vPdvg">
+        <ref role="2vPdvl" to="w88:2erTeUVEQFB" resolve="Behavior" />
+      </node>
+      <node concept="2vPdvi" id="7POWRVZLtOA" role="2vPdvg">
         <ref role="2vPdvl" to="w88:7POWRVZLtP_" resolve="Typesystem" />
       </node>
-      <node concept="2vPdvi" id="4P8eRtO8Cmq" role="2vPdvg">
+      <node concept="2vPdvi" id="3Qetf3cPeDq" role="2vPdvg">
         <ref role="2vPdvl" node="3E71z7ucbEa" resolve="Rules" />
+      </node>
+      <node concept="2vPdvi" id="7POWRVZLtOB" role="2vPdvg">
+        <ref role="2vPdvl" to="w88:2$SWsiCu1P0" resolve="Actions" />
+      </node>
+      <node concept="2vPdvi" id="7POWRVZLtOC" role="2vPdvg">
+        <ref role="2vPdvl" to="w88:7POWRVZLtD_" resolve="Refactorings" />
+      </node>
+      <node concept="2vPdvi" id="7POWRVZLtOD" role="2vPdvg">
+        <ref role="2vPdvl" to="w88:2erTeUVFcrJ" resolve="Intentions" />
+      </node>
+      <node concept="2vPdvi" id="7POWRVZLtOE" role="2vPdvg">
+        <ref role="2vPdvl" to="w88:2erTeUVFaZh" resolve="Find Usages" />
+      </node>
+      <node concept="2vPdvi" id="7POWRVZLtOF" role="2vPdvg">
+        <ref role="2vPdvl" to="w88:2erTeUVFaEE" resolve="Data Flow" />
+      </node>
+      <node concept="2vPdvi" id="7POWRVZLtOG" role="2vPdvg">
+        <ref role="2vPdvl" to="w88:2erTeUVF2dY" resolve="Generator" />
+      </node>
+      <node concept="2vPdvi" id="7POWRVZLtOH" role="2vPdvg">
+        <ref role="2vPdvl" to="w88:7POWRVZLtO0" resolve="Textgen" />
       </node>
     </node>
   </node>
