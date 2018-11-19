@@ -308,7 +308,7 @@
     <node concept="1TJgyj" id="745HIYNPptd" role="1TKVEi">
       <property role="IQ2ns" value="8144116641799968589" />
       <property role="20lmBu" value="aggregation" />
-      <property role="20kJfa" value="identity" />
+      <property role="20kJfa" value="identities" />
       <property role="20lbJX" value="0..n" />
       <ref role="20lvS9" node="745HIYNPptg" resolve="Identity" />
     </node>
@@ -331,7 +331,7 @@
   </node>
   <node concept="1TIwiD" id="3Qetf3d9slq">
     <property role="EcuMT" value="4435611260589294938" />
-    <property role="TrG5h" value="NewClassRuleSetInstance" />
+    <property role="TrG5h" value="ClassRuleSetInstance" />
     <property role="3GE5qa" value="classes" />
     <ref role="1TJDcQ" to="tpee:fz3vP1J" resolve="Expression" />
     <node concept="1TJgyj" id="3Qetf3d9slr" role="1TKVEi">
@@ -365,8 +365,68 @@
   <node concept="1TIwiD" id="745HIYNPptg">
     <property role="EcuMT" value="8144116641799968592" />
     <property role="TrG5h" value="Identity" />
-    <property role="3GE5qa" value="classes" />
+    <property role="3GE5qa" value="identity" />
     <ref role="1TJDcQ" to="tpee:fz3uBXI" resolve="VariableDeclaration" />
+    <node concept="PrWs8" id="7J3S7H6GUHr" role="PzmwI">
+      <ref role="PrY4T" node="61p65V8x$6I" resolve="ThisContext" />
+    </node>
+  </node>
+  <node concept="1TIwiD" id="7J3S7H6GuMG">
+    <property role="EcuMT" value="8918218507195378860" />
+    <property role="3GE5qa" value="identity" />
+    <property role="TrG5h" value="IdentityReference" />
+    <ref role="1TJDcQ" to="tpee:fz7vLUo" resolve="VariableReference" />
+    <node concept="1TJgyj" id="7J3S7H6G$Sw" role="1TKVEi">
+      <property role="IQ2ns" value="8918218507195403808" />
+      <property role="20lmBu" value="reference" />
+      <property role="20kJfa" value="identity" />
+      <property role="20lbJX" value="1" />
+      <ref role="20ksaX" to="tpee:fzcqZ_w" resolve="variableDeclaration" />
+      <ref role="20lvS9" node="745HIYNPptg" resolve="Identity" />
+    </node>
+  </node>
+  <node concept="1TIwiD" id="7J3S7H6GuMK">
+    <property role="EcuMT" value="8918218507195378864" />
+    <property role="3GE5qa" value="identity" />
+    <property role="TrG5h" value="IdentityOperation" />
+    <ref role="1TJDcQ" to="tpee:fz7vLUo" resolve="VariableReference" />
+    <node concept="PrWs8" id="7J3S7H6GuMO" role="PzmwI">
+      <ref role="PrY4T" to="tpee:hqOqG0K" resolve="IOperation" />
+    </node>
+    <node concept="1TJgyj" id="7J3S7H6G$S6" role="1TKVEi">
+      <property role="IQ2ns" value="8918218507195403782" />
+      <property role="20lmBu" value="reference" />
+      <property role="20kJfa" value="identity" />
+      <property role="20lbJX" value="1" />
+      <ref role="20lvS9" node="745HIYNPptg" resolve="Identity" />
+      <ref role="20ksaX" to="tpee:fzcqZ_w" resolve="variableDeclaration" />
+    </node>
+  </node>
+  <node concept="1TIwiD" id="7J3S7H6GuMR">
+    <property role="EcuMT" value="8918218507195378871" />
+    <property role="3GE5qa" value="identity" />
+    <property role="TrG5h" value="IdentityImplicitSelect" />
+    <ref role="1TJDcQ" to="tpck:gw2VY9q" resolve="BaseConcept" />
+    <node concept="PrWs8" id="7J3S7H6GuMS" role="PzmwI">
+      <ref role="PrY4T" to="tpee:hqOqG0K" resolve="IOperation" />
+    </node>
+    <node concept="1TJgyj" id="7J3S7H6G$S3" role="1TKVEi">
+      <property role="IQ2ns" value="8918218507195403779" />
+      <property role="20lmBu" value="reference" />
+      <property role="20kJfa" value="identity" />
+      <property role="20lbJX" value="1" />
+      <ref role="20lvS9" node="745HIYNPptg" resolve="Identity" />
+    </node>
+  </node>
+  <node concept="1TIwiD" id="7J3S7H6GuMV">
+    <property role="EcuMT" value="8918218507195378875" />
+    <property role="3GE5qa" value="identity" />
+    <property role="TrG5h" value="Identities" />
+    <property role="34LRSv" value="identities" />
+    <ref role="1TJDcQ" to="tpck:gw2VY9q" resolve="BaseConcept" />
+    <node concept="PrWs8" id="7J3S7H6GuMW" role="PzmwI">
+      <ref role="PrY4T" to="tpee:hqOqG0K" resolve="IOperation" />
+    </node>
   </node>
 </model>
 
