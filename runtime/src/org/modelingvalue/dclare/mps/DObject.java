@@ -76,7 +76,9 @@ public abstract class DObject<O> {
                                                                                          Observer.of(CHILDREN, a,                                                     //
                                                                                                  () -> {
                                                                                                      if (a.equals(DObject.TRANSACTION.get(o))) {
-                                                                                                         CHILDREN.set(o, o.getAllChildren().toSet());
+                                                                                                         if (o.isComplete()) {
+                                                                                                             CHILDREN.set(o, o.getAllChildren().toSet());
+                                                                                                         }
                                                                                                      } else {
                                                                                                          CHILDREN.set(o, Set.of());
                                                                                                          throw new StopObserverException("Stopped");
