@@ -315,7 +315,6 @@
     <property role="EcuMT" value="4435611260584155569" />
     <property role="TrG5h" value="StructType" />
     <property role="3GE5qa" value="structs" />
-    <property role="19KtqR" value="true" />
     <property role="34LRSv" value="struct&lt;&gt;" />
     <ref role="1TJDcQ" to="tpee:fz3vP1H" resolve="Type" />
     <node concept="1TJgyj" id="3Qetf3cPPAM" role="1TKVEi">
