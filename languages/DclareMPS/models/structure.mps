@@ -79,16 +79,11 @@
     <property role="TrG5h" value="AssignmentRuleExpression" />
     <property role="34LRSv" value=":=" />
     <ref role="1TJDcQ" to="tpee:fz7vLUm" resolve="AssignmentExpression" />
-    <node concept="1TJgyj" id="1lQ5DPQzdHE" role="1TKVEi">
-      <property role="IQ2ns" value="1546448387602963306" />
-      <property role="20lmBu" value="reference" />
-      <property role="20kJfa" value="originalContext" />
-      <ref role="20lvS9" to="tp3r:4IP40Bi2$Ew" resolve="NodeBuilderNode" />
-    </node>
   </node>
   <node concept="1TIwiD" id="29R9$zYWiFR">
     <property role="EcuMT" value="2483495814474836727" />
     <property role="TrG5h" value="OppositeLinkAccess" />
+    <property role="3GE5qa" value="models" />
     <ref role="1TJDcQ" to="tp25:gzTsc4p" resolve="SLinkListAccess" />
     <node concept="RPilO" id="29R9$zZN5nE" role="lGtFl">
       <ref role="RPilL" to="tp25:gzTtc_y" resolve="link" />
@@ -192,6 +187,7 @@
   <node concept="1TIwiD" id="30GBB6Y$vTM">
     <property role="EcuMT" value="3471323624161541746" />
     <property role="TrG5h" value="NodeBuilderInitAttribute" />
+    <property role="3GE5qa" value="attributes" />
     <ref role="1TJDcQ" to="tp3r:4IP40Bi2KcT" resolve="NodeBuilderInitPart" />
     <node concept="1TJgyj" id="30GBB6Y$wtJ" role="1TKVEi">
       <property role="IQ2ns" value="3471323624161544047" />

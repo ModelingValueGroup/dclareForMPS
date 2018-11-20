@@ -42,8 +42,16 @@
         <child id="1197027771414" name="operand" index="2Oq$k0" />
         <child id="1197027833540" name="operation" index="2OqNvi" />
       </concept>
+      <concept id="1164879751025" name="jetbrains.mps.baseLanguage.structure.TryCatchStatement" flags="nn" index="SfApY">
+        <child id="1164879758292" name="body" index="SfCbr" />
+        <child id="1164903496223" name="catchClause" index="TEbGg" />
+      </concept>
       <concept id="1145552977093" name="jetbrains.mps.baseLanguage.structure.GenericNewExpression" flags="nn" index="2ShNRf">
         <child id="1145553007750" name="creator" index="2ShVmc" />
+      </concept>
+      <concept id="1164903280175" name="jetbrains.mps.baseLanguage.structure.CatchClause" flags="nn" index="TDmWw">
+        <child id="1164903359218" name="catchBody" index="TDEfX" />
+        <child id="1164903359217" name="throwable" index="TDEfY" />
       </concept>
       <concept id="1070462154015" name="jetbrains.mps.baseLanguage.structure.StaticFieldDeclaration" flags="ig" index="Wx3nA">
         <property id="6468716278899126575" name="isVolatile" index="2dlcS1" />
@@ -228,8 +236,8 @@
         <node concept="17QB3L" id="4jqYi9EISxt" role="11_B2D" />
       </node>
       <node concept="2YIFZM" id="2UEyDf69UqF" role="33vP2m">
-        <ref role="37wK5l" to="t4tl:~DAttribute.of(java.lang.Object,java.lang.String,boolean,org.modelingvalue.collections.util.QuadConsumer):org.modelingvalue.dclare.mps.DAttribute" resolve="of" />
         <ref role="1Pybhc" to="t4tl:~DAttribute" resolve="DAttribute" />
+        <ref role="37wK5l" to="t4tl:~DAttribute.of(java.lang.Object,java.lang.String,boolean,java.lang.Object,org.modelingvalue.collections.util.QuadConsumer):org.modelingvalue.dclare.mps.DAttribute" resolve="of" />
         <node concept="Xl_RD" id="2UEyDf69VGB" role="37wK5m">
           <property role="Xl_RC" value="&lt;PATTERN_TYPE&gt;" />
         </node>
@@ -239,6 +247,7 @@
         <node concept="3clFbT" id="2UEyDf69Vdg" role="37wK5m">
           <property role="3clFbU" value="false" />
         </node>
+        <node concept="Xl_RD" id="67uyCwCKTPN" role="37wK5m" />
         <node concept="2ShNRf" id="2UEyDf69VlN" role="37wK5m">
           <node concept="YeOm9" id="2UEyDf69VlO" role="2ShVmc">
             <node concept="1Y3b0j" id="2UEyDf69VlP" role="YeSDq">
@@ -842,23 +851,47 @@
             </node>
           </node>
         </node>
-        <node concept="3clFbF" id="2ADKImQ6rum" role="3cqZAp">
-          <node concept="2OqwBi" id="2ADKImQ6rVI" role="3clFbG">
-            <node concept="37vLTw" id="2ADKImQ6ruk" role="2Oq$k0">
-              <ref role="3cqZAo" node="1pPEdD75T3t" resolve="BUILDER_TYPE" />
-            </node>
-            <node concept="liA8E" id="2ADKImQ6sED" role="2OqNvi">
-              <ref role="37wK5l" to="t4tl:~DAttribute.set(java.lang.Object,java.lang.Object):java.lang.Object" resolve="set" />
-              <node concept="10QFUN" id="URkLcmzFSj" role="37wK5m">
-                <node concept="3uibUv" id="URkLcmzGGU" role="10QFUM">
-                  <ref role="3uigEE" to="t4tl:~DNode" resolve="DNode" />
+        <node concept="SfApY" id="2UEyDf7vcQu" role="3cqZAp">
+          <node concept="3clFbS" id="2UEyDf7vcQw" role="SfCbr">
+            <node concept="3clFbF" id="2ADKImQ6rum" role="3cqZAp">
+              <node concept="2OqwBi" id="2ADKImQ6rVI" role="3clFbG">
+                <node concept="37vLTw" id="2ADKImQ6ruk" role="2Oq$k0">
+                  <ref role="3cqZAo" node="1pPEdD75T3t" resolve="BUILDER_TYPE" />
                 </node>
-                <node concept="37vLTw" id="URkLcmzEN_" role="10QFUP">
-                  <ref role="3cqZAo" node="URkLcmyTIz" resolve="node" />
+                <node concept="liA8E" id="2ADKImQ6sED" role="2OqNvi">
+                  <ref role="37wK5l" to="t4tl:~DAttribute.set(java.lang.Object,java.lang.Object):java.lang.Object" resolve="set" />
+                  <node concept="10QFUN" id="URkLcmzFSj" role="37wK5m">
+                    <node concept="3uibUv" id="URkLcmzGGU" role="10QFUM">
+                      <ref role="3uigEE" to="t4tl:~DNode" resolve="DNode" />
+                    </node>
+                    <node concept="37vLTw" id="URkLcmzEN_" role="10QFUP">
+                      <ref role="3cqZAo" node="URkLcmyTIz" resolve="node" />
+                    </node>
+                  </node>
+                  <node concept="37vLTw" id="2ADKImQ6uzs" role="37wK5m">
+                    <ref role="3cqZAo" node="2ADKImQ6r5F" resolve="builderType" />
+                  </node>
                 </node>
               </node>
-              <node concept="37vLTw" id="2ADKImQ6uzs" role="37wK5m">
-                <ref role="3cqZAo" node="2ADKImQ6r5F" resolve="builderType" />
+            </node>
+          </node>
+          <node concept="TDmWw" id="2UEyDf7vcQx" role="TEbGg">
+            <node concept="3cpWsn" id="2UEyDf7vcQz" role="TDEfY">
+              <property role="TrG5h" value="t" />
+              <node concept="3uibUv" id="2UEyDf7vfyg" role="1tU5fm">
+                <ref role="3uigEE" to="wyt6:~Throwable" resolve="Throwable" />
+              </node>
+            </node>
+            <node concept="3clFbS" id="2UEyDf7vcQB" role="TDEfX">
+              <node concept="3clFbF" id="2UEyDf7vfAr" role="3cqZAp">
+                <node concept="2OqwBi" id="2UEyDf7vfMf" role="3clFbG">
+                  <node concept="37vLTw" id="2UEyDf7vfAq" role="2Oq$k0">
+                    <ref role="3cqZAo" node="2UEyDf7vcQz" resolve="t" />
+                  </node>
+                  <node concept="liA8E" id="2UEyDf7vfWn" role="2OqNvi">
+                    <ref role="37wK5l" to="wyt6:~Throwable.printStackTrace():void" resolve="printStackTrace" />
+                  </node>
+                </node>
               </node>
             </node>
           </node>

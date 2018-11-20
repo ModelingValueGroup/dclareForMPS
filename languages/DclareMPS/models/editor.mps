@@ -345,6 +345,7 @@
     </node>
   </node>
   <node concept="24kQdi" id="29R9$zYWiG0">
+    <property role="3GE5qa" value="models" />
     <ref role="1XX52x" to="7ggn:29R9$zYWiFR" resolve="OppositeLinkAccess" />
     <node concept="1iCGBv" id="g$eExpw" role="2wV5jI">
       <property role="1$x2rV" value="&lt;no link&gt;" />
@@ -808,6 +809,7 @@
     </node>
   </node>
   <node concept="24kQdi" id="30GBB6Y$wtU">
+    <property role="3GE5qa" value="attributes" />
     <ref role="1XX52x" to="7ggn:30GBB6Y$vTM" resolve="NodeBuilderInitAttribute" />
     <node concept="3EZMnI" id="30GBB6Y$wtW" role="2wV5jI">
       <node concept="1iCGBv" id="30GBB6Y$wtX" role="3EZMnx">
