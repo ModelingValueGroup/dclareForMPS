@@ -1744,6 +1744,50 @@
         </node>
       </node>
     </node>
+    <node concept="3aamgX" id="67uyCwCPiIY" role="3acgRq">
+      <ref role="30HIoZ" to="tpee:hqOqwz4" resolve="DotExpression" />
+      <node concept="gft3U" id="67uyCwCPrFV" role="1lVwrX">
+        <node concept="2YIFZM" id="67uyCwCPark" role="gfFT$">
+          <ref role="37wK5l" to="u4ym:67uyCwCP1zP" resolve="getParent" />
+          <ref role="1Pybhc" to="u4ym:30fQumnG8Au" resolve="DclareUtil" />
+          <node concept="10Nm6u" id="67uyCwCParK" role="37wK5m">
+            <node concept="29HgVG" id="67uyCwCPvIP" role="lGtFl">
+              <node concept="3NFfHV" id="67uyCwCPvJl" role="3NFExx">
+                <node concept="3clFbS" id="67uyCwCPvJm" role="2VODD2">
+                  <node concept="3clFbF" id="67uyCwCPvMW" role="3cqZAp">
+                    <node concept="2OqwBi" id="67uyCwCPvYh" role="3clFbG">
+                      <node concept="30H73N" id="67uyCwCPvMV" role="2Oq$k0" />
+                      <node concept="3TrEf2" id="67uyCwCPwgL" role="2OqNvi">
+                        <ref role="3Tt5mk" to="tpee:hqOq$gm" resolve="operand" />
+                      </node>
+                    </node>
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+      <node concept="30G5F_" id="67uyCwCPpO3" role="30HLyM">
+        <node concept="3clFbS" id="67uyCwCPpO4" role="2VODD2">
+          <node concept="3clFbF" id="67uyCwCPpVp" role="3cqZAp">
+            <node concept="2OqwBi" id="67uyCwCPqY7" role="3clFbG">
+              <node concept="2OqwBi" id="67uyCwCPqdV" role="2Oq$k0">
+                <node concept="30H73N" id="67uyCwCPpVo" role="2Oq$k0" />
+                <node concept="3TrEf2" id="67uyCwCPqwB" role="2OqNvi">
+                  <ref role="3Tt5mk" to="tpee:hqOqNr4" resolve="operation" />
+                </node>
+              </node>
+              <node concept="1mIQ4w" id="67uyCwCPrg6" role="2OqNvi">
+                <node concept="chp4Y" id="67uyCwCPrrS" role="cj9EA">
+                  <ref role="cht4Q" to="7ggn:67uyCwCOEaZ" resolve="ClassObjectParent" />
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
     <node concept="3aamgX" id="1lQ5DPQtZF9" role="3acgRq">
       <ref role="30HIoZ" to="7ggn:3qVwZ8sHWnm" resolve="AssignmentRuleExpression" />
       <node concept="gft3U" id="1lQ5DPQukmQ" role="1lVwrX">

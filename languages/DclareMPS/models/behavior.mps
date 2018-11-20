@@ -2337,7 +2337,7 @@
   </node>
   <node concept="13h7C7" id="6HWpSUEuarn">
     <property role="3GE5qa" value="models" />
-    <ref role="13h7C2" to="7ggn:6HWpSUEuark" resolve="ConceptRuleSet" />
+    <ref role="13h7C2" to="7ggn:6HWpSUEuark" resolve="NodeRuleSet" />
     <node concept="13i0hz" id="6HWpSUF4vHG" role="13h7CS">
       <property role="TrG5h" value="setBaseConcept" />
       <property role="2Ki8OM" value="false" />
@@ -2444,8 +2444,8 @@
     </node>
   </node>
   <node concept="13h7C7" id="3Qetf3cPI4Z">
-    <property role="3GE5qa" value="classes" />
-    <ref role="13h7C2" to="7ggn:3Qetf3cPkTM" resolve="ClassRuleSet" />
+    <property role="3GE5qa" value="structs" />
+    <ref role="13h7C2" to="7ggn:3Qetf3cPkTM" resolve="StructRuleSet" />
     <node concept="13i0hz" id="3Qetf3cPI5a" role="13h7CS">
       <property role="TrG5h" value="getContextType" />
       <property role="2Ki8OM" value="false" />
@@ -2454,7 +2454,7 @@
         <node concept="3clFbF" id="3Qetf3cTxTj" role="3cqZAp">
           <node concept="2pJPEk" id="3Qetf3cTxTh" role="3clFbG">
             <node concept="2pJPED" id="3Qetf3cTxWE" role="2pJPEn">
-              <ref role="2pJxaS" to="7ggn:3Qetf3cPPAL" resolve="ClassRuleSetType" />
+              <ref role="2pJxaS" to="7ggn:3Qetf3cPPAL" resolve="StructType" />
               <node concept="2pIpSj" id="3Qetf3cTxZU" role="2pJxcM">
                 <ref role="2pIpSl" to="7ggn:3Qetf3cPPAM" resolve="class" />
                 <node concept="36biLy" id="3Qetf3cTy2F" role="2pJxcZ">
@@ -2475,7 +2475,7 @@
       <node concept="37vLTG" id="3Qetf3dk8K_" role="3clF46">
         <property role="TrG5h" value="other" />
         <node concept="3Tqbb2" id="3Qetf3dk8KN" role="1tU5fm">
-          <ref role="ehGHo" to="7ggn:3Qetf3cPkTM" resolve="ClassRuleSet" />
+          <ref role="ehGHo" to="7ggn:3Qetf3cPkTM" resolve="StructRuleSet" />
         </node>
       </node>
       <node concept="3Tm1VV" id="3Qetf3dk8IU" role="1B3o_S" />
@@ -2720,8 +2720,8 @@
     </node>
   </node>
   <node concept="13h7C7" id="3Qetf3dk3dk">
-    <property role="3GE5qa" value="classes" />
-    <ref role="13h7C2" to="7ggn:3Qetf3cPPAL" resolve="ClassRuleSetType" />
+    <property role="3GE5qa" value="structs" />
+    <ref role="13h7C2" to="7ggn:3Qetf3cPPAL" resolve="StructType" />
     <node concept="13i0hz" id="3Qetf3dk3dv" role="13h7CS">
       <property role="TrG5h" value="isSupersetOf" />
       <property role="2Ki8OM" value="false" />
@@ -2734,7 +2734,7 @@
             </node>
             <node concept="1mIQ4w" id="3Qetf3dk3yC" role="2OqNvi">
               <node concept="chp4Y" id="3Qetf3dk3_4" role="cj9EA">
-                <ref role="cht4Q" to="7ggn:3Qetf3cPPAL" resolve="ClassRuleSetType" />
+                <ref role="cht4Q" to="7ggn:3Qetf3cPPAL" resolve="StructType" />
               </node>
             </node>
           </node>
@@ -2764,7 +2764,7 @@
                         <node concept="2OqwBi" id="3Qetf3dkaZ_" role="37wK5m">
                           <node concept="1PxgMI" id="3Qetf3dkayp" role="2Oq$k0">
                             <node concept="chp4Y" id="3Qetf3dkaFl" role="3oSUPX">
-                              <ref role="cht4Q" to="7ggn:3Qetf3cPPAL" resolve="ClassRuleSetType" />
+                              <ref role="cht4Q" to="7ggn:3Qetf3cPPAL" resolve="StructType" />
                             </node>
                             <node concept="37vLTw" id="3Qetf3dka62" role="1m5AlR">
                               <ref role="3cqZAo" node="3Qetf3dk3dJ" resolve="t" />
@@ -2780,7 +2780,7 @@
                       <node concept="2OqwBi" id="745HIYNBEN3" role="2Oq$k0">
                         <node concept="1PxgMI" id="745HIYNBEN4" role="2Oq$k0">
                           <node concept="chp4Y" id="745HIYNBEN5" role="3oSUPX">
-                            <ref role="cht4Q" to="7ggn:3Qetf3cPPAL" resolve="ClassRuleSetType" />
+                            <ref role="cht4Q" to="7ggn:3Qetf3cPPAL" resolve="StructType" />
                           </node>
                           <node concept="37vLTw" id="745HIYNBEN6" role="1m5AlR">
                             <ref role="3cqZAo" node="3Qetf3dk3dJ" resolve="t" />
@@ -2822,8 +2822,8 @@
     </node>
   </node>
   <node concept="13h7C7" id="7J3S7H6FuyP">
-    <property role="3GE5qa" value="classes" />
-    <ref role="13h7C2" to="7ggn:3Qetf3d9slq" resolve="ClassRuleSetInstance" />
+    <property role="3GE5qa" value="structs" />
+    <ref role="13h7C2" to="7ggn:3Qetf3d9slq" resolve="Struct" />
     <node concept="13i0hz" id="7J3S7H6Fuz0" role="13h7CS">
       <property role="TrG5h" value="getPresentation" />
       <property role="2Ki8OM" value="false" />

@@ -32,6 +32,7 @@
         <reference id="1169127628841" name="intfc" index="PrY4T" />
       </concept>
       <concept id="8842732777748464990" name="jetbrains.mps.lang.structure.structure.RefPresentationTemplate" flags="ng" index="ROjv2">
+        <property id="4307758654697524060" name="suffix" index="1W_73K" />
         <property id="4307758654697524057" name="prefix" index="1W_73P" />
       </concept>
       <concept id="8842732777748207592" name="jetbrains.mps.lang.structure.structure.SmartReferenceAttribute" flags="ng" index="RPilO">
@@ -242,9 +243,9 @@
   </node>
   <node concept="1TIwiD" id="6HWpSUEuark">
     <property role="EcuMT" value="7745179321613461204" />
-    <property role="TrG5h" value="ConceptRuleSet" />
+    <property role="TrG5h" value="NodeRuleSet" />
     <property role="19KtqR" value="true" />
-    <property role="34LRSv" value="Concept RuleSet" />
+    <property role="34LRSv" value="Node RuleSet" />
     <property role="3GE5qa" value="models" />
     <ref role="1TJDcQ" node="29R9$zZUovD" resolve="RuleSet" />
     <node concept="PrWs8" id="6HWpSUEuarl" role="PzmwI">
@@ -294,17 +295,17 @@
   </node>
   <node concept="1TIwiD" id="3Qetf3cPkTM">
     <property role="EcuMT" value="4435611260584021618" />
-    <property role="TrG5h" value="ClassRuleSet" />
+    <property role="TrG5h" value="StructRuleSet" />
     <property role="19KtqR" value="true" />
-    <property role="34LRSv" value="Class RuleSet" />
-    <property role="3GE5qa" value="classes" />
+    <property role="34LRSv" value="Struct RuleSet" />
+    <property role="3GE5qa" value="structs" />
     <ref role="1TJDcQ" node="29R9$zZUovD" resolve="RuleSet" />
     <node concept="1TJgyj" id="3Qetf3cPp0s" role="1TKVEi">
       <property role="IQ2ns" value="4435611260584038428" />
       <property role="20lmBu" value="aggregation" />
       <property role="20kJfa" value="extends" />
       <property role="20lbJX" value="0..n" />
-      <ref role="20lvS9" node="3Qetf3dC4N5" resolve="ClassRuleSetReference" />
+      <ref role="20lvS9" node="3Qetf3dC4N5" resolve="StructRuleSetReference" />
     </node>
     <node concept="1QGGSu" id="3Qetf3diZ3y" role="rwd14">
       <property role="1iqoE4" value="${module}/icons/Dclare.png" />
@@ -312,28 +313,38 @@
   </node>
   <node concept="1TIwiD" id="3Qetf3cPPAL">
     <property role="EcuMT" value="4435611260584155569" />
-    <property role="TrG5h" value="ClassRuleSetType" />
-    <property role="3GE5qa" value="classes" />
+    <property role="TrG5h" value="StructType" />
+    <property role="3GE5qa" value="structs" />
+    <property role="19KtqR" value="true" />
+    <property role="34LRSv" value="struct&lt;&gt;" />
     <ref role="1TJDcQ" to="tpee:fz3vP1H" resolve="Type" />
     <node concept="1TJgyj" id="3Qetf3cPPAM" role="1TKVEi">
       <property role="IQ2ns" value="4435611260584155570" />
       <property role="20lmBu" value="reference" />
       <property role="20kJfa" value="class" />
       <property role="20lbJX" value="0..1" />
-      <ref role="20lvS9" node="3Qetf3cPkTM" resolve="ClassRuleSet" />
+      <ref role="20lvS9" node="3Qetf3cPkTM" resolve="StructRuleSet" />
+    </node>
+    <node concept="RPilO" id="67uyCwD4I_y" role="lGtFl">
+      <ref role="RPilL" node="3Qetf3cPPAM" resolve="class" />
+      <node concept="ROjv2" id="67uyCwD4I_C" role="ROhUF">
+        <property role="1W_73P" value="struct&lt;" />
+        <property role="1W_73K" value="&gt;" />
+      </node>
     </node>
   </node>
   <node concept="1TIwiD" id="3Qetf3d9slq">
     <property role="EcuMT" value="4435611260589294938" />
-    <property role="TrG5h" value="ClassRuleSetInstance" />
-    <property role="3GE5qa" value="classes" />
+    <property role="TrG5h" value="Struct" />
+    <property role="3GE5qa" value="structs" />
+    <property role="34LRSv" value="struct" />
     <ref role="1TJDcQ" to="tpee:fz3vP1J" resolve="Expression" />
     <node concept="1TJgyj" id="3Qetf3d9slr" role="1TKVEi">
       <property role="IQ2ns" value="4435611260589294939" />
       <property role="20lmBu" value="reference" />
       <property role="20kJfa" value="class" />
       <property role="20lbJX" value="1" />
-      <ref role="20lvS9" node="3Qetf3cPkTM" resolve="ClassRuleSet" />
+      <ref role="20lvS9" node="3Qetf3cPkTM" resolve="StructRuleSet" />
     </node>
     <node concept="1TJgyj" id="745HIYNPcqg" role="1TKVEi">
       <property role="IQ2ns" value="8144116641799915152" />
@@ -342,18 +353,34 @@
       <property role="20lbJX" value="0..n" />
       <ref role="20lvS9" to="tpee:fz3vP1J" resolve="Expression" />
     </node>
+    <node concept="RPilO" id="67uyCwD0$6o" role="lGtFl">
+      <ref role="RPilL" node="3Qetf3d9slr" resolve="class" />
+      <node concept="ROjv2" id="67uyCwD0$6r" role="ROhUF">
+        <property role="1W_73K" value="()" />
+      </node>
+    </node>
   </node>
   <node concept="1TIwiD" id="3Qetf3dC4N5">
     <property role="EcuMT" value="4435611260597324997" />
-    <property role="TrG5h" value="ClassRuleSetReference" />
-    <property role="3GE5qa" value="classes" />
+    <property role="TrG5h" value="StructRuleSetReference" />
+    <property role="3GE5qa" value="structs" />
     <ref role="1TJDcQ" to="tpck:gw2VY9q" resolve="BaseConcept" />
     <node concept="1TJgyj" id="3Qetf3dC4N6" role="1TKVEi">
       <property role="IQ2ns" value="4435611260597324998" />
       <property role="20lmBu" value="reference" />
       <property role="20kJfa" value="class" />
       <property role="20lbJX" value="1" />
-      <ref role="20lvS9" node="3Qetf3cPkTM" resolve="ClassRuleSet" />
+      <ref role="20lvS9" node="3Qetf3cPkTM" resolve="StructRuleSet" />
+    </node>
+  </node>
+  <node concept="1TIwiD" id="67uyCwCOEaZ">
+    <property role="EcuMT" value="7052226383913853631" />
+    <property role="3GE5qa" value="structs" />
+    <property role="TrG5h" value="StructParent" />
+    <property role="34LRSv" value="parent" />
+    <ref role="1TJDcQ" to="tpck:gw2VY9q" resolve="BaseConcept" />
+    <node concept="PrWs8" id="67uyCwCOEb0" role="PzmwI">
+      <ref role="PrY4T" to="tpee:hqOqG0K" resolve="IOperation" />
     </node>
   </node>
 </model>

@@ -72,6 +72,9 @@
         <child id="1081256993305" name="classType" index="2ZW6by" />
         <child id="1081256993304" name="leftExpression" index="2ZW6bz" />
       </concept>
+      <concept id="1070533707846" name="jetbrains.mps.baseLanguage.structure.StaticFieldReference" flags="nn" index="10M0yZ">
+        <reference id="1144433057691" name="classifier" index="1PxDUh" />
+      </concept>
       <concept id="1070534058343" name="jetbrains.mps.baseLanguage.structure.NullLiteral" flags="nn" index="10Nm6u" />
       <concept id="1070534370425" name="jetbrains.mps.baseLanguage.structure.IntegerType" flags="in" index="10Oyi0" />
       <concept id="1070534644030" name="jetbrains.mps.baseLanguage.structure.BooleanType" flags="in" index="10P_77" />
@@ -1181,7 +1184,44 @@
         </node>
       </node>
     </node>
-    <node concept="2tJIrI" id="MxZDaxacnh" role="jymVt" />
+    <node concept="2tJIrI" id="67uyCwCOVLl" role="jymVt" />
+    <node concept="2YIFZL" id="67uyCwCP1zP" role="jymVt">
+      <property role="TrG5h" value="getParent" />
+      <property role="od$2w" value="false" />
+      <property role="DiZV1" value="false" />
+      <property role="2aFKle" value="false" />
+      <node concept="37vLTG" id="67uyCwCP2su" role="3clF46">
+        <property role="TrG5h" value="obj" />
+        <node concept="3uibUv" id="67uyCwCP2tB" role="1tU5fm">
+          <ref role="3uigEE" to="t4tl:~SClassObject" resolve="SClassObject" />
+        </node>
+      </node>
+      <node concept="3clFbS" id="67uyCwCP1zS" role="3clF47">
+        <node concept="3clFbF" id="67uyCwCP2y$" role="3cqZAp">
+          <node concept="2OqwBi" id="67uyCwCP2OD" role="3clFbG">
+            <node concept="10M0yZ" id="67uyCwCP2$f" role="2Oq$k0">
+              <ref role="3cqZAo" to="t4tl:~DObject.PARENT" resolve="PARENT" />
+              <ref role="1PxDUh" to="t4tl:~DObject" resolve="DObject" />
+            </node>
+            <node concept="liA8E" id="67uyCwCP38x" role="2OqNvi">
+              <ref role="37wK5l" to="dy39:~Getable.get(java.lang.Object):java.lang.Object" resolve="get" />
+              <node concept="10QFUN" id="67uyCwCP4nE" role="37wK5m">
+                <node concept="3uibUv" id="67uyCwCP4uI" role="10QFUM">
+                  <ref role="3uigEE" to="t4tl:~DObject" resolve="DObject" />
+                </node>
+                <node concept="37vLTw" id="67uyCwCP3em" role="10QFUP">
+                  <ref role="3cqZAo" node="67uyCwCP2su" resolve="obj" />
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+      <node concept="3Tm1VV" id="67uyCwCP0IF" role="1B3o_S" />
+      <node concept="3uibUv" id="67uyCwCP2oO" role="3clF45">
+        <ref role="3uigEE" to="wyt6:~Object" resolve="Object" />
+      </node>
+    </node>
     <node concept="3Tm1VV" id="30fQumnG8Av" role="1B3o_S" />
   </node>
 </model>
