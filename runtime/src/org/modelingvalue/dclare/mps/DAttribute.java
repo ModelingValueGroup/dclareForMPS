@@ -13,7 +13,7 @@ public interface DAttribute<O, T> {
 
     @SuppressWarnings("unchecked")
     static final Getable<Quadruple<Object, String, Boolean, Integer>, DAttribute> ATTRIBUTE = ConstantSetable.of("ATTRIBUTE", id -> {
-        return id.d() >= 0 ? new DIdentifyingAttribute(id.a(), id.b(), id.c(), id.d()) : new DObservedAttribut(id.a(), id.b(), id.c(), null);
+        return id.d() >= 0 ? new DIdentifyingAttribute(id.a(), id.b(), id.c(), id.d()) : new DObservedAttribut(id.a(), id.b(), id.c(), null, null);
     });
 
     @SuppressWarnings("unchecked")
@@ -22,8 +22,8 @@ public interface DAttribute<O, T> {
     }
 
     @SuppressWarnings("unchecked")
-    public static <C, V> DAttribute<C, V> of(Object id, String name, boolean composite, QuadConsumer<AbstractLeaf, C, V, V> changed) {
-        return new DObservedAttribut(id, name, composite, changed);
+    public static <C, V> DAttribute<C, V> of(Object id, String name, boolean composite, V def, QuadConsumer<AbstractLeaf, C, V, V> changed) {
+        return new DObservedAttribut(id, name, composite, def, changed);
     }
 
     T get(O object);
@@ -39,8 +39,8 @@ public interface DAttribute<O, T> {
         private String  name;
         private boolean composite;
 
-        public DObservedAttribut(Object id, String name, boolean composite, QuadConsumer<AbstractLeaf, C, V, V> changed) {
-            super(id, null, false, false, (o, b, a) -> {
+        public DObservedAttribut(Object id, String name, boolean composite, V def, QuadConsumer<AbstractLeaf, C, V, V> changed) {
+            super(id, def, false, false, (o, b, a) -> {
             }, changed);
             this.name = name;
             this.composite = composite;
