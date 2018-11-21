@@ -408,5 +408,27 @@
       <ref role="PrY4T" to="tpee:hqOqG0K" resolve="IOperation" />
     </node>
   </node>
+  <node concept="1TIwiD" id="18IIFqBx3QL">
+    <property role="EcuMT" value="1310189835268668849" />
+    <property role="TrG5h" value="OppositeLinkAccessImplicitSelect" />
+    <property role="3GE5qa" value="models" />
+    <ref role="1TJDcQ" to="tpck:gw2VY9q" resolve="BaseConcept" />
+    <node concept="RPilO" id="18IIFqBx3QM" role="lGtFl">
+      <ref role="RPilL" node="18IIFqBH7Z$" resolve="link" />
+      <node concept="ROjv2" id="18IIFqBx3QN" role="ROhUF">
+        <property role="1W_73P" value="~" />
+      </node>
+    </node>
+    <node concept="PrWs8" id="18IIFqBH7Zy" role="PzmwI">
+      <ref role="PrY4T" to="tpee:hqOqG0K" resolve="IOperation" />
+    </node>
+    <node concept="1TJgyj" id="18IIFqBH7Z$" role="1TKVEi">
+      <property role="IQ2ns" value="1310189835271831524" />
+      <property role="20lmBu" value="reference" />
+      <property role="20kJfa" value="link" />
+      <property role="20lbJX" value="1" />
+      <ref role="20lvS9" to="tpce:f_TJgxE" resolve="LinkDeclaration" />
+    </node>
+  </node>
 </model>
 
