@@ -99,7 +99,10 @@
     <property role="R5$K7" value="false" />
     <property role="R5$K2" value="false" />
     <property role="34LRSv" value="rule" />
-    <ref role="1TJDcQ" to="tpee:fzclF7W" resolve="BaseMethodDeclaration" />
+    <ref role="1TJDcQ" to="tpck:gw2VY9q" resolve="BaseConcept" />
+    <node concept="PrWs8" id="7byyZgEwsfy" role="PzmwI">
+      <ref role="PrY4T" to="tpck:h0TrEE$" resolve="INamedConcept" />
+    </node>
     <node concept="PrWs8" id="6HWpSUEwIV3" role="PzmwI">
       <ref role="PrY4T" node="61p65V8x$6I" resolve="ThisContext" />
     </node>
@@ -132,9 +135,6 @@
       <property role="20lbJX" value="0..n" />
       <ref role="20lvS9" node="29R9$zZUovC" resolve="Rule" />
     </node>
-    <node concept="PrWs8" id="29R9$zZUovH" role="PzmwI">
-      <ref role="PrY4T" to="tpee:hoSGL_l" resolve="IMemberContainer" />
-    </node>
     <node concept="PrWs8" id="29R9$zZUovP" role="PzmwI">
       <ref role="PrY4T" to="tpck:h0TrEE$" resolve="INamedConcept" />
     </node>
@@ -165,6 +165,11 @@
     <node concept="1TJgyi" id="2UEyDf6lmL1" role="1TKVEl">
       <property role="IQ2nx" value="3362652439077809217" />
       <property role="TrG5h" value="identifying" />
+      <ref role="AX2Wp" to="tpck:fKAQMTB" resolve="boolean" />
+    </node>
+    <node concept="1TJgyi" id="7byyZgEvBg3" role="1TKVEl">
+      <property role="IQ2nx" value="8278332945861604355" />
+      <property role="TrG5h" value="constant" />
       <ref role="AX2Wp" to="tpck:fKAQMTB" resolve="boolean" />
     </node>
   </node>

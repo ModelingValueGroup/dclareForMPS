@@ -8,20 +8,22 @@ import org.modelingvalue.collections.util.QuadConsumer;
 import org.modelingvalue.collections.util.Triple;
 import org.modelingvalue.transactions.AbstractLeaf;
 import org.modelingvalue.transactions.ConstantSetable;
+import org.modelingvalue.transactions.ConstantSetable.Identified;
 import org.modelingvalue.transactions.Getable;
 
 @SuppressWarnings("rawtypes")
 public interface DAttribute<O, T> {
 
     @SuppressWarnings("unchecked")
-    static final Getable<Pair<Pair<Object, String>, Triple<Boolean, Integer, Function>>, DAttribute> ATTRIBUTE = ConstantSetable.of("ATTRIBUTE", id -> {
+    static final Getable<Pair<Pair<Object, String>, Triple<Boolean, Integer, Identified<Function>>>, DAttribute> ATTRIBUTE = ConstantSetable.of("ATTRIBUTE", id -> {
         return id.b().b() >= 0 ? new DIdentifyingAttribute(id.a().a(), id.a().b(), id.b().a(), id.b().b()) : id.b().c() != null ? //
-        new DConstant(id.a().a(), id.a().b(), id.b().a(), id.b().c()) : new DObservedAttribut(id.a().a(), id.a().b(), id.b().a(), null, null);
+        new DConstant(id.a().a(), id.a().b(), id.b().a(), id.b().c().get()) : new DObservedAttribut(id.a().a(), id.a().b(), id.b().a(), null, null);
     });
 
     @SuppressWarnings("unchecked")
     public static <C, V> DAttribute<C, V> of(Object id, String name, boolean composite, int identifyingNr, Function<C, V> deriver) {
-        return ATTRIBUTE.get(Pair.of(Pair.of(id, name), Triple.of(composite, identifyingNr, deriver)));
+        Pair<Object, String> key = Pair.of(id, name);
+        return ATTRIBUTE.get(Pair.of(key, Triple.of(composite, identifyingNr, deriver != null ? Identified.of(key, deriver) : null)));
     }
 
     @SuppressWarnings("unchecked")
