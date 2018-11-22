@@ -186,7 +186,7 @@ public class DNode extends DObject<SNode> implements SNode {
     }
 
     @Override
-    protected boolean isComplete() {
+    public boolean isComplete() {
         return super.isComplete() && getModel() != null;
     }
 

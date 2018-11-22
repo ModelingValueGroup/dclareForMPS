@@ -1,9 +1,11 @@
 package org.modelingvalue.dclare.mps;
 
 import java.util.function.BiFunction;
+import java.util.function.Function;
 
+import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.collections.util.QuadConsumer;
-import org.modelingvalue.collections.util.Quadruple;
+import org.modelingvalue.collections.util.Triple;
 import org.modelingvalue.transactions.AbstractLeaf;
 import org.modelingvalue.transactions.ConstantSetable;
 import org.modelingvalue.transactions.Getable;
@@ -12,18 +14,24 @@ import org.modelingvalue.transactions.Getable;
 public interface DAttribute<O, T> {
 
     @SuppressWarnings("unchecked")
-    static final Getable<Quadruple<Object, String, Boolean, Integer>, DAttribute> ATTRIBUTE = ConstantSetable.of("ATTRIBUTE", id -> {
-        return id.d() >= 0 ? new DIdentifyingAttribute(id.a(), id.b(), id.c(), id.d()) : new DObservedAttribut(id.a(), id.b(), id.c(), null, null);
+    static final Getable<Pair<Pair<Object, String>, Triple<Boolean, Integer, Function>>, DAttribute> ATTRIBUTE = ConstantSetable.of("ATTRIBUTE", id -> {
+        return id.b().b() >= 0 ? new DIdentifyingAttribute(id.a().a(), id.a().b(), id.b().a(), id.b().b()) : id.b().c() != null ? //
+        new DConstant(id.a().a(), id.a().b(), id.b().a(), id.b().c()) : new DObservedAttribut(id.a().a(), id.a().b(), id.b().a(), null, null);
     });
 
     @SuppressWarnings("unchecked")
-    public static <C, V> DAttribute<C, V> of(Object id, String name, boolean composite, int identifyingNr) {
-        return ATTRIBUTE.get(Quadruple.of(id, name, composite, identifyingNr));
+    public static <C, V> DAttribute<C, V> of(Object id, String name, boolean composite, int identifyingNr, Function<C, V> deriver) {
+        return ATTRIBUTE.get(Pair.of(Pair.of(id, name), Triple.of(composite, identifyingNr, deriver)));
     }
 
     @SuppressWarnings("unchecked")
     public static <C, V> DAttribute<C, V> of(Object id, String name, boolean composite, V def, QuadConsumer<AbstractLeaf, C, V, V> changed) {
         return new DObservedAttribut(id, name, composite, def, changed);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <C, V> DAttribute<C, V> of(Object id, String name, boolean composite, Function<C, V> deriver) {
+        return new DConstant(id, name, composite, deriver);
     }
 
     T get(O object);
@@ -122,5 +130,27 @@ public interface DAttribute<O, T> {
             throw new UnsupportedOperationException();
         }
 
+    }
+
+    static class DConstant<C, V> extends ConstantSetable<C, V> implements DAttribute<C, V> {
+
+        private String  name;
+        private boolean composite;
+
+        public DConstant(Object id, String name, boolean composite, Function<C, V> deriver) {
+            super(id, null, deriver, null);
+            this.name = name;
+            this.composite = composite;
+        }
+
+        @Override
+        public boolean isComposite() {
+            return composite;
+        }
+
+        @Override
+        public String toString() {
+            return name;
+        }
     }
 }
