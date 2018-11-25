@@ -44,6 +44,10 @@ public interface DAttribute<O, T> {
 
     boolean isComposite();
 
+    boolean isConstant();
+
+    boolean isIndetifying();
+
     final static class DObservedAttribut<C, V> extends DObserved<C, V> implements DAttribute<C, V> {
 
         private String  name;
@@ -74,6 +78,17 @@ public interface DAttribute<O, T> {
         public boolean isComposite() {
             return composite;
         }
+
+        @Override
+        public boolean isConstant() {
+            return false;
+        }
+
+        @Override
+        public boolean isIndetifying() {
+            return false;
+        }
+
     }
 
     final static class DIdentifyingAttribute<C, V> implements DAttribute<C, V> {
@@ -132,6 +147,16 @@ public interface DAttribute<O, T> {
             throw new UnsupportedOperationException();
         }
 
+        @Override
+        public boolean isConstant() {
+            return false;
+        }
+
+        @Override
+        public boolean isIndetifying() {
+            return true;
+        }
+
     }
 
     static class DConstant<C, V> extends ConstantSetable<C, V> implements DAttribute<C, V> {
@@ -154,5 +179,16 @@ public interface DAttribute<O, T> {
         public String toString() {
             return name;
         }
+
+        @Override
+        public boolean isConstant() {
+            return true;
+        }
+
+        @Override
+        public boolean isIndetifying() {
+            return false;
+        }
+
     }
 }
