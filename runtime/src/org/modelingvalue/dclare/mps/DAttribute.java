@@ -171,6 +171,11 @@ public interface DAttribute<O, T> {
         }
 
         @Override
+        public V get(C object) {
+            return object != null ? super.get(object) : null;
+        }
+
+        @Override
         public boolean isComposite() {
             return composite;
         }

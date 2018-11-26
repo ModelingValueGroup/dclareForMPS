@@ -36,7 +36,7 @@ public class DClassObject extends DObject<SClassObject> implements SClassObject 
     @SuppressWarnings("unchecked")
     @Override
     protected DType getType() {
-        Set<SLanguage> languages = PARENT.get(this).getType().getLanguages();
+        Set<SLanguage> languages = DObject.TYPE.get(PARENT.get(this)).getLanguages();
         SClass cls = original().getDClass();
         return new DType() {
 

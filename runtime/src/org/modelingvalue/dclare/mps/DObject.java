@@ -135,7 +135,7 @@ public abstract class DObject<O> {
 
     @SuppressWarnings("unchecked")
     private ContainingCollection<? extends DObject> getContained() {
-        return getType().getAttributes().filter(DAttribute::isComposite).flatMap(a -> {
+        return TYPE.get(this).getAttributes().filter(DAttribute::isComposite).flatMap(a -> {
             Object v = a.get(this);
             if (v instanceof Collection) {
                 return (Collection) v;
@@ -166,6 +166,15 @@ public abstract class DObject<O> {
                 throw new StopObserverException("Stopped");
             }
         }).trigger();
+        Observer.of("<CONSTANT_CONTAINMENT>", tx, () -> {
+            if (tx.equals(DObject.TRANSACTION.get(this))) {
+                if (isComplete()) {
+                    TYPE.get(this).getAttributes().filter(DAttribute::isConstant).filter(DAttribute::isComposite).forEach(cc -> cc.get(this));
+                }
+            } else {
+                throw new StopObserverException("Stopped");
+            }
+        });
         Observer.of(RULE_INSTANCES, tx, () -> {
             if (tx.equals(TRANSACTION.get(this))) {
                 if (isComplete()) {
