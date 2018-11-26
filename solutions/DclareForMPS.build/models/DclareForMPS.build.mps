@@ -331,6 +331,18 @@
               <ref role="3bR37D" to="ffeo:7YI57w6K0pv" resolve="jetbrains.mps.lang.quotation#1196351859310" />
             </node>
           </node>
+          <node concept="1SiIV0" id="4jp8R7Dy3$L" role="3bR37C">
+            <node concept="3bR9La" id="4jp8R7Dy3$M" role="1SiIV1">
+              <property role="3bR36h" value="false" />
+              <ref role="3bR37D" to="ffeo:7Kfy9QB6L0h" resolve="jetbrains.mps.baseLanguage.collections" />
+            </node>
+          </node>
+          <node concept="1SiIV0" id="4jp8R7Dy3$N" role="3bR37C">
+            <node concept="3bR9La" id="4jp8R7Dy3$O" role="1SiIV1">
+              <property role="3bR36h" value="false" />
+              <ref role="3bR37D" to="ffeo:7Kfy9QB6Lg8" resolve="jetbrains.mps.runtime" />
+            </node>
+          </node>
         </node>
         <node concept="1SiIV0" id="5TmHY1l0vf9" role="3bR37C">
           <node concept="3bR9La" id="5TmHY1l0vfa" role="1SiIV1">
