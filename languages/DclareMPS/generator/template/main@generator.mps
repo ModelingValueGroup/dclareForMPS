@@ -806,13 +806,13 @@
                           <node concept="2OqwBi" id="4wbMdoKhiuh" role="3clFbG">
                             <node concept="1iwH7S" id="4wbMdoKhiui" role="2Oq$k0" />
                             <node concept="1iwH70" id="4wbMdoKhiuj" role="2OqNvi">
-                              <ref role="1iwH77" node="1$veQIxqbAz" resolve="ruleContext" />
+                              <ref role="1iwH77" node="1$veQIxqbAz" resolve="thisContext" />
                               <node concept="2OqwBi" id="4wbMdoKhiuk" role="1iwH7V">
                                 <node concept="30H73N" id="4wbMdoKhiul" role="2Oq$k0" />
                                 <node concept="2Xjw5R" id="4wbMdoKhium" role="2OqNvi">
                                   <node concept="1xMEDy" id="4wbMdoKhiun" role="1xVPHs">
-                                    <node concept="chp4Y" id="4wbMdoKhiuo" role="ri$Ld">
-                                      <ref role="cht4Q" to="7ggn:29R9$zZUovC" resolve="Rule" />
+                                    <node concept="chp4Y" id="3gmcRWF3NWd" role="ri$Ld">
+                                      <ref role="cht4Q" to="7ggn:61p65V8x$6I" resolve="ThisContext" />
                                     </node>
                                   </node>
                                 </node>
@@ -890,13 +890,13 @@
                         <node concept="2OqwBi" id="3_UgbASLruQ" role="3clFbG">
                           <node concept="1iwH7S" id="3_UgbASLqWG" role="2Oq$k0" />
                           <node concept="1iwH70" id="3_UgbASLr_9" role="2OqNvi">
-                            <ref role="1iwH77" node="1$veQIxqbAz" resolve="ruleContext" />
+                            <ref role="1iwH77" node="1$veQIxqbAz" resolve="thisContext" />
                             <node concept="2OqwBi" id="3_UgbASLq2l" role="1iwH7V">
                               <node concept="30H73N" id="3_UgbASLpNE" role="2Oq$k0" />
                               <node concept="2Xjw5R" id="3_UgbASLqbU" role="2OqNvi">
                                 <node concept="1xMEDy" id="3_UgbASLqbW" role="1xVPHs">
-                                  <node concept="chp4Y" id="3pElVuqqr66" role="ri$Ld">
-                                    <ref role="cht4Q" to="7ggn:29R9$zZUovC" resolve="Rule" />
+                                  <node concept="chp4Y" id="3gmcRWF3Oig" role="ri$Ld">
+                                    <ref role="cht4Q" to="7ggn:61p65V8x$6I" resolve="ThisContext" />
                                   </node>
                                 </node>
                               </node>
@@ -2397,9 +2397,9 @@
       <ref role="2rZz_L" to="tpee:f$Wx3kv" resolve="StaticFieldDeclaration" />
     </node>
     <node concept="2rT7sh" id="1$veQIxqbAz" role="2rTMjI">
-      <property role="TrG5h" value="ruleContext" />
+      <property role="TrG5h" value="thisContext" />
       <ref role="2rZz_L" to="tpee:fz7vLUk" resolve="ParameterDeclaration" />
-      <ref role="2rTdP9" to="7ggn:29R9$zZUovC" resolve="Rule" />
+      <ref role="2rTdP9" to="7ggn:61p65V8x$6I" resolve="ThisContext" />
     </node>
     <node concept="2rT7sh" id="3Qetf3d9yds" role="2rTMjI">
       <property role="TrG5h" value="sClassField" />
@@ -2976,7 +2976,7 @@
           </node>
         </node>
         <node concept="2ZBi8u" id="4wbMdoJpU7V" role="lGtFl">
-          <ref role="2rW$FS" node="1$veQIxqbAz" resolve="ruleContext" />
+          <ref role="2rW$FS" node="1$veQIxqbAz" resolve="thisContext" />
         </node>
       </node>
       <node concept="3Tm6S6" id="4wbMdoJpU7W" role="1B3o_S" />
@@ -5248,13 +5248,13 @@
                           <node concept="2OqwBi" id="4wbMdoKmv5S" role="3clFbG">
                             <node concept="1iwH7S" id="4wbMdoKmv5T" role="2Oq$k0" />
                             <node concept="1iwH70" id="4wbMdoKmv5U" role="2OqNvi">
-                              <ref role="1iwH77" node="1$veQIxqbAz" resolve="ruleContext" />
+                              <ref role="1iwH77" node="1$veQIxqbAz" resolve="thisContext" />
                               <node concept="2OqwBi" id="4wbMdoKmv5V" role="1iwH7V">
                                 <node concept="30H73N" id="4wbMdoKmv5W" role="2Oq$k0" />
                                 <node concept="2Xjw5R" id="4wbMdoKmv5X" role="2OqNvi">
                                   <node concept="1xMEDy" id="4wbMdoKmv5Y" role="1xVPHs">
-                                    <node concept="chp4Y" id="4wbMdoKmv5Z" role="ri$Ld">
-                                      <ref role="cht4Q" to="7ggn:29R9$zZUovC" resolve="Rule" />
+                                    <node concept="chp4Y" id="3gmcRWF3Tdx" role="ri$Ld">
+                                      <ref role="cht4Q" to="7ggn:61p65V8x$6I" resolve="ThisContext" />
                                     </node>
                                   </node>
                                 </node>
@@ -5950,7 +5950,7 @@
                 <property role="od$2w" value="false" />
                 <node concept="3Tm1VV" id="5Kzc4YFQ5on" role="1B3o_S" />
                 <node concept="37vLTG" id="5Kzc4YFQ5oo" role="3clF46">
-                  <property role="TrG5h" value="p0" />
+                  <property role="TrG5h" value="context" />
                   <node concept="3uibUv" id="5Kzc4YFQ5op" role="1tU5fm">
                     <ref role="3uigEE" to="wyt6:~Object" resolve="Object" />
                     <node concept="29HgVG" id="5Kzc4YFQ5oq" role="lGtFl">
@@ -5967,6 +5967,9 @@
                         </node>
                       </node>
                     </node>
+                  </node>
+                  <node concept="2ZBi8u" id="3gmcRWEPIv2" role="lGtFl">
+                    <ref role="2rW$FS" node="1$veQIxqbAz" resolve="thisContext" />
                   </node>
                 </node>
                 <node concept="3clFbS" id="5Kzc4YFQ5ox" role="3clF47">
