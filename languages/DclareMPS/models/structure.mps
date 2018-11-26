@@ -435,5 +435,19 @@
       <ref role="20lvS9" to="tpce:f_TJgxE" resolve="LinkDeclaration" />
     </node>
   </node>
+  <node concept="1TIwiD" id="76efOMRCHWM">
+    <property role="TrG5h" value="ListBuilder" />
+    <property role="2_RsDV" value="none" />
+    <property role="34LRSv" value="[list]" />
+    <property role="EcuMT" value="8182547171709738802" />
+    <ref role="1TJDcQ" to="tpee:fz3vP1J" resolve="Expression" />
+    <node concept="1TJgyj" id="4jp8R7C$k_N" role="1TKVEi">
+      <property role="IQ2ns" value="4961035436665424243" />
+      <property role="20lmBu" value="aggregation" />
+      <property role="20kJfa" value="elements" />
+      <property role="20lbJX" value="0..n" />
+      <ref role="20lvS9" to="tpee:fz3vP1J" resolve="Expression" />
+    </node>
+  </node>
 </model>
 
