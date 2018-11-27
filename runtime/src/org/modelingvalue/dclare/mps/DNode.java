@@ -29,7 +29,6 @@ import org.jetbrains.mps.openapi.model.SNodeReference;
 import org.jetbrains.mps.openapi.model.SReference;
 import org.jetbrains.mps.openapi.module.SRepository;
 import org.modelingvalue.collections.Collection;
-import org.modelingvalue.collections.ContainingCollection;
 import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.Map;
 import org.modelingvalue.collections.Set;
@@ -47,56 +46,74 @@ import jetbrains.mps.smodel.SNodeUtil;
 
 public class DNode extends DObject<SNode> implements SNode {
 
-    public static final Getable<Pair<DClareMPS, SNode>, DNode>                  DNODE        = ConstantSetable.of("DNODE", p -> new DNode(p.a(), p.b()));
+    public static final Getable<Pair<DClareMPS, SNode>, DNode>                  DNODE              = ConstantSetable.of("DNODE", p -> new DNode(p.a(), p.b()));
 
-    public static final Observed<DNode, SContainmentLink>                       CONTAINING   = Observed.of("CONTAINING", null);
+    public static final Observed<DNode, SContainmentLink>                       CONTAINING         = Observed.of("CONTAINING", null);
 
-    public static final Observed<DNode, DModel>                                 MODEL        = Observed.of("MODEL", null);
+    public static final Observed<DNode, DModel>                                 MODEL              = Observed.of("MODEL", null);
 
-    public static final Observed<DNode, Map<Object, Object>>                    USER_OBJECTS = Observed.of("USER_OBJECTS", Map.of());
+    public static final Observed<DNode, Map<Object, Object>>                    USER_OBJECTS       = Observed.of("USER_OBJECTS", Map.of());
 
-    public static final Getable<SContainmentLink, Observed<DNode, List<DNode>>> CONTAINMENT  = ConstantSetable.of("CONTAINMENT", sc -> {
-                                                                                                 return DObserved.<DNode, List<DNode>> of(sc, List.of(), !sc.isOptional(), false,                                 //
-                                                                                                         (dNode, pre, post) -> {
-                                                                                                             DObserved.map(DNode.children(dNode.original(), sc), post.map(DNode::original).toList(),              //
-                                                                                                                     (n, a) -> dNode.original().insertChildAfter(sc, n, a), r -> dNode.original().removeChild(r));
-                                                                                                         },                                                                                                       //
-                                                                                                         (tx, o, b, a) -> {
-                                                                                                             Setable.<List<DNode>, DNode> diff(List.of(), b, a,                                                   //
-                                                                                                                     x -> DNode.CONTAINING.set(x, sc), x -> {
-                                                                                                                                                                                                              });
-                                                                                                         });
-                                                                                             });
-    public static final Getable<SReferenceLink, Observed<DNode, DNode>>         REFERENCE    = ConstantSetable.of("REFERENCE", sr -> {
-                                                                                                 Observed<DNode, Set<DNode>> oppos = DNode.OPPOSITE.get(sr);
-                                                                                                 return DObserved.<DNode, DNode> of(sr, null, !sr.isOptional(), true,                                             //
-                                                                                                         (dNode, pre, post) -> {
-                                                                                                             SNode ref = post != null ? post.original() : null;
-                                                                                                             if (!Objects.equals(dNode.original().getReferenceTarget(sr), ref)) {
-                                                                                                                 dNode.original().setReferenceTarget(sr, ref);
-                                                                                                             }
-                                                                                                         },                                                                                                       //
-                                                                                                         (tx, o, b, a) -> {
-                                                                                                             if (a != null) {
-                                                                                                                 oppos.set(a, Set::add, o);
-                                                                                                             }
-                                                                                                             if (b != null) {
-                                                                                                                 oppos.set(b, Set::remove, o);
-                                                                                                             }
-                                                                                                         });
+    public static final Getable<SContainmentLink, Observed<DNode, List<DNode>>> MANY_CONTAINMENT   = ConstantSetable.of("MANY_CONTAINMENT", sc -> {
+                                                                                                       return DObserved.<DNode, List<DNode>> of(sc, List.of(), !sc.isOptional(), false,                                      //
+                                                                                                               (dNode, pre, post) -> {
+                                                                                                                   DObserved.map(DNode.children(dNode.original(), sc), post.map(DNode::original).toList(),                   //
+                                                                                                                           (n, a) -> dNode.original().insertChildAfter(sc, n, a), r -> dNode.original().removeChild(r));
+                                                                                                               },                                                                                                            //
+                                                                                                               (tx, o, b, a) -> {
+                                                                                                                   Setable.<List<DNode>, DNode> diff(List.of(), b, a,                                                        //
+                                                                                                                           x -> DNode.CONTAINING.set(x, sc), x -> {
+                                                                                                                                                                                                                          });
+                                                                                                               });
+                                                                                                   });
 
-                                                                                             });
-    public static final Getable<SReferenceLink, Observed<DNode, Set<DNode>>>    OPPOSITE     = ConstantSetable.of("OPPOSITE", sr -> {
-                                                                                                 return Observed.<DNode, Set<DNode>> of(Pair.of(sr, "OPPOSITE"), Set.of());
-                                                                                             });
-    public static final Getable<SProperty, Observed<DNode, String>>             PROPERTY     = ConstantSetable.of("PROPERTY", sp -> {
-                                                                                                 return DObserved.<DNode, String> of(sp, null, false, false,                                                      //
-                                                                                                         (dNode, pre, post) -> {
-                                                                                                             if (!Objects.equals(dNode.original().getProperty(sp), post)) {
-                                                                                                                 dNode.original().setProperty(sp, post);
-                                                                                                             }
-                                                                                                         });
-                                                                                             });
+    public static final Getable<SContainmentLink, Observed<DNode, DNode>>       SINGLE_CONTAINMENT = ConstantSetable.of("SINGLE_CONTAINMENT", sc -> {
+                                                                                                       return DObserved.<DNode, DNode> of(sc, null, !sc.isOptional(), false,                                                 //
+                                                                                                               (dNode, pre, post) -> {
+                                                                                                                   if (pre != null) {
+                                                                                                                       dNode.original().removeChild(pre.original());
+                                                                                                                   }
+                                                                                                                   if (post != null) {
+                                                                                                                       dNode.original().addChild(sc, post.original());
+                                                                                                                   }
+                                                                                                               },                                                                                                            //
+                                                                                                               (tx, o, b, a) -> {
+                                                                                                                   if (a != null) {
+                                                                                                                       DNode.CONTAINING.set(a, sc);
+                                                                                                                   }
+                                                                                                               });
+                                                                                                   });
+
+    public static final Getable<SReferenceLink, Observed<DNode, DNode>>         REFERENCE          = ConstantSetable.of("REFERENCE", sr -> {
+                                                                                                       Observed<DNode, Set<DNode>> oppos = DNode.OPPOSITE.get(sr);
+                                                                                                       return DObserved.<DNode, DNode> of(sr, null, !sr.isOptional(), true,                                                  //
+                                                                                                               (dNode, pre, post) -> {
+                                                                                                                   SNode ref = post != null ? post.original() : null;
+                                                                                                                   if (!Objects.equals(dNode.original().getReferenceTarget(sr), ref)) {
+                                                                                                                       dNode.original().setReferenceTarget(sr, ref);
+                                                                                                                   }
+                                                                                                               },                                                                                                            //
+                                                                                                               (tx, o, b, a) -> {
+                                                                                                                   if (a != null) {
+                                                                                                                       oppos.set(a, Set::add, o);
+                                                                                                                   }
+                                                                                                                   if (b != null) {
+                                                                                                                       oppos.set(b, Set::remove, o);
+                                                                                                                   }
+                                                                                                               });
+
+                                                                                                   });
+    public static final Getable<SReferenceLink, Observed<DNode, Set<DNode>>>    OPPOSITE           = ConstantSetable.of("OPPOSITE", sr -> {
+                                                                                                       return Observed.<DNode, Set<DNode>> of(Pair.of(sr, "OPPOSITE"), Set.of());
+                                                                                                   });
+    public static final Getable<SProperty, Observed<DNode, String>>             PROPERTY           = ConstantSetable.of("PROPERTY", sp -> {
+                                                                                                       return DObserved.<DNode, String> of(sp, null, false, false,                                                           //
+                                                                                                               (dNode, pre, post) -> {
+                                                                                                                   if (!Objects.equals(dNode.original().getProperty(sp), post)) {
+                                                                                                                       dNode.original().setProperty(sp, post);
+                                                                                                                   }
+                                                                                                               });
+                                                                                                   });
 
     public static DNode of(DClareMPS dClareMPS, SNode original) {
         return original instanceof DNode && ((DNode) original).dClareMPS == dClareMPS ? (DNode) original : DNODE.get(Pair.of(dClareMPS, original));
@@ -140,10 +157,17 @@ public class DNode extends DObject<SNode> implements SNode {
     }
 
     @Override
-    public ContainingCollection<? extends DNode> getChildren() {
+    public List<? extends DNode> getChildren() {
         List<DNode> result = List.of();
         for (SContainmentLink cl : getConcept().getContainmentLinks()) {
-            result = result.appendList(CONTAINMENT.get(cl).get(this));
+            if (cl.isMultiple()) {
+                result = result.appendList(MANY_CONTAINMENT.get(cl).get(this));
+            } else {
+                DNode child = SINGLE_CONTAINMENT.get(cl).get(this);
+                if (child != null) {
+                    result = result.append(child);
+                }
+            }
         }
         return result;
     }
@@ -161,7 +185,12 @@ public class DNode extends DObject<SNode> implements SNode {
         }
         for (SNode sChild : original().getChildren()) {
             DNode dChild = of(dClareMPS, sChild);
-            CONTAINMENT.get(sChild.getContainmentLink()).set(this, (l, e) -> l.addUnique(e), dChild);
+            SContainmentLink cl = sChild.getContainmentLink();
+            if (cl.isMultiple()) {
+                MANY_CONTAINMENT.get(cl).set(this, (l, e) -> l.addUnique(e), dChild);
+            } else {
+                SINGLE_CONTAINMENT.get(cl).set(this, dChild);
+            }
         }
     }
 
@@ -251,25 +280,37 @@ public class DNode extends DObject<SNode> implements SNode {
     @Override
     public void addChild(SContainmentLink role, SNode child) {
         DNode dNode = of(dClareMPS, child);
-        CONTAINMENT.get(role).set(this, (l, e) -> l.addUnique(e), dNode);
+        if (role.isMultiple()) {
+            MANY_CONTAINMENT.get(role).set(this, (l, e) -> l.addUnique(e), dNode);
+        } else {
+            SINGLE_CONTAINMENT.get(role).set(this, dNode);
+        }
     }
 
     @Override
     public void insertChildBefore(SContainmentLink role, SNode child, SNode anchor) {
         DNode dNode = of(dClareMPS, child);
-        CONTAINMENT.get(role).set(this, (l, e) -> {
-            List<DNode> r = l.remove(e);
-            return r.insert(r.firstIndexOf(anchor), e);
-        }, dNode);
+        if (role.isMultiple()) {
+            MANY_CONTAINMENT.get(role).set(this, (l, e) -> {
+                List<DNode> r = l.remove(e);
+                return r.insert(r.firstIndexOf(anchor), e);
+            }, dNode);
+        } else {
+            SINGLE_CONTAINMENT.get(role).set(this, dNode);
+        }
     }
 
     @Override
     public void insertChildAfter(SContainmentLink role, SNode child, SNode anchor) {
         DNode dNode = of(dClareMPS, child);
-        CONTAINMENT.get(role).set(this, (l, e) -> {
-            List<DNode> r = l.remove(e);
-            return r.insert(r.firstIndexOf(anchor) + 1, e);
-        }, dNode);
+        if (role.isMultiple()) {
+            MANY_CONTAINMENT.get(role).set(this, (l, e) -> {
+                List<DNode> r = l.remove(e);
+                return r.insert(r.firstIndexOf(anchor) + 1, e);
+            }, dNode);
+        } else {
+            SINGLE_CONTAINMENT.get(role).set(this, dNode);
+        }
     }
 
     @Override
@@ -277,7 +318,11 @@ public class DNode extends DObject<SNode> implements SNode {
         DNode dNode = of(dClareMPS, child);
         SContainmentLink link = dNode.getContainmentLink();
         if (link != null) {
-            CONTAINMENT.get(link).set(this, (l, e) -> l.remove(e), dNode);
+            if (link.isMultiple()) {
+                MANY_CONTAINMENT.get(link).set(this, (l, e) -> l.remove(e), dNode);
+            } else {
+                SINGLE_CONTAINMENT.get(link).set(this, (v, e) -> dNode.equals(v) ? null : v, dNode);
+            }
         }
     }
 
@@ -285,7 +330,12 @@ public class DNode extends DObject<SNode> implements SNode {
     public void delete() {
         DNode parent = getParent();
         if (parent != null) {
-            CONTAINMENT.get(getContainmentLink()).set(parent, (l, e) -> l.remove(e), this);
+            SContainmentLink cl = getContainmentLink();
+            if (cl.isMultiple()) {
+                MANY_CONTAINMENT.get(cl).set(parent, (l, e) -> l.remove(e), this);
+            } else {
+                SINGLE_CONTAINMENT.get(cl).set(parent, (v, e) -> this.equals(v) ? null : v, this);
+            }
         } else {
             DModel model = getModel();
             if (model != null) {
@@ -324,21 +374,14 @@ public class DNode extends DObject<SNode> implements SNode {
 
     @Override
     public DNode getLastChild() {
-        SContainmentLink role = null;
-        for (SContainmentLink cl : getConcept().getContainmentLinks()) {
-            role = cl;
-        }
-        if (role != null) {
-            return CONTAINMENT.get(role).get(this).last();
-        }
-        return null;
+        return getChildren().last();
     }
 
     @Override
     public DNode getPrevSibling() {
         DNode parent = getParent();
         if (parent != null) {
-            List<DNode> list = CONTAINMENT.get(getContainmentLink()).get(parent);
+            List<? extends DNode> list = parent.getChildren();
             int i = list.firstIndexOf(this) - 1;
             return i >= 0 ? list.get(i) : null;
         }
@@ -349,16 +392,17 @@ public class DNode extends DObject<SNode> implements SNode {
     public DNode getNextSibling() {
         DNode parent = getParent();
         if (parent != null) {
-            List<DNode> list = CONTAINMENT.get(getContainmentLink()).get(parent);
+            List<? extends DNode> list = parent.getChildren();
             int i = list.firstIndexOf(this) + 1;
             return i < list.size() ? list.get(i) : null;
         }
         return null;
     }
 
+    @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     public Iterable<? extends DNode> getChildren(SContainmentLink role) {
-        return CONTAINMENT.get(role).get(this);
+        return role.isMultiple() ? MANY_CONTAINMENT.get(role).get(this) : (List) SINGLE_CONTAINMENT.get(role).getCollection(this).toList();
     }
 
     @Override

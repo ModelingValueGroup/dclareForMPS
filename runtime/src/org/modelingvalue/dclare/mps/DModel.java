@@ -20,6 +20,7 @@ import org.jetbrains.mps.openapi.event.SNodeRemoveEvent;
 import org.jetbrains.mps.openapi.event.SPropertyChangeEvent;
 import org.jetbrains.mps.openapi.event.SReferenceChangeEvent;
 import org.jetbrains.mps.openapi.language.SConcept;
+import org.jetbrains.mps.openapi.language.SContainmentLink;
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.jetbrains.mps.openapi.model.SModel;
 import org.jetbrains.mps.openapi.model.SModelId;
@@ -179,8 +180,13 @@ public class DModel extends DObject<SModel> implements SModelListener, SNodeChan
             if (event.isRoot()) {
                 DModel.ROOTS.set(dModel, (l, e) -> l.add(e), dNode);
             } else {
-                List<SNode> list = DNode.children(event.getParent(), event.getAggregationLink());
-                DNode.CONTAINMENT.get(event.getAggregationLink()).set(DNode.of(dClareMPS, event.getParent()), (l, e) -> l.remove(e).insert(list.firstIndexOf(e.original()), e), dNode);
+                SContainmentLink al = event.getAggregationLink();
+                if (al.isMultiple()) {
+                    List<SNode> list = DNode.children(event.getParent(), al);
+                    DNode.MANY_CONTAINMENT.get(al).set(DNode.of(dClareMPS, event.getParent()), (l, e) -> l.remove(e).insert(list.firstIndexOf(e.original()), e), dNode);
+                } else {
+                    DNode.SINGLE_CONTAINMENT.get(al).set(DNode.of(dClareMPS, event.getParent()), dNode);
+                }
             }
         });
     }
@@ -192,7 +198,12 @@ public class DModel extends DObject<SModel> implements SModelListener, SNodeChan
             if (event.isRoot()) {
                 DModel.ROOTS.set(DModel.of(dClareMPS, event.getModel()), (l, e) -> l.remove(e), dNode);
             } else {
-                DNode.CONTAINMENT.get(event.getAggregationLink()).set(DNode.of(dClareMPS, event.getParent()), (l, e) -> l.remove(e), dNode);
+                SContainmentLink al = event.getAggregationLink();
+                if (al.isMultiple()) {
+                    DNode.MANY_CONTAINMENT.get(al).set(DNode.of(dClareMPS, event.getParent()), (l, e) -> l.remove(e), dNode);
+                } else {
+                    DNode.SINGLE_CONTAINMENT.get(al).set(DNode.of(dClareMPS, event.getParent()), (v, e) -> dNode.equals(v) ? null : v, dNode);
+                }
             }
         });
     }
