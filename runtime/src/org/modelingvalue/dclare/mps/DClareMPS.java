@@ -168,7 +168,6 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, DeployList
         imperative = null;
         root.put("stopDclareMPS", () -> repository.stop());
         root.stop();
-        root.waitForEnd();
     }
 
     private void start(SLanguage language) {
