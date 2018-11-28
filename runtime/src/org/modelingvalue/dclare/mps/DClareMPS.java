@@ -171,7 +171,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, DeployList
             }
         });
         waiter.setDaemon(true);
-        waiter.run();
+        waiter.start();
     }
 
     public void stop() {
