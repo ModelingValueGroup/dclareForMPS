@@ -161,6 +161,17 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, DeployList
     public void start() {
         System.err.println("DCLARE START");
         root.put("startDclareMPS", () -> repository.activate(null, root));
+        Thread waiter = new Thread(() -> {
+            try {
+                root.waitForEnd();
+            } catch (Exception e) {
+                System.err.println("DCLARE Exception, Engine Stopped!");
+                e.printStackTrace();
+                stop();
+            }
+        });
+        waiter.setDaemon(true);
+        waiter.run();
     }
 
     public void stop() {
