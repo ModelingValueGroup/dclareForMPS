@@ -14,7 +14,6 @@
 package org.modelingvalue.dclare.mps;
 
 import java.util.Arrays;
-import java.util.ConcurrentModificationException;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -28,13 +27,10 @@ import org.modelingvalue.collections.util.ContextThread;
 import org.modelingvalue.transactions.Compound;
 import org.modelingvalue.transactions.EmptyMandatoryException;
 import org.modelingvalue.transactions.Leaf;
-import org.modelingvalue.transactions.NonDeterministicException;
 import org.modelingvalue.transactions.Observed;
 import org.modelingvalue.transactions.Observer;
 import org.modelingvalue.transactions.Setable;
 import org.modelingvalue.transactions.StopObserverException;
-import org.modelingvalue.transactions.TooManyChangesException;
-import org.modelingvalue.transactions.TransactionException;
 
 @SuppressWarnings("rawtypes")
 public abstract class DObject<O> {
@@ -188,20 +184,22 @@ public abstract class DObject<O> {
                                 }
                                 try {
                                     r.accept(DObject.this);
-                                } catch (NullPointerException npe) {
+                                } catch (NullPointerException e) {
                                     if (EMPTY_ATTRIBUTE.get()) {
+                                        if (DClareMPS.TRACE.get(dClareMPS)) {
+                                            e.printStackTrace();
+                                        }
                                         throw new EmptyMandatoryException();
                                     } else {
-                                        throw npe;
+                                        showError(r, e);
                                     }
-                                } catch (TooManyChangesException | StopObserverException | NonDeterministicException | //
-                                TransactionException | EmptyMandatoryException | ConcurrentModificationException e) {
+                                } catch (StopObserverException | EmptyMandatoryException e) {
+                                    if (DClareMPS.TRACE.get(dClareMPS)) {
+                                        e.printStackTrace();
+                                    }
                                     throw e;
                                 } catch (Exception e) {
-                                    Error error = new Error("Exception in rule " + r, e);
-                                    StackTraceElement[] stackTrace = error.getStackTrace();
-                                    error.setStackTrace(Arrays.copyOf(stackTrace, Math.min(4, stackTrace.length)));
-                                    error.printStackTrace();
+                                    showError(r, e);
                                 } finally {
                                     EMPTY_ATTRIBUTE.set(false);
                                 }
@@ -218,6 +216,14 @@ public abstract class DObject<O> {
         }).trigger();
         return tx;
 
+    }
+
+    private void showError(Consumer r, Exception e) {
+        Error error = new Error("DCLARE " + ContextThread.getNr() + " Exception in RULE " + r + " for " + DObject.this, e);
+        StackTraceElement[] stackTrace = error.getStackTrace();
+        error.setStackTrace(Arrays.copyOf(stackTrace, Math.min(4, stackTrace.length)));
+        error.printStackTrace();
+        throw new StopObserverException("Stop because of Exception");
     }
 
     protected void exit(DObject parent, Compound parentTx) {
