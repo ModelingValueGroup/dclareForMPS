@@ -41,9 +41,9 @@ import jetbrains.mps.smodel.language.LanguageRegistry;
 
 public class DClareMPS implements TriConsumer<State, State, Boolean>, DeployListener {
 
-    public static final Setable<DClareMPS, Boolean>            TRACE         = Setable.of("TRACE", false);
+    static final Setable<DClareMPS, Boolean>                   TRACE         = Setable.of("TRACE", false);
 
-    private static final ThreadLocal<Boolean>                  COMMITTING    = new ThreadLocal<Boolean>() {
+    private final ThreadLocal<Boolean>                         COMMITTING    = new ThreadLocal<Boolean>() {
                                                                                  @Override
                                                                                  protected Boolean initialValue() {
                                                                                      return false;
