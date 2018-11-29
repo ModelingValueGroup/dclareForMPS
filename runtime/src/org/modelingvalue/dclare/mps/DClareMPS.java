@@ -26,6 +26,7 @@ import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.collections.util.TriConsumer;
 import org.modelingvalue.transactions.Imperative;
+import org.modelingvalue.transactions.Leaf;
 import org.modelingvalue.transactions.Observed;
 import org.modelingvalue.transactions.Root;
 import org.modelingvalue.transactions.Setable;
@@ -102,6 +103,10 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, DeployList
         if (imperative != null) {
             imperative.schedule(action);
         }
+    }
+
+    public static <T> T get(Supplier<T> supplier) {
+        return ((DClareMPS) Leaf.getCurrent().root().getId()).run(supplier);
     }
 
     @SuppressWarnings("unchecked")
