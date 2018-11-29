@@ -198,7 +198,7 @@ public abstract class DObject<O> {
                                         e.printStackTrace();
                                     }
                                     throw e;
-                                } catch (Exception e) {
+                                } catch (Throwable e) {
                                     showError(r, e);
                                 } finally {
                                     EMPTY_ATTRIBUTE.set(false);
@@ -218,7 +218,7 @@ public abstract class DObject<O> {
 
     }
 
-    private void showError(Consumer r, Exception e) {
+    private void showError(Consumer r, Throwable e) {
         Error error = new Error("DCLARE " + ContextThread.getNr() + " Exception in RULE " + r + " for " + DObject.this, e);
         StackTraceElement[] stackTrace = error.getStackTrace();
         error.setStackTrace(Arrays.copyOf(stackTrace, Math.min(4, stackTrace.length)));
