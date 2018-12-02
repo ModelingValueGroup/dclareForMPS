@@ -33,7 +33,7 @@ import org.modelingvalue.collections.ContainingCollection;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.transactions.Compound;
-import org.modelingvalue.transactions.ConstantSetable;
+import org.modelingvalue.transactions.Constant;
 import org.modelingvalue.transactions.Getable;
 import org.modelingvalue.transactions.Observed;
 import org.modelingvalue.transactions.Observer;
@@ -45,7 +45,7 @@ import jetbrains.mps.extapi.module.SModuleBase;
 
 public class DModule extends DObject<SModule> implements SModuleListener, SModule {
 
-    public static final Getable<Pair<DClareMPS, SModule>, DModule> DMODULE   = ConstantSetable.of("DMODULE", p -> new DModule(p.a(), p.b()));
+    public static final Getable<Pair<DClareMPS, SModule>, DModule> DMODULE   = Constant.of("DMODULE", p -> new DModule(p.a(), p.b()));
 
     public static final Observed<DModule, Boolean>                 ACTIVE    = Observed.of("ACTIVE", false, (tx, o, b, a) -> {
                                                                                  if (DClareMPS.TRACE.get(o.dClareMPS)) {

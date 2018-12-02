@@ -34,7 +34,7 @@ import org.modelingvalue.collections.Map;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.transactions.Compound;
-import org.modelingvalue.transactions.ConstantSetable;
+import org.modelingvalue.transactions.Constant;
 import org.modelingvalue.transactions.Getable;
 import org.modelingvalue.transactions.Leaf;
 import org.modelingvalue.transactions.Observed;
@@ -46,7 +46,7 @@ import jetbrains.mps.smodel.SNodeUtil;
 
 public class DNode extends DObject<SNode> implements SNode {
 
-    public static final Getable<Pair<DClareMPS, SNode>, DNode>                  DNODE              = ConstantSetable.of("DNODE", p -> new DNode(p.a(), p.b()));
+    public static final Getable<Pair<DClareMPS, SNode>, DNode>                  DNODE              = Constant.of("DNODE", p -> new DNode(p.a(), p.b()));
 
     public static final Observed<DNode, SContainmentLink>                       CONTAINING         = Observed.of("CONTAINING", null);
 
@@ -54,7 +54,7 @@ public class DNode extends DObject<SNode> implements SNode {
 
     public static final Observed<DNode, Map<Object, Object>>                    USER_OBJECTS       = Observed.of("USER_OBJECTS", Map.of());
 
-    public static final Getable<SContainmentLink, Observed<DNode, List<DNode>>> MANY_CONTAINMENT   = ConstantSetable.of("MANY_CONTAINMENT", sc -> {
+    public static final Getable<SContainmentLink, Observed<DNode, List<DNode>>> MANY_CONTAINMENT   = Constant.of("MANY_CONTAINMENT", sc -> {
                                                                                                        return DObserved.<DNode, List<DNode>> of(sc, List.of(), !sc.isOptional(), false,                                      //
                                                                                                                (dNode, pre, post) -> {
                                                                                                                    DObserved.map(DNode.children(dNode.original(), sc), post.map(DNode::original).toList(),                   //
@@ -67,7 +67,7 @@ public class DNode extends DObject<SNode> implements SNode {
                                                                                                                });
                                                                                                    });
 
-    public static final Getable<SContainmentLink, Observed<DNode, DNode>>       SINGLE_CONTAINMENT = ConstantSetable.of("SINGLE_CONTAINMENT", sc -> {
+    public static final Getable<SContainmentLink, Observed<DNode, DNode>>       SINGLE_CONTAINMENT = Constant.of("SINGLE_CONTAINMENT", sc -> {
                                                                                                        return DObserved.<DNode, DNode> of(sc, null, !sc.isOptional(), false,                                                 //
                                                                                                                (dNode, pre, post) -> {
                                                                                                                    if (pre != null) {
@@ -84,7 +84,7 @@ public class DNode extends DObject<SNode> implements SNode {
                                                                                                                });
                                                                                                    });
 
-    public static final Getable<SReferenceLink, Observed<DNode, DNode>>         REFERENCE          = ConstantSetable.of("REFERENCE", sr -> {
+    public static final Getable<SReferenceLink, Observed<DNode, DNode>>         REFERENCE          = Constant.of("REFERENCE", sr -> {
                                                                                                        Observed<DNode, Set<DNode>> oppos = DNode.OPPOSITE.get(sr);
                                                                                                        return DObserved.<DNode, DNode> of(sr, null, !sr.isOptional(), true,                                                  //
                                                                                                                (dNode, pre, post) -> {
@@ -103,10 +103,10 @@ public class DNode extends DObject<SNode> implements SNode {
                                                                                                                });
 
                                                                                                    });
-    public static final Getable<SReferenceLink, Observed<DNode, Set<DNode>>>    OPPOSITE           = ConstantSetable.of("OPPOSITE", sr -> {
+    public static final Getable<SReferenceLink, Observed<DNode, Set<DNode>>>    OPPOSITE           = Constant.of("OPPOSITE", sr -> {
                                                                                                        return Observed.<DNode, Set<DNode>> of(Pair.of(sr, "OPPOSITE"), Set.of());
                                                                                                    });
-    public static final Getable<SProperty, Observed<DNode, String>>             PROPERTY           = ConstantSetable.of("PROPERTY", sp -> {
+    public static final Getable<SProperty, Observed<DNode, String>>             PROPERTY           = Constant.of("PROPERTY", sp -> {
                                                                                                        return DObserved.<DNode, String> of(sp, null, false, false,                                                           //
                                                                                                                (dNode, pre, post) -> {
                                                                                                                    if (!Objects.equals(dNode.original().getProperty(sp), post)) {

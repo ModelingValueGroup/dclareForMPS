@@ -3,27 +3,56 @@ package org.modelingvalue.dclare.mps;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.collections.util.QuadConsumer;
-import org.modelingvalue.collections.util.Triple;
+import org.modelingvalue.collections.util.Quadruple;
 import org.modelingvalue.transactions.AbstractLeaf;
-import org.modelingvalue.transactions.ConstantSetable;
-import org.modelingvalue.transactions.ConstantSetable.Identified;
+import org.modelingvalue.transactions.Constant;
 import org.modelingvalue.transactions.Getable;
 
 @SuppressWarnings("rawtypes")
 public interface DAttribute<O, T> {
 
+    static class Key<C, V> extends Quadruple<Object, String, Boolean, Integer> {
+
+        private static final long serialVersionUID = -403866123495976516L;
+
+        public static <X, Y> Key<X, Y> of(Object a, String b, Boolean c, Integer d, Function<X, Y> function) {
+            return new Key<X, Y>(a, b, c, d, function);
+        }
+
+        private final Function<C, V> function;
+
+        private Key(Object a, String b, Boolean c, Integer d, Function<C, V> function) {
+            super(a, b, c, d);
+            this.function = function;
+        }
+
+        private Object id() {
+            return a();
+        }
+
+        private String name() {
+            return b();
+        }
+
+        private boolean composite() {
+            return c();
+        }
+
+        private int identifyingNr() {
+            return d();
+        }
+    }
+
     @SuppressWarnings("unchecked")
-    static final Getable<Pair<Pair<Object, String>, Triple<Boolean, Integer, Identified<Function>>>, DAttribute> ATTRIBUTE = ConstantSetable.of("ATTRIBUTE", id -> {
-        return id.b().b() >= 0 ? new DIdentifyingAttribute(id.a().a(), id.a().b(), id.b().a(), id.b().b()) : id.b().c() != null ? //
-        new DConstant(id.a().a(), id.a().b(), id.b().a(), id.b().c().get()) : new DObservedAttribut(id.a().a(), id.a().b(), id.b().a(), null, null);
+    static final Getable<Key, DAttribute> ATTRIBUTE = Constant.of("ATTRIBUTE", key -> {
+        return key.identifyingNr() >= 0 ? new DIdentifyingAttribute(key.id(), key.name(), key.composite(), key.identifyingNr()) : key.function != null ? //
+        new DConstant(key.id(), key.name(), key.composite(), key.function) : new DObservedAttribut(key.id(), key.name(), key.composite(), null, null);
     });
 
     @SuppressWarnings("unchecked")
     public static <C, V> DAttribute<C, V> of(Object id, String name, boolean composite, int identifyingNr, Function<C, V> deriver) {
-        Pair<Object, String> key = Pair.of(id, name);
-        return ATTRIBUTE.get(Pair.of(key, Triple.of(composite, identifyingNr, deriver != null ? Identified.of(key, deriver) : null)));
+        return ATTRIBUTE.get(Key.of(id, name, composite, identifyingNr, deriver));
     }
 
     @SuppressWarnings("unchecked")
@@ -159,7 +188,7 @@ public interface DAttribute<O, T> {
 
     }
 
-    static class DConstant<C, V> extends ConstantSetable<C, V> implements DAttribute<C, V> {
+    static class DConstant<C, V> extends Constant<C, V> implements DAttribute<C, V> {
 
         private String  name;
         private boolean composite;

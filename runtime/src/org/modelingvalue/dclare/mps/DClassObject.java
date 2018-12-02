@@ -7,13 +7,13 @@ import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.ContainingCollection;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
-import org.modelingvalue.transactions.ConstantSetable;
+import org.modelingvalue.transactions.Constant;
 import org.modelingvalue.transactions.Getable;
 import org.modelingvalue.transactions.Leaf;
 
 public class DClassObject extends DObject<SClassObject> implements SClassObject {
 
-    private static final Getable<Pair<DClareMPS, SClassObject>, DClassObject> DCLASS_OBJECT = ConstantSetable.of("DCLASS_OBJECT", p -> new DClassObject(p.a(), p.b()));
+    private static final Getable<Pair<DClareMPS, SClassObject>, DClassObject> DCLASS_OBJECT = Constant.of("DCLASS_OBJECT", p -> new DClassObject(p.a(), p.b()));
 
     public static DClassObject of(DClareMPS dClareMPS, SClassObject original) {
         return original instanceof DClassObject && ((DClassObject) original).dClareMPS == dClareMPS ? (DClassObject) original : DCLASS_OBJECT.get(Pair.of(dClareMPS, original));

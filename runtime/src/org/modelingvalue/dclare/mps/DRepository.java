@@ -28,14 +28,14 @@ import org.modelingvalue.collections.ContainingCollection;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.transactions.Compound;
-import org.modelingvalue.transactions.ConstantSetable;
+import org.modelingvalue.transactions.Constant;
 import org.modelingvalue.transactions.Getable;
 import org.modelingvalue.transactions.Observed;
 
 @SuppressWarnings("deprecation")
 public class DRepository extends DObject<SRepository> implements SRepositoryListener, SRepository {
 
-    public static final Getable<Pair<DClareMPS, SRepository>, DRepository> DREPOSITORY = ConstantSetable.of("DREPOSITORY", p -> new DRepository(p.a(), p.b()));
+    public static final Getable<Pair<DClareMPS, SRepository>, DRepository> DREPOSITORY = Constant.of("DREPOSITORY", p -> new DRepository(p.a(), p.b()));
 
     public static final Observed<DRepository, Set<DModule>>                MODULES     = Observed.of("MODULES", Set.of());
 

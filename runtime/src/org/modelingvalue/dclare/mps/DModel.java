@@ -42,7 +42,7 @@ import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.transactions.Compound;
-import org.modelingvalue.transactions.ConstantSetable;
+import org.modelingvalue.transactions.Constant;
 import org.modelingvalue.transactions.Getable;
 import org.modelingvalue.transactions.Leaf;
 import org.modelingvalue.transactions.Observed;
@@ -54,7 +54,7 @@ import jetbrains.mps.extapi.model.SModelBase;
 
 public class DModel extends DObject<SModel> implements SModelListener, SNodeChangeListener, SModel {
 
-    public static final Getable<Pair<DClareMPS, SModel>, DModel> DMODEL         = ConstantSetable.of("DMODEL", p -> new DModel(p.a(), p.b()));
+    public static final Getable<Pair<DClareMPS, SModel>, DModel> DMODEL         = Constant.of("DMODEL", p -> new DModel(p.a(), p.b()));
 
     public static final Observed<DModel, Set<DNode>>             ROOTS          = DObserved.of("ROOTS", Set.of(), false, false, (dModel, pre, post) -> {
                                                                                     DObserved.map(DModel.roots(dModel.original()), post.map(DNode::original).toSet(),        //
