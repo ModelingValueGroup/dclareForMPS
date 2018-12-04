@@ -39,6 +39,7 @@ import jetbrains.mps.classloading.DeployListener;
 import jetbrains.mps.ide.MPSCoreComponents;
 import jetbrains.mps.module.ReloadableModule;
 import jetbrains.mps.smodel.language.LanguageRegistry;
+import jetbrains.mps.smodel.language.LanguageRuntime;
 
 public class DClareMPS implements TriConsumer<State, State, Boolean>, DeployListener {
 
@@ -177,7 +178,8 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, DeployList
 
     private void start(SLanguage language) {
         LanguageRegistry registry = LanguageRegistry.getInstance(repository.original());
-        IRuleAspect aspect = registry.getLanguage(language).getAspect(IRuleAspect.class);
+        LanguageRuntime rtLang = registry.getLanguage(language);
+        IRuleAspect aspect = rtLang != null ? rtLang.getAspect(IRuleAspect.class) : null;
         RULE_SETS.set(language, aspect != null ? Collection.of(aspect.getRuleSets()).toSet() : Set.of());
     }
 
@@ -186,7 +188,8 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, DeployList
         schedule(() -> {
             LanguageRegistry registry = LanguageRegistry.getInstance(repository.original());
             for (SLanguage language : ALL_LANGUAGES.get(this)) {
-                IRuleAspect aspect = registry.getLanguage(language).getAspect(IRuleAspect.class);
+                LanguageRuntime rtLang = registry.getLanguage(language);
+                IRuleAspect aspect = rtLang != null ? rtLang.getAspect(IRuleAspect.class) : null;
                 RULE_SETS.set(language, aspect != null ? Collection.of(aspect.getRuleSets()).toSet() : Set.of());
             }
         });
