@@ -46,8 +46,6 @@ import jetbrains.mps.smodel.SNodeUtil;
 
 public class DNode extends DObject<SNode> implements SNode {
 
-    public static final Getable<Pair<DClareMPS, SNode>, DNode>                  DNODE              = Constant.of("DNODE", p -> new DNode(p.a(), p.b()));
-
     public static final Observed<DNode, SContainmentLink>                       CONTAINING         = Observed.of("CONTAINING", null);
 
     public static final Observed<DNode, DModel>                                 MODEL              = Observed.of("MODEL", null);
@@ -116,14 +114,14 @@ public class DNode extends DObject<SNode> implements SNode {
                                                                                                    });
 
     public static DNode of(DClareMPS dClareMPS, SNode original) {
-        return original instanceof DNode && ((DNode) original).dClareMPS == dClareMPS ? (DNode) original : DNODE.get(Pair.of(dClareMPS, original));
+        return original instanceof DNode && ((DNode) original).dClareMPS == dClareMPS ? (DNode) original : dClareMPS.DNODE.get(original);
     }
 
     public static SNode wrap(SNode original) {
         return of((DClareMPS) Leaf.getCurrent().root().getId(), original);
     }
 
-    private DNode(DClareMPS dClareMPS, SNode original) {
+    protected DNode(DClareMPS dClareMPS, SNode original) {
         super(dClareMPS, original);
     }
 

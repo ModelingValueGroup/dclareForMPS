@@ -31,10 +31,7 @@ import org.jetbrains.mps.openapi.persistence.ModelRoot;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.ContainingCollection;
 import org.modelingvalue.collections.Set;
-import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.transactions.Compound;
-import org.modelingvalue.transactions.Constant;
-import org.modelingvalue.transactions.Getable;
 import org.modelingvalue.transactions.Observed;
 import org.modelingvalue.transactions.Observer;
 import org.modelingvalue.transactions.Setable;
@@ -45,34 +42,32 @@ import jetbrains.mps.extapi.module.SModuleBase;
 
 public class DModule extends DObject<SModule> implements SModuleListener, SModule {
 
-    public static final Getable<Pair<DClareMPS, SModule>, DModule> DMODULE   = Constant.of("DMODULE", p -> new DModule(p.a(), p.b()));
+    public static final Observed<DModule, Boolean>        ACTIVE    = Observed.of("ACTIVE", false, (tx, o, b, a) -> {
+                                                                        if (DClareMPS.TRACE.get(o.dClareMPS)) {
+                                                                            tx.runNonObserving(                                                          //
+                                                                                    () -> {
+                                                                                        if (a) {
+                                                                                            System.err.println("DCLARE ACTIVATE " + o.getModuleName());
+                                                                                        } else {
+                                                                                            System.err.println("DCLARE DEACTIVATE " + o.getModuleName());
+                                                                                        }
+                                                                                    });
+                                                                        }
+                                                                    });
 
-    public static final Observed<DModule, Boolean>                 ACTIVE    = Observed.of("ACTIVE", false, (tx, o, b, a) -> {
-                                                                                 if (DClareMPS.TRACE.get(o.dClareMPS)) {
-                                                                                     tx.runNonObserving(                                                             //
-                                                                                             () -> {
-                                                                                                 if (a) {
-                                                                                                     System.err.println("DCLARE ACTIVATE " + o.getModuleName());
-                                                                                                 } else {
-                                                                                                     System.err.println("DCLARE DEACTIVATE " + o.getModuleName());
-                                                                                                 }
-                                                                                             });
-                                                                                 }
-                                                                             });
+    public static final Observed<DModule, Set<DModel>>    MODELS    = Observed.of("MODELS", Set.of());
 
-    public static final Observed<DModule, Set<DModel>>             MODELS    = Observed.of("MODELS", Set.of());
-
-    public static final Observed<DModule, Set<SLanguage>>          LANGUAGES = Observed.of("LANGUAGES", Set.of(), (tx, o, b, a) -> {
-                                                                                 Setable.<Set<SLanguage>, SLanguage> diff(Set.of(), b, a,                            //
-                                                                                         x -> DClareMPS.ALL_LANGUAGES.set(o.dClareMPS, Set::add, x), x -> {
-                                                                                                                                                                  });
-                                                                             });
+    public static final Observed<DModule, Set<SLanguage>> LANGUAGES = Observed.of("LANGUAGES", Set.of(), (tx, o, b, a) -> {
+                                                                        Setable.<Set<SLanguage>, SLanguage> diff(Set.of(), b, a,                         //
+                                                                                x -> DClareMPS.ALL_LANGUAGES.set(o.dClareMPS, Set::add, x), x -> {
+                                                                                                                                                });
+                                                                    });
 
     public static DModule of(DClareMPS dClareMPS, SModule original) {
-        return original instanceof DModule && ((DModule) original).dClareMPS == dClareMPS ? (DModule) original : DMODULE.get(Pair.of(dClareMPS, original));
+        return original instanceof DModule && ((DModule) original).dClareMPS == dClareMPS ? (DModule) original : dClareMPS.DMODULE.get(original);
     }
 
-    private DModule(DClareMPS dClareMPS, SModule original) {
+    protected DModule(DClareMPS dClareMPS, SModule original) {
         super(dClareMPS, original);
     }
 

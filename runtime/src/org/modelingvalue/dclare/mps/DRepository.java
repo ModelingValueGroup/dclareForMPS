@@ -26,24 +26,19 @@ import org.jetbrains.mps.openapi.module.SRepositoryListener;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.ContainingCollection;
 import org.modelingvalue.collections.Set;
-import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.transactions.Compound;
-import org.modelingvalue.transactions.Constant;
-import org.modelingvalue.transactions.Getable;
 import org.modelingvalue.transactions.Observed;
 
 @SuppressWarnings("deprecation")
 public class DRepository extends DObject<SRepository> implements SRepositoryListener, SRepository {
 
-    public static final Getable<Pair<DClareMPS, SRepository>, DRepository> DREPOSITORY = Constant.of("DREPOSITORY", p -> new DRepository(p.a(), p.b()));
-
-    public static final Observed<DRepository, Set<DModule>>                MODULES     = Observed.of("MODULES", Set.of());
+    public static final Observed<DRepository, Set<DModule>> MODULES = Observed.of("MODULES", Set.of());
 
     public static DRepository of(DClareMPS dClareMPS, SRepository original) {
-        return original instanceof DRepository && ((DRepository) original).dClareMPS == dClareMPS ? (DRepository) original : DREPOSITORY.get(Pair.of(dClareMPS, original));
+        return original instanceof DRepository && ((DRepository) original).dClareMPS == dClareMPS ? (DRepository) original : dClareMPS.DREPOSITORY.get(original);
     }
 
-    private DRepository(DClareMPS dClareMPS, SRepository original) {
+    protected DRepository(DClareMPS dClareMPS, SRepository original) {
         super(dClareMPS, original);
     }
 

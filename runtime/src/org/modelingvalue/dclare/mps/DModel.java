@@ -40,10 +40,7 @@ import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.ContainingCollection;
 import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.Set;
-import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.transactions.Compound;
-import org.modelingvalue.transactions.Constant;
-import org.modelingvalue.transactions.Getable;
 import org.modelingvalue.transactions.Leaf;
 import org.modelingvalue.transactions.Observed;
 import org.modelingvalue.transactions.Observer;
@@ -54,35 +51,33 @@ import jetbrains.mps.extapi.model.SModelBase;
 
 public class DModel extends DObject<SModel> implements SModelListener, SNodeChangeListener, SModel {
 
-    public static final Getable<Pair<DClareMPS, SModel>, DModel> DMODEL         = Constant.of("DMODEL", p -> new DModel(p.a(), p.b()));
+    public static final Observed<DModel, Set<DNode>>     ROOTS          = DObserved.of("ROOTS", Set.of(), false, false, (dModel, pre, post) -> {
+                                                                            DObserved.map(DModel.roots(dModel.original()), post.map(DNode::original).toSet(),        //
+                                                                                    a -> dModel.original().addRootNode(a), r -> dModel.original().removeRootNode(r));
+                                                                        }, (tx, o, b, a) -> {
+                                                                            Setable.<Set<DNode>, DNode> diff(Set.of(), b, a,                                         //
+                                                                                    x -> DNode.CONTAINING.set(x, null), x -> {
+                                                                                    });
+                                                                        });
 
-    public static final Observed<DModel, Set<DNode>>             ROOTS          = DObserved.of("ROOTS", Set.of(), false, false, (dModel, pre, post) -> {
-                                                                                    DObserved.map(DModel.roots(dModel.original()), post.map(DNode::original).toSet(),        //
-                                                                                            a -> dModel.original().addRootNode(a), r -> dModel.original().removeRootNode(r));
-                                                                                }, (tx, o, b, a) -> {
-                                                                                    Setable.<Set<DNode>, DNode> diff(Set.of(), b, a,                                         //
-                                                                                            x -> DNode.CONTAINING.set(x, null), x -> {
-                                                                                            });
-                                                                                });
+    public static final Observed<DModel, Set<SLanguage>> USED_LANGUAGES = DObserved.of("USED_LANGUAGES", Set.of(), false, false, (dModel, pre, post) -> {
+                                                                            SModelBase sModel = (SModelBase) dModel.original();
+                                                                            for (SLanguage l : post) {
+                                                                                sModel.addLanguage(l);
+                                                                            }
+                                                                        });
 
-    public static final Observed<DModel, Set<SLanguage>>         USED_LANGUAGES = DObserved.of("USED_LANGUAGES", Set.of(), false, false, (dModel, pre, post) -> {
-                                                                                    SModelBase sModel = (SModelBase) dModel.original();
-                                                                                    for (SLanguage l : post) {
-                                                                                        sModel.addLanguage(l);
-                                                                                    }
-                                                                                });
-
-    public static final Observed<DModel, ModelRoot>              MODEL_ROOT     = Observed.of("MODEL_ROOT", null);
+    public static final Observed<DModel, ModelRoot>      MODEL_ROOT     = Observed.of("MODEL_ROOT", null);
 
     public static DModel of(DClareMPS dClareMPS, SModel original) {
-        return original instanceof DModel && ((DModel) original).dClareMPS == dClareMPS ? (DModel) original : DMODEL.get(Pair.of(dClareMPS, original));
+        return original instanceof DModel && ((DModel) original).dClareMPS == dClareMPS ? (DModel) original : dClareMPS.DMODEL.get(original);
     }
 
     public static DModel wrap(SModel original) {
         return of((DClareMPS) Leaf.getCurrent().root().getId(), original);
     }
 
-    private DModel(DClareMPS dClareMPS, SModel original) {
+    protected DModel(DClareMPS dClareMPS, SModel original) {
         super(dClareMPS, original);
     }
 
