@@ -1006,26 +1006,12 @@
                       <ref role="ehGHo" to="tpee:fz3vP1J" resolve="Expression" />
                     </node>
                     <node concept="2c44tf" id="6ndASaeSScy" role="33vP2m">
-                      <node concept="2YIFZM" id="3K8cZV4i$IG" role="2c44tc">
-                        <ref role="37wK5l" to="t4tl:~DNode.wrap(org.jetbrains.mps.openapi.model.SNode):org.jetbrains.mps.openapi.model.SNode" resolve="wrap" />
-                        <ref role="1Pybhc" to="t4tl:~DNode" resolve="DNode" />
-                        <node concept="2YIFZM" id="6ndASaeSSiS" role="37wK5m">
-                          <ref role="1Pybhc" to="u4ym:30fQumnG8Au" resolve="DclareUtil" />
-                          <ref role="37wK5l" to="u4ym:6ndASaeS_ln" resolve="getFromMPS" />
-                          <node concept="1bVj0M" id="6ndASaeSSkP" role="37wK5m">
-                            <node concept="3clFbS" id="6ndASaeSSkQ" role="1bW5cS">
-                              <node concept="3clFbF" id="6ndASaeSSnR" role="3cqZAp">
-                                <node concept="3B5_sB" id="6ndASaeSS$l" role="3clFbG">
-                                  <node concept="2c44tb" id="6ndASaeSSAn" role="lGtFl">
-                                    <property role="P3scX" value="7866978e-a0f0-4cc7-81bc-4d213d9375e1/1219352745532/1219352800908" />
-                                    <property role="2qtEX8" value="referentNode" />
-                                    <node concept="37vLTw" id="6ndASaeSSC$" role="2c44t1">
-                                      <ref role="3cqZAo" node="6ndASaeS2KX" resolve="target" />
-                                    </node>
-                                  </node>
-                                </node>
-                              </node>
-                            </node>
+                      <node concept="3B5_sB" id="6ndASaeSS$l" role="2c44tc">
+                        <node concept="2c44tb" id="6ndASaeSSAn" role="lGtFl">
+                          <property role="P3scX" value="7866978e-a0f0-4cc7-81bc-4d213d9375e1/1219352745532/1219352800908" />
+                          <property role="2qtEX8" value="referentNode" />
+                          <node concept="37vLTw" id="6ndASaeSSC$" role="2c44t1">
+                            <ref role="3cqZAo" node="6ndASaeS2KX" resolve="target" />
                           </node>
                         </node>
                       </node>
