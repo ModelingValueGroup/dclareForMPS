@@ -174,14 +174,14 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
 
     public void start() {
         if (imperative == null) {
-            System.err.println("DCLARE START");
+            System.err.println("DCLARE START " + project.getName());
             root.put("startDclareMPS", () -> repository.activate(null, root));
         }
     }
 
     public void stop() {
         if (imperative != null) {
-            System.err.println("DCLARE STOP");
+            System.err.println("DCLARE STOP " + project.getName());
             imperative = null;
             root.put("stopDclareMPS", () -> repository.stop());
             root.stop();
