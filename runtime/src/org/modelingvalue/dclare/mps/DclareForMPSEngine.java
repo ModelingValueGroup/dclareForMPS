@@ -37,7 +37,6 @@ public class DclareForMPSEngine implements DeployListener {
     }
 
     private void stopEngine() {
-        classLoaderManager.removeListener(this);
         if (dClareMPS != null && dClareMPS.isRunning()) {
             dClareMPS.stop();
             dClareMPS = null;
