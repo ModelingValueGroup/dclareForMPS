@@ -37,6 +37,7 @@ import org.modelingvalue.transactions.Observed;
 import org.modelingvalue.transactions.Root;
 import org.modelingvalue.transactions.Setable;
 import org.modelingvalue.transactions.State;
+import org.modelingvalue.transactions.TooManyChangesException;
 
 import com.intellij.openapi.application.ApplicationManager;
 
@@ -91,8 +92,13 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, DeployList
         classLoaderManager.addListener(this);
         root = Root.of(this, 100, maxTotalNrOfChanges, maxNrOfChanges, 10);
         waitForEndThread = new Thread(() -> {
-            root.waitForEnd();
-            stop();
+            try {
+                root.waitForEnd();
+            } catch (TooManyChangesException e) {
+                System.err.println(e.getLocalizedMessage());
+            } finally {
+                stop();
+            }
         });
         waitForEndThread.setDaemon(true);
         waitForEndThread.start();
