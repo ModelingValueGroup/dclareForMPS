@@ -781,7 +781,7 @@
                   <node concept="1pGfFk" id="GLgNzrp_ln" role="2ShVmc">
                     <ref role="37wK5l" to="dxuu:~JLabel.&lt;init&gt;(java.lang.String)" resolve="JLabel" />
                     <node concept="Xl_RD" id="GLgNzrp_lo" role="37wK5m">
-                      <property role="Xl_RC" value="Trancing on" />
+                      <property role="Xl_RC" value="Tracing on" />
                     </node>
                   </node>
                 </node>
