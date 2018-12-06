@@ -98,8 +98,13 @@ public class DclareForMPSEngine implements DeployListener {
 
     @Override
     public void onLoaded(Set<ReloadableModule> loadedModules, ProgressMonitor monitor) {
-        stopEngine();
-        startEngine();
+        if (on) {
+            if (dClareMPS != null && dClareMPS.isRunning()) {
+                dClareMPS.onLoaded();
+            } else {
+                startEngine();
+            }
+        }
     }
 
 }

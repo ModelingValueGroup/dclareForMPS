@@ -13,7 +13,6 @@
 
 package org.modelingvalue.dclare.mps;
 
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -191,15 +190,13 @@ public abstract class DObject<O> {
                                         }
                                         throw new EmptyMandatoryException();
                                     } else {
-                                        showError(r, e);
+                                        throw e;
                                     }
                                 } catch (StopObserverException | EmptyMandatoryException e) {
                                     if (DClareMPS.TRACE.get(dClareMPS)) {
                                         e.printStackTrace();
                                     }
                                     throw e;
-                                } catch (Throwable e) {
-                                    showError(r, e);
                                 } finally {
                                     EMPTY_ATTRIBUTE.set(false);
                                 }
@@ -216,14 +213,6 @@ public abstract class DObject<O> {
         }).trigger();
         return tx;
 
-    }
-
-    private void showError(Consumer r, Throwable e) {
-        Error error = new Error("DCLARE " + ContextThread.getNr() + " Exception in RULE " + r + " for " + DObject.this, e);
-        StackTraceElement[] stackTrace = error.getStackTrace();
-        error.setStackTrace(Arrays.copyOf(stackTrace, Math.min(4, stackTrace.length)));
-        error.printStackTrace();
-        throw new StopObserverException("Stop because of Exception");
     }
 
     protected void exit(DObject parent, Compound parentTx) {
