@@ -1,21 +1,34 @@
 package org.modelingvalue.dclare.mps;
 
+import java.util.Set;
+
 import org.jetbrains.mps.openapi.project.Project;
+import org.jetbrains.mps.openapi.util.ProgressMonitor;
 
-public class DclareForMPSEngine {
+import com.intellij.openapi.application.ApplicationManager;
 
-    private final Project project;
-    private DClareMPS     dClareMPS = null;
-    private boolean       on;
-    private boolean       trace;
-    private int           maxTotalNrOfChanges;
-    private int           maxNrOfChanges;
+import jetbrains.mps.classloading.ClassLoaderManager;
+import jetbrains.mps.classloading.DeployListener;
+import jetbrains.mps.ide.MPSCoreComponents;
+import jetbrains.mps.module.ReloadableModule;
+
+public class DclareForMPSEngine implements DeployListener {
+
+    private final Project              project;
+    protected final ClassLoaderManager classLoaderManager;
+    private DClareMPS                  dClareMPS = null;
+    private boolean                    on;
+    private boolean                    trace;
+    private int                        maxTotalNrOfChanges;
+    private int                        maxNrOfChanges;
 
     public DclareForMPSEngine(Project project) {
         this.project = project;
+        classLoaderManager = ApplicationManager.getApplication().getComponent(MPSCoreComponents.class).getClassLoaderManager();
+        classLoaderManager.addListener(this);
     }
 
-    private void start() {
+    private void startEngine() {
         if (dClareMPS == null || !dClareMPS.isRunning()) {
             dClareMPS = new DClareMPS(project, maxTotalNrOfChanges, maxNrOfChanges);
             dClareMPS.start();
@@ -23,11 +36,17 @@ public class DclareForMPSEngine {
         }
     }
 
-    public void stop() {
+    private void stopEngine() {
+        classLoaderManager.removeListener(this);
         if (dClareMPS != null && dClareMPS.isRunning()) {
             dClareMPS.stop();
             dClareMPS = null;
         }
+    }
+
+    public void stop() {
+        classLoaderManager.removeListener(this);
+        stopEngine();
     }
 
     public boolean isOn() {
@@ -38,9 +57,9 @@ public class DclareForMPSEngine {
         if (on != this.on) {
             this.on = on;
             if (on) {
-                start();
+                startEngine();
             } else {
-                stop();
+                stopEngine();
             }
         }
     }
@@ -72,6 +91,16 @@ public class DclareForMPSEngine {
 
     public void setMaxNrOfChanges(int maxNrOfChanges) {
         this.maxNrOfChanges = maxNrOfChanges;
+    }
+
+    @Override
+    public void onUnloaded(Set<ReloadableModule> unloadedModules, ProgressMonitor monitor) {
+    }
+
+    @Override
+    public void onLoaded(Set<ReloadableModule> loadedModules, ProgressMonitor monitor) {
+        stopEngine();
+        startEngine();
     }
 
 }

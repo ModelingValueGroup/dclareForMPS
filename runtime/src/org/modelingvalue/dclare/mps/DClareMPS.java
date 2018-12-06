@@ -23,7 +23,6 @@ import org.jetbrains.mps.openapi.model.SNode;
 import org.jetbrains.mps.openapi.module.SModule;
 import org.jetbrains.mps.openapi.module.SRepository;
 import org.jetbrains.mps.openapi.project.Project;
-import org.jetbrains.mps.openapi.util.ProgressMonitor;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Map;
 import org.modelingvalue.collections.Set;
@@ -37,18 +36,11 @@ import org.modelingvalue.transactions.Observed;
 import org.modelingvalue.transactions.Root;
 import org.modelingvalue.transactions.Setable;
 import org.modelingvalue.transactions.State;
-import org.modelingvalue.transactions.TooManyChangesException;
 
-import com.intellij.openapi.application.ApplicationManager;
-
-import jetbrains.mps.classloading.ClassLoaderManager;
-import jetbrains.mps.classloading.DeployListener;
-import jetbrains.mps.ide.MPSCoreComponents;
-import jetbrains.mps.module.ReloadableModule;
 import jetbrains.mps.smodel.language.LanguageRegistry;
 import jetbrains.mps.smodel.language.LanguageRuntime;
 
-public class DClareMPS implements TriConsumer<State, State, Boolean>, DeployListener {
+public class DClareMPS implements TriConsumer<State, State, Boolean> {
 
     static final Setable<DClareMPS, Boolean>                   TRACE         = Setable.of("TRACE", false);
 
@@ -81,21 +73,15 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, DeployList
     protected final Thread                                     waitForEndThread;
     protected final Root                                       root;
     protected final Project                                    project;
-    protected final ClassLoaderManager                         classLoaderManager;
-
     private DRepository                                        repository;
     private Imperative                                         imperative;
 
     protected DClareMPS(Project project, int maxTotalNrOfChanges, int maxNrOfChanges) {
         this.project = project;
-        classLoaderManager = ApplicationManager.getApplication().getComponent(MPSCoreComponents.class).getClassLoaderManager();
-        classLoaderManager.addListener(this);
         root = Root.of(this, 100, maxTotalNrOfChanges, maxNrOfChanges, 10);
         waitForEndThread = new Thread(() -> {
             try {
                 root.waitForEnd();
-            } catch (TooManyChangesException e) {
-                System.err.println(e.getLocalizedMessage());
             } finally {
                 stop();
             }
@@ -197,7 +183,6 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, DeployList
         if (imperative != null) {
             System.err.println("DCLARE STOP");
             imperative = null;
-            classLoaderManager.removeListener(this);
             root.put("stopDclareMPS", () -> repository.stop());
             root.stop();
         }
@@ -214,8 +199,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, DeployList
         RULE_SETS.set(language, aspect != null ? Collection.of(aspect.getRuleSets()).toSet() : Set.of());
     }
 
-    @Override
-    public void onLoaded(java.util.Set<ReloadableModule> arg0, ProgressMonitor arg1) {
+    public void onLoaded() {
         schedule(() -> {
             LanguageRegistry registry = LanguageRegistry.getInstance(repository.original());
             for (SLanguage language : ALL_LANGUAGES.get(this)) {
@@ -224,10 +208,6 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, DeployList
                 RULE_SETS.set(language, aspect != null ? Collection.of(aspect.getRuleSets()).toSet() : Set.of());
             }
         });
-    }
-
-    @Override
-    public void onUnloaded(java.util.Set<ReloadableModule> arg0, ProgressMonitor arg1) {
     }
 
     public void setTrace(boolean trace) {
