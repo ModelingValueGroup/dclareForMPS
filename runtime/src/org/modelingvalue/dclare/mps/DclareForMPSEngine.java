@@ -5,9 +5,7 @@ import org.jetbrains.mps.openapi.project.Project;
 public class DclareForMPSEngine {
 
     private final Project project;
-
     private DClareMPS     dClareMPS = null;
-
     private boolean       on;
     private boolean       trace;
     private int           maxTotalNrOfChanges;
