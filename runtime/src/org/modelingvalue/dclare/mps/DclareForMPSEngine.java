@@ -8,6 +8,7 @@ public class DclareForMPSEngine {
 
     private DClareMPS     dClareMPS = null;
 
+<<<<<<< HEAD
     private boolean       on;
     private boolean       trace;
     private int           maxTotalNrOfChanges;
@@ -76,4 +77,23 @@ public class DclareForMPSEngine {
         this.maxNrOfChanges = maxNrOfChanges;
     }
 
+=======
+    public DclareForMPSEngine(Project project) {
+        this.project = project;
+    }
+
+    public void start(int maxTotalNrOfChanges, int maxNrOfChanges) {
+        if (dClareMPS == null || !dClareMPS.isRunning()) {
+            dClareMPS = new DClareMPS(project, maxTotalNrOfChanges, maxNrOfChanges);
+            dClareMPS.start();
+        }
+    }
+
+    public void stop() {
+        if (dClareMPS != null && dClareMPS.isRunning()) {
+            dClareMPS.stop();
+            dClareMPS = null;
+        }
+    }
+>>>>>>> branch 'master' of https://github.com/ModelingValueGroup/DclareForMPS.git
 }
