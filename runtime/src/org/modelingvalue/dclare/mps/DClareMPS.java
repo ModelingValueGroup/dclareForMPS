@@ -85,11 +85,11 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, DeployList
     private DRepository                                        repository;
     private Imperative                                         imperative;
 
-    public DClareMPS(Project project) {
+    public DClareMPS(Project project, int maxTotalNrOfChanges, int maxNrOfChanges) {
         this.project = project;
         classLoaderManager = ApplicationManager.getApplication().getComponent(MPSCoreComponents.class).getClassLoaderManager();
         classLoaderManager.addListener(this);
-        root = Root.of(this, 100);
+        root = Root.of(this, 100, maxTotalNrOfChanges, maxNrOfChanges, 10);
         waitForEndThread = new Thread(() -> root.waitForEnd());
         waitForEndThread.setDaemon(true);
         waitForEndThread.start();
