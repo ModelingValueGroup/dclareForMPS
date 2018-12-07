@@ -77,7 +77,7 @@
   </node>
   <node concept="1TIwiD" id="3qVwZ8sHWnm">
     <property role="EcuMT" value="3943890974580131286" />
-    <property role="TrG5h" value="AssignmentRuleExpression" />
+    <property role="TrG5h" value="Equation" />
     <property role="34LRSv" value=":=" />
     <ref role="1TJDcQ" to="tpee:fz7vLUm" resolve="AssignmentExpression" />
   </node>

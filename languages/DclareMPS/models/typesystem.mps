@@ -525,7 +525,7 @@
     </node>
   </node>
   <node concept="1YbPZF" id="3qVwZ8sOU$P">
-    <property role="TrG5h" value="typeof_AssignmentRuleExpression" />
+    <property role="TrG5h" value="typeof_Equation" />
     <node concept="1YbPZF" id="h6MiByj" role="3K5x9m">
       <property role="TrG5h" value="typeof_BaseAssignmentExpression" />
       <property role="3GE5qa" value="" />
@@ -763,10 +763,10 @@
           <property role="TrG5h" value="rae" />
           <property role="3TUv4t" value="true" />
           <node concept="3Tqbb2" id="3qVwZ8sOWw6" role="1tU5fm">
-            <ref role="ehGHo" to="7ggn:3qVwZ8sHWnm" resolve="AssignmentRuleExpression" />
+            <ref role="ehGHo" to="7ggn:3qVwZ8sHWnm" resolve="Equation" />
           </node>
           <node concept="1YBJjd" id="3qVwZ8sOX53" role="33vP2m">
-            <ref role="1YBMHb" node="3qVwZ8sOU$S" resolve="ruleAssignmentExpression" />
+            <ref role="1YBMHb" node="3qVwZ8sOU$S" resolve="equation" />
           </node>
         </node>
       </node>
@@ -948,8 +948,8 @@
       </node>
     </node>
     <node concept="1YaCAy" id="3qVwZ8sOU$S" role="1YuTPh">
-      <property role="TrG5h" value="ruleAssignmentExpression" />
-      <ref role="1YaFvo" to="7ggn:3qVwZ8sHWnm" resolve="AssignmentRuleExpression" />
+      <property role="TrG5h" value="equation" />
+      <ref role="1YaFvo" to="7ggn:3qVwZ8sHWnm" resolve="Equation" />
     </node>
     <node concept="bXqS6" id="3qVwZ8sOVa6" role="bX4a1">
       <node concept="3clFbS" id="3qVwZ8sOVa7" role="2VODD2">
@@ -962,7 +962,7 @@
     </node>
   </node>
   <node concept="18kY7G" id="3qVwZ8t2MwE">
-    <property role="TrG5h" value="check_RuleAssignmentExpression" />
+    <property role="TrG5h" value="check_Equation" />
     <property role="18ip37" value="true" />
     <node concept="3clFbS" id="3qVwZ8t2MwF" role="18ibNy">
       <node concept="3cpWs8" id="3qVwZ8t2Wtp" role="3cqZAp">
@@ -973,7 +973,7 @@
           </node>
           <node concept="2OqwBi" id="3qVwZ8t2Wtr" role="33vP2m">
             <node concept="1YBJjd" id="3qVwZ8t2Wts" role="2Oq$k0">
-              <ref role="1YBMHb" node="3qVwZ8t2MwP" resolve="assignment" />
+              <ref role="1YBMHb" node="3qVwZ8t2MwP" resolve="equation" />
             </node>
             <node concept="3TrEf2" id="3qVwZ8t2Wtt" role="2OqNvi">
               <ref role="3Tt5mk" to="tpee:fz7vLUn" resolve="lValue" />
@@ -999,7 +999,7 @@
         <node concept="22lmx$" id="4KjhF$ZSbhU" role="3clFbw">
           <node concept="2OqwBi" id="4KjhF$ZSbJ2" role="3uHU7w">
             <node concept="1YBJjd" id="4KjhF$ZSbtw" role="2Oq$k0">
-              <ref role="1YBMHb" node="3qVwZ8t2MwP" resolve="assignment" />
+              <ref role="1YBMHb" node="3qVwZ8t2MwP" resolve="equation" />
             </node>
             <node concept="2qgKlT" id="4KjhF$ZSc70" role="2OqNvi">
               <ref role="37wK5l" to="us1s:4KjhF$ZGq5s" resolve="isModelRoots" />
@@ -1007,7 +1007,7 @@
           </node>
           <node concept="2OqwBi" id="4KjhF$ZS8VE" role="3uHU7B">
             <node concept="1YBJjd" id="4KjhF$ZS8J0" role="2Oq$k0">
-              <ref role="1YBMHb" node="3qVwZ8t2MwP" resolve="assignment" />
+              <ref role="1YBMHb" node="3qVwZ8t2MwP" resolve="equation" />
             </node>
             <node concept="2qgKlT" id="4KjhF$ZS9hb" role="2OqNvi">
               <ref role="37wK5l" to="us1s:4KjhF$ZFPTd" resolve="isLinkListAccess" />
@@ -1033,8 +1033,8 @@
       </node>
     </node>
     <node concept="1YaCAy" id="3qVwZ8t2MwP" role="1YuTPh">
-      <property role="TrG5h" value="assignment" />
-      <ref role="1YaFvo" to="7ggn:3qVwZ8sHWnm" resolve="AssignmentRuleExpression" />
+      <property role="TrG5h" value="equation" />
+      <ref role="1YaFvo" to="7ggn:3qVwZ8sHWnm" resolve="Equation" />
     </node>
   </node>
   <node concept="1YbPZF" id="29R9$zYXn2u">
@@ -2463,14 +2463,14 @@
               </node>
               <node concept="1mIQ4w" id="4jp8R7D0Ae9" role="2OqNvi">
                 <node concept="chp4Y" id="4jp8R7D0Aoa" role="cj9EA">
-                  <ref role="cht4Q" to="7ggn:3qVwZ8sHWnm" resolve="AssignmentRuleExpression" />
+                  <ref role="cht4Q" to="7ggn:3qVwZ8sHWnm" resolve="Equation" />
                 </node>
               </node>
             </node>
             <node concept="2OqwBi" id="4jp8R7D0$Ug" role="3K4E3e">
               <node concept="1PxgMI" id="4jp8R7D0$Uh" role="2Oq$k0">
                 <node concept="chp4Y" id="4jp8R7D0$Ui" role="3oSUPX">
-                  <ref role="cht4Q" to="7ggn:3qVwZ8sHWnm" resolve="AssignmentRuleExpression" />
+                  <ref role="cht4Q" to="7ggn:3qVwZ8sHWnm" resolve="Equation" />
                 </node>
                 <node concept="2OqwBi" id="4jp8R7D0$Uj" role="1m5AlR">
                   <node concept="1YBJjd" id="4jp8R7D0$Uk" role="2Oq$k0">
