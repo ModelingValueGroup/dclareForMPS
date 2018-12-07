@@ -19,6 +19,7 @@ import org.jetbrains.mps.openapi.event.SNodeAddEvent;
 import org.jetbrains.mps.openapi.event.SNodeRemoveEvent;
 import org.jetbrains.mps.openapi.event.SPropertyChangeEvent;
 import org.jetbrains.mps.openapi.event.SReferenceChangeEvent;
+import org.jetbrains.mps.openapi.language.SAbstractConcept;
 import org.jetbrains.mps.openapi.language.SConcept;
 import org.jetbrains.mps.openapi.language.SContainmentLink;
 import org.jetbrains.mps.openapi.language.SLanguage;
@@ -291,6 +292,11 @@ public class DModel extends DObject<SModel> implements SModelListener, SNodeChan
     public void removeRootNode(SNode node) {
         DNode dNode = DNode.of(dClareMPS, node);
         ROOTS.set(this, Set::remove, dNode);
+    }
+
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public void setRootNodes(SAbstractConcept concept, java.util.Collection<? extends SNode> roots) {
+        ROOTS.set(this, (rs, cs) -> cs.addAll(rs.filter(r -> !r.isInstanceOfConcept(concept))), Set.<DNode> of((java.util.Collection) roots));
     }
 
     @Override

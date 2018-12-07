@@ -241,4 +241,8 @@ public abstract class DObject<O> {
 
     protected abstract DType getType();
 
+    public void set(O obect, Object featureId, Object value) {
+
+    }
+
 }

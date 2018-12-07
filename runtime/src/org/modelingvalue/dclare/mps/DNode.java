@@ -18,6 +18,7 @@ import java.util.function.Consumer;
 
 import org.jetbrains.mps.openapi.language.SAbstractConcept;
 import org.jetbrains.mps.openapi.language.SConcept;
+import org.jetbrains.mps.openapi.language.SConceptFeature;
 import org.jetbrains.mps.openapi.language.SContainmentLink;
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.jetbrains.mps.openapi.language.SProperty;
@@ -462,6 +463,22 @@ public class DNode extends DObject<SNode> implements SNode {
     @Override
     public void setReference(SReferenceLink role, SReference reference) {
         REFERENCE.get(role).set(this, (DNode) reference.getTargetNode());
+    }
+
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public void setFeature(SConceptFeature feature, Object value) {
+        if (feature instanceof SProperty) {
+            PROPERTY.get((SProperty) feature).set(this, (String) value);
+        } else if (feature instanceof SContainmentLink) {
+            SContainmentLink cl = (SContainmentLink) feature;
+            if (cl.isMultiple()) {
+                MANY_CONTAINMENT.get(cl).set(this, List.<DNode> of((java.util.Collection) value));
+            } else {
+                SINGLE_CONTAINMENT.get(cl).set(this, (DNode) value);
+            }
+        } else {
+            REFERENCE.get((SReferenceLink) feature).set(this, (DNode) value);
+        }
     }
 
     @Override
