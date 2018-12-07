@@ -39,6 +39,7 @@ import org.modelingvalue.transactions.StopObserverException;
 
 import jetbrains.mps.extapi.model.SModelBase;
 import jetbrains.mps.extapi.module.SModuleBase;
+import jetbrains.mps.smodel.Language;
 
 public class DModule extends DObject<SModule> implements SModuleListener, SModule {
 
@@ -126,7 +127,7 @@ public class DModule extends DObject<SModule> implements SModuleListener, SModul
         }).trigger();
         Observer.of(MODELS, tx, () -> {
             if (tx.equals(DObject.TRANSACTION.get(this))) {
-                if (hasRuleSets()) {
+                if (!(original() instanceof Language) && !original().isReadOnly() && hasRuleSets()) {
                     MODELS.set(this, dClareMPS.run(() -> models(original())).map(m -> DModel.of(dClareMPS, m)).toSet());
                     ACTIVE.set(this, true);
                 } else {
@@ -323,8 +324,7 @@ public class DModule extends DObject<SModule> implements SModuleListener, SModul
     }
 
     protected boolean hasRuleSets() {
-        Set<SLanguage> langs = LANGUAGES.get(this);
-        return langs.anyMatch(l -> !DClareMPS.RULE_SETS.get(l).isEmpty()) && !langs.anyMatch(l -> l.getQualifiedName().contains("jetbrains.mps.lang"));
+        return LANGUAGES.get(this).anyMatch(l -> !DClareMPS.RULE_SETS.get(l).isEmpty());
     }
 
     public DModel findOrAddModel(String name, boolean temporal) {
