@@ -1130,8 +1130,8 @@
         </node>
       </node>
       <node concept="3Tm1VV" id="3Qetf3dy9Mh" role="1B3o_S" />
-      <node concept="3uibUv" id="3Qetf3dyiwS" role="3clF45">
-        <ref role="3uigEE" to="t4tl:~DClassObject" resolve="DClassObject" />
+      <node concept="3uibUv" id="3vqpjyc2zvB" role="3clF45">
+        <ref role="3uigEE" to="t4tl:~SClassObject" resolve="SClassObject" />
       </node>
       <node concept="37vLTG" id="3Qetf3dyi_B" role="3clF46">
         <property role="TrG5h" value="cls" />
