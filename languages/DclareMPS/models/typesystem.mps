@@ -2621,5 +2621,50 @@
       <ref role="1YaFvo" to="7ggn:76efOMRCHWM" resolve="ListBuilder" />
     </node>
   </node>
+  <node concept="18kY7G" id="3vqpjybSQo6">
+    <property role="3GE5qa" value="attributes" />
+    <property role="TrG5h" value="constantChecker" />
+    <node concept="3clFbS" id="3vqpjybSQo7" role="18ibNy">
+      <node concept="3clFbJ" id="3vqpjybSQo8" role="3cqZAp">
+        <node concept="3clFbS" id="3vqpjybSQo9" role="3clFbx">
+          <node concept="3clFbJ" id="3vqpjybSQo$" role="3cqZAp">
+            <node concept="3clFbS" id="3vqpjybSQoF" role="3clFbx">
+              <node concept="2MkqsV" id="3vqpjybSQoG" role="3cqZAp">
+                <node concept="Xl_RD" id="3vqpjybSQoH" role="2MkJ7o">
+                  <property role="Xl_RC" value="A constant attribute must have a value equation" />
+                </node>
+                <node concept="1YBJjd" id="3vqpjybSQoI" role="2OEOjV">
+                  <ref role="1YBMHb" node="3vqpjybSQoM" resolve="attribute" />
+                </node>
+              </node>
+            </node>
+            <node concept="3clFbC" id="3vqpjybSTJ8" role="3clFbw">
+              <node concept="10Nm6u" id="3vqpjybSTRM" role="3uHU7w" />
+              <node concept="2OqwBi" id="3vqpjybSSwC" role="3uHU7B">
+                <node concept="1YBJjd" id="3vqpjybSSfY" role="2Oq$k0">
+                  <ref role="1YBMHb" node="3vqpjybSQoM" resolve="attribute" />
+                </node>
+                <node concept="3TrEf2" id="3vqpjybSThC" role="2OqNvi">
+                  <ref role="3Tt5mk" to="tpee:fz3vP1I" resolve="initializer" />
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="2OqwBi" id="3vqpjybSQoJ" role="3clFbw">
+          <node concept="1YBJjd" id="3vqpjybSQoK" role="2Oq$k0">
+            <ref role="1YBMHb" node="3vqpjybSQoM" resolve="attribute" />
+          </node>
+          <node concept="3TrcHB" id="3vqpjybSS8v" role="2OqNvi">
+            <ref role="3TsBF5" to="7ggn:7byyZgEvBg3" resolve="constant" />
+          </node>
+        </node>
+      </node>
+    </node>
+    <node concept="1YaCAy" id="3vqpjybSQoM" role="1YuTPh">
+      <property role="TrG5h" value="attribute" />
+      <ref role="1YaFvo" to="7ggn:4$MeK2bmw9s" resolve="Attribute" />
+    </node>
+  </node>
 </model>
 
