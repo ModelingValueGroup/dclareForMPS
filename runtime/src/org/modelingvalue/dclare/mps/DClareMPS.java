@@ -82,6 +82,9 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
         waitForEndThread = new Thread(() -> {
             try {
                 root.waitForEnd();
+            } catch (Throwable t) {
+                t.printStackTrace();
+                throw t;
             } finally {
                 stop();
             }
