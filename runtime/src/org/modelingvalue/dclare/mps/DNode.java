@@ -468,7 +468,7 @@ public class DNode extends DObject<SNode> implements SNode {
     @SuppressWarnings({"rawtypes", "unchecked"})
     public void setFeature(SConceptFeature feature, Object value) {
         if (feature instanceof SProperty) {
-            PROPERTY.get((SProperty) feature).set(this, (String) value);
+            PROPERTY.get((SProperty) feature).set(this, value == null ? null : value.toString());
         } else if (feature instanceof SContainmentLink) {
             SContainmentLink cl = (SContainmentLink) feature;
             if (cl.isMultiple()) {
