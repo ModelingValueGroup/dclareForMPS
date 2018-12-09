@@ -4,6 +4,7 @@ import java.util.Set;
 
 import org.jetbrains.mps.openapi.project.Project;
 import org.jetbrains.mps.openapi.util.ProgressMonitor;
+import org.modelingvalue.transactions.State;
 
 import com.intellij.openapi.application.ApplicationManager;
 
@@ -22,6 +23,7 @@ public class DclareForMPSEngine implements DeployListener {
     private int                        maxTotalNrOfChanges;
     private int                        maxNrOfChanges;
     private boolean                    loaded    = false;
+    private State                      prevState = null;
 
     public DclareForMPSEngine(Project project) {
         this.project = project;
@@ -31,7 +33,7 @@ public class DclareForMPSEngine implements DeployListener {
 
     private void startEngine() {
         if (dClareMPS == null || !dClareMPS.isRunning()) {
-            dClareMPS = new DClareMPS(project, maxTotalNrOfChanges, maxNrOfChanges);
+            dClareMPS = new DClareMPS(project, prevState, maxTotalNrOfChanges, maxNrOfChanges);
             dClareMPS.start();
             dClareMPS.setTrace(trace);
         }
@@ -40,6 +42,7 @@ public class DclareForMPSEngine implements DeployListener {
     private void stopEngine() {
         if (dClareMPS != null && dClareMPS.isRunning()) {
             dClareMPS.stop();
+            // prevState = dClareMPS.root.preState().copy(o -> o instanceof DObject, s -> s instanceof DObserved || s instanceof DAttribute);
             dClareMPS = null;
         }
     }

@@ -76,9 +76,9 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
     private DRepository                                        repository;
     private Imperative                                         imperative;
 
-    protected DClareMPS(Project project, int maxTotalNrOfChanges, int maxNrOfChanges) {
+    protected DClareMPS(Project project, State prevState, int maxTotalNrOfChanges, int maxNrOfChanges) {
         this.project = project;
-        root = Root.of(this, 100, maxTotalNrOfChanges, maxNrOfChanges, 10);
+        root = Root.of(this, prevState, 100, maxTotalNrOfChanges, maxNrOfChanges, 10);
         waitForEndThread = new Thread(() -> {
             try {
                 root.waitForEnd();
