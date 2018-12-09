@@ -472,7 +472,7 @@ public class DNode extends DObject<SNode> implements SNode {
         } else if (feature instanceof SContainmentLink) {
             SContainmentLink cl = (SContainmentLink) feature;
             if (cl.isMultiple()) {
-                MANY_CONTAINMENT.get(cl).set(this, List.<DNode> of((java.util.Collection) value));
+                MANY_CONTAINMENT.get(cl).set(this, (i, s) -> s == null ? i : s, value != null ? List.<DNode> of((java.util.Collection) value) : null);
             } else {
                 SINGLE_CONTAINMENT.get(cl).set(this, (DNode) value);
             }

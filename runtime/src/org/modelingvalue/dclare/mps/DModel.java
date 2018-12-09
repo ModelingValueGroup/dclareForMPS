@@ -296,7 +296,7 @@ public class DModel extends DObject<SModel> implements SModelListener, SNodeChan
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     public void setRootNodes(SAbstractConcept concept, java.util.Collection<? extends SNode> roots) {
-        ROOTS.set(this, (rs, cs) -> cs.addAll(rs.filter(r -> !r.isInstanceOfConcept(concept))), Set.<DNode> of((java.util.Collection) roots));
+        ROOTS.set(this, (rs, cs) -> roots == null ? cs : cs.addAll(rs.filter(r -> !r.isInstanceOfConcept(concept))), Set.<DNode> of((java.util.Collection) roots));
     }
 
     @Override
