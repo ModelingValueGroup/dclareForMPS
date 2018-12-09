@@ -41,8 +41,8 @@ public class DclareForMPSEngine implements DeployListener {
 
     private void stopEngine() {
         if (dClareMPS != null && dClareMPS.isRunning()) {
+            prevState = dClareMPS.root.preState().copy(o -> o instanceof DObject, s -> s instanceof DAttribute);
             dClareMPS.stop();
-            // prevState = dClareMPS.root.preState().copy(o -> o instanceof DObject, s -> s instanceof DObserved || s instanceof DAttribute);
             dClareMPS = null;
         }
     }
