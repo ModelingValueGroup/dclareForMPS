@@ -34,6 +34,7 @@ public class DclareForMPSEngine implements DeployListener {
     private void startEngine() {
         if (dClareMPS == null || !dClareMPS.isRunning()) {
             dClareMPS = new DClareMPS(project, prevState, maxTotalNrOfChanges, maxNrOfChanges);
+            prevState = null;
             dClareMPS.start();
             dClareMPS.setTrace(trace);
         }

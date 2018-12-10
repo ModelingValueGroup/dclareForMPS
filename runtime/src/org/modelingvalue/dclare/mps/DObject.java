@@ -62,6 +62,7 @@ public abstract class DObject<O> {
     public static final Setable<DObject, DObject>                PARENT               = Observed.of("PARENT", null);
 
     public static final Setable<DObject, Set<? extends DObject>> CHILDREN             = Observed.of("CHILDREN", Set.of(), (tx, o, b, a) -> {
+                                                                                          System.err.println("!!!!!!!!!! CHILDREN " + o + " " + a);
                                                                                           Setable.<Set<? extends DObject>, DObject> diff(Set.of(), b, a,                   //
                                                                                                   e -> e.activate(o, tx.parent()), e -> e.deactivate(o, tx.parent()));
                                                                                       });
@@ -230,7 +231,8 @@ public abstract class DObject<O> {
         if (Objects.equals(parent, PARENT.get(this))) {
             PARENT.set(this, null);
         }
-        if (Objects.equals(parentTx, TRANSACTION.get(this).parent())) {
+        Compound tx = TRANSACTION.get(this);
+        if (tx != null && Objects.equals(parentTx, tx.parent())) {
             TRANSACTION.set(this, null);
         }
     }
