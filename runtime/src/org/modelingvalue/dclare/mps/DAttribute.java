@@ -3,6 +3,7 @@ package org.modelingvalue.dclare.mps;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
+import org.modelingvalue.collections.ContainingCollection;
 import org.modelingvalue.collections.util.QuadConsumer;
 import org.modelingvalue.collections.util.Quadruple;
 import org.modelingvalue.transactions.AbstractLeaf;
@@ -92,8 +93,12 @@ public interface DAttribute<O, T> {
         @Override
         public V get(C object) {
             V result = object == null ? null : super.get(object);
-            if (object != null && result == null) {
-                DObject.EMPTY_ATTRIBUTE.set(true);
+            if (object != null) {
+                if (result == null) {
+                    DObject.EMPTY_ATTRIBUTE.set(true);
+                } else if (result instanceof java.util.Collection || result instanceof ContainingCollection) {
+                    DObject.COLLECTION_ATTRIBUTE.set(true);
+                }
             }
             return result;
         }
