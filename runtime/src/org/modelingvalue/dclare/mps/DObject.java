@@ -57,12 +57,11 @@ public abstract class DObject<O> {
                                                                                           public Object getIdentity() {
                                                                                               return "<DUMMY_TYPE>";
                                                                                           }
-                                                                                      }, (tx, o, b, a) -> DClareMPS.TYPES.set(o.dClareMPS, Set::add, a));
+                                                                                      }, (tx, o, b, a) -> DClareMPS.TYPES.set(dClareMPS(), Set::add, a));
 
     public static final Setable<DObject, DObject>                PARENT               = Observed.of("PARENT", null);
 
     public static final Setable<DObject, Set<? extends DObject>> CHILDREN             = Observed.of("CHILDREN", Set.of(), (tx, o, b, a) -> {
-                                                                                          System.err.println("!!!!!!!!!! CHILDREN " + o + " " + a);
                                                                                           Setable.<Set<? extends DObject>, DObject> diff(Set.of(), b, a,                   //
                                                                                                   e -> e.activate(o, tx.parent()), e -> e.deactivate(o, tx.parent()));
                                                                                       });
@@ -88,11 +87,13 @@ public abstract class DObject<O> {
                                                                                           Setable.<Set<Observer>, Observer> diff(Set.of(), b, a, Leaf::trigger, tx::clear);
                                                                                       });
 
-    protected final DClareMPS                                    dClareMPS;
-    protected final O                                            original;
+    public static DClareMPS dClareMPS() {
+        return (DClareMPS) Leaf.getCurrent().root().getId();
+    }
 
-    protected DObject(DClareMPS dClareMPS, O original) {
-        this.dClareMPS = dClareMPS;
+    protected final O original;
+
+    protected DObject(O original) {
         this.original = original;
     }
 
@@ -102,16 +103,19 @@ public abstract class DObject<O> {
 
     @Override
     public int hashCode() {
-        return dClareMPS.hashCode() + original.hashCode();
+        return original.hashCode();
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (obj instanceof DObject) {
+        if (obj == this) {
+            return true;
+        } else if (obj instanceof DObject) {
             DObject other = (DObject) obj;
-            return dClareMPS.equals(other.dClareMPS) && original.equals(other.original);
+            return original.equals(other.original);
+        } else {
+            return false;
         }
-        return false;
     }
 
     @Override
@@ -150,6 +154,7 @@ public abstract class DObject<O> {
 
     @SuppressWarnings("unchecked")
     protected Compound activate(DObject parent, Compound parentTx) {
+        DClareMPS dClareMPS = dClareMPS();
         dClareMPS.schedule(() -> init(parent));
         Compound tx = Compound.of(this, parentTx);
         TRANSACTION.set(this, tx);
@@ -245,7 +250,7 @@ public abstract class DObject<O> {
     }
 
     protected void deactivate(DObject parent, Compound parentTx) {
-        dClareMPS.schedule(() -> init(parent));
+        dClareMPS().schedule(() -> init(parent));
     }
 
     protected boolean isComplete() {

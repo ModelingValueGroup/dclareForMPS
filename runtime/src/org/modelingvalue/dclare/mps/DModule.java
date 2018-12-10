@@ -31,6 +31,7 @@ import org.jetbrains.mps.openapi.persistence.ModelRoot;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.ContainingCollection;
 import org.modelingvalue.collections.Set;
+import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.transactions.Compound;
 import org.modelingvalue.transactions.Observed;
 import org.modelingvalue.transactions.Observer;
@@ -41,10 +42,10 @@ import jetbrains.mps.extapi.model.SModelBase;
 import jetbrains.mps.extapi.module.SModuleBase;
 import jetbrains.mps.smodel.Language;
 
-public class DModule extends DObject<SModule> implements SModuleListener, SModule {
+public class DModule extends DObject<SModule> implements SModule {
 
     public static final Observed<DModule, Boolean>        ACTIVE    = Observed.of("ACTIVE", false, (tx, o, b, a) -> {
-                                                                        if (DClareMPS.TRACE.get(o.dClareMPS)) {
+                                                                        if (DClareMPS.TRACE.get(dClareMPS())) {
                                                                             tx.runNonObserving(                                                          //
                                                                                     () -> {
                                                                                         if (a) {
@@ -60,16 +61,16 @@ public class DModule extends DObject<SModule> implements SModuleListener, SModul
 
     public static final Observed<DModule, Set<SLanguage>> LANGUAGES = Observed.of("LANGUAGES", Set.of(), (tx, o, b, a) -> {
                                                                         Setable.<Set<SLanguage>, SLanguage> diff(Set.of(), b, a,                         //
-                                                                                x -> DClareMPS.ALL_LANGUAGES.set(o.dClareMPS, Set::add, x), x -> {
+                                                                                x -> DClareMPS.ALL_LANGUAGES.set(dClareMPS(), Set::add, x), x -> {
                                                                                                                                                 });
                                                                     });
 
-    public static DModule of(DClareMPS dClareMPS, SModule original) {
-        return original instanceof DModule && ((DModule) original).dClareMPS == dClareMPS ? (DModule) original : dClareMPS.DMODULE.get(original);
+    public static DModule of(SModule original) {
+        return original instanceof DModule ? (DModule) original : dClareMPS().DMODULE.get(original);
     }
 
-    protected DModule(DClareMPS dClareMPS, SModule original) {
-        super(dClareMPS, original);
+    protected DModule(SModule original) {
+        super(original);
     }
 
     @Override
@@ -110,12 +111,13 @@ public class DModule extends DObject<SModule> implements SModuleListener, SModul
     protected void init(DObject parent) {
         super.init(parent);
         LANGUAGES.set(this, languages(original()));
-        original().addModuleListener(this);
+        original().addModuleListener(new Listener(this, dClareMPS()));
     }
 
     @SuppressWarnings("rawtypes")
     @Override
     protected Compound activate(DObject parent, Compound parentTx) {
+        DClareMPS dClareMPS = dClareMPS();
         Compound tx = super.activate(parent, parentTx);
         Observer.of(LANGUAGES, tx, () -> {
             if (tx.equals(DObject.TRANSACTION.get(this))) {
@@ -128,7 +130,7 @@ public class DModule extends DObject<SModule> implements SModuleListener, SModul
         Observer.of(MODELS, tx, () -> {
             if (tx.equals(DObject.TRANSACTION.get(this))) {
                 if (!(original() instanceof Language) && !original().isReadOnly() && hasRuleSets()) {
-                    MODELS.set(this, dClareMPS.run(() -> models(original())).map(m -> DModel.of(dClareMPS, m)).toSet());
+                    MODELS.set(this, dClareMPS.run(() -> models(original())).map(m -> DModel.of(m)).toSet());
                     ACTIVE.set(this, true);
                 } else {
                     MODELS.set(this, Set.of());
@@ -147,7 +149,7 @@ public class DModule extends DObject<SModule> implements SModuleListener, SModul
     @Override
     protected void exit(DObject parent, Compound parentTx) {
         super.exit(parent, parentTx);
-        original().removeModuleListener(this);
+        original().removeModuleListener(new Listener(this, dClareMPS()));
     }
 
     @Override
@@ -182,7 +184,7 @@ public class DModule extends DObject<SModule> implements SModuleListener, SModul
 
             @Override
             public SModule resolve(SRepository repo) {
-                return DModule.of(dClareMPS, ref.resolve(repo));
+                return DModule.of(ref.resolve(repo));
             }
         };
     }
@@ -257,58 +259,67 @@ public class DModule extends DObject<SModule> implements SModuleListener, SModul
         original().removeModuleListener(listener);
     }
 
-    @Override
-    public void modelAdded(SModule module, SModel sModel) {
-        dClareMPS.schedule(() -> {
-            if (ACTIVE.get(this)) {
-                DModel dModel = DModel.of(dClareMPS, sModel);
-                MODELS.set(DModule.this, Set::add, dModel);
-            }
-        });
-    }
+    private class Listener extends Pair<DModule, DClareMPS> implements SModuleListener {
+        private static final long serialVersionUID = -6842951912074996409L;
 
-    @Override
-    public void beforeModelRemoved(SModule module, SModel sModel) {
-        dClareMPS.schedule(() -> {
-            if (ACTIVE.get(this)) {
-                DModel dModel = DModel.of(dClareMPS, sModel);
-                MODELS.set(DModule.this, Set::remove, dModel);
-            }
-        });
-    }
+        private Listener(DModule dModule, DClareMPS dClareMPS) {
+            super(dModule, dClareMPS);
+        }
 
-    @Override
-    public void dependencyAdded(SModule module, SDependency dep) {
-    }
+        @Override
+        public void modelAdded(SModule module, SModel sModel) {
+            b().schedule(() -> {
+                if (ACTIVE.get(DModule.this)) {
+                    DModel dModel = DModel.of(sModel);
+                    MODELS.set(DModule.this, Set::add, dModel);
+                }
+            });
+        }
 
-    @Override
-    public void dependencyRemoved(SModule module, SDependency dep) {
-    }
+        @Override
+        public void beforeModelRemoved(SModule module, SModel sModel) {
+            b().schedule(() -> {
+                if (ACTIVE.get(DModule.this)) {
+                    DModel dModel = DModel.of(sModel);
+                    MODELS.set(DModule.this, Set::remove, dModel);
+                }
+            });
+        }
 
-    @Override
-    public void modelRemoved(SModule module, SModelReference ref) {
-    }
+        @Override
+        public void dependencyAdded(SModule module, SDependency dep) {
+        }
 
-    @Override
-    public void beforeModelRenamed(SModule module, SModel model, SModelReference newRef) {
-    }
+        @Override
+        public void dependencyRemoved(SModule module, SDependency dep) {
+        }
 
-    @Override
-    public void modelRenamed(SModule module, SModel model, SModelReference oldRef) {
-    }
+        @Override
+        public void modelRemoved(SModule module, SModelReference ref) {
+        }
 
-    @Override
-    public void languageAdded(SModule module, SLanguage lang) {
-        dClareMPS.schedule(() -> LANGUAGES.set(DModule.this, Set::add, lang));
-    }
+        @Override
+        public void beforeModelRenamed(SModule module, SModel model, SModelReference newRef) {
+        }
 
-    @Override
-    public void languageRemoved(SModule module, SLanguage lang) {
-        dClareMPS.schedule(() -> LANGUAGES.set(DModule.this, Set::remove, lang));
-    }
+        @Override
+        public void modelRenamed(SModule module, SModel model, SModelReference oldRef) {
+        }
 
-    @Override
-    public void moduleChanged(SModule module) {
+        @Override
+        public void languageAdded(SModule module, SLanguage lang) {
+            dClareMPS().schedule(() -> LANGUAGES.set(DModule.this, Set::add, lang));
+        }
+
+        @Override
+        public void languageRemoved(SModule module, SLanguage lang) {
+            dClareMPS().schedule(() -> LANGUAGES.set(DModule.this, Set::remove, lang));
+        }
+
+        @Override
+        public void moduleChanged(SModule module) {
+        }
+
     }
 
     protected static Set<SLanguage> languages(SModule module) {
@@ -336,12 +347,12 @@ public class DModule extends DObject<SModule> implements SModuleListener, SModul
         }
         if (found == null) {
             SModuleBase sModule = (SModuleBase) original();
-            SModelBase sModel = dClareMPS.run(temporal ? () -> {
+            SModelBase sModel = dClareMPS().run(temporal ? () -> {
                 return new DTempModel(name, sModule);
             } : () -> {
                 return (SModelBase) sModule.getModelRoots().iterator().next().createModel(name);
             });
-            found = DModel.of(dClareMPS, sModel);
+            found = DModel.of(sModel);
             MODELS.set(this, Set::add, found);
         }
         return found;

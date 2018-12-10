@@ -41,8 +41,8 @@ import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.ContainingCollection;
 import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.Set;
+import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.transactions.Compound;
-import org.modelingvalue.transactions.Leaf;
 import org.modelingvalue.transactions.Observed;
 import org.modelingvalue.transactions.Observer;
 import org.modelingvalue.transactions.Setable;
@@ -50,7 +50,7 @@ import org.modelingvalue.transactions.StopObserverException;
 
 import jetbrains.mps.extapi.model.SModelBase;
 
-public class DModel extends DObject<SModel> implements SModelListener, SNodeChangeListener, SModel {
+public class DModel extends DObject<SModel> implements SModel {
 
     public static final Observed<DModel, Set<DNode>>     ROOTS          = DObserved.of("ROOTS", Set.of(), false, false, (dModel, pre, post) -> {
                                                                             DObserved.map(DModel.roots(dModel.original()), post.map(DNode::original).toSet(),        //
@@ -70,16 +70,16 @@ public class DModel extends DObject<SModel> implements SModelListener, SNodeChan
 
     public static final Observed<DModel, ModelRoot>      MODEL_ROOT     = Observed.of("MODEL_ROOT", null);
 
-    public static DModel of(DClareMPS dClareMPS, SModel original) {
-        return original instanceof DModel && ((DModel) original).dClareMPS == dClareMPS ? (DModel) original : dClareMPS.DMODEL.get(original);
+    public static DModel of(SModel original) {
+        return original instanceof DModel ? (DModel) original : dClareMPS().DMODEL.get(original);
     }
 
     public static DModel wrap(SModel original) {
-        return of((DClareMPS) Leaf.getCurrent().root().getId(), original);
+        return of(original);
     }
 
-    protected DModel(DClareMPS dClareMPS, SModel original) {
-        super(dClareMPS, original);
+    protected DModel(SModel original) {
+        super(original);
     }
 
     @Override
@@ -123,10 +123,9 @@ public class DModel extends DObject<SModel> implements SModelListener, SNodeChan
     @Override
     protected void init(DObject parent) {
         super.init(parent);
-        ROOTS.set(this, Collection.of(original().getRootNodes()).map(n -> DNode.of(dClareMPS, n)).toSet());
+        ROOTS.set(this, Collection.of(original().getRootNodes()).map(n -> DNode.of(n)).toSet());
         MODEL_ROOT.set(this, original().getModelRoot());
-        original().addModelListener(this);
-        original().addChangeListener(this);
+        original().addChangeListener(new Listener(this, dClareMPS()));
     }
 
     @SuppressWarnings("rawtypes")
@@ -148,60 +147,68 @@ public class DModel extends DObject<SModel> implements SModelListener, SNodeChan
     @Override
     protected void exit(DObject parent, Compound parentTx) {
         super.exit(parent, parentTx);
-        original().removeModelListener(this);
-        original().removeChangeListener(this);
+        original().removeChangeListener(new Listener(this, dClareMPS()));
     }
 
-    @Override
-    public void propertyChanged(SPropertyChangeEvent event) {
-        dClareMPS.schedule(() -> {
-            DNode.PROPERTY.get(event.getProperty()).set(DNode.of(dClareMPS, event.getNode()), event.getNewValue());
-        });
-    }
+    private class Listener extends Pair<DModel, DClareMPS> implements SNodeChangeListener {
+        private static final long serialVersionUID = -5189200443861195660L;
 
-    @Override
-    public void referenceChanged(SReferenceChangeEvent event) {
-        dClareMPS.schedule(() -> {
-            SReference newValue = event.getNewValue();
-            SNode targetNode = newValue != null ? newValue.getTargetNode() : null;
-            DNode.REFERENCE.get(event.getAssociationLink()).set(DNode.of(dClareMPS, event.getNode()), targetNode != null ? DNode.of(dClareMPS, targetNode) : null);
-        });
-    }
+        private Listener(DModel dModel, DClareMPS dClareMPS) {
+            super(dModel, dClareMPS);
+        }
 
-    @Override
-    public void nodeAdded(SNodeAddEvent event) {
-        dClareMPS.schedule(() -> {
-            DNode dNode = DNode.of(dClareMPS, event.getChild());
-            DModel dModel = DModel.of(dClareMPS, event.getModel());
-            if (event.isRoot()) {
-                DModel.ROOTS.set(dModel, (l, e) -> l.add(e), dNode);
-            } else {
-                SContainmentLink al = event.getAggregationLink();
-                if (al.isMultiple()) {
-                    List<SNode> list = DNode.children(event.getParent(), al);
-                    DNode.MANY_CONTAINMENT.get(al).set(DNode.of(dClareMPS, event.getParent()), (l, e) -> l.remove(e).insert(list.firstIndexOf(e.original()), e), dNode);
+        @Override
+        public void propertyChanged(SPropertyChangeEvent event) {
+            b().schedule(() -> {
+                DNode.PROPERTY.get(event.getProperty()).set(DNode.of(event.getNode()), event.getNewValue());
+            });
+        }
+
+        @Override
+        public void referenceChanged(SReferenceChangeEvent event) {
+            b().schedule(() -> {
+                SReference newValue = event.getNewValue();
+                SNode targetNode = newValue != null ? newValue.getTargetNode() : null;
+                DNode.REFERENCE.get(event.getAssociationLink()).set(DNode.of(event.getNode()), targetNode != null ? DNode.of(targetNode) : null);
+            });
+        }
+
+        @Override
+        public void nodeAdded(SNodeAddEvent event) {
+            b().schedule(() -> {
+                DNode dNode = DNode.of(event.getChild());
+                DModel dModel = DModel.of(event.getModel());
+                if (event.isRoot()) {
+                    DModel.ROOTS.set(dModel, (l, e) -> l.add(e), dNode);
                 } else {
-                    DNode.SINGLE_CONTAINMENT.get(al).set(DNode.of(dClareMPS, event.getParent()), dNode);
+                    SContainmentLink al = event.getAggregationLink();
+                    if (al.isMultiple()) {
+                        List<SNode> list = DNode.children(event.getParent(), al);
+                        DNode.MANY_CONTAINMENT.get(al).set(DNode.of(event.getParent()), (l, e) -> l.remove(e).insert(list.firstIndexOf(e.original()), e), dNode);
+                    } else {
+                        DNode.SINGLE_CONTAINMENT.get(al).set(DNode.of(event.getParent()), dNode);
+                    }
                 }
-            }
-        });
-    }
+            });
+        }
 
-    @Override
-    public void nodeRemoved(SNodeRemoveEvent event) {
-        dClareMPS.schedule(() -> {
-            DNode dNode = DNode.of(dClareMPS, event.getChild());
-            if (event.isRoot()) {
-                DModel.ROOTS.set(DModel.of(dClareMPS, event.getModel()), (l, e) -> l.remove(e), dNode);
-            } else {
-                SContainmentLink al = event.getAggregationLink();
-                if (al.isMultiple()) {
-                    DNode.MANY_CONTAINMENT.get(al).set(DNode.of(dClareMPS, event.getParent()), (l, e) -> l.remove(e), dNode);
+        @Override
+        public void nodeRemoved(SNodeRemoveEvent event) {
+            b().schedule(() -> {
+                DNode dNode = DNode.of(event.getChild());
+                if (event.isRoot()) {
+                    DModel.ROOTS.set(DModel.of(event.getModel()), (l, e) -> l.remove(e), dNode);
                 } else {
-                    DNode.SINGLE_CONTAINMENT.get(al).set(DNode.of(dClareMPS, event.getParent()), (v, e) -> dNode.equals(v) ? null : v, dNode);
+                    SContainmentLink al = event.getAggregationLink();
+                    if (al.isMultiple()) {
+                        DNode.MANY_CONTAINMENT.get(al).set(DNode.of(event.getParent()), (l, e) -> l.remove(e), dNode);
+                    } else {
+                        DNode.SINGLE_CONTAINMENT.get(al).set(DNode.of(event.getParent()), (v, e) -> dNode.equals(v) ? null : v, dNode);
+                    }
                 }
-            }
-        });
+            });
+        }
+
     }
 
     @Override
@@ -251,7 +258,7 @@ public class DModel extends DObject<SModel> implements SModelListener, SNodeChan
 
             @Override
             public SModel resolve(SRepository repo) {
-                return DModel.of(dClareMPS, ref.resolve(repo));
+                return DModel.of(ref.resolve(repo));
             }
         };
     }
@@ -274,23 +281,23 @@ public class DModel extends DObject<SModel> implements SModelListener, SNodeChan
 
     @Override
     public DNode createNode(SConcept concept) {
-        return DNode.of(dClareMPS, original().createNode(concept));
+        return DNode.of(original().createNode(concept));
     }
 
     @Override
     public DNode createNode(SConcept concept, SNodeId nodeId) {
-        return DNode.of(dClareMPS, original().createNode(concept, nodeId));
+        return DNode.of(original().createNode(concept, nodeId));
     }
 
     @Override
     public void addRootNode(SNode node) {
-        DNode dNode = DNode.of(dClareMPS, node);
+        DNode dNode = DNode.of(node);
         ROOTS.set(this, Set::add, dNode);
     }
 
     @Override
     public void removeRootNode(SNode node) {
-        DNode dNode = DNode.of(dClareMPS, node);
+        DNode dNode = DNode.of(node);
         ROOTS.set(this, Set::remove, dNode);
     }
 
@@ -302,7 +309,7 @@ public class DModel extends DObject<SModel> implements SModelListener, SNodeChan
     @Override
     public DNode getNode(SNodeId id) {
         SNode sNode = original().getNode(id);
-        return sNode != null ? DNode.of(dClareMPS, sNode) : null;
+        return sNode != null ? DNode.of(sNode) : null;
     }
 
     @Override
@@ -363,38 +370,6 @@ public class DModel extends DObject<SModel> implements SModelListener, SNodeChan
     @Override
     public void removeChangeListener(SNodeChangeListener l) {
         original().removeChangeListener(l);
-    }
-
-    @Override
-    public void modelLoaded(SModel model, boolean partially) {
-    }
-
-    @Override
-    public void modelReplaced(SModel model) {
-    }
-
-    @Override
-    public void modelUnloaded(SModel model) {
-    }
-
-    @Override
-    public void modelSaved(SModel model) {
-    }
-
-    @Override
-    public void modelAttached(SModel model, SRepository repository) {
-    }
-
-    @Override
-    public void modelDetached(SModel model, SRepository repository) {
-    }
-
-    @Override
-    public void conflictDetected(SModel model) {
-    }
-
-    @Override
-    public void problemsDetected(SModel model, Iterable<Problem> problems) {
     }
 
     protected static Set<SNode> roots(SModel model) {

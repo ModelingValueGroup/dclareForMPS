@@ -26,20 +26,21 @@ import org.jetbrains.mps.openapi.module.SRepositoryListener;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.ContainingCollection;
 import org.modelingvalue.collections.Set;
+import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.transactions.Compound;
 import org.modelingvalue.transactions.Observed;
 
 @SuppressWarnings("deprecation")
-public class DRepository extends DObject<SRepository> implements SRepositoryListener, SRepository {
+public class DRepository extends DObject<SRepository> implements SRepository {
 
     public static final Observed<DRepository, Set<DModule>> MODULES = Observed.of("MODULES", Set.of());
 
-    public static DRepository of(DClareMPS dClareMPS, SRepository original) {
-        return original instanceof DRepository && ((DRepository) original).dClareMPS == dClareMPS ? (DRepository) original : dClareMPS.DREPOSITORY.get(original);
+    public static DRepository of(SRepository original) {
+        return original instanceof DRepository ? (DRepository) original : dClareMPS().DREPOSITORY.get(original);
     }
 
-    protected DRepository(DClareMPS dClareMPS, SRepository original) {
-        super(dClareMPS, original);
+    protected DRepository(SRepository original) {
+        super(original);
     }
 
     @SuppressWarnings("rawtypes")
@@ -50,7 +51,7 @@ public class DRepository extends DObject<SRepository> implements SRepositoryList
 
     @Override
     protected DType getType() {
-        Set<SLanguage> allLanguages = DClareMPS.ALL_LANGUAGES.get(dClareMPS);
+        Set<SLanguage> allLanguages = DClareMPS.ALL_LANGUAGES.get(dClareMPS());
         return new DType() {
 
             @SuppressWarnings({"rawtypes", "unchecked"})
@@ -86,19 +87,19 @@ public class DRepository extends DObject<SRepository> implements SRepositoryList
     @Override
     protected void init(DObject parent) {
         super.init(parent);
-        MODULES.set(this, modules(dClareMPS).map(m -> DModule.of(dClareMPS, m)).toSet());
-        addRepositoryListener(this);
+        MODULES.set(this, modules().map(m -> DModule.of(m)).toSet());
+        addRepositoryListener(new Listener(this, dClareMPS()));
     }
 
-    protected static Set<SModule> modules(DClareMPS dClareMPS) {
-        return Collection.of(dClareMPS.project.getProjectModules()).toSet();
+    protected static Set<SModule> modules() {
+        return Collection.of(dClareMPS().project.getProjectModules()).toSet();
     }
 
     @SuppressWarnings("rawtypes")
     @Override
     protected void exit(DObject parent, Compound parentTx) {
         super.exit(parent, parentTx);
-        removeRepositoryListener(this);
+        removeRepositoryListener(new Listener(this, dClareMPS()));
     }
 
     @Override
@@ -142,52 +143,60 @@ public class DRepository extends DObject<SRepository> implements SRepositoryList
         original().removeRepositoryListener(listener);
     }
 
-    @Override
-    public void moduleAdded(SModule sModule) {
-        dClareMPS.schedule(() -> {
-            if (dClareMPS.project.getProjectModules().contains(sModule)) {
-                DModule dModule = DModule.of(dClareMPS, sModule);
-                MODULES.set(DRepository.this, Set::add, dModule);
-            }
-        });
-    }
+    private class Listener extends Pair<DRepository, DClareMPS> implements SRepositoryListener {
+        private static final long serialVersionUID = -8833673849931733478L;
 
-    @Override
-    public void beforeModuleRemoved(SModule sModule) {
-        dClareMPS.schedule(() -> {
-            if (dClareMPS.project.getProjectModules().contains(sModule)) {
-                DModule dModule = DModule.of(dClareMPS, sModule);
-                MODULES.set(DRepository.this, Set::remove, dModule);
-            }
-        });
-    }
+        private Listener(DRepository dRepository, DClareMPS dClareMPS) {
+            super(dRepository, dClareMPS);
+        }
 
-    @Override
-    public void moduleRemoved(SModuleReference module) {
-    }
+        @Override
+        public void moduleAdded(SModule sModule) {
+            b().schedule(() -> {
+                if (b().project.getProjectModules().contains(sModule)) {
+                    DModule dModule = DModule.of(sModule);
+                    MODULES.set(DRepository.this, Set::add, dModule);
+                }
+            });
+        }
 
-    @Override
-    public void commandStarted(SRepository repository) {
-    }
+        @Override
+        public void beforeModuleRemoved(SModule sModule) {
+            b().schedule(() -> {
+                if (b().project.getProjectModules().contains(sModule)) {
+                    DModule dModule = DModule.of(sModule);
+                    MODULES.set(DRepository.this, Set::remove, dModule);
+                }
+            });
+        }
 
-    @Override
-    public void commandFinished(SRepository repository) {
-    }
+        @Override
+        public void moduleRemoved(SModuleReference module) {
+        }
 
-    @Override
-    public void updateStarted(SRepository repository) {
-    }
+        @Override
+        public void commandStarted(SRepository repository) {
+        }
 
-    @Override
-    public void updateFinished(SRepository repository) {
-    }
+        @Override
+        public void commandFinished(SRepository repository) {
+        }
 
-    @Override
-    public void repositoryCommandStarted(SRepository repository) {
-    }
+        @Override
+        public void updateStarted(SRepository repository) {
+        }
 
-    @Override
-    public void repositoryCommandFinished(SRepository repository) {
+        @Override
+        public void updateFinished(SRepository repository) {
+        }
+
+        @Override
+        public void repositoryCommandStarted(SRepository repository) {
+        }
+
+        @Override
+        public void repositoryCommandFinished(SRepository repository) {
+        }
     }
 
 }

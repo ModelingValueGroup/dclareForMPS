@@ -63,12 +63,11 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
                                                                                  Setable.<Set<DType>, DType> diff(Set.of(), b, a, x -> x.start(tx.root()), x -> x.stop(tx.root()));
                                                                              });
 
-    public final Getable<SClassObject, DClassObject>           DCLASS_OBJECT = Constant.of(Pair.of(this, "DCLASS_OBJECT"), c -> new DClassObject(this, c));
-
-    public final Getable<SRepository, DRepository>             DREPOSITORY   = Constant.of(Pair.of(this, "DREPOSITORY"), r -> new DRepository(this, r));
-    public final Getable<SModule, DModule>                     DMODULE       = Constant.of(Pair.of(this, "DMODULE"), m -> new DModule(this, m));
-    public final Getable<SModel, DModel>                       DMODEL        = Constant.of(Pair.of(this, "DMODEL"), m -> new DModel(this, m));
-    public final Getable<SNode, DNode>                         DNODE         = Constant.of(Pair.of(this, "DNODE"), n -> new DNode(this, n));
+    public final Getable<SRepository, DRepository>             DREPOSITORY   = Constant.of(Pair.of(this, "DREPOSITORY"), r -> new DRepository(r));
+    public final Getable<SModule, DModule>                     DMODULE       = Constant.of(Pair.of(this, "DMODULE"), m -> new DModule(m));
+    public final Getable<SModel, DModel>                       DMODEL        = Constant.of(Pair.of(this, "DMODEL"), m -> new DModel(m));
+    public final Getable<SNode, DNode>                         DNODE         = Constant.of(Pair.of(this, "DNODE"), n -> new DNode(n));
+    public final Getable<SClassObject, DClassObject>           DCLASS_OBJECT = Constant.of(Pair.of(this, "DCLASS_OBJECT"), c -> new DClassObject(c));
 
     protected final Thread                                     waitForEndThread;
     protected final Root                                       root;
@@ -97,7 +96,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
                     project.getModelAccess().executeCommandInEDT(r);
                 }
             });
-            repository = DRepository.of(DClareMPS.this, project.getRepository());
+            repository = DRepository.of(project.getRepository());
         });
     }
 

@@ -7,20 +7,19 @@ import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.ContainingCollection;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
-import org.modelingvalue.transactions.Leaf;
 
 public class DClassObject extends DObject<SClassObject> implements SClassObject {
 
-    public static DClassObject of(DClareMPS dClareMPS, SClassObject original) {
-        return original instanceof DClassObject && ((DClassObject) original).dClareMPS == dClareMPS ? (DClassObject) original : dClareMPS.DCLASS_OBJECT.get(original);
+    public static DClassObject of(SClassObject original) {
+        return original instanceof DClassObject ? (DClassObject) original : dClareMPS().DCLASS_OBJECT.get(original);
     }
 
     public static DClassObject wrap(SClassObject original) {
-        return of((DClareMPS) Leaf.getCurrent().root().getId(), original);
+        return of(original);
     }
 
-    protected DClassObject(DClareMPS dClareMPS, SClassObject original) {
-        super(dClareMPS, original);
+    protected DClassObject(SClassObject original) {
+        super(original);
     }
 
     @SuppressWarnings("rawtypes")

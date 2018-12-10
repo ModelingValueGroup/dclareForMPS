@@ -37,7 +37,6 @@ import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.transactions.Compound;
 import org.modelingvalue.transactions.Constant;
 import org.modelingvalue.transactions.Getable;
-import org.modelingvalue.transactions.Leaf;
 import org.modelingvalue.transactions.Observed;
 import org.modelingvalue.transactions.Observer;
 import org.modelingvalue.transactions.Setable;
@@ -114,16 +113,16 @@ public class DNode extends DObject<SNode> implements SNode {
                                                                                                                });
                                                                                                    });
 
-    public static DNode of(DClareMPS dClareMPS, SNode original) {
-        return original instanceof DNode && ((DNode) original).dClareMPS == dClareMPS ? (DNode) original : dClareMPS.DNODE.get(original);
+    public static DNode of(SNode original) {
+        return original instanceof DNode ? (DNode) original : dClareMPS().DNODE.get(original);
     }
 
     public static SNode wrap(SNode original) {
-        return of((DClareMPS) Leaf.getCurrent().root().getId(), original);
+        return of(original);
     }
 
-    protected DNode(DClareMPS dClareMPS, SNode original) {
-        super(dClareMPS, original);
+    protected DNode(SNode original) {
+        super(original);
     }
 
     @Override
@@ -180,10 +179,10 @@ public class DNode extends DObject<SNode> implements SNode {
         }
         for (SReference reference : original().getReferences()) {
             SNode targetNode = reference.getTargetNode();
-            REFERENCE.get(reference.getLink()).set(this, targetNode != null ? of(dClareMPS, targetNode) : null);
+            REFERENCE.get(reference.getLink()).set(this, targetNode != null ? of(targetNode) : null);
         }
         for (SNode sChild : original().getChildren()) {
-            DNode dChild = of(dClareMPS, sChild);
+            DNode dChild = of(sChild);
             SContainmentLink cl = sChild.getContainmentLink();
             if (cl.isMultiple()) {
                 MANY_CONTAINMENT.get(cl).set(this, (l, e) -> l.addUnique(e), dChild);
@@ -240,7 +239,7 @@ public class DNode extends DObject<SNode> implements SNode {
 
             @Override
             public SNode resolve(SRepository repo) {
-                return of(dClareMPS, ref.resolve(repo));
+                return of(ref.resolve(repo));
             }
 
             @Override
@@ -278,7 +277,7 @@ public class DNode extends DObject<SNode> implements SNode {
 
     @Override
     public void addChild(SContainmentLink role, SNode child) {
-        DNode dNode = of(dClareMPS, child);
+        DNode dNode = of(child);
         if (role.isMultiple()) {
             MANY_CONTAINMENT.get(role).set(this, (l, e) -> l.addUnique(e), dNode);
         } else {
@@ -288,7 +287,7 @@ public class DNode extends DObject<SNode> implements SNode {
 
     @Override
     public void insertChildBefore(SContainmentLink role, SNode child, SNode anchor) {
-        DNode dNode = of(dClareMPS, child);
+        DNode dNode = of(child);
         if (role.isMultiple()) {
             MANY_CONTAINMENT.get(role).set(this, (l, e) -> {
                 List<DNode> r = l.remove(e);
@@ -301,7 +300,7 @@ public class DNode extends DObject<SNode> implements SNode {
 
     @Override
     public void insertChildAfter(SContainmentLink role, SNode child, SNode anchor) {
-        DNode dNode = of(dClareMPS, child);
+        DNode dNode = of(child);
         if (role.isMultiple()) {
             MANY_CONTAINMENT.get(role).set(this, (l, e) -> {
                 List<DNode> r = l.remove(e);
@@ -314,7 +313,7 @@ public class DNode extends DObject<SNode> implements SNode {
 
     @Override
     public void removeChild(SNode child) {
-        DNode dNode = of(dClareMPS, child);
+        DNode dNode = of(child);
         SContainmentLink link = dNode.getContainmentLink();
         if (link != null) {
             if (link.isMultiple()) {
