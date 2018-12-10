@@ -1245,26 +1245,50 @@
                         </node>
                         <node concept="9aQIb" id="745HIYNJOt3" role="9aQIa">
                           <node concept="3clFbS" id="745HIYNJOt4" role="9aQI4">
-                            <node concept="3cpWs6" id="745HIYNJYO9" role="3cqZAp">
-                              <node concept="2YIFZM" id="745HIYNJRJ1" role="3cqZAk">
-                                <ref role="37wK5l" to="33ny:~Arrays.equals(java.lang.Object[],java.lang.Object[]):boolean" resolve="equals" />
-                                <ref role="1Pybhc" to="33ny:~Arrays" resolve="Arrays" />
-                                <node concept="37vLTw" id="745HIYNJRKJ" role="37wK5m">
-                                  <ref role="3cqZAo" node="745HIYNJMII" resolve="identity" />
+                            <node concept="3cpWs8" id="37k3L2JKzoE" role="3cqZAp">
+                              <node concept="3cpWsn" id="37k3L2JKzoF" role="3cpWs9">
+                                <property role="TrG5h" value="ocs" />
+                                <node concept="3uibUv" id="37k3L2JKzoD" role="1tU5fm">
+                                  <ref role="3uigEE" to="t4tl:~SClassObject" resolve="SClassObject" />
                                 </node>
-                                <node concept="2OqwBi" id="745HIYNJSI1" role="37wK5m">
-                                  <node concept="1eOMI4" id="745HIYNJSrr" role="2Oq$k0">
-                                    <node concept="10QFUN" id="745HIYNJSro" role="1eOMHV">
-                                      <node concept="3uibUv" id="745HIYNJSva" role="10QFUM">
-                                        <ref role="3uigEE" to="t4tl:~SClassObject" resolve="SClassObject" />
-                                      </node>
-                                      <node concept="37vLTw" id="745HIYNJS0A" role="10QFUP">
-                                        <ref role="3cqZAo" node="745HIYNJN4K" resolve="other" />
-                                      </node>
+                                <node concept="10QFUN" id="37k3L2JKzoG" role="33vP2m">
+                                  <node concept="3uibUv" id="37k3L2JKzoH" role="10QFUM">
+                                    <ref role="3uigEE" to="t4tl:~SClassObject" resolve="SClassObject" />
+                                  </node>
+                                  <node concept="37vLTw" id="37k3L2JKzoI" role="10QFUP">
+                                    <ref role="3cqZAo" node="745HIYNJN4K" resolve="other" />
+                                  </node>
+                                </node>
+                              </node>
+                            </node>
+                            <node concept="3cpWs6" id="745HIYNJYO9" role="3cqZAp">
+                              <node concept="1Wc70l" id="37k3L2JKxGx" role="3cqZAk">
+                                <node concept="17R0WA" id="37k3L2JKyT6" role="3uHU7B">
+                                  <node concept="2OqwBi" id="37k3L2JK_N0" role="3uHU7w">
+                                    <node concept="37vLTw" id="37k3L2JK_fU" role="2Oq$k0">
+                                      <ref role="3cqZAo" node="37k3L2JKzoF" resolve="ocs" />
+                                    </node>
+                                    <node concept="liA8E" id="37k3L2JKAm0" role="2OqNvi">
+                                      <ref role="37wK5l" to="t4tl:~SClassObject.getDClass():org.modelingvalue.dclare.mps.SClass" resolve="getDClass" />
                                     </node>
                                   </node>
-                                  <node concept="liA8E" id="745HIYNJYEC" role="2OqNvi">
-                                    <ref role="37wK5l" to="t4tl:~SClassObject.getIdentity():java.lang.Object[]" resolve="getIdentity" />
+                                  <node concept="37vLTw" id="37k3L2JKydJ" role="3uHU7B">
+                                    <ref role="3cqZAo" node="3Qetf3dyi_B" resolve="cls" />
+                                  </node>
+                                </node>
+                                <node concept="2YIFZM" id="745HIYNJRJ1" role="3uHU7w">
+                                  <ref role="37wK5l" to="33ny:~Arrays.equals(java.lang.Object[],java.lang.Object[]):boolean" resolve="equals" />
+                                  <ref role="1Pybhc" to="33ny:~Arrays" resolve="Arrays" />
+                                  <node concept="37vLTw" id="745HIYNJRKJ" role="37wK5m">
+                                    <ref role="3cqZAo" node="745HIYNJMII" resolve="identity" />
+                                  </node>
+                                  <node concept="2OqwBi" id="745HIYNJSI1" role="37wK5m">
+                                    <node concept="37vLTw" id="37k3L2JKzoJ" role="2Oq$k0">
+                                      <ref role="3cqZAo" node="37k3L2JKzoF" resolve="ocs" />
+                                    </node>
+                                    <node concept="liA8E" id="745HIYNJYEC" role="2OqNvi">
+                                      <ref role="37wK5l" to="t4tl:~SClassObject.getIdentity():java.lang.Object[]" resolve="getIdentity" />
+                                    </node>
                                   </node>
                                 </node>
                               </node>
