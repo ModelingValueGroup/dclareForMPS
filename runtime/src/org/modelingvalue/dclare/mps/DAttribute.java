@@ -4,6 +4,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import org.modelingvalue.collections.ContainingCollection;
+import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.collections.util.QuadConsumer;
 import org.modelingvalue.collections.util.Quadruple;
 import org.modelingvalue.transactions.AbstractLeaf;
@@ -84,7 +85,7 @@ public interface DAttribute<O, T> {
         private boolean composite;
 
         public DObservedAttribut(Object id, String name, boolean composite, V def, QuadConsumer<AbstractLeaf, C, V, V> changed) {
-            super(id, def, false, false, (o, b, a) -> {
+            super(id, def, true, false, (o, b, a) -> {
             }, changed);
             this.name = name;
             this.composite = composite;
@@ -92,15 +93,31 @@ public interface DAttribute<O, T> {
 
         @Override
         public V get(C object) {
-            V result = object == null ? null : super.get(object);
+            V result = object != null ? super.get(object) : null;
             if (object != null) {
-                if (result == null) {
-                    DObject.EMPTY_ATTRIBUTE.set(true);
+                if (result == null && mandatory) {
+                    DObject.EMPTY_ATTRIBUTE.set(DObject.EMPTY_ATTRIBUTE.get().add(Pair.of((DObject) object, this)));
                 } else if (result instanceof java.util.Collection || result instanceof ContainingCollection) {
                     DObject.COLLECTION_ATTRIBUTE.set(true);
                 }
             }
             return result;
+        }
+
+        @Override
+        public V set(C object, V value) {
+            if (object != null && mandatory) {
+                DObject.EMPTY_ATTRIBUTE.set(DObject.EMPTY_ATTRIBUTE.get().remove(Pair.of((DObject) object, this)));
+            }
+            return super.set(object, value);
+        }
+
+        @Override
+        public <E> V set(C object, BiFunction<V, E, V> function, E element) {
+            if (object != null && mandatory) {
+                DObject.EMPTY_ATTRIBUTE.set(DObject.EMPTY_ATTRIBUTE.get().remove(Pair.of((DObject) object, this)));
+            }
+            return super.set(object, function, element);
         }
 
         @Override

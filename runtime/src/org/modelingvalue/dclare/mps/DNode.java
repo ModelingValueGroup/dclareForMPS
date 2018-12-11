@@ -84,7 +84,7 @@ public class DNode extends DObject<SNode> implements SNode {
 
     public static final Getable<SReferenceLink, Observed<DNode, DNode>>         REFERENCE          = Constant.of("REFERENCE", sr -> {
                                                                                                        Observed<DNode, Set<DNode>> oppos = DNode.OPPOSITE.get(sr);
-                                                                                                       return DObserved.<DNode, DNode> of(sr, null, !sr.isOptional(), true,                                                  //
+                                                                                                       return DObserved.<DNode, DNode> of(sr, null, false, true,                                                             //
                                                                                                                (dNode, pre, post) -> {
                                                                                                                    SNode ref = post != null ? post.original() : null;
                                                                                                                    if (!Objects.equals(dNode.original().getReferenceTarget(sr), ref)) {

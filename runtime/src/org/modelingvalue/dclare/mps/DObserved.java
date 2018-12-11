@@ -16,7 +16,6 @@ package org.modelingvalue.dclare.mps;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-import org.modelingvalue.collections.ContainingCollection;
 import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.ContextThread;
@@ -40,7 +39,7 @@ public class DObserved<O, T> extends Observed<O, T> {
     }
 
     private final TriConsumer<O, T, T> toMPS;
-    private final boolean              mandatory;
+    protected final boolean            mandatory;
     private final boolean              deferred;
 
     protected DObserved(Object id, T def, boolean mandatory, boolean deferred, TriConsumer<O, T, T> toMPS, QuadConsumer<AbstractLeaf, O, T, T> changed) {
@@ -111,15 +110,6 @@ public class DObserved<O, T> extends Observed<O, T> {
                 }
             });
         }
-    }
-
-    @Override
-    public T get(O object) {
-        T result = super.get(object);
-        if (mandatory && (result == null || (result instanceof ContainingCollection && ((ContainingCollection) result).isEmpty()))) {
-            // TODO
-        }
-        return result;
     }
 
     @Override
