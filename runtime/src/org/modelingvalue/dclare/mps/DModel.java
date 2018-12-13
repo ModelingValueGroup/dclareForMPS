@@ -63,8 +63,11 @@ public class DModel extends DObject<SModel> implements SModel {
 
     public static final Observed<DModel, Set<SLanguage>> USED_LANGUAGES = DObserved.of("USED_LANGUAGES", Set.of(), false, false, (dModel, pre, post) -> {
                                                                             SModelBase sModel = (SModelBase) dModel.original();
+                                                                            java.util.Collection<SLanguage> ls = sModel.importedLanguageIds();
                                                                             for (SLanguage l : post) {
-                                                                                sModel.addLanguage(l);
+                                                                                if (!ls.contains(l)) {
+                                                                                    sModel.addLanguage(l);
+                                                                                }
                                                                             }
                                                                         });
 
