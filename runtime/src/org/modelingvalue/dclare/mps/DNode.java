@@ -68,11 +68,13 @@ public class DNode extends DObject<SNode> implements SNode {
     public static final Getable<SContainmentLink, Observed<DNode, DNode>>       SINGLE_CONTAINMENT = Constant.of("SINGLE_CONTAINMENT", sc -> {
                                                                                                        return DObserved.<DNode, DNode> of(sc, null, !sc.isOptional(), false,                                                 //
                                                                                                                (dNode, pre, post) -> {
-                                                                                                                   if (pre != null) {
-                                                                                                                       dNode.original().removeChild(pre.original());
+                                                                                                                   SNode sNode = dNode.original();
+                                                                                                                   List<SNode> cs = children(sNode, sc);
+                                                                                                                   if (pre != null && cs.contains(pre.original())) {
+                                                                                                                       sNode.removeChild(pre.original());
                                                                                                                    }
-                                                                                                                   if (post != null) {
-                                                                                                                       dNode.original().addChild(sc, post.original());
+                                                                                                                   if (post != null && !cs.contains(post.original())) {
+                                                                                                                       sNode.addChild(sc, post.original());
                                                                                                                    }
                                                                                                                },                                                                                                            //
                                                                                                                (tx, o, b, a) -> {
