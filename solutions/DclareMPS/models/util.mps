@@ -288,6 +288,10 @@
         <property role="TrG5h" value="name" />
         <node concept="17QB3L" id="4wbMdoJjOZH" role="1tU5fm" />
       </node>
+      <node concept="37vLTG" id="79VROD27cJk" role="3clF46">
+        <property role="TrG5h" value="optional" />
+        <node concept="10P_77" id="79VROD27cMO" role="1tU5fm" />
+      </node>
       <node concept="37vLTG" id="3Qetf3dxTNo" role="3clF46">
         <property role="TrG5h" value="composite" />
         <node concept="10P_77" id="3Qetf3dxTRx" role="1tU5fm" />
@@ -319,12 +323,15 @@
           <node concept="2OqwBi" id="1lQ5DPQtwTS" role="3clFbG">
             <node concept="2YIFZM" id="7byyZgEhYNP" role="2Oq$k0">
               <ref role="1Pybhc" to="t4tl:~DAttribute" resolve="DAttribute" />
-              <ref role="37wK5l" to="t4tl:~DAttribute.of(java.lang.Object,java.lang.String,boolean,int,java.util.function.Function):org.modelingvalue.dclare.mps.DAttribute" resolve="of" />
+              <ref role="37wK5l" to="t4tl:~DAttribute.of(java.lang.Object,java.lang.String,boolean,boolean,int,java.util.function.Function):org.modelingvalue.dclare.mps.DAttribute" resolve="of" />
               <node concept="37vLTw" id="7byyZgEhYNQ" role="37wK5m">
                 <ref role="3cqZAo" node="1lQ5DPQtstn" resolve="attributeId" />
               </node>
               <node concept="37vLTw" id="7byyZgEhYNR" role="37wK5m">
                 <ref role="3cqZAo" node="4wbMdoJjOKU" resolve="name" />
+              </node>
+              <node concept="37vLTw" id="79VROD27e4S" role="37wK5m">
+                <ref role="3cqZAo" node="79VROD27cJk" resolve="optional" />
               </node>
               <node concept="37vLTw" id="7byyZgEhYNS" role="37wK5m">
                 <ref role="3cqZAo" node="3Qetf3dxTNo" resolve="composite" />
@@ -378,6 +385,10 @@
         <property role="TrG5h" value="name" />
         <node concept="17QB3L" id="4wbMdoJjOXu" role="1tU5fm" />
       </node>
+      <node concept="37vLTG" id="79VROD27cNV" role="3clF46">
+        <property role="TrG5h" value="optional" />
+        <node concept="10P_77" id="79VROD27cR8" role="1tU5fm" />
+      </node>
       <node concept="37vLTG" id="3Qetf3dxVkN" role="3clF46">
         <property role="TrG5h" value="composite" />
         <node concept="10P_77" id="3Qetf3dxVoy" role="1tU5fm" />
@@ -399,12 +410,15 @@
           <node concept="2OqwBi" id="1lQ5DPQt_of" role="3clFbG">
             <node concept="2YIFZM" id="7byyZgEh$kv" role="2Oq$k0">
               <ref role="1Pybhc" to="t4tl:~DAttribute" resolve="DAttribute" />
-              <ref role="37wK5l" to="t4tl:~DAttribute.of(java.lang.Object,java.lang.String,boolean,int,java.util.function.Function):org.modelingvalue.dclare.mps.DAttribute" resolve="of" />
+              <ref role="37wK5l" to="t4tl:~DAttribute.of(java.lang.Object,java.lang.String,boolean,boolean,int,java.util.function.Function):org.modelingvalue.dclare.mps.DAttribute" resolve="of" />
               <node concept="37vLTw" id="7byyZgEh$kw" role="37wK5m">
                 <ref role="3cqZAo" node="1lQ5DPQt_o9" resolve="attributeId" />
               </node>
               <node concept="37vLTw" id="7byyZgEh$kx" role="37wK5m">
                 <ref role="3cqZAo" node="4wbMdoJjOTa" resolve="name" />
+              </node>
+              <node concept="37vLTw" id="79VROD27d$p" role="37wK5m">
+                <ref role="3cqZAo" node="79VROD27cNV" resolve="optional" />
               </node>
               <node concept="37vLTw" id="7byyZgEh$ky" role="37wK5m">
                 <ref role="3cqZAo" node="3Qetf3dxVkN" resolve="composite" />

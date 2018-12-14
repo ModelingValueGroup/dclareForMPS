@@ -1935,6 +1935,46 @@
               </node>
             </node>
           </node>
+          <node concept="3clFbJ" id="4k6r071pLgr" role="3cqZAp">
+            <node concept="3clFbS" id="4k6r071pLgs" role="3clFbx">
+              <node concept="2MkqsV" id="4k6r071pLgt" role="3cqZAp">
+                <node concept="Xl_RD" id="4k6r071pLgu" role="2MkJ7o">
+                  <property role="Xl_RC" value="Identifying attributes may not be optional" />
+                </node>
+                <node concept="1YBJjd" id="4k6r071pLgv" role="2OEOjV">
+                  <ref role="1YBMHb" node="67uyCwCTrnv" resolve="attribute" />
+                </node>
+              </node>
+            </node>
+            <node concept="2OqwBi" id="4k6r071pLgw" role="3clFbw">
+              <node concept="1YBJjd" id="4k6r071pLgx" role="2Oq$k0">
+                <ref role="1YBMHb" node="67uyCwCTrnv" resolve="attribute" />
+              </node>
+              <node concept="3TrcHB" id="4k6r071pLgy" role="2OqNvi">
+                <ref role="3TsBF5" to="7ggn:79VROD26KQN" resolve="optional" />
+              </node>
+            </node>
+          </node>
+          <node concept="3clFbJ" id="4k6r071pLxV" role="3cqZAp">
+            <node concept="3clFbS" id="4k6r071pLxX" role="3clFbx">
+              <node concept="2MkqsV" id="4k6r071pMm9" role="3cqZAp">
+                <node concept="Xl_RD" id="4k6r071pMma" role="2MkJ7o">
+                  <property role="Xl_RC" value="Identifying attributes are implicitly constant" />
+                </node>
+                <node concept="1YBJjd" id="4k6r071pMmb" role="2OEOjV">
+                  <ref role="1YBMHb" node="67uyCwCTrnv" resolve="attribute" />
+                </node>
+              </node>
+            </node>
+            <node concept="2OqwBi" id="4k6r071pLNi" role="3clFbw">
+              <node concept="1YBJjd" id="4k6r071pLyC" role="2Oq$k0">
+                <ref role="1YBMHb" node="67uyCwCTrnv" resolve="attribute" />
+              </node>
+              <node concept="3TrcHB" id="4k6r071pMiT" role="2OqNvi">
+                <ref role="3TsBF5" to="7ggn:7byyZgEvBg3" resolve="constant" />
+              </node>
+            </node>
+          </node>
         </node>
         <node concept="2OqwBi" id="67uyCwCTrCE" role="3clFbw">
           <node concept="1YBJjd" id="67uyCwCTrnZ" role="2Oq$k0">
@@ -2920,6 +2960,26 @@
                 <node concept="3TrEf2" id="3vqpjybSThC" role="2OqNvi">
                   <ref role="3Tt5mk" to="tpee:fz3vP1I" resolve="initializer" />
                 </node>
+              </node>
+            </node>
+          </node>
+          <node concept="3clFbJ" id="4k6r071pKk_" role="3cqZAp">
+            <node concept="3clFbS" id="4k6r071pKkB" role="3clFbx">
+              <node concept="2MkqsV" id="4k6r071pL3B" role="3cqZAp">
+                <node concept="Xl_RD" id="4k6r071pL3Q" role="2MkJ7o">
+                  <property role="Xl_RC" value="A constant may not be optional" />
+                </node>
+                <node concept="1YBJjd" id="4k6r071pL5z" role="2OEOjV">
+                  <ref role="1YBMHb" node="3vqpjybSQoM" resolve="attribute" />
+                </node>
+              </node>
+            </node>
+            <node concept="2OqwBi" id="4k6r071pK_C" role="3clFbw">
+              <node concept="1YBJjd" id="4k6r071pKkY" role="2Oq$k0">
+                <ref role="1YBMHb" node="3vqpjybSQoM" resolve="attribute" />
+              </node>
+              <node concept="3TrcHB" id="4k6r071pL0n" role="2OqNvi">
+                <ref role="3TsBF5" to="7ggn:79VROD26KQN" resolve="optional" />
               </node>
             </node>
           </node>
