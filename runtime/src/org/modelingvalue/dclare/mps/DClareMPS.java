@@ -85,7 +85,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
 
             @SuppressWarnings("rawtypes")
             private void throwProblems() {
-                if (imperative != null && repository != null) {
+                if (imperative != null && repository != null && inQueue.isEmpty()) {
                     Set<Triple<DObject, Object, String>> problems = DObject.ALL_PROBLEMS.get(repository);
                     if (!problems.isEmpty()) {
                         throw new Error("DCLARE Problems found: " + problems.reduce("", (r, p) -> r + "\n" + p.a() + ": " + p.c(), (a, b) -> a + b));
