@@ -28,11 +28,13 @@ import org.modelingvalue.collections.Map;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.collections.util.TriConsumer;
+import org.modelingvalue.collections.util.Triple;
 import org.modelingvalue.transactions.Constant;
 import org.modelingvalue.transactions.Getable;
 import org.modelingvalue.transactions.Imperative;
 import org.modelingvalue.transactions.Leaf;
 import org.modelingvalue.transactions.Observed;
+import org.modelingvalue.transactions.Priority;
 import org.modelingvalue.transactions.Root;
 import org.modelingvalue.transactions.Setable;
 import org.modelingvalue.transactions.State;
@@ -77,7 +79,25 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
 
     protected DClareMPS(Project project, State prevState, int maxTotalNrOfChanges, int maxNrOfChanges) {
         this.project = project;
-        root = Root.of(this, prevState, 100, maxTotalNrOfChanges, maxNrOfChanges, 10);
+        root = new Root(this, prevState, 100, maxTotalNrOfChanges, maxNrOfChanges, 10, null) {
+
+            private final Leaf throwProblems = Leaf.of("throwProblems", this, this::throwProblems);
+
+            @SuppressWarnings("rawtypes")
+            private void throwProblems() {
+                if (imperative != null && repository != null) {
+                    Set<Triple<DObject, Object, String>> problems = DObject.ALL_PROBLEMS.get(repository);
+                    if (!problems.isEmpty()) {
+                        throw new Error("DCLARE Problems found: " + problems.reduce("", (r, p) -> r + "\n" + p.a() + ": " + p.c(), (a, b) -> a + b));
+                    }
+                }
+            }
+
+            @Override
+            protected State post(State state) {
+                return apply(schedule(state, throwProblems, Priority.low));
+            }
+        };
         waitForEndThread = new Thread(() -> {
             try {
                 root.waitForEnd();

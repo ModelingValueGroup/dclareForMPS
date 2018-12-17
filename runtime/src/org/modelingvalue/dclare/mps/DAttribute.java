@@ -71,6 +71,8 @@ public interface DAttribute<O, T> {
 
     boolean isIndetifying();
 
+    boolean isMandatory();
+
     final static class DObservedAttribut<C, V> extends DObserved<C, V> implements DAttribute<C, V> {
 
         private String  name;
@@ -130,6 +132,11 @@ public interface DAttribute<O, T> {
         @Override
         public boolean isIndetifying() {
             return false;
+        }
+
+        @Override
+        public boolean isMandatory() {
+            return mandatory;
         }
 
     }
@@ -200,6 +207,11 @@ public interface DAttribute<O, T> {
             return true;
         }
 
+        @Override
+        public boolean isMandatory() {
+            return true;
+        }
+
     }
 
     static class DConstant<C, V> extends Constant<C, V> implements DAttribute<C, V> {
@@ -236,6 +248,11 @@ public interface DAttribute<O, T> {
         @Override
         public boolean isIndetifying() {
             return false;
+        }
+
+        @Override
+        public boolean isMandatory() {
+            return true;
         }
 
     }
