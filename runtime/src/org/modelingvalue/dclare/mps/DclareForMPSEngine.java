@@ -20,6 +20,7 @@ public class DclareForMPSEngine implements DeployListener {
     private DClareMPS                  dClareMPS = null;
     private boolean                    on;
     private boolean                    trace;
+    private boolean                    keepState;
     private int                        maxTotalNrOfChanges;
     private int                        maxNrOfChanges;
     private boolean                    loaded    = false;
@@ -42,7 +43,7 @@ public class DclareForMPSEngine implements DeployListener {
 
     private void stopEngine() {
         if (dClareMPS != null && dClareMPS.isRunning()) {
-            prevState = dClareMPS.root.preState().copy(o -> o instanceof DObject, s -> s instanceof DAttribute);
+            prevState = keepState ? dClareMPS.root.preState().copy(o -> o instanceof DObject, s -> s instanceof DAttribute) : null;
             dClareMPS.stop();
             dClareMPS = null;
         }
@@ -79,6 +80,19 @@ public class DclareForMPSEngine implements DeployListener {
             this.trace = trace;
             if (dClareMPS != null) {
                 dClareMPS.setTrace(trace);
+            }
+        }
+    }
+
+    public boolean isKeepState() {
+        return keepState;
+    }
+
+    public void setKeepState(boolean keepState) {
+        if (keepState != this.keepState) {
+            this.keepState = keepState;
+            if (!keepState) {
+                prevState = null;
             }
         }
     }
