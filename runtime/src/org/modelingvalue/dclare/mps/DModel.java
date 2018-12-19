@@ -52,21 +52,30 @@ import jetbrains.mps.extapi.model.SModelBase;
 
 public class DModel extends DObject<SModel> implements SModel {
 
-    public static final Observed<DModel, Set<DNode>>     ROOTS          = DObserved.of("ROOTS", Set.of(), false, false, (dModel, pre, post) -> {
-                                                                            DObserved.map(DModel.roots(dModel.original()), post.map(DNode::original).toSet(),        //
-                                                                                    a -> dModel.original().addRootNode(a), r -> dModel.original().removeRootNode(r));
+    public static final Observed<DModel, Set<DNode>>     ROOTS          = DObserved.of("ROOTS", Set.of(), false, false, (dModel, pre, post, first) -> {
+                                                                            if (first) {
+                                                                                DObserved.map(DModel.roots(dModel.original()), post.map(DNode::original).toSet(),   //
+                                                                                        a -> {
+                                                                                        }, r -> dModel.original().removeRootNode(r));
+                                                                            } else {
+                                                                                DObserved.map(DModel.roots(dModel.original()), post.map(DNode::original).toSet(),   //
+                                                                                        a -> dModel.original().addRootNode(a), r -> {
+                                                                                                                                                            });
+                                                                            }
                                                                         }, (tx, o, b, a) -> {
-                                                                            Setable.<Set<DNode>, DNode> diff(Set.of(), b, a,                                         //
+                                                                            Setable.<Set<DNode>, DNode> diff(Set.of(), b, a,                                        //
                                                                                     x -> DNode.CONTAINING.set(x, null), x -> {
                                                                                     });
                                                                         });
 
-    public static final Observed<DModel, Set<SLanguage>> USED_LANGUAGES = DObserved.of("USED_LANGUAGES", Set.of(), false, false, (dModel, pre, post) -> {
-                                                                            SModelBase sModel = (SModelBase) dModel.original();
-                                                                            java.util.Collection<SLanguage> ls = sModel.importedLanguageIds();
-                                                                            for (SLanguage l : post) {
-                                                                                if (!ls.contains(l)) {
-                                                                                    sModel.addLanguage(l);
+    public static final Observed<DModel, Set<SLanguage>> USED_LANGUAGES = DObserved.of("USED_LANGUAGES", Set.of(), false, false, (dModel, pre, post, first) -> {
+                                                                            if (first) {
+                                                                                SModelBase sModel = (SModelBase) dModel.original();
+                                                                                java.util.Collection<SLanguage> ls = sModel.importedLanguageIds();
+                                                                                for (SLanguage l : post) {
+                                                                                    if (!ls.contains(l)) {
+                                                                                        sModel.addLanguage(l);
+                                                                                    }
                                                                                 }
                                                                             }
                                                                         });

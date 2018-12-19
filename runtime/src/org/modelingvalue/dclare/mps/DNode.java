@@ -53,30 +53,37 @@ public class DNode extends DObject<SNode> implements SNode {
     public static final Observed<DNode, Map<Object, Object>>                    USER_OBJECTS       = Observed.of("USER_OBJECTS", Map.of());
 
     public static final Getable<SContainmentLink, Observed<DNode, List<DNode>>> MANY_CONTAINMENT   = Constant.of("MANY_CONTAINMENT", sc -> {
-                                                                                                       return DObserved.<DNode, List<DNode>> of(sc, List.of(), !sc.isOptional(), false,                                      //
-                                                                                                               (dNode, pre, post) -> {
-                                                                                                                   DObserved.map(DNode.children(dNode.original(), sc), post.map(DNode::original).toList(),                   //
-                                                                                                                           (n, a) -> dNode.original().insertChildAfter(sc, n, a), r -> dNode.original().removeChild(r));
-                                                                                                               },                                                                                                            //
+                                                                                                       return DObserved.<DNode, List<DNode>> of(sc, List.of(), !sc.isOptional(), false,                                          //
+                                                                                                               (dNode, pre, post, first) -> {
+                                                                                                                   if (first) {
+                                                                                                                       DObserved.map(DNode.children(dNode.original(), sc), post.map(DNode::original).toList(),                   //
+                                                                                                                               (n, a) -> {
+                                                                                                                               }, r -> dNode.original().removeChild(r));
+                                                                                                                   } else {
+                                                                                                                       DObserved.map(DNode.children(dNode.original(), sc), post.map(DNode::original).toList(),                   //
+                                                                                                                               (n, a) -> dNode.original().insertChildAfter(sc, n, a), r -> {
+                                                                                                                                                                                                                              });
+                                                                                                                   }
+                                                                                                               },                                                                                                                //
                                                                                                                (tx, o, b, a) -> {
-                                                                                                                   Setable.<List<DNode>, DNode> diff(List.of(), b, a,                                                        //
+                                                                                                                   Setable.<List<DNode>, DNode> diff(List.of(), b, a,                                                            //
                                                                                                                            x -> DNode.CONTAINING.set(x, sc), x -> {
                                                                                                                                                                                                                           });
                                                                                                                });
                                                                                                    });
 
     public static final Getable<SContainmentLink, Observed<DNode, DNode>>       SINGLE_CONTAINMENT = Constant.of("SINGLE_CONTAINMENT", sc -> {
-                                                                                                       return DObserved.<DNode, DNode> of(sc, null, !sc.isOptional(), false,                                                 //
-                                                                                                               (dNode, pre, post) -> {
+                                                                                                       return DObserved.<DNode, DNode> of(sc, null, !sc.isOptional(), false,                                                     //
+                                                                                                               (dNode, pre, post, first) -> {
                                                                                                                    SNode sNode = dNode.original();
                                                                                                                    List<SNode> cs = children(sNode, sc);
-                                                                                                                   if (pre != null && cs.contains(pre.original())) {
+                                                                                                                   if (first && pre != null && cs.contains(pre.original())) {
                                                                                                                        sNode.removeChild(pre.original());
                                                                                                                    }
-                                                                                                                   if (post != null && !cs.contains(post.original())) {
+                                                                                                                   if (!first && post != null && !cs.contains(post.original())) {
                                                                                                                        sNode.addChild(sc, post.original());
                                                                                                                    }
-                                                                                                               },                                                                                                            //
+                                                                                                               },                                                                                                                //
                                                                                                                (tx, o, b, a) -> {
                                                                                                                    if (a != null) {
                                                                                                                        DNode.CONTAINING.set(a, sc);
@@ -86,13 +93,15 @@ public class DNode extends DObject<SNode> implements SNode {
 
     public static final Getable<SReferenceLink, Observed<DNode, DNode>>         REFERENCE          = Constant.of("REFERENCE", sr -> {
                                                                                                        Observed<DNode, Set<DNode>> oppos = DNode.OPPOSITE.get(sr);
-                                                                                                       return DObserved.<DNode, DNode> of(sr, null, false, true,                                                             //
-                                                                                                               (dNode, pre, post) -> {
-                                                                                                                   SNode ref = post != null ? post.original() : null;
-                                                                                                                   if (!Objects.equals(dNode.original().getReferenceTarget(sr), ref)) {
-                                                                                                                       dNode.original().setReferenceTarget(sr, ref);
+                                                                                                       return DObserved.<DNode, DNode> of(sr, null, false, true,                                                                 //
+                                                                                                               (dNode, pre, post, first) -> {
+                                                                                                                   if (first) {
+                                                                                                                       SNode ref = post != null ? post.original() : null;
+                                                                                                                       if (!Objects.equals(dNode.original().getReferenceTarget(sr), ref)) {
+                                                                                                                           dNode.original().setReferenceTarget(sr, ref);
+                                                                                                                       }
                                                                                                                    }
-                                                                                                               },                                                                                                            //
+                                                                                                               },                                                                                                                //
                                                                                                                (tx, o, b, a) -> {
                                                                                                                    if (a != null) {
                                                                                                                        oppos.set(a, Set::add, o);
@@ -107,9 +116,9 @@ public class DNode extends DObject<SNode> implements SNode {
                                                                                                        return Observed.<DNode, Set<DNode>> of(Pair.of(sr, "OPPOSITE"), Set.of());
                                                                                                    });
     public static final Getable<SProperty, Observed<DNode, String>>             PROPERTY           = Constant.of("PROPERTY", sp -> {
-                                                                                                       return DObserved.<DNode, String> of(sp, null, false, false,                                                           //
-                                                                                                               (dNode, pre, post) -> {
-                                                                                                                   if (!Objects.equals(dNode.original().getProperty(sp), post)) {
+                                                                                                       return DObserved.<DNode, String> of(sp, null, false, false,                                                               //
+                                                                                                               (dNode, pre, post, first) -> {
+                                                                                                                   if (first && !Objects.equals(dNode.original().getProperty(sp), post)) {
                                                                                                                        dNode.original().setProperty(sp, post);
                                                                                                                    }
                                                                                                                });
@@ -473,7 +482,8 @@ public class DNode extends DObject<SNode> implements SNode {
         } else if (feature instanceof SContainmentLink) {
             SContainmentLink cl = (SContainmentLink) feature;
             if (cl.isMultiple()) {
-                MANY_CONTAINMENT.get(cl).set(this, (i, s) -> s == null ? i : s, value != null ? List.<DNode> of((java.util.Collection) value) : null);
+                List<DNode> element = value != null ? List.<DNode> of((java.util.Collection) value) : null;
+                MANY_CONTAINMENT.get(cl).set(this, (i, s) -> s == null || Objects.equals(s, i) ? i : s, element);
             } else {
                 SINGLE_CONTAINMENT.get(cl).set(this, (DNode) value);
             }

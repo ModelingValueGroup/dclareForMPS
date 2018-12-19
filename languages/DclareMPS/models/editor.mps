@@ -23,6 +23,7 @@
     <import index="tpcn" ref="r:00000000-0000-4000-0000-011c8959028b(jetbrains.mps.lang.structure.behavior)" implicit="true" />
     <import index="tpck" ref="r:00000000-0000-4000-0000-011c89590288(jetbrains.mps.lang.core.structure)" implicit="true" />
     <import index="tpco" ref="r:00000000-0000-4000-0000-011c89590284(jetbrains.mps.lang.core.editor)" implicit="true" />
+    <import index="tp2u" ref="r:00000000-0000-4000-0000-011c8959032a(jetbrains.mps.baseLanguage.collections.editor)" implicit="true" />
   </imports>
   <registry>
     <language id="13744753-c81f-424a-9c1b-cf8943bf4e86" name="jetbrains.mps.lang.sharedConcepts">
@@ -1579,6 +1580,16 @@
       <node concept="3F0ifn" id="76efOMRCHWX" role="3EZMnx">
         <property role="3F0ifm" value="]" />
         <ref role="1k5W1q" to="tpen:hXb$V4T" resolve="RightBracket" />
+      </node>
+    </node>
+  </node>
+  <node concept="24kQdi" id="2bORRGLUZZq">
+    <ref role="1XX52x" to="7ggn:2bORRGLUZYX" resolve="ToSetOperation" />
+    <node concept="3F0ifn" id="gKAS902" role="2wV5jI">
+      <property role="3F0ifm" value="toSet" />
+      <ref role="1k5W1q" to="tp2u:hGdPUoh" resolve="Operation" />
+      <node concept="VPxyj" id="hEZKQzg" role="3F10Kt">
+        <property role="VOm3f" value="true" />
       </node>
     </node>
   </node>

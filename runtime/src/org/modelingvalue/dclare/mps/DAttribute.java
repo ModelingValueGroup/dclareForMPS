@@ -79,7 +79,7 @@ public interface DAttribute<O, T> {
         private boolean composite;
 
         public DObservedAttribut(Object id, String name, boolean optional, boolean composite, V def, QuadConsumer<AbstractLeaf, C, V, V> changed) {
-            super(id, def, !optional, false, (o, b, a) -> {
+            super(id, def, !optional, false, (o, b, a, first) -> {
             }, changed);
             this.name = name;
             this.composite = composite;

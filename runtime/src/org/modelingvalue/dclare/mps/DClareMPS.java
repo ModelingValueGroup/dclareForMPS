@@ -26,6 +26,8 @@ import org.jetbrains.mps.openapi.project.Project;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Map;
 import org.modelingvalue.collections.Set;
+import org.modelingvalue.collections.util.ContextThread;
+import org.modelingvalue.collections.util.ContextThread.ContextPool;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.collections.util.TriConsumer;
 import org.modelingvalue.collections.util.Triple;
@@ -71,6 +73,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
     public final Getable<SNode, DNode>                         DNODE         = Constant.of(Pair.of(this, "DNODE"), n -> new DNode(n));
     public final Getable<SClassObject, DClassObject>           DCLASS_OBJECT = Constant.of(Pair.of(this, "DCLASS_OBJECT"), c -> new DClassObject(c));
 
+    private final ContextPool                                  thePool       = ContextThread.createPool();
     protected final Thread                                     waitForEndThread;
     protected final Root                                       root;
     protected final Project                                    project;
@@ -79,7 +82,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
 
     protected DClareMPS(Project project, State prevState, int maxTotalNrOfChanges, int maxNrOfChanges) {
         this.project = project;
-        root = new Root(this, prevState, 100, maxTotalNrOfChanges, maxNrOfChanges, 10, null) {
+        root = new Root(this, thePool, prevState, 100, maxTotalNrOfChanges, maxNrOfChanges, 10, null) {
 
             private final Leaf throwProblems = Leaf.of("throwProblems", this, this::throwProblems);
 
@@ -175,17 +178,27 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
                     DObject dObject = (DObject) e0.getKey();
                     e0.getValue().forEach(e1 -> {
                         DObserved mpsObserved = (DObserved) e1.getKey();
+                        if (!mpsObserved.isDeferred()) {
+                            mpsObserved.toMPS(dObject, e1.getValue().a(), e1.getValue().b(), true);
+                        }
+                    });
+                });
+                pre.diff(post, o -> o instanceof DObject, p -> p instanceof DObserved).forEach(e0 -> {
+                    DObject dObject = (DObject) e0.getKey();
+                    e0.getValue().forEach(e1 -> {
+                        DObserved mpsObserved = (DObserved) e1.getKey();
                         if (mpsObserved.isDeferred()) {
                             Pair<DObject, DObserved> slot = Pair.of(dObject, mpsObserved);
                             Pair<Object, Object> old = deferred[0].get(slot);
                             deferred[0] = deferred[0].put(slot, old != null ? Pair.of(old.a(), e1.getValue().b()) : Pair.of(e1.getValue().a(), e1.getValue().b()));
                         } else {
-                            mpsObserved.toMPS(dObject, e1.getValue().a(), e1.getValue().b());
+                            mpsObserved.toMPS(dObject, e1.getValue().a(), e1.getValue().b(), false);
                         }
                     });
                 });
                 if (last) {
-                    deferred[0].forEach(e -> e.getKey().b().toMPS(e.getKey().a(), e.getValue().a(), e.getValue().b()));
+                    deferred[0].forEach(e -> e.getKey().b().toMPS(e.getKey().a(), e.getValue().a(), e.getValue().b(), true));
+                    deferred[0].forEach(e -> e.getKey().b().toMPS(e.getKey().a(), e.getValue().a(), e.getValue().b(), false));
                     deferred[0] = Map.of();
                 }
             } finally {

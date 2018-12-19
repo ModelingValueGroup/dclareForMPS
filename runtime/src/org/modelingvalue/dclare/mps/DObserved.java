@@ -21,7 +21,6 @@ import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.ContextThread;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.collections.util.QuadConsumer;
-import org.modelingvalue.collections.util.TriConsumer;
 import org.modelingvalue.transactions.AbstractLeaf;
 import org.modelingvalue.transactions.Leaf;
 import org.modelingvalue.transactions.Observed;
@@ -30,19 +29,19 @@ import org.modelingvalue.transactions.Observer;
 @SuppressWarnings("rawtypes")
 public class DObserved<O, T> extends Observed<O, T> {
 
-    public static <C, V> DObserved<C, V> of(Object id, V def, boolean mandatory, boolean deferred, TriConsumer<C, V, V> toMPS) {
+    public static <C, V> DObserved<C, V> of(Object id, V def, boolean mandatory, boolean deferred, QuadConsumer<C, V, V, Boolean> toMPS) {
         return of(id, def, mandatory, deferred, toMPS, null);
     }
 
-    public static <C, V> DObserved<C, V> of(Object id, V def, boolean mandatory, boolean deferred, TriConsumer<C, V, V> toMPS, QuadConsumer<AbstractLeaf, C, V, V> changed) {
+    public static <C, V> DObserved<C, V> of(Object id, V def, boolean mandatory, boolean deferred, QuadConsumer<C, V, V, Boolean> toMPS, QuadConsumer<AbstractLeaf, C, V, V> changed) {
         return new DObserved<C, V>(id, def, mandatory, deferred, toMPS, changed);
     }
 
-    private final TriConsumer<O, T, T> toMPS;
-    protected final boolean            mandatory;
-    private final boolean              deferred;
+    private final QuadConsumer<O, T, T, Boolean> toMPS;
+    protected final boolean                      mandatory;
+    private final boolean                        deferred;
 
-    protected DObserved(Object id, T def, boolean mandatory, boolean deferred, TriConsumer<O, T, T> toMPS, QuadConsumer<AbstractLeaf, O, T, T> changed) {
+    protected DObserved(Object id, T def, boolean mandatory, boolean deferred, QuadConsumer<O, T, T, Boolean> toMPS, QuadConsumer<AbstractLeaf, O, T, T> changed) {
         super(Pair.of(id, mandatory), def, changed);
         this.toMPS = toMPS;
         this.mandatory = mandatory;
@@ -53,14 +52,14 @@ public class DObserved<O, T> extends Observed<O, T> {
         return deferred;
     }
 
-    public void toMPS(O object, T pre, T post) {
+    public void toMPS(O object, T pre, T post, boolean first) {
         AbstractLeaf tx = Leaf.getCurrent();
-        if (DClareMPS.TRACE.get((DClareMPS) tx.root().getId())) {
+        if (first && DClareMPS.TRACE.get((DClareMPS) tx.root().getId())) {
             tx.runNonObserving(() -> {
                 System.err.println("DCLARE TO MPS " + object + "." + this + "=" + pre + "->" + post);
             });
         }
-        toMPS.accept(object, pre, post);
+        toMPS.accept(object, pre, post, first);
     }
 
     public static <T> void map(Set<T> ist, Set<T> soll, Consumer<T> add, Consumer<T> remove) {
