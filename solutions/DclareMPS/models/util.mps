@@ -254,7 +254,7 @@
                 </node>
               </node>
               <node concept="liA8E" id="4Y8BM43oaxi" role="2OqNvi">
-                <ref role="37wK5l" to="t4tl:~DObject.getAttributes():java.util.List" resolve="getAttributes" />
+                <ref role="37wK5l" to="t4tl:~DObject.getNonSyntheticAttributes():java.util.List" resolve="getNonSyntheticAttributes" />
               </node>
             </node>
             <node concept="A3Dl8" id="4Y8BM43oaMe" role="10QFUM">
@@ -287,6 +287,10 @@
       <node concept="37vLTG" id="4wbMdoJjOKU" role="3clF46">
         <property role="TrG5h" value="name" />
         <node concept="17QB3L" id="4wbMdoJjOZH" role="1tU5fm" />
+      </node>
+      <node concept="37vLTG" id="7S$pNDLrlg4" role="3clF46">
+        <property role="TrG5h" value="synthetic" />
+        <node concept="10P_77" id="7S$pNDLrltX" role="1tU5fm" />
       </node>
       <node concept="37vLTG" id="79VROD27cJk" role="3clF46">
         <property role="TrG5h" value="optional" />
@@ -323,12 +327,15 @@
           <node concept="2OqwBi" id="1lQ5DPQtwTS" role="3clFbG">
             <node concept="2YIFZM" id="7byyZgEhYNP" role="2Oq$k0">
               <ref role="1Pybhc" to="t4tl:~DAttribute" resolve="DAttribute" />
-              <ref role="37wK5l" to="t4tl:~DAttribute.of(java.lang.Object,java.lang.String,boolean,boolean,int,java.util.function.Function):org.modelingvalue.dclare.mps.DAttribute" resolve="of" />
+              <ref role="37wK5l" to="t4tl:~DAttribute.of(java.lang.Object,java.lang.String,boolean,boolean,boolean,int,java.util.function.Function):org.modelingvalue.dclare.mps.DAttribute" resolve="of" />
               <node concept="37vLTw" id="7byyZgEhYNQ" role="37wK5m">
                 <ref role="3cqZAo" node="1lQ5DPQtstn" resolve="attributeId" />
               </node>
               <node concept="37vLTw" id="7byyZgEhYNR" role="37wK5m">
                 <ref role="3cqZAo" node="4wbMdoJjOKU" resolve="name" />
+              </node>
+              <node concept="37vLTw" id="7S$pNDLrl$M" role="37wK5m">
+                <ref role="3cqZAo" node="7S$pNDLrlg4" resolve="synthetic" />
               </node>
               <node concept="37vLTw" id="79VROD27e4S" role="37wK5m">
                 <ref role="3cqZAo" node="79VROD27cJk" resolve="optional" />
@@ -385,6 +392,10 @@
         <property role="TrG5h" value="name" />
         <node concept="17QB3L" id="4wbMdoJjOXu" role="1tU5fm" />
       </node>
+      <node concept="37vLTG" id="7S$pNDLrkV9" role="3clF46">
+        <property role="TrG5h" value="synthetic" />
+        <node concept="10P_77" id="7S$pNDLrl6L" role="1tU5fm" />
+      </node>
       <node concept="37vLTG" id="79VROD27cNV" role="3clF46">
         <property role="TrG5h" value="optional" />
         <node concept="10P_77" id="79VROD27cR8" role="1tU5fm" />
@@ -410,12 +421,15 @@
           <node concept="2OqwBi" id="1lQ5DPQt_of" role="3clFbG">
             <node concept="2YIFZM" id="7byyZgEh$kv" role="2Oq$k0">
               <ref role="1Pybhc" to="t4tl:~DAttribute" resolve="DAttribute" />
-              <ref role="37wK5l" to="t4tl:~DAttribute.of(java.lang.Object,java.lang.String,boolean,boolean,int,java.util.function.Function):org.modelingvalue.dclare.mps.DAttribute" resolve="of" />
+              <ref role="37wK5l" to="t4tl:~DAttribute.of(java.lang.Object,java.lang.String,boolean,boolean,boolean,int,java.util.function.Function):org.modelingvalue.dclare.mps.DAttribute" resolve="of" />
               <node concept="37vLTw" id="7byyZgEh$kw" role="37wK5m">
                 <ref role="3cqZAo" node="1lQ5DPQt_o9" resolve="attributeId" />
               </node>
               <node concept="37vLTw" id="7byyZgEh$kx" role="37wK5m">
                 <ref role="3cqZAo" node="4wbMdoJjOTa" resolve="name" />
+              </node>
+              <node concept="37vLTw" id="7S$pNDLrldx" role="37wK5m">
+                <ref role="3cqZAo" node="7S$pNDLrkV9" resolve="synthetic" />
               </node>
               <node concept="37vLTw" id="79VROD27d$p" role="37wK5m">
                 <ref role="3cqZAo" node="79VROD27cNV" resolve="optional" />
