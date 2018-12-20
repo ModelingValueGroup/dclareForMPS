@@ -3081,5 +3081,59 @@
       <ref role="1YaFvo" to="7ggn:2bORRGLUZYX" resolve="ToSetOperation" />
     </node>
   </node>
+  <node concept="1YbPZF" id="7S$pNDLbg2W">
+    <property role="TrG5h" value="typeof_RepositoryOperation" />
+    <property role="3GE5qa" value="models" />
+    <node concept="3clFbS" id="7S$pNDLbg2X" role="18ibNy">
+      <node concept="1Z5TYs" id="7S$pNDLbg33" role="3cqZAp">
+        <node concept="mw_s8" id="7S$pNDLbg34" role="1ZfhKB">
+          <node concept="2c44tf" id="6HWpSUEubyd" role="mwGJk">
+            <node concept="3uibUv" id="6HWpSUEubye" role="2c44tc">
+              <ref role="3uigEE" to="t4tl:~DRepository" resolve="DRepository" />
+            </node>
+          </node>
+        </node>
+        <node concept="mw_s8" id="7S$pNDLbg38" role="1ZfhK$">
+          <node concept="1Z2H0r" id="7S$pNDLbg39" role="mwGJk">
+            <node concept="1YBJjd" id="7S$pNDLbg5v" role="1Z2MuG">
+              <ref role="1YBMHb" node="7S$pNDLbg2Z" resolve="repositoryOperation" />
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+    <node concept="1YaCAy" id="7S$pNDLbg2Z" role="1YuTPh">
+      <property role="TrG5h" value="repositoryOperation" />
+      <ref role="1YaFvo" to="7ggn:7S$pNDLbd0e" resolve="RepositoryOperation" />
+    </node>
+  </node>
+  <node concept="1YbPZF" id="7S$pNDLbhb8">
+    <property role="TrG5h" value="typeof_Modules" />
+    <property role="3GE5qa" value="models" />
+    <node concept="3clFbS" id="7S$pNDLbhb9" role="18ibNy">
+      <node concept="1Z5TYs" id="7S$pNDLbhbf" role="3cqZAp">
+        <node concept="mw_s8" id="7S$pNDLbhbg" role="1ZfhKB">
+          <node concept="2c44tf" id="7S$pNDLbhbh" role="mwGJk">
+            <node concept="A3Dl8" id="7S$pNDLbhbi" role="2c44tc">
+              <node concept="3uibUv" id="7S$pNDLbhf5" role="A3Ik2">
+                <ref role="3uigEE" to="t4tl:~DModule" resolve="DModule" />
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="mw_s8" id="7S$pNDLbhbk" role="1ZfhK$">
+          <node concept="1Z2H0r" id="7S$pNDLbhbl" role="mwGJk">
+            <node concept="1YBJjd" id="7S$pNDLbhdF" role="1Z2MuG">
+              <ref role="1YBMHb" node="7S$pNDLbhbb" resolve="modules" />
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+    <node concept="1YaCAy" id="7S$pNDLbhbb" role="1YuTPh">
+      <property role="TrG5h" value="modules" />
+      <ref role="1YaFvo" to="7ggn:7S$pNDLbgad" resolve="Modules" />
+    </node>
+  </node>
 </model>
 
