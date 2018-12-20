@@ -46,6 +46,10 @@ public abstract class DType {
         return ATTRIBUTES.get(this);
     }
 
+    public final Set<DAttribute> getNonSyntheticAttributes() {
+        return ATTRIBUTES.get(this).filter(a -> !a.isSynthetic()).toSet();
+    }
+
     public abstract Object getIdentity();
 
     @Override

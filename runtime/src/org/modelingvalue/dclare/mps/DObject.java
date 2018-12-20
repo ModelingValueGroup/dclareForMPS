@@ -135,6 +135,10 @@ public abstract class DObject<O> {
         return TYPE.get(this).getAttributes().collect(Collectors.toList());
     }
 
+    public java.util.List<DAttribute> getNonSyntheticAttributes() {
+        return TYPE.get(this).getNonSyntheticAttributes().collect(Collectors.toList());
+    }
+
     @SuppressWarnings("unchecked")
     public ContainingCollection<? extends DNode> getAllChildren() {
         return getContained().addAll((ContainingCollection) getChildren());

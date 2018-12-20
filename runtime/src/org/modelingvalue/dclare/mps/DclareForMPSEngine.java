@@ -41,9 +41,10 @@ public class DclareForMPSEngine implements DeployListener {
         }
     }
 
+    @SuppressWarnings("rawtypes")
     private void stopEngine() {
         if (dClareMPS != null && dClareMPS.isRunning()) {
-            prevState = keepState ? dClareMPS.root.preState().copy(o -> o instanceof DObject, s -> s instanceof DAttribute) : null;
+            prevState = keepState ? dClareMPS.root.preState().copy(o -> o instanceof DObject, s -> s instanceof DAttribute && !((DAttribute) s).isSynthetic()) : null;
             dClareMPS.stop();
             dClareMPS = null;
         }

@@ -1,12 +1,13 @@
 package org.modelingvalue.dclare.mps;
 
+import java.lang.reflect.Method;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import org.modelingvalue.collections.ContainingCollection;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.collections.util.QuadConsumer;
-import org.modelingvalue.collections.util.Quadruple;
+import org.modelingvalue.collections.util.Triple;
 import org.modelingvalue.transactions.AbstractLeaf;
 import org.modelingvalue.transactions.Constant;
 import org.modelingvalue.transactions.Getable;
@@ -14,21 +15,25 @@ import org.modelingvalue.transactions.Getable;
 @SuppressWarnings("rawtypes")
 public interface DAttribute<O, T> {
 
-    static class Key<C, V> extends Quadruple<Object, String, Boolean, Integer> {
+    static class Key<C, V> extends Triple<Object, String, Integer> {
 
         private static final long serialVersionUID = -403866123495976516L;
 
-        public static <X, Y> Key<X, Y> of(Object a, String b, boolean optional, boolean c, int d, Function<X, Y> function) {
-            return new Key<X, Y>(a, b, optional, c, d, function);
+        public static <X, Y> Key<X, Y> of(Object id, String name, boolean synthetic, boolean optional, boolean composite, int identifyingNr, Function<X, Y> function) {
+            return new Key<X, Y>(id, name, synthetic, optional, composite, identifyingNr, function);
         }
 
         private final Function<C, V> function;
         private final boolean        optional;
+        private final boolean        synthetic;
+        private final boolean        composite;
 
-        private Key(Object a, String b, boolean optional, boolean c, int d, Function<C, V> function) {
-            super(a, b, c, d);
+        private Key(Object id, String name, boolean synthetic, boolean optional, boolean composite, int identifyingNr, Function<C, V> function) {
+            super(id, name, identifyingNr);
             this.function = function;
             this.optional = optional;
+            this.synthetic = synthetic;
+            this.composite = composite;
         }
 
         private Object id() {
@@ -39,24 +44,21 @@ public interface DAttribute<O, T> {
             return b();
         }
 
-        private boolean composite() {
+        private int identifyingNr() {
             return c();
         }
 
-        private int identifyingNr() {
-            return d();
-        }
     }
 
     @SuppressWarnings("unchecked")
     static final Getable<Key, DAttribute> ATTRIBUTE = Constant.of("ATTRIBUTE", key -> {
-        return key.identifyingNr() >= 0 ? new DIdentifyingAttribute(key.id(), key.name(), key.composite(), key.identifyingNr()) : key.function != null ? //
-        new DConstant(key.id(), key.name(), key.composite(), key.function) : new DObservedAttribut(key.id(), key.name(), key.optional, key.composite(), null, null);
+        return key.identifyingNr() >= 0 ? new DIdentifyingAttribute(key.id(), key.name(), key.synthetic, key.composite, key.identifyingNr()) : key.function != null ? //
+        new DConstant(key.id(), key.name(), key.synthetic, key.composite, key.function) : new DObservedAttribut(key.id(), key.name(), key.synthetic, key.optional, key.composite, null, null);
     });
 
     @SuppressWarnings("unchecked")
-    public static <C, V> DAttribute<C, V> of(Object id, String name, boolean optional, boolean composite, int identifyingNr, Function<C, V> deriver) {
-        return ATTRIBUTE.get(Key.of(id, name, optional, composite, identifyingNr, deriver));
+    public static <C, V> DAttribute<C, V> of(Object id, String name, boolean synthetic, boolean optional, boolean composite, int identifyingNr, Function<C, V> deriver) {
+        return ATTRIBUTE.get(Key.of(id, name, synthetic, optional, composite, identifyingNr, deriver));
     }
 
     T get(O object);
@@ -73,16 +75,22 @@ public interface DAttribute<O, T> {
 
     boolean isMandatory();
 
+    boolean isSynthetic();
+
     final static class DObservedAttribut<C, V> extends DObserved<C, V> implements DAttribute<C, V> {
 
-        private String  name;
-        private boolean composite;
+        Method                m;
 
-        public DObservedAttribut(Object id, String name, boolean optional, boolean composite, V def, QuadConsumer<AbstractLeaf, C, V, V> changed) {
+        private final String  name;
+        private final boolean composite;
+        private final boolean synthetic;
+
+        public DObservedAttribut(Object id, String name, boolean synthetic, boolean optional, boolean composite, V def, QuadConsumer<AbstractLeaf, C, V, V> changed) {
             super(id, def, !optional, false, (o, b, a, first) -> {
             }, changed);
             this.name = name;
             this.composite = composite;
+            this.synthetic = synthetic;
         }
 
         @Override
@@ -139,19 +147,25 @@ public interface DAttribute<O, T> {
             return mandatory;
         }
 
+        @Override
+        public boolean isSynthetic() {
+            return synthetic;
+        }
     }
 
     final static class DIdentifyingAttribute<C, V> implements DAttribute<C, V> {
-        private Object  id;
-        private String  name;
-        private boolean composite;
-        private int     index;
+        private final Object  id;
+        private final String  name;
+        private final boolean composite;
+        private final int     index;
+        private final boolean synthetic;
 
-        public DIdentifyingAttribute(Object id, String name, boolean composite, int index) {
+        public DIdentifyingAttribute(Object id, String name, boolean synthetic, boolean composite, int index) {
             this.id = id;
             this.name = name;
             this.composite = composite;
             this.index = index;
+            this.synthetic = synthetic;
         }
 
         @Override
@@ -212,17 +226,23 @@ public interface DAttribute<O, T> {
             return true;
         }
 
+        @Override
+        public boolean isSynthetic() {
+            return synthetic;
+        }
     }
 
     static class DConstant<C, V> extends Constant<C, V> implements DAttribute<C, V> {
 
-        private String  name;
-        private boolean composite;
+        private final String  name;
+        private final boolean composite;
+        private final boolean synthetic;
 
-        public DConstant(Object id, String name, boolean composite, Function<C, V> deriver) {
+        public DConstant(Object id, String name, boolean synthetic, boolean composite, Function<C, V> deriver) {
             super(id, null, deriver, null);
             this.name = name;
             this.composite = composite;
+            this.synthetic = synthetic;
         }
 
         @Override
@@ -255,5 +275,9 @@ public interface DAttribute<O, T> {
             return true;
         }
 
+        @Override
+        public boolean isSynthetic() {
+            return synthetic;
+        }
     }
 }
