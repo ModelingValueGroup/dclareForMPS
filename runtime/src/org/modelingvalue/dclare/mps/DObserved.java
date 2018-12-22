@@ -19,14 +19,12 @@ import java.util.function.Consumer;
 import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.ContextThread;
-import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.collections.util.QuadConsumer;
 import org.modelingvalue.transactions.AbstractLeaf;
 import org.modelingvalue.transactions.Leaf;
 import org.modelingvalue.transactions.Observed;
 import org.modelingvalue.transactions.Observer;
 
-@SuppressWarnings("rawtypes")
 public class DObserved<O, T> extends Observed<O, T> {
 
     public static <C, V> DObserved<C, V> of(Object id, V def, boolean mandatory, boolean deferred, QuadConsumer<C, V, V, Boolean> toMPS) {
@@ -42,7 +40,7 @@ public class DObserved<O, T> extends Observed<O, T> {
     private final boolean                        deferred;
 
     protected DObserved(Object id, T def, boolean mandatory, boolean deferred, QuadConsumer<O, T, T, Boolean> toMPS, QuadConsumer<AbstractLeaf, O, T, T> changed) {
-        super(Pair.of(id, mandatory), def, changed);
+        super(id, def, changed);
         this.toMPS = toMPS;
         this.mandatory = mandatory;
         this.deferred = deferred;
@@ -109,11 +107,6 @@ public class DObserved<O, T> extends Observed<O, T> {
                 }
             });
         }
-    }
-
-    @Override
-    public String toString() {
-        return ((Pair) id).a().toString();
     }
 
 }
