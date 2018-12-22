@@ -257,8 +257,15 @@ public abstract class DObject<O> {
                                     }
                                     throw e;
                                 } finally {
-                                    EMPTY_ATTRIBUTE.set(Set.of());
                                     COLLECTION_ATTRIBUTE.set(false);
+                                    if (!EMPTY_ATTRIBUTE.get().isEmpty()) {
+                                        EMPTY_ATTRIBUTE.set(Set.of());
+                                        EmptyMandatoryException e = new EmptyMandatoryException();
+                                        if (DClareMPS.TRACE.get(dClareMPS)) {
+                                            e.printStackTrace();
+                                        }
+                                        throw e;
+                                    }
                                 }
                             }
                         } else {
