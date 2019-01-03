@@ -38,7 +38,7 @@ import org.modelingvalue.transactions.StopObserverException;
 @SuppressWarnings("rawtypes")
 public abstract class DObject<O> {
 
-    protected static final Context<Set<Pair<DObject, DAttribute>>>                      EMPTY_ATTRIBUTE      = Context.of(Set.of());
+    protected static final Context<Boolean>                                             EMPTY_ATTRIBUTE      = Context.of(false);
     protected static final Context<Boolean>                                             COLLECTION_ATTRIBUTE = Context.of(false);
 
     public static final Setable<DObject, DType>                                         TYPE                 = Observed.of("TYPE", new DType() {
@@ -225,7 +225,7 @@ public abstract class DObject<O> {
                 if (isComplete()) {
                     RULE_INSTANCES.set(this, TYPE.get(this).getRules().map(r -> Observer.of(r, tx, () -> {
                         if (tx.equals(TRANSACTION.get(this))) {
-                            if (isComplete()) {
+                            if (DClareMPS.INITIALIZED.get(tx.root()) && isComplete()) {
                                 if (DClareMPS.TRACE.get(dClareMPS)) {
                                     Leaf.getCurrent().runNonObserving(() -> {
                                         System.err.println("DCLARE " + ContextThread.getNr() + " RUN RULE " + r + " for " + DObject.this);
@@ -234,7 +234,7 @@ public abstract class DObject<O> {
                                 try {
                                     r.accept(DObject.this);
                                 } catch (NullPointerException e) {
-                                    if (!EMPTY_ATTRIBUTE.get().isEmpty()) {
+                                    if (EMPTY_ATTRIBUTE.get()) {
                                         if (DClareMPS.TRACE.get(dClareMPS)) {
                                             e.printStackTrace();
                                         }
@@ -258,14 +258,7 @@ public abstract class DObject<O> {
                                     throw e;
                                 } finally {
                                     COLLECTION_ATTRIBUTE.set(false);
-                                    if (!EMPTY_ATTRIBUTE.get().isEmpty()) {
-                                        EMPTY_ATTRIBUTE.set(Set.of());
-                                        EmptyMandatoryException e = new EmptyMandatoryException();
-                                        if (DClareMPS.TRACE.get(dClareMPS)) {
-                                            e.printStackTrace();
-                                        }
-                                        throw e;
-                                    }
+                                    EMPTY_ATTRIBUTE.set(false);
                                 }
                             }
                         } else {
@@ -292,15 +285,15 @@ public abstract class DObject<O> {
         }
     }
 
-    protected void stop() {
-        exit(null, null);
-        for (DObject child : CHILDREN.get(this)) {
-            child.stop();
-        }
+    protected void deactivate(DObject parent, Compound parentTx) {
+        dClareMPS().schedule(() -> exit(parent, parentTx));
     }
 
-    protected void deactivate(DObject parent, Compound parentTx) {
-        dClareMPS().schedule(() -> init(parent));
+    protected void stop(DObject parent, Compound parentTx) {
+        exit(parent, parentTx);
+        for (DObject child : CHILDREN.get(this)) {
+            child.stop(this, TRANSACTION.get(this));
+        }
     }
 
     protected boolean isComplete() {

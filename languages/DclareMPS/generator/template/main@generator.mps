@@ -3338,6 +3338,37 @@
         </node>
       </node>
     </node>
+    <node concept="3aamgX" id="3HLMRNkvc97" role="3acgRq">
+      <ref role="30HIoZ" to="7ggn:3HLMRNkuBN1" resolve="PreviousStateExpression" />
+      <node concept="gft3U" id="3HLMRNkvieM" role="1lVwrX">
+        <node concept="2YIFZM" id="3HLMRNkvihI" role="gfFT$">
+          <ref role="37wK5l" to="u4ym:3HLMRNkuJ6J" resolve="pre" />
+          <ref role="1Pybhc" to="u4ym:30fQumnG8Au" resolve="DclareUtil" />
+          <node concept="1bVj0M" id="3HLMRNkvit1" role="37wK5m">
+            <node concept="3clFbS" id="3HLMRNkvit2" role="1bW5cS">
+              <node concept="3clFbF" id="3HLMRNkviuU" role="3cqZAp">
+                <node concept="10Nm6u" id="3HLMRNkvijq" role="3clFbG">
+                  <node concept="29HgVG" id="3HLMRNkviky" role="lGtFl">
+                    <node concept="3NFfHV" id="3HLMRNkvikz" role="3NFExx">
+                      <node concept="3clFbS" id="3HLMRNkvik$" role="2VODD2">
+                        <node concept="3clFbF" id="3HLMRNkvikE" role="3cqZAp">
+                          <node concept="2OqwBi" id="3HLMRNkvik_" role="3clFbG">
+                            <node concept="3TrEf2" id="3HLMRNkvikC" role="2OqNvi">
+                              <ref role="3Tt5mk" to="7ggn:3HLMRNkuYWy" resolve="expression" />
+                            </node>
+                            <node concept="30H73N" id="3HLMRNkvikD" role="2Oq$k0" />
+                          </node>
+                        </node>
+                      </node>
+                    </node>
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
     <node concept="2rT7sh" id="1$veQIxmoNu" role="2rTMjI">
       <property role="TrG5h" value="ruleSetConstructor" />
       <ref role="2rZz_L" to="tpee:fzclF84" resolve="ConstructorDeclaration" />

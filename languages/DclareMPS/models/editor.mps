@@ -1628,5 +1628,38 @@
       </node>
     </node>
   </node>
+  <node concept="24kQdi" id="3HLMRNkv1ar">
+    <ref role="1XX52x" to="7ggn:3HLMRNkuBN1" resolve="PreviousStateExpression" />
+    <node concept="3EZMnI" id="3HLMRNkv1aw" role="2wV5jI">
+      <node concept="2iRfu4" id="3HLMRNkv1ax" role="2iSdaV" />
+      <node concept="3F0ifn" id="3HLMRNkv1at" role="3EZMnx">
+        <property role="3F0ifm" value="pre" />
+        <node concept="Vb9p2" id="3HLMRNkv3lg" role="3F10Kt">
+          <property role="Vbekb" value="BOLD" />
+        </node>
+      </node>
+      <node concept="3F0ifn" id="3HLMRNkv1b3" role="3EZMnx">
+        <property role="3F0ifm" value="(" />
+        <node concept="11L4FC" id="3HLMRNkv1bb" role="3F10Kt">
+          <property role="VOm3f" value="true" />
+        </node>
+        <node concept="11LMrY" id="3HLMRNkv1bh" role="3F10Kt">
+          <property role="VOm3f" value="true" />
+        </node>
+      </node>
+      <node concept="3F1sOY" id="3HLMRNkv1aL" role="3EZMnx">
+        <ref role="1NtTu8" to="7ggn:3HLMRNkuYWy" resolve="expression" />
+      </node>
+      <node concept="3F0ifn" id="3HLMRNkv1aD" role="3EZMnx">
+        <property role="3F0ifm" value=")" />
+        <node concept="11L4FC" id="3HLMRNkv1bn" role="3F10Kt">
+          <property role="VOm3f" value="true" />
+        </node>
+        <node concept="11LMrY" id="3HLMRNkv1bt" role="3F10Kt">
+          <property role="VOm3f" value="true" />
+        </node>
+      </node>
+    </node>
+  </node>
 </model>
 

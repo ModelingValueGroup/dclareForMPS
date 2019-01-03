@@ -31,6 +31,7 @@ import org.modelingvalue.collections.util.ContextThread.ContextPool;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.collections.util.TriConsumer;
 import org.modelingvalue.collections.util.Triple;
+import org.modelingvalue.transactions.AbstractLeaf;
 import org.modelingvalue.transactions.Constant;
 import org.modelingvalue.transactions.Getable;
 import org.modelingvalue.transactions.Imperative;
@@ -48,13 +49,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
 
     static final Setable<DClareMPS, Boolean>                   TRACE         = Setable.of("TRACE", false);
 
-    private final ThreadLocal<Boolean>                         COMMITTING    = new ThreadLocal<Boolean>() {
-                                                                                 @Override
-                                                                                 protected Boolean initialValue() {
-                                                                                     return false;
-                                                                                 }
-
-                                                                             };
+    protected static final Observed<Root, Boolean>             INITIALIZED   = Observed.of("INITIALIZED", false);
 
     protected static final Observed<DClareMPS, Set<SLanguage>> ALL_LANGUAGES = Observed.of("ALL_LANGAUGES", Set.of(), (tx, o, b, a) -> {
                                                                                  Setable.<Set<SLanguage>, SLanguage> diff(Set.of(), b, a, x -> o.start(x), x -> {
@@ -66,6 +61,14 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
     protected static final Observed<DClareMPS, Set<DType>>     TYPES         = Observed.of("TYPES", Set.of(), (tx, o, b, a) -> {
                                                                                  Setable.<Set<DType>, DType> diff(Set.of(), b, a, x -> x.start(tx.root()), x -> x.stop(tx.root()));
                                                                              });
+
+    private final ThreadLocal<Boolean>                         COMMITTING    = new ThreadLocal<Boolean>() {
+                                                                                 @Override
+                                                                                 protected Boolean initialValue() {
+                                                                                     return false;
+                                                                                 }
+
+                                                                             };
 
     public final Getable<SRepository, DRepository>             DREPOSITORY   = Constant.of(Pair.of(this, "DREPOSITORY"), r -> new DRepository(r));
     public final Getable<SModule, DModule>                     DMODULE       = Constant.of(Pair.of(this, "DMODULE"), m -> new DModule(m));
@@ -88,10 +91,14 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
 
             @SuppressWarnings("rawtypes")
             private void throwProblems() {
-                if (imperative != null && repository != null && inQueue.isEmpty()) {
-                    Set<Triple<DObject, Object, String>> problems = DObject.ALL_PROBLEMS.get(repository);
-                    if (!problems.isEmpty()) {
-                        throw new Error("DCLARE Problems found: " + problems.reduce("", (r, p) -> r + "\n" + p.a() + ": " + p.c(), (a, b) -> a + b));
+                if (imperative != null && repository != null && inQueue.isEmpty() && repository.isComplete()) {
+                    if (INITIALIZED.get(root)) {
+                        Set<Triple<DObject, Object, String>> problems = DObject.ALL_PROBLEMS.get(repository);
+                        if (!problems.isEmpty()) {
+                            throw new Error("DCLARE Problems found: " + problems.reduce("", (r, p) -> r + "\n" + p.a() + ": " + p.c(), (a, b) -> a + b));
+                        }
+                    } else {
+                        INITIALIZED.set(root, true);
                     }
                 }
             }
@@ -104,7 +111,9 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
         waitForEndThread = new Thread(() -> {
             try {
                 root.waitForEnd();
-            } catch (Throwable t) {
+            } catch (
+
+            Throwable t) {
                 t.printStackTrace();
                 throw t;
             } finally {
@@ -210,7 +219,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
     public void start() {
         if (imperative == null) {
             System.err.println("DCLARE START " + project.getName());
-            root.put("startDclareMPS", () -> repository.activate(null, root));
+            root.put("activateDclareMPS", () -> repository.activate(null, root));
         }
     }
 
@@ -218,7 +227,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
         if (imperative != null) {
             System.err.println("DCLARE STOP " + project.getName());
             imperative = null;
-            root.put("stopDclareMPS", () -> repository.stop());
+            root.put("stopDclareMPS", () -> repository.stop(null, root));
             root.stop();
         }
     }
@@ -247,5 +256,9 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
 
     public void setTrace(boolean trace) {
         schedule(() -> TRACE.set(this, trace));
+    }
+
+    public static <T> T pre(Supplier<T> supplier) {
+        return AbstractLeaf.getCurrent().root().preState().get(supplier);
     }
 }

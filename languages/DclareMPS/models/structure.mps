@@ -488,5 +488,19 @@
       <ref role="PrY4T" to="tpee:hqOqG0K" resolve="IOperation" />
     </node>
   </node>
+  <node concept="1TIwiD" id="3HLMRNkuBN1">
+    <property role="EcuMT" value="4283428457607232705" />
+    <property role="TrG5h" value="PreviousStateExpression" />
+    <property role="34LRSv" value="pre(expr)" />
+    <property role="R4oN_" value="previous state expression" />
+    <ref role="1TJDcQ" to="tpee:fz3vP1J" resolve="Expression" />
+    <node concept="1TJgyj" id="3HLMRNkuYWy" role="1TKVEi">
+      <property role="IQ2ns" value="4283428457607327522" />
+      <property role="20lmBu" value="aggregation" />
+      <property role="20kJfa" value="expression" />
+      <property role="20lbJX" value="1" />
+      <ref role="20lvS9" to="tpee:fz3vP1J" resolve="Expression" />
+    </node>
+  </node>
 </model>
 

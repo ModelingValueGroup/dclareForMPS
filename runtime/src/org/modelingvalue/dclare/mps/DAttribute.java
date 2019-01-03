@@ -5,7 +5,6 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import org.modelingvalue.collections.ContainingCollection;
-import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.collections.util.QuadConsumer;
 import org.modelingvalue.collections.util.Triple;
 import org.modelingvalue.transactions.AbstractLeaf;
@@ -61,6 +60,8 @@ public interface DAttribute<O, T> {
         return ATTRIBUTE.get(Key.of(id, name, synthetic, optional, composite, identifyingNr, deriver));
     }
 
+    T pre(O object);
+
     T get(O object);
 
     T set(O object, T value);
@@ -98,28 +99,12 @@ public interface DAttribute<O, T> {
             V result = object != null ? super.get(object) : null;
             if (object != null) {
                 if (result == null && mandatory) {
-                    DObject.EMPTY_ATTRIBUTE.set(DObject.EMPTY_ATTRIBUTE.get().add(Pair.of((DObject) object, this)));
+                    DObject.EMPTY_ATTRIBUTE.set(true);
                 } else if (result instanceof java.util.Collection || result instanceof ContainingCollection) {
                     DObject.COLLECTION_ATTRIBUTE.set(true);
                 }
             }
             return result;
-        }
-
-        @Override
-        public V set(C object, V value) {
-            if (object != null && mandatory) {
-                DObject.EMPTY_ATTRIBUTE.set(DObject.EMPTY_ATTRIBUTE.get().remove(Pair.of((DObject) object, this)));
-            }
-            return super.set(object, value);
-        }
-
-        @Override
-        public <E> V set(C object, BiFunction<V, E, V> function, E element) {
-            if (object != null && mandatory) {
-                DObject.EMPTY_ATTRIBUTE.set(DObject.EMPTY_ATTRIBUTE.get().remove(Pair.of((DObject) object, this)));
-            }
-            return super.set(object, function, element);
         }
 
         @Override
@@ -192,6 +177,11 @@ public interface DAttribute<O, T> {
         }
 
         @Override
+        public V pre(C object) {
+            return get(object);
+        }
+
+        @Override
         public String toString() {
             return name;
         }
@@ -248,6 +238,11 @@ public interface DAttribute<O, T> {
         @Override
         public V get(C object) {
             return object != null ? super.get(object) : null;
+        }
+
+        @Override
+        public V pre(C object) {
+            return object != null ? super.pre(object) : null;
         }
 
         @Override
