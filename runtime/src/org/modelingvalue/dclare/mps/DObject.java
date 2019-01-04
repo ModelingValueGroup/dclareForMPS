@@ -38,6 +38,7 @@ import org.modelingvalue.transactions.StopObserverException;
 @SuppressWarnings("rawtypes")
 public abstract class DObject<O> {
 
+    protected static final String                                                       DCLARE               = "---------> DCLARE ";
     protected static final Context<Boolean>                                             EMPTY_ATTRIBUTE      = Context.of(false);
     protected static final Context<Boolean>                                             COLLECTION_ATTRIBUTE = Context.of(false);
 
@@ -160,14 +161,14 @@ public abstract class DObject<O> {
         }).toSet();
     }
 
-    protected void init(DObject parent) {
-        PARENT.set(this, parent);
+    protected void init(DClareMPS dClareMPS) {
     }
 
     @SuppressWarnings("unchecked")
     protected Compound activate(DObject parent, Compound parentTx) {
         DClareMPS dClareMPS = dClareMPS();
-        dClareMPS.schedule(() -> init(parent));
+        dClareMPS.run(() -> init(dClareMPS));
+        PARENT.set(this, parent);
         Compound tx = Compound.of(this, parentTx);
         TRANSACTION.set(this, tx);
         Observer.of(TYPE, tx, () -> {
@@ -225,10 +226,10 @@ public abstract class DObject<O> {
                 if (isComplete()) {
                     RULE_INSTANCES.set(this, TYPE.get(this).getRules().map(r -> Observer.of(r, tx, () -> {
                         if (tx.equals(TRANSACTION.get(this))) {
-                            if (DClareMPS.INITIALIZED.get(tx.root()) && isComplete()) {
+                            if (isComplete()) {
                                 if (DClareMPS.TRACE.get(dClareMPS)) {
                                     Leaf.getCurrent().runNonObserving(() -> {
-                                        System.err.println("DCLARE " + ContextThread.getNr() + " RUN RULE " + r + " for " + DObject.this);
+                                        System.err.println(DCLARE + ContextThread.getNr() + " RUN RULE " + r + " for " + DObject.this);
                                     });
                                 }
                                 try {
@@ -236,7 +237,7 @@ public abstract class DObject<O> {
                                 } catch (NullPointerException e) {
                                     if (EMPTY_ATTRIBUTE.get()) {
                                         if (DClareMPS.TRACE.get(dClareMPS)) {
-                                            e.printStackTrace();
+                                            System.err.println(DCLARE + e.getMessage());
                                         }
                                         throw new EmptyMandatoryException();
                                     } else {
@@ -245,7 +246,7 @@ public abstract class DObject<O> {
                                 } catch (IndexOutOfBoundsException e) {
                                     if (COLLECTION_ATTRIBUTE.get()) {
                                         if (DClareMPS.TRACE.get(dClareMPS)) {
-                                            e.printStackTrace();
+                                            System.err.println(DCLARE + e.getMessage());
                                         }
                                         throw new EmptyMandatoryException();
                                     } else {
@@ -253,7 +254,7 @@ public abstract class DObject<O> {
                                     }
                                 } catch (StopObserverException | EmptyMandatoryException e) {
                                     if (DClareMPS.TRACE.get(dClareMPS)) {
-                                        e.printStackTrace();
+                                        System.err.println(DCLARE + e.getMessage());
                                     }
                                     throw e;
                                 } finally {
@@ -275,7 +276,10 @@ public abstract class DObject<O> {
 
     }
 
-    protected void exit(DObject parent, Compound parentTx) {
+    protected void exit(DClareMPS dClareMPS) {
+    }
+
+    protected void deactivate(DObject parent, Compound parentTx) {
         if (Objects.equals(parent, PARENT.get(this))) {
             PARENT.set(this, null);
         }
@@ -283,16 +287,13 @@ public abstract class DObject<O> {
         if (tx != null && Objects.equals(parentTx, tx.parent())) {
             TRANSACTION.set(this, null);
         }
+        dClareMPS().run(() -> exit(dClareMPS()));
     }
 
-    protected void deactivate(DObject parent, Compound parentTx) {
-        dClareMPS().schedule(() -> exit(parent, parentTx));
-    }
-
-    protected void stop(DObject parent, Compound parentTx) {
-        exit(parent, parentTx);
+    protected void stop(DClareMPS dClareMPS) {
+        exit(dClareMPS);
         for (DObject child : CHILDREN.get(this)) {
-            child.stop(this, TRANSACTION.get(this));
+            child.stop(dClareMPS);
         }
     }
 

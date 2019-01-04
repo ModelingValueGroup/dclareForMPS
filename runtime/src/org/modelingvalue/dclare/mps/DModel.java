@@ -131,13 +131,12 @@ public class DModel extends DObject<SModel> implements SModel {
         return ROOTS.get(this);
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
-    protected void init(DObject parent) {
-        super.init(parent);
+    protected void init(DClareMPS dClareMPS) {
+        super.init(dClareMPS);
         ROOTS.set(this, Collection.of(original().getRootNodes()).map(n -> DNode.of(n)).toSet());
         MODEL_ROOT.set(this, original().getModelRoot());
-        original().addChangeListener(new Listener(this, dClareMPS()));
+        original().addChangeListener(new Listener(this, dClareMPS));
     }
 
     @SuppressWarnings("rawtypes")
@@ -155,11 +154,10 @@ public class DModel extends DObject<SModel> implements SModel {
         return tx;
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
-    protected void exit(DObject parent, Compound parentTx) {
-        super.exit(parent, parentTx);
-        original().removeChangeListener(new Listener(this, dClareMPS()));
+    protected void exit(DClareMPS dClareMPS) {
+        super.exit(dClareMPS);
+        original().removeChangeListener(new Listener(this, dClareMPS));
     }
 
     private class Listener extends Pair<DModel, DClareMPS> implements SNodeChangeListener {

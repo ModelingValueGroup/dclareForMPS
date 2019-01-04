@@ -181,10 +181,9 @@ public class DNode extends DObject<SNode> implements SNode {
         return result;
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
-    protected void init(DObject parent) {
-        super.init(parent);
+    protected void init(DClareMPS dClareMPS) {
+        super.init(dClareMPS);
         for (SProperty property : original().getProperties()) {
             PROPERTY.get(property).set(this, original().getProperty(property));
         }

@@ -64,7 +64,11 @@ public abstract class DType {
 
     public void start(Root root) {
         Compound tx = Compound.of(this, root);
-        Observer.of(TYPE_RULE_SETS, tx, () -> TYPE_RULE_SETS.set(this, getLanguages().flatMap(l -> DClareMPS.RULE_SETS.get(l)).toSet())).trigger();
+        Observer.of(TYPE_RULE_SETS, tx, () -> {
+            if (DClareMPS.INITIALIZED.get((DClareMPS) root.getId())) {
+                TYPE_RULE_SETS.set(this, getLanguages().flatMap(l -> DClareMPS.RULE_SETS.get(l)).toSet());
+            }
+        }).trigger();
         Observer.of(RULES, tx, () -> RULES.set(this, getRules(TYPE_RULE_SETS.get(this)))).trigger();
         Observer.of(ATTRIBUTES, tx, () -> ATTRIBUTES.set(this, getAttributes(TYPE_RULE_SETS.get(this)))).trigger();
     }

@@ -15,6 +15,7 @@ package org.modelingvalue.dclare.mps;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
@@ -49,7 +50,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
 
     static final Setable<DClareMPS, Boolean>                   TRACE         = Setable.of("TRACE", false);
 
-    protected static final Observed<Root, Boolean>             INITIALIZED   = Observed.of("INITIALIZED", false);
+    protected static final Observed<DClareMPS, Boolean>        INITIALIZED   = Observed.of("INITIALIZED", false);
 
     protected static final Observed<DClareMPS, Set<SLanguage>> ALL_LANGUAGES = Observed.of("ALL_LANGAUGES", Set.of(), (tx, o, b, a) -> {
                                                                                  Setable.<Set<SLanguage>, SLanguage> diff(Set.of(), b, a, x -> o.start(x), x -> {
@@ -92,13 +93,13 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
             @SuppressWarnings("rawtypes")
             private void throwProblems() {
                 if (imperative != null && repository != null && inQueue.isEmpty() && repository.isComplete()) {
-                    if (INITIALIZED.get(root)) {
+                    if (INITIALIZED.get(DClareMPS.this)) {
                         Set<Triple<DObject, Object, String>> problems = DObject.ALL_PROBLEMS.get(repository);
                         if (!problems.isEmpty()) {
-                            throw new Error("DCLARE Problems found: " + problems.reduce("", (r, p) -> r + "\n" + p.a() + ": " + p.c(), (a, b) -> a + b));
+                            throw new Error(DObject.DCLARE + "Problems found: " + problems.reduce("", (r, p) -> r + "\n" + p.a() + ": " + p.c(), (a, b) -> a + b));
                         }
                     } else {
-                        INITIALIZED.set(root, true);
+                        root.put(INITIALIZED, () -> INITIALIZED.set(DClareMPS.this, true));
                     }
                 }
             }
@@ -150,6 +151,15 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
 
     public static <T> T get(Supplier<T> supplier) {
         return ((DClareMPS) Leaf.getCurrent().root().getId()).run(supplier);
+    }
+
+    public void run(Runnable runnable) {
+        Consumer<AbstractLeaf> action = AbstractLeaf.consumer(runnable);
+        AbstractLeaf tx = AbstractLeaf.getCurrent();
+        run(() -> {
+            action.accept(tx);
+            return null;
+        });
     }
 
     @SuppressWarnings("unchecked")
@@ -218,16 +228,16 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
 
     public void start() {
         if (imperative == null) {
-            System.err.println("DCLARE START " + project.getName());
+            System.err.println(DObject.DCLARE + "START " + project.getName());
             root.put("activateDclareMPS", () -> repository.activate(null, root));
         }
     }
 
     public void stop() {
         if (imperative != null) {
-            System.err.println("DCLARE STOP " + project.getName());
+            System.err.println(DObject.DCLARE + "STOP " + project.getName());
             imperative = null;
-            root.put("stopDclareMPS", () -> repository.stop(null, root));
+            root.put("stopDclareMPS", () -> repository.stop(this));
             root.stop();
         }
     }
@@ -255,7 +265,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
     }
 
     public void setTrace(boolean trace) {
-        schedule(() -> TRACE.set(this, trace));
+        root.put("<SET TRACE " + trace + ">", () -> TRACE.set(this, trace));
     }
 
     public static <T> T pre(Supplier<T> supplier) {

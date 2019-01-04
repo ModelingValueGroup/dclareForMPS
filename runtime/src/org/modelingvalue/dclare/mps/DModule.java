@@ -46,12 +46,12 @@ public class DModule extends DObject<SModule> implements SModule {
 
     public static final Observed<DModule, Boolean>        ACTIVE    = Observed.of("ACTIVE", false, (tx, o, b, a) -> {
                                                                         if (DClareMPS.TRACE.get(dClareMPS())) {
-                                                                            tx.runNonObserving(                                                          //
+                                                                            tx.runNonObserving(                                                                    //
                                                                                     () -> {
                                                                                         if (a) {
-                                                                                            System.err.println("DCLARE ACTIVATE " + o.getModuleName());
+                                                                                            System.err.println(DObject.DCLARE + "ACTIVATE " + o.getModuleName());
                                                                                         } else {
-                                                                                            System.err.println("DCLARE DEACTIVATE " + o.getModuleName());
+                                                                                            System.err.println(DObject.DCLARE + "DEACTIVATE " + o.getModuleName());
                                                                                         }
                                                                                     });
                                                                         }
@@ -60,7 +60,7 @@ public class DModule extends DObject<SModule> implements SModule {
     public static final Observed<DModule, Set<DModel>>    MODELS    = Observed.of("MODELS", Set.of());
 
     public static final Observed<DModule, Set<SLanguage>> LANGUAGES = Observed.of("LANGUAGES", Set.of(), (tx, o, b, a) -> {
-                                                                        Setable.<Set<SLanguage>, SLanguage> diff(Set.of(), b, a,                         //
+                                                                        Setable.<Set<SLanguage>, SLanguage> diff(Set.of(), b, a,                                   //
                                                                                 x -> DClareMPS.ALL_LANGUAGES.set(dClareMPS(), Set::add, x), x -> {
                                                                                                                                                 });
                                                                     });
@@ -106,12 +106,11 @@ public class DModule extends DObject<SModule> implements SModule {
         };
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
-    protected void init(DObject parent) {
-        super.init(parent);
+    protected void init(DClareMPS dClareMPS) {
+        super.init(dClareMPS);
         LANGUAGES.set(this, languages(original()));
-        original().addModuleListener(new Listener(this, dClareMPS()));
+        original().addModuleListener(new Listener(this, dClareMPS));
     }
 
     @SuppressWarnings("rawtypes")
@@ -145,11 +144,10 @@ public class DModule extends DObject<SModule> implements SModule {
         return tx;
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
-    protected void exit(DObject parent, Compound parentTx) {
-        super.exit(parent, parentTx);
-        original().removeModuleListener(new Listener(this, dClareMPS()));
+    protected void exit(DClareMPS dClareMPS) {
+        super.exit(dClareMPS);
+        original().removeModuleListener(new Listener(this, dClareMPS));
     }
 
     @Override

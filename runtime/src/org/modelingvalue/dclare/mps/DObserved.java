@@ -54,7 +54,7 @@ public class DObserved<O, T> extends Observed<O, T> {
         AbstractLeaf tx = Leaf.getCurrent();
         if (first && DClareMPS.TRACE.get((DClareMPS) tx.root().getId())) {
             tx.runNonObserving(() -> {
-                System.err.println("DCLARE TO MPS " + object + "." + this + "=" + pre + "->" + post);
+                System.err.println(DObject.DCLARE + "TO MPS " + object + "." + this + "=" + pre + "->" + post);
             });
         }
         toMPS.accept(object, pre, post, first);
@@ -101,9 +101,9 @@ public class DObserved<O, T> extends Observed<O, T> {
         if (DClareMPS.TRACE.get((DClareMPS) tx.root().getId())) {
             tx.runNonObserving(() -> {
                 if (Leaf.getCurrent() instanceof Observer) {
-                    System.err.println("DCLARE " + ContextThread.getNr() + " CHANGED " + object + "." + this + "=" + pre + "->" + post);
+                    System.err.println(DObject.DCLARE + ContextThread.getNr() + " CHANGED " + object + "." + this + "=" + pre + "->" + post);
                 } else {
-                    System.err.println("DCLARE FROM MPS " + object + "." + this + "=" + pre + "->" + post);
+                    System.err.println(DObject.DCLARE + "FROM MPS " + object + "." + this + "=" + pre + "->" + post);
                 }
             });
         }

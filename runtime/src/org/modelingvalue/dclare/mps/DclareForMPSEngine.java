@@ -17,14 +17,14 @@ public class DclareForMPSEngine implements DeployListener {
 
     private final Project              project;
     protected final ClassLoaderManager classLoaderManager;
-    private DClareMPS                  dClareMPS = null;
+    private DClareMPS                  dClareMPS;
     private boolean                    on;
     private boolean                    trace;
     private boolean                    keepState;
     private int                        maxTotalNrOfChanges;
     private int                        maxNrOfChanges;
-    private boolean                    loaded    = false;
-    private State                      prevState = null;
+    private boolean                    loaded;
+    private State                      prevState;
 
     public DclareForMPSEngine(Project project) {
         this.project = project;
@@ -36,8 +36,8 @@ public class DclareForMPSEngine implements DeployListener {
         if (dClareMPS == null || !dClareMPS.isRunning()) {
             dClareMPS = new DClareMPS(project, prevState, maxTotalNrOfChanges, maxNrOfChanges);
             prevState = null;
-            dClareMPS.start();
             dClareMPS.setTrace(trace);
+            dClareMPS.start();
         }
     }
 
@@ -117,6 +117,7 @@ public class DclareForMPSEngine implements DeployListener {
     @Override
     public void onUnloaded(Set<ReloadableModule> unloadedModules, ProgressMonitor monitor) {
         stopEngine();
+        loaded = false;
     }
 
     @Override
