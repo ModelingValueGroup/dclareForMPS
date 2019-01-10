@@ -13,6 +13,7 @@
 
 package org.modelingvalue.dclare.mps;
 
+import java.util.Arrays;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
@@ -54,10 +55,16 @@ public class DObserved<O, T> extends Observed<O, T> {
         AbstractLeaf tx = Leaf.getCurrent();
         if (first && DClareMPS.TRACE.get((DClareMPS) tx.root().getId())) {
             tx.runNonObserving(() -> {
-                System.err.println(DObject.DCLARE + "TO MPS " + object + "." + this + "=" + pre + "->" + post);
+                System.err.println(DObject.DCLARE + "TO MPS " + object + "." + this + "=" + post);
             });
         }
-        toMPS.accept(object, pre, post, first);
+        try {
+            toMPS.accept(object, pre, post, first);
+        } catch (Throwable t) {
+            System.err.println(DObject.DCLARE + "TO MPS " + object + "." + this + "=" + post);
+            t.setStackTrace(Arrays.copyOf(t.getStackTrace(), 8));
+            t.printStackTrace();
+        }
     }
 
     public static <T> void map(Set<T> ist, Set<T> soll, Consumer<T> add, Consumer<T> remove) {
