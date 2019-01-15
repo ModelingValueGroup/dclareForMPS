@@ -630,4 +630,9 @@ public class DNode extends DObject<SNode> implements SNode {
             removeChild(child);
         }
     }
+
+    public boolean hasAncestor(DNode dNode) {
+        DNode parent = getParent();
+        return equals(dNode) || (parent != null && parent.hasAncestor(dNode));
+    }
 }
