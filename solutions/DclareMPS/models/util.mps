@@ -794,6 +794,52 @@
         </node>
       </node>
     </node>
+    <node concept="2tJIrI" id="4wJaMXe_MyE" role="jymVt" />
+    <node concept="2YIFZL" id="4wJaMXe_OUl" role="jymVt">
+      <property role="TrG5h" value="dCopy" />
+      <property role="od$2w" value="false" />
+      <property role="DiZV1" value="false" />
+      <property role="2aFKle" value="false" />
+      <node concept="37vLTG" id="4wJaMXfcFVP" role="3clF46">
+        <property role="TrG5h" value="copy" />
+        <node concept="3uibUv" id="4wJaMXfcFXY" role="1tU5fm">
+          <ref role="3uigEE" to="mhbf:~SNode" resolve="SNode" />
+        </node>
+      </node>
+      <node concept="37vLTG" id="4wJaMXe_PK4" role="3clF46">
+        <property role="TrG5h" value="copied" />
+        <node concept="3uibUv" id="4wJaMXfcFUm" role="1tU5fm">
+          <ref role="3uigEE" to="mhbf:~SNode" resolve="SNode" />
+        </node>
+      </node>
+      <node concept="3clFbS" id="4wJaMXe_OUo" role="3clF47">
+        <node concept="3clFbF" id="4wJaMXe_PVN" role="3cqZAp">
+          <node concept="10QFUN" id="4wJaMXe_UbJ" role="3clFbG">
+            <node concept="2YIFZM" id="4wJaMXe_Q06" role="10QFUP">
+              <ref role="1Pybhc" to="t4tl:~DCopy" resolve="DCopy" />
+              <ref role="37wK5l" to="t4tl:~DCopy.of(org.jetbrains.mps.openapi.model.SNode,org.jetbrains.mps.openapi.model.SNode):org.modelingvalue.dclare.mps.DCopy" resolve="of" />
+              <node concept="37vLTw" id="4wJaMXfcJQa" role="37wK5m">
+                <ref role="3cqZAo" node="4wJaMXfcFVP" resolve="copy" />
+              </node>
+              <node concept="37vLTw" id="4wJaMXe_SOG" role="37wK5m">
+                <ref role="3cqZAo" node="4wJaMXe_PK4" resolve="copied" />
+              </node>
+            </node>
+            <node concept="16syzq" id="4wJaMXe_UbK" role="10QFUM">
+              <ref role="16sUi3" node="4wJaMXe_PHK" resolve="T" />
+            </node>
+          </node>
+        </node>
+      </node>
+      <node concept="3Tm1VV" id="4wJaMXe_O7f" role="1B3o_S" />
+      <node concept="16euLQ" id="4wJaMXe_PHK" role="16eVyc">
+        <property role="TrG5h" value="T" />
+        <node concept="3Tqbb2" id="4wJaMXe_PIZ" role="3ztrMU" />
+      </node>
+      <node concept="16syzq" id="4wJaMXe_PJa" role="3clF45">
+        <ref role="16sUi3" node="4wJaMXe_PHK" resolve="T" />
+      </node>
+    </node>
     <node concept="2tJIrI" id="6ndASaeSzK_" role="jymVt" />
     <node concept="2YIFZL" id="MxZDaxdenI" role="jymVt">
       <property role="TrG5h" value="dNode" />
