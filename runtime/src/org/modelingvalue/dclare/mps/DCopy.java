@@ -9,8 +9,6 @@ import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.transactions.Compound;
 import org.modelingvalue.transactions.Observed;
-import org.modelingvalue.transactions.Observer;
-import org.modelingvalue.transactions.StopObserverException;
 
 public class DCopy extends DNode {
 
@@ -34,20 +32,20 @@ public class DCopy extends DNode {
         SConcept c = original().getConcept();
         for (SProperty property : c.getProperties()) {
             Observed<DNode, String> observed = PROPERTY.get(property);
-            copyRule(tx, observed, () -> observed.set(this, observed.get(copied)));
+            rule(observed, tx, () -> observed.set(this, observed.get(copied)));
         }
         for (SContainmentLink containment : c.getContainmentLinks()) {
             if (containment.isMultiple()) {
                 Observed<DNode, List<DNode>> observed = MANY_CONTAINMENT.get(containment);
-                copyRule(tx, observed, () -> observed.set(this, copy(observed.get(copied))));
+                rule(observed, tx, () -> observed.set(this, copy(observed.get(copied))));
             } else {
                 Observed<DNode, DNode> observed = SINGLE_CONTAINMENT.get(containment);
-                copyRule(tx, observed, () -> observed.set(this, copy(observed.get(copied))));
+                rule(observed, tx, () -> observed.set(this, copy(observed.get(copied))));
             }
         }
         for (SReferenceLink reference : c.getReferenceLinks()) {
             Observed<DNode, DNode> observed = REFERENCE.get(reference);
-            copyRule(tx, observed, () -> observed.set(this, map(observed.get(copied))));
+            rule(observed, tx, () -> observed.set(this, map(observed.get(copied))));
         }
         return tx;
     }
@@ -62,16 +60,6 @@ public class DCopy extends DNode {
 
     private DNode map(DNode referenced) {
         return referenced.hasAncestor(root.copied) ? dClareMPS().DCHILD_COPY.get(Pair.of(root, referenced)) : referenced;
-    }
-
-    private void copyRule(Compound tx, Object id, Runnable action) {
-        Observer.of(id, tx, () -> {
-            if (tx.equals(DObject.TRANSACTION.get(this))) {
-                action.run();
-            } else {
-                throw new StopObserverException("Stopped");
-            }
-        }).trigger();
     }
 
 }

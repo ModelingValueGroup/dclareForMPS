@@ -111,7 +111,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
             private void throwProblems() {
                 if (imperative != null && repository != null && inQueue.isEmpty() && repository.isComplete()) {
                     if (INITIALIZED.get(DClareMPS.this)) {
-                        Set<Triple<DObject, Object, String>> problems = DObject.ALL_PROBLEMS.get(repository);
+                        Set<Triple<DObject, Object, Object>> problems = DObject.ALL_PROBLEMS.get(repository);
                         if (!problems.isEmpty()) {
                             throw new Error(DObject.DCLARE + "Problems found: " + problems.reduce("", (r, p) -> r + "\n" + p.a() + ": " + p.c(), (a, b) -> a + b));
                         }

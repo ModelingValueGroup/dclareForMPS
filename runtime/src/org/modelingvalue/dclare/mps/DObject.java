@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.ContainingCollection;
+import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.QualifiedSet;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Context;
@@ -32,8 +33,12 @@ import org.modelingvalue.transactions.EmptyMandatoryException;
 import org.modelingvalue.transactions.Leaf;
 import org.modelingvalue.transactions.Observed;
 import org.modelingvalue.transactions.Observer;
+import org.modelingvalue.transactions.Priority;
+import org.modelingvalue.transactions.Root;
 import org.modelingvalue.transactions.Setable;
 import org.modelingvalue.transactions.StopObserverException;
+import org.modelingvalue.transactions.TooManyChangesException;
+import org.modelingvalue.transactions.Transaction;
 
 @SuppressWarnings("rawtypes")
 public abstract class DObject<O> {
@@ -74,17 +79,9 @@ public abstract class DObject<O> {
     @SuppressWarnings("unchecked")
     public static final Setable<DObject, Compound>                                      TRANSACTION          = Observed.of("TRANSACTION", null, (tx, o, b, a) -> {
                                                                                                                  if (a != null) {
-                                                                                                                     Observer.of(CHILDREN, a,                                                     //
-                                                                                                                             () -> {
-                                                                                                                                 if (a.equals(DObject.TRANSACTION.get(o))) {
-                                                                                                                                     if (o.isComplete()) {
-                                                                                                                                         CHILDREN.set(o, o.getAllChildren().toSet());
-                                                                                                                                     }
-                                                                                                                                 } else {
-                                                                                                                                     CHILDREN.set(o, Set.of());
-                                                                                                                                     throw new StopObserverException("Stopped");
-                                                                                                                                 }
-                                                                                                                             }).trigger();
+                                                                                                                     o.rule(CHILDREN, a,                                                          //
+                                                                                                                             () -> CHILDREN.set(o, o.getAllChildren().toSet()),                   //
+                                                                                                                             () -> CHILDREN.set(o, Set.of()));
                                                                                                                  }
                                                                                                              });
 
@@ -92,9 +89,9 @@ public abstract class DObject<O> {
                                                                                                                  Setable.<Set<Observer>, Observer> diff(Set.of(), b, a, Leaf::trigger, tx::clear);
                                                                                                              });
 
-    protected static final Setable<DObject, Set<Triple<DObject, Object, String>>>       ALL_PROBLEMS         = Observed.of("ALL_PROBLEMS", Set.of());
+    protected static final Setable<DObject, Set<Triple<DObject, Object, Object>>>       ALL_PROBLEMS         = Observed.of("ALL_PROBLEMS", Set.of());
 
-    protected static final Setable<DObject, QualifiedSet<Object, Pair<Object, String>>> PROBLEMS             = Observed.of("PROBLEMS", QualifiedSet.of(Pair::a));
+    protected static final Setable<DObject, QualifiedSet<Object, Pair<Object, Object>>> PROBLEMS             = Observed.of("PROBLEMS", QualifiedSet.of(Pair::a));
 
     public static DClareMPS dClareMPS() {
         return (DClareMPS) Leaf.getCurrent().root().getId();
@@ -171,107 +168,29 @@ public abstract class DObject<O> {
         PARENT.set(this, parent);
         Compound tx = Compound.of(this, parentTx);
         TRANSACTION.set(this, tx);
-        Observer.of(TYPE, tx, () -> {
-            if (tx.equals(DObject.TRANSACTION.get(this))) {
-                if (isComplete()) {
-                    TYPE.set(this, getType());
-                }
-            } else {
-                TYPE.set(this, TYPE.getDefault());
-                throw new StopObserverException("Stopped");
-            }
-        }).trigger();
-        Observer.of("<CONSTANT_CONTAINMENT>", tx, () -> {
-            if (tx.equals(DObject.TRANSACTION.get(this))) {
-                if (isComplete()) {
-                    TYPE.get(this).getAttributes().filter(DAttribute::isConstant).filter(DAttribute::isComposite).forEach(cc -> cc.get(this));
-                }
-            } else {
-                throw new StopObserverException("Stopped");
-            }
-        }).trigger();
-        Observer.of(ALL_PROBLEMS, tx, () -> {
-            if (tx.equals(DObject.TRANSACTION.get(this))) {
-                if (isComplete()) {
-                    Set<Triple<DObject, Object, String>> problems = PROBLEMS.get(this).map(p -> Triple.of((DObject) this, p.a(), p.b())).toSet();
-                    ALL_PROBLEMS.set(this, problems.addAll(CHILDREN.get(this).flatMap(c -> ALL_PROBLEMS.get(c))));
-                }
-            } else {
-                ALL_PROBLEMS.set(this, Set.of());
-                throw new StopObserverException("Stopped");
-            }
-        }).trigger();
-        Observer.of("<EMPTY_MANDATORY>", tx, () -> {
-            if (tx.equals(DObject.TRANSACTION.get(this))) {
-                if (isComplete()) {
-                    QualifiedSet<Object, Pair<Object, String>> problems = PROBLEMS.get(this);
-                    for (DAttribute attr : TYPE.get(this).getAttributes()) {
-                        if (attr instanceof DObservedAttribut && attr.isMandatory()) {
-                            if (attr.get(this) == null) {
-                                problems = problems.add(Pair.of(attr, "Mandatory attribute " + attr + " of " + this + " is null"));
-                            } else {
-                                problems = problems.removeKey(attr);
-                            }
-                        }
+        rule(TYPE, tx, () -> TYPE.set(this, getType()), () -> TYPE.set(this, TYPE.getDefault()));
+        rule("<CONSTANT_CONTAINMENT>", tx, () -> //
+        TYPE.get(this).getAttributes().filter(DAttribute::isConstant).filter(DAttribute::isComposite).forEach(cc -> cc.get(this)));
+        rule(ALL_PROBLEMS, tx, () -> {
+            Set<Triple<DObject, Object, Object>> problems = PROBLEMS.get(this).map(p -> Triple.of((DObject) this, p.a(), p.b())).toSet();
+            ALL_PROBLEMS.set(this, problems.addAll(CHILDREN.get(this).flatMap(c -> ALL_PROBLEMS.get(c))));
+        }, () -> ALL_PROBLEMS.set(this, Set.of()));
+        rule("<EMPTY_MANDATORY>", tx, () -> {
+            QualifiedSet<Object, Pair<Object, Object>> problems = PROBLEMS.get(this);
+            for (DAttribute attr : TYPE.get(this).getAttributes()) {
+                if (attr instanceof DObservedAttribut && attr.isMandatory()) {
+                    if (attr.get(this) == null) {
+                        problems = problems.add(Pair.of(attr, "Mandatory attribute " + attr + " of " + this + " is null"));
+                    } else {
+                        problems = problems.removeKey(attr);
                     }
-                    PROBLEMS.set(this, problems);
                 }
-            } else {
-                PROBLEMS.set(this, PROBLEMS.getDefault());
-                throw new StopObserverException("Stopped");
             }
-        }).trigger();
-        Observer.of(RULE_INSTANCES, tx, () -> {
-            if (tx.equals(TRANSACTION.get(this))) {
-                if (isComplete()) {
-                    RULE_INSTANCES.set(this, TYPE.get(this).getRules().map(r -> Observer.of(r, tx, () -> {
-                        if (tx.equals(TRANSACTION.get(this))) {
-                            if (isComplete()) {
-                                if (DClareMPS.TRACE.get(dClareMPS)) {
-                                    Leaf.getCurrent().runNonObserving(() -> {
-                                        System.err.println(DCLARE + ContextThread.getNr() + " RUN RULE " + r + " for " + DObject.this);
-                                    });
-                                }
-                                try {
-                                    r.accept(DObject.this);
-                                } catch (NullPointerException e) {
-                                    if (EMPTY_ATTRIBUTE.get()) {
-                                        if (DClareMPS.TRACE.get(dClareMPS)) {
-                                            System.err.println(DCLARE + e.getMessage());
-                                        }
-                                        throw new EmptyMandatoryException();
-                                    } else {
-                                        throw e;
-                                    }
-                                } catch (IndexOutOfBoundsException e) {
-                                    if (COLLECTION_ATTRIBUTE.get()) {
-                                        if (DClareMPS.TRACE.get(dClareMPS)) {
-                                            System.err.println(DCLARE + e.getMessage());
-                                        }
-                                        throw new EmptyMandatoryException();
-                                    } else {
-                                        throw e;
-                                    }
-                                } catch (StopObserverException | EmptyMandatoryException e) {
-                                    if (DClareMPS.TRACE.get(dClareMPS)) {
-                                        System.err.println(DCLARE + e.getMessage());
-                                    }
-                                    throw e;
-                                } finally {
-                                    COLLECTION_ATTRIBUTE.set(false);
-                                    EMPTY_ATTRIBUTE.set(false);
-                                }
-                            }
-                        } else {
-                            throw new StopObserverException("Stopped");
-                        }
-                    })).toSet());
-                }
-            } else {
-                RULE_INSTANCES.set(this, Set.of());
-                throw new StopObserverException("Stopped");
-            }
-        }).trigger();
+            PROBLEMS.set(this, problems);
+        }, () -> PROBLEMS.set(this, PROBLEMS.getDefault()));
+        rule(RULE_INSTANCES, tx, //
+                () -> RULE_INSTANCES.set(this, TYPE.get(this).getRules().map(r -> rule(tx, r)).toSet()), //
+                () -> RULE_INSTANCES.set(this, Set.of()));
         return tx;
 
     }
@@ -303,8 +222,90 @@ public abstract class DObject<O> {
 
     protected abstract DType getType();
 
-    public void set(O obect, Object featureId, Object value) {
+    @SuppressWarnings("unchecked")
+    private Observer rule(Compound tx, Consumer r) {
+        DClareMPS dClareMPS = dClareMPS();
+        return makeRule(r, tx, () -> {
+            if (DClareMPS.TRACE.get(dClareMPS)) {
+                Leaf.getCurrent().runNonObserving(() -> {
+                    System.err.println(DCLARE + ContextThread.getNr() + " RUN RULE " + r + " for " + DObject.this);
+                });
+            }
+            try {
+                r.accept(DObject.this);
+            } catch (NullPointerException e) {
+                if (EMPTY_ATTRIBUTE.get()) {
+                    if (DClareMPS.TRACE.get(dClareMPS)) {
+                        System.err.println(DCLARE + e.getMessage());
+                    }
+                    throw new EmptyMandatoryException();
+                } else {
+                    handleException(r, e);
+                }
+            } catch (IndexOutOfBoundsException e) {
+                if (COLLECTION_ATTRIBUTE.get()) {
+                    if (DClareMPS.TRACE.get(dClareMPS)) {
+                        System.err.println(DCLARE + e.getMessage());
+                    }
+                    throw new EmptyMandatoryException();
+                } else {
+                    handleException(r, e);
+                }
+            } catch (Throwable e) {
+                if (DClareMPS.TRACE.get(dClareMPS)) {
+                    System.err.println(DCLARE + e.getMessage());
+                }
+                handleException(r, e);
+            } finally {
+                COLLECTION_ATTRIBUTE.set(false);
+                EMPTY_ATTRIBUTE.set(false);
+            }
+        });
+    }
 
+    private void handleException(Consumer r, Throwable e) {
+        if (!(e instanceof TooManyChangesException)) {
+            PROBLEMS.set(this, QualifiedSet::add, Pair.<Object, Object> of(r, e));
+        }
+        throw new StopObserverException(e);
+    }
+
+    protected void reportTooManyChanges(Transaction running, Object object, Setable setable, Object pre, Object post, Observer triggered, int tooMany) {
+        String message = running.root().preState().get(() -> //
+        "Too many changes: " + tooMany + "\n       Running: " + running + "\n       Change: " + object + "." + setable + "=" + pre + " -> " + post + "\n       Triggers: " + triggered);
+        List<Object> key = List.of(triggered.getId(), tooMany, running.getId(), object, setable, pre, post);
+        PROBLEMS.set(this, QualifiedSet::add, Pair.<Object, Object> of(key, message));
+    }
+
+    final public void rule(Object id, Compound tx, Runnable action) {
+        makeRule(id, tx, action).trigger();
+    }
+
+    final public void rule(Object id, Compound tx, Runnable action, Runnable stop) {
+        makeRule(id, tx, action, stop).trigger();
+    }
+
+    final public Observer makeRule(Object id, Compound tx, Runnable action) {
+        return makeRule(id, tx, action, () -> {
+        });
+    }
+
+    final public Observer makeRule(Object id, Compound tx, Runnable action, Runnable stop) {
+        return new Observer(id, tx, () -> {
+            if (tx.equals(DObject.TRANSACTION.get(this))) {
+                if (isComplete()) {
+                    action.run();
+                }
+            } else {
+                stop.run();
+                throw new StopObserverException("Stopped");
+            }
+        }, Priority.high) {
+            @Override
+            protected void reportTooManyChanges(Root root, Transaction running, Object object, Setable setable, Object pre, Object post, int tooMany) {
+                DObject.this.reportTooManyChanges(running, object, setable, pre, post, this, tooMany);
+            }
+        };
     }
 
 }
