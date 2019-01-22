@@ -34,7 +34,6 @@ import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.transactions.Compound;
 import org.modelingvalue.transactions.Observed;
-import org.modelingvalue.transactions.Observer;
 import org.modelingvalue.transactions.Setable;
 import org.modelingvalue.transactions.StopObserverException;
 
@@ -118,7 +117,7 @@ public class DModule extends DObject<SModule> implements SModule {
     protected Compound activate(DObject parent, Compound parentTx) {
         DClareMPS dClareMPS = dClareMPS();
         Compound tx = super.activate(parent, parentTx);
-        Observer.of(LANGUAGES, tx, () -> {
+        new NonCheckingObserver(LANGUAGES, tx, () -> {
             if (tx.equals(DObject.TRANSACTION.get(this))) {
                 LANGUAGES.set(this, dClareMPS.run(() -> languages(original())).addAll(MODELS.get(this).flatMap(DModel::getUsedLanguages)));
             } else {
@@ -126,7 +125,7 @@ public class DModule extends DObject<SModule> implements SModule {
                 throw new StopObserverException("Stopped");
             }
         }).trigger();
-        Observer.of(MODELS, tx, () -> {
+        new NonCheckingObserver(MODELS, tx, () -> {
             if (tx.equals(DObject.TRANSACTION.get(this))) {
                 if (!(original() instanceof Language) && !original().isReadOnly() && hasRuleSets()) {
                     MODELS.set(this, dClareMPS.run(() -> models(original())).map(m -> DModel.of(m)).toSet());

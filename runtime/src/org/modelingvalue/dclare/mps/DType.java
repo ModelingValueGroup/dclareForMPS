@@ -19,7 +19,6 @@ import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.transactions.Compound;
 import org.modelingvalue.transactions.Observed;
-import org.modelingvalue.transactions.Observer;
 import org.modelingvalue.transactions.Root;
 import org.modelingvalue.transactions.Setable;
 
@@ -64,13 +63,13 @@ public abstract class DType {
 
     public void start(Root root) {
         Compound tx = Compound.of(this, root);
-        Observer.of(TYPE_RULE_SETS, tx, () -> {
+        new DObject.NonCheckingObserver(TYPE_RULE_SETS, tx, () -> {
             if (DClareMPS.INITIALIZED.get((DClareMPS) root.getId())) {
                 TYPE_RULE_SETS.set(this, getLanguages().flatMap(l -> DClareMPS.RULE_SETS.get(l)).toSet());
             }
         }).trigger();
-        Observer.of(RULES, tx, () -> RULES.set(this, getRules(TYPE_RULE_SETS.get(this)))).trigger();
-        Observer.of(ATTRIBUTES, tx, () -> ATTRIBUTES.set(this, getAttributes(TYPE_RULE_SETS.get(this)))).trigger();
+        new DObject.NonCheckingObserver(RULES, tx, () -> RULES.set(this, getRules(TYPE_RULE_SETS.get(this)))).trigger();
+        new DObject.NonCheckingObserver(ATTRIBUTES, tx, () -> ATTRIBUTES.set(this, getAttributes(TYPE_RULE_SETS.get(this)))).trigger();
     }
 
     public void stop(Root root) {

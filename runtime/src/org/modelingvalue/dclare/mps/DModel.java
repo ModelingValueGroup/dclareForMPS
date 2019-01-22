@@ -44,7 +44,6 @@ import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.transactions.Compound;
 import org.modelingvalue.transactions.Observed;
-import org.modelingvalue.transactions.Observer;
 import org.modelingvalue.transactions.Setable;
 import org.modelingvalue.transactions.StopObserverException;
 
@@ -143,7 +142,7 @@ public class DModel extends DObject<SModel> implements SModel {
     @Override
     protected Compound activate(DObject parent, Compound parentTx) {
         Compound tx = super.activate(parent, parentTx);
-        Observer.of(USED_LANGUAGES, tx, () -> {
+        new NonCheckingObserver(USED_LANGUAGES, tx, () -> {
             if (tx.equals(DObject.TRANSACTION.get(this))) {
                 USED_LANGUAGES.set(this, ROOTS.get(this).map(SNode::getConcept).map(SConcept::getLanguage).toSet());
             } else {

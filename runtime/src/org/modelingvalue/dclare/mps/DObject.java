@@ -28,12 +28,14 @@ import org.modelingvalue.collections.util.ContextThread;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.collections.util.Triple;
 import org.modelingvalue.dclare.mps.DAttribute.DObservedAttribut;
+import org.modelingvalue.transactions.AbstractLeaf;
 import org.modelingvalue.transactions.Compound;
 import org.modelingvalue.transactions.EmptyMandatoryException;
 import org.modelingvalue.transactions.Leaf;
 import org.modelingvalue.transactions.Observed;
 import org.modelingvalue.transactions.Observer;
 import org.modelingvalue.transactions.Priority;
+import org.modelingvalue.transactions.ReadOnly;
 import org.modelingvalue.transactions.Root;
 import org.modelingvalue.transactions.Setable;
 import org.modelingvalue.transactions.StopObserverException;
@@ -42,6 +44,47 @@ import org.modelingvalue.transactions.Transaction;
 
 @SuppressWarnings("rawtypes")
 public abstract class DObject<O> {
+
+    private final class DObserver extends Observer {
+
+        protected DObserver(Object id, Compound parent, Runnable action) {
+            super(id, parent, action, Priority.high);
+        }
+
+        @Override
+        protected void countChanges(Setable setable) {
+            if (!PROBLEMS.equals(setable)) {
+                super.countChanges(setable);
+            }
+        }
+
+        @Override
+        protected void checkTooManyChanges(Root root, Transaction running, Priority prio, Object object, Setable setable, Object pre, Object post) {
+            if (!(AbstractLeaf.getCurrent() instanceof ReadOnly) && !PROBLEMS.equals(setable)) {
+                super.checkTooManyChanges(root, running, prio, object, setable, pre, post);
+            }
+        }
+
+        @Override
+        protected void reportTooManyChanges(Root root, Transaction running, Object object, Setable setable, Object pre, Object post, int tooMany) {
+            DObject.this.reportTooManyChanges(running, object, setable, pre, post, this, tooMany);
+        }
+    }
+
+    protected final static class NonCheckingObserver extends Observer {
+
+        protected NonCheckingObserver(Object id, Compound parent, Runnable action) {
+            super(id, parent, action, Priority.high);
+        }
+
+        @Override
+        protected void countChanges(Setable property) {
+        }
+
+        @Override
+        protected void checkTooManyChanges(Root root, Transaction running, Priority prio, Object object, Setable setable, Object pre, Object post) {
+        }
+    }
 
     protected static final String                                                       DCLARE               = "---------> DCLARE ";
     protected static final Context<Boolean>                                             EMPTY_ATTRIBUTE      = Context.of(false);
@@ -225,40 +268,42 @@ public abstract class DObject<O> {
     @SuppressWarnings("unchecked")
     private Observer rule(Compound tx, Consumer r) {
         DClareMPS dClareMPS = dClareMPS();
-        return makeRule(r, tx, () -> {
-            if (DClareMPS.TRACE.get(dClareMPS)) {
-                Leaf.getCurrent().runNonObserving(() -> {
-                    System.err.println(DCLARE + ContextThread.getNr() + " RUN RULE " + r + " for " + DObject.this);
-                });
-            }
-            try {
-                r.accept(DObject.this);
-            } catch (NullPointerException e) {
-                if (EMPTY_ATTRIBUTE.get()) {
-                    if (DClareMPS.TRACE.get(dClareMPS)) {
-                        System.err.println(DCLARE + e.getMessage());
-                    }
-                    throw new EmptyMandatoryException();
-                } else {
-                    handleException(r, e);
-                }
-            } catch (IndexOutOfBoundsException e) {
-                if (COLLECTION_ATTRIBUTE.get()) {
-                    if (DClareMPS.TRACE.get(dClareMPS)) {
-                        System.err.println(DCLARE + e.getMessage());
-                    }
-                    throw new EmptyMandatoryException();
-                } else {
-                    handleException(r, e);
-                }
-            } catch (Throwable e) {
+        return new DObserver(r, tx, () -> {
+            if (tx.equals(DObject.TRANSACTION.get(this)) && isComplete()) {
                 if (DClareMPS.TRACE.get(dClareMPS)) {
-                    System.err.println(DCLARE + e.getMessage());
+                    Leaf.getCurrent().runNonObserving(() -> {
+                        System.err.println(DCLARE + ContextThread.getNr() + " RUN RULE " + r + " for " + DObject.this);
+                    });
                 }
-                handleException(r, e);
-            } finally {
-                COLLECTION_ATTRIBUTE.set(false);
-                EMPTY_ATTRIBUTE.set(false);
+                try {
+                    r.accept(DObject.this);
+                } catch (NullPointerException e) {
+                    if (EMPTY_ATTRIBUTE.get()) {
+                        if (DClareMPS.TRACE.get(dClareMPS)) {
+                            System.err.println(DCLARE + e.getMessage());
+                        }
+                        throw new EmptyMandatoryException();
+                    } else {
+                        handleException(r, e);
+                    }
+                } catch (IndexOutOfBoundsException e) {
+                    if (COLLECTION_ATTRIBUTE.get()) {
+                        if (DClareMPS.TRACE.get(dClareMPS)) {
+                            System.err.println(DCLARE + e.getMessage());
+                        }
+                        throw new EmptyMandatoryException();
+                    } else {
+                        handleException(r, e);
+                    }
+                } catch (Throwable e) {
+                    if (DClareMPS.TRACE.get(dClareMPS)) {
+                        System.err.println(DCLARE + e.getMessage());
+                    }
+                    handleException(r, e);
+                } finally {
+                    COLLECTION_ATTRIBUTE.set(false);
+                    EMPTY_ATTRIBUTE.set(false);
+                }
             }
         });
     }
@@ -291,7 +336,7 @@ public abstract class DObject<O> {
     }
 
     final public Observer makeRule(Object id, Compound tx, Runnable action, Runnable stop) {
-        return new Observer(id, tx, () -> {
+        return new NonCheckingObserver(id, tx, () -> {
             if (tx.equals(DObject.TRANSACTION.get(this))) {
                 if (isComplete()) {
                     action.run();
@@ -300,12 +345,7 @@ public abstract class DObject<O> {
                 stop.run();
                 throw new StopObserverException("Stopped");
             }
-        }, Priority.high) {
-            @Override
-            protected void reportTooManyChanges(Root root, Transaction running, Object object, Setable setable, Object pre, Object post, int tooMany) {
-                DObject.this.reportTooManyChanges(running, object, setable, pre, post, this, tooMany);
-            }
-        };
+        });
     }
 
 }

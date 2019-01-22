@@ -38,7 +38,6 @@ import org.modelingvalue.transactions.Compound;
 import org.modelingvalue.transactions.Constant;
 import org.modelingvalue.transactions.Getable;
 import org.modelingvalue.transactions.Observed;
-import org.modelingvalue.transactions.Observer;
 import org.modelingvalue.transactions.Setable;
 import org.modelingvalue.transactions.StopObserverException;
 
@@ -206,7 +205,7 @@ public class DNode extends DObject<SNode> implements SNode {
     @Override
     protected Compound activate(DObject parent, Compound parentTx) {
         Compound tx = super.activate(parent, parentTx);
-        Observer.of(MODEL, tx, () -> {
+        new NonCheckingObserver(MODEL, tx, () -> {
             if (tx.equals(DObject.TRANSACTION.get(this))) {
                 DObject p = PARENT.get(this);
                 if (p instanceof DNode) {
