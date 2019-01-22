@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.ContainingCollection;
-import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.QualifiedSet;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Context;
@@ -270,8 +269,12 @@ public abstract class DObject<O> {
         DClareMPS dClareMPS = dClareMPS();
         return new DObserver(r, tx, () -> {
             if (tx.equals(DObject.TRANSACTION.get(this)) && isComplete()) {
+                DObserver current = (DObserver) Leaf.getCurrent();
+                if (tx.root().runCount() > current.count()) {
+                    removeProblems(r);
+                }
                 if (DClareMPS.TRACE.get(dClareMPS)) {
-                    Leaf.getCurrent().runNonObserving(() -> {
+                    current.runNonObserving(() -> {
                         System.err.println(DCLARE + ContextThread.getNr() + " RUN RULE " + r + " for " + DObject.this);
                     });
                 }
@@ -310,16 +313,27 @@ public abstract class DObject<O> {
 
     private void handleException(Consumer r, Throwable e) {
         if (!(e instanceof TooManyChangesException)) {
-            PROBLEMS.set(this, QualifiedSet::add, Pair.<Object, Object> of(r, e));
+            addProblem(r, e);
         }
         throw new StopObserverException(e);
     }
 
     protected void reportTooManyChanges(Transaction running, Object object, Setable setable, Object pre, Object post, Observer triggered, int tooMany) {
         String message = running.root().preState().get(() -> //
-        "Too many changes: " + tooMany + "\n       Running: " + running + "\n       Change: " + object + "." + setable + "=" + pre + " -> " + post + "\n       Triggers: " + triggered);
-        List<Object> key = List.of(triggered.getId(), tooMany, running.getId(), object, setable, pre, post);
-        PROBLEMS.set(this, QualifiedSet::add, Pair.<Object, Object> of(key, message));
+        "Too many changes: " + tooMany + "\n       Running: " + running + "\n       Change: " + object + "." + setable + "=" + pre + " -> " + post + "\n       Triggers: " + triggered + "\n");
+        addProblem(triggered.getId(), message);
+    }
+
+    @SuppressWarnings("unchecked")
+    private void addProblem(Object key, Object problem) {
+        PROBLEMS.set(this, (s, k) -> {
+            Pair<Object, Set<Object>> p = (Pair) s.get(k);
+            return s.add(Pair.of(k, p != null ? p.b().add(problem) : Set.of(problem)));
+        }, key);
+    }
+
+    private void removeProblems(Object key) {
+        PROBLEMS.set(this, QualifiedSet::removeKey, key);
     }
 
     final public void rule(Object id, Compound tx, Runnable action) {
