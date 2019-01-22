@@ -88,20 +88,27 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
     private DRepository                                        repository;
     private Imperative                                         imperative;
 
-    protected DClareMPS(Project project, State prevState, int maxTotalNrOfChanges, int maxNrOfChanges) {
+    protected DClareMPS(Project project, State prevState, int maxTotalNrOfChanges, int maxNrOfChanges, StartStopHandler startStopHandler) {
         this.project = project;
         root = new Root(this, thePool, prevState, 100, maxTotalNrOfChanges, maxNrOfChanges, 10, null) {
 
-            private final Leaf throwProblems = Leaf.of("throwProblems", this, this::throwProblems);
+            private final Leaf pre  = Leaf.of("<pre>", this, this::pre);
+            private final Leaf post = Leaf.of("<post>", this, this::post);
+
+            private void pre() {
+                if (imperative != null && repository != null && inQueue.isEmpty() && repository.isComplete()) {
+                    if (INITIALIZED.get(DClareMPS.this)) {
+                        run(() -> startStopHandler.start(project));
+                    }
+                }
+            }
 
             @SuppressWarnings("rawtypes")
-            private void throwProblems() {
+            private void post() {
                 if (imperative != null && repository != null && inQueue.isEmpty() && repository.isComplete()) {
                     if (INITIALIZED.get(DClareMPS.this)) {
                         Set<Triple<DObject, Object, Object>> problems = DObject.ALL_PROBLEMS.get(repository);
-                        if (!problems.isEmpty()) {
-                            throw new Error(DObject.DCLARE + "Problems found: " + problems.reduce("", (r, p) -> r + "\n" + p.a() + ": " + p.c(), (a, b) -> a + b));
-                        }
+                        run(() -> startStopHandler.stop(project, problems));
                     } else {
                         root.put(INITIALIZED, () -> INITIALIZED.set(DClareMPS.this, true));
                     }
@@ -109,8 +116,13 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
             }
 
             @Override
+            protected State pre(State state) {
+                return apply(schedule(state, pre, Priority.high));
+            }
+
+            @Override
             protected State post(State state) {
-                return apply(schedule(state, throwProblems, Priority.low));
+                return apply(schedule(state, post, Priority.low));
             }
         };
         waitForEndThread = new Thread(() -> {

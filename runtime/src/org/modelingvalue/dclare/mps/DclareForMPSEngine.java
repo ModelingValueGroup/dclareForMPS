@@ -30,6 +30,7 @@ public class DclareForMPSEngine implements DeployListener {
 
     private final Project              project;
     protected final ClassLoaderManager classLoaderManager;
+    private final StartStopHandler     startStopHandler;
     private DClareMPS                  dClareMPS;
     private boolean                    on;
     private boolean                    trace;
@@ -39,7 +40,8 @@ public class DclareForMPSEngine implements DeployListener {
     private boolean                    loaded;
     private State                      prevState;
 
-    public DclareForMPSEngine(Project project) {
+    public DclareForMPSEngine(Project project, StartStopHandler startStopHandler) {
+        this.startStopHandler = startStopHandler;
         this.project = project;
         classLoaderManager = ApplicationManager.getApplication().getComponent(MPSCoreComponents.class).getClassLoaderManager();
         classLoaderManager.addListener(this);
@@ -47,7 +49,7 @@ public class DclareForMPSEngine implements DeployListener {
 
     private void startEngine() {
         if (dClareMPS == null || !dClareMPS.isRunning()) {
-            dClareMPS = new DClareMPS(project, prevState, maxTotalNrOfChanges, maxNrOfChanges);
+            dClareMPS = new DClareMPS(project, prevState, maxTotalNrOfChanges, maxNrOfChanges, startStopHandler);
             prevState = null;
             dClareMPS.setTrace(trace);
             dClareMPS.start();
