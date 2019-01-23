@@ -20,6 +20,7 @@ import java.util.function.Consumer;
 import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.ContextThread;
+import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.collections.util.QuadConsumer;
 import org.modelingvalue.transactions.AbstractLeaf;
 import org.modelingvalue.transactions.Leaf;
@@ -39,6 +40,14 @@ public class DObserved<O, T> extends Observed<O, T> {
     private final QuadConsumer<O, T, T, Boolean> toMPS;
     protected final boolean                      mandatory;
     private final boolean                        deferred;
+    private final Pair<DObserved<O, T>, String>  toMpsKey = new Pair<DObserved<O, T>, String>(this, "TO_MPS") {
+                                                              private static final long serialVersionUID = 13238368238882305L;
+
+                                                              @Override
+                                                              public String toString() {
+                                                                  return a().toString();
+                                                              }
+                                                          };
 
     protected DObserved(Object id, T def, boolean mandatory, boolean deferred, QuadConsumer<O, T, T, Boolean> toMPS, QuadConsumer<AbstractLeaf, O, T, T> changed) {
         super(id, def, changed);
@@ -51,6 +60,7 @@ public class DObserved<O, T> extends Observed<O, T> {
         return deferred;
     }
 
+    @SuppressWarnings("rawtypes")
     public void toMPS(O object, T pre, T post, boolean first) {
         AbstractLeaf tx = Leaf.getCurrent();
         if (first && DClareMPS.TRACE.get((DClareMPS) tx.root().getId())) {
@@ -58,12 +68,20 @@ public class DObserved<O, T> extends Observed<O, T> {
                 System.err.println(DObject.DCLARE + "TO MPS " + object + "." + this + "=" + post);
             });
         }
+
         try {
             toMPS.accept(object, pre, post, first);
+            if (object instanceof DObject) {
+                ((DObject) object).removeProblems(toMpsKey);
+            }
         } catch (Throwable t) {
-            System.err.println(DObject.DCLARE + "TO MPS " + object + "." + this + "=" + post);
-            t.setStackTrace(Arrays.copyOf(t.getStackTrace(), 8));
-            t.printStackTrace();
+            if (object instanceof DObject) {
+                ((DObject) object).addProblem(toMpsKey, t);
+            } else {
+                System.err.println(DObject.DCLARE + "TO MPS " + object + "." + this + "=" + post);
+                t.setStackTrace(Arrays.copyOf(t.getStackTrace(), 8));
+                t.printStackTrace();
+            }
         }
     }
 

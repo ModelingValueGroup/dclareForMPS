@@ -325,14 +325,14 @@ public abstract class DObject<O> {
     }
 
     @SuppressWarnings("unchecked")
-    private void addProblem(Object key, Object problem) {
+    protected void addProblem(Object key, Object problem) {
         PROBLEMS.set(this, (s, k) -> {
             Pair<Object, Set<Object>> p = (Pair) s.get(k);
             return s.add(Pair.of(k, p != null ? p.b().add(problem) : Set.of(problem)));
         }, key);
     }
 
-    private void removeProblems(Object key) {
+    protected void removeProblems(Object key) {
         PROBLEMS.set(this, QualifiedSet::removeKey, key);
     }
 
