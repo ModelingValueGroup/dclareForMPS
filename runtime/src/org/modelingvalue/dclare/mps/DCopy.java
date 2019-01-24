@@ -75,4 +75,8 @@ public class DCopy extends DNode {
         return referenced.hasAncestor(root.copied) ? dClareMPS().DCHILD_COPY.get(Pair.of(root, referenced)) : referenced;
     }
 
+    public DNode getCopied() {
+        return copied;
+    }
+
 }
