@@ -68,7 +68,7 @@ public class DCopy extends DNode {
     }
 
     private DNode copy(DNode child) {
-        return dClareMPS().DCHILD_COPY.get(Pair.of(root, copied));
+        return child != null ? dClareMPS().DCHILD_COPY.get(Pair.of(root, copied)) : null;
     }
 
     private DNode map(DNode referenced) {
