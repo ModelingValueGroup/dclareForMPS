@@ -825,13 +825,20 @@
         <node concept="3clFbF" id="4wJaMXe_PVN" role="3cqZAp">
           <node concept="10QFUN" id="4wJaMXe_UbJ" role="3clFbG">
             <node concept="2YIFZM" id="4wJaMXe_Q06" role="10QFUP">
-              <ref role="37wK5l" to="t4tl:~DCopy.of(org.jetbrains.mps.openapi.model.SNode,org.jetbrains.mps.openapi.model.SNode):org.modelingvalue.dclare.mps.DCopy" resolve="of" />
               <ref role="1Pybhc" to="t4tl:~DCopy" resolve="DCopy" />
+              <ref role="37wK5l" to="t4tl:~DCopy.of(org.jetbrains.mps.openapi.model.SNode,org.modelingvalue.dclare.mps.DNode):org.modelingvalue.dclare.mps.DCopy" resolve="of" />
               <node concept="37vLTw" id="4wJaMXfcJQa" role="37wK5m">
                 <ref role="3cqZAo" node="4wJaMXfcFVP" resolve="copy" />
               </node>
-              <node concept="37vLTw" id="4wJaMXe_SOG" role="37wK5m">
-                <ref role="3cqZAo" node="5vtCMlZQq1F" resolve="copied" />
+              <node concept="1eOMI4" id="18FLjWqjYZM" role="37wK5m">
+                <node concept="10QFUN" id="18FLjWqjYZJ" role="1eOMHV">
+                  <node concept="3uibUv" id="18FLjWqjZwf" role="10QFUM">
+                    <ref role="3uigEE" to="t4tl:~DNode" resolve="DNode" />
+                  </node>
+                  <node concept="37vLTw" id="4wJaMXe_SOG" role="10QFUP">
+                    <ref role="3cqZAo" node="5vtCMlZQq1F" resolve="copied" />
+                  </node>
+                </node>
               </node>
             </node>
             <node concept="16syzq" id="4wJaMXe_UbK" role="10QFUM">
