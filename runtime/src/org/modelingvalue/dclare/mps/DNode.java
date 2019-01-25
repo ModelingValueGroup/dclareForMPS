@@ -131,6 +131,10 @@ public class DNode extends DObject<SNode> implements SNode {
         return of(original);
     }
 
+    public static SNode newSNode(SConcept concept) {
+        return new jetbrains.mps.smodel.SNode(concept, jetbrains.mps.smodel.SModel.generateUniqueId());
+    }
+
     protected DNode(SNode original) {
         super(original);
     }
@@ -223,7 +227,7 @@ public class DNode extends DObject<SNode> implements SNode {
 
     @Override
     public boolean isComplete() {
-        return super.isComplete() && getModel() != null;
+        return super.isComplete() && getModel() != null && getModel().getModule() != null;
     }
 
     @Override

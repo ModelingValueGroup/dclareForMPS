@@ -25,16 +25,16 @@ import org.modelingvalue.transactions.Observed;
 
 public class DCopy extends DNode {
 
-    public static DCopy of(SNode copy, SNode copied) {
+    public static DCopy of(SNode copy, DNode copied) {
         return dClareMPS().DCOPY.get(Pair.of(copy, copied));
     }
 
     private final DNode copied;
     private final DCopy root;
 
-    protected DCopy(SNode copy, SNode copied, DCopy root) {
+    protected DCopy(SNode copy, DNode copied, DCopy root) {
         super(copy);
-        this.copied = DNode.of(copied);
+        this.copied = copied;
         this.root = root != null ? root : this;
     }
 
@@ -72,7 +72,9 @@ public class DCopy extends DNode {
     }
 
     private DNode map(DNode referenced) {
-        return referenced.hasAncestor(root.copied) ? dClareMPS().DCHILD_COPY.get(Pair.of(root, referenced)) : referenced;
+        return referenced != null && referenced.hasAncestor(root.copied) ? //
+                (referenced.equals(root.copied) ? root : dClareMPS().DCHILD_COPY.get(Pair.of(root, referenced))) : //
+                referenced;
     }
 
     public DNode getCopied() {
