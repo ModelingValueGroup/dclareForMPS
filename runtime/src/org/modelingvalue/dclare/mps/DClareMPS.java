@@ -117,7 +117,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
 
             @Override
             protected State pre(State state) {
-                return scheduleAndApply(state, pre, Priority.first);
+                return scheduleAndApply(state, pre, Priority.high);
             }
 
             @Override

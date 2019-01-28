@@ -47,7 +47,7 @@ public abstract class DObject<O> {
     private final class DObserver extends Observer {
 
         protected DObserver(Object id, Compound parent, Runnable action) {
-            super(id, parent, action, Priority.high);
+            super(id, parent, action, Priority.mid);
         }
 
         @Override
@@ -73,7 +73,7 @@ public abstract class DObject<O> {
     protected final static class NonCheckingObserver extends Observer {
 
         protected NonCheckingObserver(Object id, Compound parent, Runnable action) {
-            super(id, parent, action, Priority.high);
+            super(id, parent, action, Priority.mid);
         }
 
         @Override
