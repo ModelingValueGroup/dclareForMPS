@@ -95,20 +95,18 @@ public interface DAttribute<O, T> extends DFeature<O> {
 
     final static class DObservedAttribute<C, V> extends DObserved<C, V> implements DAttribute<C, V> {
 
-        Method                        m;
+        Method                m;
 
-        private final String          name;
-        private final boolean         composite;
-        private final boolean         synthetic;
-        private final Supplier<SNode> source;
+        private final String  name;
+        private final boolean composite;
+        private final boolean synthetic;
 
         public DObservedAttribute(Object id, String name, boolean synthetic, boolean optional, boolean composite, V def, Supplier<SNode> source, QuadConsumer<AbstractLeaf, C, V, V> changed) {
             super(id, def, !optional, false, (o, b, a, first) -> {
-            }, changed);
+            }, changed, source);
             this.name = name;
             this.composite = composite;
             this.synthetic = synthetic;
-            this.source = source;
         }
 
         @Override
@@ -152,11 +150,6 @@ public interface DAttribute<O, T> extends DFeature<O> {
         @Override
         public boolean isSynthetic() {
             return synthetic;
-        }
-
-        @Override
-        public SNode getSource() {
-            return source.get();
         }
     }
 

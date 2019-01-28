@@ -15,13 +15,11 @@ package org.modelingvalue.dclare.mps;
 
 import org.jetbrains.mps.openapi.project.Project;
 import org.modelingvalue.collections.Set;
-import org.modelingvalue.collections.util.Triple;
 
 public interface StartStopHandler {
 
     void start(Project project);
 
-    @SuppressWarnings("rawtypes")
-    void stop(Project project, Set<Triple<DObject, Object, Object>> problems);
+    void stop(Project project, Set<DProblem> problems);
 
 }

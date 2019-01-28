@@ -31,7 +31,6 @@ import org.modelingvalue.collections.util.ContextThread;
 import org.modelingvalue.collections.util.ContextThread.ContextPool;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.collections.util.TriConsumer;
-import org.modelingvalue.collections.util.Triple;
 import org.modelingvalue.transactions.AbstractLeaf;
 import org.modelingvalue.transactions.Constant;
 import org.modelingvalue.transactions.Getable;
@@ -103,11 +102,10 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
                 }
             }
 
-            @SuppressWarnings("rawtypes")
             private void post() {
                 if (imperative != null && repository != null && inQueue.isEmpty() && repository.isComplete()) {
                     if (INITIALIZED.get(DClareMPS.this)) {
-                        Set<Triple<DObject, Object, Object>> problems = DObject.ALL_PROBLEMS.get(repository);
+                        Set<DProblem> problems = DObject.ALL_PROBLEMS.get(repository);
                         run(() -> startStopHandler.stop(project, problems));
                     } else {
                         root.put(INITIALIZED, () -> INITIALIZED.set(DClareMPS.this, true));

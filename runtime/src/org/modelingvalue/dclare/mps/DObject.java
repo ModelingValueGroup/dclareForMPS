@@ -14,17 +14,17 @@
 package org.modelingvalue.dclare.mps;
 
 import java.util.Objects;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
+import org.jetbrains.mps.openapi.model.SNode;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.ContainingCollection;
 import org.modelingvalue.collections.QualifiedSet;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Context;
 import org.modelingvalue.collections.util.ContextThread;
-import org.modelingvalue.collections.util.Pair;
-import org.modelingvalue.collections.util.Triple;
 import org.modelingvalue.dclare.mps.DAttribute.DObservedAttribute;
 import org.modelingvalue.transactions.AbstractLeaf;
 import org.modelingvalue.transactions.Compound;
@@ -45,7 +45,7 @@ public abstract class DObject<O> {
 
     private final class DObserver extends Observer {
 
-        protected DObserver(Object id, Compound parent, Runnable action) {
+        protected DObserver(DRule id, Compound parent, Runnable action) {
             super(id, parent, action, Priority.mid);
         }
 
@@ -84,55 +84,55 @@ public abstract class DObject<O> {
         }
     }
 
-    protected static final String                                                       DCLARE               = "---------> DCLARE ";
-    protected static final Context<Boolean>                                             EMPTY_ATTRIBUTE      = Context.of(false);
-    protected static final Context<Boolean>                                             COLLECTION_ATTRIBUTE = Context.of(false);
+    protected static final String                                           DCLARE               = "---------> DCLARE ";
+    protected static final Context<Boolean>                                 EMPTY_ATTRIBUTE      = Context.of(false);
+    protected static final Context<Boolean>                                 COLLECTION_ATTRIBUTE = Context.of(false);
 
-    public static final Setable<DObject, DType>                                         TYPE                 = Observed.of("TYPE", new DType() {
-                                                                                                                 @Override
-                                                                                                                 public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
-                                                                                                                     return Set.of();
-                                                                                                                 }
+    public static final Setable<DObject, DType>                             TYPE                 = Observed.of("TYPE", new DType() {
+                                                                                                     @Override
+                                                                                                     public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
+                                                                                                         return Set.of();
+                                                                                                     }
 
-                                                                                                                 @Override
-                                                                                                                 public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
-                                                                                                                     return Set.of();
-                                                                                                                 }
+                                                                                                     @Override
+                                                                                                     public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
+                                                                                                         return Set.of();
+                                                                                                     }
 
-                                                                                                                 @Override
-                                                                                                                 public Set<SLanguage> getLanguages() {
-                                                                                                                     return Set.of();
-                                                                                                                 }
+                                                                                                     @Override
+                                                                                                     public Set<SLanguage> getLanguages() {
+                                                                                                         return Set.of();
+                                                                                                     }
 
-                                                                                                                 @Override
-                                                                                                                 public Object getIdentity() {
-                                                                                                                     return "<DUMMY_TYPE>";
-                                                                                                                 }
-                                                                                                             }, (tx, o, b, a) -> DClareMPS.TYPES.set(dClareMPS(), Set::add, a));
+                                                                                                     @Override
+                                                                                                     public Object getIdentity() {
+                                                                                                         return "<DUMMY_TYPE>";
+                                                                                                     }
+                                                                                                 }, (tx, o, b, a) -> DClareMPS.TYPES.set(dClareMPS(), Set::add, a));
 
-    public static final Setable<DObject, DObject>                                       PARENT               = Observed.of("PARENT", null);
+    public static final Setable<DObject, DObject>                           PARENT               = Observed.of("PARENT", null);
 
-    public static final Setable<DObject, Set<? extends DObject>>                        CHILDREN             = Observed.of("CHILDREN", Set.of(), (tx, o, b, a) -> {
-                                                                                                                 Setable.<Set<? extends DObject>, DObject> diff(Set.of(), b, a,                   //
-                                                                                                                         e -> e.activate(o, tx.parent()), e -> e.deactivate(o, tx.parent()));
-                                                                                                             });
+    public static final Setable<DObject, Set<? extends DObject>>            CHILDREN             = Observed.of("CHILDREN", Set.of(), (tx, o, b, a) -> {
+                                                                                                     Setable.<Set<? extends DObject>, DObject> diff(Set.of(), b, a,                   //
+                                                                                                             e -> e.activate(o, tx.parent()), e -> e.deactivate(o, tx.parent()));
+                                                                                                 });
 
     @SuppressWarnings("unchecked")
-    public static final Setable<DObject, Compound>                                      TRANSACTION          = Observed.of("TRANSACTION", null, (tx, o, b, a) -> {
-                                                                                                                 if (a != null) {
-                                                                                                                     o.rule(CHILDREN, a,                                                          //
-                                                                                                                             () -> CHILDREN.set(o, o.getAllChildren().toSet()),                   //
-                                                                                                                             () -> CHILDREN.set(o, Set.of()));
-                                                                                                                 }
-                                                                                                             });
+    public static final Setable<DObject, Compound>                          TRANSACTION          = Observed.of("TRANSACTION", null, (tx, o, b, a) -> {
+                                                                                                     if (a != null) {
+                                                                                                         o.rule(CHILDREN, a,                                                          //
+                                                                                                                 () -> CHILDREN.set(o, o.getAllChildren().toSet()),                   //
+                                                                                                                 () -> CHILDREN.set(o, Set.of()));
+                                                                                                     }
+                                                                                                 });
 
-    private static final Setable<DObject, Set<Observer>>                                RULE_INSTANCES       = Setable.of("RULE_INSTANCES", Set.of(), (tx, o, b, a) -> {
-                                                                                                                 Setable.<Set<Observer>, Observer> diff(Set.of(), b, a, Leaf::trigger, tx::clear);
-                                                                                                             });
+    private static final Setable<DObject, Set<Observer>>                    RULE_INSTANCES       = Setable.of("RULE_INSTANCES", Set.of(), (tx, o, b, a) -> {
+                                                                                                     Setable.<Set<Observer>, Observer> diff(Set.of(), b, a, Leaf::trigger, tx::clear);
+                                                                                                 });
 
-    protected static final Setable<DObject, Set<Triple<DObject, Object, Object>>>       ALL_PROBLEMS         = Observed.of("ALL_PROBLEMS", Set.of());
+    protected static final Setable<DObject, Set<DProblem>>                  ALL_PROBLEMS         = Observed.of("ALL_PROBLEMS", Set.of());
 
-    protected static final Setable<DObject, QualifiedSet<Object, Pair<Object, Object>>> PROBLEMS             = Observed.of("PROBLEMS", QualifiedSet.of(Pair::a));
+    protected static final Setable<DObject, QualifiedSet<Object, DProblem>> PROBLEMS             = Observed.of("PROBLEMS", QualifiedSet.of(DProblem::id));
 
     public static DClareMPS dClareMPS() {
         return (DClareMPS) Leaf.getCurrent().root().getId();
@@ -213,15 +213,15 @@ public abstract class DObject<O> {
         rule("<CONSTANT_CONTAINMENT>", tx, () -> //
         TYPE.get(this).getAttributes().filter(DAttribute::isConstant).filter(DAttribute::isComposite).forEach(cc -> cc.get(this)));
         rule(ALL_PROBLEMS, tx, () -> {
-            Set<Triple<DObject, Object, Object>> problems = PROBLEMS.get(this).map(p -> Triple.of((DObject) this, p.a(), p.b())).toSet();
+            Set<DProblem> problems = PROBLEMS.get(this).toSet();
             ALL_PROBLEMS.set(this, problems.addAll(CHILDREN.get(this).flatMap(c -> ALL_PROBLEMS.get(c))));
         }, () -> ALL_PROBLEMS.set(this, Set.of()));
         rule("<EMPTY_MANDATORY>", tx, () -> {
-            QualifiedSet<Object, Pair<Object, Object>> problems = PROBLEMS.get(this);
+            QualifiedSet<Object, DProblem> problems = PROBLEMS.get(this);
             for (DAttribute attr : TYPE.get(this).getAttributes()) {
                 if (attr instanceof DObservedAttribute && attr.isMandatory()) {
                     if (attr.get(this) == null) {
-                        problems = problems.add(Pair.of(attr, "Mandatory attribute " + attr + " of " + this + " is null"));
+                        problems = problems.add(new DProblem(this, attr, () -> attr.getSource(), "Mandatory attribute " + attr + " of " + this + " is null"));
                     } else {
                         problems = problems.removeKey(attr);
                     }
@@ -312,7 +312,7 @@ public abstract class DObject<O> {
 
     private void handleException(DRule r, Throwable e) {
         if (!(e instanceof TooManyChangesException)) {
-            addProblem(r, e);
+            addProblem(r, () -> r.getSource(), e);
         }
         throw new StopObserverException(e);
     }
@@ -320,14 +320,15 @@ public abstract class DObject<O> {
     protected void reportTooManyChanges(Transaction running, Object object, Setable setable, Object pre, Object post, Observer triggered, int tooMany) {
         String message = running.root().preState().get(() -> //
         "Too many changes: " + tooMany + "\n       Running: " + running + "\n       Change: " + object + "." + setable + "=" + pre + " -> " + post + "\n       Triggers: " + triggered + "\n");
-        addProblem(triggered.getId(), message);
+        DRule id = (DRule) triggered.getId();
+        addProblem(id, () -> id.getSource(), message);
     }
 
     @SuppressWarnings("unchecked")
-    protected void addProblem(Object key, Object problem) {
+    protected void addProblem(Object key, Supplier<SNode> source, Object problem) {
         PROBLEMS.set(this, (s, k) -> {
-            Pair<Object, Set<Object>> p = (Pair) s.get(k);
-            return s.add(Pair.of(k, p != null ? p.b().add(problem) : Set.of(problem)));
+            DProblem p = s.get(k);
+            return s.add(new DProblem(this, k, source, p != null ? ((Set) p.content()).add(problem) : Set.of(problem)));
         }, key);
     }
 

@@ -16,7 +16,9 @@ package org.modelingvalue.dclare.mps;
 import java.util.Arrays;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
+import org.jetbrains.mps.openapi.model.SNode;
 import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.ContextThread;
@@ -34,7 +36,7 @@ public class DObserved<O, T> extends Observed<O, T> {
     }
 
     public static <C, V> DObserved<C, V> of(Object id, V def, boolean mandatory, boolean deferred, QuadConsumer<C, V, V, Boolean> toMPS, QuadConsumer<AbstractLeaf, C, V, V> changed) {
-        return new DObserved<C, V>(id, def, mandatory, deferred, toMPS, changed);
+        return new DObserved<C, V>(id, def, mandatory, deferred, toMPS, changed, null);
     }
 
     private final QuadConsumer<O, T, T, Boolean> toMPS;
@@ -48,19 +50,25 @@ public class DObserved<O, T> extends Observed<O, T> {
                                                                   return a().toString();
                                                               }
                                                           };
+    private final Supplier<SNode>                source;
 
-    protected DObserved(Object id, T def, boolean mandatory, boolean deferred, QuadConsumer<O, T, T, Boolean> toMPS, QuadConsumer<AbstractLeaf, O, T, T> changed) {
+    protected DObserved(Object id, T def, boolean mandatory, boolean deferred, QuadConsumer<O, T, T, Boolean> toMPS, QuadConsumer<AbstractLeaf, O, T, T> changed, Supplier<SNode> source) {
         super(id, def, changed);
         this.toMPS = toMPS;
         this.mandatory = mandatory;
         this.deferred = deferred;
+        this.source = source;
     }
 
     public boolean isDeferred() {
         return deferred;
     }
 
-    @SuppressWarnings("rawtypes")
+    public SNode getSource() {
+        return source.get();
+    }
+
+    @SuppressWarnings({"rawtypes", "unchecked"})
     public void toMPS(O object, T pre, T post, boolean first) {
         AbstractLeaf tx = Leaf.getCurrent();
         if (first && DClareMPS.TRACE.get((DClareMPS) tx.root().getId())) {
@@ -76,7 +84,7 @@ public class DObserved<O, T> extends Observed<O, T> {
             }
         } catch (Throwable t) {
             if (object instanceof DObject) {
-                ((DObject) object).addProblem(toMpsKey, t);
+                ((DObject) object).addProblem(toMpsKey, () -> toMpsKey.a().getSource(), t);
             } else {
                 System.err.println(DObject.DCLARE + "TO MPS " + object + "." + this + "=" + post);
                 t.setStackTrace(Arrays.copyOf(t.getStackTrace(), 8));
