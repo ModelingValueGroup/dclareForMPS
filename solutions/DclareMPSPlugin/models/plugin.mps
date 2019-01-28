@@ -2948,17 +2948,8 @@
         <property role="TrG5h" value="problems" />
         <node concept="3uibUv" id="QlQbLbRUPt" role="1tU5fm">
           <ref role="3uigEE" to="zrbp:~Set" resolve="Set" />
-          <node concept="3uibUv" id="QlQbLbRUPu" role="11_B2D">
-            <ref role="3uigEE" to="42m3:~Triple" resolve="Triple" />
-            <node concept="3uibUv" id="QlQbLbRUPv" role="11_B2D">
-              <ref role="3uigEE" to="t4tl:~DObject" resolve="DObject" />
-            </node>
-            <node concept="3uibUv" id="QlQbLbRUPw" role="11_B2D">
-              <ref role="3uigEE" to="wyt6:~Object" resolve="Object" />
-            </node>
-            <node concept="3uibUv" id="QlQbLbRUPx" role="11_B2D">
-              <ref role="3uigEE" to="wyt6:~Object" resolve="Object" />
-            </node>
+          <node concept="3uibUv" id="zt9WhNq0d_" role="11_B2D">
+            <ref role="3uigEE" to="t4tl:~DProblem" resolve="DProblem" />
           </node>
         </node>
       </node>
@@ -3279,17 +3270,8 @@
         <property role="TrG5h" value="problems" />
         <node concept="3uibUv" id="1sOlkZtHpXc" role="1tU5fm">
           <ref role="3uigEE" to="zrbp:~Set" resolve="Set" />
-          <node concept="3uibUv" id="1sOlkZtHpXd" role="11_B2D">
-            <ref role="3uigEE" to="42m3:~Triple" resolve="Triple" />
-            <node concept="3uibUv" id="1sOlkZtHpXe" role="11_B2D">
-              <ref role="3uigEE" to="t4tl:~DObject" resolve="DObject" />
-            </node>
-            <node concept="3uibUv" id="1sOlkZtHpXf" role="11_B2D">
-              <ref role="3uigEE" to="wyt6:~Object" resolve="Object" />
-            </node>
-            <node concept="3uibUv" id="1sOlkZtHpXg" role="11_B2D">
-              <ref role="3uigEE" to="wyt6:~Object" resolve="Object" />
-            </node>
+          <node concept="3uibUv" id="zt9WhNqafy" role="11_B2D">
+            <ref role="3uigEE" to="t4tl:~DProblem" resolve="DProblem" />
           </node>
         </node>
       </node>
@@ -3332,7 +3314,7 @@
                               <ref role="2Gs0qQ" node="QlQbLbS4WQ" resolve="problem" />
                             </node>
                             <node concept="liA8E" id="1sOlkZtNidr" role="2OqNvi">
-                              <ref role="37wK5l" to="42m3:~Triple.a():java.lang.Object" resolve="a" />
+                              <ref role="37wK5l" to="t4tl:~DProblem.context():org.modelingvalue.dclare.mps.DObject" resolve="context" />
                             </node>
                           </node>
                           <node concept="liA8E" id="1sOlkZtNids" role="2OqNvi">
@@ -3356,7 +3338,7 @@
                     <ref role="2Gs0qQ" node="QlQbLbS4WQ" resolve="problem" />
                   </node>
                   <node concept="liA8E" id="1sOlkZtMCgK" role="2OqNvi">
-                    <ref role="37wK5l" to="42m3:~Triple.c():java.lang.Object" resolve="c" />
+                    <ref role="37wK5l" to="t4tl:~DProblem.content():java.lang.Object" resolve="content" />
                   </node>
                 </node>
               </node>

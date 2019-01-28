@@ -313,6 +313,15 @@
         <property role="TrG5h" value="identityIndex" />
         <node concept="10Oyi0" id="2UEyDf69Yag" role="1tU5fm" />
       </node>
+      <node concept="37vLTG" id="4Bl8LN15CN3" role="3clF46">
+        <property role="TrG5h" value="source" />
+        <node concept="3uibUv" id="4Bl8LN15Dij" role="1tU5fm">
+          <ref role="3uigEE" to="82uw:~Supplier" resolve="Supplier" />
+          <node concept="3uibUv" id="4Bl8LN15EeV" role="11_B2D">
+            <ref role="3uigEE" to="mhbf:~SNode" resolve="SNode" />
+          </node>
+        </node>
+      </node>
       <node concept="37vLTG" id="1th4WYI8axt" role="3clF46">
         <property role="TrG5h" value="function" />
         <node concept="3uibUv" id="1th4WYI8aEi" role="1tU5fm">
@@ -336,7 +345,7 @@
           <node concept="2OqwBi" id="1lQ5DPQtwTS" role="3clFbG">
             <node concept="2YIFZM" id="7byyZgEhYNP" role="2Oq$k0">
               <ref role="1Pybhc" to="t4tl:~DAttribute" resolve="DAttribute" />
-              <ref role="37wK5l" to="t4tl:~DAttribute.of(java.lang.Object,java.lang.String,boolean,boolean,boolean,int,java.util.function.Function):org.modelingvalue.dclare.mps.DAttribute" resolve="of" />
+              <ref role="37wK5l" to="t4tl:~DAttribute.of(java.lang.Object,java.lang.String,boolean,boolean,boolean,int,java.util.function.Supplier,java.util.function.Function):org.modelingvalue.dclare.mps.DAttribute" resolve="of" />
               <node concept="37vLTw" id="7byyZgEhYNQ" role="37wK5m">
                 <ref role="3cqZAo" node="1lQ5DPQtstn" resolve="attributeId" />
               </node>
@@ -354,6 +363,9 @@
               </node>
               <node concept="37vLTw" id="7byyZgEhYNT" role="37wK5m">
                 <ref role="3cqZAo" node="2UEyDf69Y8Q" resolve="identityIndex" />
+              </node>
+              <node concept="37vLTw" id="4Bl8LN15FZH" role="37wK5m">
+                <ref role="3cqZAo" node="4Bl8LN15CN3" resolve="source" />
               </node>
               <node concept="37vLTw" id="1th4WYI8bZK" role="37wK5m">
                 <ref role="3cqZAo" node="1th4WYI8axt" resolve="function" />
@@ -413,6 +425,15 @@
         <property role="TrG5h" value="composite" />
         <node concept="10P_77" id="3Qetf3dxVoy" role="1tU5fm" />
       </node>
+      <node concept="37vLTG" id="4Bl8LN15Gwj" role="3clF46">
+        <property role="TrG5h" value="source" />
+        <node concept="3uibUv" id="4Bl8LN15GZb" role="1tU5fm">
+          <ref role="3uigEE" to="82uw:~Supplier" resolve="Supplier" />
+          <node concept="3uibUv" id="4Bl8LN15HVT" role="11_B2D">
+            <ref role="3uigEE" to="mhbf:~SNode" resolve="SNode" />
+          </node>
+        </node>
+      </node>
       <node concept="37vLTG" id="1lQ5DPQt_ob" role="3clF46">
         <property role="TrG5h" value="object" />
         <node concept="3uibUv" id="1lQ5DPQ_8op" role="1tU5fm">
@@ -430,7 +451,7 @@
           <node concept="2OqwBi" id="1lQ5DPQt_of" role="3clFbG">
             <node concept="2YIFZM" id="7byyZgEh$kv" role="2Oq$k0">
               <ref role="1Pybhc" to="t4tl:~DAttribute" resolve="DAttribute" />
-              <ref role="37wK5l" to="t4tl:~DAttribute.of(java.lang.Object,java.lang.String,boolean,boolean,boolean,int,java.util.function.Function):org.modelingvalue.dclare.mps.DAttribute" resolve="of" />
+              <ref role="37wK5l" to="t4tl:~DAttribute.of(java.lang.Object,java.lang.String,boolean,boolean,boolean,int,java.util.function.Supplier,java.util.function.Function):org.modelingvalue.dclare.mps.DAttribute" resolve="of" />
               <node concept="37vLTw" id="7byyZgEh$kw" role="37wK5m">
                 <ref role="3cqZAo" node="1lQ5DPQt_o9" resolve="attributeId" />
               </node>
@@ -448,6 +469,9 @@
               </node>
               <node concept="3cmrfG" id="1th4WYI7EvC" role="37wK5m">
                 <property role="3cmrfH" value="-1" />
+              </node>
+              <node concept="37vLTw" id="4Bl8LN15JDW" role="37wK5m">
+                <ref role="3cqZAo" node="4Bl8LN15Gwj" resolve="source" />
               </node>
               <node concept="10Nm6u" id="1th4WYI7EgZ" role="37wK5m" />
               <node concept="3uibUv" id="7byyZgEhZ1J" role="3PaCim">
