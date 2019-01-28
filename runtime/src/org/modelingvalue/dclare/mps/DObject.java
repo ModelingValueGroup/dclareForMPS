@@ -14,7 +14,6 @@
 package org.modelingvalue.dclare.mps;
 
 import java.util.Objects;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
@@ -26,7 +25,7 @@ import org.modelingvalue.collections.util.Context;
 import org.modelingvalue.collections.util.ContextThread;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.collections.util.Triple;
-import org.modelingvalue.dclare.mps.DAttribute.DObservedAttribut;
+import org.modelingvalue.dclare.mps.DAttribute.DObservedAttribute;
 import org.modelingvalue.transactions.AbstractLeaf;
 import org.modelingvalue.transactions.Compound;
 import org.modelingvalue.transactions.EmptyMandatoryException;
@@ -91,7 +90,7 @@ public abstract class DObject<O> {
 
     public static final Setable<DObject, DType>                                         TYPE                 = Observed.of("TYPE", new DType() {
                                                                                                                  @Override
-                                                                                                                 public Set<Consumer> getRules(Set<IRuleSet> ruleSets) {
+                                                                                                                 public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
                                                                                                                      return Set.of();
                                                                                                                  }
 
@@ -220,7 +219,7 @@ public abstract class DObject<O> {
         rule("<EMPTY_MANDATORY>", tx, () -> {
             QualifiedSet<Object, Pair<Object, Object>> problems = PROBLEMS.get(this);
             for (DAttribute attr : TYPE.get(this).getAttributes()) {
-                if (attr instanceof DObservedAttribut && attr.isMandatory()) {
+                if (attr instanceof DObservedAttribute && attr.isMandatory()) {
                     if (attr.get(this) == null) {
                         problems = problems.add(Pair.of(attr, "Mandatory attribute " + attr + " of " + this + " is null"));
                     } else {
@@ -265,7 +264,7 @@ public abstract class DObject<O> {
     protected abstract DType getType();
 
     @SuppressWarnings("unchecked")
-    private Observer rule(Compound tx, Consumer r) {
+    private Observer rule(Compound tx, DRule r) {
         DClareMPS dClareMPS = dClareMPS();
         return new DObserver(r, tx, () -> {
             if (tx.equals(DObject.TRANSACTION.get(this)) && isComplete()) {
@@ -279,7 +278,7 @@ public abstract class DObject<O> {
                     });
                 }
                 try {
-                    r.accept(DObject.this);
+                    r.run(DObject.this);
                 } catch (NullPointerException e) {
                     if (EMPTY_ATTRIBUTE.get()) {
                         if (DClareMPS.TRACE.get(dClareMPS)) {
@@ -311,7 +310,7 @@ public abstract class DObject<O> {
         });
     }
 
-    private void handleException(Consumer r, Throwable e) {
+    private void handleException(DRule r, Throwable e) {
         if (!(e instanceof TooManyChangesException)) {
             addProblem(r, e);
         }

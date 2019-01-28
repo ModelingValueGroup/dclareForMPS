@@ -13,8 +13,6 @@
 
 package org.modelingvalue.dclare.mps;
 
-import java.util.function.Consumer;
-
 import org.jetbrains.mps.openapi.event.SNodeAddEvent;
 import org.jetbrains.mps.openapi.event.SNodeRemoveEvent;
 import org.jetbrains.mps.openapi.event.SPropertyChangeEvent;
@@ -99,7 +97,7 @@ public class DModel extends DObject<SModel> implements SModel {
         return new DType() {
             @SuppressWarnings({"unchecked", "rawtypes"})
             @Override
-            public Set<Consumer> getRules(Set<IRuleSet> ruleSets) {
+            public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
                 return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getModelRules())).toSet();
             }
 

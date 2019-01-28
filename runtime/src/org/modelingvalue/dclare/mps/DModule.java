@@ -14,7 +14,6 @@
 package org.modelingvalue.dclare.mps;
 
 import java.util.HashSet;
-import java.util.function.Consumer;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.jetbrains.mps.openapi.model.SModel;
@@ -83,7 +82,7 @@ public class DModule extends DObject<SModule> implements SModule {
         return new DType() {
             @SuppressWarnings({"unchecked", "rawtypes"})
             @Override
-            public Set<Consumer> getRules(Set<IRuleSet> ruleSets) {
+            public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
                 return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getModuleRules())).toSet();
             }
 

@@ -13,8 +13,6 @@
 
 package org.modelingvalue.dclare.mps;
 
-import java.util.function.Consumer;
-
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.transactions.Compound;
@@ -25,19 +23,19 @@ import org.modelingvalue.transactions.Setable;
 @SuppressWarnings("rawtypes")
 public abstract class DType {
 
-    private static final Setable<DType, Set<Consumer>>   RULES          = Observed.of("RULES", Set.of());
+    private static final Setable<DType, Set<DRule>>      RULES          = Observed.of("RULES", Set.of());
 
     private static final Setable<DType, Set<DAttribute>> ATTRIBUTES     = Observed.of("ATTRIBUTES", Set.of());
 
     private static final Setable<DType, Set<IRuleSet>>   TYPE_RULE_SETS = Observed.of("TYPE_RULE_SETS", Set.of());
 
-    public abstract Set<Consumer> getRules(Set<IRuleSet> ruleSets);
+    public abstract Set<DRule> getRules(Set<IRuleSet> ruleSets);
 
     public abstract Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets);
 
     public abstract Set<SLanguage> getLanguages();
 
-    public final Set<Consumer> getRules() {
+    public final Set<DRule> getRules() {
         return RULES.get(this);
     }
 

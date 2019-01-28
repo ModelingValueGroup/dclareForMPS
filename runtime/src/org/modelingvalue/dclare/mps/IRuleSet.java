@@ -14,7 +14,6 @@
 package org.modelingvalue.dclare.mps;
 
 import java.util.List;
-import java.util.function.Consumer;
 
 import org.jetbrains.mps.openapi.language.SAbstractConcept;
 import org.jetbrains.mps.openapi.model.SModel;
@@ -32,14 +31,14 @@ public interface IRuleSet {
 
     List<DAttribute<SClassObject, ?>> getClassAttributes(SClass cls);
 
-    List<Consumer<SNode>> getNodeRules(SAbstractConcept concept);
+    List<DRule<SNode>> getNodeRules(SAbstractConcept concept);
 
-    List<Consumer<SModel>> getModelRules();
+    List<DRule<SModel>> getModelRules();
 
-    List<Consumer<DModule>> getModuleRules();
+    List<DRule<DModule>> getModuleRules();
 
-    List<Consumer<DRepository>> getRepositoryRules();
+    List<DRule<DRepository>> getRepositoryRules();
 
-    List<Consumer<SClassObject>> getClassRules(SClass cls);
+    List<DRule<SClassObject>> getClassRules(SClass cls);
 
 }

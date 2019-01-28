@@ -14,7 +14,6 @@
 package org.modelingvalue.dclare.mps;
 
 import java.util.Objects;
-import java.util.function.Consumer;
 
 import org.jetbrains.mps.openapi.language.SAbstractConcept;
 import org.jetbrains.mps.openapi.language.SConcept;
@@ -146,7 +145,7 @@ public class DNode extends DObject<SNode> implements SNode {
         return new DType() {
             @SuppressWarnings({"unchecked", "rawtypes"})
             @Override
-            public Set<Consumer> getRules(Set<IRuleSet> ruleSets) {
+            public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
                 return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getNodeRules(concept))).toSet();
             }
 

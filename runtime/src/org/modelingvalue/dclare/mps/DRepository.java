@@ -13,8 +13,6 @@
 
 package org.modelingvalue.dclare.mps;
 
-import java.util.function.Consumer;
-
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.jetbrains.mps.openapi.module.ModelAccess;
 import org.jetbrains.mps.openapi.module.RepositoryAccess;
@@ -57,7 +55,7 @@ public class DRepository extends DObject<SRepository> implements SRepository {
 
             @SuppressWarnings({"rawtypes", "unchecked"})
             @Override
-            public Set<Consumer> getRules(Set<IRuleSet> ruleSets) {
+            public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
                 return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getRepositoryRules())).toSet();
             }
 

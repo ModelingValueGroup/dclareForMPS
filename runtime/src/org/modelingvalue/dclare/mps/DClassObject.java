@@ -13,8 +13,6 @@
 
 package org.modelingvalue.dclare.mps;
 
-import java.util.function.Consumer;
-
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.ContainingCollection;
@@ -50,7 +48,7 @@ public class DClassObject extends DObject<SClassObject> implements SClassObject 
 
             @SuppressWarnings("rawtypes")
             @Override
-            public Set<Consumer> getRules(Set<IRuleSet> ruleSets) {
+            public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
                 return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getClassRules(cls))).toSet();
             }
 
