@@ -115,12 +115,12 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
 
             @Override
             protected State pre(State state) {
-                return scheduleAndApply(state, pre, Priority.high);
+                return apply(schedule(trigger(state, pre, Priority.high)));
             }
 
             @Override
             protected State post(State state) {
-                return scheduleAndApply(state, post, Priority.low);
+                return apply(schedule(trigger(state, post, Priority.low)));
             }
         };
         waitForEndThread = new Thread(() -> {
