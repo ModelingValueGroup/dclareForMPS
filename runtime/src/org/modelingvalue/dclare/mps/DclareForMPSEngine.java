@@ -118,7 +118,13 @@ public class DclareForMPSEngine implements DeployListener {
     }
 
     public void setMaxTotalNrOfChanges(int maxTotalNrOfChanges) {
-        this.maxTotalNrOfChanges = maxTotalNrOfChanges;
+        if (this.maxTotalNrOfChanges != maxTotalNrOfChanges) {
+            this.maxTotalNrOfChanges = maxTotalNrOfChanges;
+            if (on) {
+                stopEngine();
+                startEngine();
+            }
+        }
     }
 
     public int getMaxNrOfChanges() {
@@ -126,7 +132,13 @@ public class DclareForMPSEngine implements DeployListener {
     }
 
     public void setMaxNrOfChanges(int maxNrOfChanges) {
-        this.maxNrOfChanges = maxNrOfChanges;
+        if (this.maxNrOfChanges != maxNrOfChanges) {
+            this.maxNrOfChanges = maxNrOfChanges;
+            if (on) {
+                stopEngine();
+                startEngine();
+            }
+        }
     }
 
     @Override
