@@ -35,6 +35,10 @@ public class DTempModel extends EditableModelDescriptor implements EditableSMode
         module.registerModel(this);
     }
 
+    public DTempModel(String name) {
+        super(createModelRef(name, null), new NullDataSource());
+    }
+
     @Override
     public void updateTimestamp() {
     }
