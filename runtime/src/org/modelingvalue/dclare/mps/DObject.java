@@ -144,7 +144,7 @@ public abstract class DObject<O> {
         this.original = original;
     }
 
-    protected O original() {
+    public O original() {
         return original;
     }
 
