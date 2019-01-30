@@ -253,6 +253,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
             imperative = null;
             root.put("stopDclareMPS", () -> repository.stop(this));
             root.stop();
+            thePool.shutdownNow();
         }
     }
 
