@@ -48,12 +48,6 @@ public abstract class DObject<O> {
         }
 
         @Override
-        protected void firstRun() {
-            super.firstRun();
-            removeProblems(getId());
-        }
-
-        @Override
         protected void countChanges(Setable setable) {
             if (setable instanceof DObserved) {
                 super.countChanges(setable);
@@ -277,6 +271,9 @@ public abstract class DObject<O> {
                     current.runNonObserving(() -> {
                         System.err.println(DCLARE + ContextThread.getNr() + " RUN RULE " + r + " for " + DObject.this);
                     });
+                }
+                if (current.firstTime()) {
+                    removeProblems(r);
                 }
                 try {
                     r.run(DObject.this);
