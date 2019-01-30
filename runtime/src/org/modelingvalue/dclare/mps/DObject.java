@@ -26,14 +26,12 @@ import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Context;
 import org.modelingvalue.collections.util.ContextThread;
 import org.modelingvalue.dclare.mps.DAttribute.DObservedAttribute;
-import org.modelingvalue.transactions.AbstractLeaf;
 import org.modelingvalue.transactions.Compound;
 import org.modelingvalue.transactions.EmptyMandatoryException;
 import org.modelingvalue.transactions.Leaf;
 import org.modelingvalue.transactions.Observed;
 import org.modelingvalue.transactions.Observer;
 import org.modelingvalue.transactions.Priority;
-import org.modelingvalue.transactions.ReadOnly;
 import org.modelingvalue.transactions.Root;
 import org.modelingvalue.transactions.Setable;
 import org.modelingvalue.transactions.StopObserverException;
@@ -50,15 +48,21 @@ public abstract class DObject<O> {
         }
 
         @Override
+        protected void firstRun() {
+            super.firstRun();
+            removeProblems(getId());
+        }
+
+        @Override
         protected void countChanges(Setable setable) {
-            if (!PROBLEMS.equals(setable)) {
+            if (setable instanceof DObserved) {
                 super.countChanges(setable);
             }
         }
 
         @Override
         protected void checkTooManyChanges(Root root, Transaction running, Priority prio, Object object, Setable setable, Object pre, Object post) {
-            if (!(AbstractLeaf.getCurrent() instanceof ReadOnly) && !PROBLEMS.equals(setable)) {
+            if (setable instanceof DObserved) {
                 super.checkTooManyChanges(root, running, prio, object, setable, pre, post);
             }
         }
@@ -269,9 +273,6 @@ public abstract class DObject<O> {
         return new DObserver(r, tx, () -> {
             if (tx.equals(DObject.TRANSACTION.get(this)) && isComplete()) {
                 DObserver current = (DObserver) Leaf.getCurrent();
-                if (tx.root().runCount() > current.count()) {
-                    removeProblems(r);
-                }
                 if (DClareMPS.TRACE.get(dClareMPS)) {
                     current.runNonObserving(() -> {
                         System.err.println(DCLARE + ContextThread.getNr() + " RUN RULE " + r + " for " + DObject.this);

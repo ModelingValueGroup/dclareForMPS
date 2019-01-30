@@ -16,19 +16,17 @@ package org.modelingvalue.dclare.mps;
 import java.util.function.Supplier;
 
 import org.jetbrains.mps.openapi.model.SNode;
-import org.modelingvalue.collections.util.Pair;
+import org.modelingvalue.collections.util.Triple;
 
 @SuppressWarnings("rawtypes")
-public class DProblem extends Pair<DObject, Object> {
+public class DProblem extends Triple<DObject, Object, Object> {
     private static final long     serialVersionUID = -303368640776089669L;
 
-    private final Object          content;
     private final Supplier<SNode> source;
 
     public DProblem(DObject context, Object id, Supplier<SNode> source, Object content) {
-        super(context, id);
+        super(context, id, content);
         this.source = source;
-        this.content = content;
     }
 
     public DObject context() {
@@ -44,7 +42,7 @@ public class DProblem extends Pair<DObject, Object> {
     }
 
     public Object content() {
-        return content;
+        return c();
     }
 
 }
