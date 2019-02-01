@@ -326,7 +326,7 @@ public abstract class DObject<O> {
     protected void addProblem(Object key, Supplier<SNode> source, Object problem) {
         PROBLEMS.set(this, (s, k) -> {
             DProblem p = s.get(k);
-            return s.add(new DProblem(this, k, source, p != null ? ((Set) p.content()).add(problem) : Set.of(problem)));
+            return s.put(new DProblem(this, k, source, p != null ? ((Set) p.content()).add(problem) : Set.of(problem)));
         }, key);
     }
 
