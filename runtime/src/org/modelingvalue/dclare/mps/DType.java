@@ -56,7 +56,7 @@ public abstract class DType {
 
     @Override
     public boolean equals(Object obj) {
-        return getClass().equals(obj.getClass()) && getIdentity().equals(((DType) obj).getIdentity());
+        return obj != null && getClass().equals(obj.getClass()) && getIdentity().equals(((DType) obj).getIdentity());
     }
 
     public void start(Root root) {

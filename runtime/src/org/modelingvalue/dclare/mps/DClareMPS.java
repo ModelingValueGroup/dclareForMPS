@@ -97,7 +97,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
             private void pre() {
                 if (imperative != null && repository != null && inQueue.isEmpty() && repository.isComplete()) {
                     if (INITIALIZED.get(DClareMPS.this)) {
-                        run(() -> startStopHandler.start(project));
+                        DClareMPS.this.run(() -> startStopHandler.start(project));
                     }
                 }
             }
@@ -106,7 +106,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
                 if (imperative != null && repository != null && inQueue.isEmpty() && repository.isComplete()) {
                     if (INITIALIZED.get(DClareMPS.this)) {
                         Set<DProblem> problems = DObject.ALL_PROBLEMS.get(repository);
-                        run(() -> startStopHandler.stop(project, problems));
+                        DClareMPS.this.run(() -> startStopHandler.stop(project, problems));
                     } else {
                         root.put(INITIALIZED, () -> INITIALIZED.set(DClareMPS.this, true));
                     }
@@ -115,12 +115,12 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
 
             @Override
             protected State pre(State state) {
-                return apply(schedule(trigger(state, pre, Priority.high)));
+                return run(schedule(state, pre, Priority.high));
             }
 
             @Override
             protected State post(State state) {
-                return apply(schedule(trigger(state, post, Priority.low)));
+                return run(schedule(state, post, Priority.low));
             }
         };
         waitForEndThread = new Thread(() -> {

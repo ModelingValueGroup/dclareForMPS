@@ -55,7 +55,7 @@ public abstract class DObject<O> {
         }
 
         @Override
-        protected void checkTooManyChanges(Root root, Transaction running, Priority prio, Object object, Setable setable, Object pre, Object post) {
+        protected void checkTooManyChanges(Root root, Transaction running, Priority prio, Object object, Observed setable, Object pre, Object post) {
             if (setable instanceof DObserved) {
                 super.checkTooManyChanges(root, running, prio, object, setable, pre, post);
             }
@@ -78,7 +78,7 @@ public abstract class DObject<O> {
         }
 
         @Override
-        protected void checkTooManyChanges(Root root, Transaction running, Priority prio, Object object, Setable setable, Object pre, Object post) {
+        protected void checkTooManyChanges(Root root, Transaction running, Priority prio, Object object, Observed setable, Object pre, Object post) {
         }
     }
 
