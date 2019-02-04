@@ -21,13 +21,10 @@ import java.util.function.Supplier;
 import org.jetbrains.mps.openapi.model.SNode;
 import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.Set;
-import org.modelingvalue.collections.util.ContextThread;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.collections.util.QuadConsumer;
 import org.modelingvalue.transactions.AbstractLeaf;
-import org.modelingvalue.transactions.Leaf;
 import org.modelingvalue.transactions.Observed;
-import org.modelingvalue.transactions.Observer;
 
 public class DObserved<O, T> extends Observed<O, T> {
 
@@ -70,13 +67,6 @@ public class DObserved<O, T> extends Observed<O, T> {
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     public void toMPS(O object, T pre, T post, boolean first) {
-        AbstractLeaf tx = Leaf.getCurrent();
-        if (first && DClareMPS.TRACE.get((DClareMPS) tx.root().getId())) {
-            tx.runNonObserving(() -> {
-                System.err.println(DObject.DCLARE + "TO MPS " + object + "." + this + "=" + post);
-            });
-        }
-
         try {
             toMPS.accept(object, pre, post, first);
             if (object instanceof DObject) {
@@ -125,20 +115,6 @@ public class DObserved<O, T> extends Observed<O, T> {
                 add.accept(n, is > 0 ? ist.get(is - 1) : null);
                 ist = ist.insert(is, n);
             }
-        }
-    }
-
-    @Override
-    protected void changed(AbstractLeaf tx, O object, T pre, T post) {
-        super.changed(tx, object, pre, post);
-        if (DClareMPS.TRACE.get((DClareMPS) tx.root().getId())) {
-            tx.runNonObserving(() -> {
-                if (Leaf.getCurrent() instanceof Observer) {
-                    System.err.println(DObject.DCLARE + ContextThread.getNr() + " CHANGED " + object + "." + this + "=" + pre + "->" + post);
-                } else {
-                    System.err.println(DObject.DCLARE + "FROM MPS " + object + "." + this + "=" + pre + "->" + post);
-                }
-            });
         }
     }
 

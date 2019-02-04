@@ -17,7 +17,6 @@ import java.util.Set;
 
 import org.jetbrains.mps.openapi.project.Project;
 import org.jetbrains.mps.openapi.util.ProgressMonitor;
-import org.modelingvalue.transactions.State;
 
 import com.intellij.openapi.application.ApplicationManager;
 
@@ -33,12 +32,9 @@ public class DclareForMPSEngine implements DeployListener {
     private final StartStopHandler     startStopHandler;
     private DClareMPS                  dClareMPS;
     private boolean                    on;
-    private boolean                    trace;
-    private boolean                    keepState;
     private int                        maxTotalNrOfChanges;
     private int                        maxNrOfChanges;
     private boolean                    loaded;
-    private State                      prevState;
 
     public DclareForMPSEngine(Project project, StartStopHandler startStopHandler) {
         this.startStopHandler = startStopHandler;
@@ -49,17 +45,13 @@ public class DclareForMPSEngine implements DeployListener {
 
     private void startEngine() {
         if (dClareMPS == null || !dClareMPS.isRunning()) {
-            dClareMPS = new DClareMPS(project, prevState, maxTotalNrOfChanges, maxNrOfChanges, startStopHandler);
-            prevState = null;
-            dClareMPS.setTrace(trace);
+            dClareMPS = new DClareMPS(project, null, maxTotalNrOfChanges, maxNrOfChanges, startStopHandler);
             dClareMPS.start();
         }
     }
 
-    @SuppressWarnings("rawtypes")
     private void stopEngine() {
         if (dClareMPS != null && dClareMPS.isRunning()) {
-            prevState = keepState ? dClareMPS.root.preState().copy(o -> o instanceof DObject, s -> s instanceof DAttribute && !((DAttribute) s).isSynthetic()) : null;
             dClareMPS.stop();
             dClareMPS = null;
         }
@@ -83,32 +75,6 @@ public class DclareForMPSEngine implements DeployListener {
                 }
             } else {
                 stopEngine();
-            }
-        }
-    }
-
-    public boolean isTrace() {
-        return trace;
-    }
-
-    public void setTrace(boolean trace) {
-        if (trace != this.trace) {
-            this.trace = trace;
-            if (dClareMPS != null) {
-                dClareMPS.setTrace(trace);
-            }
-        }
-    }
-
-    public boolean isKeepState() {
-        return keepState;
-    }
-
-    public void setKeepState(boolean keepState) {
-        if (keepState != this.keepState) {
-            this.keepState = keepState;
-            if (!keepState) {
-                prevState = null;
             }
         }
     }

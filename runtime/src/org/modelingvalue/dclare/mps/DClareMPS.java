@@ -47,8 +47,6 @@ import jetbrains.mps.smodel.language.LanguageRuntime;
 
 public class DClareMPS implements TriConsumer<State, State, Boolean> {
 
-    static final Setable<DClareMPS, Boolean>                   TRACE         = Setable.of("TRACE", false);
-
     protected static final Observed<DClareMPS, Boolean>        INITIALIZED   = Observed.of("INITIALIZED", false);
 
     protected static final Observed<DClareMPS, Set<SLanguage>> ALL_LANGUAGES = Observed.of("ALL_LANGAUGES", Set.of(), (tx, o, b, a) -> {
@@ -277,10 +275,6 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
                 RULE_SETS.set(language, aspect != null ? Collection.of(aspect.getRuleSets()).toSet() : Set.of());
             }
         });
-    }
-
-    public void setTrace(boolean trace) {
-        root.put("<SET TRACE " + trace + ">", () -> TRACE.set(this, trace));
     }
 
     public static <T> T pre(Supplier<T> supplier) {

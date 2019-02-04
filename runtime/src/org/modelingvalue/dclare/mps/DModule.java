@@ -42,23 +42,12 @@ import jetbrains.mps.smodel.Language;
 
 public class DModule extends DObject<SModule> implements SModule {
 
-    public static final Observed<DModule, Boolean>        ACTIVE    = Observed.of("ACTIVE", false, (tx, o, b, a) -> {
-                                                                        if (DClareMPS.TRACE.get(dClareMPS())) {
-                                                                            tx.runNonObserving(                                                                    //
-                                                                                    () -> {
-                                                                                        if (a) {
-                                                                                            System.err.println(DObject.DCLARE + "ACTIVATE " + o.getModuleName());
-                                                                                        } else {
-                                                                                            System.err.println(DObject.DCLARE + "DEACTIVATE " + o.getModuleName());
-                                                                                        }
-                                                                                    });
-                                                                        }
-                                                                    });
+    public static final Observed<DModule, Boolean>        ACTIVE    = Observed.of("ACTIVE", false);
 
     public static final Observed<DModule, Set<DModel>>    MODELS    = Observed.of("MODELS", Set.of());
 
     public static final Observed<DModule, Set<SLanguage>> LANGUAGES = Observed.of("LANGUAGES", Set.of(), (tx, o, b, a) -> {
-                                                                        Setable.<Set<SLanguage>, SLanguage> diff(Set.of(), b, a,                                   //
+                                                                        Setable.<Set<SLanguage>, SLanguage> diff(Set.of(), b, a,                   //
                                                                                 x -> DClareMPS.ALL_LANGUAGES.set(dClareMPS(), Set::add, x), x -> {
                                                                                                                                                 });
                                                                     });
