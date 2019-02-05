@@ -13,36 +13,48 @@
 
 package org.modelingvalue.dclare.mps;
 
-import java.util.function.Supplier;
-
 import org.jetbrains.mps.openapi.model.SNode;
+import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.util.Triple;
 
 @SuppressWarnings("rawtypes")
-public class DProblem extends Triple<DObject, Object, Object> {
-    private static final long     serialVersionUID = -303368640776089669L;
+public class DMessage extends Triple<DObject, DFeature, String> {
+    private static final long serialVersionUID = -303368640776089669L;
 
-    private final Supplier<SNode> source;
+    private final Object      content;
+    private List<DMessage>    subMessages      = List.of();
 
-    public DProblem(DObject context, Object id, Supplier<SNode> source, Object content) {
-        super(context, id, content);
-        this.source = source;
+    public DMessage(DObject context, DFeature feature, String id, Object content) {
+        super(context, feature, id);
+        this.content = content;
     }
 
     public DObject context() {
         return a();
     }
 
-    public Object id() {
+    public DFeature feature() {
         return b();
     }
 
-    public SNode source() {
-        return source.get();
+    public String id() {
+        return c();
     }
 
     public Object content() {
-        return c();
+        return content;
+    }
+
+    public SNode source() {
+        return feature().getSource();
+    }
+
+    public List<DMessage> subMessages() {
+        return subMessages;
+    }
+
+    public List<DMessage> addSubMessage(DMessage subMessage) {
+        return subMessages = subMessages.add(subMessage);
     }
 
 }

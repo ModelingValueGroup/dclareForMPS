@@ -103,7 +103,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
             private void post() {
                 if (imperative != null && repository != null && inQueue.isEmpty() && repository.isComplete()) {
                     if (INITIALIZED.get(DClareMPS.this)) {
-                        Set<DProblem> problems = DObject.ALL_PROBLEMS.get(repository);
+                        Set<DMessage> problems = DObject.ALL_PROBLEMS.get(repository);
                         DClareMPS.this.run(() -> startStopHandler.stop(project, problems));
                     } else {
                         root.put(INITIALIZED, () -> INITIALIZED.set(DClareMPS.this, true));

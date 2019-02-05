@@ -20,6 +20,6 @@ public interface StartStopHandler {
 
     void start(Project project);
 
-    void stop(Project project, Set<DProblem> problems);
+    void stop(Project project, Set<DMessage> problems);
 
 }
