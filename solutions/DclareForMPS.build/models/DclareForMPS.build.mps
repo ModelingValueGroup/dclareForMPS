@@ -353,13 +353,10 @@
             <node concept="55IIr" id="3QNBbOsArmu" role="3LXTmr">
               <node concept="2Ry0Ak" id="3QNBbOsArmv" role="iGT6I">
                 <property role="2Ry0Am" value="languages" />
-                <node concept="2Ry0Ak" id="3QNBbOsArmw" role="2Ry0An">
-                  <property role="2Ry0Am" value="DclareMPS" />
-                </node>
               </node>
             </node>
             <node concept="3qWCbU" id="3QNBbOsArmy" role="3LXTna">
-              <property role="3qWCbO" value="icons/**" />
+              <property role="3qWCbO" value="DclareMPS/plugin/*.png,DclareMPS/structure/*.png" />
             </node>
           </node>
         </node>

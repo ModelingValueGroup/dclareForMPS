@@ -74,7 +74,7 @@
     </echoxml>
     <jar destfile="${build.tmp}/default/DclareForMPS.zip/DclareForMPS/languages/DclareForMPS/DclareMPS.jar" duplicate="preserve">
       <fileset dir="${build.tmp}/java/out/DclareMPS" />
-      <fileset dir="${basedir}/languages/DclareMPS" includes="icons/**" />
+      <fileset dir="${basedir}/languages" includes="DclareMPS/plugin/*.png,DclareMPS/structure/*.png" />
       <fileset dir="${basedir}/languages/DclareMPS/source_gen" includes="**/trace.info, **/exports, **/*.mps, **/checkpoints" />
       <fileset dir="${build.tmp}/default/DclareMPS.jar" />
     </jar>
