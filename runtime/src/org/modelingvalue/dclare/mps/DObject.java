@@ -24,6 +24,7 @@ import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Context;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.dclare.mps.DAttribute.DObservedAttribute;
+import org.modelingvalue.transactions.AbstractLeaf;
 import org.modelingvalue.transactions.Compound;
 import org.modelingvalue.transactions.EmptyMandatoryException;
 import org.modelingvalue.transactions.Leaf;
@@ -32,6 +33,7 @@ import org.modelingvalue.transactions.Observer;
 import org.modelingvalue.transactions.Priority;
 import org.modelingvalue.transactions.Root;
 import org.modelingvalue.transactions.Setable;
+import org.modelingvalue.transactions.Slot;
 import org.modelingvalue.transactions.State;
 import org.modelingvalue.transactions.StopObserverException;
 import org.modelingvalue.transactions.TooManyChangesException;
@@ -42,7 +44,38 @@ public abstract class DObject<O> {
     private static final class DRuleObserver extends Observer {
 
         protected DRuleObserver(DRule rule, Compound parent, Runnable action) {
-            super(rule, parent, action, Priority.mid);
+            super(rule, parent, () -> ((DRuleObserver) AbstractLeaf.getCurrent()).run(action), Priority.mid);
+        }
+
+        private void run(Runnable action) {
+            try {
+                if (firstTime()) {
+                    object().removeMessages(rule(), "EXCEPTION");
+                }
+                if (parent.equals(DObject.TRANSACTION.get(object())) && object().isComplete()) {
+                    action.run();
+                }
+            } catch (NullPointerException e) {
+                if (EMPTY_ATTRIBUTE.get()) {
+                    throw new EmptyMandatoryException();
+                } else {
+                    object().addMessage(rule(), "EXCEPTION", e);
+                    throw new StopObserverException(e);
+                }
+            } catch (IndexOutOfBoundsException e) {
+                if (COLLECTION_ATTRIBUTE.get()) {
+                    throw new EmptyMandatoryException();
+                } else {
+                    object().addMessage(rule(), "EXCEPTION", e);
+                    throw new StopObserverException(e);
+                }
+            } catch (Throwable e) {
+                object().addMessage(rule(), "EXCEPTION", e);
+                throw new StopObserverException(e);
+            } finally {
+                COLLECTION_ATTRIBUTE.set(false);
+                EMPTY_ATTRIBUTE.set(false);
+            }
         }
 
         @Override
@@ -61,35 +94,12 @@ public abstract class DObject<O> {
         }
 
         @Override
-        protected State observe(State pre, Root root, Priority prio) {
+        protected void checkTooManyChanges(State pre, Root root, Set<Slot> sets, Set<Slot> gets) {
             try {
-                if (firstTime()) {
-                    object().removeMessages(rule(), "EXCEPTION");
-                }
-                return super.observe(pre, root, prio);
-            } catch (NullPointerException e) {
-                if (EMPTY_ATTRIBUTE.get()) {
-                    throw new EmptyMandatoryException();
-                } else {
-                    object().addMessage(rule(), "EXCEPTION", e);
-                    throw new StopObserverException(e);
-                }
-            } catch (IndexOutOfBoundsException e) {
-                if (COLLECTION_ATTRIBUTE.get()) {
-                    throw new EmptyMandatoryException();
-                } else {
-                    object().addMessage(rule(), "EXCEPTION", e);
-                    throw new StopObserverException(e);
-                }
+                super.checkTooManyChanges(pre, root, sets, gets);
             } catch (TooManyChangesException e) {
                 object().addMessage(rule(), "EXCEPTION", e);
                 throw new StopObserverException(e);
-            } catch (Throwable e) {
-                object().addMessage(rule(), "EXCEPTION", e);
-                throw new StopObserverException(e);
-            } finally {
-                COLLECTION_ATTRIBUTE.set(false);
-                EMPTY_ATTRIBUTE.set(false);
             }
         }
 
@@ -286,11 +296,7 @@ public abstract class DObject<O> {
 
     @SuppressWarnings("unchecked")
     private Observer rule(Compound parent, DRule rule) {
-        return new DRuleObserver(rule, parent, () -> {
-            if (parent.equals(DObject.TRANSACTION.get(this)) && isComplete()) {
-                rule.run(DObject.this);
-            }
-        });
+        return new DRuleObserver(rule, parent, () -> rule.run(DObject.this));
     }
 
     protected void addMessage(DFeature feature, String id, TooManyChangesException tmce) {
