@@ -300,13 +300,16 @@ public abstract class DObject<O> {
     }
 
     protected void addMessage(DFeature feature, String id, TooManyChangesException tmce) {
-        DMessage message = new DMessage(this, feature, id, "Too many changes running " + tmce.getObserver() + " changes=" + tmce.getNrOfChanges());
+        DMessage message = new DMessage(this, feature, id, "Too many changes running " + feature + " changes=" + tmce.getNrOfChanges());
         tmce.getLast().trace(message, (m, r) -> {
-            m.addSubMessage(new DMessage(((DRuleObserver) r.observer()).object(), ((DRuleObserver) r.observer()).rule(), id, "run: " + r.observer() + " nr: " + r.nrOfChanges()));
+            m.addSubMessage(new DMessage(((DRuleObserver) r.observer()).object(), ((DRuleObserver) r.observer()).rule(), id, //
+                    "run: " + ((DRuleObserver) r.observer()).object() + "." + ((DRuleObserver) r.observer()).rule() + " nr: " + r.nrOfChanges()));
         }, (m, r, s) -> {
-            m.subMessages().last().addSubMessage(new DMessage((DObject) s.object(), (DObserved) s.observed(), id, "read: " + s.object() + "." + s.observed() + "=" + r.read().get(s)));
+            m.subMessages().last().addSubMessage(new DMessage((DObject) s.object(), (DObserved) s.observed(), id, //
+                    "read: " + s.object() + "." + s.observed() + "=" + r.read().get(s)));
         }, (m, w, s) -> {
-            m.subMessages().last().addSubMessage(new DMessage((DObject) s.object(), (DObserved) s.observed(), id, "write: " + s.object() + "." + s.observed() + "=" + w.written().get(s)));
+            m.subMessages().last().addSubMessage(new DMessage((DObject) s.object(), (DObserved) s.observed(), id, //
+                    "write: " + s.object() + "." + s.observed() + "=" + w.written().get(s)));
         }, m -> m.subMessages().last(), tmce.getObserver().root().maxNrOfChanges());
         PROBLEMS.set(this, QualifiedSet::add, message);
     }

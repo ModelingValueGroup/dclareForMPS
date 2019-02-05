@@ -54,7 +54,7 @@ public class DObserved<O, T> extends Observed<O, T> implements DFeature<O> {
 
     @Override
     public SNode getSource() {
-        return source.get();
+        return source != null ? source.get() : null;
     }
 
     @SuppressWarnings("rawtypes")
