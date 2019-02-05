@@ -424,6 +424,16 @@
           <property role="TrG5h" value="DclareMessages#01" />
           <property role="3LESm3" value="850ebde7-f10c-4286-9b25-cb26dbd75285" />
         </node>
+        <node concept="1SiIV0" id="IcHFOsMS4n" role="3bR37C">
+          <node concept="3bR9La" id="IcHFOsMS4o" role="1SiIV1">
+            <ref role="3bR37D" to="ffeo:mXGwHwhVPj" resolve="JDK" />
+          </node>
+        </node>
+        <node concept="1SiIV0" id="IcHFOsMS4p" role="3bR37C">
+          <node concept="3bR9La" id="IcHFOsMS4q" role="1SiIV1">
+            <ref role="3bR37D" to="ffeo:1TaHNgiIbIZ" resolve="MPS.Editor" />
+          </node>
+        </node>
       </node>
       <node concept="1E1JtA" id="5TmHY1kYraY" role="2G$12L">
         <property role="BnDLt" value="false" />

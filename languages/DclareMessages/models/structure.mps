@@ -10,6 +10,15 @@
   </imports>
   <registry>
     <language id="c72da2b9-7cce-4447-8389-f407dc1158b7" name="jetbrains.mps.lang.structure">
+      <concept id="1082978164219" name="jetbrains.mps.lang.structure.structure.EnumerationDataTypeDeclaration" flags="ng" index="AxPO7">
+        <reference id="1083171729157" name="memberDataType" index="M4eZT" />
+        <reference id="1083241965437" name="defaultMember" index="Qgau1" />
+        <child id="1083172003582" name="member" index="M5hS2" />
+      </concept>
+      <concept id="1083171877298" name="jetbrains.mps.lang.structure.structure.EnumerationMemberDeclaration" flags="ig" index="M4N5e">
+        <property id="1083923523172" name="externalValue" index="1uS6qo" />
+        <property id="1083923523171" name="internalValue" index="1uS6qv" />
+      </concept>
       <concept id="1169125787135" name="jetbrains.mps.lang.structure.structure.AbstractConceptDeclaration" flags="ig" index="PkWjJ">
         <property id="6714410169261853888" name="conceptId" index="EcuMT" />
         <child id="1071489727083" name="linkDeclaration" index="1TKVEi" />
@@ -39,11 +48,26 @@
   </registry>
   <node concept="1TIwiD" id="7e_PmaZxfwQ">
     <property role="EcuMT" value="8333301305615644726" />
-    <property role="TrG5h" value="Error" />
+    <property role="TrG5h" value="Message" />
     <ref role="1TJDcQ" to="tpck:gw2VY9q" resolve="BaseConcept" />
+    <node concept="1TJgyi" id="5FinwQP4DTI" role="1TKVEl">
+      <property role="IQ2nx" value="6544396621488234094" />
+      <property role="TrG5h" value="type" />
+      <ref role="AX2Wp" node="5FinwQP4DTw" resolve="MessageType" />
+    </node>
+    <node concept="1TJgyi" id="IcHFOtrcMv" role="1TKVEl">
+      <property role="IQ2nx" value="832240954515442847" />
+      <property role="TrG5h" value="id" />
+      <ref role="AX2Wp" to="tpck:fKAOsGN" resolve="string" />
+    </node>
     <node concept="1TJgyi" id="4hagRHmzsU3" role="1TKVEl">
       <property role="IQ2nx" value="4920819739867860611" />
       <property role="TrG5h" value="context" />
+      <ref role="AX2Wp" to="tpck:fKAOsGN" resolve="string" />
+    </node>
+    <node concept="1TJgyi" id="IcHFOtrcNa" role="1TKVEl">
+      <property role="IQ2nx" value="832240954515442890" />
+      <property role="TrG5h" value="text" />
       <ref role="AX2Wp" to="tpck:fKAOsGN" resolve="string" />
     </node>
     <node concept="1TJgyj" id="7e_PmaZxfxC" role="1TKVEi">
@@ -56,32 +80,67 @@
     <node concept="1TJgyj" id="7e_PmaZxfxA" role="1TKVEi">
       <property role="IQ2ns" value="8333301305615644774" />
       <property role="20lmBu" value="aggregation" />
-      <property role="20kJfa" value="messages" />
+      <property role="20kJfa" value="lines" />
       <property role="20lbJX" value="0..n" />
-      <ref role="20lvS9" node="7e_PmaZxfxz" resolve="Message" />
+      <ref role="20lvS9" node="7e_PmaZxfxz" resolve="MessageLine" />
     </node>
   </node>
   <node concept="1TIwiD" id="7e_PmaZxfxz">
     <property role="EcuMT" value="8333301305615644771" />
-    <property role="TrG5h" value="Message" />
+    <property role="TrG5h" value="MessageLine" />
     <ref role="1TJDcQ" to="tpck:gw2VY9q" resolve="BaseConcept" />
+    <node concept="1TJgyj" id="IcHFOtrcMs" role="1TKVEi">
+      <property role="IQ2ns" value="832240954515442844" />
+      <property role="20lmBu" value="reference" />
+      <property role="20kJfa" value="source" />
+      <property role="20lbJX" value="1" />
+      <ref role="20lvS9" to="tpck:gw2VY9q" resolve="BaseConcept" />
+    </node>
     <node concept="1TJgyi" id="7e_PmaZxfx$" role="1TKVEl">
       <property role="IQ2nx" value="8333301305615644772" />
       <property role="TrG5h" value="text" />
       <ref role="AX2Wp" to="tpck:fKAOsGN" resolve="string" />
     </node>
+    <node concept="1TJgyj" id="IcHFOtrcMq" role="1TKVEi">
+      <property role="IQ2ns" value="832240954515442842" />
+      <property role="20lmBu" value="aggregation" />
+      <property role="20kJfa" value="lines" />
+      <property role="20lbJX" value="0..n" />
+      <ref role="20lvS9" node="7e_PmaZxfxz" resolve="MessageLine" />
+    </node>
   </node>
   <node concept="1TIwiD" id="7e_PmaZxgoP">
     <property role="EcuMT" value="8333301305615648309" />
     <property role="19KtqR" value="true" />
-    <property role="TrG5h" value="ErrorSet" />
+    <property role="TrG5h" value="MessageSet" />
     <ref role="1TJDcQ" to="tpck:gw2VY9q" resolve="BaseConcept" />
     <node concept="1TJgyj" id="7e_PmaZxgoQ" role="1TKVEi">
       <property role="IQ2ns" value="8333301305615648310" />
       <property role="20lmBu" value="aggregation" />
-      <property role="20kJfa" value="errors" />
+      <property role="20kJfa" value="messages" />
       <property role="20lbJX" value="0..n" />
-      <ref role="20lvS9" node="7e_PmaZxfwQ" resolve="Error" />
+      <ref role="20lvS9" node="7e_PmaZxfwQ" resolve="Message" />
+    </node>
+  </node>
+  <node concept="AxPO7" id="5FinwQP4DTw">
+    <property role="TrG5h" value="MessageType" />
+    <ref role="M4eZT" to="tpck:fKAOsGN" resolve="string" />
+    <ref role="Qgau1" node="5FinwQP4DTx" />
+    <node concept="M4N5e" id="5FinwQP4DTx" role="M5hS2">
+      <property role="1uS6qv" value="ERROR" />
+      <property role="1uS6qo" value="error" />
+    </node>
+    <node concept="M4N5e" id="5FinwQP4DTy" role="M5hS2">
+      <property role="1uS6qv" value="WARNING" />
+      <property role="1uS6qo" value="warning" />
+    </node>
+    <node concept="M4N5e" id="5FinwQP4DT_" role="M5hS2">
+      <property role="1uS6qv" value="INFO" />
+      <property role="1uS6qo" value="info" />
+    </node>
+    <node concept="M4N5e" id="5FinwQP4DTD" role="M5hS2">
+      <property role="1uS6qv" value="DEBUG" />
+      <property role="1uS6qo" value="debug" />
     </node>
   </node>
 </model>
