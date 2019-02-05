@@ -63,7 +63,7 @@ public class DModel extends DObject<SModel> implements SModel {
                                                                             Setable.<Set<DNode>, DNode> diff(Set.of(), b, a,                                        //
                                                                                     x -> DNode.CONTAINING.set(x, null), x -> {
                                                                                     });
-                                                                        });
+                                                                        }, null);
 
     public static final Observed<DModel, Set<SLanguage>> USED_LANGUAGES = DObserved.of("USED_LANGUAGES", Set.of(), false, false, (dModel, pre, post, first) -> {
                                                                             if (first) {
@@ -75,7 +75,7 @@ public class DModel extends DObject<SModel> implements SModel {
                                                                                     }
                                                                                 }
                                                                             }
-                                                                        });
+                                                                        }, null);
 
     public static final Observed<DModel, ModelRoot>      MODEL_ROOT     = Observed.of("MODEL_ROOT", null);
 

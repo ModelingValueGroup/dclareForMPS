@@ -27,12 +27,12 @@ import org.modelingvalue.transactions.Observed;
 
 public class DObserved<O, T> extends Observed<O, T> implements DFeature<O> {
 
-    public static <C, V> DObserved<C, V> of(Object id, V def, boolean mandatory, boolean deferred, QuadConsumer<C, V, V, Boolean> toMPS) {
-        return of(id, def, mandatory, deferred, toMPS, null);
+    public static <C, V> DObserved<C, V> of(Object id, V def, boolean mandatory, boolean deferred, QuadConsumer<C, V, V, Boolean> toMPS, Supplier<SNode> source) {
+        return of(id, def, mandatory, deferred, toMPS, null, source);
     }
 
-    public static <C, V> DObserved<C, V> of(Object id, V def, boolean mandatory, boolean deferred, QuadConsumer<C, V, V, Boolean> toMPS, QuadConsumer<AbstractLeaf, C, V, V> changed) {
-        return new DObserved<C, V>(id, def, mandatory, deferred, toMPS, changed, null);
+    public static <C, V> DObserved<C, V> of(Object id, V def, boolean mandatory, boolean deferred, QuadConsumer<C, V, V, Boolean> toMPS, QuadConsumer<AbstractLeaf, C, V, V> changed, Supplier<SNode> source) {
+        return new DObserved<C, V>(id, def, mandatory, deferred, toMPS, changed, source);
     }
 
     private final QuadConsumer<O, T, T, Boolean> toMPS;

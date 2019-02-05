@@ -240,7 +240,7 @@ public interface DAttribute<O, T> extends DFeature<O> {
 
         @Override
         public SNode getSource() {
-            return source.get();
+            return source != null ? source.get() : null;
         }
     }
 
@@ -301,7 +301,7 @@ public interface DAttribute<O, T> extends DFeature<O> {
 
         @Override
         public SNode getSource() {
-            return source.get();
+            return source != null ? source.get() : null;
         }
     }
 }

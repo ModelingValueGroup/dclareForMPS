@@ -50,6 +50,7 @@ public class DNode extends DObject<SNode> implements SNode {
 
     public static final Observed<DNode, Map<Object, Object>>                    USER_OBJECTS       = Observed.of("USER_OBJECTS", Map.of());
 
+    @SuppressWarnings("deprecation")
     public static final Getable<SContainmentLink, Observed<DNode, List<DNode>>> MANY_CONTAINMENT   = Constant.of("MANY_CONTAINMENT", sc -> {
                                                                                                        return DObserved.<DNode, List<DNode>> of(sc, List.of(), !sc.isOptional(), false,                                          //
                                                                                                                (dNode, pre, post, first) -> {
@@ -67,9 +68,10 @@ public class DNode extends DObject<SNode> implements SNode {
                                                                                                                    Setable.<List<DNode>, DNode> diff(List.of(), b, a,                                                            //
                                                                                                                            x -> DNode.CONTAINING.set(x, sc), x -> {
                                                                                                                                                                                                                           });
-                                                                                                               });
+                                                                                                               }, () -> sc.getDeclarationNode());
                                                                                                    });
 
+    @SuppressWarnings("deprecation")
     public static final Getable<SContainmentLink, Observed<DNode, DNode>>       SINGLE_CONTAINMENT = Constant.of("SINGLE_CONTAINMENT", sc -> {
                                                                                                        return DObserved.<DNode, DNode> of(sc, null, !sc.isOptional(), false,                                                     //
                                                                                                                (dNode, pre, post, first) -> {
@@ -86,9 +88,10 @@ public class DNode extends DObject<SNode> implements SNode {
                                                                                                                    if (a != null) {
                                                                                                                        DNode.CONTAINING.set(a, sc);
                                                                                                                    }
-                                                                                                               });
+                                                                                                               }, () -> sc.getDeclarationNode());
                                                                                                    });
 
+    @SuppressWarnings("deprecation")
     public static final Getable<SReferenceLink, Observed<DNode, DNode>>         REFERENCE          = Constant.of("REFERENCE", sr -> {
                                                                                                        Observed<DNode, Set<DNode>> oppos = DNode.OPPOSITE.get(sr);
                                                                                                        return DObserved.<DNode, DNode> of(sr, null, false, true,                                                                 //
@@ -107,19 +110,20 @@ public class DNode extends DObject<SNode> implements SNode {
                                                                                                                    if (b != null) {
                                                                                                                        oppos.set(b, Set::remove, o);
                                                                                                                    }
-                                                                                                               });
+                                                                                                               }, () -> sr.getDeclarationNode());
 
                                                                                                    });
     public static final Getable<SReferenceLink, Observed<DNode, Set<DNode>>>    OPPOSITE           = Constant.of("OPPOSITE", sr -> {
                                                                                                        return Observed.<DNode, Set<DNode>> of(Pair.of(sr, "OPPOSITE"), Set.of());
                                                                                                    });
+    @SuppressWarnings("deprecation")
     public static final Getable<SProperty, Observed<DNode, String>>             PROPERTY           = Constant.of("PROPERTY", sp -> {
                                                                                                        return DObserved.<DNode, String> of(sp, null, false, false,                                                               //
                                                                                                                (dNode, pre, post, first) -> {
                                                                                                                    if (first && !Objects.equals(dNode.original().getProperty(sp), post)) {
                                                                                                                        dNode.original().setProperty(sp, post);
                                                                                                                    }
-                                                                                                               });
+                                                                                                               }, () -> sp.getDeclarationNode());
                                                                                                    });
 
     public static DNode of(SNode original) {
