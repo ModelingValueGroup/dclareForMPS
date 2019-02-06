@@ -308,9 +308,9 @@ public class DModel extends DObject<SModel> implements SModel {
         ROOTS.set(this, Set::remove, dNode);
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
     public void setRootNodes(SAbstractConcept concept, java.util.Collection<? extends SNode> roots) {
-        ROOTS.set(this, (rs, cs) -> cs == null ? rs : cs.addAll(rs.filter(r -> !r.isInstanceOfConcept(concept))), roots != null ? Set.<DNode> of((java.util.Collection) roots) : null);
+        ROOTS.set(this, (rs, cs) -> cs == null ? rs : cs.addAll(rs.filter(r -> !r.isInstanceOfConcept(concept))), //
+                roots != null ? Collection.of(roots).map(n -> DNode.of(n)).toSet() : null);
     }
 
     @Override
