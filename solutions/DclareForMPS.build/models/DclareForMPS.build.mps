@@ -426,6 +426,18 @@
         <property role="BnDLt" value="false" />
         <property role="TrG5h" value="DclareMPSRuntime" />
         <property role="3LESm3" value="55d6b6f5-8095-4cd0-a39b-779da8d12940" />
+        <node concept="3rtmxn" id="1gvgm7ih8N" role="3bR31x">
+          <node concept="3LXTmp" id="1gvgm7ih8O" role="3rtmxm">
+            <node concept="55IIr" id="1gvgm7ih8P" role="3LXTmr">
+              <node concept="2Ry0Ak" id="1gvgm7ih8Q" role="iGT6I">
+                <property role="2Ry0Am" value="languages" />
+              </node>
+            </node>
+            <node concept="3qWCbU" id="1gvgm7ih8R" role="3LXTna">
+              <property role="3qWCbO" value="DclareMPSRuntime/util/*.png" />
+            </node>
+          </node>
+        </node>
         <node concept="55IIr" id="5TmHY1kYraT" role="3LF7KH">
           <node concept="2Ry0Ak" id="5TmHY1kYraU" role="iGT6I">
             <property role="2Ry0Am" value="solutions" />
@@ -470,21 +482,6 @@
         <node concept="1SiIV0" id="2s2J4CrwgjP" role="3bR37C">
           <node concept="3bR9La" id="2s2J4CrwgjQ" role="1SiIV1">
             <ref role="3bR37D" to="ffeo:mXGwHwhVPj" resolve="JDK" />
-          </node>
-        </node>
-        <node concept="3rtmxn" id="3E71z7ur9wW" role="3bR31x">
-          <node concept="3LXTmp" id="3E71z7ur9wX" role="3rtmxm">
-            <node concept="55IIr" id="3E71z7ur9wY" role="3LXTmr">
-              <node concept="2Ry0Ak" id="3E71z7ur9wZ" role="iGT6I">
-                <property role="2Ry0Am" value="solutions" />
-                <node concept="2Ry0Ak" id="3E71z7ur9x0" role="2Ry0An">
-                  <property role="2Ry0Am" value="DclareMPS" />
-                </node>
-              </node>
-            </node>
-            <node concept="3qWCbU" id="3E71z7ur9x2" role="3LXTna">
-              <property role="3qWCbO" value="icons/**,DclareMPS/plugin/*.png" />
-            </node>
           </node>
         </node>
       </node>
@@ -540,15 +537,12 @@
         <node concept="3rtmxn" id="3E71z7ur9xC" role="3bR31x">
           <node concept="3LXTmp" id="3E71z7ur9xD" role="3rtmxm">
             <node concept="55IIr" id="3E71z7ur9xE" role="3LXTmr">
-              <node concept="2Ry0Ak" id="3E71z7ur9xF" role="iGT6I">
-                <property role="2Ry0Am" value="solutions" />
-                <node concept="2Ry0Ak" id="3E71z7ur9xG" role="2Ry0An">
-                  <property role="2Ry0Am" value="DclareMPSPlugin" />
-                </node>
+              <node concept="2Ry0Ak" id="1gvgm7ih7N" role="iGT6I">
+                <property role="2Ry0Am" value="languages" />
               </node>
             </node>
             <node concept="3qWCbU" id="3E71z7ur9xI" role="3LXTna">
-              <property role="3qWCbO" value="icons/**" />
+              <property role="3qWCbO" value="DclareMPSPlugin/plugin/*.png" />
             </node>
           </node>
         </node>

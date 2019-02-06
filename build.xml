@@ -233,7 +233,7 @@
     </echoxml>
     <jar destfile="${build.tmp}/default/DclareForMPS.zip/DclareForMPS/languages/DclareForMPS/DclareMPSRuntime.jar" duplicate="preserve">
       <fileset dir="${build.tmp}/java/out/DclareMPSRuntime" />
-      <fileset dir="${basedir}/solutions/DclareMPS" includes="icons/**,DclareMPS/plugin/*.png" />
+      <fileset dir="${basedir}/languages" includes="DclareMPSRuntime/util/*.png" />
       <fileset dir="${basedir}/solutions/DclareMPS/source_gen" includes="**/trace.info, **/exports, **/*.mps, **/checkpoints" />
       <fileset dir="${build.tmp}/default/DclareMPSRuntime.jar" />
     </jar>
@@ -282,7 +282,7 @@
     </echoxml>
     <jar destfile="${build.tmp}/default/DclareForMPS.zip/DclareForMPS/languages/DclareForMPS/DclareMPSPlugin.jar" duplicate="preserve">
       <fileset dir="${build.tmp}/java/out/DclareMPSPlugin" />
-      <fileset dir="${basedir}/solutions/DclareMPSPlugin" includes="icons/**" />
+      <fileset dir="${basedir}/languages" includes="DclareMPSPlugin/plugin/*.png" />
       <fileset dir="${basedir}/solutions/DclareMPSPlugin/source_gen" includes="**/trace.info, **/exports, **/*.mps, **/checkpoints" />
       <fileset dir="${build.tmp}/default/DclareMPSPlugin.jar" />
     </jar>
