@@ -1041,8 +1041,8 @@
                   <node concept="3yMSdA" id="GLgNzrnI89" role="2Oq$k0" />
                   <node concept="liA8E" id="GLgNzrnI8a" role="2OqNvi">
                     <ref role="37wK5l" to="z60i:~Container.getComponent(int):java.awt.Component" resolve="getComponent" />
-                    <node concept="3cmrfG" id="7S$pNDL4bIY" role="37wK5m">
-                      <property role="3cmrfH" value="7" />
+                    <node concept="3cmrfG" id="4PMfL9tSC$L" role="37wK5m">
+                      <property role="3cmrfH" value="3" />
                     </node>
                   </node>
                 </node>
@@ -1086,8 +1086,8 @@
                   <node concept="3yMSdA" id="GLgNzrnEa9" role="2Oq$k0" />
                   <node concept="liA8E" id="GLgNzrnEaa" role="2OqNvi">
                     <ref role="37wK5l" to="z60i:~Container.getComponent(int):java.awt.Component" resolve="getComponent" />
-                    <node concept="3cmrfG" id="7S$pNDL4cTs" role="37wK5m">
-                      <property role="3cmrfH" value="9" />
+                    <node concept="3cmrfG" id="4PMfL9tSDEN" role="37wK5m">
+                      <property role="3cmrfH" value="5" />
                     </node>
                   </node>
                 </node>
@@ -1243,7 +1243,7 @@
                   </node>
                 </node>
                 <node concept="3cmrfG" id="GLgNzrlsFm" role="37vLTx">
-                  <property role="3cmrfH" value="100000" />
+                  <property role="3cmrfH" value="10000" />
                 </node>
               </node>
             </node>
