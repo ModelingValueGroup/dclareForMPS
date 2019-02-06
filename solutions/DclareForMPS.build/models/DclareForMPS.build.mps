@@ -308,16 +308,6 @@
               <ref role="3bR37D" to="ffeo:7Kfy9QB6KYb" resolve="jetbrains.mps.baseLanguage" />
             </node>
           </node>
-          <node concept="1SiIV0" id="7r$hcUuYol$" role="3bR37C">
-            <node concept="3bR9La" id="7r$hcUuYol_" role="1SiIV1">
-              <ref role="3bR37D" to="ffeo:7YI57w6K0pv" resolve="jetbrains.mps.lang.quotation#1196351859310" />
-            </node>
-          </node>
-          <node concept="1SiIV0" id="7r$hcUuYolD" role="3bR37C">
-            <node concept="3bR9La" id="7r$hcUuYolC" role="1SiIV1">
-              <ref role="3bR37D" to="ffeo:7YI57w6K0pv" resolve="jetbrains.mps.lang.quotation#1196351859310" />
-            </node>
-          </node>
           <node concept="1SiIV0" id="4jp8R7Dy3$L" role="3bR37C">
             <node concept="3bR9La" id="4jp8R7Dy3$M" role="1SiIV1">
               <ref role="3bR37D" to="ffeo:7Kfy9QB6L0h" resolve="jetbrains.mps.baseLanguage.collections" />
@@ -493,7 +483,7 @@
               </node>
             </node>
             <node concept="3qWCbU" id="3E71z7ur9x2" role="3LXTna">
-              <property role="3qWCbO" value="icons/**" />
+              <property role="3qWCbO" value="icons/**,DclareMPS/plugin/*.png" />
             </node>
           </node>
         </node>

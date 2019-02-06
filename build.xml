@@ -233,7 +233,7 @@
     </echoxml>
     <jar destfile="${build.tmp}/default/DclareForMPS.zip/DclareForMPS/languages/DclareForMPS/DclareMPSRuntime.jar" duplicate="preserve">
       <fileset dir="${build.tmp}/java/out/DclareMPSRuntime" />
-      <fileset dir="${basedir}/solutions/DclareMPS" includes="icons/**" />
+      <fileset dir="${basedir}/solutions/DclareMPS" includes="icons/**,DclareMPS/plugin/*.png" />
       <fileset dir="${basedir}/solutions/DclareMPS/source_gen" includes="**/trace.info, **/exports, **/*.mps, **/checkpoints" />
       <fileset dir="${build.tmp}/default/DclareMPSRuntime.jar" />
     </jar>
@@ -263,7 +263,9 @@
           <module ref="86441d7a-e194-42da-81a5-2161ec62a379(MPS.Workbench)" />
           <module ref="4c6a28d1-2c60-478d-b36e-db9b3cbb21fb(closures.runtime)" />
           <module ref="9b80526e-f0bf-4992-bdf5-cee39c1833f3(collections.runtime)" />
+          <module ref="a3e4657f-a76c-45bb-bbda-c764596ecc65(jetbrains.mps.baseLanguage.logging.runtime)" />
           <module ref="52b81ac7-93fd-4e9e-b972-4995882da6d4(jetbrains.mps.baseLanguage.references.runtime)" />
+          <module ref="d44dab97-aaac-44cb-9745-8a14db674c03(jetbrains.mps.baseLanguage.tuples.runtime)" />
           <module ref="2d3c70e9-aab2-4870-8d8d-6036800e4103(jetbrains.mps.kernel)" />
           <module ref="d936855b-48da-4812-a8a0-2bfddd633ac5(jetbrains.mps.lang.behavior.api)" />
           <module ref="d936855b-48da-4812-a8a0-2bfddd633ac4(jetbrains.mps.lang.behavior.runtime)" />
@@ -534,7 +536,6 @@
         <fileset file="${artifacts.mps}/languages/languageDesign/jetbrains.mps.lang.modelapi.jar" />
         <fileset file="${artifacts.mps}/languages/languageDesign/jetbrains.mps.lang.project.jar" />
         <fileset file="${artifacts.mps}/languages/languageDesign/jetbrains.mps.lang.quotation.jar" />
-        <fileset file="${artifacts.mps}/languages/languageDesign/jetbrains.mps.lang.quotation-generator.jar" />
         <fileset file="${artifacts.mps}/languages/languageDesign/jetbrains.mps.lang.smodel.jar" />
         <fileset file="${artifacts.mps}/languages/languageDesign/jetbrains.mps.lang.smodel-generator.jar" />
         <fileset file="${artifacts.mps}/languages/languageDesign/jetbrains.mps.lang.structure.jar" />
@@ -693,6 +694,7 @@
         <fileset file="${artifacts.mps}/languages/baseLanguage/jetbrains.mps.baseLanguage.jar" />
         <fileset file="${artifacts.mps}/languages/baseLanguage/jetbrains.mps.baseLanguage.closures.jar" />
         <fileset file="${artifacts.mps}/languages/baseLanguage/jetbrains.mps.baseLanguage.collections.jar" />
+        <fileset file="${artifacts.mps}/languages/baseLanguage/jetbrains.mps.baseLanguage.logging.runtime.jar" />
         <fileset file="${artifacts.mps}/languages/baseLanguage/jetbrains.mps.baseLanguage.scopes.jar" />
         <fileset file="${artifacts.mps}/languages/languageDesign/jetbrains.mps.lang.core.jar" />
         <fileset file="${artifacts.mps}/languages/languageDesign/jetbrains.mps.lang.generator.jar" />

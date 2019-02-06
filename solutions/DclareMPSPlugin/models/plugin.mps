@@ -9,6 +9,8 @@
     <use id="69b8a993-9b87-4d96-bf0c-3559f4bb0c63" name="jetbrains.mps.lang.slanguage" version="0" />
     <use id="aee9cad2-acd4-4608-aef2-0004f6a1cdbd" name="jetbrains.mps.lang.actions" version="4" />
     <use id="3ecd7c84-cde3-45de-886c-135ecc69b742" name="jetbrains.mps.lang.refactoring" version="0" />
+    <use id="982eb8df-2c96-4bd7-9963-11712ea622e5" name="jetbrains.mps.lang.resources" version="2" />
+    <devkit ref="fbc25dd2-5da4-483a-8b19-70928e1b62d7(jetbrains.mps.devkit.general-purpose)" />
   </languages>
   <imports>
     <import index="t4tl" ref="55d6b6f5-8095-4cd0-a39b-779da8d12940/java:org.modelingvalue.dclare.mps(DclareMPSRuntime/)" />
@@ -50,6 +52,11 @@
     <import index="g3l6" ref="6ed54515-acc8-4d1e-a16c-9fd6cfe951ea/java:jetbrains.mps.extapi.model(MPS.Core/)" implicit="true" />
   </imports>
   <registry>
+    <language id="982eb8df-2c96-4bd7-9963-11712ea622e5" name="jetbrains.mps.lang.resources">
+      <concept id="8974276187400029883" name="jetbrains.mps.lang.resources.structure.FileIcon" flags="ng" index="1QGGSu">
+        <property id="2756621024541341363" name="file" index="1iqoE4" />
+      </concept>
+    </language>
     <language id="28f9e497-3b42-4291-aeba-0a1039153ab1" name="jetbrains.mps.lang.plugin">
       <concept id="1207145163717" name="jetbrains.mps.lang.plugin.structure.ElementListContents" flags="ng" index="ftmFs">
         <child id="1207145201301" name="reference" index="ftvYc" />
@@ -103,6 +110,7 @@
         <child id="8096638938275469615" name="toolDisposeBlock" index="uR5co" />
         <child id="8096638938275469614" name="toolInitBlock" index="uR5cp" />
         <child id="6547237850567462849" name="fieldDeclaration" index="2XNbBz" />
+        <child id="6791676465872004185" name="toolIcon" index="1nVCmq" />
       </concept>
       <concept id="1210179134063" name="jetbrains.mps.lang.plugin.structure.PreferencesComponentDeclaration" flags="ng" index="34j2dQ">
         <child id="1210179829398" name="persistenPropertyDeclaration" index="34lFYf" />
@@ -2840,6 +2848,9 @@
     </node>
     <node concept="2xpOpl" id="3OqCb4$vkkl" role="uR5co">
       <node concept="3clFbS" id="3OqCb4$vkkm" role="2VODD2" />
+    </node>
+    <node concept="1QGGSu" id="32W_4IvFKnM" role="1nVCmq">
+      <property role="1iqoE4" value="${module}/icons/Dclare.png" />
     </node>
   </node>
   <node concept="312cEu" id="1sOlkZtG9YK">
