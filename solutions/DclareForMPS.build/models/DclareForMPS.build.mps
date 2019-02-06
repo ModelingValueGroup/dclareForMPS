@@ -318,6 +318,11 @@
               <ref role="3bR37D" to="ffeo:7Kfy9QB6Lg8" resolve="jetbrains.mps.runtime" />
             </node>
           </node>
+          <node concept="1SiIV0" id="6px9fxgBhdz" role="3bR37C">
+            <node concept="3bR9La" id="6px9fxgBhdy" role="1SiIV1">
+              <ref role="3bR37D" to="ffeo:7YI57w6K0pv" resolve="jetbrains.mps.lang.quotation#1196351859310" />
+            </node>
+          </node>
         </node>
         <node concept="1SiIV0" id="5TmHY1l0vf9" role="3bR37C">
           <node concept="3bR9La" id="5TmHY1l0vfa" role="1SiIV1">
@@ -429,12 +434,12 @@
         <node concept="3rtmxn" id="1gvgm7ih8N" role="3bR31x">
           <node concept="3LXTmp" id="1gvgm7ih8O" role="3rtmxm">
             <node concept="55IIr" id="1gvgm7ih8P" role="3LXTmr">
-              <node concept="2Ry0Ak" id="1gvgm7ih8Q" role="iGT6I">
-                <property role="2Ry0Am" value="languages" />
+              <node concept="2Ry0Ak" id="6px9fxgnbjk" role="iGT6I">
+                <property role="2Ry0Am" value="solutions" />
               </node>
             </node>
             <node concept="3qWCbU" id="1gvgm7ih8R" role="3LXTna">
-              <property role="3qWCbO" value="DclareMPSRuntime/util/*.png" />
+              <property role="3qWCbO" value="DclareMPS/util/*.png" />
             </node>
           </node>
         </node>
@@ -537,8 +542,8 @@
         <node concept="3rtmxn" id="3E71z7ur9xC" role="3bR31x">
           <node concept="3LXTmp" id="3E71z7ur9xD" role="3rtmxm">
             <node concept="55IIr" id="3E71z7ur9xE" role="3LXTmr">
-              <node concept="2Ry0Ak" id="1gvgm7ih7N" role="iGT6I">
-                <property role="2Ry0Am" value="languages" />
+              <node concept="2Ry0Ak" id="4PMfL9tOogq" role="iGT6I">
+                <property role="2Ry0Am" value="solutions" />
               </node>
             </node>
             <node concept="3qWCbU" id="3E71z7ur9xI" role="3LXTna">

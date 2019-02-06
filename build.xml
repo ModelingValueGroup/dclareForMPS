@@ -233,7 +233,7 @@
     </echoxml>
     <jar destfile="${build.tmp}/default/DclareForMPS.zip/DclareForMPS/languages/DclareForMPS/DclareMPSRuntime.jar" duplicate="preserve">
       <fileset dir="${build.tmp}/java/out/DclareMPSRuntime" />
-      <fileset dir="${basedir}/languages" includes="DclareMPSRuntime/util/*.png" />
+      <fileset dir="${basedir}/solutions" includes="DclareMPS/util/*.png" />
       <fileset dir="${basedir}/solutions/DclareMPS/source_gen" includes="**/trace.info, **/exports, **/*.mps, **/checkpoints" />
       <fileset dir="${build.tmp}/default/DclareMPSRuntime.jar" />
     </jar>
@@ -282,7 +282,7 @@
     </echoxml>
     <jar destfile="${build.tmp}/default/DclareForMPS.zip/DclareForMPS/languages/DclareForMPS/DclareMPSPlugin.jar" duplicate="preserve">
       <fileset dir="${build.tmp}/java/out/DclareMPSPlugin" />
-      <fileset dir="${basedir}/languages" includes="DclareMPSPlugin/plugin/*.png" />
+      <fileset dir="${basedir}/solutions" includes="DclareMPSPlugin/plugin/*.png" />
       <fileset dir="${basedir}/solutions/DclareMPSPlugin/source_gen" includes="**/trace.info, **/exports, **/*.mps, **/checkpoints" />
       <fileset dir="${build.tmp}/default/DclareMPSPlugin.jar" />
     </jar>
@@ -536,6 +536,7 @@
         <fileset file="${artifacts.mps}/languages/languageDesign/jetbrains.mps.lang.modelapi.jar" />
         <fileset file="${artifacts.mps}/languages/languageDesign/jetbrains.mps.lang.project.jar" />
         <fileset file="${artifacts.mps}/languages/languageDesign/jetbrains.mps.lang.quotation.jar" />
+        <fileset file="${artifacts.mps}/languages/languageDesign/jetbrains.mps.lang.quotation-generator.jar" />
         <fileset file="${artifacts.mps}/languages/languageDesign/jetbrains.mps.lang.smodel.jar" />
         <fileset file="${artifacts.mps}/languages/languageDesign/jetbrains.mps.lang.smodel-generator.jar" />
         <fileset file="${artifacts.mps}/languages/languageDesign/jetbrains.mps.lang.structure.jar" />

@@ -872,11 +872,21 @@
       </node>
       <node concept="3Tm1VV" id="3pElVuqPFEz" role="1B3o_S" />
       <node concept="3clFbS" id="3pElVuqPFE_" role="3clF47">
-        <node concept="2Gpval" id="1BBe7Sou5Bk" role="3cqZAp">
-          <node concept="2GrKxI" id="1BBe7Sou5Bm" role="2Gsz3X">
+        <node concept="2Gpval" id="6px9fxg5XwD" role="3cqZAp">
+          <node concept="2GrKxI" id="6px9fxg5XwF" role="2Gsz3X">
             <property role="TrG5h" value="quot" />
           </node>
-          <node concept="3clFbS" id="1BBe7Sou5Bq" role="2LFqv$">
+          <node concept="2OqwBi" id="6px9fxg9vJA" role="2GsD0m">
+            <node concept="13iPFW" id="6px9fxg5Zdd" role="2Oq$k0" />
+            <node concept="2Rf3mk" id="6px9fxggpEx" role="2OqNvi">
+              <node concept="1xMEDy" id="6px9fxggpEz" role="1xVPHs">
+                <node concept="chp4Y" id="4PMfL9tCMlA" role="ri$Ld">
+                  <ref role="cht4Q" to="tp3r:hqc44pp" resolve="Quotation" />
+                </node>
+              </node>
+            </node>
+          </node>
+          <node concept="3clFbS" id="6px9fxg5XwJ" role="2LFqv$">
             <node concept="3clFbF" id="1BBe7Sou7Qv" role="3cqZAp">
               <node concept="2OqwBi" id="5oUXqOrkGKs" role="3clFbG">
                 <node concept="1P9Npp" id="5oUXqOrkGKy" role="2OqNvi">
@@ -884,8 +894,8 @@
                     <node concept="2ShNRf" id="5oUXqOrkzLj" role="2Oq$k0">
                       <node concept="1pGfFk" id="5oUXqOrkGJC" role="2ShVmc">
                         <ref role="37wK5l" node="76efOMRDFzU" resolve="DclareQuotationConverter" />
-                        <node concept="2GrUjf" id="1BBe7Soug6l" role="37wK5m">
-                          <ref role="2Gs0qQ" node="1BBe7Sou5Bm" resolve="quot" />
+                        <node concept="2GrUjf" id="4PMfL9tCLBN" role="37wK5m">
+                          <ref role="2Gs0qQ" node="6px9fxg5XwF" resolve="quot" />
                         </node>
                       </node>
                     </node>
@@ -898,17 +908,7 @@
                   </node>
                 </node>
                 <node concept="2GrUjf" id="1BBe7SoufZt" role="2Oq$k0">
-                  <ref role="2Gs0qQ" node="1BBe7Sou5Bm" resolve="quot" />
-                </node>
-              </node>
-            </node>
-          </node>
-          <node concept="2OqwBi" id="1BBe7Sou6YW" role="2GsD0m">
-            <node concept="13iPFW" id="1BBe7Sou6_J" role="2Oq$k0" />
-            <node concept="2Rf3mk" id="6qybuMBZeXV" role="2OqNvi">
-              <node concept="1xMEDy" id="6qybuMBZeXX" role="1xVPHs">
-                <node concept="chp4Y" id="6qybuMBZhXv" role="ri$Ld">
-                  <ref role="cht4Q" to="tp3r:hqc44pp" resolve="Quotation" />
+                  <ref role="2Gs0qQ" node="6px9fxg5XwF" resolve="quot" />
                 </node>
               </node>
             </node>
