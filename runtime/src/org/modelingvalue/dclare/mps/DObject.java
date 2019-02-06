@@ -95,6 +95,10 @@ public abstract class DObject<O> {
 
         @Override
         protected void checkTooManyChanges(State pre, Root root, Set<Slot> sets, Set<Slot> gets) {
+            if (root.isDebugging()) {
+                sets = sets.filter(s -> s.observed() instanceof DObserved).toSet();
+                gets = gets.filter(s -> s.observed() instanceof DObserved).toSet();
+            }
             try {
                 super.checkTooManyChanges(pre, root, sets, gets);
             } catch (TooManyChangesException e) {
