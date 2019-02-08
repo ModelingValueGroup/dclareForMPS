@@ -342,7 +342,7 @@
         <child id="5169995583184591170" name="smodelAttribute" index="lGtFl" />
       </concept>
       <concept id="3364660638048049745" name="jetbrains.mps.lang.core.structure.LinkAttribute" flags="ng" index="A9Btn">
-        <property id="1757699476691236116" name="linkRole" index="2qtEX8" />
+        <property id="1757699476691236116" name="role_DebugInfo" index="2qtEX8" />
         <property id="1341860900488019036" name="linkId" index="P3scX" />
       </concept>
       <concept id="1169194658468" name="jetbrains.mps.lang.core.structure.INamedConcept" flags="ng" index="TrEIO">
@@ -2069,17 +2069,31 @@
             </node>
           </node>
           <node concept="3clFbJ" id="67uyCwCTw6M" role="3cqZAp">
-            <node concept="3fqX7Q" id="67uyCwCTGPS" role="3clFbw">
-              <node concept="2OqwBi" id="67uyCwCTH3b" role="3fr31v">
-                <node concept="2pJPEk" id="67uyCwCTGQa" role="2Oq$k0">
-                  <node concept="2pJPED" id="67uyCwCTGRY" role="2pJPEn">
-                    <ref role="2pJxaS" to="7ggn:3Qetf3cPPAL" resolve="StructType" />
+            <node concept="1Wc70l" id="6t3mfVt$d6R" role="3clFbw">
+              <node concept="3fqX7Q" id="6t3mfVt$dQk" role="3uHU7w">
+                <node concept="2OqwBi" id="6t3mfVt$hnu" role="3fr31v">
+                  <node concept="37vLTw" id="6t3mfVt$h8z" role="2Oq$k0">
+                    <ref role="3cqZAo" node="67uyCwCTEa4" resolve="elementType" />
+                  </node>
+                  <node concept="1mIQ4w" id="6t3mfVt$hAl" role="2OqNvi">
+                    <node concept="chp4Y" id="6t3mfVt$hGV" role="cj9EA">
+                      <ref role="cht4Q" to="tp25:gzTqbfa" resolve="SNodeType" />
+                    </node>
                   </node>
                 </node>
-                <node concept="2qgKlT" id="67uyCwCTHeQ" role="2OqNvi">
-                  <ref role="37wK5l" to="tpek:hKBOZqh" resolve="isSupersetOf" />
-                  <node concept="37vLTw" id="67uyCwCTHlY" role="37wK5m">
-                    <ref role="3cqZAo" node="67uyCwCTEa4" resolve="elementType" />
+              </node>
+              <node concept="3fqX7Q" id="67uyCwCTGPS" role="3uHU7B">
+                <node concept="2OqwBi" id="67uyCwCTH3b" role="3fr31v">
+                  <node concept="2pJPEk" id="67uyCwCTGQa" role="2Oq$k0">
+                    <node concept="2pJPED" id="67uyCwCTGRY" role="2pJPEn">
+                      <ref role="2pJxaS" to="7ggn:3Qetf3cPPAL" resolve="StructType" />
+                    </node>
+                  </node>
+                  <node concept="2qgKlT" id="67uyCwCTHeQ" role="2OqNvi">
+                    <ref role="37wK5l" to="tpek:hKBOZqh" resolve="isSupersetOf" />
+                    <node concept="37vLTw" id="67uyCwCTHlY" role="37wK5m">
+                      <ref role="3cqZAo" node="67uyCwCTEa4" resolve="elementType" />
+                    </node>
                   </node>
                 </node>
               </node>
@@ -2087,7 +2101,7 @@
             <node concept="3clFbS" id="67uyCwCTw6O" role="3clFbx">
               <node concept="2MkqsV" id="67uyCwCTHrS" role="3cqZAp">
                 <node concept="Xl_RD" id="67uyCwCTHs7" role="2MkJ7o">
-                  <property role="Xl_RC" value="The type of an composite attribute must be a struct or a collection of structs" />
+                  <property role="Xl_RC" value="The type of an composite attribute must be a struct or node or a collection of structs or nodes" />
                 </node>
                 <node concept="1YBJjd" id="67uyCwCTHv_" role="2OEOjV">
                   <ref role="1YBMHb" node="67uyCwCTvaD" resolve="attribute" />
