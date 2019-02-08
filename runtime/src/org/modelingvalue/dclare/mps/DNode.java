@@ -52,7 +52,7 @@ public class DNode extends DObject<SNode> implements SNode {
 
     @SuppressWarnings("deprecation")
     public static final Getable<SContainmentLink, Observed<DNode, List<DNode>>> MANY_CONTAINMENT   = Constant.of("MANY_CONTAINMENT", sc -> {
-                                                                                                       return DObserved.<DNode, List<DNode>> of(sc, List.of(), !sc.isOptional(), false,                                          //
+                                                                                                       return DObserved.<DNode, List<DNode>> of(sc, List.of(), !sc.isOptional(), false, false,                                   //
                                                                                                                (dNode, pre, post, first) -> {
                                                                                                                    if (first) {
                                                                                                                        DObserved.map(DNode.children(dNode.original(), sc), post.map(DNode::original).toList(),                   //
@@ -73,7 +73,7 @@ public class DNode extends DObject<SNode> implements SNode {
 
     @SuppressWarnings("deprecation")
     public static final Getable<SContainmentLink, Observed<DNode, DNode>>       SINGLE_CONTAINMENT = Constant.of("SINGLE_CONTAINMENT", sc -> {
-                                                                                                       return DObserved.<DNode, DNode> of(sc, null, !sc.isOptional(), false,                                                     //
+                                                                                                       return DObserved.<DNode, DNode> of(sc, null, !sc.isOptional(), false, false,                                              //
                                                                                                                (dNode, pre, post, first) -> {
                                                                                                                    SNode sNode = dNode.original();
                                                                                                                    List<SNode> cs = children(sNode, sc);
@@ -94,7 +94,7 @@ public class DNode extends DObject<SNode> implements SNode {
     @SuppressWarnings("deprecation")
     public static final Getable<SReferenceLink, Observed<DNode, DNode>>         REFERENCE          = Constant.of("REFERENCE", sr -> {
                                                                                                        Observed<DNode, Set<DNode>> oppos = DNode.OPPOSITE.get(sr);
-                                                                                                       return DObserved.<DNode, DNode> of(sr, null, false, true,                                                                 //
+                                                                                                       return DObserved.<DNode, DNode> of(sr, null, false, true, false,                                                          //
                                                                                                                (dNode, pre, post, first) -> {
                                                                                                                    if (first) {
                                                                                                                        SNode ref = post != null ? post.original() : null;
@@ -118,7 +118,7 @@ public class DNode extends DObject<SNode> implements SNode {
                                                                                                    });
     @SuppressWarnings("deprecation")
     public static final Getable<SProperty, Observed<DNode, String>>             PROPERTY           = Constant.of("PROPERTY", sp -> {
-                                                                                                       return DObserved.<DNode, String> of(sp, null, false, false,                                                               //
+                                                                                                       return DObserved.<DNode, String> of(sp, null, false, false, false,                                                        //
                                                                                                                (dNode, pre, post, first) -> {
                                                                                                                    if (first && !Objects.equals(dNode.original().getProperty(sp), post)) {
                                                                                                                        dNode.original().setProperty(sp, post);

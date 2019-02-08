@@ -27,25 +27,27 @@ import org.modelingvalue.transactions.Observed;
 
 public class DObserved<O, T> extends Observed<O, T> implements DFeature<O> {
 
-    public static <C, V> DObserved<C, V> of(Object id, V def, boolean mandatory, boolean deferred, QuadConsumer<C, V, V, Boolean> toMPS, Supplier<SNode> source) {
-        return of(id, def, mandatory, deferred, toMPS, null, source);
+    public static <C, V> DObserved<C, V> of(Object id, V def, boolean mandatory, boolean deferred, boolean synthetic, QuadConsumer<C, V, V, Boolean> toMPS, Supplier<SNode> source) {
+        return of(id, def, mandatory, deferred, synthetic, toMPS, null, source);
     }
 
-    public static <C, V> DObserved<C, V> of(Object id, V def, boolean mandatory, boolean deferred, QuadConsumer<C, V, V, Boolean> toMPS, QuadConsumer<AbstractLeaf, C, V, V> changed, Supplier<SNode> source) {
-        return new DObserved<C, V>(id, def, mandatory, deferred, toMPS, changed, source);
+    public static <C, V> DObserved<C, V> of(Object id, V def, boolean mandatory, boolean deferred, boolean synthetic, QuadConsumer<C, V, V, Boolean> toMPS, QuadConsumer<AbstractLeaf, C, V, V> changed, Supplier<SNode> source) {
+        return new DObserved<C, V>(id, def, mandatory, deferred, synthetic, toMPS, changed, source);
     }
 
     private final QuadConsumer<O, T, T, Boolean> toMPS;
     protected final boolean                      mandatory;
     private final boolean                        deferred;
     private final Supplier<SNode>                source;
+    private final boolean                        synthetic;
 
-    protected DObserved(Object id, T def, boolean mandatory, boolean deferred, QuadConsumer<O, T, T, Boolean> toMPS, QuadConsumer<AbstractLeaf, O, T, T> changed, Supplier<SNode> source) {
+    protected DObserved(Object id, T def, boolean mandatory, boolean deferred, boolean synthetic, QuadConsumer<O, T, T, Boolean> toMPS, QuadConsumer<AbstractLeaf, O, T, T> changed, Supplier<SNode> source) {
         super(id, def, changed);
         this.toMPS = toMPS;
         this.mandatory = mandatory;
         this.deferred = deferred;
         this.source = source;
+        this.synthetic = synthetic;
     }
 
     public boolean isDeferred() {
@@ -112,7 +114,7 @@ public class DObserved<O, T> extends Observed<O, T> implements DFeature<O> {
 
     @Override
     public boolean isSynthetic() {
-        return false;
+        return synthetic;
     }
 
 }

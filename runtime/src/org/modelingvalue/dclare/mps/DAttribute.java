@@ -14,6 +14,7 @@
 package org.modelingvalue.dclare.mps;
 
 import java.lang.reflect.Method;
+import java.util.Collections;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -81,6 +82,17 @@ public interface DAttribute<O, T> extends DFeature<O> {
 
     T get(O object);
 
+    default Iterable<?> getIterable(O object) {
+        T value = get(object);
+        if (value instanceof Iterable) {
+            return (Iterable<?>) value;
+        } else if (value != null) {
+            return Collections.singletonList(value);
+        } else {
+            return Collections.emptyList();
+        }
+    }
+
     T set(O object, T value);
 
     <E> T set(O object, BiFunction<T, E, T> function, E element);
@@ -99,14 +111,12 @@ public interface DAttribute<O, T> extends DFeature<O> {
 
         private final String  name;
         private final boolean composite;
-        private final boolean synthetic;
 
         public DObservedAttribute(Object id, String name, boolean synthetic, boolean optional, boolean composite, V def, Supplier<SNode> source, QuadConsumer<AbstractLeaf, C, V, V> changed) {
-            super(id, def, !optional, false, (o, b, a, first) -> {
+            super(id, def, !optional, false, synthetic, (o, b, a, first) -> {
             }, changed, source);
             this.name = name;
             this.composite = composite;
-            this.synthetic = synthetic;
         }
 
         @Override
@@ -147,10 +157,6 @@ public interface DAttribute<O, T> extends DFeature<O> {
             return mandatory;
         }
 
-        @Override
-        public boolean isSynthetic() {
-            return synthetic;
-        }
     }
 
     final static class DIdentifyingAttribute<C, V> implements DAttribute<C, V> {

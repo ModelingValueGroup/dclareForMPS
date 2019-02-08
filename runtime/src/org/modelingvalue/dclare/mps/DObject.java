@@ -80,7 +80,7 @@ public abstract class DObject<O> {
 
         @Override
         protected void countChanges(Observed observed) {
-            if (observed instanceof DObserved) {
+            if (observed instanceof DObserved && !((DObserved) observed).isSynthetic()) {
                 super.countChanges(observed);
             }
         }
@@ -96,8 +96,8 @@ public abstract class DObject<O> {
         @Override
         protected void checkTooManyChanges(State pre, Root root, Set<Slot> sets, Set<Slot> gets) {
             if (root.isDebugging()) {
-                sets = sets.filter(s -> s.observed() instanceof DObserved).toSet();
-                gets = gets.filter(s -> s.observed() instanceof DObserved).toSet();
+                sets = sets.filter(s -> s.observed() instanceof DObserved && !((DObserved) s.observed()).isSynthetic()).toSet();
+                gets = gets.filter(s -> s.observed() instanceof DObserved && !((DObserved) s.observed()).isSynthetic()).toSet();
             }
             try {
                 super.checkTooManyChanges(pre, root, sets, gets);
@@ -147,7 +147,8 @@ public abstract class DObject<O> {
                                                                                                                      }
                                                                                                                  }, (tx, o, b, a) -> DClareMPS.TYPES.set(dClareMPS(), Set::add, a));
 
-    public static final Setable<DObject, DObject>                                           PARENT               = Observed.of("PARENT", null);
+    public static final Setable<DObject, DObject>                                           PARENT               = DObserved.of("PARENT", null, false, false, false, (o, b, a, f) -> {
+                                                                                                                 }, null);
 
     public static final Setable<DObject, Set<? extends DObject>>                            CHILDREN             = Observed.of("CHILDREN", Set.of(), (tx, o, b, a) -> {
                                                                                                                      Setable.<Set<? extends DObject>, DObject> diff(Set.of(), b, a,                   //
@@ -255,11 +256,23 @@ public abstract class DObject<O> {
         }, () -> ALL_PROBLEMS.set(this, Set.of()));
         rule("<EMPTY_MANDATORY>", tx, () -> {
             for (DAttribute attr : TYPE.get(this).getAttributes()) {
-                if (attr instanceof DObservedAttribute && attr.isMandatory()) {
+                if (attr instanceof DObservedAttribute && attr.isMandatory() && !attr.isSynthetic()) {
                     if (attr.get(this) == null) {
                         addMessage(attr, "MANDATORY", "Mandatory attribute " + attr + " of " + this + " is null");
                     } else {
                         removeMessages(attr, "MANDATORY");
+                    }
+                }
+            }
+        }, () -> PROBLEMS.set(this, PROBLEMS.getDefault()));
+        rule("<REFERENCED_ORPHAN>", tx, () -> {
+            for (DAttribute attr : TYPE.get(this).getAttributes()) {
+                if (attr instanceof DObservedAttribute && !attr.isComposite() && !attr.isSynthetic()) {
+                    Set<DObject> orphans = Collection.of(attr.getIterable(this)).filter(DObject.class).filter(o -> !((DObject) o).isComplete()).toSet();
+                    if (!orphans.isEmpty()) {
+                        addMessage(attr, "ORPHAN", "Non-composite attribute " + attr + " of " + this + " references orphans " + orphans.toString().substring(3));
+                    } else {
+                        removeMessages(attr, "ORPHAN");
                     }
                 }
             }
