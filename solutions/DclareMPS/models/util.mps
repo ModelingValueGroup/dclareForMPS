@@ -771,38 +771,43 @@
       <property role="2aFKle" value="false" />
       <node concept="3clFbS" id="6ndASaeS_lq" role="3clF47">
         <node concept="3clFbF" id="6ndASaeSBKb" role="3cqZAp">
-          <node concept="2YIFZM" id="6ndASaeSCmL" role="3clFbG">
-            <ref role="37wK5l" to="t4tl:~DClareMPS.get(java.util.function.Supplier):java.lang.Object" resolve="get" />
-            <ref role="1Pybhc" to="t4tl:~DClareMPS" resolve="DClareMPS" />
-            <node concept="2ShNRf" id="6ndASaeSCqe" role="37wK5m">
-              <node concept="YeOm9" id="6ndASaeSKpc" role="2ShVmc">
-                <node concept="1Y3b0j" id="6ndASaeSKpf" role="YeSDq">
-                  <property role="2bfB8j" value="true" />
-                  <ref role="1Y3XeK" to="82uw:~Supplier" resolve="Supplier" />
-                  <ref role="37wK5l" to="wyt6:~Object.&lt;init&gt;()" resolve="Object" />
-                  <node concept="3Tm1VV" id="6ndASaeSKpg" role="1B3o_S" />
-                  <node concept="3clFb_" id="6ndASaeSKph" role="jymVt">
-                    <property role="1EzhhJ" value="false" />
-                    <property role="TrG5h" value="get" />
-                    <property role="DiZV1" value="false" />
-                    <property role="od$2w" value="false" />
-                    <node concept="3Tm1VV" id="6ndASaeSKpi" role="1B3o_S" />
-                    <node concept="16syzq" id="6ndASaeSKF4" role="3clF45">
-                      <ref role="16sUi3" node="6ndASaeSBGc" resolve="T" />
-                    </node>
-                    <node concept="3clFbS" id="6ndASaeSKpl" role="3clF47">
-                      <node concept="3clFbF" id="6ndASaeSKwT" role="3cqZAp">
-                        <node concept="2OqwBi" id="6ndASaeSKyy" role="3clFbG">
-                          <node concept="37vLTw" id="6ndASaeSKwS" role="2Oq$k0">
-                            <ref role="3cqZAo" node="6ndASaeSBHo" resolve="getter" />
+          <node concept="2OqwBi" id="acrA1QgTkG" role="3clFbG">
+            <node concept="2YIFZM" id="acrA1QgPEd" role="2Oq$k0">
+              <ref role="37wK5l" to="t4tl:~DClareMPS.instance():org.modelingvalue.dclare.mps.DClareMPS" resolve="instance" />
+              <ref role="1Pybhc" to="t4tl:~DClareMPS" resolve="DClareMPS" />
+            </node>
+            <node concept="liA8E" id="acrA1QgTEd" role="2OqNvi">
+              <ref role="37wK5l" to="t4tl:~DClareMPS.read(java.util.function.Supplier):java.lang.Object" resolve="read" />
+              <node concept="2ShNRf" id="acrA1QgPEe" role="37wK5m">
+                <node concept="YeOm9" id="acrA1QgPEf" role="2ShVmc">
+                  <node concept="1Y3b0j" id="acrA1QgPEg" role="YeSDq">
+                    <property role="2bfB8j" value="true" />
+                    <ref role="1Y3XeK" to="82uw:~Supplier" resolve="Supplier" />
+                    <ref role="37wK5l" to="wyt6:~Object.&lt;init&gt;()" resolve="Object" />
+                    <node concept="3Tm1VV" id="acrA1QgPEh" role="1B3o_S" />
+                    <node concept="3clFb_" id="acrA1QgPEi" role="jymVt">
+                      <property role="1EzhhJ" value="false" />
+                      <property role="TrG5h" value="get" />
+                      <property role="DiZV1" value="false" />
+                      <property role="od$2w" value="false" />
+                      <node concept="3Tm1VV" id="acrA1QgPEj" role="1B3o_S" />
+                      <node concept="16syzq" id="acrA1QgPEk" role="3clF45">
+                        <ref role="16sUi3" node="6ndASaeSBGc" resolve="T" />
+                      </node>
+                      <node concept="3clFbS" id="acrA1QgPEl" role="3clF47">
+                        <node concept="3clFbF" id="acrA1QgPEm" role="3cqZAp">
+                          <node concept="2OqwBi" id="acrA1QgPEn" role="3clFbG">
+                            <node concept="37vLTw" id="acrA1QgPEo" role="2Oq$k0">
+                              <ref role="3cqZAo" node="6ndASaeSBHo" resolve="getter" />
+                            </node>
+                            <node concept="1Bd96e" id="acrA1QgPEp" role="2OqNvi" />
                           </node>
-                          <node concept="1Bd96e" id="6ndASaeSK$4" role="2OqNvi" />
                         </node>
                       </node>
                     </node>
-                  </node>
-                  <node concept="16syzq" id="6ndASaeSK_C" role="2Ghqu4">
-                    <ref role="16sUi3" node="6ndASaeSBGc" resolve="T" />
+                    <node concept="16syzq" id="acrA1QgPEq" role="2Ghqu4">
+                      <ref role="16sUi3" node="6ndASaeSBGc" resolve="T" />
+                    </node>
                   </node>
                 </node>
               </node>
