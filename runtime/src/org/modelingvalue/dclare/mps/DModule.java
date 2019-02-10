@@ -33,8 +33,8 @@ import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.transactions.Compound;
 import org.modelingvalue.transactions.Observed;
+import org.modelingvalue.transactions.Priority;
 import org.modelingvalue.transactions.Setable;
-import org.modelingvalue.transactions.StopObserverException;
 
 import jetbrains.mps.extapi.model.SModelBase;
 import jetbrains.mps.extapi.module.SModuleBase;
@@ -105,30 +105,23 @@ public class DModule extends DObject<SModule> implements SModule {
     protected Compound activate(DObject parent, Compound parentTx) {
         DClareMPS dClareMPS = dClareMPS();
         Compound tx = super.activate(parent, parentTx);
-        new NonCheckingObserver(LANGUAGES, tx, () -> {
-            if (tx.equals(DObject.TRANSACTION.get(this))) {
-                LANGUAGES.set(this, dClareMPS.run(() -> languages(original())).addAll(MODELS.get(this).flatMap(DModel::getUsedLanguages)));
-            } else {
-                LANGUAGES.set(this, Set.of());
-                throw new StopObserverException("Stopped");
-            }
-        }).trigger();
-        new NonCheckingObserver(MODELS, tx, () -> {
-            if (tx.equals(DObject.TRANSACTION.get(this))) {
-                if (!(original() instanceof Language) && !original().isReadOnly() && hasRuleSets()) {
-                    MODELS.set(this, dClareMPS.run(() -> models(original())).map(m -> DModel.of(m)).toSet());
-                    ACTIVE.set(this, true);
-                } else {
-                    MODELS.set(this, Set.of());
-                    ACTIVE.set(this, false);
-                }
+        rule(LANGUAGES, tx, () -> {
+            LANGUAGES.set(this, dClareMPS.read(() -> languages(original())).addAll(MODELS.get(this).flatMap(DModel::getUsedLanguages)));
+        }, () -> LANGUAGES.set(this, Set.of()), Priority.high);
+        rule(MODELS, tx, () -> {
+            if (!(original() instanceof Language) && !original().isReadOnly() && hasRuleSets()) {
+                MODELS.set(this, dClareMPS.read(() -> models(original())).map(m -> DModel.of(m)).toSet());
+                ACTIVE.set(this, true);
             } else {
                 MODELS.set(this, Set.of());
                 ACTIVE.set(this, false);
-                throw new StopObserverException("Stopped");
             }
-        }).trigger();
+        }, () -> {
+            MODELS.set(this, Set.of());
+            ACTIVE.set(this, false);
+        }, Priority.high);
         return tx;
+
     }
 
     @Override
@@ -332,7 +325,7 @@ public class DModule extends DObject<SModule> implements SModule {
         }
         if (found == null) {
             SModuleBase sModule = (SModuleBase) original();
-            SModelBase sModel = dClareMPS().run(temporal ? () -> {
+            SModelBase sModel = dClareMPS().write(temporal ? () -> {
                 return new DTempModel(name, sModule);
             } : () -> {
                 return (SModelBase) sModule.getModelRoots().iterator().next().createModel(name);

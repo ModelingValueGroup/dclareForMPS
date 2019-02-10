@@ -30,8 +30,6 @@ import org.modelingvalue.transactions.Observed;
 @SuppressWarnings("deprecation")
 public class DRepository extends DObject<SRepository> implements SRepository {
 
-    protected static final Observed<DRepository, Boolean>   STARTED = Observed.of("STARTED", false);
-
     public static final Observed<DRepository, Set<DModule>> MODULES = Observed.of("MODULES", Set.of());
 
     public static DRepository of(SRepository original) {
@@ -78,14 +76,13 @@ public class DRepository extends DObject<SRepository> implements SRepository {
     }
 
     @Override
-    protected boolean isComplete() {
-        return STARTED.get(this);
+    protected boolean isOwned() {
+        return true;
     }
 
     @Override
     protected void init(DClareMPS dClareMPS) {
         super.init(dClareMPS);
-        STARTED.set(this, true);
         MODULES.set(this, modules().map(m -> DModule.of(m)).toSet());
         addRepositoryListener(new Listener(this, dClareMPS));
     }

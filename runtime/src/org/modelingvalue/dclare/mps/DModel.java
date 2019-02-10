@@ -42,8 +42,8 @@ import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.transactions.Compound;
 import org.modelingvalue.transactions.Observed;
+import org.modelingvalue.transactions.Priority;
 import org.modelingvalue.transactions.Setable;
-import org.modelingvalue.transactions.StopObserverException;
 
 import jetbrains.mps.extapi.model.SModelBase;
 
@@ -78,6 +78,10 @@ public class DModel extends DObject<SModel> implements SModel {
                                                                         }, null);
 
     public static final Observed<DModel, ModelRoot>      MODEL_ROOT     = Observed.of("MODEL_ROOT", null);
+
+    public static final Observed<DModel, Boolean>        LOADED         = Observed.of("LOADED", false);
+
+    private boolean                                      loaded;
 
     public static DModel of(SModel original) {
         return original instanceof DModel ? (DModel) original : dClareMPS().DMODEL.get(original);
@@ -131,23 +135,32 @@ public class DModel extends DObject<SModel> implements SModel {
     @Override
     protected void init(DClareMPS dClareMPS) {
         super.init(dClareMPS);
-        ROOTS.set(this, Collection.of(original().getRootNodes()).map(n -> DNode.of(n)).toSet());
         MODEL_ROOT.set(this, original().getModelRoot());
+        loaded = original() instanceof DTempModel || original().isLoaded();
+        loadUnload();
         original().addChangeListener(new Listener(this, dClareMPS));
+        if (!(original() instanceof DTempModel)) {
+            dClareMPS.addPoller(this, () -> {
+                if (loaded != original().isLoaded()) {
+                    loaded = original().isLoaded();
+                    dClareMPS.schedule(this::loadUnload);
+                }
+            });
+        }
+    }
+
+    private void loadUnload() {
+        ROOTS.set(this, loaded ? Collection.of(original().getRootNodes()).map(n -> DNode.of(n)).toSet() : Set.of());
+        dClareMPS().root().put(this, () -> dClareMPS().schedule(() -> LOADED.set(this, loaded)));
     }
 
     @SuppressWarnings("rawtypes")
     @Override
     protected Compound activate(DObject parent, Compound parentTx) {
         Compound tx = super.activate(parent, parentTx);
-        new NonCheckingObserver(USED_LANGUAGES, tx, () -> {
-            if (tx.equals(DObject.TRANSACTION.get(this))) {
-                USED_LANGUAGES.set(this, ROOTS.get(this).map(SNode::getConcept).map(SConcept::getLanguage).toSet());
-            } else {
-                USED_LANGUAGES.set(this, Set.of());
-                throw new StopObserverException("Stopped");
-            }
-        }).trigger();
+        rule(USED_LANGUAGES, tx, () -> {
+            USED_LANGUAGES.set(this, ROOTS.get(this).map(SNode::getConcept).map(SConcept::getLanguage).toSet());
+        }, () -> USED_LANGUAGES.set(this, Set.of()), Priority.high);
         return tx;
     }
 
@@ -155,6 +168,9 @@ public class DModel extends DObject<SModel> implements SModel {
     protected void exit(DClareMPS dClareMPS) {
         super.exit(dClareMPS);
         original().removeChangeListener(new Listener(this, dClareMPS));
+        if (!(original() instanceof DTempModel)) {
+            dClareMPS.removePoller(this);
+        }
     }
 
     private class Listener extends Pair<DModel, DClareMPS> implements SNodeChangeListener {
@@ -215,7 +231,11 @@ public class DModel extends DObject<SModel> implements SModel {
                 }
             });
         }
+    }
 
+    @Override
+    protected boolean isComplete() {
+        return super.isComplete() && isLoaded();
     }
 
     @Override
@@ -331,7 +351,7 @@ public class DModel extends DObject<SModel> implements SModel {
 
     @Override
     public boolean isLoaded() {
-        return original().isReadOnly();
+        return LOADED.get(this);
     }
 
     @Override

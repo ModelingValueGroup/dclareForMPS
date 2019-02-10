@@ -115,6 +115,10 @@ public abstract class DObject<O> {
             super(id, parent, action, Priority.mid);
         }
 
+        protected NonCheckingObserver(Object id, Compound parent, Runnable action, Priority prio) {
+            super(id, parent, action, prio);
+        }
+
         @Override
         protected void countChanges(Observed observed) {
         }
@@ -160,7 +164,7 @@ public abstract class DObject<O> {
                                                                                                                      if (a != null) {
                                                                                                                          o.rule(CHILDREN, a,                                                          //
                                                                                                                                  () -> CHILDREN.set(o, o.getAllChildren().toSet()),                   //
-                                                                                                                                 () -> CHILDREN.set(o, Set.of()));
+                                                                                                                                 () -> CHILDREN.set(o, Set.of()), Priority.high);
                                                                                                                      }
                                                                                                                  });
 
@@ -173,7 +177,7 @@ public abstract class DObject<O> {
     protected static final Setable<DObject, QualifiedSet<Pair<DFeature, String>, DMessage>> PROBLEMS             = Observed.of("PROBLEMS", QualifiedSet.of(m -> Pair.of(m.feature(), m.id())));
 
     public static DClareMPS dClareMPS() {
-        return (DClareMPS) Leaf.getCurrent().root().getId();
+        return DClareMPS.instance();
     }
 
     protected final O original;
@@ -243,13 +247,16 @@ public abstract class DObject<O> {
     @SuppressWarnings("unchecked")
     protected Compound activate(DObject parent, Compound parentTx) {
         DClareMPS dClareMPS = dClareMPS();
-        dClareMPS.run(() -> init(dClareMPS));
+        dClareMPS.read(() -> init(dClareMPS));
         PARENT.set(this, parent);
         Compound tx = Compound.of(this, parentTx);
         TRANSACTION.set(this, tx);
-        rule(TYPE, tx, () -> TYPE.set(this, getType()), () -> TYPE.set(this, TYPE.getDefault()));
-        rule("<CONSTANT_CONTAINMENT>", tx, () -> //
-        TYPE.get(this).getAttributes().filter(DAttribute::isConstant).filter(DAttribute::isComposite).forEach(cc -> cc.get(this)));
+        rule(TYPE, tx, () -> {
+            TYPE.set(this, getType());
+        }, () -> TYPE.set(this, TYPE.getDefault()), Priority.high);
+        rule("<CONSTANT_CONTAINMENT>", tx, () -> {
+            TYPE.get(this).getAttributes().filter(DAttribute::isConstant).filter(DAttribute::isComposite).forEach(cc -> cc.get(this));
+        }, Priority.high);
         rule(ALL_PROBLEMS, tx, () -> {
             Set<DMessage> problems = PROBLEMS.get(this).toSet();
             ALL_PROBLEMS.set(this, problems.addAll(CHILDREN.get(this).flatMap(c -> ALL_PROBLEMS.get(c))));
@@ -277,9 +284,9 @@ public abstract class DObject<O> {
                 }
             }
         }, () -> PROBLEMS.set(this, PROBLEMS.getDefault()));
-        rule(RULE_INSTANCES, tx, //
-                () -> RULE_INSTANCES.set(this, TYPE.get(this).getRules().map(r -> rule(tx, r)).toSet()), //
-                () -> RULE_INSTANCES.set(this, Set.of()));
+        rule(RULE_INSTANCES, tx, () -> {
+            RULE_INSTANCES.set(this, TYPE.get(this).getRules().map(r -> rule(tx, r)).toSet());
+        }, () -> RULE_INSTANCES.set(this, Set.of()));
         return tx;
 
     }
@@ -295,7 +302,7 @@ public abstract class DObject<O> {
         if (tx != null && Objects.equals(parentTx, tx.parent())) {
             TRANSACTION.set(this, null);
         }
-        dClareMPS().run(() -> exit(dClareMPS()));
+        dClareMPS().read(() -> exit(dClareMPS()));
     }
 
     protected void stop(DClareMPS dClareMPS) {
@@ -305,8 +312,12 @@ public abstract class DObject<O> {
         }
     }
 
-    protected boolean isComplete() {
+    protected boolean isOwned() {
         return PARENT.get(this) != null;
+    }
+
+    protected boolean isComplete() {
+        return isOwned();
     }
 
     protected abstract DType getType();
@@ -340,29 +351,34 @@ public abstract class DObject<O> {
     }
 
     final public void rule(Object id, Compound tx, Runnable action) {
-        makeRule(id, tx, action).trigger();
+        makeRule(id, tx, action, () -> {
+        }, Priority.mid).trigger();
+    }
+
+    final public void rule(Object id, Compound tx, Runnable action, Priority prio) {
+        makeRule(id, tx, action, () -> {
+        }, prio).trigger();
     }
 
     final public void rule(Object id, Compound tx, Runnable action, Runnable stop) {
-        makeRule(id, tx, action, stop).trigger();
+        makeRule(id, tx, action, stop, Priority.mid).trigger();
     }
 
-    final public Observer makeRule(Object id, Compound tx, Runnable action) {
-        return makeRule(id, tx, action, () -> {
-        });
+    final public void rule(Object id, Compound tx, Runnable action, Runnable stop, Priority prio) {
+        makeRule(id, tx, action, stop, prio).trigger();
     }
 
-    final public Observer makeRule(Object id, Compound tx, Runnable action, Runnable stop) {
+    final private Observer makeRule(Object id, Compound tx, Runnable action, Runnable stop, Priority prio) {
         return new NonCheckingObserver(id, tx, () -> {
             if (tx.equals(DObject.TRANSACTION.get(this))) {
-                if (isComplete()) {
+                if (prio == Priority.high ? isOwned() : isComplete()) {
                     action.run();
                 }
             } else {
                 stop.run();
                 throw new StopObserverException("Stopped");
             }
-        });
+        }, prio);
     }
 
 }

@@ -13,9 +13,8 @@
 
 package org.modelingvalue.dclare.mps;
 
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.function.Consumer;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.function.Supplier;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
@@ -25,6 +24,7 @@ import org.jetbrains.mps.openapi.module.SModule;
 import org.jetbrains.mps.openapi.module.SRepository;
 import org.jetbrains.mps.openapi.project.Project;
 import org.modelingvalue.collections.Collection;
+import org.modelingvalue.collections.Entry;
 import org.modelingvalue.collections.Map;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.ContextThread;
@@ -35,7 +35,6 @@ import org.modelingvalue.transactions.AbstractLeaf;
 import org.modelingvalue.transactions.Constant;
 import org.modelingvalue.transactions.Getable;
 import org.modelingvalue.transactions.Imperative;
-import org.modelingvalue.transactions.Leaf;
 import org.modelingvalue.transactions.Observed;
 import org.modelingvalue.transactions.Priority;
 import org.modelingvalue.transactions.Root;
@@ -46,8 +45,6 @@ import jetbrains.mps.smodel.language.LanguageRegistry;
 import jetbrains.mps.smodel.language.LanguageRuntime;
 
 public class DClareMPS implements TriConsumer<State, State, Boolean> {
-
-    protected static final Observed<DClareMPS, Boolean>        INITIALIZED   = Observed.of("INITIALIZED", false);
 
     protected static final Observed<DClareMPS, Set<SLanguage>> ALL_LANGUAGES = Observed.of("ALL_LANGAUGES", Set.of(), (tx, o, b, a) -> {
                                                                                  Setable.<Set<SLanguage>, SLanguage> diff(Set.of(), b, a, x -> o.start(x), x -> {
@@ -82,55 +79,32 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
     protected final Thread                                     waitForEndThread;
     protected final Root                                       root;
     protected final Project                                    project;
+    private final StartStopHandler                             startStopHandler;
     private DRepository                                        repository;
     private Imperative                                         imperative;
+    private final Timer                                        timer         = new Timer();
+    private Map<Object, Runnable>                              pollers       = Map.of();
+    private final TimerTask                                    poolTask      = new TimerTask() {
+                                                                                 @Override
+                                                                                 public void run() {
+                                                                                     poll();
+                                                                                 }
+                                                                             };
+    private boolean                                            running;
 
     protected DClareMPS(Project project, State prevState, int maxTotalNrOfChanges, int maxNrOfChanges, StartStopHandler startStopHandler) {
+        System.err.println(DObject.DCLARE + "START " + project.getName());
         this.project = project;
-        root = new Root(this, thePool, prevState, 100, maxTotalNrOfChanges, maxNrOfChanges, 10, null) {
-
-            private final Leaf pre  = Leaf.of("<pre>", this, this::pre);
-            private final Leaf post = Leaf.of("<post>", this, this::post);
-
-            private void pre() {
-                if (imperative != null && repository != null && inQueue.isEmpty() && repository.isComplete()) {
-                    if (INITIALIZED.get(DClareMPS.this)) {
-                        DClareMPS.this.run(() -> startStopHandler.start(project));
-                    }
-                }
-            }
-
-            private void post() {
-                if (imperative != null && repository != null && inQueue.isEmpty() && repository.isComplete()) {
-                    if (INITIALIZED.get(DClareMPS.this)) {
-                        Set<DMessage> problems = DObject.ALL_PROBLEMS.get(repository);
-                        DClareMPS.this.run(() -> startStopHandler.stop(project, problems));
-                    } else {
-                        root.put(INITIALIZED, () -> INITIALIZED.set(DClareMPS.this, true));
-                    }
-                }
-            }
-
-            @Override
-            protected State pre(State state) {
-                return run(schedule(state, pre, Priority.high));
-            }
-
-            @Override
-            protected State post(State state) {
-                return run(schedule(state, post, Priority.low));
-            }
-        };
+        this.startStopHandler = startStopHandler;
+        root = Root.of(this, thePool, prevState, 100, maxTotalNrOfChanges, maxNrOfChanges, 10, null);
         waitForEndThread = new Thread(() -> {
             try {
                 root.waitForEnd();
-            } catch (
-
-            Throwable t) {
-                t.printStackTrace();
-                throw t;
-            } finally {
+                thePool.shutdownNow();
+            } catch (Throwable t) {
+                thePool.shutdownNow();
                 stop();
+                throw t;
             }
         });
         waitForEndThread.setDaemon(true);
@@ -138,11 +112,17 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
         root.put("init", () -> {
             imperative = root.addIntegration("MPSNative", this, r -> {
                 if (imperative != null && !COMMITTING.get()) {
-                    project.getModelAccess().executeCommandInEDT(r);
+                    if (!running) {
+                        running = true;
+                        command(() -> startStopHandler.start(project));
+                    }
+                    command(r);
                 }
             });
             repository = DRepository.of(project.getRepository());
-        });
+            repository.activate(null, root);
+        }, Priority.high);
+        timer.schedule(poolTask, 500, 500);
     }
 
     @Override
@@ -161,39 +141,34 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
         }
     }
 
-    public static <T> T get(Supplier<T> supplier) {
-        return ((DClareMPS) Leaf.getCurrent().root().getId()).run(supplier);
+    public void command(Runnable runnable) {
+        project.getModelAccess().executeCommandInEDT(runnable);
     }
 
-    public void run(Runnable runnable) {
-        Consumer<AbstractLeaf> action = AbstractLeaf.consumer(runnable);
-        AbstractLeaf tx = AbstractLeaf.getCurrent();
-        run(() -> {
-            action.accept(tx);
-            return null;
-        });
+    public void read(Runnable runnable) {
+        project.getModelAccess().runReadAction(runnable);
+    }
+
+    public void write(Runnable runnable) {
+        project.getModelAccess().runWriteAction(runnable);
     }
 
     @SuppressWarnings("unchecked")
-    public <R> R run(Supplier<R> supplier) {
-        BlockingQueue<Supplier<R>> wait = new LinkedBlockingQueue<>(1);
-        schedule(() -> {
-            try {
-                Object[] r = new Object[1];
-                try {
-                    r[0] = supplier.get();
-                } finally {
-                    wait.put(() -> (R) r[0]);
-                }
-            } catch (InterruptedException e) {
-                throw new Error(e);
-            }
-        });
-        try {
-            return wait.take().get();
-        } catch (InterruptedException e) {
-            throw new Error(e);
-        }
+    public <R> R read(Supplier<R> supplier) {
+        R[] result = (R[]) new Object[1];
+        project.getModelAccess().runReadAction(() -> result[0] = supplier.get());
+        return result[0];
+    }
+
+    @SuppressWarnings("unchecked")
+    public <R> R write(Supplier<R> supplier) {
+        R[] result = (R[]) new Object[1];
+        project.getModelAccess().runWriteAction(() -> result[0] = supplier.get());
+        return result[0];
+    }
+
+    public static DClareMPS instance() {
+        return (DClareMPS) AbstractLeaf.getCurrent().root().getId();
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
@@ -231,6 +206,8 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
                     deferred[0].forEach(e -> e.getKey().b().toMPS(e.getKey().a(), e.getValue().a(), e.getValue().b(), true));
                     deferred[0].forEach(e -> e.getKey().b().toMPS(e.getKey().a(), e.getValue().a(), e.getValue().b(), false));
                     deferred[0] = Map.of();
+                    running = false;
+                    startStopHandler.stop(project, DObject.ALL_PROBLEMS.get(repository));
                 }
             } finally {
                 COMMITTING.set(false);
@@ -238,20 +215,31 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
         }
     }
 
-    public void start() {
-        if (imperative == null) {
-            System.err.println(DObject.DCLARE + "START " + project.getName());
-            root.put("activateDclareMPS", () -> repository.activate(null, root));
+    public void addPoller(Object id, Runnable poller) {
+        synchronized (timer) {
+            pollers = pollers.put(id, poller);
+        }
+    }
+
+    public void removePoller(Object id) {
+        synchronized (timer) {
+            pollers = pollers.removeKey(id);
+        }
+    }
+
+    private void poll() {
+        for (Entry<Object, Runnable> pl : pollers) {
+            pl.getValue().run();
         }
     }
 
     public void stop() {
         if (imperative != null) {
             System.err.println(DObject.DCLARE + "STOP " + project.getName());
+            timer.cancel();
             imperative = null;
             root.put("stopDclareMPS", () -> repository.stop(this));
             root.stop();
-            thePool.shutdownNow();
         }
     }
 
@@ -280,5 +268,9 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
     public static <T> T pre(Supplier<T> supplier) {
         DObject.EMPTY_ATTRIBUTE.set(true);
         return AbstractLeaf.getCurrent().root().preState().get(supplier);
+    }
+
+    public Root root() {
+        return root;
     }
 }

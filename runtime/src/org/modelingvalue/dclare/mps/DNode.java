@@ -229,8 +229,13 @@ public class DNode extends DObject<SNode> implements SNode {
     }
 
     @Override
+    public boolean isOwned() {
+        return super.isOwned() && getModel() != null && getModel().isOwned();
+    }
+
+    @Override
     public boolean isComplete() {
-        return super.isComplete() && getModel() != null && getModel().getModule() != null;
+        return super.isComplete() && getModel() != null && getModel().isComplete();
     }
 
     @Override
