@@ -22,6 +22,7 @@ import org.jetbrains.mps.openapi.language.SContainmentLink;
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.jetbrains.mps.openapi.language.SProperty;
 import org.jetbrains.mps.openapi.language.SReferenceLink;
+import org.jetbrains.mps.openapi.model.SModel;
 import org.jetbrains.mps.openapi.model.SModelReference;
 import org.jetbrains.mps.openapi.model.SNode;
 import org.jetbrains.mps.openapi.model.SNodeId;
@@ -140,6 +141,12 @@ public class DNode extends DObject<SNode> implements SNode {
 
     protected DNode(SNode original) {
         super(original);
+    }
+
+    @Override
+    public boolean isReadOnly() {
+        SModel m = original().getModel();
+        return m != null && m.isReadOnly();
     }
 
     @Override

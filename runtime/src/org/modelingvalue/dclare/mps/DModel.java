@@ -136,10 +136,10 @@ public class DModel extends DObject<SModel> implements SModel {
     protected void init(DClareMPS dClareMPS) {
         super.init(dClareMPS);
         MODEL_ROOT.set(this, original().getModelRoot());
-        loaded = original() instanceof DTempModel || original().isLoaded();
+        loaded = (original() instanceof DTempModel || original().isLoaded()) && !original().isReadOnly();
         loadUnload();
         original().addChangeListener(new Listener(this, dClareMPS));
-        if (!(original() instanceof DTempModel)) {
+        if (!(original() instanceof DTempModel) && !original().isReadOnly()) {
             dClareMPS.addPoller(this, () -> {
                 if (loaded != original().isLoaded()) {
                     loaded = original().isLoaded();

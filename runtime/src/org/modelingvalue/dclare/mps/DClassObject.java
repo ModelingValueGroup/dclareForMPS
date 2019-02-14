@@ -39,6 +39,11 @@ public class DClassObject extends DObject<SClassObject> implements SClassObject 
         return Set.of();
     }
 
+    @Override
+    public boolean isReadOnly() {
+        return false;
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     protected DType getType() {

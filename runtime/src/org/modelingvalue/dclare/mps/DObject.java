@@ -207,6 +207,8 @@ public abstract class DObject<O> {
         }
     }
 
+    public abstract boolean isReadOnly();
+
     @Override
     public String toString() {
         return original().toString();
@@ -275,7 +277,7 @@ public abstract class DObject<O> {
         rule("<REFERENCED_ORPHAN>", tx, () -> {
             for (DAttribute attr : TYPE.get(this).getAttributes()) {
                 if (attr instanceof DObservedAttribute && !attr.isComposite() && !attr.isSynthetic()) {
-                    Set<DObject> orphans = Collection.of(attr.getIterable(this)).filter(DObject.class).filter(o -> !((DObject) o).isComplete()).toSet();
+                    Set<DObject> orphans = Collection.of(attr.getIterable(this)).filter(DObject.class).filter(o -> !((DObject) o).isReadOnly() && !((DObject) o).isComplete()).toSet();
                     if (!orphans.isEmpty()) {
                         addMessage(attr, "ORPHAN", "Non-composite attribute " + attr + " of " + this + " references orphans " + orphans.toString().substring(3));
                     } else {
