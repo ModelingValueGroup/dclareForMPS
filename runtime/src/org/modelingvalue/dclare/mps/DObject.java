@@ -17,6 +17,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
+import org.jetbrains.mps.openapi.module.SRepository;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.ContainingCollection;
 import org.modelingvalue.collections.QualifiedSet;
@@ -277,7 +278,9 @@ public abstract class DObject<O> {
         rule("<REFERENCED_ORPHAN>", tx, () -> {
             for (DAttribute attr : TYPE.get(this).getAttributes()) {
                 if (attr instanceof DObservedAttribute && !attr.isComposite() && !attr.isSynthetic()) {
-                    Set<DObject> orphans = Collection.of(attr.getIterable(this)).filter(DObject.class).filter(o -> !((DObject) o).isReadOnly() && !((DObject) o).isComplete()).toSet();
+                    Set<DObject> orphans = Collection.of(attr.getIterable(this)).filter(DObject.class).filter(o -> {
+                        return !((DObject) o).isReadOnly() && !isInOtherRepository(dClareMPS, (DObject) o) && !((DObject) o).isComplete();
+                    }).toSet();
                     if (!orphans.isEmpty()) {
                         addMessage(attr, "ORPHAN", "Non-composite attribute " + attr + " of " + this + " references orphans " + orphans.toString().substring(3));
                     } else {
@@ -291,6 +294,17 @@ public abstract class DObject<O> {
         }, () -> RULE_INSTANCES.set(this, Set.of()));
         return tx;
 
+    }
+
+    protected abstract SRepository getOriginalRepository();
+
+    private boolean isInOtherRepository(DClareMPS dClareMPS, DObject o) {
+        if (isReadOnly()) {
+            return true;
+        } else {
+            SRepository r = o.getOriginalRepository();
+            return r != null && !r.equals(dClareMPS.getRepository().original());
+        }
     }
 
     protected void exit(DClareMPS dClareMPS) {

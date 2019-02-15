@@ -52,6 +52,11 @@ public class DRepository extends DObject<SRepository> implements SRepository {
     }
 
     @Override
+    protected SRepository getOriginalRepository() {
+        return original();
+    }
+
+    @Override
     protected DType getType() {
         Set<SLanguage> allLanguages = DClareMPS.ALL_LANGUAGES.get(dClareMPS());
         return new DType() {

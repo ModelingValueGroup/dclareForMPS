@@ -31,6 +31,7 @@ import org.jetbrains.mps.openapi.model.SNodeAccessListener;
 import org.jetbrains.mps.openapi.model.SNodeChangeListener;
 import org.jetbrains.mps.openapi.model.SNodeId;
 import org.jetbrains.mps.openapi.model.SReference;
+import org.jetbrains.mps.openapi.module.SModule;
 import org.jetbrains.mps.openapi.module.SModuleReference;
 import org.jetbrains.mps.openapi.module.SRepository;
 import org.jetbrains.mps.openapi.persistence.DataSource;
@@ -93,6 +94,12 @@ public class DModel extends DObject<SModel> implements SModel {
 
     protected DModel(SModel original) {
         super(original);
+    }
+
+    @Override
+    protected SRepository getOriginalRepository() {
+        SModule m = original().getModule();
+        return m != null ? m.getRepository() : null;
     }
 
     @Override

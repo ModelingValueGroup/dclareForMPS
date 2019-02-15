@@ -14,6 +14,7 @@
 package org.modelingvalue.dclare.mps;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
+import org.jetbrains.mps.openapi.module.SRepository;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.ContainingCollection;
 import org.modelingvalue.collections.Set;
@@ -42,6 +43,11 @@ public class DClassObject extends DObject<SClassObject> implements SClassObject 
     @Override
     public boolean isReadOnly() {
         return false;
+    }
+
+    @Override
+    protected SRepository getOriginalRepository() {
+        return null;
     }
 
     @SuppressWarnings("unchecked")

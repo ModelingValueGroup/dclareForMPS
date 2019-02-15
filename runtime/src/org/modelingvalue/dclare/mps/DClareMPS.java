@@ -243,6 +243,10 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
         }
     }
 
+    public DRepository getRepository() {
+        return repository;
+    }
+
     public boolean isRunning() {
         return imperative != null;
     }

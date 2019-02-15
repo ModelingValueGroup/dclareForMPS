@@ -66,6 +66,11 @@ public class DModule extends DObject<SModule> implements SModule {
     }
 
     @Override
+    protected SRepository getOriginalRepository() {
+        return original().getRepository();
+    }
+
+    @Override
     protected DType getType() {
         Set<SLanguage> usedLanguages = LANGUAGES.get(this);
         return new DType() {

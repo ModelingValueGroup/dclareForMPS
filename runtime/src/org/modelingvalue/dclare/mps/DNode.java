@@ -28,6 +28,7 @@ import org.jetbrains.mps.openapi.model.SNode;
 import org.jetbrains.mps.openapi.model.SNodeId;
 import org.jetbrains.mps.openapi.model.SNodeReference;
 import org.jetbrains.mps.openapi.model.SReference;
+import org.jetbrains.mps.openapi.module.SModule;
 import org.jetbrains.mps.openapi.module.SRepository;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.List;
@@ -141,6 +142,13 @@ public class DNode extends DObject<SNode> implements SNode {
 
     protected DNode(SNode original) {
         super(original);
+    }
+
+    @Override
+    protected SRepository getOriginalRepository() {
+        SModel me = original().getModel();
+        SModule mu = me != null ? me.getModule() : null;
+        return mu != null ? mu.getRepository() : null;
     }
 
     @Override
