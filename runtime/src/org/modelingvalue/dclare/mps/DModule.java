@@ -330,7 +330,7 @@ public class DModule extends DObject<SModule> implements SModule {
         }
         if (found == null) {
             SModuleBase sModule = (SModuleBase) original();
-            SModelBase sModel = dClareMPS().write(temporal ? () -> {
+            SModelBase sModel = dClareMPS().command(temporal ? () -> {
                 return new DTempModel(name, sModule);
             } : () -> {
                 return (SModelBase) sModule.getModelRoots().iterator().next().createModel(name);

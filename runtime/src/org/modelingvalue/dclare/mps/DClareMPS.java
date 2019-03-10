@@ -15,6 +15,8 @@ package org.modelingvalue.dclare.mps;
 
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.Supplier;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
@@ -151,6 +153,35 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
 
     public void write(Runnable runnable) {
         project.getModelAccess().runWriteAction(runnable);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <R> R command(Supplier<R> supplier) {
+        BlockingQueue<Object> queue = new LinkedBlockingQueue<>(1);
+        project.getModelAccess().executeCommandInEDT(() -> {
+            try {
+                try {
+                    queue.put(supplier.get());
+                } catch (InterruptedException e) {
+                    throw e;
+                } catch (Throwable t) {
+                    queue.put(t);
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+        try {
+            Object result = queue.take();
+            if (result instanceof Throwable) {
+                throw new Error((Throwable) result);
+            } else {
+                return (R) result;
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @SuppressWarnings("unchecked")
