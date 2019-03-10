@@ -349,7 +349,7 @@ public abstract class DObject<O> {
             m.addSubMessage(new DMessage(((DRuleObserver) r.observer()).object(), ((DRuleObserver) r.observer()).rule(), id, //
                     "run: " + ((DRuleObserver) r.observer()).object() + "." + ((DRuleObserver) r.observer()).rule() + " nr: " + r.nrOfChanges()));
         }, (m, r, s) -> {
-            m.subMessages().last().addSubMessage(new DMessage((DObject) s.object(), (DObserved) s.observed(), id, //
+            m.addSubMessage(new DMessage((DObject) s.object(), (DObserved) s.observed(), id, //
                     "read: " + s.object() + "." + s.observed() + "=" + r.read().get(s)));
         }, (m, w, s) -> {
             m.subMessages().last().addSubMessage(new DMessage((DObject) s.object(), (DObserved) s.observed(), id, //
