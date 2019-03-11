@@ -15,8 +15,20 @@
   </imports>
   <registry>
     <language id="982eb8df-2c96-4bd7-9963-11712ea622e5" name="jetbrains.mps.lang.resources">
-      <concept id="8974276187400029883" name="jetbrains.mps.lang.resources.structure.FileIcon" flags="ng" index="1QGGSu">
-        <property id="2756621024541341363" name="file" index="1iqoE4" />
+      <concept id="2756621024541681841" name="jetbrains.mps.lang.resources.structure.Primitive" flags="ng" index="1irPi6">
+        <child id="1860120738943552529" name="fillColor" index="3PKjn_" />
+      </concept>
+      <concept id="2756621024541681849" name="jetbrains.mps.lang.resources.structure.Text" flags="ng" index="1irPie">
+        <property id="2756621024541681854" name="text" index="1irPi9" />
+        <child id="1860120738943552534" name="color" index="3PKjny" />
+      </concept>
+      <concept id="2756621024541674821" name="jetbrains.mps.lang.resources.structure.TextIcon" flags="ng" index="1irR5M">
+        <property id="1358878980655415353" name="iconId" index="2$rrk2" />
+        <child id="2756621024541675110" name="layers" index="1irR9h" />
+      </concept>
+      <concept id="2756621024541675104" name="jetbrains.mps.lang.resources.structure.Circle" flags="ng" index="1irR9n" />
+      <concept id="1860120738943552477" name="jetbrains.mps.lang.resources.structure.ColorLiteral" flags="ng" index="3PKj8D">
+        <property id="1860120738943552481" name="val" index="3PKj8l" />
       </concept>
     </language>
     <language id="c72da2b9-7cce-4447-8389-f407dc1158b7" name="jetbrains.mps.lang.structure">
@@ -226,8 +238,19 @@
     <property role="34LRSv" value="Model RuleSet" />
     <property role="3GE5qa" value="models" />
     <ref role="1TJDcQ" node="29R9$zZUovD" resolve="RuleSet" />
-    <node concept="1QGGSu" id="6HWpSUEu3T6" role="rwd14">
-      <property role="1iqoE4" value="${module}/icons/Dclare.png" />
+    <node concept="1irR5M" id="4vjy7c4Qp9c" role="rwd14">
+      <property role="2$rrk2" value="31" />
+      <node concept="1irR9n" id="4vjy7c4Qp9j" role="1irR9h">
+        <node concept="3PKj8D" id="4vjy7c4Qp9k" role="3PKjn_">
+          <property role="3PKj8l" value="00ddff" />
+        </node>
+      </node>
+      <node concept="1irPie" id="4vjy7c4Qpb3" role="1irR9h">
+        <property role="1irPi9" value="m" />
+        <node concept="3PKj8D" id="4vjy7c4Qpb4" role="3PKjny">
+          <property role="3PKj8l" value="ffffff" />
+        </node>
+      </node>
     </node>
   </node>
   <node concept="1TIwiD" id="6HWpSUEu3U0">
@@ -237,8 +260,19 @@
     <property role="34LRSv" value="Module RuleSet" />
     <property role="3GE5qa" value="models" />
     <ref role="1TJDcQ" node="29R9$zZUovD" resolve="RuleSet" />
-    <node concept="1QGGSu" id="6HWpSUEu3U2" role="rwd14">
-      <property role="1iqoE4" value="${module}/icons/Dclare.png" />
+    <node concept="1irR5M" id="4vjy7c4Qp9s" role="rwd14">
+      <property role="2$rrk2" value="30" />
+      <node concept="1irR9n" id="4vjy7c4Qp9z" role="1irR9h">
+        <node concept="3PKj8D" id="4vjy7c4Qp9$" role="3PKjn_">
+          <property role="3PKj8l" value="00ddff" />
+        </node>
+      </node>
+      <node concept="1irPie" id="4vjy7c4QpaM" role="1irR9h">
+        <property role="1irPi9" value="M" />
+        <node concept="3PKj8D" id="4vjy7c4QpaN" role="3PKjny">
+          <property role="3PKj8l" value="ffffff" />
+        </node>
+      </node>
     </node>
   </node>
   <node concept="1TIwiD" id="6HWpSUEu3U3">
@@ -248,8 +282,19 @@
     <property role="34LRSv" value="Repository RuleSet" />
     <property role="3GE5qa" value="models" />
     <ref role="1TJDcQ" node="29R9$zZUovD" resolve="RuleSet" />
-    <node concept="1QGGSu" id="6HWpSUEu3U5" role="rwd14">
-      <property role="1iqoE4" value="${module}/icons/Dclare.png" />
+    <node concept="1irR5M" id="4vjy7c4Qp9W" role="rwd14">
+      <property role="2$rrk2" value="28" />
+      <node concept="1irR9n" id="4vjy7c4Qpa3" role="1irR9h">
+        <node concept="3PKj8D" id="4vjy7c4Qpa4" role="3PKjn_">
+          <property role="3PKj8l" value="00ddff" />
+        </node>
+      </node>
+      <node concept="1irPie" id="4vjy7c4Qpag" role="1irR9h">
+        <property role="1irPi9" value="r" />
+        <node concept="3PKj8D" id="4vjy7c4Qpah" role="3PKjny">
+          <property role="3PKj8l" value="ffffff" />
+        </node>
+      </node>
     </node>
   </node>
   <node concept="1TIwiD" id="6HWpSUEuark">
@@ -262,15 +307,26 @@
     <node concept="PrWs8" id="6HWpSUEuarl" role="PzmwI">
       <ref role="PrY4T" to="tpce:2hxg_BDjKM4" resolve="IConceptAspect" />
     </node>
-    <node concept="1QGGSu" id="6HWpSUEuarm" role="rwd14">
-      <property role="1iqoE4" value="${module}/icons/Dclare.png" />
-    </node>
     <node concept="1TJgyj" id="6HWpSUEuarY" role="1TKVEi">
       <property role="IQ2ns" value="7745179321613461246" />
       <property role="20lmBu" value="reference" />
       <property role="20kJfa" value="concept" />
       <property role="20lbJX" value="1" />
       <ref role="20lvS9" to="tpce:h0PkWnZ" resolve="AbstractConceptDeclaration" />
+    </node>
+    <node concept="1irR5M" id="4vjy7c4Qp9G" role="rwd14">
+      <property role="2$rrk2" value="29" />
+      <node concept="1irR9n" id="4vjy7c4Qp9N" role="1irR9h">
+        <node concept="3PKj8D" id="4vjy7c4Qp9O" role="3PKjn_">
+          <property role="3PKj8l" value="00ddff" />
+        </node>
+      </node>
+      <node concept="1irPie" id="4vjy7c4Qpax" role="1irR9h">
+        <property role="1irPi9" value="n" />
+        <node concept="3PKj8D" id="4vjy7c4Qpay" role="3PKjny">
+          <property role="3PKj8l" value="ffffff" />
+        </node>
+      </node>
     </node>
   </node>
   <node concept="1TIwiD" id="35Jy4LMD1lX">
@@ -318,8 +374,19 @@
       <property role="20lbJX" value="0..n" />
       <ref role="20lvS9" node="3Qetf3dC4N5" resolve="StructRuleSetReference" />
     </node>
-    <node concept="1QGGSu" id="3Qetf3diZ3y" role="rwd14">
-      <property role="1iqoE4" value="${module}/icons/Dclare.png" />
+    <node concept="1irR5M" id="4vjy7c4KiqU" role="rwd14">
+      <property role="2$rrk2" value="27" />
+      <node concept="1irR9n" id="4vjy7c4QiFL" role="1irR9h">
+        <node concept="3PKj8D" id="4vjy7c4Kir3" role="3PKjn_">
+          <property role="3PKj8l" value="00ddff" />
+        </node>
+      </node>
+      <node concept="1irPie" id="4vjy7c4QiG4" role="1irR9h">
+        <property role="1irPi9" value="s" />
+        <node concept="3PKj8D" id="4vjy7c4QiGf" role="3PKjny">
+          <property role="3PKj8l" value="ffffff" />
+        </node>
+      </node>
     </node>
   </node>
   <node concept="1TIwiD" id="3Qetf3cPPAL">
