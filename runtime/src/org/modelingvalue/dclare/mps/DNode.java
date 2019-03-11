@@ -39,6 +39,7 @@ import org.modelingvalue.transactions.Compound;
 import org.modelingvalue.transactions.Constant;
 import org.modelingvalue.transactions.Getable;
 import org.modelingvalue.transactions.Observed;
+import org.modelingvalue.transactions.Priority;
 import org.modelingvalue.transactions.Setable;
 import org.modelingvalue.transactions.StopObserverException;
 
@@ -128,6 +129,10 @@ public class DNode extends DObject<SNode> implements SNode {
                                                                                                                }, () -> sp.getDeclarationNode());
                                                                                                    });
 
+    public static final Observed<DNode, Set<SLanguage>>                         USED_LANGUAGES     = Observed.of("USED_LANGUAGES", Set.of());
+
+    public static final Observed<DNode, Set<DModel>>                            USED_MODELS        = Observed.of("USED_MODELS", Set.of());
+
     public static DNode of(SNode original) {
         return original instanceof DNode ? (DNode) original : dClareMPS().DNODE.get(original);
     }
@@ -202,6 +207,17 @@ public class DNode extends DObject<SNode> implements SNode {
         return result;
     }
 
+    public Set<? extends DNode> getReferenced() {
+        Set<DNode> result = Set.of();
+        for (SReferenceLink rl : getConcept().getReferenceLinks()) {
+            DNode ref = REFERENCE.get(rl).get(this);
+            if (ref != null) {
+                result = result.add(ref);
+            }
+        }
+        return result;
+    }
+
     @Override
     protected void init(DClareMPS dClareMPS) {
         super.init(dClareMPS);
@@ -240,6 +256,21 @@ public class DNode extends DObject<SNode> implements SNode {
                 throw new StopObserverException("Stopped");
             }
         }).trigger();
+        rule(USED_LANGUAGES, tx, () -> {
+            USED_LANGUAGES.set(this, getChildren().flatMap(r -> DNode.USED_LANGUAGES.get(r)).toSet().add(getConcept().getLanguage()));
+        }, () -> USED_LANGUAGES.set(this, Set.of()), Priority.high);
+        rule(USED_MODELS, tx, () -> {
+            USED_MODELS.set(this, getChildren().flatMap(r -> DNode.USED_MODELS.get(r)).toSet().addAll(getReferenced().map(r -> {
+                DModel dm = MODEL.get(r);
+                if (dm == null) {
+                    SModel sm = r.original().getModel();
+                    if (sm != null) {
+                        dm = DModel.of(sm);
+                    }
+                }
+                return dm;
+            }).toSet()));
+        }, () -> USED_MODELS.set(this, Set.of()), Priority.high);
         return tx;
     }
 

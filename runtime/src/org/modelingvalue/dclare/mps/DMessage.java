@@ -19,14 +19,16 @@ import org.modelingvalue.collections.util.Triple;
 
 @SuppressWarnings("rawtypes")
 public class DMessage extends Triple<DObject, DFeature, String> {
-    private static final long serialVersionUID = -303368640776089669L;
+    private static final long  serialVersionUID = -303368640776089669L;
 
-    private final Object      content;
-    private List<DMessage>    subMessages      = List.of();
+    private final Object       content;
+    private List<DMessage>     subMessages      = List.of();
+    private final DMessageType type;
 
-    public DMessage(DObject context, DFeature feature, String id, Object content) {
+    public DMessage(DObject context, DFeature feature, DMessageType type, String id, Object content) {
         super(context, feature, id);
         this.content = content;
+        this.type = type;
     }
 
     public DObject context() {
@@ -39,6 +41,10 @@ public class DMessage extends Triple<DObject, DFeature, String> {
 
     public String id() {
         return c();
+    }
+
+    public DMessageType type() {
+        return type;
     }
 
     public Object content() {

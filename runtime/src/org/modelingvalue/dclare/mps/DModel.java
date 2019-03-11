@@ -78,6 +78,19 @@ public class DModel extends DObject<SModel> implements SModel {
                                                                             }
                                                                         }, null);
 
+    public static final Observed<DModel, Set<DModel>>    USED_MODELS    = DObserved.of("USED_MODELS", Set.of(), false, false, false, (dModel, pre, post, first) -> {
+                                                                            if (first) {
+                                                                                SModelBase sModel = (SModelBase) dModel.original();
+                                                                                java.util.Collection<SModelReference> ls = sModel.getModelImports();
+                                                                                for (DModel dm : post) {
+                                                                                    SModel sm = dm.original();
+                                                                                    if (!ls.stream().anyMatch(r -> r.getModelId().equals(sm.getModelId()))) {
+                                                                                        sModel.addModelImport(sm.getReference());
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        }, null);
+
     public static final Observed<DModel, ModelRoot>      MODEL_ROOT     = Observed.of("MODEL_ROOT", null);
 
     public static final Observed<DModel, Boolean>        LOADED         = Observed.of("LOADED", false);
@@ -166,8 +179,11 @@ public class DModel extends DObject<SModel> implements SModel {
     protected Compound activate(DObject parent, Compound parentTx) {
         Compound tx = super.activate(parent, parentTx);
         rule(USED_LANGUAGES, tx, () -> {
-            USED_LANGUAGES.set(this, ROOTS.get(this).map(SNode::getConcept).map(SConcept::getLanguage).toSet());
+            USED_LANGUAGES.set(this, ROOTS.get(this).flatMap(r -> DNode.USED_LANGUAGES.get(r)).toSet());
         }, () -> USED_LANGUAGES.set(this, Set.of()), Priority.high);
+        rule(USED_MODELS, tx, () -> {
+            USED_MODELS.set(this, ROOTS.get(this).flatMap(r -> DNode.USED_MODELS.get(r)).toSet().remove(this));
+        }, () -> USED_MODELS.set(this, Set.of()), Priority.high);
         return tx;
     }
 

@@ -60,18 +60,18 @@ public abstract class DObject<O> {
                 if (EMPTY_ATTRIBUTE.get()) {
                     throw new EmptyMandatoryException();
                 } else {
-                    object().addMessage(rule(), "EXCEPTION", e);
+                    object().addMessage(rule(), DMessageType.error, "EXCEPTION", e);
                     throw new StopObserverException(e);
                 }
             } catch (IndexOutOfBoundsException e) {
                 if (COLLECTION_ATTRIBUTE.get()) {
                     throw new EmptyMandatoryException();
                 } else {
-                    object().addMessage(rule(), "EXCEPTION", e);
+                    object().addMessage(rule(), DMessageType.error, "EXCEPTION", e);
                     throw new StopObserverException(e);
                 }
             } catch (Throwable e) {
-                object().addMessage(rule(), "EXCEPTION", e);
+                object().addMessage(rule(), DMessageType.error, "EXCEPTION", e);
                 throw new StopObserverException(e);
             } finally {
                 COLLECTION_ATTRIBUTE.set(false);
@@ -268,7 +268,7 @@ public abstract class DObject<O> {
             for (DAttribute attr : TYPE.get(this).getAttributes()) {
                 if (attr instanceof DObservedAttribute && attr.isMandatory() && !attr.isSynthetic()) {
                     if (attr.get(this) == null) {
-                        addMessage(attr, "MANDATORY", "Mandatory attribute " + attr + " of " + this + " is null");
+                        addMessage(attr, DMessageType.warning, "MANDATORY", "Mandatory attribute " + attr + " of " + this + " is null");
                     } else {
                         removeMessages(attr, "MANDATORY");
                     }
@@ -282,7 +282,7 @@ public abstract class DObject<O> {
                         return !((DObject) o).isReadOnly() && !isInOtherRepository(dClareMPS, (DObject) o) && !((DObject) o).isComplete();
                     }).toSet();
                     if (!orphans.isEmpty()) {
-                        addMessage(attr, "ORPHAN", "Non-composite attribute " + attr + " of " + this + " references orphans " + orphans.toString().substring(3));
+                        addMessage(attr, DMessageType.warning, "ORPHAN", "Non-composite attribute " + attr + " of " + this + " references orphans " + orphans.toString().substring(3));
                     } else {
                         removeMessages(attr, "ORPHAN");
                     }
@@ -344,22 +344,22 @@ public abstract class DObject<O> {
     }
 
     protected void addMessage(DFeature feature, String id, TooManyChangesException tmce) {
-        DMessage message = new DMessage(this, feature, id, "Too many changes running " + feature + " changes=" + tmce.getNrOfChanges());
+        DMessage message = new DMessage(this, feature, DMessageType.error, id, "Too many changes running " + feature + " changes=" + tmce.getNrOfChanges());
         tmce.getLast().trace(message, (m, r) -> {
-            m.addSubMessage(new DMessage(((DRuleObserver) r.observer()).object(), ((DRuleObserver) r.observer()).rule(), id, //
+            m.addSubMessage(new DMessage(((DRuleObserver) r.observer()).object(), ((DRuleObserver) r.observer()).rule(), DMessageType.error, id, //
                     "run: " + ((DRuleObserver) r.observer()).object() + "." + ((DRuleObserver) r.observer()).rule() + " nr: " + r.nrOfChanges()));
         }, (m, r, s) -> {
-            m.addSubMessage(new DMessage((DObject) s.object(), (DObserved) s.observed(), id, //
+            m.addSubMessage(new DMessage((DObject) s.object(), (DObserved) s.observed(), DMessageType.error, id, //
                     "read: " + s.object() + "." + s.observed() + "=" + r.read().get(s)));
         }, (m, w, s) -> {
-            m.subMessages().last().addSubMessage(new DMessage((DObject) s.object(), (DObserved) s.observed(), id, //
+            m.subMessages().last().addSubMessage(new DMessage((DObject) s.object(), (DObserved) s.observed(), DMessageType.error, id, //
                     "write: " + s.object() + "." + s.observed() + "=" + w.written().get(s)));
         }, m -> m.subMessages().last(), tmce.getObserver().root().maxNrOfChanges());
         PROBLEMS.set(this, QualifiedSet::add, message);
     }
 
-    protected void addMessage(DFeature feature, String id, Object content) {
-        PROBLEMS.set(this, QualifiedSet::add, new DMessage(this, feature, id, content));
+    protected void addMessage(DFeature feature, DMessageType type, String id, Object content) {
+        PROBLEMS.set(this, QualifiedSet::add, new DMessage(this, feature, type, id, content));
     }
 
     protected void removeMessages(DFeature feature, String id) {
