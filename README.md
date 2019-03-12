@@ -12,7 +12,7 @@ DclareForMPS is a work in progress. In this phase of development, no guarantees 
 All feedback, functional or technical, is appreciated.
 
 ## JDclare
-DclareForMPS uses the collections framework and the transactions library that are part of the JDclare project.  
+DclareForMPS uses the transactions framework and the collections library that are part of the JDclare project.  
 The JDclare project can be found here: [JDclare on GitHub](https://github.com/ModelingValueGroup/jdclare)
 
 ## Installation
