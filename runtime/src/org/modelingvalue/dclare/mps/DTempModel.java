@@ -19,8 +19,6 @@ import org.jetbrains.mps.openapi.module.SModuleReference;
 import org.jetbrains.mps.openapi.persistence.NullDataSource;
 import org.jetbrains.mps.openapi.persistence.PersistenceFacade;
 
-import com.sun.istack.internal.NotNull;
-
 import jetbrains.mps.extapi.module.SModuleBase;
 import jetbrains.mps.smodel.EditableModelDescriptor;
 import jetbrains.mps.smodel.ModelLoadResult;
@@ -48,12 +46,11 @@ public class DTempModel extends EditableModelDescriptor implements EditableSMode
         return false;
     }
 
-    @NotNull
     @Override
     protected ModelLoadResult<jetbrains.mps.smodel.SModel> createModel() {
         jetbrains.mps.smodel.SModel smodel = new jetbrains.mps.smodel.SModel(getReference()) {
             @Override
-            protected void performUndoableAction(@NotNull SNodeUndoableAction action) {
+            protected void performUndoableAction(SNodeUndoableAction action) {
                 super.performUndoableAction(action);
             }
         };
