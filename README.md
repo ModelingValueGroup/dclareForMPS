@@ -7,8 +7,12 @@ The regular MPS base-language can be used to specify the rules.
 Rules definitions typically use quotations (simple or not) to define the derivations.  
 The rules are executed incrementally, meaning they perform a minimal amount of changes to derive the defined patterns (expressed in quotations).
 
+## Work in progress
+DclareForMPS is a work in progress. In this phase of development, no guarantees are given on the stability and scalability of the software.  
+All feedback, functional or technical, is appreciated.
+
 ## Installation
-In an installed MPS (2018.3 or higher), install the DclareForMPS.zip plugin and extract the ExamplesProject.zip and open the extracted folder as a Project in MPS.
+In an installation of JetBrains MPS (2018.3 or higher), install the DclareForMPS.zip plugin and open the extracted ExamplesProject.zip as a Project in MPS.
 
 ## Examples
 Two examples can be found in the ExamplesProject:
@@ -20,7 +24,7 @@ In this example two Languages are defined, the (Entity) SourceLanguage:
 and the (Class) TargetLanguage:  
 ![picture alt](docs/TargetLanguage.jpg "TargetLanguage")
 
-Rules are defined to transform instances of the Entity Language to instances of the Target Language:
+Rules are defined that transform instances of the Entity Language to instances of the Target Language:
 ![picture alt](docs/Rules.jpg "Rules")
 
 Two example entities (instances of the SourceLanguage) are also provided:  
@@ -42,4 +46,4 @@ The Sudoku Structure and Rules are defined in the Sudoku Language.
 There are two example Sudokus delivered in the SudokuSolution/games folder.
 
 The sudoku31 example:
-![picture alt](docs/sudoku31.jpg "Sudoku") 
+![picture alt](docs/sudoku31.jpg "Sudoku")
