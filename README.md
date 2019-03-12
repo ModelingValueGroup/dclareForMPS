@@ -13,7 +13,7 @@ In an installed MPS (2018.3 or higher), install the DclareForMPS.zip plugin and 
 ## Examples
 Two examples can be found in the ExamplesProject:
 
-### Entity to Class transformation
+### 1. Entity to Class transformation
 In this example two Languages are defined, the (Entity) SourceLanguage:
 ![picture alt](docs/SourceLanguage.jpg "SourceLanguage")  
 
@@ -34,4 +34,12 @@ Also when a new entity is created in the source folder, it will immediately be t
 Overview of this complete Example:
 ![picture alt](docs/Overview.jpg "Overview")
 
-### Sudoku
+### 2. Sudoku
+The Sudoku example is a more sophisticated example that uses Rules to solve a Sudoku puzzle.
+
+The Sudoku Structure and Rules are defined in the Sudoku Language.
+
+There are two example Sudokus delivered in the SudokuSolution/games folder.
+
+The sudoku31 example:
+![picture alt](docs/sudoku31.jpg "Sudoku") 
