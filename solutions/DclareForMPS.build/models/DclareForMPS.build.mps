@@ -364,6 +364,24 @@
             </node>
           </node>
         </node>
+        <node concept="3rtmxn" id="1woa4Rlp4cH" role="3bR31x">
+          <node concept="3LXTmp" id="1woa4Rlp4cI" role="3rtmxm">
+            <node concept="55IIr" id="1woa4Rlp4cJ" role="3LXTmr">
+              <node concept="2Ry0Ak" id="1woa4Rlp4cK" role="iGT6I">
+                <property role="2Ry0Am" value="languages" />
+                <node concept="2Ry0Ak" id="1woa4Rlp4df" role="2Ry0An">
+                  <property role="2Ry0Am" value="DclareMPS" />
+                  <node concept="2Ry0Ak" id="1woa4Rlp4dm" role="2Ry0An">
+                    <property role="2Ry0Am" value="source_gen" />
+                  </node>
+                </node>
+              </node>
+            </node>
+            <node concept="3qWCbU" id="1woa4Rlp4cL" role="3LXTna">
+              <property role="3qWCbO" value="DclareMPS/structure/*.png" />
+            </node>
+          </node>
+        </node>
         <node concept="1SiIV0" id="7r$hcUuYolq" role="3bR37C">
           <node concept="3bR9La" id="7r$hcUuYolr" role="1SiIV1">
             <ref role="3bR37D" to="ffeo:7Kfy9QB6L9c" resolve="jetbrains.mps.lang.quotation" />
