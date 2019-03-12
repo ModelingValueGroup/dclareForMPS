@@ -68,7 +68,7 @@ public class DObserved<O, T> extends Observed<O, T> implements DFeature<O> {
             }
         } catch (Throwable t) {
             if (object instanceof DObject) {
-                ((DObject) object).addMessage(this, "TO MPS", t);
+                ((DObject) object).addMessage(this, DMessageType.error, "TO MPS", t);
             } else {
                 System.err.println(DObject.DCLARE + "TO MPS " + object + "." + this + "=" + post);
                 t.setStackTrace(Arrays.copyOf(t.getStackTrace(), 8));

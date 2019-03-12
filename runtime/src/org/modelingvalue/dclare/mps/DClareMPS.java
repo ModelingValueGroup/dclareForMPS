@@ -15,6 +15,8 @@ package org.modelingvalue.dclare.mps;
 
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.Supplier;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
@@ -35,6 +37,7 @@ import org.modelingvalue.transactions.AbstractLeaf;
 import org.modelingvalue.transactions.Constant;
 import org.modelingvalue.transactions.Getable;
 import org.modelingvalue.transactions.Imperative;
+import org.modelingvalue.transactions.Leaf;
 import org.modelingvalue.transactions.Observed;
 import org.modelingvalue.transactions.Priority;
 import org.modelingvalue.transactions.Root;
@@ -93,10 +96,27 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
     private boolean                                            running;
 
     protected DClareMPS(Project project, State prevState, int maxTotalNrOfChanges, int maxNrOfChanges, StartStopHandler startStopHandler) {
-        System.err.println(DObject.DCLARE + "START " + project.getName());
         this.project = project;
         this.startStopHandler = startStopHandler;
-        root = Root.of(this, thePool, prevState, 100, maxTotalNrOfChanges, maxNrOfChanges, 10, null);
+        root = new Root(this, thePool, prevState, 100, maxTotalNrOfChanges, maxNrOfChanges, 10, null) {
+            private final Leaf clearOrphans = Leaf.of("clearOrphans", this, this::clearOrphans);
+
+            private void clearOrphans() {
+                if (!isTimeTraveling()) {
+                    AbstractLeaf tx = AbstractLeaf.getCurrent();
+                    preState().diff(tx.state(), o -> o instanceof DObject, s -> true).forEach(e0 -> {
+                        if (DObject.TRANSACTION.get((DObject<?>) e0.getKey()) == null) {
+                            tx.clear(e0.getKey());
+                        }
+                    });
+                }
+            }
+
+            @Override
+            protected State post(State pre) {
+                return run(schedule(pre, clearOrphans, Priority.low));
+            }
+        };
         waitForEndThread = new Thread(() -> {
             try {
                 root.waitForEnd();
@@ -151,6 +171,35 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
 
     public void write(Runnable runnable) {
         project.getModelAccess().runWriteAction(runnable);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <R> R command(Supplier<R> supplier) {
+        BlockingQueue<Object> queue = new LinkedBlockingQueue<>(1);
+        project.getModelAccess().executeCommandInEDT(() -> {
+            try {
+                try {
+                    queue.put(supplier.get());
+                } catch (InterruptedException e) {
+                    throw e;
+                } catch (Throwable t) {
+                    queue.put(t);
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+        try {
+            Object result = queue.take();
+            if (result instanceof Throwable) {
+                throw new Error((Throwable) result);
+            } else {
+                return (R) result;
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -235,7 +284,6 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
 
     public void stop() {
         if (imperative != null) {
-            System.err.println(DObject.DCLARE + "STOP " + project.getName());
             timer.cancel();
             imperative = null;
             root.put("stopDclareMPS", () -> repository.stop(this));

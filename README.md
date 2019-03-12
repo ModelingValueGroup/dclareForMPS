@@ -1,2 +1,3 @@
 # DclareForMPS
-Adding declarative, reactive and incremental rules to MPS
+
+DclareForMPS adds an language aspect named 'rules' to MPS. These rules run when something changes in the models that is read by those rules (hence, reactive). A rule typically derives some part of a model. Rules can therefore trigger other rules. The system terminates on a fixpoint (if no changes occure anymore). You can use ordinary base-language to specify the rules. Rules definitions typically use quotations (simple or not) to define the derivations. The rules are executed incrementally, meaning they perform a minimal amount of changes to derive the defined patterns (expressed in quotations).
