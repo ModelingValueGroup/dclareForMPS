@@ -11,6 +11,10 @@ The rules are executed incrementally, meaning they perform a minimal amount of c
 DclareForMPS is a work in progress. In this phase of development, no guarantees are given on the stability and scalability of the software.  
 All feedback, functional or technical, is appreciated.
 
+## JDclare
+DclareForMPS uses the collections framework and the transactions library that are part of the JDclare project.  
+The JDclare project can be found here: [JDclare on GitHub](https://github.com/ModelingValueGroup/jdclare)
+
 ## Installation
 In an installation of JetBrains MPS (2018.3 or higher), install the DclareForMPS.zip plugin and open the extracted ExamplesProject.zip as a Project in MPS.
 
