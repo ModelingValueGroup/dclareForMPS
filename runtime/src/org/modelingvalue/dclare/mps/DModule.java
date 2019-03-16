@@ -14,6 +14,7 @@
 package org.modelingvalue.dclare.mps;
 
 import java.util.HashSet;
+import java.util.Objects;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.jetbrains.mps.openapi.model.SModel;
@@ -108,8 +109,9 @@ public class DModule extends DObject<SModule> implements SModule {
     @SuppressWarnings("rawtypes")
     @Override
     protected Compound activate(DObject parent, Compound parentTx) {
-        DClareMPS dClareMPS = dClareMPS();
         Compound tx = super.activate(parent, parentTx);
+        PARENT.set(this, parent);
+        DClareMPS dClareMPS = dClareMPS();
         rule(LANGUAGES, tx, () -> {
             LANGUAGES.set(this, dClareMPS.read(() -> languages(original())).addAll(MODELS.get(this).flatMap(DModel::getUsedLanguages)));
         }, () -> LANGUAGES.set(this, Set.of()), Priority.high);
@@ -127,6 +129,15 @@ public class DModule extends DObject<SModule> implements SModule {
         }, Priority.high);
         return tx;
 
+    }
+
+    @SuppressWarnings("rawtypes")
+    @Override
+    protected void deactivate(DObject parent, Compound parentTx) {
+        super.deactivate(parent, parentTx);
+        if (Objects.equals(parent, PARENT.get(this))) {
+            PARENT.set(this, null);
+        }
     }
 
     @Override

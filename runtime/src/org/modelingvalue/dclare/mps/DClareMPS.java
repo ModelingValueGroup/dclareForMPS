@@ -13,8 +13,6 @@
 
 package org.modelingvalue.dclare.mps;
 
-import java.util.Timer;
-import java.util.TimerTask;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.Supplier;
@@ -26,7 +24,6 @@ import org.jetbrains.mps.openapi.module.SModule;
 import org.jetbrains.mps.openapi.module.SRepository;
 import org.jetbrains.mps.openapi.project.Project;
 import org.modelingvalue.collections.Collection;
-import org.modelingvalue.collections.Entry;
 import org.modelingvalue.collections.Map;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.ContextThread;
@@ -85,14 +82,6 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
     private final StartStopHandler                             startStopHandler;
     private DRepository                                        repository;
     private Imperative                                         imperative;
-    private final Timer                                        timer         = new Timer();
-    private Map<Object, Runnable>                              pollers       = Map.of();
-    private final TimerTask                                    poolTask      = new TimerTask() {
-                                                                                 @Override
-                                                                                 public void run() {
-                                                                                     poll();
-                                                                                 }
-                                                                             };
     private boolean                                            running;
 
     protected DClareMPS(Project project, State prevState, int maxTotalNrOfChanges, int maxNrOfChanges, StartStopHandler startStopHandler) {
@@ -142,7 +131,6 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
             repository = DRepository.of(project.getRepository());
             repository.activate(null, root);
         }, Priority.high);
-        timer.schedule(poolTask, 500, 500);
     }
 
     @Override
@@ -264,27 +252,8 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
         }
     }
 
-    public void addPoller(Object id, Runnable poller) {
-        synchronized (timer) {
-            pollers = pollers.put(id, poller);
-        }
-    }
-
-    public void removePoller(Object id) {
-        synchronized (timer) {
-            pollers = pollers.removeKey(id);
-        }
-    }
-
-    private void poll() {
-        for (Entry<Object, Runnable> pl : pollers) {
-            pl.getValue().run();
-        }
-    }
-
     public void stop() {
         if (imperative != null) {
-            timer.cancel();
             imperative = null;
             root.put("stopDclareMPS", () -> repository.stop(this));
             root.stop();

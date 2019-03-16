@@ -3,8 +3,8 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.modelingvalue.collections"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/org.modelingvalue.transactions"/>
-	<classpathentry kind="var" path="MPS_HOME/lib/mps-core.jar"/>
-	<classpathentry kind="var" path="MPS_HOME/lib/mps-openapi.jar"/>
+	<classpathentry kind="var" path="MPS_HOME/lib/mps-core.jar" sourcepath="/MPS_HOME/lib/MPS-src.zip"/>
+	<classpathentry kind="var" path="MPS_HOME/lib/mps-openapi.jar" sourcepath="/MPS_HOME/lib/MPS-src.zip"/>
 	<classpathentry kind="var" path="MPS_HOME/lib/mps-platform.jar"/>
 	<classpathentry kind="var" path="MPS_HOME/lib/platform-api.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>

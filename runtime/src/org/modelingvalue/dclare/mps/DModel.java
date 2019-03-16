@@ -13,6 +13,8 @@
 
 package org.modelingvalue.dclare.mps;
 
+import java.util.Objects;
+
 import org.jetbrains.mps.openapi.event.SNodeAddEvent;
 import org.jetbrains.mps.openapi.event.SNodeRemoveEvent;
 import org.jetbrains.mps.openapi.event.SPropertyChangeEvent;
@@ -62,8 +64,7 @@ public class DModel extends DObject<SModel> implements SModel {
                                                                             }
                                                                         }, (tx, o, b, a) -> {
                                                                             Setable.<Set<DNode>, DNode> diff(Set.of(), b, a,                                           //
-                                                                                    x -> DNode.CONTAINING.set(x, null), x -> {
-                                                                                    });
+                                                                                    x -> x.add(null, o), y -> y.remove(null, o));
                                                                         }, null);
 
     public static final Observed<DModel, Set<SLanguage>> USED_LANGUAGES = DObserved.of("USED_LANGUAGES", Set.of(), false, false, false, (dModel, pre, post, first) -> {
@@ -94,8 +95,6 @@ public class DModel extends DObject<SModel> implements SModel {
     public static final Observed<DModel, ModelRoot>      MODEL_ROOT     = Observed.of("MODEL_ROOT", null);
 
     public static final Observed<DModel, Boolean>        LOADED         = Observed.of("LOADED", false);
-
-    private boolean                                      loaded;
 
     public static DModel of(SModel original) {
         return original instanceof DModel ? (DModel) original : dClareMPS().DMODEL.get(original);
@@ -156,28 +155,16 @@ public class DModel extends DObject<SModel> implements SModel {
     protected void init(DClareMPS dClareMPS) {
         super.init(dClareMPS);
         MODEL_ROOT.set(this, original().getModelRoot());
-        loaded = (original() instanceof DTempModel || original().isLoaded()) && !original().isReadOnly();
-        loadUnload();
+        ROOTS.set(this, Collection.of(original().getRootNodes()).map(n -> DNode.of(n)).toSet());
         original().addChangeListener(new Listener(this, dClareMPS));
-        if (!(original() instanceof DTempModel) && !original().isReadOnly()) {
-            dClareMPS.addPoller(this, () -> {
-                if (loaded != original().isLoaded()) {
-                    loaded = original().isLoaded();
-                    dClareMPS.schedule(this::loadUnload);
-                }
-            });
-        }
-    }
-
-    private void loadUnload() {
-        ROOTS.set(this, loaded ? Collection.of(original().getRootNodes()).map(n -> DNode.of(n)).toSet() : Set.of());
-        dClareMPS().root().put(this, () -> dClareMPS().schedule(() -> LOADED.set(this, loaded)));
+        dClareMPS().root().put(this, () -> dClareMPS().schedule(() -> LOADED.set(this, true)));
     }
 
     @SuppressWarnings("rawtypes")
     @Override
     protected Compound activate(DObject parent, Compound parentTx) {
         Compound tx = super.activate(parent, parentTx);
+        PARENT.set(this, parent);
         rule(USED_LANGUAGES, tx, () -> {
             USED_LANGUAGES.set(this, ROOTS.get(this).flatMap(r -> DNode.USED_LANGUAGES.get(r)).toSet());
         }, () -> USED_LANGUAGES.set(this, Set.of()), Priority.high);
@@ -187,13 +174,19 @@ public class DModel extends DObject<SModel> implements SModel {
         return tx;
     }
 
+    @SuppressWarnings("rawtypes")
+    @Override
+    protected void deactivate(DObject parent, Compound parentTx) {
+        super.deactivate(parent, parentTx);
+        if (Objects.equals(parent, PARENT.get(this))) {
+            PARENT.set(this, null);
+        }
+    }
+
     @Override
     protected void exit(DClareMPS dClareMPS) {
         super.exit(dClareMPS);
         original().removeChangeListener(new Listener(this, dClareMPS));
-        if (!(original() instanceof DTempModel)) {
-            dClareMPS.removePoller(this);
-        }
     }
 
     private class Listener extends Pair<DModel, DClareMPS> implements SNodeChangeListener {

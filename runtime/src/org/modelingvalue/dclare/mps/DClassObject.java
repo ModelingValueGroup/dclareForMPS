@@ -13,12 +13,15 @@
 
 package org.modelingvalue.dclare.mps;
 
+import java.util.Objects;
+
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.jetbrains.mps.openapi.module.SRepository;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.ContainingCollection;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
+import org.modelingvalue.transactions.Compound;
 
 public class DClassObject extends DObject<SClassObject> implements SClassObject {
 
@@ -79,6 +82,23 @@ public class DClassObject extends DObject<SClassObject> implements SClassObject 
                 return Pair.of(languages, cls);
             }
         };
+    }
+
+    @SuppressWarnings("rawtypes")
+    @Override
+    protected Compound activate(DObject parent, Compound parentTx) {
+        Compound tx = super.activate(parent, parentTx);
+        PARENT.set(this, parent);
+        return tx;
+    }
+
+    @SuppressWarnings("rawtypes")
+    @Override
+    protected void deactivate(DObject parent, Compound parentTx) {
+        super.deactivate(parent, parentTx);
+        if (Objects.equals(parent, PARENT.get(this))) {
+            PARENT.set(this, null);
+        }
     }
 
     @Override

@@ -13,6 +13,8 @@
 
 package org.modelingvalue.dclare.mps;
 
+import java.util.Objects;
+
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.jetbrains.mps.openapi.module.ModelAccess;
 import org.jetbrains.mps.openapi.module.RepositoryAccess;
@@ -25,6 +27,7 @@ import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.ContainingCollection;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
+import org.modelingvalue.transactions.Compound;
 import org.modelingvalue.transactions.Observed;
 
 @SuppressWarnings("deprecation")
@@ -95,6 +98,23 @@ public class DRepository extends DObject<SRepository> implements SRepository {
         super.init(dClareMPS);
         MODULES.set(this, modules().map(m -> DModule.of(m)).toSet());
         addRepositoryListener(new Listener(this, dClareMPS));
+    }
+
+    @SuppressWarnings("rawtypes")
+    @Override
+    protected Compound activate(DObject parent, Compound parentTx) {
+        Compound tx = super.activate(parent, parentTx);
+        PARENT.set(this, parent);
+        return tx;
+    }
+
+    @SuppressWarnings("rawtypes")
+    @Override
+    protected void deactivate(DObject parent, Compound parentTx) {
+        super.deactivate(parent, parentTx);
+        if (Objects.equals(parent, PARENT.get(this))) {
+            PARENT.set(this, null);
+        }
     }
 
     protected static Set<SModule> modules() {

@@ -21,9 +21,7 @@ import java.util.function.Supplier;
 
 import org.jetbrains.mps.openapi.model.SNode;
 import org.modelingvalue.collections.ContainingCollection;
-import org.modelingvalue.collections.util.QuadConsumer;
 import org.modelingvalue.collections.util.Triple;
-import org.modelingvalue.transactions.AbstractLeaf;
 import org.modelingvalue.transactions.Constant;
 import org.modelingvalue.transactions.Getable;
 
@@ -70,7 +68,7 @@ public interface DAttribute<O, T> extends DFeature<O> {
     @SuppressWarnings("unchecked")
     static final Getable<Key, DAttribute> ATTRIBUTE = Constant.of("ATTRIBUTE", key -> {
         return key.identifyingNr() >= 0 ? new DIdentifyingAttribute(key.id(), key.name(), key.synthetic, key.composite, key.identifyingNr(), key.source) : key.function != null ? //
-        new DConstant(key.id(), key.name(), key.synthetic, key.composite, key.source, key.function) : new DObservedAttribute(key.id(), key.name(), key.synthetic, key.optional, key.composite, null, key.source, null);
+        new DConstant(key.id(), key.name(), key.synthetic, key.composite, key.source, key.function) : new DObservedAttribute(key.id(), key.name(), key.synthetic, key.optional, key.composite, null, key.source);
     });
 
     @SuppressWarnings("unchecked")
@@ -112,9 +110,9 @@ public interface DAttribute<O, T> extends DFeature<O> {
         private final String  name;
         private final boolean composite;
 
-        public DObservedAttribute(Object id, String name, boolean synthetic, boolean optional, boolean composite, V def, Supplier<SNode> source, QuadConsumer<AbstractLeaf, C, V, V> changed) {
+        public DObservedAttribute(Object id, String name, boolean synthetic, boolean optional, boolean composite, V def, Supplier<SNode> source) {
             super(id, def, !optional, false, synthetic, (o, b, a, first) -> {
-            }, changed, source);
+            }, null, source);
             this.name = name;
             this.composite = composite;
         }

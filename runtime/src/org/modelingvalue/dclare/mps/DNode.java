@@ -47,7 +47,8 @@ import jetbrains.mps.smodel.SNodeUtil;
 
 public class DNode extends DObject<SNode> implements SNode {
 
-    public static final Observed<DNode, SContainmentLink>                       CONTAINING         = Observed.of("CONTAINING", null);
+    public static final Observed<DNode, SContainmentLink>                       CONTAINING         = DObserved.of("CONTAINING", null, false, false, false, (o, b, a, f) -> {
+                                                                                                   }, null);
 
     public static final Observed<DNode, DModel>                                 MODEL              = Observed.of("MODEL", null);
 
@@ -69,8 +70,7 @@ public class DNode extends DObject<SNode> implements SNode {
                                                                                                                },                                                                                                                //
                                                                                                                (tx, o, b, a) -> {
                                                                                                                    Setable.<List<DNode>, DNode> diff(List.of(), b, a,                                                            //
-                                                                                                                           x -> DNode.CONTAINING.set(x, sc), x -> {
-                                                                                                                                                                                                                          });
+                                                                                                                           x -> x.add(sc, o), y -> y.remove(sc, o));
                                                                                                                }, () -> sc.getDeclarationNode());
                                                                                                    });
 
@@ -89,7 +89,9 @@ public class DNode extends DObject<SNode> implements SNode {
                                                                                                                },                                                                                                                //
                                                                                                                (tx, o, b, a) -> {
                                                                                                                    if (a != null) {
-                                                                                                                       DNode.CONTAINING.set(a, sc);
+                                                                                                                       a.add(sc, o);
+                                                                                                                   } else if (b != null) {
+                                                                                                                       b.remove(sc, o);
                                                                                                                    }
                                                                                                                }, () -> sc.getDeclarationNode());
                                                                                                    });
@@ -147,6 +149,22 @@ public class DNode extends DObject<SNode> implements SNode {
 
     protected DNode(SNode original) {
         super(original);
+    }
+
+    @SuppressWarnings("rawtypes")
+    protected void add(SContainmentLink sc, DObject parent) {
+        DObject.PARENT.set(this, parent);
+        DNode.CONTAINING.set(this, sc);
+    }
+
+    @SuppressWarnings("rawtypes")
+    protected void remove(SContainmentLink sc, DObject o) {
+        if (o.equals(DObject.PARENT.get(this))) {
+            DObject.PARENT.set(this, null);
+        }
+        if (sc != null && sc.equals(DNode.CONTAINING.get(this))) {
+            DNode.CONTAINING.set(this, null);
+        }
     }
 
     @Override

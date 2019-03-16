@@ -16,10 +16,12 @@ package org.modelingvalue.dclare.mps;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import org.jetbrains.mps.openapi.language.SContainmentLink;
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.jetbrains.mps.openapi.module.SRepository;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.ContainingCollection;
+import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.QualifiedSet;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Context;
@@ -153,18 +155,33 @@ public abstract class DObject<O> {
                                                                                                                  }, (tx, o, b, a) -> DClareMPS.TYPES.set(dClareMPS(), Set::add, a));
 
     public static final Setable<DObject, DObject>                                           PARENT               = DObserved.of("PARENT", null, false, false, false, (o, b, a, f) -> {
+                                                                                                                 }, (tx, o, b, a) -> {
+                                                                                                                     if (o instanceof DNode) {
+                                                                                                                         if (b != null && a != null) {
+                                                                                                                             SContainmentLink cl = DNode.CONTAINING.get((DNode) o);
+                                                                                                                             if (cl == null && b instanceof DModel) {
+                                                                                                                                 DModel.ROOTS.set((DModel) b, Set::remove, o);
+                                                                                                                             } else if (cl != null && b instanceof DNode) {
+                                                                                                                                 if (cl.isMultiple()) {
+                                                                                                                                     DNode.MANY_CONTAINMENT.get(cl).set((DNode) b, List::remove, o);
+                                                                                                                                 } else if (o.equals(DNode.SINGLE_CONTAINMENT.get(cl).get((DNode) b))) {
+                                                                                                                                     DNode.SINGLE_CONTAINMENT.get(cl).set((DNode) b, null);
+                                                                                                                                 }
+                                                                                                                             }
+                                                                                                                         }
+                                                                                                                     }
                                                                                                                  }, null);
 
     public static final Setable<DObject, Set<? extends DObject>>                            CHILDREN             = Observed.of("CHILDREN", Set.of(), (tx, o, b, a) -> {
-                                                                                                                     Setable.<Set<? extends DObject>, DObject> diff(Set.of(), b, a,                   //
+                                                                                                                     Setable.<Set<? extends DObject>, DObject> diff(Set.of(), b, a,                     //
                                                                                                                              e -> e.activate(o, tx.parent()), e -> e.deactivate(o, tx.parent()));
                                                                                                                  });
 
     @SuppressWarnings("unchecked")
     public static final Setable<DObject, Compound>                                          TRANSACTION          = Observed.of("TRANSACTION", null, (tx, o, b, a) -> {
                                                                                                                      if (a != null) {
-                                                                                                                         o.rule(CHILDREN, a,                                                          //
-                                                                                                                                 () -> CHILDREN.set(o, o.getAllChildren().toSet()),                   //
+                                                                                                                         o.rule(CHILDREN, a,                                                            //
+                                                                                                                                 () -> CHILDREN.set(o, o.getAllChildren().toSet()),                     //
                                                                                                                                  () -> CHILDREN.set(o, Set.of()), Priority.high);
                                                                                                                      }
                                                                                                                  });
@@ -251,7 +268,6 @@ public abstract class DObject<O> {
     protected Compound activate(DObject parent, Compound parentTx) {
         DClareMPS dClareMPS = dClareMPS();
         dClareMPS.read(() -> init(dClareMPS));
-        PARENT.set(this, parent);
         Compound tx = Compound.of(this, parentTx);
         TRANSACTION.set(this, tx);
         rule(TYPE, tx, () -> {
@@ -311,9 +327,6 @@ public abstract class DObject<O> {
     }
 
     protected void deactivate(DObject parent, Compound parentTx) {
-        if (Objects.equals(parent, PARENT.get(this))) {
-            PARENT.set(this, null);
-        }
         Compound tx = TRANSACTION.get(this);
         if (tx != null && Objects.equals(parentTx, tx.parent())) {
             TRANSACTION.set(this, null);
