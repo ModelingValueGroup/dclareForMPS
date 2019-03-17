@@ -155,9 +155,11 @@ public class DModel extends DObject<SModel> implements SModel {
     protected void init(DClareMPS dClareMPS) {
         super.init(dClareMPS);
         MODEL_ROOT.set(this, original().getModelRoot());
-        ROOTS.set(this, Collection.of(original().getRootNodes()).map(n -> DNode.of(n)).toSet());
-        original().addChangeListener(new Listener(this, dClareMPS));
-        dClareMPS().root().put(this, () -> dClareMPS().schedule(() -> LOADED.set(this, true)));
+        if (!original().isReadOnly()) {
+            ROOTS.set(this, Collection.of(original().getRootNodes()).map(n -> DNode.of(n)).toSet());
+            original().addChangeListener(new Listener(this, dClareMPS));
+            dClareMPS().root().put(this, () -> dClareMPS().schedule(() -> LOADED.set(this, true)));
+        }
     }
 
     @SuppressWarnings("rawtypes")
@@ -165,12 +167,14 @@ public class DModel extends DObject<SModel> implements SModel {
     protected Compound activate(DObject parent, Compound parentTx) {
         Compound tx = super.activate(parent, parentTx);
         PARENT.set(this, parent);
-        rule(USED_LANGUAGES, tx, () -> {
-            USED_LANGUAGES.set(this, ROOTS.get(this).flatMap(r -> DNode.USED_LANGUAGES.get(r)).toSet());
-        }, () -> USED_LANGUAGES.set(this, Set.of()), Priority.high);
-        rule(USED_MODELS, tx, () -> {
-            USED_MODELS.set(this, ROOTS.get(this).flatMap(r -> DNode.USED_MODELS.get(r)).toSet().remove(this));
-        }, () -> USED_MODELS.set(this, Set.of()), Priority.high);
+        if (!original().isReadOnly()) {
+            rule(USED_LANGUAGES, tx, () -> {
+                USED_LANGUAGES.set(this, ROOTS.get(this).flatMap(r -> DNode.USED_LANGUAGES.get(r)).toSet());
+            }, () -> USED_LANGUAGES.set(this, Set.of()), Priority.high);
+            rule(USED_MODELS, tx, () -> {
+                USED_MODELS.set(this, ROOTS.get(this).flatMap(r -> DNode.USED_MODELS.get(r)).toSet().remove(this));
+            }, () -> USED_MODELS.set(this, Set.of()), Priority.high);
+        }
         return tx;
     }
 
@@ -186,7 +190,9 @@ public class DModel extends DObject<SModel> implements SModel {
     @Override
     protected void exit(DClareMPS dClareMPS) {
         super.exit(dClareMPS);
-        original().removeChangeListener(new Listener(this, dClareMPS));
+        if (!original().isReadOnly()) {
+            original().removeChangeListener(new Listener(this, dClareMPS));
+        }
     }
 
     private class Listener extends Pair<DModel, DClareMPS> implements SNodeChangeListener {
