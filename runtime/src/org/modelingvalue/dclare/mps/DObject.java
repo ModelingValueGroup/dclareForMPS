@@ -105,7 +105,7 @@ public abstract class DObject<O> {
             try {
                 super.checkTooManyChanges(pre, root, sets, gets);
             } catch (TooManyChangesException e) {
-                object().addMessage(rule(), "EXCEPTION", e);
+                object().addMessage(rule(), "CONFLICTING_RULES", e);
                 throw new StopObserverException(e);
             }
         }
@@ -357,7 +357,7 @@ public abstract class DObject<O> {
     }
 
     protected void addMessage(DFeature feature, String id, TooManyChangesException tmce) {
-        DMessage message = new DMessage(this, feature, DMessageType.error, id, "Too many changes running " + feature + " changes=" + tmce.getNrOfChanges());
+        DMessage message = new DMessage(this, feature, DMessageType.error, id, "Conflicting rules, running " + feature + " changes=" + tmce.getNrOfChanges());
         tmce.getLast().trace(message, (m, r) -> {
             m.addSubMessage(new DMessage(((DRuleObserver) r.observer()).object(), ((DRuleObserver) r.observer()).rule(), DMessageType.error, id, //
                     "run: " + ((DRuleObserver) r.observer()).object() + "." + ((DRuleObserver) r.observer()).rule() + " nr: " + r.nrOfChanges()));
@@ -368,6 +368,14 @@ public abstract class DObject<O> {
             m.subMessages().last().addSubMessage(new DMessage((DObject) s.object(), (DObserved) s.observed(), DMessageType.error, id, //
                     "write: " + s.object() + "." + s.observed() + "=" + w.written().get(s)));
         }, m -> m.subMessages().last(), tmce.getObserver().root().maxNrOfChanges());
+        PROBLEMS.set(this, QualifiedSet::add, message);
+    }
+
+    protected void addMessage(DFeature feature, DMessageType type, String id, Throwable content) {
+        DMessage message = new DMessage(this, feature, type, id, content);
+        for (StackTraceElement ste : content.getStackTrace()) {
+            message.addSubMessage(new DMessage(this, feature, type, id, ste));
+        }
         PROBLEMS.set(this, QualifiedSet::add, message);
     }
 
