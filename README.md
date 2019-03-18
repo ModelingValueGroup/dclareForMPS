@@ -4,7 +4,7 @@ A rule typically derives some part of a model.
 Rules can trigger other rules.  
 A rule runs when something changes in the models that is read by this rule (reactive).  The system terminates on a fixpoint (if no changes occur anymore).  
 The regular MPS base-language can be used to specify the rules.  
-Rules definitions typically use quotations (simple or not) to define the derivations.  
+Rules definitions typically use quotations (light or not) to define the derivations.  
 The rules are executed incrementally, meaning they perform a minimal amount of changes to derive the defined patterns (expressed in quotations).
 
 ## Work in progress
