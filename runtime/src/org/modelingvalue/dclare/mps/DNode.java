@@ -218,10 +218,12 @@ public class DNode extends DObject<SNode> implements SNode {
         for (SNode sChild : original().getChildren()) {
             DNode dChild = of(sChild);
             SContainmentLink cl = sChild.getContainmentLink();
-            if (cl.isMultiple()) {
-                MANY_CONTAINMENT.get(cl).set(this, (l, e) -> l.addUnique(e), dChild);
-            } else {
-                SINGLE_CONTAINMENT.get(cl).set(this, dChild);
+            if (!cl.getName().equals("smodelAttribute")) {
+                if (cl.isMultiple()) {
+                    MANY_CONTAINMENT.get(cl).set(this, (l, e) -> l.addUnique(e), dChild);
+                } else {
+                    SINGLE_CONTAINMENT.get(cl).set(this, dChild);
+                }
             }
         }
     }

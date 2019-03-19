@@ -42,16 +42,18 @@ import jetbrains.mps.smodel.Language;
 
 public class DModule extends DObject<SModule> implements SModule {
 
-    public static final Observed<DModule, Boolean>        ACTIVE    = Observed.of("ACTIVE", false);
+    public static final Observed<DModule, Set<DModel>>    REFERENCED = Observed.of("REFERENCED", Set.of());
 
-    public static final Observed<DModule, Set<DModel>>    MODELS    = DObserved.of("MODELS", Set.of(), false, true, false, false, (o, pre, post, first) -> {
-                                                                    }, null);
+    public static final Observed<DModule, Boolean>        ACTIVE     = Observed.of("ACTIVE", false);
 
-    public static final Observed<DModule, Set<SLanguage>> LANGUAGES = Observed.of("LANGUAGES", Set.of(), (tx, o, b, a) -> {
-                                                                        Setable.<Set<SLanguage>, SLanguage> diff(Set.of(), b, a,                            //
-                                                                                x -> DClareMPS.ALL_LANGUAGES.set(dClareMPS(), Set::add, x), x -> {
-                                                                                                                                                });
-                                                                    });
+    public static final Observed<DModule, Set<DModel>>    MODELS     = DObserved.of("MODELS", Set.of(), false, true, false, false, (o, pre, post, first) -> {
+                                                                     }, null);
+
+    public static final Observed<DModule, Set<SLanguage>> LANGUAGES  = Observed.of("LANGUAGES", Set.of(), (tx, o, b, a) -> {
+                                                                         Setable.<Set<SLanguage>, SLanguage> diff(Set.of(), b, a,                            //
+                                                                                 x -> DClareMPS.ALL_LANGUAGES.set(dClareMPS(), Set::add, x), x -> {
+                                                                                                                                                  });
+                                                                     });
 
     public static DModule of(SModule original) {
         return original instanceof DModule ? (DModule) original : dClareMPS().DMODULE.get(original);
@@ -74,17 +76,18 @@ public class DModule extends DObject<SModule> implements SModule {
     @Override
     protected DType getType() {
         Set<SLanguage> usedLanguages = LANGUAGES.get(this);
+        boolean allwaysActive = isAllwaysActive();
         return new DType() {
             @SuppressWarnings({"unchecked", "rawtypes"})
             @Override
             public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
-                return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getModuleRules())).toSet();
+                return allwaysActive ? (Set) ruleSets.flatMap(rs -> Collection.of(rs.getModuleRules())).toSet() : Set.of();
             }
 
             @SuppressWarnings({"rawtypes", "unchecked"})
             @Override
             public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
-                return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getModuleAttributes())).toSet();
+                return allwaysActive ? (Set) ruleSets.flatMap(rs -> Collection.of(rs.getModuleAttributes())).toSet() : Set.of();
             }
 
             @Override
@@ -97,6 +100,10 @@ public class DModule extends DObject<SModule> implements SModule {
                 return usedLanguages;
             }
         };
+    }
+
+    private boolean isAllwaysActive() {
+        return !(original() instanceof Language) && !original().isReadOnly();
     }
 
     @Override
@@ -115,12 +122,18 @@ public class DModule extends DObject<SModule> implements SModule {
             LANGUAGES.set(this, dClareMPS.read(() -> languages(original())).addAll(MODELS.get(this).flatMap(DModel::getUsedLanguages)));
         }, () -> LANGUAGES.set(this, Set.of()), Priority.high);
         rule(MODELS, tx, () -> {
-            if (!(original() instanceof Language) && !original().isReadOnly() && hasRuleSets()) {
+            if (isAllwaysActive() && hasRuleSets()) {
                 MODELS.set(this, dClareMPS.read(() -> models(original())).map(m -> DModel.of(m)).toSet());
                 ACTIVE.set(this, true);
             } else {
-                MODELS.set(this, Set.of());
-                ACTIVE.set(this, false);
+                Set<DModel> referenced = REFERENCED.get(this);
+                if (referenced.isEmpty()) {
+                    MODELS.set(this, Set.of());
+                    ACTIVE.set(this, false);
+                } else {
+                    MODELS.set(this, referenced);
+                    ACTIVE.set(this, true);
+                }
             }
         }, () -> {
             MODELS.set(this, Set.of());

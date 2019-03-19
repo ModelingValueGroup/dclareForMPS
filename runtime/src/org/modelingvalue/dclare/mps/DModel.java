@@ -167,6 +167,9 @@ public class DModel extends DObject<SModel> implements SModel {
             rule(USED_MODELS, tx, () -> {
                 USED_MODELS.set(this, ROOTS.get(this).flatMap(r -> DNode.USED_MODELS.get(r)).toSet().remove(this));
             }, () -> USED_MODELS.set(this, Set.of()), Priority.high);
+            rule(DModule.REFERENCED, tx, () -> {
+                USED_MODELS.get(this).forEach(m -> DModule.REFERENCED.set(DModule.of(m.original().getModule()), Set::add, m));
+            });
         }
         return tx;
     }
@@ -211,11 +214,13 @@ public class DModel extends DObject<SModel> implements SModel {
                     DModel.ROOTS.set(dModel, (l, e) -> l.add(e), dNode);
                 } else {
                     SContainmentLink al = event.getAggregationLink();
-                    if (al.isMultiple()) {
-                        List<SNode> list = DNode.children(event.getParent(), al);
-                        DNode.MANY_CONTAINMENT.get(al).set(DNode.of(event.getParent()), (l, e) -> l.remove(e).insert(list.firstIndexOf(e.original()), e), dNode);
-                    } else {
-                        DNode.SINGLE_CONTAINMENT.get(al).set(DNode.of(event.getParent()), dNode);
+                    if (!al.getName().equals("smodelAttribute")) {
+                        if (al.isMultiple()) {
+                            List<SNode> list = DNode.children(event.getParent(), al);
+                            DNode.MANY_CONTAINMENT.get(al).set(DNode.of(event.getParent()), (l, e) -> l.remove(e).insert(list.firstIndexOf(e.original()), e), dNode);
+                        } else {
+                            DNode.SINGLE_CONTAINMENT.get(al).set(DNode.of(event.getParent()), dNode);
+                        }
                     }
                 }
             });
@@ -229,10 +234,12 @@ public class DModel extends DObject<SModel> implements SModel {
                     DModel.ROOTS.set(DModel.of(event.getModel()), (l, e) -> l.remove(e), dNode);
                 } else {
                     SContainmentLink al = event.getAggregationLink();
-                    if (al.isMultiple()) {
-                        DNode.MANY_CONTAINMENT.get(al).set(DNode.of(event.getParent()), (l, e) -> l.remove(e), dNode);
-                    } else {
-                        DNode.SINGLE_CONTAINMENT.get(al).set(DNode.of(event.getParent()), (v, e) -> dNode.equals(v) ? null : v, dNode);
+                    if (!al.getName().equals("smodelAttribute")) {
+                        if (al.isMultiple()) {
+                            DNode.MANY_CONTAINMENT.get(al).set(DNode.of(event.getParent()), (l, e) -> l.remove(e), dNode);
+                        } else {
+                            DNode.SINGLE_CONTAINMENT.get(al).set(DNode.of(event.getParent()), (v, e) -> dNode.equals(v) ? null : v, dNode);
+                        }
                     }
                 }
             });
