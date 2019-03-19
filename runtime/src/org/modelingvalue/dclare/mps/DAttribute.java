@@ -103,18 +103,16 @@ public interface DAttribute<O, T> extends DFeature<O> {
 
     boolean isMandatory();
 
-    final static class DObservedAttribute<C, V> extends DObserved<C, V> implements DAttribute<C, V> {
+    final static class DObservedAttribute<C extends DObject, V> extends DObserved<C, V> implements DAttribute<C, V> {
 
-        Method                m;
+        Method               m;
 
-        private final String  name;
-        private final boolean composite;
+        private final String name;
 
         public DObservedAttribute(Object id, String name, boolean synthetic, boolean optional, boolean composite, V def, Supplier<SNode> source) {
-            super(id, def, !optional, false, synthetic, (o, b, a, first) -> {
+            super(id, def, !optional, composite, false, synthetic, (o, b, a, first) -> {
             }, null, source);
             this.name = name;
-            this.composite = composite;
         }
 
         @Override
@@ -136,11 +134,6 @@ public interface DAttribute<O, T> extends DFeature<O> {
         }
 
         @Override
-        public boolean isComposite() {
-            return composite;
-        }
-
-        @Override
         public boolean isConstant() {
             return false;
         }
@@ -157,7 +150,7 @@ public interface DAttribute<O, T> extends DFeature<O> {
 
     }
 
-    final static class DIdentifyingAttribute<C, V> implements DAttribute<C, V> {
+    final static class DIdentifyingAttribute<C extends DObject, V> implements DAttribute<C, V> {
         private final Object          id;
         private final String          name;
         private final boolean         composite;
@@ -248,7 +241,7 @@ public interface DAttribute<O, T> extends DFeature<O> {
         }
     }
 
-    static class DConstant<C, V> extends Constant<C, V> implements DAttribute<C, V> {
+    static class DConstant<C extends DObject, V> extends Constant<C, V> implements DAttribute<C, V> {
 
         private final String          name;
         private final boolean         composite;

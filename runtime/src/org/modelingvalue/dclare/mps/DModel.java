@@ -13,8 +13,6 @@
 
 package org.modelingvalue.dclare.mps;
 
-import java.util.Objects;
-
 import org.jetbrains.mps.openapi.event.SNodeAddEvent;
 import org.jetbrains.mps.openapi.event.SNodeRemoveEvent;
 import org.jetbrains.mps.openapi.event.SPropertyChangeEvent;
@@ -46,28 +44,24 @@ import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.transactions.Compound;
 import org.modelingvalue.transactions.Observed;
 import org.modelingvalue.transactions.Priority;
-import org.modelingvalue.transactions.Setable;
 
 import jetbrains.mps.extapi.model.SModelBase;
 
 public class DModel extends DObject<SModel> implements SModel {
 
-    public static final Observed<DModel, Set<DNode>>     ROOTS          = DObserved.of("ROOTS", Set.of(), false, false, false, (dModel, pre, post, first) -> {
+    public static final Observed<DModel, Set<DNode>>     ROOTS          = DObserved.of("ROOTS", Set.of(), false, true, false, false, (dModel, pre, post, first) -> {
                                                                             if (first) {
-                                                                                DObserved.map(DModel.roots(dModel.original()), post.map(DNode::original).toSet(),      //
+                                                                                DObserved.map(DModel.roots(dModel.original()), post.map(DNode::original).toSet(),             //
                                                                                         a -> {
                                                                                         }, r -> dModel.original().removeRootNode(r));
                                                                             } else {
-                                                                                DObserved.map(DModel.roots(dModel.original()), post.map(DNode::original).toSet(),      //
+                                                                                DObserved.map(DModel.roots(dModel.original()), post.map(DNode::original).toSet(),             //
                                                                                         a -> dModel.original().addRootNode(a), r -> {
                                                                                                                                                             });
                                                                             }
-                                                                        }, (tx, o, b, a) -> {
-                                                                            Setable.<Set<DNode>, DNode> diff(Set.of(), b, a,                                           //
-                                                                                    x -> x.add(null, o), y -> y.remove(null, o));
                                                                         }, null);
 
-    public static final Observed<DModel, Set<SLanguage>> USED_LANGUAGES = DObserved.of("USED_LANGUAGES", Set.of(), false, false, false, (dModel, pre, post, first) -> {
+    public static final Observed<DModel, Set<SLanguage>> USED_LANGUAGES = DObserved.of("USED_LANGUAGES", Set.of(), false, false, false, false, (dModel, pre, post, first) -> {
                                                                             if (first) {
                                                                                 SModelBase sModel = (SModelBase) dModel.original();
                                                                                 java.util.Collection<SLanguage> ls = sModel.importedLanguageIds();
@@ -79,7 +73,7 @@ public class DModel extends DObject<SModel> implements SModel {
                                                                             }
                                                                         }, null);
 
-    public static final Observed<DModel, Set<DModel>>    USED_MODELS    = DObserved.of("USED_MODELS", Set.of(), false, false, false, (dModel, pre, post, first) -> {
+    public static final Observed<DModel, Set<DModel>>    USED_MODELS    = DObserved.of("USED_MODELS", Set.of(), false, false, false, false, (dModel, pre, post, first) -> {
                                                                             if (first) {
                                                                                 SModelBase sModel = (SModelBase) dModel.original();
                                                                                 java.util.Collection<SModelReference> ls = sModel.getModelImports();
@@ -116,7 +110,7 @@ public class DModel extends DObject<SModel> implements SModel {
 
     @Override
     protected DType getType() {
-        Set<SLanguage> usedLanguages = getUsedLanguages();
+        Set<SLanguage> usedLanguages = DObject.TYPE.get(PARENT.get(this)).getLanguages();
         return new DType() {
             @SuppressWarnings({"unchecked", "rawtypes"})
             @Override
@@ -166,7 +160,6 @@ public class DModel extends DObject<SModel> implements SModel {
     @Override
     protected Compound activate(DObject parent, Compound parentTx) {
         Compound tx = super.activate(parent, parentTx);
-        PARENT.set(this, parent);
         if (!original().isReadOnly()) {
             rule(USED_LANGUAGES, tx, () -> {
                 USED_LANGUAGES.set(this, ROOTS.get(this).flatMap(r -> DNode.USED_LANGUAGES.get(r)).toSet());
@@ -176,15 +169,6 @@ public class DModel extends DObject<SModel> implements SModel {
             }, () -> USED_MODELS.set(this, Set.of()), Priority.high);
         }
         return tx;
-    }
-
-    @SuppressWarnings("rawtypes")
-    @Override
-    protected void deactivate(DObject parent, Compound parentTx) {
-        super.deactivate(parent, parentTx);
-        if (Objects.equals(parent, PARENT.get(this))) {
-            PARENT.set(this, null);
-        }
     }
 
     @Override

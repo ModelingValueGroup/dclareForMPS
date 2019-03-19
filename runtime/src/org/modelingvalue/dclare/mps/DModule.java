@@ -14,7 +14,6 @@
 package org.modelingvalue.dclare.mps;
 
 import java.util.HashSet;
-import java.util.Objects;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.jetbrains.mps.openapi.model.SModel;
@@ -45,10 +44,11 @@ public class DModule extends DObject<SModule> implements SModule {
 
     public static final Observed<DModule, Boolean>        ACTIVE    = Observed.of("ACTIVE", false);
 
-    public static final Observed<DModule, Set<DModel>>    MODELS    = Observed.of("MODELS", Set.of());
+    public static final Observed<DModule, Set<DModel>>    MODELS    = DObserved.of("MODELS", Set.of(), false, true, false, false, (o, pre, post, first) -> {
+                                                                    }, null);
 
     public static final Observed<DModule, Set<SLanguage>> LANGUAGES = Observed.of("LANGUAGES", Set.of(), (tx, o, b, a) -> {
-                                                                        Setable.<Set<SLanguage>, SLanguage> diff(Set.of(), b, a,                   //
+                                                                        Setable.<Set<SLanguage>, SLanguage> diff(Set.of(), b, a,                            //
                                                                                 x -> DClareMPS.ALL_LANGUAGES.set(dClareMPS(), Set::add, x), x -> {
                                                                                                                                                 });
                                                                     });
@@ -110,7 +110,6 @@ public class DModule extends DObject<SModule> implements SModule {
     @Override
     protected Compound activate(DObject parent, Compound parentTx) {
         Compound tx = super.activate(parent, parentTx);
-        PARENT.set(this, parent);
         DClareMPS dClareMPS = dClareMPS();
         rule(LANGUAGES, tx, () -> {
             LANGUAGES.set(this, dClareMPS.read(() -> languages(original())).addAll(MODELS.get(this).flatMap(DModel::getUsedLanguages)));
@@ -129,15 +128,6 @@ public class DModule extends DObject<SModule> implements SModule {
         }, Priority.high);
         return tx;
 
-    }
-
-    @SuppressWarnings("rawtypes")
-    @Override
-    protected void deactivate(DObject parent, Compound parentTx) {
-        super.deactivate(parent, parentTx);
-        if (Objects.equals(parent, PARENT.get(this))) {
-            PARENT.set(this, null);
-        }
     }
 
     @Override

@@ -16,12 +16,10 @@ package org.modelingvalue.dclare.mps;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import org.jetbrains.mps.openapi.language.SContainmentLink;
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.jetbrains.mps.openapi.module.SRepository;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.ContainingCollection;
-import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.QualifiedSet;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Context;
@@ -154,34 +152,30 @@ public abstract class DObject<O> {
                                                                                                                      }
                                                                                                                  }, (tx, o, b, a) -> DClareMPS.TYPES.set(dClareMPS(), Set::add, a));
 
-    public static final Setable<DObject, DObject>                                           PARENT               = DObserved.of("PARENT", null, false, false, false, (o, b, a, f) -> {
+    public static final Observed<DObject, DObserved>                                        CONTAINING           = DObserved.of("CONTAINING", null, false, false, false, false, (o, b, a, f) -> {
+                                                                                                                 }, null);
+
+    @SuppressWarnings("unchecked")
+    public static final Setable<DObject, DObject>                                           PARENT               = DObserved.of("PARENT", null, false, false, false, false, (o, b, a, f) -> {
                                                                                                                  }, (tx, o, b, a) -> {
-                                                                                                                     if (o instanceof DNode) {
-                                                                                                                         if (b != null && a != null) {
-                                                                                                                             SContainmentLink cl = DNode.CONTAINING.get((DNode) o);
-                                                                                                                             if (cl == null && b instanceof DModel) {
-                                                                                                                                 DModel.ROOTS.set((DModel) b, Set::remove, o);
-                                                                                                                             } else if (cl != null && b instanceof DNode) {
-                                                                                                                                 if (cl.isMultiple()) {
-                                                                                                                                     DNode.MANY_CONTAINMENT.get(cl).set((DNode) b, List::remove, o);
-                                                                                                                                 } else if (o.equals(DNode.SINGLE_CONTAINMENT.get(cl).get((DNode) b))) {
-                                                                                                                                     DNode.SINGLE_CONTAINMENT.get(cl).set((DNode) b, null);
-                                                                                                                                 }
-                                                                                                                             }
+                                                                                                                     if (b != null && a != null) {
+                                                                                                                         DObserved cont = CONTAINING.get(o);
+                                                                                                                         if (cont != null) {
+                                                                                                                             cont.remove(b, o);
                                                                                                                          }
                                                                                                                      }
                                                                                                                  }, null);
 
     public static final Setable<DObject, Set<? extends DObject>>                            CHILDREN             = Observed.of("CHILDREN", Set.of(), (tx, o, b, a) -> {
-                                                                                                                     Setable.<Set<? extends DObject>, DObject> diff(Set.of(), b, a,                     //
+                                                                                                                     Setable.<Set<? extends DObject>, DObject> diff(Set.of(), b, a,                   //
                                                                                                                              e -> e.activate(o, tx.parent()), e -> e.deactivate(o, tx.parent()));
                                                                                                                  });
 
     @SuppressWarnings("unchecked")
     public static final Setable<DObject, Compound>                                          TRANSACTION          = Observed.of("TRANSACTION", null, (tx, o, b, a) -> {
                                                                                                                      if (a != null) {
-                                                                                                                         o.rule(CHILDREN, a,                                                            //
-                                                                                                                                 () -> CHILDREN.set(o, o.getAllChildren().toSet()),                     //
+                                                                                                                         o.rule(CHILDREN, a,                                                          //
+                                                                                                                                 () -> CHILDREN.set(o, o.getAllChildren().toSet()),                   //
                                                                                                                                  () -> CHILDREN.set(o, Set.of()), Priority.high);
                                                                                                                      }
                                                                                                                  });
@@ -249,16 +243,18 @@ public abstract class DObject<O> {
 
     @SuppressWarnings("unchecked")
     private ContainingCollection<? extends DObject> getContained() {
-        return TYPE.get(this).getAttributes().filter(DAttribute::isComposite).flatMap(a -> {
-            Object v = a.get(this);
-            if (v instanceof Collection) {
-                return (Collection) v;
-            } else if (v instanceof java.util.Collection) {
-                return Set.of((java.util.Collection) v);
-            } else {
-                return v == null ? Set.of() : Set.of((DObject) v);
-            }
-        }).toSet();
+        return TYPE.get(this).getAttributes().filter(DAttribute::isComposite).flatMap(a -> getDObjectSet(a.get(this))).toSet();
+    }
+
+    @SuppressWarnings("unchecked")
+    public static Set<DObject<?>> getDObjectSet(Object v) {
+        if (v instanceof Collection) {
+            return ((Collection) v).toSet();
+        } else if (v instanceof java.util.Collection) {
+            return Set.of((java.util.Collection) v);
+        } else {
+            return v == null ? Set.of() : Set.of((DObject) v);
+        }
     }
 
     protected void init(DClareMPS dClareMPS) {
@@ -339,6 +335,16 @@ public abstract class DObject<O> {
         for (DObject child : CHILDREN.get(this)) {
             child.stop(dClareMPS);
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> T ancestor(Class<T> cls) {
+        for (DObject p = PARENT.get(this); p != null; p = PARENT.get(p)) {
+            if (cls.isInstance(p)) {
+                return (T) p;
+            }
+        }
+        return null;
     }
 
     protected boolean isOwned() {

@@ -13,26 +13,32 @@
 
 package org.modelingvalue.dclare.mps;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import org.jetbrains.mps.openapi.model.SNode;
+import org.modelingvalue.collections.ContainingCollection;
 import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.QuadConsumer;
 import org.modelingvalue.transactions.AbstractLeaf;
 import org.modelingvalue.transactions.Observed;
+import org.modelingvalue.transactions.Setable;
 
-public class DObserved<O, T> extends Observed<O, T> implements DFeature<O> {
+@SuppressWarnings("rawtypes")
+public class DObserved<O extends DObject, T> extends Observed<O, T> implements DFeature<O> {
 
-    public static <C, V> DObserved<C, V> of(Object id, V def, boolean mandatory, boolean deferred, boolean synthetic, QuadConsumer<C, V, V, Boolean> toMPS, Supplier<SNode> source) {
-        return of(id, def, mandatory, deferred, synthetic, toMPS, null, source);
+    public static <C extends DObject, V> DObserved<C, V> of(Object id, V def, boolean mandatory, boolean composite, boolean deferred, boolean synthetic, QuadConsumer<C, V, V, Boolean> toMPS, Supplier<SNode> source) {
+        return of(id, def, mandatory, composite, deferred, synthetic, toMPS, null, source);
     }
 
-    public static <C, V> DObserved<C, V> of(Object id, V def, boolean mandatory, boolean deferred, boolean synthetic, QuadConsumer<C, V, V, Boolean> toMPS, QuadConsumer<AbstractLeaf, C, V, V> changed, Supplier<SNode> source) {
-        return new DObserved<C, V>(id, def, mandatory, deferred, synthetic, toMPS, changed, source);
+    public static <C extends DObject, V> DObserved<C, V> of(Object id, V def, boolean mandatory, boolean composite, boolean deferred, boolean synthetic, QuadConsumer<C, V, V, Boolean> toMPS, QuadConsumer<AbstractLeaf, C, V, V> changed, Supplier<SNode> source) {
+        return new DObserved<C, V>(id, def, mandatory, composite, deferred, synthetic, toMPS, changed, source);
     }
 
     private final QuadConsumer<O, T, T, Boolean> toMPS;
@@ -40,14 +46,39 @@ public class DObserved<O, T> extends Observed<O, T> implements DFeature<O> {
     private final boolean                        deferred;
     private final Supplier<SNode>                source;
     private final boolean                        synthetic;
+    private final boolean                        composite;
 
-    protected DObserved(Object id, T def, boolean mandatory, boolean deferred, boolean synthetic, QuadConsumer<O, T, T, Boolean> toMPS, QuadConsumer<AbstractLeaf, O, T, T> changed, Supplier<SNode> source) {
+    protected DObserved(Object id, T def, boolean mandatory, boolean composite, boolean deferred, boolean synthetic, QuadConsumer<O, T, T, Boolean> toMPS, QuadConsumer<AbstractLeaf, O, T, T> changed, Supplier<SNode> source) {
         super(id, def, changed);
+        if (composite) {
+            QuadConsumer<AbstractLeaf, O, T, T> superChanged = this.changed;
+            this.changed = (tx, o, b, a) -> {
+                if (superChanged != null) {
+                    superChanged.accept(tx, o, b, a);
+                }
+                Setable.<Set<DObject<?>>, DObject<?>> diff(Set.of(), DObject.getDObjectSet(b), DObject.getDObjectSet(a), added -> {
+                    DObject.PARENT.set(added, o);
+                    DObject.CONTAINING.set(added, this);
+                }, removed -> {
+                    if (o.equals(DObject.PARENT.get(removed))) {
+                        DObject.PARENT.set(removed, null);
+                    }
+                    if (equals(DNode.CONTAINING.get(removed))) {
+                        DObject.CONTAINING.set(removed, null);
+                    }
+                });
+            };
+        }
         this.toMPS = toMPS;
         this.mandatory = mandatory;
         this.deferred = deferred;
         this.source = source;
         this.synthetic = synthetic;
+        this.composite = composite;
+    }
+
+    public boolean isComposite() {
+        return composite;
     }
 
     public boolean isDeferred() {
@@ -59,7 +90,6 @@ public class DObserved<O, T> extends Observed<O, T> implements DFeature<O> {
         return source != null ? source.get() : null;
     }
 
-    @SuppressWarnings("rawtypes")
     public void toMPS(O object, T pre, T post, boolean first) {
         try {
             toMPS.accept(object, pre, post, first);
@@ -115,6 +145,27 @@ public class DObserved<O, T> extends Observed<O, T> implements DFeature<O> {
     @Override
     public boolean isSynthetic() {
         return synthetic;
+    }
+
+    @SuppressWarnings("unchecked")
+    public void remove(O obj, Object e) {
+        set(obj, (v, r) -> {
+            if (r.equals(v)) {
+                return null;
+            } else if (v instanceof ContainingCollection && ((ContainingCollection) v).contains(r)) {
+                return (T) ((ContainingCollection) v).remove(r);
+            } else if (v instanceof java.util.List && ((java.util.List) v).contains(r)) {
+                java.util.List l = new ArrayList((java.util.List) v);
+                l.remove(r);
+                return (T) Collections.unmodifiableList(l);
+            } else if (v instanceof java.util.Set && ((java.util.Set) v).contains(r)) {
+                java.util.Set s = new HashSet((java.util.Set) v);
+                s.remove(r);
+                return (T) Collections.unmodifiableSet(s);
+            } else {
+                return v;
+            }
+        }, e);
     }
 
 }
