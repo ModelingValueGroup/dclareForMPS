@@ -18,15 +18,16 @@ The JDclare project can be found here: [JDclare on GitHub](https://github.com/Mo
 ## Installation
 In an installation of JetBrains MPS (2018.3 or higher) ...
 1. install the DclareForMPS.zip plugin
-2. open the extracted ExamplesProject.zip as a Project
+2. open one of the example MPS Projects from [DclareForMPS_Examples on GitHub](https://github.com/ModelingValueGroup/DclareForMPS_Examples)
 3. switch on the Dclare engine (Settings... > Dclare)
 ![picture alt](docs/engineOn.jpg "Engine on")  
-4. rebuild the ExamplesProject
+4. rebuild the example project
 
 ## Examples
-Two examples can be found in the ExamplesProject:
+Multiple examples can be found in the DcalreForMPS_Examples repository on GitHub:
+[DclareForMPS_Examples on GitHub](https://github.com/ModelingValueGroup/DclareForMPS_Examples)
 
-### 1. Entity to Class transformation
+### 1. SourceTarget - a simple Entity to Class transformation
 In this example two Languages are defined, the (Entity) SourceLanguage:
 ![picture alt](docs/SourceLanguage.jpg "SourceLanguage")  
 
@@ -47,7 +48,18 @@ Also when a new entity is created in the source folder, it will immediately be t
 Overview of this complete Example:
 ![picture alt](docs/Overview.jpg "Overview")
 
-### 2. Sudoku
+### 2. NiamToOO - a simple Niam to OO transformation
+
+Similar to example 1, this example defines two languages with a transformation: 
+* a NIAM like language   
+* and a very basic OO language  
+* Rules are defined to transform NIAM instances into OO instances  
+* An example sales model is defined  
+
+Overview of the sales example in NIAM and OO:
+![picture alt](docs/niam.jpg "NIAM")
+
+### 3. Sudoku - a Sudoku puzzle solver
 The Sudoku example is a more sophisticated example that uses Rules to solve a Sudoku puzzle.
 
 The Sudoku Structure and Rules are defined in the Sudoku Language.
