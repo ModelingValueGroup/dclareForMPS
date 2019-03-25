@@ -244,11 +244,6 @@ public class DModel extends DObject<SModel> implements SModel {
     }
 
     @Override
-    protected boolean isComplete() {
-        return super.isComplete() && getModule().isComplete();
-    }
-
-    @Override
     public DRepository getRepository() {
         return getModule().getRepository();
     }

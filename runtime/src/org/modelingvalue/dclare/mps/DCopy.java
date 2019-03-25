@@ -20,6 +20,7 @@ import org.jetbrains.mps.openapi.language.SReferenceLink;
 import org.jetbrains.mps.openapi.model.SNode;
 import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.util.Pair;
+import org.modelingvalue.transactions.AbstractLeaf;
 import org.modelingvalue.transactions.Compound;
 import org.modelingvalue.transactions.Observed;
 
@@ -67,18 +68,40 @@ public class DCopy extends DNode {
         return children.map(this::copy).toList();
     }
 
-    private DNode copy(DNode child) {
-        return child != null ? dClareMPS().DCHILD_COPY.get(Pair.of(root, child)) : null;
-    }
-
     private DNode map(DNode referenced) {
         return referenced != null && referenced.hasAncestor(root.copied) ? //
-                (referenced.equals(root.copied) ? root : dClareMPS().DCHILD_COPY.get(Pair.of(root, referenced))) : //
+                (referenced.equals(root.copied) ? root : copy(referenced)) : //
                 referenced;
+    }
+
+    private DNode copy(DNode child) {
+        if (child != null) {
+            Pair<DCopy, DNode> key = Pair.of(root, child);
+            DClareMPS dClareMPS = dClareMPS();
+            DCopy copy = dClareMPS.DCHILD_COPY.get(key);
+            if (copy != null) {
+                DNode repl = DNode.REPLACEMENT.get(copy);
+                if (repl != null) {
+                    copy = new DCopy(repl.original(), key.b(), key.a());
+                    dClareMPS.DCHILD_COPY.set(key, copy);
+                }
+            } else {
+                copy = new DCopy(DNode.newSNode(key.b().getConcept()), key.b(), key.a());
+                dClareMPS.DCHILD_COPY.set(key, copy);
+                DNode.CREATOR.set(copy, AbstractLeaf.getCurrent());
+            }
+            return copy;
+        } else {
+            return null;
+        }
     }
 
     public DNode getCopied() {
         return copied;
+    }
+
+    public DCopy getRoot() {
+        return root;
     }
 
 }

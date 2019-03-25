@@ -70,9 +70,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
     public final Getable<SModel, DModel>                       DMODEL        = Constant.of(Pair.of(this, "DMODEL"), m -> new DModel(m));
     public final Getable<SNode, DNode>                         DNODE         = Constant.of(Pair.of(this, "DNODE"), n -> new DNode(n));
     public final Getable<Pair<SNode, DNode>, DCopy>            DCOPY         = Constant.of(Pair.of(this, "DCOPY"), p -> new DCopy(p.a(), p.b(), null));
-    public final Getable<Pair<DCopy, DNode>, DCopy>            DCHILD_COPY   = Constant.of(Pair.of(this, "DCHILD_COPY"), p -> {
-                                                                                 return new DCopy(DNode.newSNode(p.b().getConcept()), p.b(), p.a());
-                                                                             });
+    public final Observed<Pair<DCopy, DNode>, DCopy>           DCHILD_COPY   = Observed.of(Pair.of(this, "DCHILD_COPY"), null);
     public final Getable<SClassObject, DClassObject>           DCLASS_OBJECT = Constant.of(Pair.of(this, "DCLASS_OBJECT"), c -> new DClassObject(c));
 
     private final ContextPool                                  thePool       = ContextThread.createPool();

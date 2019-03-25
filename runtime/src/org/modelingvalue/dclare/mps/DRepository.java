@@ -95,7 +95,7 @@ public class DRepository extends DObject<SRepository> implements SRepository {
 
     @Override
     protected boolean isComplete() {
-        return super.isComplete() && LOADED.get(this);
+        return LOADED.get(this);
     }
 
     @Override

@@ -150,7 +150,7 @@ public class DModule extends DObject<SModule> implements SModule {
 
     @Override
     protected boolean isComplete() {
-        return super.isComplete() && ACTIVE.get(this) && getRepository().isComplete();
+        return super.isComplete() && ACTIVE.get(this);
     }
 
     @Override

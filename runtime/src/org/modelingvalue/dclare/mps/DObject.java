@@ -348,11 +348,13 @@ public abstract class DObject<O> {
     }
 
     protected boolean isOwned() {
-        return PARENT.get(this) != null;
+        DObject<?> p = PARENT.get(this);
+        return p != null && p.isOwned();
     }
 
     protected boolean isComplete() {
-        return isOwned();
+        DObject<?> p = PARENT.get(this);
+        return p != null && p.isComplete();
     }
 
     protected abstract DType getType();

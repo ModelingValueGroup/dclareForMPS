@@ -126,9 +126,9 @@ public class DNode extends DObject<SNode> implements SNode {
 
     public static final Observed<DNode, Set<DModel>>                            USED_MODELS        = Observed.of("USED_MODELS", Set.of());
 
-    private static final Setable<DNode, AbstractLeaf>                           CREATOR            = Setable.of("CREATOR", null);
+    protected static final Setable<DNode, AbstractLeaf>                         CREATOR            = Setable.of("CREATOR", null);
 
-    private static final Setable<DNode, DNode>                                  REPLACEMENT        = Setable.of("REPLACEMENT", null);
+    protected static final Setable<DNode, DNode>                                REPLACEMENT        = Setable.of("REPLACEMENT", null);
 
     public static DNode of(SNode original) {
         return original instanceof DNode ? (DNode) original : dClareMPS().DNODE.get(original);
@@ -185,6 +185,9 @@ public class DNode extends DObject<SNode> implements SNode {
         } else if (AbstractLeaf.getCurrent().equals(DNode.CREATOR.get((DNode) node))) {
             DNode repl = DNode.REPLACEMENT.get((DNode) node);
             if (repl != null) {
+                if (node instanceof DCopy) {
+                    repl = DCopy.of(repl.original(), ((DCopy) node).getCopied());
+                }
                 node = (T) repl;
             }
         }
@@ -204,9 +207,8 @@ public class DNode extends DObject<SNode> implements SNode {
             }
         } else if (post instanceof ContainingCollection && pre instanceof ContainingCollection) {
             if (((ContainingCollection<Object>) post).anyMatch(e -> e instanceof DNode)) {
-                ContainingCollection<DNode> prec = (ContainingCollection<DNode>) pre;
-                ContainingCollection<DNode> postc = ((ContainingCollection<DNode>) post).removeAll(prec);
-                prec = prec.removeAll((ContainingCollection<Object>) post);
+                ContainingCollection<DNode> prec = ((ContainingCollection<DNode>) pre).removeAll((ContainingCollection<DNode>) post);
+                ContainingCollection<DNode> postc = ((ContainingCollection<DNode>) post).removeAll((ContainingCollection<DNode>) pre);
                 if (!prec.isEmpty()) {
                     for (DNode elem : postc) {
                         AbstractLeaf creator = DNode.CREATOR.get(elem);
@@ -224,9 +226,8 @@ public class DNode extends DObject<SNode> implements SNode {
             }
         } else if (post instanceof java.util.List && pre instanceof java.util.List) {
             if (((java.util.List<Object>) post).stream().anyMatch(e -> e instanceof DNode)) {
-                java.util.List<DNode> prel = (java.util.List<DNode>) pre;
-                java.util.List<DNode> postl = ((java.util.List<DNode>) post).stream().filter(e -> !prel.contains(e)).collect(Collectors.toList());
-                prel.removeAll((java.util.List<DNode>) post);
+                java.util.List<DNode> prel = ((java.util.List<DNode>) pre).stream().filter(e -> !((java.util.List<DNode>) post).contains(e)).collect(Collectors.toList());
+                java.util.List<DNode> postl = ((java.util.List<DNode>) post).stream().filter(e -> !((java.util.List<DNode>) pre).contains(e)).collect(Collectors.toList());
                 if (!prel.isEmpty()) {
                     for (DNode elem : postl) {
                         AbstractLeaf creator = DNode.CREATOR.get(elem);
@@ -244,9 +245,8 @@ public class DNode extends DObject<SNode> implements SNode {
             }
         } else if (post instanceof java.util.Set && pre instanceof java.util.Set) {
             if (((java.util.Set<Object>) post).stream().anyMatch(e -> e instanceof DNode)) {
-                java.util.Set<DNode> pres = (java.util.Set<DNode>) pre;
-                java.util.Set<DNode> posts = ((java.util.Set<DNode>) post).stream().filter(e -> !pres.contains(e)).collect(Collectors.toSet());
-                pres.removeAll((java.util.Set<DNode>) post);
+                java.util.Set<DNode> pres = ((java.util.Set<DNode>) pre).stream().filter(e -> !((java.util.Set<DNode>) post).contains(e)).collect(Collectors.toSet());
+                java.util.Set<DNode> posts = ((java.util.Set<DNode>) post).stream().filter(e -> !((java.util.Set<DNode>) pre).contains(e)).collect(Collectors.toSet());
                 if (!pres.isEmpty()) {
                     for (DNode elem : posts) {
                         AbstractLeaf creator = DNode.CREATOR.get(elem);
@@ -377,16 +377,6 @@ public class DNode extends DObject<SNode> implements SNode {
             }).toSet()));
         }, () -> USED_MODELS.set(this, Set.of()), Priority.high);
         return tx;
-    }
-
-    @Override
-    public boolean isOwned() {
-        return super.isOwned() && getModel() != null && getModel().isOwned();
-    }
-
-    @Override
-    public boolean isComplete() {
-        return super.isComplete() && getModel() != null && getModel().isComplete();
     }
 
     @Override
