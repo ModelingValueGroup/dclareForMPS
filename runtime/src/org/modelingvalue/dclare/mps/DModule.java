@@ -140,7 +140,6 @@ public class DModule extends DObject<SModule> implements SModule {
             ACTIVE.set(this, false);
         }, Priority.high);
         return tx;
-
     }
 
     @Override
@@ -151,7 +150,7 @@ public class DModule extends DObject<SModule> implements SModule {
 
     @Override
     protected boolean isComplete() {
-        return super.isComplete() && ACTIVE.get(this);
+        return super.isComplete() && ACTIVE.get(this) && getRepository().isComplete();
     }
 
     @Override

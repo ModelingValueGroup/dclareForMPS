@@ -13,6 +13,8 @@
 
 package org.modelingvalue.dclare.mps;
 
+import java.util.stream.Collectors;
+
 import org.jetbrains.mps.openapi.event.SNodeAddEvent;
 import org.jetbrains.mps.openapi.event.SNodeRemoveEvent;
 import org.jetbrains.mps.openapi.event.SPropertyChangeEvent;
@@ -88,8 +90,6 @@ public class DModel extends DObject<SModel> implements SModel {
 
     public static final Observed<DModel, ModelRoot>      MODEL_ROOT     = Observed.of("MODEL_ROOT", null);
 
-    public static final Observed<DModel, Boolean>        LOADED         = Observed.of("LOADED", false);
-
     public static DModel of(SModel original) {
         return original instanceof DModel ? (DModel) original : dClareMPS().DMODEL.get(original);
     }
@@ -149,10 +149,9 @@ public class DModel extends DObject<SModel> implements SModel {
     protected void init(DClareMPS dClareMPS) {
         super.init(dClareMPS);
         MODEL_ROOT.set(this, original().getModelRoot());
-        if (!original().isReadOnly()) {
-            ROOTS.set(this, Collection.of(original().getRootNodes()).map(n -> DNode.of(n)).toSet());
+        ROOTS.set(this, Collection.of(original().getRootNodes()).map(n -> DNode.of(n)).toSet());
+        if (!isReadOnly()) {
             original().addChangeListener(new Listener(this, dClareMPS));
-            dClareMPS().root().put(this, () -> dClareMPS().schedule(() -> LOADED.set(this, true)));
         }
     }
 
@@ -160,24 +159,22 @@ public class DModel extends DObject<SModel> implements SModel {
     @Override
     protected Compound activate(DObject parent, Compound parentTx) {
         Compound tx = super.activate(parent, parentTx);
-        if (!original().isReadOnly()) {
-            rule(USED_LANGUAGES, tx, () -> {
-                USED_LANGUAGES.set(this, ROOTS.get(this).flatMap(r -> DNode.USED_LANGUAGES.get(r)).toSet());
-            }, () -> USED_LANGUAGES.set(this, Set.of()), Priority.high);
-            rule(USED_MODELS, tx, () -> {
-                USED_MODELS.set(this, ROOTS.get(this).flatMap(r -> DNode.USED_MODELS.get(r)).toSet().remove(this));
-            }, () -> USED_MODELS.set(this, Set.of()), Priority.high);
-            rule(DModule.REFERENCED, tx, () -> {
-                USED_MODELS.get(this).forEach(m -> DModule.REFERENCED.set(DModule.of(m.original().getModule()), Set::add, m));
-            });
-        }
+        rule(USED_LANGUAGES, tx, () -> {
+            USED_LANGUAGES.set(this, ROOTS.get(this).flatMap(r -> DNode.USED_LANGUAGES.get(r)).toSet());
+        }, () -> USED_LANGUAGES.set(this, Set.of()), Priority.high);
+        rule(USED_MODELS, tx, () -> {
+            USED_MODELS.set(this, ROOTS.get(this).flatMap(r -> DNode.USED_MODELS.get(r)).toSet().remove(this));
+        }, () -> USED_MODELS.set(this, Set.of()), Priority.high);
+        rule(DModule.REFERENCED, tx, () -> {
+            USED_MODELS.get(this).forEach(m -> DModule.REFERENCED.set(DModule.of(m.original().getModule()), Set::add, m));
+        });
         return tx;
     }
 
     @Override
     protected void exit(DClareMPS dClareMPS) {
         super.exit(dClareMPS);
-        if (!original().isReadOnly()) {
+        if (!isReadOnly()) {
             original().removeChangeListener(new Listener(this, dClareMPS));
         }
     }
@@ -248,11 +245,11 @@ public class DModel extends DObject<SModel> implements SModel {
 
     @Override
     protected boolean isComplete() {
-        return super.isComplete() && isLoaded();
+        return super.isComplete() && getModule().isComplete();
     }
 
     @Override
-    public SRepository getRepository() {
+    public DRepository getRepository() {
         return getModule().getRepository();
     }
 
@@ -346,6 +343,10 @@ public class DModel extends DObject<SModel> implements SModel {
                 roots != null ? Collection.of(roots).map(n -> DNode.of(n)).toSet() : null);
     }
 
+    public java.util.Collection<? extends SNode> getRootNodes(SAbstractConcept concept) {
+        return ROOTS.get(this).filter(r -> r.isInstanceOfConcept(concept)).collect(Collectors.toList());
+    }
+
     @Override
     public DNode getNode(SNodeId id) {
         SNode sNode = original().getNode(id);
@@ -364,7 +365,7 @@ public class DModel extends DObject<SModel> implements SModel {
 
     @Override
     public boolean isLoaded() {
-        return LOADED.get(this);
+        return original().isLoaded();
     }
 
     @Override

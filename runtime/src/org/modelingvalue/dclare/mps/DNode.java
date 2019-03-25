@@ -14,6 +14,9 @@
 package org.modelingvalue.dclare.mps;
 
 import java.util.Objects;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import org.jetbrains.mps.openapi.language.SAbstractConcept;
 import org.jetbrains.mps.openapi.language.SConcept;
@@ -31,15 +34,18 @@ import org.jetbrains.mps.openapi.model.SReference;
 import org.jetbrains.mps.openapi.module.SModule;
 import org.jetbrains.mps.openapi.module.SRepository;
 import org.modelingvalue.collections.Collection;
+import org.modelingvalue.collections.ContainingCollection;
 import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.Map;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
+import org.modelingvalue.transactions.AbstractLeaf;
 import org.modelingvalue.transactions.Compound;
 import org.modelingvalue.transactions.Constant;
 import org.modelingvalue.transactions.Getable;
 import org.modelingvalue.transactions.Observed;
 import org.modelingvalue.transactions.Priority;
+import org.modelingvalue.transactions.Setable;
 import org.modelingvalue.transactions.StopObserverException;
 
 import jetbrains.mps.smodel.SNodeUtil;
@@ -120,6 +126,10 @@ public class DNode extends DObject<SNode> implements SNode {
 
     public static final Observed<DNode, Set<DModel>>                            USED_MODELS        = Observed.of("USED_MODELS", Set.of());
 
+    private static final Setable<DNode, AbstractLeaf>                           CREATOR            = Setable.of("CREATOR", null);
+
+    private static final Setable<DNode, DNode>                                  REPLACEMENT        = Setable.of("REPLACEMENT", null);
+
     public static DNode of(SNode original) {
         return original instanceof DNode ? (DNode) original : dClareMPS().DNODE.get(original);
     }
@@ -137,6 +147,11 @@ public class DNode extends DObject<SNode> implements SNode {
     }
 
     @Override
+    public int hashCode() {
+        return getNodeId().hashCode();
+    }
+
+    @Override
     protected SRepository getOriginalRepository() {
         SModel me = original().getModel();
         SModule mu = me != null ? me.getModule() : null;
@@ -147,6 +162,112 @@ public class DNode extends DObject<SNode> implements SNode {
     public boolean isReadOnly() {
         SModel m = original().getModel();
         return m != null && m.isReadOnly();
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T extends SNode> T newNode(java.util.List<SNode> pre, java.util.List<T> attr, Predicate<SNode> checker, Supplier<T> creator, java.util.List<T> var) {
+        T node = attr != null && var.size() < attr.size() ? attr.get(var.size()) : null;
+        if (node == null || !checker.test(node)) {
+            node = null;
+            if (pre != null) {
+                for (SNode e : pre) {
+                    if (checker.test(e) && !var.contains(e)) {
+                        node = (T) e;
+                        pre.remove(e);
+                        break;
+                    }
+                }
+            }
+            if (node == null) {
+                node = creator.get();
+                DNode.CREATOR.set((DNode) node, AbstractLeaf.getCurrent());
+            }
+        } else if (AbstractLeaf.getCurrent().equals(DNode.CREATOR.get((DNode) node))) {
+            DNode repl = DNode.REPLACEMENT.get((DNode) node);
+            if (repl != null) {
+                node = (T) repl;
+            }
+        }
+        var.add(node);
+        return node;
+    }
+
+    @SuppressWarnings({"unchecked", "resource"})
+    public static <T> boolean setContainment(T pre, T post) {
+        boolean replacement = false;
+        if (post instanceof DNode && pre instanceof DNode) {
+            AbstractLeaf creator = DNode.CREATOR.get((DNode) post);
+            if (creator != null && !post.equals(pre) && match((DNode) post, (DNode) pre)) {
+                REPLACEMENT.set((DNode) post, (DNode) pre);
+                replacement = true;
+                creator.trigger();
+            }
+        } else if (post instanceof ContainingCollection && pre instanceof ContainingCollection) {
+            if (((ContainingCollection<Object>) post).anyMatch(e -> e instanceof DNode)) {
+                ContainingCollection<DNode> prec = (ContainingCollection<DNode>) pre;
+                ContainingCollection<DNode> postc = ((ContainingCollection<DNode>) post).removeAll(prec);
+                prec = prec.removeAll((ContainingCollection<Object>) post);
+                if (!prec.isEmpty()) {
+                    for (DNode elem : postc) {
+                        AbstractLeaf creator = DNode.CREATOR.get(elem);
+                        if (creator != null) {
+                            DNode matched = prec.filter(DNode.class).filter(n -> match(elem, n)).findFirst().orElse(null);
+                            if (matched != null) {
+                                prec = prec.remove(matched);
+                                REPLACEMENT.set(elem, matched);
+                                replacement = true;
+                                creator.trigger();
+                            }
+                        }
+                    }
+                }
+            }
+        } else if (post instanceof java.util.List && pre instanceof java.util.List) {
+            if (((java.util.List<Object>) post).stream().anyMatch(e -> e instanceof DNode)) {
+                java.util.List<DNode> prel = (java.util.List<DNode>) pre;
+                java.util.List<DNode> postl = ((java.util.List<DNode>) post).stream().filter(e -> !prel.contains(e)).collect(Collectors.toList());
+                prel.removeAll((java.util.List<DNode>) post);
+                if (!prel.isEmpty()) {
+                    for (DNode elem : postl) {
+                        AbstractLeaf creator = DNode.CREATOR.get(elem);
+                        if (creator != null) {
+                            DNode matched = prel.stream().filter(n -> n instanceof DNode && match(elem, n)).findFirst().orElse(null);
+                            if (matched != null) {
+                                prel.remove(matched);
+                                REPLACEMENT.set(elem, matched);
+                                replacement = true;
+                                creator.trigger();
+                            }
+                        }
+                    }
+                }
+            }
+        } else if (post instanceof java.util.Set && pre instanceof java.util.Set) {
+            if (((java.util.Set<Object>) post).stream().anyMatch(e -> e instanceof DNode)) {
+                java.util.Set<DNode> pres = (java.util.Set<DNode>) pre;
+                java.util.Set<DNode> posts = ((java.util.Set<DNode>) post).stream().filter(e -> !pres.contains(e)).collect(Collectors.toSet());
+                pres.removeAll((java.util.Set<DNode>) post);
+                if (!pres.isEmpty()) {
+                    for (DNode elem : posts) {
+                        AbstractLeaf creator = DNode.CREATOR.get(elem);
+                        if (creator != null) {
+                            DNode matched = pres.stream().filter(n -> n instanceof DNode && match(elem, n)).findFirst().orElse(null);
+                            if (matched != null) {
+                                pres.remove(matched);
+                                REPLACEMENT.set(elem, matched);
+                                replacement = true;
+                                creator.trigger();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return replacement;
+    }
+
+    private static boolean match(DNode post, DNode pre) {
+        return pre.getConcept().equals(post.getConcept()) && Objects.equals(pre.getName(), post.getName());
     }
 
     @Override
@@ -531,6 +652,21 @@ public class DNode extends DObject<SNode> implements SNode {
             }
         } else {
             REFERENCE.get((SReferenceLink) feature).set(this, (DNode) value);
+        }
+    }
+
+    public Object getFeature(SConceptFeature feature) {
+        if (feature instanceof SProperty) {
+            return PROPERTY.get((SProperty) feature).get(this);
+        } else if (feature instanceof SContainmentLink) {
+            SContainmentLink cl = (SContainmentLink) feature;
+            if (cl.isMultiple()) {
+                return MANY_CONTAINMENT.get(cl).get(this).collect(Collectors.toList());
+            } else {
+                return SINGLE_CONTAINMENT.get(cl).get(this);
+            }
+        } else {
+            return REFERENCE.get((SReferenceLink) feature).get(this);
         }
     }
 

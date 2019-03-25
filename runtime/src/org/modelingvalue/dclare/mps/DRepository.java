@@ -31,7 +31,9 @@ import org.modelingvalue.transactions.Observed;
 public class DRepository extends DObject<SRepository> implements SRepository {
 
     public static final Observed<DRepository, Set<DModule>> MODULES = DObserved.of("MODULES", Set.of(), false, true, false, false, (o, pre, post, first) -> {
-    }, null);
+                                                                    }, null);
+
+    public static final Observed<DRepository, Boolean>      LOADED  = Observed.of("LOADED", false);
 
     public static DRepository of(SRepository original) {
         return original instanceof DRepository ? (DRepository) original : dClareMPS().DREPOSITORY.get(original);
@@ -92,10 +94,16 @@ public class DRepository extends DObject<SRepository> implements SRepository {
     }
 
     @Override
+    protected boolean isComplete() {
+        return super.isComplete() && LOADED.get(this);
+    }
+
+    @Override
     protected void init(DClareMPS dClareMPS) {
         super.init(dClareMPS);
         MODULES.set(this, modules().map(m -> DModule.of(m)).toSet());
         addRepositoryListener(new Listener(this, dClareMPS));
+        dClareMPS().root().put(this, () -> dClareMPS().schedule(() -> LOADED.set(this, true)));
     }
 
     protected static Set<SModule> modules() {

@@ -44,7 +44,7 @@ public abstract class DObject<O> {
 
     private static final class DRuleObserver extends Observer {
 
-        protected DRuleObserver(DRule rule, Compound parent, Runnable action) {
+        private DRuleObserver(DRule rule, Compound parent, Runnable action) {
             super(rule, parent, () -> ((DRuleObserver) AbstractLeaf.getCurrent()).run(action), Priority.mid);
         }
 
