@@ -62,7 +62,7 @@ public class SClass {
 
     @Override
     public String toString() {
-        return name;
+        return name + "(" + id + ")";
     }
 
 }
