@@ -75,7 +75,7 @@ public class DModule extends DObject<SModule> implements SModule {
 
     @Override
     protected DType getType() {
-        Set<SLanguage> usedLanguages = LANGUAGES.get(this);
+        Set<SLanguage> usedLanguages = LANGUAGES.get(this).filter(l -> !DClareMPS.RULE_SETS.get(l).isEmpty()).toSet();
         boolean allwaysActive = isAllwaysActive();
         return new DType() {
             @SuppressWarnings({"unchecked", "rawtypes"})
@@ -97,7 +97,7 @@ public class DModule extends DObject<SModule> implements SModule {
 
             @Override
             public Object getIdentity() {
-                return usedLanguages;
+                return Pair.of(allwaysActive, usedLanguages);
             }
         };
     }

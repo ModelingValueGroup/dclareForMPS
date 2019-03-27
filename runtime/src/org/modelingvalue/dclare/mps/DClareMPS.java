@@ -53,7 +53,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
 
     protected static final Observed<SLanguage, Set<IRuleSet>>  RULE_SETS     = Observed.of("RULE_SETS", Set.of());
 
-    protected static final Observed<DClareMPS, Set<DType>>     TYPES         = Observed.of("TYPES", Set.of(), (tx, o, b, a) -> {
+    protected static final Setable<DClareMPS, Set<DType>>      TYPES         = Setable.of("TYPES", Set.of(), (tx, o, b, a) -> {
                                                                                  Setable.<Set<DType>, DType> diff(Set.of(), b, a, x -> x.start(tx.root()), x -> x.stop(tx.root()));
                                                                              });
 

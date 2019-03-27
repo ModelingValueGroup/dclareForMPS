@@ -61,7 +61,7 @@ public class DRepository extends DObject<SRepository> implements SRepository {
 
     @Override
     protected DType getType() {
-        Set<SLanguage> allLanguages = DClareMPS.ALL_LANGUAGES.get(dClareMPS());
+        Set<SLanguage> allLanguages = DClareMPS.ALL_LANGUAGES.get(dClareMPS()).filter(l -> !DClareMPS.RULE_SETS.get(l).isEmpty()).toSet();
         return new DType() {
 
             @SuppressWarnings({"rawtypes", "unchecked"})
