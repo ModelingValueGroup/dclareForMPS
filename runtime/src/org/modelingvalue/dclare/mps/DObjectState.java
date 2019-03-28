@@ -13,12 +13,8 @@
 
 package org.modelingvalue.dclare.mps;
 
-import org.jetbrains.mps.openapi.project.Project;
-
-public interface StartStopHandler {
-
-    void start(Project project);
-
-    void stop(Project project, Getter getter, DRepository repository);
-
+public enum DObjectState {
+    orphan,
+    contained,
+    active,
 }

@@ -242,7 +242,12 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
                     deferred[0].forEach(e -> e.getKey().b().toMPS(e.getKey().a(), e.getValue().a(), e.getValue().b(), false));
                     deferred[0] = Map.of();
                     running = false;
-                    startStopHandler.stop(project, DObject.ALL_PROBLEMS.get(repository));
+                    startStopHandler.stop(project, new Getter() {
+                        @Override
+                        public <R> R get(Supplier<R> supplier) {
+                            return post.get(supplier);
+                        }
+                    }, repository);
                 }
             } finally {
                 COMMITTING.set(false);

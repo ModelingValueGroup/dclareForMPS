@@ -13,12 +13,11 @@
 
 package org.modelingvalue.dclare.mps;
 
-import org.jetbrains.mps.openapi.project.Project;
+import java.util.function.Supplier;
 
-public interface StartStopHandler {
+@FunctionalInterface
+public interface Getter {
 
-    void start(Project project);
-
-    void stop(Project project, Getter getter, DRepository repository);
+    <R> R get(Supplier<R> supplier);
 
 }

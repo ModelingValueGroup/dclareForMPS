@@ -44,8 +44,6 @@ public class DModule extends DObject<SModule> implements SModule {
 
     public static final Observed<DModule, Set<DModel>>    REFERENCED = Observed.of("REFERENCED", Set.of());
 
-    public static final Observed<DModule, Boolean>        ACTIVE     = Observed.of("ACTIVE", false);
-
     public static final Observed<DModule, Set<DModel>>    MODELS     = DObserved.of("MODELS", Set.of(), false, true, false, false, (o, pre, post, first) -> {
                                                                      }, null);
 
@@ -124,20 +122,12 @@ public class DModule extends DObject<SModule> implements SModule {
         rule(MODELS, tx, () -> {
             if (isAllwaysActive() && hasRuleSets()) {
                 MODELS.set(this, dClareMPS.read(() -> models(original())).map(m -> DModel.of(m)).toSet());
-                ACTIVE.set(this, true);
             } else {
-                Set<DModel> referenced = REFERENCED.get(this);
-                if (referenced.isEmpty()) {
-                    MODELS.set(this, Set.of());
-                    ACTIVE.set(this, false);
-                } else {
-                    MODELS.set(this, referenced);
-                    ACTIVE.set(this, true);
-                }
+                MODELS.set(this, REFERENCED.get(this));
             }
-        }, () -> {
-            MODELS.set(this, Set.of());
-            ACTIVE.set(this, false);
+        }, () -> MODELS.set(this, Set.of()), Priority.high);
+        rule(STATE, tx, () -> {
+            STATE.set(this, MODELS.get(this).isEmpty() ? DObjectState.contained : PARENT.get(this).state());
         }, Priority.high);
         return tx;
     }
@@ -146,11 +136,6 @@ public class DModule extends DObject<SModule> implements SModule {
     protected void exit(DClareMPS dClareMPS) {
         super.exit(dClareMPS);
         original().removeModuleListener(new Listener(this, dClareMPS));
-    }
-
-    @Override
-    protected boolean isComplete() {
-        return super.isComplete() && ACTIVE.get(this);
     }
 
     @Override
@@ -265,7 +250,7 @@ public class DModule extends DObject<SModule> implements SModule {
         @Override
         public void modelAdded(SModule module, SModel sModel) {
             b().schedule(() -> {
-                if (ACTIVE.get(DModule.this)) {
+                if (isActive()) {
                     DModel dModel = DModel.of(sModel);
                     MODELS.set(DModule.this, Set::add, dModel);
                 }
@@ -275,7 +260,7 @@ public class DModule extends DObject<SModule> implements SModule {
         @Override
         public void beforeModelRemoved(SModule module, SModel sModel) {
             b().schedule(() -> {
-                if (ACTIVE.get(DModule.this)) {
+                if (isActive()) {
                     DModel dModel = DModel.of(sModel);
                     MODELS.set(DModule.this, Set::remove, dModel);
                 }
