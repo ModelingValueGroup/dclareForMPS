@@ -46,11 +46,29 @@ import org.modelingvalue.transactions.Getable;
 import org.modelingvalue.transactions.Observed;
 import org.modelingvalue.transactions.Priority;
 import org.modelingvalue.transactions.Setable;
-import org.modelingvalue.transactions.StopObserverException;
 
 import jetbrains.mps.smodel.SNodeUtil;
 
 public class DNode extends DObject<SNode> implements SNode {
+
+    private static final Constant<Pair<Set<SLanguage>, SConcept>, DType>        TYPE               = Constant.of("NODE_TYPE", null, p -> new DType(p) {
+                                                                                                       @SuppressWarnings({"unchecked", "rawtypes"})
+                                                                                                       @Override
+                                                                                                       public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
+                                                                                                           return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getNodeRules(p.b()))).toSet();
+                                                                                                       }
+
+                                                                                                       @SuppressWarnings({"unchecked", "rawtypes"})
+                                                                                                       @Override
+                                                                                                       public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
+                                                                                                           return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getNodeAttributes(p.b()))).toSet();
+                                                                                                       }
+
+                                                                                                       @Override
+                                                                                                       public Set<SLanguage> getLanguages() {
+                                                                                                           return p.a();
+                                                                                                       }
+                                                                                                   });
 
     public static final Observed<DNode, DModel>                                 MODEL              = Observed.of("MODEL", null);
 
@@ -272,31 +290,7 @@ public class DNode extends DObject<SNode> implements SNode {
 
     @Override
     protected DType getType() {
-        Set<SLanguage> usedLanguages = DObject.TYPE.get(PARENT.get(this)).getLanguages();
-        SConcept concept = getConcept();
-        return new DType() {
-            @SuppressWarnings({"unchecked", "rawtypes"})
-            @Override
-            public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
-                return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getNodeRules(concept))).toSet();
-            }
-
-            @SuppressWarnings({"unchecked", "rawtypes"})
-            @Override
-            public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
-                return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getNodeAttributes(concept))).toSet();
-            }
-
-            @Override
-            public Set<SLanguage> getLanguages() {
-                return usedLanguages;
-            }
-
-            @Override
-            public Object getIdentity() {
-                return Pair.of(usedLanguages, concept);
-            }
-        };
+        return TYPE.get(Pair.of(DObject.TYPE.get(PARENT.get(this)).getLanguages(), getConcept()));
     }
 
     @Override
@@ -353,14 +347,10 @@ public class DNode extends DObject<SNode> implements SNode {
     @Override
     protected Compound activate(DObject parent, Compound parentTx) {
         Compound tx = super.activate(parent, parentTx);
-        new NonCheckingObserver(MODEL, tx, () -> {
-            if (tx.equals(DObject.TRANSACTION.get(this))) {
-                MODEL.set(this, ancestor(DModel.class));
-            } else {
-                MODEL.set(this, null);
-                throw new StopObserverException("Stopped");
-            }
-        }).trigger();
+        rule(MODEL, tx, () -> {
+            DNode p = ancestor(DNode.class);
+            MODEL.set(this, p != null ? MODEL.get(p) : ancestor(DModel.class));
+        }, () -> MODEL.set(this, null), Priority.high);
         rule(USED_LANGUAGES, tx, () -> {
             USED_LANGUAGES.set(this, getChildren().flatMap(r -> DNode.USED_LANGUAGES.get(r)).toSet().add(getConcept().getLanguage()));
         }, () -> USED_LANGUAGES.set(this, Set.of()), Priority.high);

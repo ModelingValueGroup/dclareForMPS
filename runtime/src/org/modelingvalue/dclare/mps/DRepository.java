@@ -25,13 +25,33 @@ import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.ContainingCollection;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
+import org.modelingvalue.transactions.Constant;
 import org.modelingvalue.transactions.Observed;
 
 @SuppressWarnings("deprecation")
 public class DRepository extends DObject<SRepository> implements SRepository {
 
+    private static final Constant<Set<SLanguage>, DType>    TYPE    = Constant.of("REPOSITORY_TYPE", null, ls -> new DType(ls) {
+                                                                        @SuppressWarnings({"rawtypes", "unchecked"})
+                                                                        @Override
+                                                                        public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
+                                                                            return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getRepositoryRules())).toSet();
+                                                                        }
+
+                                                                        @SuppressWarnings({"rawtypes", "unchecked"})
+                                                                        @Override
+                                                                        public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
+                                                                            return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getRepositoryAttributes())).toSet();
+                                                                        }
+
+                                                                        @Override
+                                                                        public Set<SLanguage> getLanguages() {
+                                                                            return ls;
+                                                                        }
+                                                                    });
+
     public static final Observed<DRepository, Set<DModule>> MODULES = DObserved.of("MODULES", Set.of(), false, true, false, false, (o, pre, post, first) -> {
-    }, null);
+                                                                    }, null);
 
     public static DRepository of(SRepository original) {
         return original instanceof DRepository ? (DRepository) original : dClareMPS().DREPOSITORY.get(original);
@@ -59,43 +79,15 @@ public class DRepository extends DObject<SRepository> implements SRepository {
 
     @Override
     protected DType getType() {
-        Set<SLanguage> allLanguages = DClareMPS.ALL_LANGUAGES.get(dClareMPS()).filter(l -> !DClareMPS.RULE_SETS.get(l).isEmpty()).toSet();
-        return new DType() {
-
-            @SuppressWarnings({"rawtypes", "unchecked"})
-            @Override
-            public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
-                return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getRepositoryRules())).toSet();
-            }
-
-            @SuppressWarnings({"rawtypes", "unchecked"})
-            @Override
-            public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
-                return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getRepositoryAttributes())).toSet();
-            }
-
-            @Override
-            public Set<SLanguage> getLanguages() {
-                return allLanguages;
-            }
-
-            @Override
-            public Object getIdentity() {
-                return allLanguages;
-            }
-        };
+        return TYPE.get(DClareMPS.ALL_LANGUAGES.get(dClareMPS()).filter(l -> !DClareMPS.RULE_SETS.get(l).isEmpty()).toSet());
     }
 
     @Override
     protected void init(DClareMPS dClareMPS) {
         super.init(dClareMPS);
-        System.err.println(DObject.DCLARE + " LOAD " + this);
         MODULES.set(this, modules().map(m -> DModule.of(m)).toSet());
         addRepositoryListener(new Listener(this, dClareMPS));
-        dClareMPS().root().put(this, () -> dClareMPS().schedule(() -> {
-            System.err.println(DObject.DCLARE + " START " + this);
-            STATE.set(this, DObjectState.active);
-        }));
+        dClareMPS().root().put(this, () -> dClareMPS().schedule(() -> STATE.set(this, DObjectState.active)));
     }
 
     protected static Set<SModule> modules() {
@@ -106,6 +98,13 @@ public class DRepository extends DObject<SRepository> implements SRepository {
     protected void exit(DClareMPS dClareMPS) {
         super.exit(dClareMPS);
         removeRepositoryListener(new Listener(this, dClareMPS));
+    }
+
+    protected void stop(DClareMPS dClareMPS) {
+        exit(dClareMPS);
+        for (DModule child : modules().map(m -> DModule.of(m))) {
+            child.stop(dClareMPS);
+        }
     }
 
     @Override

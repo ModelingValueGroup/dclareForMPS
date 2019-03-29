@@ -15,20 +15,16 @@ package org.modelingvalue.dclare.mps;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.Set;
-import org.modelingvalue.transactions.Compound;
-import org.modelingvalue.transactions.Observed;
-import org.modelingvalue.transactions.Priority;
-import org.modelingvalue.transactions.Root;
-import org.modelingvalue.transactions.Setable;
+import org.modelingvalue.transactions.Constant;
 
 @SuppressWarnings("rawtypes")
 public abstract class DType {
 
-    private static final Setable<DType, Set<DRule>>      RULES          = Observed.of("RULES", Set.of());
+    private static final Constant<DType, Set<IRuleSet>>   TYPE_RULE_SETS = Constant.of("TYPE_RULE_SETS", Set.of(), t -> t.getLanguages().flatMap(l -> DClareMPS.RULE_SETS.get(l)).toSet());
 
-    private static final Setable<DType, Set<DAttribute>> ATTRIBUTES     = Observed.of("ATTRIBUTES", Set.of());
+    private static final Constant<DType, Set<DRule>>      RULES          = Constant.<DType, Set<DRule>> of("RULES", Set.of(), t -> t.getRules(TYPE_RULE_SETS.get(t)));
 
-    private static final Setable<DType, Set<IRuleSet>>   TYPE_RULE_SETS = Observed.of("TYPE_RULE_SETS", Set.of());
+    private static final Constant<DType, Set<DAttribute>> ATTRIBUTES     = Constant.of("ATTRIBUTES", Set.of(), t -> t.getAttributes(TYPE_RULE_SETS.get(t)));
 
     public abstract Set<DRule> getRules(Set<IRuleSet> ruleSets);
 
@@ -48,30 +44,24 @@ public abstract class DType {
         return ATTRIBUTES.get(this).filter(a -> !a.isSynthetic()).toSet();
     }
 
-    public abstract Object getIdentity();
+    private final Object identity;
+
+    protected DType(Object identity) {
+        this.identity = identity;
+    }
 
     @Override
     public int hashCode() {
-        return getClass().hashCode() + getIdentity().hashCode();
+        return getClass().hashCode() + identity.hashCode();
     }
 
     @Override
     public boolean equals(Object obj) {
-        return obj != null && getClass().equals(obj.getClass()) && getIdentity().equals(((DType) obj).getIdentity());
-    }
-
-    public void start(Root root) {
-        Compound tx = Compound.of(this, root);
-        new DObject.NonCheckingObserver(TYPE_RULE_SETS, tx, () -> TYPE_RULE_SETS.set(this, getLanguages().flatMap(l -> DClareMPS.RULE_SETS.get(l)).toSet()), Priority.high).trigger();
-        new DObject.NonCheckingObserver(RULES, tx, () -> RULES.set(this, getRules(TYPE_RULE_SETS.get(this))), Priority.high).trigger();
-        new DObject.NonCheckingObserver(ATTRIBUTES, tx, () -> ATTRIBUTES.set(this, getAttributes(TYPE_RULE_SETS.get(this))), Priority.high).trigger();
-    }
-
-    public void stop(Root root) {
+        return obj != null && getClass().equals(obj.getClass()) && identity.equals(((DType) obj).identity);
     }
 
     @Override
     public String toString() {
-        return getClass().getSimpleName() + ":" + getIdentity();
+        return getClass().getSimpleName() + ":" + identity;
     }
 }

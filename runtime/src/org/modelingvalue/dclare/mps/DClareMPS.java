@@ -38,7 +38,6 @@ import org.modelingvalue.transactions.Leaf;
 import org.modelingvalue.transactions.Observed;
 import org.modelingvalue.transactions.Priority;
 import org.modelingvalue.transactions.Root;
-import org.modelingvalue.transactions.Setable;
 import org.modelingvalue.transactions.State;
 
 import jetbrains.mps.smodel.language.LanguageRegistry;
@@ -46,15 +45,14 @@ import jetbrains.mps.smodel.language.LanguageRuntime;
 
 public class DClareMPS implements TriConsumer<State, State, Boolean> {
 
-    protected static final Observed<DClareMPS, Set<SLanguage>> ALL_LANGUAGES = Observed.of("ALL_LANGAUGES", Set.of(), (tx, o, b, a) -> {
-                                                                                 Setable.<Set<SLanguage>, SLanguage> diff(Set.of(), b, a, x -> o.start(x), x -> {
-                                                                                                                                                          });
-                                                                             });
+    protected static final Observed<DClareMPS, Set<SLanguage>> ALL_LANGUAGES = Observed.of("ALL_LANGAUGES", Set.of());
 
-    protected static final Observed<SLanguage, Set<IRuleSet>>  RULE_SETS     = Observed.of("RULE_SETS", Set.of());
+    protected static final String                              DCLARE        = "---------> DCLARE ";
 
-    protected static final Setable<DClareMPS, Set<DType>>      TYPES         = Setable.of("TYPES", Set.of(), (tx, o, b, a) -> {
-                                                                                 Setable.<Set<DType>, DType> diff(Set.of(), b, a, x -> x.start(tx.root()), x -> x.stop(tx.root()));
+    protected static final Constant<SLanguage, Set<IRuleSet>>  RULE_SETS     = Constant.of("RULE_SETS", Set.of(), language -> {
+                                                                                 LanguageRuntime rtLang = registry().getLanguage(language);
+                                                                                 IRuleAspect aspect = rtLang != null ? rtLang.getAspect(IRuleAspect.class) : null;
+                                                                                 return aspect != null ? Collection.of(aspect.getRuleSets()).toSet() : Set.of();
                                                                              });
 
     private final ThreadLocal<Boolean>                         COMMITTING    = new ThreadLocal<Boolean>() {
@@ -85,7 +83,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
     protected DClareMPS(Project project, State prevState, int maxTotalNrOfChanges, int maxNrOfChanges, StartStopHandler startStopHandler) {
         this.project = project;
         this.startStopHandler = startStopHandler;
-        root = new Root(this, thePool, prevState, 100, maxTotalNrOfChanges, maxNrOfChanges, 10, null) {
+        root = new Root(this, thePool, prevState, 100, maxTotalNrOfChanges, maxNrOfChanges, 4, null) {
             private final Leaf clearOrphans = Leaf.of("clearOrphans", this, this::clearOrphans);
 
             private void clearOrphans() {
@@ -99,6 +97,15 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
                 }
             }
 
+            //            @Override
+            //            public void startPriority(Priority prio) {
+            //                if (prio != null) {
+            //                    System.err.println(DClareMPS.DCLARE + "START PRIORITY " + prio + "  " + this + "  " + repository);
+            //                } else {
+            //                    System.err.println(DClareMPS.DCLARE + "STOP " + this + "  " + repository);
+            //                }
+            //            }
+
             @Override
             protected State post(State pre) {
                 return run(schedule(pre, clearOrphans, Priority.low));
@@ -109,8 +116,8 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
                 root.waitForEnd();
                 thePool.shutdownNow();
             } catch (Throwable t) {
-                thePool.shutdownNow();
                 stop();
+                thePool.shutdownNow();
                 throw t;
             }
         });
@@ -258,8 +265,8 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
     public void stop() {
         if (imperative != null) {
             imperative = null;
-            root.put("stopDclareMPS", () -> repository.stop(this));
-            root.stop();
+            root.kill();
+            root.preState().run(() -> repository.stop(this));
         }
     }
 
@@ -271,22 +278,8 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
         return imperative != null;
     }
 
-    private void start(SLanguage language) {
-        LanguageRegistry registry = LanguageRegistry.getInstance(repository.original());
-        LanguageRuntime rtLang = registry.getLanguage(language);
-        IRuleAspect aspect = rtLang != null ? rtLang.getAspect(IRuleAspect.class) : null;
-        RULE_SETS.set(language, aspect != null ? Collection.of(aspect.getRuleSets()).toSet() : Set.of());
-    }
-
-    public void onLoaded() {
-        schedule(() -> {
-            LanguageRegistry registry = LanguageRegistry.getInstance(repository.original());
-            for (SLanguage language : ALL_LANGUAGES.get(this)) {
-                LanguageRuntime rtLang = registry.getLanguage(language);
-                IRuleAspect aspect = rtLang != null ? rtLang.getAspect(IRuleAspect.class) : null;
-                RULE_SETS.set(language, aspect != null ? Collection.of(aspect.getRuleSets()).toSet() : Set.of());
-            }
-        });
+    private static LanguageRegistry registry() {
+        return LanguageRegistry.getInstance(instance().repository.original());
     }
 
     public static <T> T pre(Supplier<T> supplier) {

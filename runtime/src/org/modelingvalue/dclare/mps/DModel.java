@@ -44,12 +44,32 @@ import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.transactions.Compound;
+import org.modelingvalue.transactions.Constant;
 import org.modelingvalue.transactions.Observed;
 import org.modelingvalue.transactions.Priority;
 
 import jetbrains.mps.extapi.model.SModelBase;
 
 public class DModel extends DObject<SModel> implements SModel {
+
+    private static final Constant<Set<SLanguage>, DType> TYPE           = Constant.of("MODEL_TYPE", null, ls -> new DType(ls) {
+                                                                            @SuppressWarnings({"unchecked", "rawtypes"})
+                                                                            @Override
+                                                                            public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
+                                                                                return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getModelRules())).toSet();
+                                                                            }
+
+                                                                            @SuppressWarnings({"rawtypes", "unchecked"})
+                                                                            @Override
+                                                                            public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
+                                                                                return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getModelAttributes())).toSet();
+                                                                            }
+
+                                                                            @Override
+                                                                            public Set<SLanguage> getLanguages() {
+                                                                                return ls;
+                                                                            }
+                                                                        });
 
     public static final Observed<DModel, Set<DNode>>     ROOTS          = DObserved.of("ROOTS", Set.of(), false, true, false, false, (dModel, pre, post, first) -> {
                                                                             if (first) {
@@ -110,30 +130,7 @@ public class DModel extends DObject<SModel> implements SModel {
 
     @Override
     protected DType getType() {
-        Set<SLanguage> usedLanguages = DObject.TYPE.get(PARENT.get(this)).getLanguages();
-        return new DType() {
-            @SuppressWarnings({"unchecked", "rawtypes"})
-            @Override
-            public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
-                return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getModelRules())).toSet();
-            }
-
-            @SuppressWarnings({"rawtypes", "unchecked"})
-            @Override
-            public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
-                return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getModelAttributes())).toSet();
-            }
-
-            @Override
-            public Set<SLanguage> getLanguages() {
-                return usedLanguages;
-            }
-
-            @Override
-            public Object getIdentity() {
-                return usedLanguages;
-            }
-        };
+        return TYPE.get(DObject.TYPE.get(PARENT.get(this)).getLanguages());
     }
 
     protected Set<SLanguage> getUsedLanguages() {
@@ -159,11 +156,14 @@ public class DModel extends DObject<SModel> implements SModel {
     @Override
     protected Compound activate(DObject parent, Compound parentTx) {
         Compound tx = super.activate(parent, parentTx);
+        DClareMPS dClareMPS = dClareMPS();
         rule(USED_LANGUAGES, tx, () -> {
-            USED_LANGUAGES.set(this, ROOTS.get(this).flatMap(r -> DNode.USED_LANGUAGES.get(r)).toSet());
+            Set<SLanguage> ls = dClareMPS.read(() -> Collection.of(((SModelBase) original()).importedLanguageIds()).toSet());
+            USED_LANGUAGES.set(this, ls.addAll(ROOTS.get(this).flatMap(r -> DNode.USED_LANGUAGES.get(r))));
         }, () -> USED_LANGUAGES.set(this, Set.of()), Priority.high);
         rule(USED_MODELS, tx, () -> {
-            USED_MODELS.set(this, ROOTS.get(this).flatMap(r -> DNode.USED_MODELS.get(r)).toSet().remove(this));
+            Set<DModel> ls = dClareMPS.read(() -> Collection.of(((SModelBase) original()).getModelImports()).map(r -> DModel.of(r.resolve(dClareMPS.getRepository().original()))).toSet());
+            USED_MODELS.set(this, ls.addAll(ROOTS.get(this).flatMap(r -> DNode.USED_MODELS.get(r))).remove(this));
         }, () -> USED_MODELS.set(this, Set.of()), Priority.high);
         rule(DModule.REFERENCED, tx, () -> {
             USED_MODELS.get(this).forEach(m -> DModule.REFERENCED.set(DModule.of(m.original().getModule()), Set::add, m));
@@ -241,6 +241,10 @@ public class DModel extends DObject<SModel> implements SModel {
                 }
             });
         }
+    }
+
+    protected void stop(DClareMPS dClareMPS) {
+        exit(dClareMPS);
     }
 
     @Override

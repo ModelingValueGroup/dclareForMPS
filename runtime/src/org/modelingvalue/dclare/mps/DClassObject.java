@@ -19,8 +19,28 @@ import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.ContainingCollection;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
+import org.modelingvalue.transactions.Constant;
 
 public class DClassObject extends DObject<SClassObject> implements SClassObject {
+
+    private static final Constant<Pair<Set<SLanguage>, SClass>, DType> TYPE = Constant.of("CLASS_OBJECT_TYPE", null, p -> new DType(p) {
+        @SuppressWarnings({"rawtypes", "unchecked"})
+        @Override
+        public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
+            return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getClassRules(p.b()))).toSet();
+        }
+
+        @SuppressWarnings({"rawtypes", "unchecked"})
+        @Override
+        public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
+            return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getClassAttributes(p.b()))).toSet();
+        }
+
+        @Override
+        public Set<SLanguage> getLanguages() {
+            return p.a();
+        }
+    });
 
     public static DClassObject of(SClassObject original) {
         return original instanceof DClassObject ? (DClassObject) original : dClareMPS().DCLASS_OBJECT.get(original);
@@ -50,35 +70,9 @@ public class DClassObject extends DObject<SClassObject> implements SClassObject 
         return null;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     protected DType getType() {
-        Set<SLanguage> languages = DObject.TYPE.get(PARENT.get(this)).getLanguages();
-        SClass cls = original().getDClass();
-        return new DType() {
-
-            @SuppressWarnings("rawtypes")
-            @Override
-            public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
-                return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getClassRules(cls))).toSet();
-            }
-
-            @SuppressWarnings("rawtypes")
-            @Override
-            public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
-                return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getClassAttributes(cls))).toSet();
-            }
-
-            @Override
-            public Set<SLanguage> getLanguages() {
-                return languages;
-            }
-
-            @Override
-            public Object getIdentity() {
-                return Pair.of(languages, cls);
-            }
-        };
+        return TYPE.get(Pair.of(DObject.TYPE.get(PARENT.get(this)).getLanguages(), original().getDClass()));
     }
 
     @Override

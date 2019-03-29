@@ -116,10 +116,6 @@ public abstract class DObject<O> {
 
     protected final static class NonCheckingObserver extends Observer {
 
-        protected NonCheckingObserver(Object id, Compound parent, Runnable action) {
-            super(id, parent, action, Priority.mid);
-        }
-
         protected NonCheckingObserver(Object id, Compound parent, Runnable action, Priority prio) {
             super(id, parent, action, prio);
         }
@@ -130,11 +126,10 @@ public abstract class DObject<O> {
 
     }
 
-    protected static final String                                                                              DCLARE               = "---------> DCLARE ";
     protected static final Context<Boolean>                                                                    EMPTY_ATTRIBUTE      = Context.of(false);
     protected static final Context<Boolean>                                                                    COLLECTION_ATTRIBUTE = Context.of(false);
 
-    public static final Setable<DObject, DType>                                                                TYPE                 = Observed.of("TYPE", new DType() {
+    public static final Setable<DObject, DType>                                                                TYPE                 = Observed.of("TYPE", new DType("<DUMMY_TYPE>") {
                                                                                                                                         @Override
                                                                                                                                         public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
                                                                                                                                             return Set.of();
@@ -149,12 +144,7 @@ public abstract class DObject<O> {
                                                                                                                                         public Set<SLanguage> getLanguages() {
                                                                                                                                             return Set.of();
                                                                                                                                         }
-
-                                                                                                                                        @Override
-                                                                                                                                        public Object getIdentity() {
-                                                                                                                                            return "<DUMMY_TYPE>";
-                                                                                                                                        }
-                                                                                                                                    }, (tx, o, b, a) -> DClareMPS.TYPES.set(dClareMPS(), Set::add, a));
+                                                                                                                                    });
 
     public static final Observed<DObject, DObserved>                                                           CONTAINING           = DObserved.of("CONTAINING", null, false, false, false, false, (o, b, a, f) -> {
                                                                                                                                     }, null);
@@ -197,9 +187,7 @@ public abstract class DObject<O> {
         return DClareMPS.instance();
     }
 
-    private static boolean VALIDATE = false;
-
-    protected final O      original;
+    protected final O original;
 
     protected DObject(O original) {
         this.original = original;
@@ -275,7 +263,6 @@ public abstract class DObject<O> {
     }
 
     protected void init(DClareMPS dClareMPS) {
-        STATE.set(this, DObjectState.contained);
     }
 
     @SuppressWarnings("unchecked")
@@ -284,6 +271,7 @@ public abstract class DObject<O> {
         dClareMPS.read(() -> init(dClareMPS));
         Compound tx = Compound.of(this, parentTx);
         TRANSACTION.set(this, tx);
+        STATE.set(this, DObjectState.contained);
         rule(TYPE, tx, () -> {
             TYPE.set(this, getType());
         }, () -> TYPE.set(this, TYPE.getDefault()), Priority.high);
@@ -305,10 +293,6 @@ public abstract class DObject<O> {
             }).toSet())));
         }, () -> MESSAGE_CHILDREN.set(this, Map.of()), Priority.low);
         rule("<EMPTY_MANDATORY>", tx, () -> {
-            if (!VALIDATE) {
-                VALIDATE = true;
-                System.err.println(DObject.DCLARE + " VALIDATE " + ancestor(DRepository.class));
-            }
             for (DAttribute attr : TYPE.get(this).getAttributes()) {
                 if (attr instanceof DObservedAttribute && attr.isMandatory() && !attr.isSynthetic()) {
                     if (attr.get(this) == null) {
@@ -349,7 +333,6 @@ public abstract class DObject<O> {
     }
 
     protected void exit(DClareMPS dClareMPS) {
-        STATE.set(this, DObjectState.orphan);
     }
 
     protected DObjectState state() {
@@ -361,14 +344,8 @@ public abstract class DObject<O> {
         if (tx != null && Objects.equals(parentTx, tx.parent())) {
             TRANSACTION.set(this, null);
         }
+        STATE.set(this, DObjectState.orphan);
         dClareMPS().read(() -> exit(dClareMPS()));
-    }
-
-    protected void stop(DClareMPS dClareMPS) {
-        exit(dClareMPS);
-        for (DObject child : CHILDREN.get(this)) {
-            child.stop(dClareMPS);
-        }
     }
 
     @SuppressWarnings("unchecked")

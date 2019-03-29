@@ -32,6 +32,7 @@ import org.modelingvalue.collections.ContainingCollection;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.transactions.Compound;
+import org.modelingvalue.transactions.Constant;
 import org.modelingvalue.transactions.Observed;
 import org.modelingvalue.transactions.Priority;
 import org.modelingvalue.transactions.Setable;
@@ -42,16 +43,35 @@ import jetbrains.mps.smodel.Language;
 
 public class DModule extends DObject<SModule> implements SModule {
 
-    public static final Observed<DModule, Set<DModel>>    REFERENCED = Observed.of("REFERENCED", Set.of());
+    private static final Constant<Pair<Boolean, Set<SLanguage>>, DType> TYPE       = Constant.of("MODULE_TYPE", null, p -> new DType(p) {
+                                                                                       @SuppressWarnings({"unchecked", "rawtypes"})
+                                                                                       @Override
+                                                                                       public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
+                                                                                           return p.a() ? (Set) ruleSets.flatMap(rs -> Collection.of(rs.getModuleRules())).toSet() : Set.of();
+                                                                                       }
 
-    public static final Observed<DModule, Set<DModel>>    MODELS     = DObserved.of("MODELS", Set.of(), false, true, false, false, (o, pre, post, first) -> {
-                                                                     }, null);
+                                                                                       @SuppressWarnings({"rawtypes", "unchecked"})
+                                                                                       @Override
+                                                                                       public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
+                                                                                           return p.a() ? (Set) ruleSets.flatMap(rs -> Collection.of(rs.getModuleAttributes())).toSet() : Set.of();
+                                                                                       }
 
-    public static final Observed<DModule, Set<SLanguage>> LANGUAGES  = Observed.of("LANGUAGES", Set.of(), (tx, o, b, a) -> {
-                                                                         Setable.<Set<SLanguage>, SLanguage> diff(Set.of(), b, a,                            //
-                                                                                 x -> DClareMPS.ALL_LANGUAGES.set(dClareMPS(), Set::add, x), x -> {
-                                                                                                                                                  });
-                                                                     });
+                                                                                       @Override
+                                                                                       public Set<SLanguage> getLanguages() {
+                                                                                           return p.b();
+                                                                                       }
+                                                                                   });
+
+    public static final Observed<DModule, Set<DModel>>                  REFERENCED = Observed.of("REFERENCED", Set.of());
+
+    public static final Observed<DModule, Set<DModel>>                  MODELS     = DObserved.of("MODELS", Set.of(), false, true, false, false, (o, pre, post, first) -> {
+                                                                                   }, null);
+
+    public static final Observed<DModule, Set<SLanguage>>               LANGUAGES  = Observed.of("LANGUAGES", Set.of(), (tx, o, b, a) -> {
+                                                                                       Setable.<Set<SLanguage>, SLanguage> diff(Set.of(), b, a,                                                    //
+                                                                                               x -> DClareMPS.ALL_LANGUAGES.set(dClareMPS(), Set::add, x), x -> {
+                                                                                                                                                                              });
+                                                                                   });
 
     public static DModule of(SModule original) {
         return original instanceof DModule ? (DModule) original : dClareMPS().DMODULE.get(original);
@@ -73,31 +93,7 @@ public class DModule extends DObject<SModule> implements SModule {
 
     @Override
     protected DType getType() {
-        Set<SLanguage> usedLanguages = LANGUAGES.get(this).filter(l -> !DClareMPS.RULE_SETS.get(l).isEmpty()).toSet();
-        boolean allwaysActive = isAllwaysActive();
-        return new DType() {
-            @SuppressWarnings({"unchecked", "rawtypes"})
-            @Override
-            public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
-                return allwaysActive ? (Set) ruleSets.flatMap(rs -> Collection.of(rs.getModuleRules())).toSet() : Set.of();
-            }
-
-            @SuppressWarnings({"rawtypes", "unchecked"})
-            @Override
-            public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
-                return allwaysActive ? (Set) ruleSets.flatMap(rs -> Collection.of(rs.getModuleAttributes())).toSet() : Set.of();
-            }
-
-            @Override
-            public Set<SLanguage> getLanguages() {
-                return usedLanguages;
-            }
-
-            @Override
-            public Object getIdentity() {
-                return Pair.of(allwaysActive, usedLanguages);
-            }
-        };
+        return TYPE.get(Pair.of(isAllwaysActive(), LANGUAGES.get(this).filter(l -> !DClareMPS.RULE_SETS.get(l).isEmpty()).toSet()));
     }
 
     private boolean isAllwaysActive() {
@@ -301,6 +297,13 @@ public class DModule extends DObject<SModule> implements SModule {
         public void moduleChanged(SModule module) {
         }
 
+    }
+
+    protected void stop(DClareMPS dClareMPS) {
+        exit(dClareMPS);
+        for (DModel child : dClareMPS.read(() -> models(original())).map(m -> DModel.of(m))) {
+            child.stop(dClareMPS);
+        }
     }
 
     protected static Set<SLanguage> languages(SModule module) {
