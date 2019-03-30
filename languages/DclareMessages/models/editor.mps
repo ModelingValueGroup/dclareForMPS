@@ -19,6 +19,7 @@
         <child id="1140524464359" name="emptyCellModel" index="2czzBI" />
       </concept>
       <concept id="1106270549637" name="jetbrains.mps.lang.editor.structure.CellLayout_Horizontal" flags="nn" index="2iRfu4" />
+      <concept id="1106270571710" name="jetbrains.mps.lang.editor.structure.CellLayout_Vertical" flags="nn" index="2iRkQZ" />
       <concept id="3459162043708467089" name="jetbrains.mps.lang.editor.structure.CellActionMap_CanExecuteFunction" flags="in" index="jK8Ss" />
       <concept id="1237303669825" name="jetbrains.mps.lang.editor.structure.CellLayout_Indent" flags="nn" index="l2Vlx" />
       <concept id="1237307900041" name="jetbrains.mps.lang.editor.structure.IndentLayoutIndentStyleClassItem" flags="ln" index="lj46D" />
@@ -151,7 +152,35 @@
   </registry>
   <node concept="24kQdi" id="7e_PmaZxgph">
     <ref role="1XX52x" to="wknp:7e_PmaZxgoP" resolve="MessageSet" />
-    <node concept="3EZMnI" id="7e_PmaZxgF$" role="2wV5jI">
+    <node concept="3EZMnI" id="1DUQ$OwrN4j" role="2wV5jI">
+      <node concept="3EZMnI" id="1DUQ$OwrQgP" role="3EZMnx">
+        <node concept="2iRfu4" id="1DUQ$OwrQgQ" role="2iSdaV" />
+        <node concept="3F0ifn" id="1DUQ$OwrN6Y" role="3EZMnx">
+          <property role="3F0ifm" value="engine   " />
+        </node>
+        <node concept="1QoScp" id="1DUQ$OwrQhP" role="3EZMnx">
+          <property role="1QpmdY" value="true" />
+          <node concept="3F0ifn" id="1DUQ$OwrQpi" role="1QoS34">
+            <property role="3F0ifm" value="ON" />
+          </node>
+          <node concept="pkWqt" id="1DUQ$OwrQhS" role="3e4ffs">
+            <node concept="3clFbS" id="1DUQ$OwrQhU" role="2VODD2">
+              <node concept="3clFbF" id="1DUQ$OwrQwT" role="3cqZAp">
+                <node concept="2OqwBi" id="1DUQ$OwrQHm" role="3clFbG">
+                  <node concept="pncrf" id="1DUQ$OwrQwS" role="2Oq$k0" />
+                  <node concept="3TrcHB" id="1DUQ$OwrR4X" role="2OqNvi">
+                    <ref role="3TsBF5" to="wknp:1DUQ$OwrN1P" resolve="engineActive" />
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+          <node concept="3F0ifn" id="1DUQ$OwrQpn" role="1QoVPY">
+            <property role="3F0ifm" value="OFF" />
+          </node>
+        </node>
+      </node>
+      <node concept="2iRkQZ" id="1DUQ$OwrN4k" role="2iSdaV" />
       <node concept="3EZMnI" id="1KqhpdG7b8B" role="3EZMnx">
         <node concept="2iRfu4" id="1KqhpdG7b8C" role="2iSdaV" />
         <node concept="3F0ifn" id="1KqhpdG7b9y" role="3EZMnx">
@@ -287,10 +316,6 @@
         <node concept="lj46D" id="1KqhpdG7bi0" role="3F10Kt">
           <property role="VOm3f" value="true" />
         </node>
-      </node>
-      <node concept="l2Vlx" id="7e_PmaZxgF_" role="2iSdaV" />
-      <node concept="lj46D" id="7e_PmaZxgFA" role="3F10Kt">
-        <property role="VOm3f" value="true" />
       </node>
     </node>
   </node>
