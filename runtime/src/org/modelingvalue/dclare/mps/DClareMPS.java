@@ -45,40 +45,38 @@ import jetbrains.mps.smodel.language.LanguageRuntime;
 
 public class DClareMPS implements TriConsumer<State, State, Boolean> {
 
-    protected static final Observed<DClareMPS, Set<SLanguage>> ALL_LANGUAGES = Observed.of("ALL_LANGAUGES", Set.of());
+    protected static final String                    DCLARE        = "---------> DCLARE ";
 
-    protected static final String                              DCLARE        = "---------> DCLARE ";
+    private final ThreadLocal<Boolean>               COMMITTING    = new ThreadLocal<Boolean>() {
+                                                                       @Override
+                                                                       protected Boolean initialValue() {
+                                                                           return false;
+                                                                       }
 
-    protected static final Constant<SLanguage, Set<IRuleSet>>  RULE_SETS     = Constant.of("RULE_SETS", Set.of(), language -> {
-                                                                                 LanguageRuntime rtLang = registry().getLanguage(language);
-                                                                                 IRuleAspect aspect = rtLang != null ? rtLang.getAspect(IRuleAspect.class) : null;
-                                                                                 return aspect != null ? Collection.of(aspect.getRuleSets()).toSet() : Set.of();
-                                                                             });
+                                                                   };
 
-    private final ThreadLocal<Boolean>                         COMMITTING    = new ThreadLocal<Boolean>() {
-                                                                                 @Override
-                                                                                 protected Boolean initialValue() {
-                                                                                     return false;
-                                                                                 }
+    public final Observed<DClareMPS, Set<SLanguage>> ALL_LANGUAGES = Observed.of(Pair.of(this, "ALL_LANGAUGES"), Set.of());
+    public final Constant<SLanguage, Set<IRuleSet>>  RULE_SETS     = Constant.of(Pair.of(this, "RULE_SETS"), Set.of(), language -> {
+                                                                       LanguageRuntime rtLang = registry().getLanguage(language);
+                                                                       IRuleAspect aspect = rtLang != null ? rtLang.getAspect(IRuleAspect.class) : null;
+                                                                       return aspect != null ? Collection.of(aspect.getRuleSets()).toSet() : Set.of();
+                                                                   });
+    public final Getable<SRepository, DRepository>   DREPOSITORY   = Constant.of(Pair.of(this, "DREPOSITORY"), r -> new DRepository(r));
+    public final Getable<SModule, DModule>           DMODULE       = Constant.of(Pair.of(this, "DMODULE"), m -> new DModule(m));
+    public final Getable<SModel, DModel>             DMODEL        = Constant.of(Pair.of(this, "DMODEL"), m -> new DModel(m));
+    public final Getable<SNode, DNode>               DNODE         = Constant.of(Pair.of(this, "DNODE"), n -> new DNode(n));
+    public final Getable<Pair<SNode, DNode>, DCopy>  DCOPY         = Constant.of(Pair.of(this, "DCOPY"), p -> new DCopy(p.a(), p.b(), null));
+    public final Observed<Pair<DCopy, DNode>, DCopy> DCHILD_COPY   = Observed.of(Pair.of(this, "DCHILD_COPY"), null);
+    public final Getable<SClassObject, DClassObject> DCLASS_OBJECT = Constant.of(Pair.of(this, "DCLASS_OBJECT"), c -> new DClassObject(c));
 
-                                                                             };
-
-    public final Getable<SRepository, DRepository>             DREPOSITORY   = Constant.of(Pair.of(this, "DREPOSITORY"), r -> new DRepository(r));
-    public final Getable<SModule, DModule>                     DMODULE       = Constant.of(Pair.of(this, "DMODULE"), m -> new DModule(m));
-    public final Getable<SModel, DModel>                       DMODEL        = Constant.of(Pair.of(this, "DMODEL"), m -> new DModel(m));
-    public final Getable<SNode, DNode>                         DNODE         = Constant.of(Pair.of(this, "DNODE"), n -> new DNode(n));
-    public final Getable<Pair<SNode, DNode>, DCopy>            DCOPY         = Constant.of(Pair.of(this, "DCOPY"), p -> new DCopy(p.a(), p.b(), null));
-    public final Observed<Pair<DCopy, DNode>, DCopy>           DCHILD_COPY   = Observed.of(Pair.of(this, "DCHILD_COPY"), null);
-    public final Getable<SClassObject, DClassObject>           DCLASS_OBJECT = Constant.of(Pair.of(this, "DCLASS_OBJECT"), c -> new DClassObject(c));
-
-    private final ContextPool                                  thePool       = ContextThread.createPool();
-    protected final Thread                                     waitForEndThread;
-    protected final Root                                       root;
-    protected final Project                                    project;
-    private final StartStopHandler                             startStopHandler;
-    private DRepository                                        repository;
-    private Imperative                                         imperative;
-    private boolean                                            running;
+    private final ContextPool                        thePool       = ContextThread.createPool();
+    protected final Thread                           waitForEndThread;
+    protected final Root                             root;
+    protected final Project                          project;
+    private final StartStopHandler                   startStopHandler;
+    private DRepository                              repository;
+    private Imperative                               imperative;
+    private boolean                                  running;
 
     protected DClareMPS(Project project, State prevState, int maxTotalNrOfChanges, int maxNrOfChanges, StartStopHandler startStopHandler) {
         this.project = project;
@@ -264,6 +262,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
 
     public void stop() {
         if (imperative != null) {
+            imperative.stop();
             imperative = null;
             root.kill();
             root.preState().run(() -> repository.stop(this));

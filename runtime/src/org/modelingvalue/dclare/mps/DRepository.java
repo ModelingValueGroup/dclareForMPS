@@ -79,7 +79,7 @@ public class DRepository extends DObject<SRepository> implements SRepository {
 
     @Override
     protected DType getType() {
-        return TYPE.get(DClareMPS.ALL_LANGUAGES.get(dClareMPS()).filter(l -> !DClareMPS.RULE_SETS.get(l).isEmpty()).toSet());
+        return TYPE.get(dClareMPS().ALL_LANGUAGES.get(dClareMPS()).filter(l -> !dClareMPS().RULE_SETS.get(l).isEmpty()).toSet());
     }
 
     @Override

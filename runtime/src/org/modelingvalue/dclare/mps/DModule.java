@@ -69,7 +69,7 @@ public class DModule extends DObject<SModule> implements SModule {
 
     public static final Observed<DModule, Set<SLanguage>>               LANGUAGES  = Observed.of("LANGUAGES", Set.of(), (tx, o, b, a) -> {
                                                                                        Setable.<Set<SLanguage>, SLanguage> diff(Set.of(), b, a,                                                    //
-                                                                                               x -> DClareMPS.ALL_LANGUAGES.set(dClareMPS(), Set::add, x), x -> {
+                                                                                               x -> dClareMPS().ALL_LANGUAGES.set(dClareMPS(), Set::add, x), x -> {
                                                                                                                                                                               });
                                                                                    });
 
@@ -93,7 +93,7 @@ public class DModule extends DObject<SModule> implements SModule {
 
     @Override
     protected DType getType() {
-        return TYPE.get(Pair.of(isAllwaysActive(), LANGUAGES.get(this).filter(l -> !DClareMPS.RULE_SETS.get(l).isEmpty()).toSet()));
+        return TYPE.get(Pair.of(isAllwaysActive(), LANGUAGES.get(this).filter(l -> !dClareMPS().RULE_SETS.get(l).isEmpty()).toSet()));
     }
 
     private boolean isAllwaysActive() {
@@ -319,7 +319,7 @@ public class DModule extends DObject<SModule> implements SModule {
     }
 
     protected boolean hasRuleSets() {
-        return LANGUAGES.get(this).anyMatch(l -> !DClareMPS.RULE_SETS.get(l).isEmpty());
+        return LANGUAGES.get(this).anyMatch(l -> !dClareMPS().RULE_SETS.get(l).isEmpty());
     }
 
     public DModel findOrAddModel(String name, boolean temporal) {

@@ -17,6 +17,10 @@ import org.jetbrains.mps.openapi.project.Project;
 
 public interface StartStopHandler {
 
+    void on(Project project);
+
+    void off(Project project);
+
     void start(Project project);
 
     void stop(Project project, Getter getter, DRepository repository);
