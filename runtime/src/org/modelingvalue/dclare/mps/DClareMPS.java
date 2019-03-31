@@ -18,12 +18,9 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.Supplier;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
-import org.jetbrains.mps.openapi.model.SModel;
-import org.jetbrains.mps.openapi.model.SNode;
-import org.jetbrains.mps.openapi.module.SModule;
-import org.jetbrains.mps.openapi.module.SRepository;
 import org.jetbrains.mps.openapi.project.Project;
 import org.modelingvalue.collections.Collection;
+import org.modelingvalue.collections.Entry;
 import org.modelingvalue.collections.Map;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.ContextThread;
@@ -32,7 +29,6 @@ import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.collections.util.TriConsumer;
 import org.modelingvalue.transactions.AbstractLeaf;
 import org.modelingvalue.transactions.Constant;
-import org.modelingvalue.transactions.Getable;
 import org.modelingvalue.transactions.Imperative;
 import org.modelingvalue.transactions.Leaf;
 import org.modelingvalue.transactions.Observed;
@@ -45,38 +41,34 @@ import jetbrains.mps.smodel.language.LanguageRuntime;
 
 public class DClareMPS implements TriConsumer<State, State, Boolean> {
 
-    protected static final String                    DCLARE        = "---------> DCLARE ";
+    protected static final boolean                          TRACE         = true;                                                                              //Boolean.getBoolean("DCLARE_TRACE");
 
-    private final ThreadLocal<Boolean>               COMMITTING    = new ThreadLocal<Boolean>() {
-                                                                       @Override
-                                                                       protected Boolean initialValue() {
-                                                                           return false;
-                                                                       }
+    protected static final String                           DCLARE        = "---------> DCLARE ";
 
-                                                                   };
+    private final ThreadLocal<Boolean>                      COMMITTING    = new ThreadLocal<Boolean>() {
+                                                                              @Override
+                                                                              protected Boolean initialValue() {
+                                                                                  return false;
+                                                                              }
 
-    public final Observed<DClareMPS, Set<SLanguage>> ALL_LANGUAGES = Observed.of(Pair.of(this, "ALL_LANGAUGES"), Set.of());
-    public final Constant<SLanguage, Set<IRuleSet>>  RULE_SETS     = Constant.of(Pair.of(this, "RULE_SETS"), Set.of(), language -> {
-                                                                       LanguageRuntime rtLang = registry().getLanguage(language);
-                                                                       IRuleAspect aspect = rtLang != null ? rtLang.getAspect(IRuleAspect.class) : null;
-                                                                       return aspect != null ? Collection.of(aspect.getRuleSets()).toSet() : Set.of();
-                                                                   });
-    public final Getable<SRepository, DRepository>   DREPOSITORY   = Constant.of(Pair.of(this, "DREPOSITORY"), r -> new DRepository(r));
-    public final Getable<SModule, DModule>           DMODULE       = Constant.of(Pair.of(this, "DMODULE"), m -> new DModule(m));
-    public final Getable<SModel, DModel>             DMODEL        = Constant.of(Pair.of(this, "DMODEL"), m -> new DModel(m));
-    public final Getable<SNode, DNode>               DNODE         = Constant.of(Pair.of(this, "DNODE"), n -> new DNode(n));
-    public final Getable<Pair<SNode, DNode>, DCopy>  DCOPY         = Constant.of(Pair.of(this, "DCOPY"), p -> new DCopy(p.a(), p.b(), null));
-    public final Observed<Pair<DCopy, DNode>, DCopy> DCHILD_COPY   = Observed.of(Pair.of(this, "DCHILD_COPY"), null);
-    public final Getable<SClassObject, DClassObject> DCLASS_OBJECT = Constant.of(Pair.of(this, "DCLASS_OBJECT"), c -> new DClassObject(c));
+                                                                          };
 
-    private final ContextPool                        thePool       = ContextThread.createPool();
-    protected final Thread                           waitForEndThread;
-    protected final Root                             root;
-    protected final Project                          project;
-    private final StartStopHandler                   startStopHandler;
-    private DRepository                              repository;
-    private Imperative                               imperative;
-    private boolean                                  running;
+    public final static Observed<DClareMPS, Set<SLanguage>> ALL_LANGUAGES = Observed.of("ALL_LANGAUGES", Set.of());
+
+    public final static Constant<SLanguage, Set<IRuleSet>>  RULE_SETS     = Constant.of("RULE_SETS", Set.of(), language -> {
+                                                                              LanguageRuntime rtLang = registry().getLanguage(language);
+                                                                              IRuleAspect aspect = rtLang != null ? rtLang.getAspect(IRuleAspect.class) : null;
+                                                                              return aspect != null ? Collection.of(aspect.getRuleSets()).toSet() : Set.of();
+                                                                          });
+
+    private final ContextPool                               thePool       = ContextThread.createPool();
+    protected final Thread                                  waitForEndThread;
+    protected final Root                                    root;
+    protected final Project                                 project;
+    private final StartStopHandler                          startStopHandler;
+    private DRepository                                     repository;
+    private Imperative                                      imperative;
+    private boolean                                         running;
 
     protected DClareMPS(Project project, State prevState, int maxTotalNrOfChanges, int maxNrOfChanges, StartStopHandler startStopHandler) {
         this.project = project;
@@ -95,14 +87,19 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
                 }
             }
 
-            //            @Override
-            //            public void startPriority(Priority prio) {
-            //                if (prio != null) {
-            //                    System.err.println(DClareMPS.DCLARE + "START PRIORITY " + prio + "  " + this + "  " + repository);
-            //                } else {
-            //                    System.err.println(DClareMPS.DCLARE + "STOP " + this + "  " + repository);
-            //                }
-            //            }
+            @Override
+            public void startPriority(Priority prio) {
+                if (TRACE) {
+                    System.err.println(DCLARE + "START PRIORITY " + prio + "  " + this + "  " + repository);
+                }
+            }
+
+            @Override
+            public void endPriority(Priority prio) {
+                if (TRACE) {
+                    System.err.println(DCLARE + "END PRIORITY   " + prio + "  " + this + "  " + repository);
+                }
+            }
 
             @Override
             protected State post(State pre) {
@@ -110,13 +107,24 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
             }
         };
         waitForEndThread = new Thread(() -> {
+            State result = root.emptyState();
             try {
-                root.waitForEnd();
+                if (TRACE) {
+                    System.err.println(DCLARE + "START " + this + "  " + repository);
+                }
+                result = root.waitForEnd();
                 thePool.shutdownNow();
             } catch (Throwable t) {
                 stop();
                 thePool.shutdownNow();
                 throw t;
+            } finally {
+                if (TRACE) {
+                    System.err.println(DCLARE + "END   " + this + "  " + repository);
+                    for (Entry<Class<?>, Integer> e : result.count()) {
+                        System.err.println(DCLARE + "COUNT " + e.getKey().getSimpleName() + " = " + e.getValue());
+                    }
+                }
             }
         });
         waitForEndThread.setDaemon(true);

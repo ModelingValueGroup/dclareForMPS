@@ -20,7 +20,7 @@ import org.modelingvalue.transactions.Constant;
 @SuppressWarnings("rawtypes")
 public abstract class DType {
 
-    private static final Constant<DType, Set<IRuleSet>>   TYPE_RULE_SETS = Constant.of("TYPE_RULE_SETS", Set.of(), t -> t.getLanguages().flatMap(l -> DClareMPS.instance().RULE_SETS.get(l)).toSet());
+    private static final Constant<DType, Set<IRuleSet>>   TYPE_RULE_SETS = Constant.of("TYPE_RULE_SETS", Set.of(), t -> t.getLanguages().flatMap(l -> DClareMPS.RULE_SETS.get(l)).toSet());
 
     private static final Constant<DType, Set<DRule>>      RULES          = Constant.<DType, Set<DRule>> of("RULES", Set.of(), t -> t.getRules(TYPE_RULE_SETS.get(t)));
 

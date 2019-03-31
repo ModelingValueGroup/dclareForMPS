@@ -22,12 +22,17 @@ import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.transactions.AbstractLeaf;
 import org.modelingvalue.transactions.Compound;
+import org.modelingvalue.transactions.Constant;
 import org.modelingvalue.transactions.Observed;
 
 public class DCopy extends DNode {
 
+    private static final Constant<Pair<SNode, DNode>, DCopy> DCOPY       = Constant.of("DCOPY", p -> new DCopy(p.a(), p.b(), null));
+
+    private static final Observed<Pair<DCopy, DNode>, DCopy> DCHILD_COPY = Observed.of("DCHILD_COPY", null);
+
     public static DCopy of(SNode copy, DNode copied) {
-        return dClareMPS().DCOPY.get(Pair.of(copy, copied));
+        return DCOPY.get(Pair.of(copy, copied));
     }
 
     private final DNode copied;
@@ -77,17 +82,16 @@ public class DCopy extends DNode {
     private DNode copy(DNode child) {
         if (child != null) {
             Pair<DCopy, DNode> key = Pair.of(root, child);
-            DClareMPS dClareMPS = dClareMPS();
-            DCopy copy = dClareMPS.DCHILD_COPY.get(key);
+            DCopy copy = DCHILD_COPY.get(key);
             if (copy != null) {
                 DNode repl = DNode.REPLACEMENT.get(copy);
                 if (repl != null) {
                     copy = new DCopy(repl.original(), key.b(), key.a());
-                    dClareMPS.DCHILD_COPY.set(key, copy);
+                    DCHILD_COPY.set(key, copy);
                 }
             } else {
                 copy = new DCopy(DNode.newSNode(key.b().getConcept()), key.b(), key.a());
-                dClareMPS.DCHILD_COPY.set(key, copy);
+                DCHILD_COPY.set(key, copy);
                 DNode.CREATOR.set(copy, AbstractLeaf.getCurrent());
             }
             return copy;

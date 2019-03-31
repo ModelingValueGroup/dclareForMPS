@@ -43,6 +43,8 @@ import jetbrains.mps.smodel.Language;
 
 public class DModule extends DObject<SModule> implements SModule {
 
+    private static final Constant<SModule, DModule>                     DMODULE    = Constant.of("DMODULE", m -> new DModule(m));
+
     private static final Constant<Pair<Boolean, Set<SLanguage>>, DType> TYPE       = Constant.of("MODULE_TYPE", null, p -> new DType(p) {
                                                                                        @SuppressWarnings({"unchecked", "rawtypes"})
                                                                                        @Override
@@ -69,12 +71,12 @@ public class DModule extends DObject<SModule> implements SModule {
 
     public static final Observed<DModule, Set<SLanguage>>               LANGUAGES  = Observed.of("LANGUAGES", Set.of(), (tx, o, b, a) -> {
                                                                                        Setable.<Set<SLanguage>, SLanguage> diff(Set.of(), b, a,                                                    //
-                                                                                               x -> dClareMPS().ALL_LANGUAGES.set(dClareMPS(), Set::add, x), x -> {
+                                                                                               x -> DClareMPS.ALL_LANGUAGES.set(dClareMPS(), Set::add, x), x -> {
                                                                                                                                                                               });
                                                                                    });
 
     public static DModule of(SModule original) {
-        return original instanceof DModule ? (DModule) original : dClareMPS().DMODULE.get(original);
+        return original instanceof DModule ? (DModule) original : DMODULE.get(original);
     }
 
     protected DModule(SModule original) {
@@ -93,7 +95,7 @@ public class DModule extends DObject<SModule> implements SModule {
 
     @Override
     protected DType getType() {
-        return TYPE.get(Pair.of(isAllwaysActive(), LANGUAGES.get(this).filter(l -> !dClareMPS().RULE_SETS.get(l).isEmpty()).toSet()));
+        return TYPE.get(Pair.of(isAllwaysActive(), LANGUAGES.get(this).filter(l -> !DClareMPS.RULE_SETS.get(l).isEmpty()).toSet()));
     }
 
     private boolean isAllwaysActive() {
@@ -111,13 +113,12 @@ public class DModule extends DObject<SModule> implements SModule {
     @Override
     protected Compound activate(DObject parent, Compound parentTx) {
         Compound tx = super.activate(parent, parentTx);
-        DClareMPS dClareMPS = dClareMPS();
         rule(LANGUAGES, tx, () -> {
-            LANGUAGES.set(this, dClareMPS.read(() -> languages(original())).addAll(MODELS.get(this).flatMap(DModel::getUsedLanguages)));
+            LANGUAGES.set(this, dClareMPS().read(() -> languages(original())).addAll(MODELS.get(this).flatMap(DModel::getUsedLanguages)));
         }, () -> LANGUAGES.set(this, Set.of()), Priority.high);
         rule(MODELS, tx, () -> {
             if (isAllwaysActive() && hasRuleSets()) {
-                MODELS.set(this, dClareMPS.read(() -> models(original())).map(m -> DModel.of(m)).toSet());
+                MODELS.set(this, dClareMPS().read(() -> models(original())).map(m -> DModel.of(m)).toSet());
             } else {
                 MODELS.set(this, REFERENCED.get(this));
             }
@@ -319,7 +320,7 @@ public class DModule extends DObject<SModule> implements SModule {
     }
 
     protected boolean hasRuleSets() {
-        return LANGUAGES.get(this).anyMatch(l -> !dClareMPS().RULE_SETS.get(l).isEmpty());
+        return LANGUAGES.get(this).anyMatch(l -> !DClareMPS.RULE_SETS.get(l).isEmpty());
     }
 
     public DModel findOrAddModel(String name, boolean temporal) {

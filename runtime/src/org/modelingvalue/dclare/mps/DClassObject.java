@@ -23,27 +23,29 @@ import org.modelingvalue.transactions.Constant;
 
 public class DClassObject extends DObject<SClassObject> implements SClassObject {
 
-    private static final Constant<Pair<Set<SLanguage>, SClass>, DType> TYPE = Constant.of("CLASS_OBJECT_TYPE", null, p -> new DType(p) {
-        @SuppressWarnings({"rawtypes", "unchecked"})
-        @Override
-        public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
-            return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getClassRules(p.b()))).toSet();
-        }
+    private static final Constant<SClassObject, DClassObject>          DCLASS_OBJECT = Constant.of("DCLASS_OBJECT", c -> new DClassObject(c));
 
-        @SuppressWarnings({"rawtypes", "unchecked"})
-        @Override
-        public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
-            return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getClassAttributes(p.b()))).toSet();
-        }
+    private static final Constant<Pair<Set<SLanguage>, SClass>, DType> TYPE          = Constant.of("CLASS_OBJECT_TYPE", null, p -> new DType(p) {
+                                                                                         @SuppressWarnings({"rawtypes", "unchecked"})
+                                                                                         @Override
+                                                                                         public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
+                                                                                             return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getClassRules(p.b()))).toSet();
+                                                                                         }
 
-        @Override
-        public Set<SLanguage> getLanguages() {
-            return p.a();
-        }
-    });
+                                                                                         @SuppressWarnings({"rawtypes", "unchecked"})
+                                                                                         @Override
+                                                                                         public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
+                                                                                             return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getClassAttributes(p.b()))).toSet();
+                                                                                         }
+
+                                                                                         @Override
+                                                                                         public Set<SLanguage> getLanguages() {
+                                                                                             return p.a();
+                                                                                         }
+                                                                                     });
 
     public static DClassObject of(SClassObject original) {
-        return original instanceof DClassObject ? (DClassObject) original : dClareMPS().DCLASS_OBJECT.get(original);
+        return original instanceof DClassObject ? (DClassObject) original : DCLASS_OBJECT.get(original);
     }
 
     public static DClassObject wrap(SClassObject original) {
@@ -72,12 +74,12 @@ public class DClassObject extends DObject<SClassObject> implements SClassObject 
 
     @Override
     protected DType getType() {
-        return TYPE.get(Pair.of(DObject.TYPE.get(PARENT.get(this)).getLanguages(), original().getDClass()));
+        return TYPE.get(Pair.of(DObject.TYPE.get(PARENT.get(this)).getLanguages(), original().getSClass()));
     }
 
     @Override
-    public SClass getDClass() {
-        return original().getDClass();
+    public SClass getSClass() {
+        return original().getSClass();
     }
 
     @Override

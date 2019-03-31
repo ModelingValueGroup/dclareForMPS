@@ -307,7 +307,7 @@ public abstract class DObject<O> {
             for (DAttribute attr : TYPE.get(this).getAttributes()) {
                 if (attr instanceof DObservedAttribute && !attr.isComposite() && !attr.isSynthetic()) {
                     Set<DObject> orphans = Collection.of(attr.getIterable(this)).filter(DObject.class).filter(o -> {
-                        return !((DObject) o).isReadOnly() && !isInOtherRepository(dClareMPS, (DObject) o) && !((DObject) o).isOwned();
+                        return !((DObject) o).isReadOnly() && !isInOtherRepository((DObject) o) && !((DObject) o).isOwned();
                     }).toSet();
                     if (!orphans.isEmpty()) {
                         addMessage(attr, DMessageType.warning, "ORPHAN", "Non-composite attribute " + attr + " of " + this + " references orphans " + orphans.toString().substring(3));
@@ -323,12 +323,12 @@ public abstract class DObject<O> {
 
     protected abstract SRepository getOriginalRepository();
 
-    private boolean isInOtherRepository(DClareMPS dClareMPS, DObject o) {
+    private boolean isInOtherRepository(DObject o) {
         if (isReadOnly()) {
             return true;
         } else {
             SRepository r = o.getOriginalRepository();
-            return r != null && !r.equals(dClareMPS.getRepository().original());
+            return r != null && !r.equals(dClareMPS().getRepository().original());
         }
     }
 

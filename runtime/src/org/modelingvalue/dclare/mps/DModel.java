@@ -52,6 +52,8 @@ import jetbrains.mps.extapi.model.SModelBase;
 
 public class DModel extends DObject<SModel> implements SModel {
 
+    private static final Constant<SModel, DModel>        DMODEL         = Constant.of("DMODEL", m -> new DModel(m));
+
     private static final Constant<Set<SLanguage>, DType> TYPE           = Constant.of("MODEL_TYPE", null, ls -> new DType(ls) {
                                                                             @SuppressWarnings({"unchecked", "rawtypes"})
                                                                             @Override
@@ -111,7 +113,7 @@ public class DModel extends DObject<SModel> implements SModel {
     public static final Observed<DModel, ModelRoot>      MODEL_ROOT     = Observed.of("MODEL_ROOT", null);
 
     public static DModel of(SModel original) {
-        return original instanceof DModel ? (DModel) original : dClareMPS().DMODEL.get(original);
+        return original instanceof DModel ? (DModel) original : DMODEL.get(original);
     }
 
     public static DModel wrap(SModel original) {
@@ -156,12 +158,12 @@ public class DModel extends DObject<SModel> implements SModel {
     @Override
     protected Compound activate(DObject parent, Compound parentTx) {
         Compound tx = super.activate(parent, parentTx);
-        DClareMPS dClareMPS = dClareMPS();
         rule(USED_LANGUAGES, tx, () -> {
-            Set<SLanguage> ls = dClareMPS.read(() -> Collection.of(((SModelBase) original()).importedLanguageIds()).toSet());
+            Set<SLanguage> ls = dClareMPS().read(() -> Collection.of(((SModelBase) original()).importedLanguageIds()).toSet());
             USED_LANGUAGES.set(this, ls.addAll(ROOTS.get(this).flatMap(r -> DNode.USED_LANGUAGES.get(r))));
         }, () -> USED_LANGUAGES.set(this, Set.of()), Priority.high);
         rule(USED_MODELS, tx, () -> {
+            DClareMPS dClareMPS = dClareMPS();
             Set<DModel> ls = dClareMPS.read(() -> Collection.of(((SModelBase) original()).getModelImports()).map(r -> DModel.of(r.resolve(dClareMPS.getRepository().original()))).toSet());
             USED_MODELS.set(this, ls.addAll(ROOTS.get(this).flatMap(r -> DNode.USED_MODELS.get(r))).remove(this));
         }, () -> USED_MODELS.set(this, Set.of()), Priority.high);
