@@ -41,7 +41,7 @@ import jetbrains.mps.smodel.language.LanguageRuntime;
 
 public class DClareMPS implements TriConsumer<State, State, Boolean> {
 
-    protected static final boolean                          TRACE         = true;                                                                              //Boolean.getBoolean("DCLARE_TRACE");
+    protected static final boolean                          TRACE         = Boolean.getBoolean("DCLARE_TRACE");
 
     protected static final String                           DCLARE        = "---------> DCLARE ";
 
