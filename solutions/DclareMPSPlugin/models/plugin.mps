@@ -582,6 +582,14 @@
       <property role="TrG5h" value="maxTotalNrOfChanges" />
       <node concept="10Oyi0" id="GLgNzrkHla" role="1tU5fm" />
     </node>
+    <node concept="34jfKJ" id="1RIwjuNzktC" role="34lFYf">
+      <property role="TrG5h" value="maxNrOfObserd" />
+      <node concept="10Oyi0" id="1RIwjuNzmEk" role="1tU5fm" />
+    </node>
+    <node concept="34jfKJ" id="1RIwjuNzsTl" role="34lFYf">
+      <property role="TrG5h" value="maxNrOfObservers" />
+      <node concept="10Oyi0" id="1RIwjuNzsTm" role="1tU5fm" />
+    </node>
     <node concept="3yqqq6" id="4Y8BM43M7ZW" role="3yq$HY">
       <property role="TrG5h" value="Dclare" />
       <property role="3EcmCg" value="switch tracing on and off" />
@@ -653,52 +661,53 @@
               </node>
             </node>
           </node>
-          <node concept="3clFbF" id="4Y8BM43MyUx" role="3cqZAp">
-            <node concept="22lmx$" id="IcHFOt4LZd" role="3clFbG">
-              <node concept="22lmx$" id="GLgNzrngWV" role="3uHU7B">
-                <node concept="17QLQc" id="GLgNzrn04S" role="3uHU7B">
-                  <node concept="0kSF2" id="GLgNzrmW8v" role="3uHU7B">
-                    <node concept="3uibUv" id="GLgNzrmXl5" role="0kSFW">
-                      <ref role="3uigEE" to="wyt6:~Integer" resolve="Integer" />
-                    </node>
-                    <node concept="2OqwBi" id="GLgNzrmS14" role="0kSFX">
-                      <node concept="37vLTw" id="GLgNzrmQtq" role="2Oq$k0">
-                        <ref role="3cqZAo" node="GLgNzrm$NJ" resolve="max" />
-                      </node>
-                      <node concept="liA8E" id="GLgNzrmU20" role="2OqNvi">
-                        <ref role="37wK5l" to="dxuu:~JFormattedTextField.getValue():java.lang.Object" resolve="getValue" />
-                      </node>
-                    </node>
-                  </node>
-                  <node concept="2OqwBi" id="GLgNzrn2qu" role="3uHU7w">
-                    <node concept="2WthIp" id="GLgNzrn1gY" role="2Oq$k0" />
-                    <node concept="34pFcN" id="GLgNzrn3vU" role="2OqNvi">
-                      <ref role="2WH_rO" node="GLgNzrkAU0" resolve="maxNrOfChanges" />
-                    </node>
-                  </node>
+          <node concept="3cpWs8" id="1RIwjuNAsJn" role="3cqZAp">
+            <node concept="3cpWsn" id="1RIwjuNAsJo" role="3cpWs9">
+              <property role="TrG5h" value="maxObserved" />
+              <node concept="3uibUv" id="1RIwjuNAsJp" role="1tU5fm">
+                <ref role="3uigEE" to="dxuu:~JFormattedTextField" resolve="JFormattedTextField" />
+              </node>
+              <node concept="10QFUN" id="1RIwjuNAsJq" role="33vP2m">
+                <node concept="3uibUv" id="1RIwjuNAsJr" role="10QFUM">
+                  <ref role="3uigEE" to="dxuu:~JFormattedTextField" resolve="JFormattedTextField" />
                 </node>
-                <node concept="17QLQc" id="GLgNzrntsj" role="3uHU7w">
-                  <node concept="0kSF2" id="GLgNzrnpqR" role="3uHU7B">
-                    <node concept="3uibUv" id="GLgNzrnqCZ" role="0kSFW">
-                      <ref role="3uigEE" to="wyt6:~Integer" resolve="Integer" />
-                    </node>
-                    <node concept="2OqwBi" id="GLgNzrnlg9" role="0kSFX">
-                      <node concept="37vLTw" id="GLgNzrnjDu" role="2Oq$k0">
-                        <ref role="3cqZAo" node="GLgNzrmAOV" resolve="maxTotal" />
-                      </node>
-                      <node concept="liA8E" id="GLgNzrnniB" role="2OqNvi">
-                        <ref role="37wK5l" to="dxuu:~JFormattedTextField.getValue():java.lang.Object" resolve="getValue" />
-                      </node>
-                    </node>
-                  </node>
-                  <node concept="2OqwBi" id="GLgNzrnzLZ" role="3uHU7w">
-                    <node concept="2WthIp" id="GLgNzrnyAX" role="2Oq$k0" />
-                    <node concept="34pFcN" id="GLgNzrn$SX" role="2OqNvi">
-                      <ref role="2WH_rO" node="GLgNzrkGxI" resolve="maxTotalNrOfChanges" />
+                <node concept="2OqwBi" id="1RIwjuNAsJs" role="10QFUP">
+                  <node concept="3yMSdA" id="1RIwjuNAsJt" role="2Oq$k0" />
+                  <node concept="liA8E" id="1RIwjuNAsJu" role="2OqNvi">
+                    <ref role="37wK5l" to="z60i:~Container.getComponent(int):java.awt.Component" resolve="getComponent" />
+                    <node concept="3cmrfG" id="1RIwjuNAsJv" role="37wK5m">
+                      <property role="3cmrfH" value="7" />
                     </node>
                   </node>
                 </node>
               </node>
+            </node>
+          </node>
+          <node concept="3cpWs8" id="1RIwjuNAuvc" role="3cqZAp">
+            <node concept="3cpWsn" id="1RIwjuNAuvd" role="3cpWs9">
+              <property role="TrG5h" value="maxObservers" />
+              <node concept="3uibUv" id="1RIwjuNAuve" role="1tU5fm">
+                <ref role="3uigEE" to="dxuu:~JFormattedTextField" resolve="JFormattedTextField" />
+              </node>
+              <node concept="10QFUN" id="1RIwjuNAuvf" role="33vP2m">
+                <node concept="3uibUv" id="1RIwjuNAuvg" role="10QFUM">
+                  <ref role="3uigEE" to="dxuu:~JFormattedTextField" resolve="JFormattedTextField" />
+                </node>
+                <node concept="2OqwBi" id="1RIwjuNAuvh" role="10QFUP">
+                  <node concept="3yMSdA" id="1RIwjuNAuvi" role="2Oq$k0" />
+                  <node concept="liA8E" id="1RIwjuNAuvj" role="2OqNvi">
+                    <ref role="37wK5l" to="z60i:~Container.getComponent(int):java.awt.Component" resolve="getComponent" />
+                    <node concept="3cmrfG" id="1RIwjuNAuvk" role="37wK5m">
+                      <property role="3cmrfH" value="9" />
+                    </node>
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+          <node concept="3clFbH" id="1RIwjuNArva" role="3cqZAp" />
+          <node concept="3clFbF" id="4Y8BM43MyUx" role="3cqZAp">
+            <node concept="22lmx$" id="1RIwjuNAwm9" role="3clFbG">
               <node concept="3y3z36" id="4Y8BM43MPjR" role="3uHU7w">
                 <node concept="2OqwBi" id="4Y8BM43MMMq" role="3uHU7B">
                   <node concept="37vLTw" id="5LbVSrDBHwP" role="2Oq$k0">
@@ -712,6 +721,96 @@
                   <node concept="2WthIp" id="4Y8BM43MP4a" role="2Oq$k0" />
                   <node concept="34pFcN" id="5LbVSrDBIXk" role="2OqNvi">
                     <ref role="2WH_rO" node="5LbVSrDAu_C" resolve="on" />
+                  </node>
+                </node>
+              </node>
+              <node concept="22lmx$" id="1RIwjuNAyYC" role="3uHU7B">
+                <node concept="22lmx$" id="IcHFOt4LZd" role="3uHU7B">
+                  <node concept="22lmx$" id="GLgNzrngWV" role="3uHU7B">
+                    <node concept="17QLQc" id="GLgNzrn04S" role="3uHU7B">
+                      <node concept="0kSF2" id="GLgNzrmW8v" role="3uHU7B">
+                        <node concept="3uibUv" id="GLgNzrmXl5" role="0kSFW">
+                          <ref role="3uigEE" to="wyt6:~Integer" resolve="Integer" />
+                        </node>
+                        <node concept="2OqwBi" id="GLgNzrmS14" role="0kSFX">
+                          <node concept="37vLTw" id="GLgNzrmQtq" role="2Oq$k0">
+                            <ref role="3cqZAo" node="GLgNzrm$NJ" resolve="max" />
+                          </node>
+                          <node concept="liA8E" id="GLgNzrmU20" role="2OqNvi">
+                            <ref role="37wK5l" to="dxuu:~JFormattedTextField.getValue():java.lang.Object" resolve="getValue" />
+                          </node>
+                        </node>
+                      </node>
+                      <node concept="2OqwBi" id="GLgNzrn2qu" role="3uHU7w">
+                        <node concept="2WthIp" id="GLgNzrn1gY" role="2Oq$k0" />
+                        <node concept="34pFcN" id="GLgNzrn3vU" role="2OqNvi">
+                          <ref role="2WH_rO" node="GLgNzrkAU0" resolve="maxNrOfChanges" />
+                        </node>
+                      </node>
+                    </node>
+                    <node concept="17QLQc" id="GLgNzrntsj" role="3uHU7w">
+                      <node concept="0kSF2" id="GLgNzrnpqR" role="3uHU7B">
+                        <node concept="3uibUv" id="GLgNzrnqCZ" role="0kSFW">
+                          <ref role="3uigEE" to="wyt6:~Integer" resolve="Integer" />
+                        </node>
+                        <node concept="2OqwBi" id="GLgNzrnlg9" role="0kSFX">
+                          <node concept="37vLTw" id="GLgNzrnjDu" role="2Oq$k0">
+                            <ref role="3cqZAo" node="GLgNzrmAOV" resolve="maxTotal" />
+                          </node>
+                          <node concept="liA8E" id="GLgNzrnniB" role="2OqNvi">
+                            <ref role="37wK5l" to="dxuu:~JFormattedTextField.getValue():java.lang.Object" resolve="getValue" />
+                          </node>
+                        </node>
+                      </node>
+                      <node concept="2OqwBi" id="GLgNzrnzLZ" role="3uHU7w">
+                        <node concept="2WthIp" id="GLgNzrnyAX" role="2Oq$k0" />
+                        <node concept="34pFcN" id="GLgNzrn$SX" role="2OqNvi">
+                          <ref role="2WH_rO" node="GLgNzrkGxI" resolve="maxTotalNrOfChanges" />
+                        </node>
+                      </node>
+                    </node>
+                  </node>
+                  <node concept="17QLQc" id="1RIwjuNANZm" role="3uHU7w">
+                    <node concept="2OqwBi" id="1RIwjuNARh2" role="3uHU7w">
+                      <node concept="2WthIp" id="1RIwjuNAPN7" role="2Oq$k0" />
+                      <node concept="34pFcN" id="1RIwjuNASEz" role="2OqNvi">
+                        <ref role="2WH_rO" node="1RIwjuNzktC" resolve="maxNrOfObserd" />
+                      </node>
+                    </node>
+                    <node concept="0kSF2" id="1RIwjuNAIjj" role="3uHU7B">
+                      <node concept="3uibUv" id="1RIwjuNAK4G" role="0kSFW">
+                        <ref role="3uigEE" to="wyt6:~Integer" resolve="Integer" />
+                      </node>
+                      <node concept="2OqwBi" id="1RIwjuNACTi" role="0kSFX">
+                        <node concept="37vLTw" id="1RIwjuNAAS2" role="2Oq$k0">
+                          <ref role="3cqZAo" node="1RIwjuNAsJo" resolve="maxObserved" />
+                        </node>
+                        <node concept="liA8E" id="1RIwjuNAF25" role="2OqNvi">
+                          <ref role="37wK5l" to="dxuu:~JFormattedTextField.getValue():java.lang.Object" resolve="getValue" />
+                        </node>
+                      </node>
+                    </node>
+                  </node>
+                </node>
+                <node concept="17QLQc" id="1RIwjuNAU07" role="3uHU7w">
+                  <node concept="2OqwBi" id="1RIwjuNAU08" role="3uHU7w">
+                    <node concept="2WthIp" id="1RIwjuNAU09" role="2Oq$k0" />
+                    <node concept="34pFcN" id="1RIwjuNAXnl" role="2OqNvi">
+                      <ref role="2WH_rO" node="1RIwjuNzsTl" resolve="maxNrOfObservers" />
+                    </node>
+                  </node>
+                  <node concept="0kSF2" id="1RIwjuNAU0b" role="3uHU7B">
+                    <node concept="3uibUv" id="1RIwjuNAU0c" role="0kSFW">
+                      <ref role="3uigEE" to="wyt6:~Integer" resolve="Integer" />
+                    </node>
+                    <node concept="2OqwBi" id="1RIwjuNAU0d" role="0kSFX">
+                      <node concept="37vLTw" id="1RIwjuNAVTs" role="2Oq$k0">
+                        <ref role="3cqZAo" node="1RIwjuNAuvd" resolve="maxObservers" />
+                      </node>
+                      <node concept="liA8E" id="1RIwjuNAU0f" role="2OqNvi">
+                        <ref role="37wK5l" to="dxuu:~JFormattedTextField.getValue():java.lang.Object" resolve="getValue" />
+                      </node>
+                    </node>
                   </node>
                 </node>
               </node>
@@ -777,6 +876,62 @@
               </node>
             </node>
           </node>
+          <node concept="3clFbJ" id="1RIwjuN$cAl" role="3cqZAp">
+            <node concept="3clFbS" id="1RIwjuN$cAm" role="3clFbx">
+              <node concept="3clFbF" id="1RIwjuN$cAn" role="3cqZAp">
+                <node concept="37vLTI" id="1RIwjuN$cAo" role="3clFbG">
+                  <node concept="2OqwBi" id="1RIwjuN$cAp" role="37vLTJ">
+                    <node concept="2WthIp" id="1RIwjuN$cAq" role="2Oq$k0" />
+                    <node concept="34pFcN" id="1RIwjuN$cAr" role="2OqNvi">
+                      <ref role="2WH_rO" node="1RIwjuNzktC" resolve="maxNrOfObserd" />
+                    </node>
+                  </node>
+                  <node concept="3cmrfG" id="1RIwjuN$cAs" role="37vLTx">
+                    <property role="3cmrfH" value="16" />
+                  </node>
+                </node>
+              </node>
+            </node>
+            <node concept="2dkUwp" id="1RIwjuN$cAt" role="3clFbw">
+              <node concept="2OqwBi" id="1RIwjuN$cAu" role="3uHU7B">
+                <node concept="2WthIp" id="1RIwjuN$cAv" role="2Oq$k0" />
+                <node concept="34pFcN" id="1RIwjuN$cAw" role="2OqNvi">
+                  <ref role="2WH_rO" node="1RIwjuNzktC" resolve="maxNrOfObserd" />
+                </node>
+              </node>
+              <node concept="3cmrfG" id="1RIwjuN$cAx" role="3uHU7w">
+                <property role="3cmrfH" value="0" />
+              </node>
+            </node>
+          </node>
+          <node concept="3clFbJ" id="1RIwjuN$eAH" role="3cqZAp">
+            <node concept="3clFbS" id="1RIwjuN$eAI" role="3clFbx">
+              <node concept="3clFbF" id="1RIwjuN$eAJ" role="3cqZAp">
+                <node concept="37vLTI" id="1RIwjuN$eAK" role="3clFbG">
+                  <node concept="2OqwBi" id="1RIwjuN$eAL" role="37vLTJ">
+                    <node concept="2WthIp" id="1RIwjuN$eAM" role="2Oq$k0" />
+                    <node concept="34pFcN" id="1RIwjuN$eAN" role="2OqNvi">
+                      <ref role="2WH_rO" node="1RIwjuNzsTl" resolve="maxNrOfObservers" />
+                    </node>
+                  </node>
+                  <node concept="3cmrfG" id="1RIwjuN$eAO" role="37vLTx">
+                    <property role="3cmrfH" value="64" />
+                  </node>
+                </node>
+              </node>
+            </node>
+            <node concept="2dkUwp" id="1RIwjuN$eAP" role="3clFbw">
+              <node concept="2OqwBi" id="1RIwjuN$eAQ" role="3uHU7B">
+                <node concept="2WthIp" id="1RIwjuN$eAR" role="2Oq$k0" />
+                <node concept="34pFcN" id="1RIwjuN$eAS" role="2OqNvi">
+                  <ref role="2WH_rO" node="1RIwjuNzsTl" resolve="maxNrOfObservers" />
+                </node>
+              </node>
+              <node concept="3cmrfG" id="1RIwjuN$eAT" role="3uHU7w">
+                <property role="3cmrfH" value="0" />
+              </node>
+            </node>
+          </node>
           <node concept="3clFbF" id="5LbVSrDAGGf" role="3cqZAp">
             <node concept="2OqwBi" id="5LbVSrDAHBM" role="3clFbG">
               <node concept="3yMSdA" id="5LbVSrDAGGd" role="2Oq$k0" />
@@ -785,6 +940,7 @@
               </node>
             </node>
           </node>
+          <node concept="3clFbH" id="1RIwjuN$qWw" role="3cqZAp" />
           <node concept="3clFbF" id="GLgNzrphWo" role="3cqZAp">
             <node concept="2OqwBi" id="GLgNzrpk2l" role="3clFbG">
               <node concept="3yMSdA" id="GLgNzrphWm" role="2Oq$k0" />
@@ -841,6 +997,7 @@
               </node>
             </node>
           </node>
+          <node concept="3clFbH" id="1RIwjuN$kQO" role="3cqZAp" />
           <node concept="3clFbF" id="GLgNzrpBj0" role="3cqZAp">
             <node concept="2OqwBi" id="GLgNzrpBj1" role="3clFbG">
               <node concept="3yMSdA" id="GLgNzrpBj2" role="2Oq$k0" />
@@ -901,6 +1058,7 @@
               </node>
             </node>
           </node>
+          <node concept="3clFbH" id="1RIwjuN$mR6" role="3cqZAp" />
           <node concept="3clFbF" id="GLgNzrpDfo" role="3cqZAp">
             <node concept="2OqwBi" id="GLgNzrpDfp" role="3clFbG">
               <node concept="3yMSdA" id="GLgNzrpDfq" role="2Oq$k0" />
@@ -961,6 +1119,129 @@
               </node>
             </node>
           </node>
+          <node concept="3clFbH" id="1RIwjuN$oUQ" role="3cqZAp" />
+          <node concept="3clFbF" id="1RIwjuN$MQF" role="3cqZAp">
+            <node concept="2OqwBi" id="1RIwjuN$MQG" role="3clFbG">
+              <node concept="3yMSdA" id="1RIwjuN$MQH" role="2Oq$k0" />
+              <node concept="liA8E" id="1RIwjuN$MQI" role="2OqNvi">
+                <ref role="37wK5l" to="z60i:~Container.add(java.awt.Component):java.awt.Component" resolve="add" />
+                <node concept="2ShNRf" id="1RIwjuN$MQJ" role="37wK5m">
+                  <node concept="1pGfFk" id="1RIwjuN$MQK" role="2ShVmc">
+                    <ref role="37wK5l" to="dxuu:~JLabel.&lt;init&gt;(java.lang.String)" resolve="JLabel" />
+                    <node concept="Xl_RD" id="1RIwjuN$MQL" role="37wK5m">
+                      <property role="Xl_RC" value="Maximum number of observed features (instances) per rule (instance)" />
+                    </node>
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+          <node concept="3cpWs8" id="1RIwjuN$OXc" role="3cqZAp">
+            <node concept="3cpWsn" id="1RIwjuN$OXd" role="3cpWs9">
+              <property role="TrG5h" value="maxObserved" />
+              <node concept="3uibUv" id="1RIwjuN$OXe" role="1tU5fm">
+                <ref role="3uigEE" to="dxuu:~JFormattedTextField" resolve="JFormattedTextField" />
+              </node>
+              <node concept="2ShNRf" id="1RIwjuN$OXf" role="33vP2m">
+                <node concept="1pGfFk" id="1RIwjuN$OXg" role="2ShVmc">
+                  <ref role="37wK5l" to="dxuu:~JFormattedTextField.&lt;init&gt;(java.lang.Object)" resolve="JFormattedTextField" />
+                  <node concept="10M0yZ" id="1RIwjuN$OXh" role="37wK5m">
+                    <ref role="3cqZAo" to="25x5:~NumberFormat.INTEGER_FIELD" resolve="INTEGER_FIELD" />
+                    <ref role="1PxDUh" to="25x5:~NumberFormat" resolve="NumberFormat" />
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+          <node concept="3clFbF" id="1RIwjuN$RwI" role="3cqZAp">
+            <node concept="2OqwBi" id="1RIwjuN$RwJ" role="3clFbG">
+              <node concept="37vLTw" id="1RIwjuN_QV1" role="2Oq$k0">
+                <ref role="3cqZAo" node="1RIwjuN$OXd" resolve="maxObserved" />
+              </node>
+              <node concept="liA8E" id="1RIwjuN$RwL" role="2OqNvi">
+                <ref role="37wK5l" to="dxuu:~JFormattedTextField.setValue(java.lang.Object):void" resolve="setValue" />
+                <node concept="2OqwBi" id="1RIwjuN$RwM" role="37wK5m">
+                  <node concept="2WthIp" id="1RIwjuN$RwN" role="2Oq$k0" />
+                  <node concept="34pFcN" id="1RIwjuN_TlA" role="2OqNvi">
+                    <ref role="2WH_rO" node="1RIwjuNzktC" resolve="maxNrOfObserd" />
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+          <node concept="3clFbF" id="1RIwjuN$U77" role="3cqZAp">
+            <node concept="2OqwBi" id="1RIwjuN$U78" role="3clFbG">
+              <node concept="3yMSdA" id="1RIwjuN$U79" role="2Oq$k0" />
+              <node concept="liA8E" id="1RIwjuN$U7a" role="2OqNvi">
+                <ref role="37wK5l" to="z60i:~Container.add(java.awt.Component):java.awt.Component" resolve="add" />
+                <node concept="37vLTw" id="3jOpaegeruk" role="37wK5m">
+                  <ref role="3cqZAo" node="1RIwjuN$OXd" resolve="maxObserved" />
+                </node>
+              </node>
+            </node>
+          </node>
+          <node concept="3clFbH" id="1RIwjuN$KMB" role="3cqZAp" />
+          <node concept="3clFbF" id="1RIwjuN$Wm1" role="3cqZAp">
+            <node concept="2OqwBi" id="1RIwjuN$Wm2" role="3clFbG">
+              <node concept="3yMSdA" id="1RIwjuN$Wm3" role="2Oq$k0" />
+              <node concept="liA8E" id="1RIwjuN$Wm4" role="2OqNvi">
+                <ref role="37wK5l" to="z60i:~Container.add(java.awt.Component):java.awt.Component" resolve="add" />
+                <node concept="2ShNRf" id="1RIwjuN$Wm5" role="37wK5m">
+                  <node concept="1pGfFk" id="1RIwjuN$Wm6" role="2ShVmc">
+                    <ref role="37wK5l" to="dxuu:~JLabel.&lt;init&gt;(java.lang.String)" resolve="JLabel" />
+                    <node concept="Xl_RD" id="1RIwjuN$Wm7" role="37wK5m">
+                      <property role="Xl_RC" value="Maximum number of observing rules (instances) per feature (instance)" />
+                    </node>
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+          <node concept="3cpWs8" id="1RIwjuN_0$q" role="3cqZAp">
+            <node concept="3cpWsn" id="1RIwjuN_0$r" role="3cpWs9">
+              <property role="TrG5h" value="maxObservers" />
+              <node concept="3uibUv" id="1RIwjuN_0$s" role="1tU5fm">
+                <ref role="3uigEE" to="dxuu:~JFormattedTextField" resolve="JFormattedTextField" />
+              </node>
+              <node concept="2ShNRf" id="1RIwjuN_0$t" role="33vP2m">
+                <node concept="1pGfFk" id="1RIwjuN_0$u" role="2ShVmc">
+                  <ref role="37wK5l" to="dxuu:~JFormattedTextField.&lt;init&gt;(java.lang.Object)" resolve="JFormattedTextField" />
+                  <node concept="10M0yZ" id="1RIwjuN_0$v" role="37wK5m">
+                    <ref role="1PxDUh" to="25x5:~NumberFormat" resolve="NumberFormat" />
+                    <ref role="3cqZAo" to="25x5:~NumberFormat.INTEGER_FIELD" resolve="INTEGER_FIELD" />
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+          <node concept="3clFbF" id="1RIwjuN_3al" role="3cqZAp">
+            <node concept="2OqwBi" id="1RIwjuN_3am" role="3clFbG">
+              <node concept="37vLTw" id="1RIwjuN_R3X" role="2Oq$k0">
+                <ref role="3cqZAo" node="1RIwjuN_0$r" resolve="maxObservers" />
+              </node>
+              <node concept="liA8E" id="1RIwjuN_3ao" role="2OqNvi">
+                <ref role="37wK5l" to="dxuu:~JFormattedTextField.setValue(java.lang.Object):void" resolve="setValue" />
+                <node concept="2OqwBi" id="1RIwjuN_3ap" role="37wK5m">
+                  <node concept="2WthIp" id="1RIwjuN_3aq" role="2Oq$k0" />
+                  <node concept="34pFcN" id="1RIwjuN_Rhd" role="2OqNvi">
+                    <ref role="2WH_rO" node="1RIwjuNzsTl" resolve="maxNrOfObservers" />
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+          <node concept="3clFbF" id="1RIwjuN_5N_" role="3cqZAp">
+            <node concept="2OqwBi" id="1RIwjuN_5NA" role="3clFbG">
+              <node concept="3yMSdA" id="1RIwjuN_5NB" role="2Oq$k0" />
+              <node concept="liA8E" id="1RIwjuN_5NC" role="2OqNvi">
+                <ref role="37wK5l" to="z60i:~Container.add(java.awt.Component):java.awt.Component" resolve="add" />
+                <node concept="37vLTw" id="3jOpaegesRd" role="37wK5m">
+                  <ref role="3cqZAo" node="1RIwjuN_0$r" resolve="maxObservers" />
+                </node>
+              </node>
+            </node>
+          </node>
+          <node concept="3clFbH" id="1RIwjuN$KP2" role="3cqZAp" />
           <node concept="1Dw8fO" id="6_bAO4Vq2WM" role="3cqZAp">
             <node concept="3clFbS" id="6_bAO4Vq2WO" role="2LFqv$">
               <node concept="3clFbF" id="6_bAO4VoGDp" role="3cqZAp">
@@ -988,8 +1269,8 @@
               <node concept="37vLTw" id="6_bAO4Vq4SB" role="3uHU7B">
                 <ref role="3cqZAo" node="6_bAO4Vq2WP" resolve="i" />
               </node>
-              <node concept="3cmrfG" id="IcHFOt48fK" role="3uHU7w">
-                <property role="3cmrfH" value="22" />
+              <node concept="3cmrfG" id="3jOpaegfbwr" role="3uHU7w">
+                <property role="3cmrfH" value="30" />
               </node>
             </node>
             <node concept="3uNrnE" id="6_bAO4Vq9yl" role="1Dwrff">
@@ -1042,6 +1323,7 @@
               </node>
             </node>
           </node>
+          <node concept="3clFbH" id="1RIwjuN$t0m" role="3cqZAp" />
           <node concept="3cpWs8" id="GLgNzrnI83" role="3cqZAp">
             <node concept="3cpWsn" id="GLgNzrnI84" role="3cpWs9">
               <property role="TrG5h" value="max" />
@@ -1087,6 +1369,7 @@
               </node>
             </node>
           </node>
+          <node concept="3clFbH" id="1RIwjuN$vhN" role="3cqZAp" />
           <node concept="3cpWs8" id="GLgNzrnEa3" role="3cqZAp">
             <node concept="3cpWsn" id="GLgNzrnEa4" role="3cpWs9">
               <property role="TrG5h" value="maxTotal" />
@@ -1132,6 +1415,99 @@
               </node>
             </node>
           </node>
+          <node concept="3clFbH" id="1RIwjuN_XGs" role="3cqZAp" />
+          <node concept="3cpWs8" id="1RIwjuN_Z$F" role="3cqZAp">
+            <node concept="3cpWsn" id="1RIwjuN_Z$G" role="3cpWs9">
+              <property role="TrG5h" value="maxObserved" />
+              <node concept="3uibUv" id="1RIwjuN_Z$H" role="1tU5fm">
+                <ref role="3uigEE" to="dxuu:~JFormattedTextField" resolve="JFormattedTextField" />
+              </node>
+              <node concept="10QFUN" id="1RIwjuN_Z$I" role="33vP2m">
+                <node concept="3uibUv" id="1RIwjuN_Z$J" role="10QFUM">
+                  <ref role="3uigEE" to="dxuu:~JFormattedTextField" resolve="JFormattedTextField" />
+                </node>
+                <node concept="2OqwBi" id="1RIwjuN_Z$K" role="10QFUP">
+                  <node concept="3yMSdA" id="1RIwjuN_Z$L" role="2Oq$k0" />
+                  <node concept="liA8E" id="1RIwjuN_Z$M" role="2OqNvi">
+                    <ref role="37wK5l" to="z60i:~Container.getComponent(int):java.awt.Component" resolve="getComponent" />
+                    <node concept="3cmrfG" id="1RIwjuNAjST" role="37wK5m">
+                      <property role="3cmrfH" value="7" />
+                    </node>
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+          <node concept="3clFbF" id="1RIwjuNAbHA" role="3cqZAp">
+            <node concept="37vLTI" id="1RIwjuNAbHB" role="3clFbG">
+              <node concept="0kSF2" id="1RIwjuNAbHC" role="37vLTx">
+                <node concept="3uibUv" id="1RIwjuNAbHD" role="0kSFW">
+                  <ref role="3uigEE" to="wyt6:~Integer" resolve="Integer" />
+                </node>
+                <node concept="2OqwBi" id="1RIwjuNAbHE" role="0kSFX">
+                  <node concept="37vLTw" id="1RIwjuNAmzi" role="2Oq$k0">
+                    <ref role="3cqZAo" node="1RIwjuN_Z$G" resolve="maxObserved" />
+                  </node>
+                  <node concept="liA8E" id="1RIwjuNAbHG" role="2OqNvi">
+                    <ref role="37wK5l" to="dxuu:~JFormattedTextField.getValue():java.lang.Object" resolve="getValue" />
+                  </node>
+                </node>
+              </node>
+              <node concept="2OqwBi" id="1RIwjuNAbHH" role="37vLTJ">
+                <node concept="2WthIp" id="1RIwjuNAbHI" role="2Oq$k0" />
+                <node concept="34pFcN" id="1RIwjuNApfW" role="2OqNvi">
+                  <ref role="2WH_rO" node="1RIwjuNzktC" resolve="maxNrOfObserd" />
+                </node>
+              </node>
+            </node>
+          </node>
+          <node concept="3clFbH" id="1RIwjuNA2fE" role="3cqZAp" />
+          <node concept="3cpWs8" id="1RIwjuNA4xd" role="3cqZAp">
+            <node concept="3cpWsn" id="1RIwjuNA4xe" role="3cpWs9">
+              <property role="TrG5h" value="maxObservers" />
+              <node concept="3uibUv" id="1RIwjuNA4xf" role="1tU5fm">
+                <ref role="3uigEE" to="dxuu:~JFormattedTextField" resolve="JFormattedTextField" />
+              </node>
+              <node concept="10QFUN" id="1RIwjuNA4xg" role="33vP2m">
+                <node concept="3uibUv" id="1RIwjuNA4xh" role="10QFUM">
+                  <ref role="3uigEE" to="dxuu:~JFormattedTextField" resolve="JFormattedTextField" />
+                </node>
+                <node concept="2OqwBi" id="1RIwjuNA4xi" role="10QFUP">
+                  <node concept="3yMSdA" id="1RIwjuNA4xj" role="2Oq$k0" />
+                  <node concept="liA8E" id="1RIwjuNA4xk" role="2OqNvi">
+                    <ref role="37wK5l" to="z60i:~Container.getComponent(int):java.awt.Component" resolve="getComponent" />
+                    <node concept="3cmrfG" id="1RIwjuNAla$" role="37wK5m">
+                      <property role="3cmrfH" value="9" />
+                    </node>
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+          <node concept="3clFbF" id="1RIwjuNAeuc" role="3cqZAp">
+            <node concept="37vLTI" id="1RIwjuNAeud" role="3clFbG">
+              <node concept="0kSF2" id="1RIwjuNAeue" role="37vLTx">
+                <node concept="3uibUv" id="1RIwjuNAeuf" role="0kSFW">
+                  <ref role="3uigEE" to="wyt6:~Integer" resolve="Integer" />
+                </node>
+                <node concept="2OqwBi" id="1RIwjuNAeug" role="0kSFX">
+                  <node concept="37vLTw" id="1RIwjuNAmGW" role="2Oq$k0">
+                    <ref role="3cqZAo" node="1RIwjuNA4xe" resolve="maxObservers" />
+                  </node>
+                  <node concept="liA8E" id="1RIwjuNAeui" role="2OqNvi">
+                    <ref role="37wK5l" to="dxuu:~JFormattedTextField.getValue():java.lang.Object" resolve="getValue" />
+                  </node>
+                </node>
+              </node>
+              <node concept="2OqwBi" id="1RIwjuNAeuj" role="37vLTJ">
+                <node concept="2WthIp" id="1RIwjuNAeuk" role="2Oq$k0" />
+                <node concept="34pFcN" id="1RIwjuNAmUU" role="2OqNvi">
+                  <ref role="2WH_rO" node="1RIwjuNzsTl" resolve="maxNrOfObservers" />
+                </node>
+              </node>
+            </node>
+          </node>
+          <node concept="3clFbH" id="1RIwjuNA2hu" role="3cqZAp" />
           <node concept="3cpWs8" id="5LbVSrDC$MR" role="3cqZAp">
             <node concept="3cpWsn" id="5LbVSrDC$MU" role="3cpWs9">
               <property role="TrG5h" value="engine" />
@@ -1182,6 +1558,38 @@
               </node>
             </node>
           </node>
+          <node concept="3clFbF" id="1RIwjuN$_O7" role="3cqZAp">
+            <node concept="2OqwBi" id="1RIwjuN$C72" role="3clFbG">
+              <node concept="37vLTw" id="1RIwjuN$_O5" role="2Oq$k0">
+                <ref role="3cqZAo" node="5LbVSrDC$MU" resolve="engine" />
+              </node>
+              <node concept="liA8E" id="1RIwjuN$Dsm" role="2OqNvi">
+                <ref role="37wK5l" to="t4tl:~DclareForMPSEngine.setNrOfObserved(int):void" resolve="setNrOfObserved" />
+                <node concept="2OqwBi" id="1RIwjuN$DMW" role="37wK5m">
+                  <node concept="2WthIp" id="1RIwjuN$DAC" role="2Oq$k0" />
+                  <node concept="34pFcN" id="1RIwjuN$DU1" role="2OqNvi">
+                    <ref role="2WH_rO" node="1RIwjuNzktC" resolve="maxNrOfObserd" />
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+          <node concept="3clFbF" id="1RIwjuN$Gll" role="3cqZAp">
+            <node concept="2OqwBi" id="1RIwjuN$IBz" role="3clFbG">
+              <node concept="37vLTw" id="1RIwjuN$Glj" role="2Oq$k0">
+                <ref role="3cqZAo" node="5LbVSrDC$MU" resolve="engine" />
+              </node>
+              <node concept="liA8E" id="1RIwjuN$JXd" role="2OqNvi">
+                <ref role="37wK5l" to="t4tl:~DclareForMPSEngine.setNrOfObservers(int):void" resolve="setNrOfObservers" />
+                <node concept="2OqwBi" id="1RIwjuN$KjN" role="37wK5m">
+                  <node concept="2WthIp" id="1RIwjuN$K7v" role="2Oq$k0" />
+                  <node concept="34pFcN" id="1RIwjuN$KqS" role="2OqNvi">
+                    <ref role="2WH_rO" node="1RIwjuNzsTl" resolve="maxNrOfObservers" />
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
           <node concept="3clFbF" id="GLgNzrknZj" role="3cqZAp">
             <node concept="2OqwBi" id="GLgNzrkoNS" role="3clFbG">
               <node concept="37vLTw" id="GLgNzrknZh" role="2Oq$k0">
@@ -1206,8 +1614,8 @@
           <node concept="2ShNRf" id="5LbVSrDAKvz" role="37wK5m">
             <node concept="1pGfFk" id="5LbVSrDAUrQ" role="2ShVmc">
               <ref role="37wK5l" to="z60i:~GridLayout.&lt;init&gt;(int,int)" resolve="GridLayout" />
-              <node concept="3cmrfG" id="5LbVSrDB0CY" role="37wK5m">
-                <property role="3cmrfH" value="16" />
+              <node concept="3cmrfG" id="3jOpaegfa6$" role="37wK5m">
+                <property role="3cmrfH" value="20" />
               </node>
               <node concept="3cmrfG" id="GLgNzroYOS" role="37wK5m">
                 <property role="3cmrfH" value="2" />
@@ -1275,6 +1683,62 @@
             </node>
           </node>
         </node>
+        <node concept="3clFbJ" id="1RIwjuNz$Ge" role="3cqZAp">
+          <node concept="3clFbS" id="1RIwjuNz$Gf" role="3clFbx">
+            <node concept="3clFbF" id="1RIwjuNz$Gg" role="3cqZAp">
+              <node concept="37vLTI" id="1RIwjuNz$Gh" role="3clFbG">
+                <node concept="2OqwBi" id="1RIwjuNz$Gj" role="37vLTJ">
+                  <node concept="2WthIp" id="1RIwjuNz$Gk" role="2Oq$k0" />
+                  <node concept="34pFcN" id="1RIwjuNzGP8" role="2OqNvi">
+                    <ref role="2WH_rO" node="1RIwjuNzktC" resolve="maxNrOfObserd" />
+                  </node>
+                </node>
+                <node concept="3cmrfG" id="1RIwjuNzNx$" role="37vLTx">
+                  <property role="3cmrfH" value="16" />
+                </node>
+              </node>
+            </node>
+          </node>
+          <node concept="2dkUwp" id="1RIwjuNz$Gm" role="3clFbw">
+            <node concept="2OqwBi" id="1RIwjuNz$Gn" role="3uHU7B">
+              <node concept="2WthIp" id="1RIwjuNz$Go" role="2Oq$k0" />
+              <node concept="34pFcN" id="1RIwjuNzEOc" role="2OqNvi">
+                <ref role="2WH_rO" node="1RIwjuNzktC" resolve="maxNrOfObserd" />
+              </node>
+            </node>
+            <node concept="3cmrfG" id="1RIwjuNz$Gq" role="3uHU7w">
+              <property role="3cmrfH" value="0" />
+            </node>
+          </node>
+        </node>
+        <node concept="3clFbJ" id="1RIwjuNzCBn" role="3cqZAp">
+          <node concept="3clFbS" id="1RIwjuNzCBo" role="3clFbx">
+            <node concept="3clFbF" id="1RIwjuNzCBp" role="3cqZAp">
+              <node concept="37vLTI" id="1RIwjuNzCBq" role="3clFbG">
+                <node concept="2OqwBi" id="1RIwjuNzCBs" role="37vLTJ">
+                  <node concept="2WthIp" id="1RIwjuNzCBt" role="2Oq$k0" />
+                  <node concept="34pFcN" id="1RIwjuNzKQp" role="2OqNvi">
+                    <ref role="2WH_rO" node="1RIwjuNzsTl" resolve="maxNrOfObservers" />
+                  </node>
+                </node>
+                <node concept="3cmrfG" id="1RIwjuNzSIu" role="37vLTx">
+                  <property role="3cmrfH" value="64" />
+                </node>
+              </node>
+            </node>
+          </node>
+          <node concept="2dkUwp" id="1RIwjuNzCBv" role="3clFbw">
+            <node concept="2OqwBi" id="1RIwjuNzCBw" role="3uHU7B">
+              <node concept="2WthIp" id="1RIwjuNzCBx" role="2Oq$k0" />
+              <node concept="34pFcN" id="1RIwjuNzILk" role="2OqNvi">
+                <ref role="2WH_rO" node="1RIwjuNzsTl" resolve="maxNrOfObservers" />
+              </node>
+            </node>
+            <node concept="3cmrfG" id="1RIwjuNzCBz" role="3uHU7w">
+              <property role="3cmrfH" value="0" />
+            </node>
+          </node>
+        </node>
         <node concept="3cpWs8" id="GLgNzrkNBP" role="3cqZAp">
           <node concept="3cpWsn" id="GLgNzrkNBS" role="3cpWs9">
             <property role="TrG5h" value="engine" />
@@ -1325,6 +1789,38 @@
                 <node concept="2WthIp" id="GLgNzrkRza" role="2Oq$k0" />
                 <node concept="34pFcN" id="GLgNzrkSp7" role="2OqNvi">
                   <ref role="2WH_rO" node="GLgNzrkAU0" resolve="maxNrOfChanges" />
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="3clFbF" id="1RIwjuN$1r2" role="3cqZAp">
+          <node concept="2OqwBi" id="1RIwjuN$3CC" role="3clFbG">
+            <node concept="37vLTw" id="1RIwjuN$1r0" role="2Oq$k0">
+              <ref role="3cqZAo" node="GLgNzrkNBS" resolve="engine" />
+            </node>
+            <node concept="liA8E" id="1RIwjuN$40D" role="2OqNvi">
+              <ref role="37wK5l" to="t4tl:~DclareForMPSEngine.setNrOfObserved(int):void" resolve="setNrOfObserved" />
+              <node concept="2OqwBi" id="1RIwjuN$6KQ" role="37wK5m">
+                <node concept="2WthIp" id="1RIwjuN$6KT" role="2Oq$k0" />
+                <node concept="34pFcN" id="1RIwjuN$6KV" role="2OqNvi">
+                  <ref role="2WH_rO" node="1RIwjuNzktC" resolve="maxNrOfObserd" />
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="3clFbF" id="1RIwjuN$9lT" role="3cqZAp">
+          <node concept="2OqwBi" id="1RIwjuN$b$h" role="3clFbG">
+            <node concept="37vLTw" id="1RIwjuN$9lR" role="2Oq$k0">
+              <ref role="3cqZAo" node="GLgNzrkNBS" resolve="engine" />
+            </node>
+            <node concept="liA8E" id="1RIwjuN$bWV" role="2OqNvi">
+              <ref role="37wK5l" to="t4tl:~DclareForMPSEngine.setNrOfObservers(int):void" resolve="setNrOfObservers" />
+              <node concept="2OqwBi" id="1RIwjuN$cjK" role="37wK5m">
+                <node concept="2WthIp" id="1RIwjuN$c7g" role="2Oq$k0" />
+                <node concept="34pFcN" id="1RIwjuN$cqP" role="2OqNvi">
+                  <ref role="2WH_rO" node="1RIwjuNzsTl" resolve="maxNrOfObservers" />
                 </node>
               </node>
             </node>
