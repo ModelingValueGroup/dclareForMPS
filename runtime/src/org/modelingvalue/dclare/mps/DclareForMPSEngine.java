@@ -34,6 +34,8 @@ public class DclareForMPSEngine implements DeployListener {
     private boolean                    on;
     private int                        maxTotalNrOfChanges;
     private int                        maxNrOfChanges;
+    private int                        maxNrOfObserved;
+    private int                        maxNrOfObservers;
     private boolean                    loaded;
 
     public DclareForMPSEngine(Project project, StartStopHandler startStopHandler) {
@@ -46,7 +48,7 @@ public class DclareForMPSEngine implements DeployListener {
     private void startEngine() {
         if (dClareMPS == null || !dClareMPS.isRunning()) {
             project.getModelAccess().executeCommandInEDT(() -> startStopHandler.on(project));
-            dClareMPS = new DClareMPS(project, null, maxTotalNrOfChanges, maxNrOfChanges, startStopHandler);
+            dClareMPS = new DClareMPS(project, null, maxTotalNrOfChanges, maxNrOfChanges, maxNrOfObserved, maxNrOfObservers, startStopHandler);
         }
     }
 
@@ -101,6 +103,34 @@ public class DclareForMPSEngine implements DeployListener {
     public void setMaxNrOfChanges(int maxNrOfChanges) {
         if (this.maxNrOfChanges != maxNrOfChanges) {
             this.maxNrOfChanges = maxNrOfChanges;
+            if (on) {
+                stopEngine();
+                startEngine();
+            }
+        }
+    }
+
+    public int getNrOfObserved() {
+        return maxNrOfObserved;
+    }
+
+    public void setNrOfObserved(int maxNrOfObserved) {
+        if (this.maxNrOfObserved != maxNrOfObserved) {
+            this.maxNrOfObserved = maxNrOfObserved;
+            if (on) {
+                stopEngine();
+                startEngine();
+            }
+        }
+    }
+
+    public int getNrOfObservers() {
+        return maxNrOfObservers;
+    }
+
+    public void setNrOfObservers(int maxNrOfObservers) {
+        if (this.maxNrOfObservers != maxNrOfObservers) {
+            this.maxNrOfObservers = maxNrOfObservers;
             if (on) {
                 stopEngine();
                 startEngine();

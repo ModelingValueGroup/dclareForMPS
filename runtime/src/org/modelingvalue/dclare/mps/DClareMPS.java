@@ -34,6 +34,7 @@ import org.modelingvalue.transactions.Leaf;
 import org.modelingvalue.transactions.Observed;
 import org.modelingvalue.transactions.Priority;
 import org.modelingvalue.transactions.Root;
+import org.modelingvalue.transactions.Setable;
 import org.modelingvalue.transactions.State;
 
 import jetbrains.mps.smodel.language.LanguageRegistry;
@@ -70,10 +71,10 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
     private Imperative                                      imperative;
     private boolean                                         running;
 
-    protected DClareMPS(Project project, State prevState, int maxTotalNrOfChanges, int maxNrOfChanges, StartStopHandler startStopHandler) {
+    protected DClareMPS(Project project, State prevState, int maxTotalNrOfChanges, int maxNrOfChanges, int maxNrOfObserved, int maxNrOfObservers, StartStopHandler startStopHandler) {
         this.project = project;
         this.startStopHandler = startStopHandler;
-        root = new Root(this, thePool, prevState, 100, maxTotalNrOfChanges, maxNrOfChanges, 4, null) {
+        root = new Root(this, thePool, prevState, 100, maxTotalNrOfChanges, maxNrOfChanges, maxNrOfObserved, maxNrOfObservers, 4, null) {
             private final Leaf clearOrphans = Leaf.of("clearOrphans", this, this::clearOrphans);
 
             private void clearOrphans() {
@@ -121,8 +122,9 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
             } finally {
                 if (TRACE) {
                     System.err.println(DCLARE + "END   " + this + "  " + repository);
-                    for (Entry<Class<?>, Integer> e : result.count()) {
-                        System.err.println(DCLARE + "COUNT " + e.getKey().getSimpleName() + " = " + e.getValue());
+                    for (@SuppressWarnings("rawtypes")
+                    Entry<Setable, Integer> e : result.count()) {
+                        System.err.println(DCLARE + "COUNT " + e.getKey() + " = " + e.getValue());
                     }
                 }
             }
