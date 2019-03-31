@@ -86,13 +86,6 @@ public abstract class DObject<O> {
             }
         }
 
-        @Override
-        protected void countChanges(Observed observed) {
-            if (observed instanceof DObserved && !((DObserved) observed).isSynthetic()) {
-                super.countChanges(observed);
-            }
-        }
-
         private DObject object() {
             return (DObject) parent.getId();
         }
@@ -102,11 +95,25 @@ public abstract class DObject<O> {
         }
 
         @Override
+        protected void checkTooManyObservers(Root root, Observed observed, Set<Observer> obervsers) {
+            if (observed instanceof DObserved && !((DObserved) observed).isSynthetic()) {
+                super.checkTooManyObservers(root, observed, obervsers);
+            }
+        }
+
+        @Override
         protected void observe(Root root, Set<Slot> sets, Set<Slot> gets) {
             try {
                 super.observe(root, sets, gets);
             } catch (TooManySubscriptionsException e) {
                 object().addMessage(rule(), DMessageType.warning, "TOO_MANY_SUBSCRIPTIONS", e);
+            }
+        }
+
+        @Override
+        protected void countChanges(Observed observed) {
+            if (observed instanceof DObserved && !((DObserved) observed).isSynthetic()) {
+                super.countChanges(observed);
             }
         }
 
@@ -134,6 +141,14 @@ public abstract class DObject<O> {
 
         @Override
         protected void countChanges(Observed observed) {
+        }
+
+        @Override
+        protected void checkTooManyObserved(Root root, Set<Slot> sets, Set<Slot> gets) {
+        }
+
+        @Override
+        protected void checkTooManyObservers(Root root, Observed observed, Set<Observer> obervsers) {
         }
 
     }
