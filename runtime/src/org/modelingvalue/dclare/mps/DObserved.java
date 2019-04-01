@@ -26,7 +26,7 @@ import org.modelingvalue.collections.ContainingCollection;
 import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.QuadConsumer;
-import org.modelingvalue.transactions.AbstractLeaf;
+import org.modelingvalue.transactions.AbstractLeaf.AbstractLeafRun;
 import org.modelingvalue.transactions.Observed;
 import org.modelingvalue.transactions.Setable;
 
@@ -37,7 +37,7 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
         return of(id, def, mandatory, composite, deferred, synthetic, toMPS, null, source);
     }
 
-    public static <C extends DObject, V> DObserved<C, V> of(Object id, V def, boolean mandatory, boolean composite, boolean deferred, boolean synthetic, QuadConsumer<C, V, V, Boolean> toMPS, QuadConsumer<AbstractLeaf, C, V, V> changed, Supplier<SNode> source) {
+    public static <C extends DObject, V> DObserved<C, V> of(Object id, V def, boolean mandatory, boolean composite, boolean deferred, boolean synthetic, QuadConsumer<C, V, V, Boolean> toMPS, QuadConsumer<AbstractLeafRun<?>, C, V, V> changed, Supplier<SNode> source) {
         return new DObserved<C, V>(id, def, mandatory, composite, deferred, synthetic, toMPS, changed, source);
     }
 
@@ -48,10 +48,10 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
     private final boolean                        synthetic;
     private final boolean                        composite;
 
-    protected DObserved(Object id, T def, boolean mandatory, boolean composite, boolean deferred, boolean synthetic, QuadConsumer<O, T, T, Boolean> toMPS, QuadConsumer<AbstractLeaf, O, T, T> changed, Supplier<SNode> source) {
+    protected DObserved(Object id, T def, boolean mandatory, boolean composite, boolean deferred, boolean synthetic, QuadConsumer<O, T, T, Boolean> toMPS, QuadConsumer<AbstractLeafRun<?>, O, T, T> changed, Supplier<SNode> source) {
         super(id, def, changed);
         if (composite) {
-            QuadConsumer<AbstractLeaf, O, T, T> superChanged = this.changed;
+            QuadConsumer<AbstractLeafRun<?>, O, T, T> superChanged = this.changed;
             this.changed = (tx, o, b, a) -> {
                 if (superChanged != null) {
                     superChanged.accept(tx, o, b, a);

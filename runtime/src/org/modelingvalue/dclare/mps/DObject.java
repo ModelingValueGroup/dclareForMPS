@@ -34,7 +34,6 @@ import org.modelingvalue.transactions.Leaf;
 import org.modelingvalue.transactions.Observed;
 import org.modelingvalue.transactions.Observer;
 import org.modelingvalue.transactions.Priority;
-import org.modelingvalue.transactions.Root;
 import org.modelingvalue.transactions.Setable;
 import org.modelingvalue.transactions.Slot;
 import org.modelingvalue.transactions.State;
@@ -52,7 +51,7 @@ public abstract class DObject<O> {
     private static final class DRuleObserver extends Observer {
 
         private DRuleObserver(DRule rule, Compound parent, Runnable action) {
-            super(rule, parent, () -> ((DRuleObserver) AbstractLeaf.getCurrent()).run(action), Priority.mid);
+            super(rule, parent, () -> ((DRuleObserver) AbstractLeaf.getCurrent().transaction()).run(action), Priority.mid);
         }
 
         private void run(Runnable action) {
@@ -95,36 +94,36 @@ public abstract class DObject<O> {
         }
 
         @Override
-        protected void checkTooManyObservers(Root root, Observed observed, Set<Observer> obervsers) {
+        protected void checkTooManyObservers(AbstractLeafRun<?> run, Observed observed, Set<Observer> obervsers) {
             if (observed instanceof DObserved && !((DObserved) observed).isSynthetic()) {
-                super.checkTooManyObservers(root, observed, obervsers);
+                super.checkTooManyObservers(run, observed, obervsers);
             }
         }
 
         @Override
-        protected void observe(Root root, Set<Slot> sets, Set<Slot> gets) {
+        protected void observe(ObserverRun run, Set<Slot> sets, Set<Slot> gets) {
             try {
-                super.observe(root, sets, gets);
+                super.observe(run, sets, gets);
             } catch (TooManySubscriptionsException e) {
                 object().addMessage(rule(), DMessageType.warning, "TOO_MANY_SUBSCRIPTIONS", e);
             }
         }
 
         @Override
-        protected void countChanges(Observed observed) {
+        protected void countChanges(ObserverRun run, Observed observed) {
             if (observed instanceof DObserved && !((DObserved) observed).isSynthetic()) {
-                super.countChanges(observed);
+                super.countChanges(run, observed);
             }
         }
 
         @Override
-        protected void checkTooManyChanges(State pre, Root root, Set<Slot> sets, Set<Slot> gets) {
-            if (root.isDebugging()) {
+        protected void checkTooManyChanges(ObserverRun run, State pre, Set<Slot> sets, Set<Slot> gets) {
+            if (run.root().isDebugging()) {
                 sets = sets.filter(s -> s.observed() instanceof DObserved && !((DObserved) s.observed()).isSynthetic()).toSet();
                 gets = gets.filter(s -> s.observed() instanceof DObserved && !((DObserved) s.observed()).isSynthetic()).toSet();
             }
             try {
-                super.checkTooManyChanges(pre, root, sets, gets);
+                super.checkTooManyChanges(run, pre, sets, gets);
             } catch (TooManyChangesException e) {
                 object().addMessage(rule(), "CONFLICTING_RULES", e);
                 throw new StopObserverException(e);
@@ -140,15 +139,15 @@ public abstract class DObject<O> {
         }
 
         @Override
-        protected void countChanges(Observed observed) {
+        protected void countChanges(ObserverRun run, Observed observed) {
         }
 
         @Override
-        protected void checkTooManyObserved(Root root, Set<Slot> sets, Set<Slot> gets) {
+        protected void checkTooManyObserved(ObserverRun run, Set<Slot> sets, Set<Slot> gets) {
         }
 
         @Override
-        protected void checkTooManyObservers(Root root, Observed observed, Set<Observer> obervsers) {
+        protected void checkTooManyObservers(AbstractLeafRun<?> run, Observed observed, Set<Observer> obervsers) {
         }
 
     }

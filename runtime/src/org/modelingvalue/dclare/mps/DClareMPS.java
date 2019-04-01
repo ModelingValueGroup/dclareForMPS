@@ -28,6 +28,7 @@ import org.modelingvalue.collections.util.ContextThread.ContextPool;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.collections.util.TriConsumer;
 import org.modelingvalue.transactions.AbstractLeaf;
+import org.modelingvalue.transactions.AbstractLeaf.AbstractLeafRun;
 import org.modelingvalue.transactions.Constant;
 import org.modelingvalue.transactions.Imperative;
 import org.modelingvalue.transactions.Leaf;
@@ -79,7 +80,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
 
             private void clearOrphans() {
                 if (!isTimeTraveling()) {
-                    AbstractLeaf tx = AbstractLeaf.getCurrent();
+                    AbstractLeafRun<?> tx = AbstractLeaf.getCurrent();
                     preState().diff(tx.state(), o -> o instanceof DObject, s -> true).forEach(e0 -> {
                         if (DObject.TRANSACTION.get((DObject<?>) e0.getKey()) == null) {
                             tx.clear(e0.getKey());

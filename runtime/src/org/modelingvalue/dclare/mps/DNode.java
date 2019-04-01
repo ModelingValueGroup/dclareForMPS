@@ -199,9 +199,9 @@ public class DNode extends DObject<SNode> implements SNode {
             }
             if (node == null) {
                 node = creator.get();
-                DNode.CREATOR.set((DNode) node, AbstractLeaf.getCurrent());
+                DNode.CREATOR.set((DNode) node, AbstractLeaf.getCurrent().transaction());
             }
-        } else if (AbstractLeaf.getCurrent().equals(DNode.CREATOR.get((DNode) node))) {
+        } else if (AbstractLeaf.getCurrent().transaction().equals(DNode.CREATOR.get((DNode) node))) {
             DNode repl = DNode.REPLACEMENT.get((DNode) node);
             if (repl != null) {
                 if (node instanceof DCopy) {

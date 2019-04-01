@@ -92,7 +92,7 @@ public class DCopy extends DNode {
             } else {
                 copy = new DCopy(DNode.newSNode(key.b().getConcept()), key.b(), key.a());
                 DCHILD_COPY.set(key, copy);
-                DNode.CREATOR.set(copy, AbstractLeaf.getCurrent());
+                DNode.CREATOR.set(copy, AbstractLeaf.getCurrent().transaction());
             }
             return copy;
         } else {
