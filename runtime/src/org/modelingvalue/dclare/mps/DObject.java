@@ -434,11 +434,11 @@ public abstract class DObject<O> {
     }
 
     private void addMessage(DMessage message) {
-        MESSAGES.set(this, (m, s) -> m.put(message.type(), s), getMessages(message.type()).add(message));
+        AbstractLeaf.getCurrent().runNonObserving(() -> MESSAGES.set(this, (m, s) -> m.put(message.type(), s), getMessages(message.type()).add(message)));
     }
 
     protected void removeMessages(DFeature feature, DMessageType type, String id) {
-        MESSAGES.set(this, (m, s) -> m.put(type, s), getMessages(type).removeKey(Pair.of(feature, id)));
+        AbstractLeaf.getCurrent().runNonObserving(() -> MESSAGES.set(this, (m, s) -> m.put(type, s), getMessages(type).removeKey(Pair.of(feature, id))));
     }
 
     final public void rule(Object id, Compound tx, Runnable action) {
