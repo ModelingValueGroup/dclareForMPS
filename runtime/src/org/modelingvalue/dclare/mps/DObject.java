@@ -44,9 +44,13 @@ import org.modelingvalue.transactions.TooManySubscriptionsException;
 @SuppressWarnings("rawtypes")
 public abstract class DObject<O> {
 
-    private static final Set<DMessageType>                              MESSAGE_TYPES = Collection.of(DMessageType.values()).toSet();
+    private static final Set<DMessageType>                              MESSAGE_TYPES       = Collection.of(DMessageType.values()).toSet();
 
-    private static final QualifiedSet<Pair<DFeature, String>, DMessage> MESSAGES_SET  = QualifiedSet.of(m -> Pair.of(m.feature(), m.id()));
+    private static final QualifiedSet<Pair<DFeature, String>, DMessage> MESSAGES_SET        = QualifiedSet.of(m -> Pair.of(m.feature(), m.id()));
+
+    private static final Map<DMessageType, Boolean>                     MESSAGE_BOOLEAN_MAP = MESSAGE_TYPES.toMap(t -> Entry.of(t, false));
+
+    private static final Map<DMessageType, Set<? extends DObject>>      MESSAGE_SET_MAP     = MESSAGE_TYPES.toMap(t -> Entry.of(t, Set.of()));
 
     private static final class DRuleObserver extends Observer {
 
@@ -205,9 +209,9 @@ public abstract class DObject<O> {
                                                                                                                                         Setable.<Set<Observer>, Observer> diff(Set.of(), b, a, Leaf::trigger, tx::clear);
                                                                                                                                     });
 
-    protected static final Setable<DObject, Map<DMessageType, Set<? extends DObject>>>                         MESSAGE_CHILDREN     = Observed.of("MESSAGE_CHILDREN", MESSAGE_TYPES.toMap(t -> Entry.of(t, Set.of())));
+    protected static final Setable<DObject, Map<DMessageType, Set<? extends DObject>>>                         MESSAGE_CHILDREN     = Observed.of("MESSAGE_CHILDREN", MESSAGE_SET_MAP);
 
-    protected static final Setable<DObject, Map<DMessageType, Boolean>>                                        MESSAGES_OR_CHILDREN = Observed.of("MESSAGES_OR_CHILDREN", MESSAGE_TYPES.toMap(t -> Entry.of(t, false)));
+    protected static final Setable<DObject, Map<DMessageType, Boolean>>                                        MESSAGES_OR_CHILDREN = Observed.of("MESSAGES_OR_CHILDREN", MESSAGE_BOOLEAN_MAP);
 
     protected static final Setable<DObject, Map<DMessageType, QualifiedSet<Pair<DFeature, String>, DMessage>>> MESSAGES             = Observed.of("MESSAGES", Map.of());
 
@@ -308,7 +312,7 @@ public abstract class DObject<O> {
         }, Priority.high);
         rule(RULE_INSTANCES, tx, () -> {
             RULE_INSTANCES.set(this, TYPE.get(this).getRules().map(r -> rule(tx, r)).toSet());
-        }, () -> RULE_INSTANCES.set(this, Set.of()), Priority.high);
+        }, () -> RULE_INSTANCES.set(this, RULE_INSTANCES.getDefault()), Priority.high);
         if (!(this instanceof DRepository || this instanceof DModule)) {
             rule(STATE, tx, () -> {
                 STATE.set(this, PARENT.get(this).state());
@@ -316,11 +320,11 @@ public abstract class DObject<O> {
         }
         rule(MESSAGES_OR_CHILDREN, tx, () -> {
             MESSAGES_OR_CHILDREN.set(this, MESSAGE_TYPES.toMap(t -> Entry.of(t, !getMessages(t).isEmpty() || !getMessageChildren(t).isEmpty())));
-        }, () -> MESSAGES_OR_CHILDREN.set(this, Map.of()), Priority.low);
+        }, () -> MESSAGES_OR_CHILDREN.set(this, MESSAGES_OR_CHILDREN.getDefault()), Priority.low);
         rule(MESSAGE_CHILDREN, tx, () -> {
             Set<? extends DObject> children = CHILDREN.get(this);
             MESSAGE_CHILDREN.set(this, MESSAGE_TYPES.toMap(t -> Entry.of(t, children.filter(c -> MESSAGES_OR_CHILDREN.get(c).get(t)).toSet())));
-        }, () -> MESSAGE_CHILDREN.set(this, Map.of()), Priority.low);
+        }, () -> MESSAGE_CHILDREN.set(this, MESSAGE_CHILDREN.getDefault()), Priority.low);
         rule("<EMPTY_MANDATORY>", tx, () -> {
             for (DAttribute attr : TYPE.get(this).getAttributes()) {
                 if (attr instanceof DObservedAttribute && attr.isMandatory() && !attr.isSynthetic()) {
