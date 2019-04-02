@@ -97,8 +97,11 @@ public class DNode extends DObject<SNode> implements SNode {
                                                                                                                 (dNode, pre, post, first) -> {
                                                                                                                     SNode sNode = dNode.original();
                                                                                                                     List<SNode> cs = children(sNode, sc);
-                                                                                                                    if (first && pre != null && cs.contains(pre.original())) {
-                                                                                                                        sNode.removeChild(pre.original());
+                                                                                                                    if (first) {
+                                                                                                                        List<SNode> toBeRemoved = cs.filter((s) -> post == null || !s.equals(post.original)).toList();
+                                                                                                                        for (SNode sn : toBeRemoved) {
+                                                                                                                            sNode.removeChild(sn);
+                                                                                                                        }
                                                                                                                     }
                                                                                                                     if (!first && post != null && !cs.contains(post.original())) {
                                                                                                                         sNode.addChild(sc, post.original());
