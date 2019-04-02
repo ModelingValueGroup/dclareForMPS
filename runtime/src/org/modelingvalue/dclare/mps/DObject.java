@@ -29,11 +29,13 @@ import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.dclare.mps.DAttribute.DObservedAttribute;
 import org.modelingvalue.transactions.AbstractLeaf;
 import org.modelingvalue.transactions.Compound;
+import org.modelingvalue.transactions.Constant;
 import org.modelingvalue.transactions.EmptyMandatoryException;
 import org.modelingvalue.transactions.Leaf;
 import org.modelingvalue.transactions.Observed;
 import org.modelingvalue.transactions.Observer;
 import org.modelingvalue.transactions.Priority;
+import org.modelingvalue.transactions.Rule;
 import org.modelingvalue.transactions.Setable;
 import org.modelingvalue.transactions.Slot;
 import org.modelingvalue.transactions.State;
@@ -52,16 +54,18 @@ public abstract class DObject<O> {
 
     private static final Map<DMessageType, Set<? extends DObject>>      MESSAGE_SET_MAP     = MESSAGE_TYPES.toMap(t -> Entry.of(t, Set.of()));
 
+    private static final Constant<Object, Rule>                         RULE                = Constant.of("<RULE>", r -> new Rule(r));
+
     private static final class DRuleObserver extends Observer {
 
         private DRuleObserver(DRule rule, Compound parent, Runnable action) {
-            super(rule, parent, () -> ((DRuleObserver) AbstractLeaf.getCurrent().transaction()).run(action), Priority.mid);
+            super(RULE.get(rule), parent, () -> ((DRuleObserver) AbstractLeaf.getCurrent().transaction()).run(action), Priority.mid);
         }
 
         private void run(Runnable action) {
             try {
                 if (firstTime()) {
-                    object().removeMessages(rule(), DMessageType.error, "EXCEPTION");
+                    object().removeMessages(dRule(), DMessageType.error, "EXCEPTION");
                 }
                 if (parent.equals(DObject.TRANSACTION.get(object())) && object().isActive()) {
                     action.run();
@@ -70,18 +74,18 @@ public abstract class DObject<O> {
                 if (EMPTY_ATTRIBUTE.get()) {
                     throw new EmptyMandatoryException();
                 } else {
-                    object().addMessage(rule(), DMessageType.error, "EXCEPTION", e);
+                    object().addMessage(dRule(), DMessageType.error, "EXCEPTION", e);
                     throw new StopObserverException(e);
                 }
             } catch (IndexOutOfBoundsException e) {
                 if (COLLECTION_ATTRIBUTE.get()) {
                     throw new EmptyMandatoryException();
                 } else {
-                    object().addMessage(rule(), DMessageType.error, "EXCEPTION", e);
+                    object().addMessage(dRule(), DMessageType.error, "EXCEPTION", e);
                     throw new StopObserverException(e);
                 }
             } catch (Throwable e) {
-                object().addMessage(rule(), DMessageType.error, "EXCEPTION", e);
+                object().addMessage(dRule(), DMessageType.error, "EXCEPTION", e);
                 throw new StopObserverException(e);
             } finally {
                 COLLECTION_ATTRIBUTE.set(false);
@@ -93,8 +97,8 @@ public abstract class DObject<O> {
             return (DObject) parent.getId();
         }
 
-        private DRule rule() {
-            return (DRule) getId();
+        private DRule dRule() {
+            return (DRule) rule().id();
         }
 
         @Override
@@ -109,7 +113,7 @@ public abstract class DObject<O> {
             try {
                 super.observe(run, sets, gets);
             } catch (TooManySubscriptionsException e) {
-                object().addMessage(rule(), DMessageType.warning, "TOO_MANY_SUBSCRIPTIONS", e);
+                object().addMessage(dRule(), DMessageType.warning, "TOO_MANY_SUBSCRIPTIONS", e);
             }
         }
 
@@ -129,7 +133,7 @@ public abstract class DObject<O> {
             try {
                 super.checkTooManyChanges(run, pre, sets, gets);
             } catch (TooManyChangesException e) {
-                object().addMessage(rule(), "CONFLICTING_RULES", e);
+                object().addMessage(dRule(), "CONFLICTING_RULES", e);
                 throw new StopObserverException(e);
             }
         }
@@ -139,7 +143,7 @@ public abstract class DObject<O> {
     protected final static class NonCheckingObserver extends Observer {
 
         protected NonCheckingObserver(Object id, Compound parent, Runnable action, Priority prio) {
-            super(id, parent, action, prio);
+            super(RULE.get(id), parent, action, prio);
         }
 
         @Override
@@ -409,8 +413,8 @@ public abstract class DObject<O> {
     protected void addMessage(DFeature feature, String id, TooManyChangesException tmce) {
         DMessage message = new DMessage(this, feature, DMessageType.error, id, "Conflicting rules, running " + feature + " changes=" + tmce.getNrOfChanges());
         tmce.getLast().trace(message, (m, r) -> {
-            m.addSubMessage(new DMessage(((DRuleObserver) r.observer()).object(), ((DRuleObserver) r.observer()).rule(), DMessageType.error, id, //
-                    "run: " + ((DRuleObserver) r.observer()).object() + "." + ((DRuleObserver) r.observer()).rule() + " nr: " + r.nrOfChanges()));
+            m.addSubMessage(new DMessage(((DRuleObserver) r.observer()).object(), ((DRuleObserver) r.observer()).dRule(), DMessageType.error, id, //
+                    "run: " + ((DRuleObserver) r.observer()).object() + "." + ((DRuleObserver) r.observer()).dRule() + " nr: " + r.nrOfChanges()));
         }, (m, r, s) -> {
             m.addSubMessage(new DMessage((DObject) s.object(), (DObserved) s.observed(), DMessageType.error, id, //
                     "read: " + s.object() + "." + s.observed() + "=" + r.read().get(s)));
