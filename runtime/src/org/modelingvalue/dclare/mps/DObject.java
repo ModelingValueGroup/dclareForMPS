@@ -143,7 +143,7 @@ public abstract class DObject<O> {
     protected final static class NonCheckingObserver extends Observer {
 
         protected NonCheckingObserver(Object id, Compound parent, Runnable action, Priority prio) {
-            super(RULE.get(id), parent, action, prio);
+            super(DObject.RULE.get(id), parent, action, prio);
         }
 
         @Override
