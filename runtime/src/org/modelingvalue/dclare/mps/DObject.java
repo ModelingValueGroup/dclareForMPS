@@ -102,18 +102,25 @@ public abstract class DObject<O> {
         }
 
         @Override
-        protected void checkTooManyObservers(AbstractLeafRun<?> run, Observed observed, Set<Observer> obervsers) {
-            if (observed instanceof DObserved && !((DObserved) observed).isSynthetic()) {
-                super.checkTooManyObservers(run, observed, obervsers);
+        protected void checkTooManyObservers(AbstractLeafRun<?> run, Object object, Observed observed, Set<Observer> obervers) {
+            if (object instanceof DObject && observed instanceof DObserved && !((DObserved) observed).isSynthetic()) {
+                try {
+                    super.checkTooManyObservers(run, object, observed, obervers.filter(o -> o instanceof DRuleObserver && !((DRuleObserver) o).dRule().isSynthetic()).toSet());
+                } catch (TooManySubscriptionsException e) {
+                    ((DObject) object).addMessage((DObserved) observed, DMessageType.warning, "TOO_MANY_OBSERVERS", e.getMessage());
+                }
             }
+
         }
 
         @Override
-        protected void observe(ObserverRun run, Set<Slot> sets, Set<Slot> gets) {
+        protected void checkTooManyObserved(ObserverRun run, Set<Slot> sets, Set<Slot> gets) {
             try {
-                super.observe(run, sets, gets);
+                super.checkTooManyObserved(run, //
+                        sets.filter(s -> s.observed() instanceof DObserved && !((DObserved) s.observed()).isSynthetic()).toSet(), //
+                        gets.filter(s -> s.observed() instanceof DObserved && !((DObserved) s.observed()).isSynthetic()).toSet());
             } catch (TooManySubscriptionsException e) {
-                object().addMessage(dRule(), DMessageType.warning, "TOO_MANY_SUBSCRIPTIONS", e);
+                object().addMessage(dRule(), DMessageType.warning, "TOO_MANY_OBSERVED", e.getMessage());
             }
         }
 
@@ -155,7 +162,7 @@ public abstract class DObject<O> {
         }
 
         @Override
-        protected void checkTooManyObservers(AbstractLeafRun<?> run, Observed observed, Set<Observer> obervsers) {
+        protected void checkTooManyObservers(AbstractLeafRun<?> run, Object object, Observed observed, Set<Observer> obervers) {
         }
 
     }
