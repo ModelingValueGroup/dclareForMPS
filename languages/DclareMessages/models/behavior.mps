@@ -362,7 +362,7 @@
                             <node concept="3cpWsn" id="1KqhpdFS8Pf" role="3cpWs9">
                               <property role="TrG5h" value="messages" />
                               <node concept="3uibUv" id="1KqhpdFS8Pg" role="1tU5fm">
-                                <ref role="3uigEE" to="zrbp:~Set" resolve="Set" />
+                                <ref role="3uigEE" to="zrbp:~List" resolve="List" />
                                 <node concept="3Tqbb2" id="1KqhpdFS8Ph" role="11_B2D">
                                   <ref role="ehGHo" to="wknp:7e_PmaZxfwQ" resolve="Message" />
                                 </node>
@@ -435,7 +435,7 @@
                                   </node>
                                 </node>
                                 <node concept="liA8E" id="1KqhpdFS8PL" role="2OqNvi">
-                                  <ref role="37wK5l" to="zrbp:~Collection.toSet():org.modelingvalue.collections.Set" resolve="toSet" />
+                                  <ref role="37wK5l" to="zrbp:~Collection.toList():org.modelingvalue.collections.List" resolve="toList" />
                                 </node>
                               </node>
                             </node>

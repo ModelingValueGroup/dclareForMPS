@@ -41,7 +41,8 @@ import org.modelingvalue.transactions.Slot;
 import org.modelingvalue.transactions.State;
 import org.modelingvalue.transactions.StopObserverException;
 import org.modelingvalue.transactions.TooManyChangesException;
-import org.modelingvalue.transactions.TooManySubscriptionsException;
+import org.modelingvalue.transactions.TooManyObservedException;
+import org.modelingvalue.transactions.TooManyObserversException;
 
 @SuppressWarnings("rawtypes")
 public abstract class DObject<O> {
@@ -106,8 +107,8 @@ public abstract class DObject<O> {
             if (object instanceof DObject && observed instanceof DObserved && !((DObserved) observed).isSynthetic()) {
                 try {
                     super.checkTooManyObservers(run, object, observed, obervers.filter(o -> o instanceof DRuleObserver && !((DRuleObserver) o).dRule().isSynthetic()).toSet());
-                } catch (TooManySubscriptionsException e) {
-                    ((DObject) object).addMessage((DObserved) observed, DMessageType.warning, "TOO_MANY_OBSERVERS", e.getMessage());
+                } catch (TooManyObserversException e) {
+                    ((DObject) object).addMessage((DObserved) observed, "TOO_MANY_OBSERVERS", e);
                 }
             }
 
@@ -119,8 +120,8 @@ public abstract class DObject<O> {
                 super.checkTooManyObserved(run, //
                         sets.filter(s -> s.observed() instanceof DObserved && !((DObserved) s.observed()).isSynthetic()).toSet(), //
                         gets.filter(s -> s.observed() instanceof DObserved && !((DObserved) s.observed()).isSynthetic()).toSet());
-            } catch (TooManySubscriptionsException e) {
-                object().addMessage(dRule(), DMessageType.warning, "TOO_MANY_OBSERVED", e.getMessage());
+            } catch (TooManyObservedException e) {
+                object().addMessage(dRule(), "TOO_MANY_OBSERVED", e);
             }
         }
 
@@ -429,6 +430,29 @@ public abstract class DObject<O> {
             m.subMessages().last().addSubMessage(new DMessage((DObject) s.object(), (DObserved) s.observed(), DMessageType.error, id, //
                     "write: " + s.object() + "." + s.observed() + "=" + w.written().get(s)));
         }, m -> m.subMessages().last(), tmce.getObserver().root().maxNrOfChanges());
+        addMessage(message);
+    }
+
+    protected void addMessage(DFeature feature, String id, TooManyObservedException tmse) {
+        DMessage message = new DMessage(this, feature, DMessageType.warning, id, tmse.getMessage());
+        int number = 0;
+        for (Slot slot : tmse.getObserved()) {
+            Observed observed = slot.observed();
+            number++;
+            message.addSubMessage(new DMessage(this, (DObserved) observed, DMessageType.warning, number + ")", slot.toString()));
+        }
+        addMessage(message);
+    }
+
+    protected void addMessage(DFeature feature, String id, TooManyObserversException tmse) {
+        DMessage message = new DMessage(this, feature, DMessageType.warning, id, tmse.getMessage());
+        int number = 0;
+        for (Observer observer : tmse.getObservers()) {
+            if (observer instanceof DRuleObserver) {
+                number++;
+                message.addSubMessage(new DMessage(this, ((DRuleObserver) observer).dRule(), DMessageType.warning, number + ")", observer.toString()));
+            }
+        }
         addMessage(message);
     }
 
