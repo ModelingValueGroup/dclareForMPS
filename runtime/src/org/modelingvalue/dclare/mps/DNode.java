@@ -112,7 +112,7 @@ public class DNode extends DObject<SNode> implements SNode {
     @SuppressWarnings("deprecation")
     public static final Constant<SReferenceLink, Observed<DNode, DNode>>         REFERENCE          = Constant.of("REFERENCE", sr -> {
                                                                                                         Observed<DNode, Set<DNode>> oppos = DNode.OPPOSITE.get(sr);
-                                                                                                        return DObserved.<DNode, DNode> of(sr, null, false, false, true, false,                                                    //
+                                                                                                        return DObserved.<DNode, DNode> of(sr, null, !sr.isOptional(), false, true, false,                                         //
                                                                                                                 (dNode, pre, post, first) -> {
                                                                                                                     if (first) {
                                                                                                                         SNode ref = post != null ? post.original() : null;
@@ -136,7 +136,7 @@ public class DNode extends DObject<SNode> implements SNode {
                                                                                                     });
     @SuppressWarnings("deprecation")
     public static final Constant<SProperty, Observed<DNode, String>>             PROPERTY           = Constant.of("PROPERTY", sp -> {
-                                                                                                        return DObserved.<DNode, String> of(sp, null, false, false, false, false,                                                  //
+                                                                                                        return DObserved.<DNode, String> of(sp, null, true, false, false, false,                                                   //
                                                                                                                 (dNode, pre, post, first) -> {
                                                                                                                     if (first && !Objects.equals(dNode.original().getProperty(sp), post)) {
                                                                                                                         dNode.original().setProperty(sp, post);
