@@ -60,7 +60,7 @@ public abstract class DObject<O> {
     private static final class DRuleObserver extends Observer {
 
         private DRuleObserver(DRule rule, Compound parent, Runnable action) {
-            super(RULE.get(rule), parent, () -> ((DRuleObserver) AbstractLeaf.getCurrent().transaction()).run(action), Priority.mid);
+            super(RULE.get(rule), parent, () -> ((DRuleObserver) AbstractLeaf.getCurrent().transaction()).run(action), Priority.high);
         }
 
         private void run(Runnable action) {
@@ -211,7 +211,7 @@ public abstract class DObject<O> {
                                                                                                                                         if (a != null) {
                                                                                                                                             o.rule(CHILDREN, a,                                                          //
                                                                                                                                                     () -> CHILDREN.set(o, o.getAllChildren().toSet()),                   //
-                                                                                                                                                    () -> CHILDREN.set(o, Set.of()), Priority.high);
+                                                                                                                                                    () -> CHILDREN.set(o, Set.of()), Priority.pre);
                                                                                                                                         }
                                                                                                                                     });
 
@@ -318,25 +318,25 @@ public abstract class DObject<O> {
         STATE.set(this, DObjectState.contained);
         rule(TYPE, tx, () -> {
             TYPE.set(this, getType());
-        }, () -> TYPE.set(this, TYPE.getDefault()), Priority.high);
+        }, () -> TYPE.set(this, TYPE.getDefault()), Priority.pre);
         rule("<CONSTANT_CONTAINMENT>", tx, () -> {
             TYPE.get(this).getAttributes().filter(DAttribute::isConstant).filter(DAttribute::isComposite).forEach(cc -> cc.get(this));
-        }, Priority.high);
+        }, Priority.pre);
         rule(RULE_INSTANCES, tx, () -> {
             RULE_INSTANCES.set(this, TYPE.get(this).getRules().map(r -> rule(tx, r)).toSet());
-        }, () -> RULE_INSTANCES.set(this, RULE_INSTANCES.getDefault()), Priority.high);
+        }, () -> RULE_INSTANCES.set(this, RULE_INSTANCES.getDefault()), Priority.pre);
         if (!(this instanceof DRepository || this instanceof DModule)) {
             rule(STATE, tx, () -> {
                 STATE.set(this, PARENT.get(this).state());
-            }, Priority.high);
+            }, Priority.pre);
         }
         rule(MESSAGES_OR_CHILDREN, tx, () -> {
             MESSAGES_OR_CHILDREN.set(this, MESSAGE_TYPES.toMap(t -> Entry.of(t, !getMessages(t).isEmpty() || !getMessageChildren(t).isEmpty())));
-        }, () -> MESSAGES_OR_CHILDREN.set(this, MESSAGES_OR_CHILDREN.getDefault()), Priority.low);
+        }, () -> MESSAGES_OR_CHILDREN.set(this, MESSAGES_OR_CHILDREN.getDefault()), Priority.post);
         rule(MESSAGE_CHILDREN, tx, () -> {
             Set<? extends DObject> children = CHILDREN.get(this);
             MESSAGE_CHILDREN.set(this, MESSAGE_TYPES.toMap(t -> Entry.of(t, children.filter(c -> MESSAGES_OR_CHILDREN.get(c).get(t)).toSet())));
-        }, () -> MESSAGE_CHILDREN.set(this, MESSAGE_CHILDREN.getDefault()), Priority.low);
+        }, () -> MESSAGE_CHILDREN.set(this, MESSAGE_CHILDREN.getDefault()), Priority.post);
         rule("<EMPTY_MANDATORY>", tx, () -> {
             for (DAttribute attr : TYPE.get(this).getAttributes()) {
                 if (attr instanceof DObservedAttribute && attr.isMandatory() && !attr.isSynthetic()) {
@@ -347,7 +347,7 @@ public abstract class DObject<O> {
                     }
                 }
             }
-        }, () -> MESSAGES.set(this, MESSAGES.getDefault()), Priority.low);
+        }, () -> MESSAGES.set(this, MESSAGES.getDefault()), Priority.post);
         rule("<REFERENCED_ORPHAN>", tx, () -> {
             for (DAttribute attr : TYPE.get(this).getAttributes()) {
                 if (attr instanceof DObservedAttribute && !attr.isComposite() && !attr.isSynthetic()) {
@@ -361,7 +361,7 @@ public abstract class DObject<O> {
                     }
                 }
             }
-        }, () -> MESSAGES.set(this, MESSAGES.getDefault()), Priority.low);
+        }, () -> MESSAGES.set(this, MESSAGES.getDefault()), Priority.post);
         return tx;
 
     }
@@ -478,7 +478,7 @@ public abstract class DObject<O> {
 
     final public void rule(Object id, Compound tx, Runnable action) {
         makeRule(id, tx, action, () -> {
-        }, Priority.mid).trigger();
+        }, Priority.high).trigger();
     }
 
     final public void rule(Object id, Compound tx, Runnable action, Priority prio) {
@@ -487,7 +487,7 @@ public abstract class DObject<O> {
     }
 
     final public void rule(Object id, Compound tx, Runnable action, Runnable stop) {
-        makeRule(id, tx, action, stop, Priority.mid).trigger();
+        makeRule(id, tx, action, stop, Priority.high).trigger();
     }
 
     final public void rule(Object id, Compound tx, Runnable action, Runnable stop, Priority prio) {
@@ -497,7 +497,7 @@ public abstract class DObject<O> {
     final private Observer makeRule(Object id, Compound tx, Runnable action, Runnable stop, Priority prio) {
         return new NonCheckingObserver(id, tx, () -> {
             if (tx.equals(DObject.TRANSACTION.get(this))) {
-                if (prio == Priority.high ? isOwned() : isActive()) {
+                if (prio == Priority.pre ? isOwned() : isActive()) {
                     action.run();
                 }
             } else {

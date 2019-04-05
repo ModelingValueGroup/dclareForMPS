@@ -105,7 +105,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
 
             @Override
             protected State post(State pre) {
-                return run(trigger(pre, clearOrphans, Priority.low));
+                return run(trigger(pre, clearOrphans, Priority.post));
             }
         };
         waitForEndThread = new Thread(() -> {
@@ -144,7 +144,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
             });
             repository = DRepository.of(project.getRepository());
             repository.activate(null, root);
-        }, Priority.high);
+        }, Priority.pre);
     }
 
     @Override
