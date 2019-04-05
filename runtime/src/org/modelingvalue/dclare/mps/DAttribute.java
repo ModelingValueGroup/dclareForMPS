@@ -20,7 +20,6 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import org.jetbrains.mps.openapi.model.SNode;
-import org.modelingvalue.collections.ContainingCollection;
 import org.modelingvalue.collections.util.Triple;
 import org.modelingvalue.transactions.Constant;
 import org.modelingvalue.transactions.Getable;
@@ -113,19 +112,6 @@ public interface DAttribute<O, T> extends DFeature<O> {
             super(id, def, !optional, composite, false, synthetic, (o, b, a, first) -> {
             }, null, source);
             this.name = name;
-        }
-
-        @Override
-        public V get(C object) {
-            V result = object != null ? super.get(object) : null;
-            if (object != null) {
-                if (result == null && mandatory) {
-                    DObject.EMPTY_ATTRIBUTE.set(true);
-                } else if (result instanceof java.util.Collection || result instanceof ContainingCollection) {
-                    DObject.COLLECTION_ATTRIBUTE.set(true);
-                }
-            }
-            return result;
         }
 
         @Override

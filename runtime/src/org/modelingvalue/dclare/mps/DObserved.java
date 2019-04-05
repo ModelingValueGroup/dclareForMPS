@@ -89,6 +89,19 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
     public SNode getSource() {
         return source != null ? source.get() : null;
     }
+    
+    @Override
+    public T get(O object) {
+        T result = object != null ? super.get(object) : null;
+        if (object != null) {
+            if (result == null && mandatory) {
+                DObject.EMPTY_ATTRIBUTE.set(true);
+            } else if (result instanceof java.util.Collection || result instanceof ContainingCollection) {
+                DObject.COLLECTION_ATTRIBUTE.set(true);
+            }
+        }
+        return result;
+    }
 
     public void toMPS(O object, T pre, T post, boolean first) {
         try {
