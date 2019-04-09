@@ -335,7 +335,7 @@ public class DNode extends DObject<SNode> implements SNode {
     }
 
     @Override
-    protected List<? extends DObject<?>> init(DClareMPS dClareMPS) {
+    protected List<? extends DObject<?>> read(DClareMPS dClareMPS) {
         for (SProperty property : original().getProperties()) {
             PROPERTY.get(property).set(this, original().getProperty(property));
         }
@@ -634,9 +634,6 @@ public class DNode extends DObject<SNode> implements SNode {
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     public void setFeature(SConceptFeature feature, Object value) {
-        if (EMPTY_ATTRIBUTE.get()) {
-            throw new NullPointerException();
-        }
         if (feature instanceof SProperty) {
             PROPERTY.get((SProperty) feature).set(this, value == null ? null : value.toString());
         } else if (feature instanceof SContainmentLink) {
@@ -792,19 +789,6 @@ public class DNode extends DObject<SNode> implements SNode {
             ist = ist.add(child);
         }
         return ist;
-    }
-
-    public void clearAllFeatures() {
-        SConcept concept = getConcept();
-        for (SProperty p : concept.getProperties()) {
-            setProperty(p, null);
-        }
-        for (SReferenceLink r : concept.getReferenceLinks()) {
-            setReferenceTarget(r, null);
-        }
-        for (SNode child : getChildren()) {
-            removeChild(child);
-        }
     }
 
     public boolean hasAncestor(DNode dNode) {

@@ -103,10 +103,29 @@ public class DModule extends DObject<SModule> implements SModule {
     }
 
     @Override
-    protected Set<? extends DObject<?>> init(DClareMPS dClareMPS) {
+    protected void init(DClareMPS dClareMPS) {
+        super.init(dClareMPS);
+        original().addModuleListener(new Listener(this, dClareMPS));
+    }
+
+    @Override
+    protected void exit(DClareMPS dClareMPS) {
+        super.exit(dClareMPS);
+        original().removeModuleListener(new Listener(this, dClareMPS));
+    }
+
+    @Override
+    protected void stop(DClareMPS dClareMPS) {
+        super.stop(dClareMPS);
+        for (DModel child : dClareMPS.read(() -> models(original())).map(m -> DModel.of(m))) {
+            child.stop(dClareMPS);
+        }
+    }
+
+    @Override
+    protected Set<? extends DObject<?>> read(DClareMPS dClareMPS) {
         Set<SLanguage> languages = languages(original());
         LANGUAGES.set(this, languages);
-        original().addModuleListener(new Listener(this, dClareMPS));
         if (isAllwaysActive() && hasRuleSets(languages)) {
             Set<DModel> models = models(original()).map(m -> DModel.of(m)).toSet();
             MODELS.set(this, models);
@@ -131,12 +150,6 @@ public class DModule extends DObject<SModule> implements SModule {
             }
         }, () -> MODELS.set(this, Set.of()), Priority.pre);
         return tx;
-    }
-
-    @Override
-    protected void exit(DClareMPS dClareMPS) {
-        super.exit(dClareMPS);
-        original().removeModuleListener(new Listener(this, dClareMPS));
     }
 
     @Override
@@ -304,14 +317,6 @@ public class DModule extends DObject<SModule> implements SModule {
         public void moduleChanged(SModule module) {
         }
 
-    }
-
-    @Override
-    protected void stop(DClareMPS dClareMPS) {
-        super.stop(dClareMPS);
-        for (DModel child : dClareMPS.read(() -> models(original())).map(m -> DModel.of(m))) {
-            child.stop(dClareMPS);
-        }
     }
 
     protected static Set<SLanguage> languages(SModule module) {

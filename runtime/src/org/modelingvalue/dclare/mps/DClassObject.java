@@ -88,7 +88,7 @@ public class DClassObject extends DObject<SClassObject> implements SClassObject 
     }
 
     @Override
-    protected Set<? extends DObject<?>> init(DClareMPS dClareMPS) {
+    protected Set<? extends DObject<?>> read(DClareMPS dClareMPS) {
         return Set.of();
     }
 

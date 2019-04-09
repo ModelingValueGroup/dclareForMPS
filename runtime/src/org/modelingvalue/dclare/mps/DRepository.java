@@ -85,15 +85,20 @@ public class DRepository extends DObject<SRepository> implements SRepository {
     }
 
     @Override
-    protected Set<? extends DObject<?>> init(DClareMPS dClareMPS) {
+    protected Set<? extends DObject<?>> read(DClareMPS dClareMPS) {
         Set<DModule> modules = modules().map(m -> DModule.of(m)).toSet();
         MODULES.set(this, modules);
-        addRepositoryListener(new Listener(this, dClareMPS));
         return modules;
     }
 
     protected static Set<SModule> modules() {
         return Collection.of(dClareMPS().project.getProjectModules()).toSet();
+    }
+
+    @Override
+    protected void init(DClareMPS dClareMPS) {
+        super.init(dClareMPS);
+        addRepositoryListener(new Listener(this, dClareMPS));
     }
 
     @Override

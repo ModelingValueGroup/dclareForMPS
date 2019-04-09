@@ -144,17 +144,6 @@ public class DModel extends DObject<SModel> implements SModel {
         return ROOTS.get(this);
     }
 
-    @Override
-    protected Set<? extends DObject<?>> init(DClareMPS dClareMPS) {
-        MODEL_ROOT.set(this, original().getModelRoot());
-        Set<DNode> roots = Collection.of(original().getRootNodes()).map(n -> DNode.of(n)).toSet();
-        ROOTS.set(this, roots);
-        if (!isReadOnly()) {
-            original().addChangeListener(new Listener(this, dClareMPS));
-        }
-        return roots;
-    }
-
     @SuppressWarnings("rawtypes")
     @Override
     protected Compound activate(DObject parent, Compound parentTx) {
@@ -172,6 +161,22 @@ public class DModel extends DObject<SModel> implements SModel {
             USED_MODELS.get(this).forEach(m -> DModule.REFERENCED.set(DModule.of(m.original().getModule()), Set::add, m));
         });
         return tx;
+    }
+
+    @Override
+    protected Set<? extends DObject<?>> read(DClareMPS dClareMPS) {
+        MODEL_ROOT.set(this, original().getModelRoot());
+        Set<DNode> roots = Collection.of(original().getRootNodes()).map(n -> DNode.of(n)).toSet();
+        ROOTS.set(this, roots);
+        return roots;
+    }
+
+    @Override
+    protected void init(DClareMPS dClareMPS) {
+        super.init(dClareMPS);
+        if (!isReadOnly()) {
+            original().addChangeListener(new Listener(this, dClareMPS));
+        }
     }
 
     @Override

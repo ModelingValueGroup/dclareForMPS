@@ -214,8 +214,13 @@ public abstract class DObject<O> {
                                                                                                                                     });
     @SuppressWarnings("unchecked")
     public static final Setable<DObject, Compound>                                                             TRANSACTION          = DObserved.of("TRANSACTION", null, false, false, false, true, (dObject, pre, post, first) -> {
-                                                                                                                                        if (first && pre != null && post == null) {
-                                                                                                                                            dObject.stop(dClareMPS());
+                                                                                                                                        if (first) {
+                                                                                                                                            if (pre != null && post == null) {
+                                                                                                                                                dObject.exit(dClareMPS());
+                                                                                                                                            }
+                                                                                                                                            if (pre == null && post != null) {
+                                                                                                                                                dObject.init(dClareMPS());
+                                                                                                                                            }
                                                                                                                                         }
                                                                                                                                     }, (tx, o, b, a) -> {
                                                                                                                                         if (a != null) {
@@ -316,12 +321,23 @@ public abstract class DObject<O> {
         }
     }
 
-    protected abstract ContainingCollection<? extends DObject<?>> init(DClareMPS dClareMPS);
+    protected abstract ContainingCollection<? extends DObject<?>> read(DClareMPS dClareMPS);
+
+    protected void init(DClareMPS dClareMPS) {
+    }
+
+    protected void exit(DClareMPS dClareMPS) {
+    }
 
     protected final void start(DClareMPS dClareMPS) {
-        for (DObject<?> child : dClareMPS.read(() -> init(dClareMPS))) {
+        init(dClareMPS);
+        for (DObject<?> child : dClareMPS.read(() -> read(dClareMPS))) {
             child.start(dClareMPS);
         }
+    }
+
+    protected void stop(DClareMPS dClareMPS) {
+        exit(dClareMPS);
     }
 
     @SuppressWarnings("unchecked")
@@ -341,8 +357,7 @@ public abstract class DObject<O> {
             MESSAGES_OR_CHILDREN.set(this, MESSAGE_TYPES.toMap(t -> Entry.of(t, !getMessages(t).isEmpty() || !getMessageChildren(t).isEmpty())));
         }, () -> MESSAGES_OR_CHILDREN.set(this, MESSAGES_OR_CHILDREN.getDefault()), Priority.post);
         rule(MESSAGE_CHILDREN, tx, () -> {
-            Set<? extends DObject> children = CHILDREN.get(this);
-            MESSAGE_CHILDREN.set(this, MESSAGE_TYPES.toMap(t -> Entry.of(t, children.filter(c -> MESSAGES_OR_CHILDREN.get(c).get(t)).toSet())));
+            MESSAGE_CHILDREN.set(this, MESSAGE_TYPES.toMap(t -> Entry.of(t, CHILDREN.get(this).filter(c -> MESSAGES_OR_CHILDREN.get(c).get(t)).toSet())));
         }, () -> MESSAGE_CHILDREN.set(this, MESSAGE_CHILDREN.getDefault()), Priority.post);
         rule("<EMPTY_MANDATORY>", tx, () -> {
             for (DAttribute attr : TYPE.get(this).getAttributes()) {
@@ -382,13 +397,6 @@ public abstract class DObject<O> {
             SRepository r = o.getOriginalRepository();
             return r != null && !r.equals(dClareMPS().getRepository().original());
         }
-    }
-
-    protected void exit(DClareMPS dClareMPS) {
-    }
-
-    protected void stop(DClareMPS dClareMPS) {
-        exit(dClareMPS);
     }
 
     protected void deactivate(DObject parent, Compound parentTx) {
