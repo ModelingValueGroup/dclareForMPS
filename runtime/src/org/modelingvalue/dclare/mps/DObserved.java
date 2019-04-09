@@ -61,9 +61,11 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
                 Setable.<Set<DObject<?>>, DObject<?>> diff(Set.of(), DObject.getDObjectSet(b), DObject.getDObjectSet(a), added -> {
                     DObject.PARENT.set(added, o);
                     DObject.CONTAINING.set(added, this);
+                    added.start(DObject.dClareMPS());
                 }, removed -> {
                     if (o.equals(DObject.PARENT.get(removed))) {
                         DObject.PARENT.set(removed, null);
+                        removed.stop(DObject.dClareMPS());
                     }
                     if (equals(DNode.CONTAINING.get(removed))) {
                         DObject.CONTAINING.set(removed, null);

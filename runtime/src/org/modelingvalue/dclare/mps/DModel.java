@@ -164,11 +164,9 @@ public class DModel extends DObject<SModel> implements SModel {
     }
 
     @Override
-    protected Set<? extends DObject<?>> read(DClareMPS dClareMPS) {
+    protected void read(DClareMPS dClareMPS) {
         MODEL_ROOT.set(this, original().getModelRoot());
-        Set<DNode> roots = Collection.of(original().getRootNodes()).map(n -> DNode.of(n)).toSet();
-        ROOTS.set(this, roots);
-        return roots;
+        ROOTS.set(this, Collection.of(original().getRootNodes()).map(n -> DNode.of(n)).toSet());
     }
 
     @Override
@@ -228,7 +226,6 @@ public class DModel extends DObject<SModel> implements SModel {
                         }
                     }
                 }
-                dNode.start(b());
             });
         }
 
@@ -248,7 +245,6 @@ public class DModel extends DObject<SModel> implements SModel {
                         }
                     }
                 }
-                dNode.stop(b());
             });
         }
     }

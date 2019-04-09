@@ -335,7 +335,7 @@ public class DNode extends DObject<SNode> implements SNode {
     }
 
     @Override
-    protected List<? extends DObject<?>> read(DClareMPS dClareMPS) {
+    protected void read(DClareMPS dClareMPS) {
         for (SProperty property : original().getProperties()) {
             PROPERTY.get(property).set(this, original().getProperty(property));
         }
@@ -343,8 +343,7 @@ public class DNode extends DObject<SNode> implements SNode {
             SNode targetNode = reference.getTargetNode();
             REFERENCE.get(reference.getLink()).set(this, targetNode != null ? of(targetNode) : null);
         }
-        List<DNode> children = Collection.of(original().getChildren()).map(n -> of(n)).toList();
-        for (DNode dChild : children) {
+        for (DNode dChild : Collection.of(original().getChildren()).map(n -> of(n))) {
             SContainmentLink cl = dChild.original.getContainmentLink();
             if (!cl.getName().equals("smodelAttribute")) {
                 if (cl.isMultiple()) {
@@ -354,7 +353,6 @@ public class DNode extends DObject<SNode> implements SNode {
                 }
             }
         }
-        return children;
     }
 
     @SuppressWarnings("rawtypes")

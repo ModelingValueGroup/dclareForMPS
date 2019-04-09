@@ -209,26 +209,17 @@ public abstract class DObject<O> {
                                                                                                                                     }, null);
 
     public static final Setable<DObject, Set<? extends DObject>>                                               CHILDREN             = Observed.of("CHILDREN", Set.of(), (tx, o, b, a) -> {
-                                                                                                                                        Setable.<Set<? extends DObject>, DObject> diff(Set.of(), b, a,                             //
+                                                                                                                                        Setable.<Set<? extends DObject>, DObject> diff(Set.of(), b, a,                   //
                                                                                                                                                 e -> e.activate(o, tx.parent()), e -> e.deactivate(o, tx.parent()));
                                                                                                                                     });
     @SuppressWarnings("unchecked")
-    public static final Setable<DObject, Compound>                                                             TRANSACTION          = DObserved.of("TRANSACTION", null, false, false, false, true, (dObject, pre, post, first) -> {
-                                                                                                                                        if (first) {
-                                                                                                                                            if (pre != null && post == null) {
-                                                                                                                                                dObject.exit(dClareMPS());
-                                                                                                                                            }
-                                                                                                                                            if (pre == null && post != null) {
-                                                                                                                                                dObject.init(dClareMPS());
-                                                                                                                                            }
-                                                                                                                                        }
-                                                                                                                                    }, (tx, o, b, a) -> {
+    public static final Setable<DObject, Compound>                                                             TRANSACTION          = Observed.of("TRANSACTION", null, (tx, o, b, a) -> {
                                                                                                                                         if (a != null) {
-                                                                                                                                            o.rule(CHILDREN, a,                                                                    //
-                                                                                                                                                    () -> CHILDREN.set(o, o.getAllChildren().toSet()),                             //
+                                                                                                                                            o.rule(CHILDREN, a,                                                          //
+                                                                                                                                                    () -> CHILDREN.set(o, o.getAllChildren().toSet()),                   //
                                                                                                                                                     () -> CHILDREN.set(o, Set.of()), Priority.pre);
                                                                                                                                         }
-                                                                                                                                    }, null);
+                                                                                                                                    });
 
     private static final Setable<DObject, Set<Observer>>                                                       RULE_INSTANCES       = Setable.of("RULE_INSTANCES", Set.of(), (tx, o, b, a) -> {
                                                                                                                                         Setable.<Set<Observer>, Observer> diff(Set.of(), b, a, Leaf::trigger, tx::clear);
@@ -321,7 +312,7 @@ public abstract class DObject<O> {
         }
     }
 
-    protected abstract ContainingCollection<? extends DObject<?>> read(DClareMPS dClareMPS);
+    protected abstract void read(DClareMPS dClareMPS);
 
     protected void init(DClareMPS dClareMPS) {
     }
@@ -331,9 +322,7 @@ public abstract class DObject<O> {
 
     protected final void start(DClareMPS dClareMPS) {
         init(dClareMPS);
-        for (DObject<?> child : dClareMPS.read(() -> read(dClareMPS))) {
-            child.start(dClareMPS);
-        }
+        dClareMPS.read(() -> read(dClareMPS));
     }
 
     protected void stop(DClareMPS dClareMPS) {
@@ -388,6 +377,13 @@ public abstract class DObject<O> {
 
     }
 
+    protected void deactivate(DObject parent, Compound parentTx) {
+        Compound tx = TRANSACTION.get(this);
+        if (tx != null && Objects.equals(parentTx, tx.parent())) {
+            TRANSACTION.set(this, null);
+        }
+    }
+
     protected abstract SRepository getOriginalRepository();
 
     private boolean isInOtherRepository(DObject o) {
@@ -396,13 +392,6 @@ public abstract class DObject<O> {
         } else {
             SRepository r = o.getOriginalRepository();
             return r != null && !r.equals(dClareMPS().getRepository().original());
-        }
-    }
-
-    protected void deactivate(DObject parent, Compound parentTx) {
-        Compound tx = TRANSACTION.get(this);
-        if (tx != null && Objects.equals(parentTx, tx.parent())) {
-            TRANSACTION.set(this, null);
         }
     }
 

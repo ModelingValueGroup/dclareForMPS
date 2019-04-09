@@ -85,10 +85,8 @@ public class DRepository extends DObject<SRepository> implements SRepository {
     }
 
     @Override
-    protected Set<? extends DObject<?>> read(DClareMPS dClareMPS) {
-        Set<DModule> modules = modules().map(m -> DModule.of(m)).toSet();
-        MODULES.set(this, modules);
-        return modules;
+    protected void read(DClareMPS dClareMPS) {
+        MODULES.set(this, modules().map(m -> DModule.of(m)).toSet());
     }
 
     protected static Set<SModule> modules() {
@@ -174,7 +172,6 @@ public class DRepository extends DObject<SRepository> implements SRepository {
                 if (b().project.getProjectModules().contains(sModule)) {
                     DModule dModule = DModule.of(sModule);
                     MODULES.set(DRepository.this, Set::add, dModule);
-                    dModule.start(b());
                 }
             });
         }
@@ -185,7 +182,6 @@ public class DRepository extends DObject<SRepository> implements SRepository {
                 if (b().project.getProjectModules().contains(sModule)) {
                     DModule dModule = DModule.of(sModule);
                     MODULES.set(DRepository.this, Set::remove, dModule);
-                    dModule.stop(b());
                 }
             });
         }

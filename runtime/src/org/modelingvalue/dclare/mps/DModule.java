@@ -123,15 +123,11 @@ public class DModule extends DObject<SModule> implements SModule {
     }
 
     @Override
-    protected Set<? extends DObject<?>> read(DClareMPS dClareMPS) {
+    protected void read(DClareMPS dClareMPS) {
         Set<SLanguage> languages = languages(original());
         LANGUAGES.set(this, languages);
         if (isAllwaysActive() && hasRuleSets(languages)) {
-            Set<DModel> models = models(original()).map(m -> DModel.of(m)).toSet();
-            MODELS.set(this, models);
-            return models;
-        } else {
-            return Set.of();
+            MODELS.set(this, models(original()).map(m -> DModel.of(m)).toSet());
         }
     }
 
@@ -267,7 +263,6 @@ public class DModule extends DObject<SModule> implements SModule {
                 if (isAllwaysActive() && hasRuleSets(LANGUAGES.get(DModule.this))) {
                     DModel dModel = DModel.of(sModel);
                     MODELS.set(DModule.this, Set::add, dModel);
-                    dModel.start(b());
                 }
             });
         }
@@ -278,7 +273,6 @@ public class DModule extends DObject<SModule> implements SModule {
                 if (isAllwaysActive() && hasRuleSets(LANGUAGES.get(DModule.this))) {
                     DModel dModel = DModel.of(sModel);
                     MODELS.set(DModule.this, Set::remove, dModel);
-                    dModel.stop(b());
                 }
             });
         }
