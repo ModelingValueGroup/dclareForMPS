@@ -145,13 +145,14 @@ public class DModel extends DObject<SModel> implements SModel {
     }
 
     @Override
-    protected void init(DClareMPS dClareMPS) {
-        super.init(dClareMPS);
+    protected Set<? extends DObject<?>> init(DClareMPS dClareMPS) {
         MODEL_ROOT.set(this, original().getModelRoot());
-        ROOTS.set(this, Collection.of(original().getRootNodes()).map(n -> DNode.of(n)).toSet());
+        Set<DNode> roots = Collection.of(original().getRootNodes()).map(n -> DNode.of(n)).toSet();
+        ROOTS.set(this, roots);
         if (!isReadOnly()) {
             original().addChangeListener(new Listener(this, dClareMPS));
         }
+        return roots;
     }
 
     @SuppressWarnings("rawtypes")
@@ -190,14 +191,14 @@ public class DModel extends DObject<SModel> implements SModel {
 
         @Override
         public void propertyChanged(SPropertyChangeEvent event) {
-            b().schedule(() -> {
+            b().handleMPSChange(() -> {
                 DNode.PROPERTY.get(event.getProperty()).set(DNode.of(event.getNode()), event.getNewValue());
             });
         }
 
         @Override
         public void referenceChanged(SReferenceChangeEvent event) {
-            b().schedule(() -> {
+            b().handleMPSChange(() -> {
                 SReference newValue = event.getNewValue();
                 SNode targetNode = newValue != null ? newValue.getTargetNode() : null;
                 DNode.REFERENCE.get(event.getAssociationLink()).set(DNode.of(event.getNode()), targetNode != null ? DNode.of(targetNode) : null);
@@ -206,7 +207,7 @@ public class DModel extends DObject<SModel> implements SModel {
 
         @Override
         public void nodeAdded(SNodeAddEvent event) {
-            b().schedule(() -> {
+            b().handleMPSChange(() -> {
                 DNode dNode = DNode.of(event.getChild());
                 DModel dModel = DModel.of(event.getModel());
                 if (event.isRoot()) {
@@ -222,12 +223,13 @@ public class DModel extends DObject<SModel> implements SModel {
                         }
                     }
                 }
+                dNode.start(b());
             });
         }
 
         @Override
         public void nodeRemoved(SNodeRemoveEvent event) {
-            b().schedule(() -> {
+            b().handleMPSChange(() -> {
                 DNode dNode = DNode.of(event.getChild());
                 if (event.isRoot()) {
                     DModel.ROOTS.set(DModel.of(event.getModel()), (l, e) -> l.remove(e), dNode);
@@ -241,12 +243,9 @@ public class DModel extends DObject<SModel> implements SModel {
                         }
                     }
                 }
+                dNode.stop(b());
             });
         }
-    }
-
-    protected void stop(DClareMPS dClareMPS) {
-        exit(dClareMPS);
     }
 
     @Override

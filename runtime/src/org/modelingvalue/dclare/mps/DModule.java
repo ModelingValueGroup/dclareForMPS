@@ -103,10 +103,17 @@ public class DModule extends DObject<SModule> implements SModule {
     }
 
     @Override
-    protected void init(DClareMPS dClareMPS) {
-        super.init(dClareMPS);
-        LANGUAGES.set(this, languages(original()));
+    protected Set<? extends DObject<?>> init(DClareMPS dClareMPS) {
+        Set<SLanguage> languages = languages(original());
+        LANGUAGES.set(this, languages);
         original().addModuleListener(new Listener(this, dClareMPS));
+        if (isAllwaysActive() && hasRuleSets(languages)) {
+            Set<DModel> models = models(original()).map(m -> DModel.of(m)).toSet();
+            MODELS.set(this, models);
+            return models;
+        } else {
+            return Set.of();
+        }
     }
 
     @SuppressWarnings("rawtypes")
@@ -117,15 +124,12 @@ public class DModule extends DObject<SModule> implements SModule {
             LANGUAGES.set(this, dClareMPS().read(() -> languages(original())).addAll(MODELS.get(this).flatMap(DModel::getUsedLanguages)));
         }, () -> LANGUAGES.set(this, Set.of()), Priority.pre);
         rule(MODELS, tx, () -> {
-            if (isAllwaysActive() && hasRuleSets()) {
+            if (isAllwaysActive() && hasRuleSets(LANGUAGES.get(this))) {
                 MODELS.set(this, dClareMPS().read(() -> models(original())).map(m -> DModel.of(m)).toSet());
             } else {
                 MODELS.set(this, REFERENCED.get(this));
             }
         }, () -> MODELS.set(this, Set.of()), Priority.pre);
-        rule(STATE, tx, () -> {
-            STATE.set(this, MODELS.get(this).isEmpty() ? DObjectState.contained : PARENT.get(this).state());
-        }, Priority.pre);
         return tx;
     }
 
@@ -246,20 +250,22 @@ public class DModule extends DObject<SModule> implements SModule {
 
         @Override
         public void modelAdded(SModule module, SModel sModel) {
-            b().schedule(() -> {
-                if (isActive()) {
+            b().handleMPSChange(() -> {
+                if (isAllwaysActive() && hasRuleSets(LANGUAGES.get(DModule.this))) {
                     DModel dModel = DModel.of(sModel);
                     MODELS.set(DModule.this, Set::add, dModel);
+                    dModel.start(b());
                 }
             });
         }
 
         @Override
         public void beforeModelRemoved(SModule module, SModel sModel) {
-            b().schedule(() -> {
-                if (isActive()) {
+            b().handleMPSChange(() -> {
+                if (isAllwaysActive() && hasRuleSets(LANGUAGES.get(DModule.this))) {
                     DModel dModel = DModel.of(sModel);
                     MODELS.set(DModule.this, Set::remove, dModel);
+                    dModel.stop(b());
                 }
             });
         }
@@ -286,12 +292,12 @@ public class DModule extends DObject<SModule> implements SModule {
 
         @Override
         public void languageAdded(SModule module, SLanguage lang) {
-            dClareMPS().schedule(() -> LANGUAGES.set(DModule.this, Set::add, lang));
+            dClareMPS().handleMPSChange(() -> LANGUAGES.set(DModule.this, Set::add, lang));
         }
 
         @Override
         public void languageRemoved(SModule module, SLanguage lang) {
-            dClareMPS().schedule(() -> LANGUAGES.set(DModule.this, Set::remove, lang));
+            dClareMPS().handleMPSChange(() -> LANGUAGES.set(DModule.this, Set::remove, lang));
         }
 
         @Override
@@ -300,8 +306,9 @@ public class DModule extends DObject<SModule> implements SModule {
 
     }
 
+    @Override
     protected void stop(DClareMPS dClareMPS) {
-        exit(dClareMPS);
+        super.stop(dClareMPS);
         for (DModel child : dClareMPS.read(() -> models(original())).map(m -> DModel.of(m))) {
             child.stop(dClareMPS);
         }
@@ -319,8 +326,8 @@ public class DModule extends DObject<SModule> implements SModule {
         return ist;
     }
 
-    protected boolean hasRuleSets() {
-        return LANGUAGES.get(this).anyMatch(l -> !DClareMPS.RULE_SETS.get(l).isEmpty());
+    protected boolean hasRuleSets(Set<SLanguage> languages) {
+        return languages.anyMatch(l -> !DClareMPS.RULE_SETS.get(l).isEmpty());
     }
 
     public DModel findOrAddModel(String name, boolean temporal) {

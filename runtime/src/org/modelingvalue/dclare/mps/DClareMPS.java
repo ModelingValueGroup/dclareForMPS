@@ -75,11 +75,14 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
     protected DClareMPS(Project project, State prevState, int maxTotalNrOfChanges, int maxNrOfChanges, int maxNrOfObserved, int maxNrOfObservers, StartStopHandler startStopHandler) {
         this.project = project;
         this.startStopHandler = startStopHandler;
+        if (TRACE) {
+            System.err.println(DCLARE + "START " + this);
+        }
         root = new Root(this, thePool, prevState, 100, maxTotalNrOfChanges, maxNrOfChanges, maxNrOfObserved, maxNrOfObservers, 4, null) {
             private final Leaf clearOrphans = Leaf.of("clearOrphans", this, this::clearOrphans);
 
             private void clearOrphans() {
-                if (!isTimeTraveling()) {
+                if (!isTimeTraveling() && imperative != null) {
                     AbstractLeafRun<?> tx = AbstractLeaf.getCurrent();
                     preState().diff(tx.state(), o -> o instanceof DObject, s -> true).forEach(e0 -> {
                         if (DObject.TRANSACTION.get((DObject<?>) e0.getKey()) == null) {
@@ -90,30 +93,27 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
             }
 
             @Override
+            protected State post(State pre) {
+                return run(trigger(pre, clearOrphans, Priority.post));
+            }
+
+            @Override
             public void startPriority(Priority prio) {
                 if (TRACE) {
-                    System.err.println(DCLARE + "START PRIORITY " + prio + "  " + this + "  " + repository);
+                    System.err.println(DCLARE + "START PRIORITY " + prio + "  " + this);
                 }
             }
 
             @Override
             public void endPriority(Priority prio) {
                 if (TRACE) {
-                    System.err.println(DCLARE + "END PRIORITY   " + prio + "  " + this + "  " + repository);
+                    System.err.println(DCLARE + "END PRIORITY   " + prio + "  " + this);
                 }
-            }
-
-            @Override
-            protected State post(State pre) {
-                return run(trigger(pre, clearOrphans, Priority.post));
             }
         };
         waitForEndThread = new Thread(() -> {
             State result = root.emptyState();
             try {
-                if (TRACE) {
-                    System.err.println(DCLARE + "START " + this + "  " + repository);
-                }
                 result = root.waitForEnd();
                 thePool.shutdownNow();
             } catch (Throwable t) {
@@ -122,7 +122,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
                 throw t;
             } finally {
                 if (TRACE) {
-                    System.err.println(DCLARE + "END   " + this + "  " + repository);
+                    System.err.println(DCLARE + "END   " + this);
                     for (@SuppressWarnings("rawtypes")
                     Entry<Setable, Integer> e : result.count()) {
                         System.err.println(DCLARE + "COUNT " + e.getKey() + " = " + e.getValue());
@@ -132,7 +132,17 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
         });
         waitForEndThread.setDaemon(true);
         waitForEndThread.start();
-        root.put("init", () -> {
+        root.put("start", () -> {
+            repository = DRepository.of(project.getRepository());
+            if (TRACE) {
+                System.err.println(DCLARE + "START READ " + this);
+            }
+            repository.start(this);
+            if (TRACE) {
+                System.err.println(DCLARE + "END READ " + this);
+            }
+        }, Priority.pre);
+        root.put("activate", () -> {
             imperative = root.addIntegration("MPSNative", this, r -> {
                 if (imperative != null && !COMMITTING.get()) {
                     if (!running) {
@@ -142,8 +152,13 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
                     command(r);
                 }
             });
-            repository = DRepository.of(project.getRepository());
+            if (TRACE) {
+                System.err.println(DCLARE + "START ACTIVATE " + this);
+            }
             repository.activate(null, root);
+            if (TRACE) {
+                System.err.println(DCLARE + "END ACTIVATE " + this);
+            }
         }, Priority.pre);
     }
 
@@ -157,9 +172,17 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
         return obj instanceof DClareMPS && project.equals(((DClareMPS) obj).project);
     }
 
-    public void schedule(Runnable action) {
+    public void handleMPSChange(Runnable action) {
         if (imperative != null) {
             imperative.schedule(action);
+        } else {
+            root.put(action, () -> {
+                if (imperative != null) {
+                    imperative.schedule(action);
+                } else {
+                    read(action);
+                }
+            }, Priority.high);
         }
     }
 
@@ -229,6 +252,9 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
     @Override
     public void accept(State pre, State post, Boolean last) {
         if (imperative != null) {
+            if (TRACE) {
+                System.err.println(DCLARE + "START COMMIT " + this);
+            }
             COMMITTING.set(true);
             try {
                 pre.diff(post, o -> o instanceof DObject, p -> p instanceof DObserved).forEach(e0 -> {
@@ -267,6 +293,9 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
                 }
             } finally {
                 COMMITTING.set(false);
+                if (TRACE) {
+                    System.err.println(DCLARE + "END COMMIT " + this);
+                }
             }
         }
     }

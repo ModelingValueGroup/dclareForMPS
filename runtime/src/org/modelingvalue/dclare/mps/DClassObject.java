@@ -87,4 +87,9 @@ public class DClassObject extends DObject<SClassObject> implements SClassObject 
         return original().getIdentity();
     }
 
+    @Override
+    protected Set<? extends DObject<?>> init(DClareMPS dClareMPS) {
+        return Set.of();
+    }
+
 }

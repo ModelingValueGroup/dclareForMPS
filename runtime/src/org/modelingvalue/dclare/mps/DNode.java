@@ -50,8 +50,6 @@ import jetbrains.mps.smodel.SNodeUtil;
 
 public class DNode extends DObject<SNode> implements SNode {
 
-    private static final Constant<SNode, DNode>                                  DNODE              = Constant.of("DNODE", n -> new DNode(n));
-
     private static final Constant<Pair<Set<SLanguage>, SConcept>, DType>         TYPE               = Constant.of("NODE_TYPE", null, p -> new DType(p) {
                                                                                                         @SuppressWarnings({"unchecked", "rawtypes"})
                                                                                                         @Override
@@ -153,7 +151,7 @@ public class DNode extends DObject<SNode> implements SNode {
     protected static final Setable<DNode, DNode>                                 REPLACEMENT        = Setable.of("REPLACEMENT", null);
 
     public static DNode of(SNode original) {
-        return original instanceof DNode ? (DNode) original : DNODE.get(original);
+        return original instanceof DNode ? (DNode) original : new DNode(original);
     }
 
     public static SNode wrap(SNode original) {
@@ -171,6 +169,18 @@ public class DNode extends DObject<SNode> implements SNode {
     @Override
     public int hashCode() {
         return getNodeId().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        } else if (obj instanceof DNode) {
+            DNode other = (DNode) obj;
+            return getNodeId().equals(other.getNodeId());
+        } else {
+            return false;
+        }
     }
 
     @Override
@@ -325,8 +335,7 @@ public class DNode extends DObject<SNode> implements SNode {
     }
 
     @Override
-    protected void init(DClareMPS dClareMPS) {
-        super.init(dClareMPS);
+    protected List<? extends DObject<?>> init(DClareMPS dClareMPS) {
         for (SProperty property : original().getProperties()) {
             PROPERTY.get(property).set(this, original().getProperty(property));
         }
@@ -334,9 +343,9 @@ public class DNode extends DObject<SNode> implements SNode {
             SNode targetNode = reference.getTargetNode();
             REFERENCE.get(reference.getLink()).set(this, targetNode != null ? of(targetNode) : null);
         }
-        for (SNode sChild : original().getChildren()) {
-            DNode dChild = of(sChild);
-            SContainmentLink cl = sChild.getContainmentLink();
+        List<DNode> children = Collection.of(original().getChildren()).map(n -> of(n)).toList();
+        for (DNode dChild : children) {
+            SContainmentLink cl = dChild.original.getContainmentLink();
             if (!cl.getName().equals("smodelAttribute")) {
                 if (cl.isMultiple()) {
                     MANY_CONTAINMENT.get(cl).set(this, (l, e) -> l.addUnique(e), dChild);
@@ -345,6 +354,7 @@ public class DNode extends DObject<SNode> implements SNode {
                 }
             }
         }
+        return children;
     }
 
     @SuppressWarnings("rawtypes")
@@ -488,7 +498,7 @@ public class DNode extends DObject<SNode> implements SNode {
             if (cl.isMultiple()) {
                 MANY_CONTAINMENT.get(cl).set(parent, (l, e) -> l.remove(e), this);
             } else {
-                SINGLE_CONTAINMENT.get(cl).set(parent, (v, e) -> this.equals(v) ? null : v, this);
+                SINGLE_CONTAINMENT.get(cl).set(parent, (v, e) -> equals(v) ? null : v, this);
             }
         } else {
             DModel model = getModel();
@@ -624,6 +634,9 @@ public class DNode extends DObject<SNode> implements SNode {
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     public void setFeature(SConceptFeature feature, Object value) {
+        if (EMPTY_ATTRIBUTE.get()) {
+            throw new NullPointerException();
+        }
         if (feature instanceof SProperty) {
             PROPERTY.get((SProperty) feature).set(this, value == null ? null : value.toString());
         } else if (feature instanceof SContainmentLink) {

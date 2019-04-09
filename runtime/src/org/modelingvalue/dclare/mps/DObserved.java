@@ -26,6 +26,8 @@ import org.modelingvalue.collections.ContainingCollection;
 import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.QuadConsumer;
+import org.modelingvalue.dclare.mps.DObject.DRuleObserver;
+import org.modelingvalue.transactions.AbstractLeaf;
 import org.modelingvalue.transactions.AbstractLeaf.AbstractLeafRun;
 import org.modelingvalue.transactions.Observed;
 import org.modelingvalue.transactions.Setable;
@@ -166,6 +168,23 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
                 return v;
             }
         }, e);
+    }
+
+    @Override
+    public T get(O object) {
+        T result = object != null ? super.get(object) : null;
+        if (object != null) {
+            if (result == null && mandatory) {
+                if (AbstractLeaf.getCurrent().transaction() instanceof DRuleObserver) {
+                    DObject.EMPTY_ATTRIBUTE.set(true);
+                }
+            } else if (result instanceof java.util.Collection || result instanceof ContainingCollection) {
+                if (AbstractLeaf.getCurrent().transaction() instanceof DRuleObserver) {
+                    DObject.COLLECTION_ATTRIBUTE.set(true);
+                }
+            }
+        }
+        return result;
     }
 
 }

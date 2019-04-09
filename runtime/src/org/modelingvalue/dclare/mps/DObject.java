@@ -47,50 +47,56 @@ import org.modelingvalue.transactions.TooManyObserversException;
 @SuppressWarnings("rawtypes")
 public abstract class DObject<O> {
 
-    private static final Set<DMessageType>                              MESSAGE_TYPES       = Collection.of(DMessageType.values()).toSet();
+    private static final QualifiedSet<Pair<DFeature, String>, DMessage>                    MESSAGE_QSET        = QualifiedSet.of(m -> Pair.of(m.feature(), m.id()));
 
-    private static final QualifiedSet<Pair<DFeature, String>, DMessage> MESSAGES_SET        = QualifiedSet.of(m -> Pair.of(m.feature(), m.id()));
+    private static final Set<DMessageType>                                                 MESSAGE_TYPES       = Collection.of(DMessageType.values()).toSet();
 
-    private static final Map<DMessageType, Boolean>                     MESSAGE_BOOLEAN_MAP = MESSAGE_TYPES.toMap(t -> Entry.of(t, false));
+    private static final Map<DMessageType, Boolean>                                        MESSAGE_BOOLEAN_MAP = MESSAGE_TYPES.sequential().toMap(t -> Entry.of(t, false));
 
-    private static final Map<DMessageType, Set<? extends DObject>>      MESSAGE_SET_MAP     = MESSAGE_TYPES.toMap(t -> Entry.of(t, Set.of()));
+    private static final Map<DMessageType, Set<? extends DObject>>                         MESSAGE_SET_MAP     = MESSAGE_TYPES.sequential().toMap(t -> Entry.of(t, Set.of()));
 
-    private static final Constant<Object, Rule>                         RULE                = Constant.of("<RULE>", r -> new Rule(r));
+    private static final Map<DMessageType, QualifiedSet<Pair<DFeature, String>, DMessage>> MESSAGE_QSET_MAP    = MESSAGE_TYPES.sequential().toMap(t -> Entry.of(t, MESSAGE_QSET));
 
-    private static final class DRuleObserver extends Observer {
+    private static final Constant<Object, Rule>                                            RULE                = Constant.of("<RULE>", r -> new Rule(r));
+
+    protected static final class DRuleObserver extends Observer {
 
         private DRuleObserver(DRule rule, Compound parent, Runnable action) {
             super(RULE.get(rule), parent, () -> ((DRuleObserver) AbstractLeaf.getCurrent().transaction()).run(action), Priority.high);
         }
 
         private void run(Runnable action) {
-            try {
-                if (firstTime()) {
-                    object().removeMessages(dRule(), DMessageType.error, "EXCEPTION");
+            if (firstTime()) {
+                object().removeMessages(dRule(), DMessageType.error, "EXCEPTION");
+            }
+            if (parent.equals(DObject.TRANSACTION.get(object()))) {
+                if (object().isOwned()) {
+                    try {
+                        action.run();
+                    } catch (NullPointerException e) {
+                        if (EMPTY_ATTRIBUTE.get()) {
+                            throw new EmptyMandatoryException();
+                        } else {
+                            object().addMessage(dRule(), DMessageType.error, "EXCEPTION", e);
+                            throw new StopObserverException(e);
+                        }
+                    } catch (IndexOutOfBoundsException e) {
+                        if (COLLECTION_ATTRIBUTE.get()) {
+                            throw new EmptyMandatoryException();
+                        } else {
+                            object().addMessage(dRule(), DMessageType.error, "EXCEPTION", e);
+                            throw new StopObserverException(e);
+                        }
+                    } catch (Throwable e) {
+                        object().addMessage(dRule(), DMessageType.error, "EXCEPTION", e);
+                        throw new StopObserverException(e);
+                    } finally {
+                        COLLECTION_ATTRIBUTE.set(false);
+                        EMPTY_ATTRIBUTE.set(false);
+                    }
                 }
-                if (parent.equals(DObject.TRANSACTION.get(object())) && object().isActive()) {
-                    action.run();
-                }
-            } catch (NullPointerException e) {
-                if (EMPTY_ATTRIBUTE.get()) {
-                    throw new EmptyMandatoryException();
-                } else {
-                    object().addMessage(dRule(), DMessageType.error, "EXCEPTION", e);
-                    throw new StopObserverException(e);
-                }
-            } catch (IndexOutOfBoundsException e) {
-                if (COLLECTION_ATTRIBUTE.get()) {
-                    throw new EmptyMandatoryException();
-                } else {
-                    object().addMessage(dRule(), DMessageType.error, "EXCEPTION", e);
-                    throw new StopObserverException(e);
-                }
-            } catch (Throwable e) {
-                object().addMessage(dRule(), DMessageType.error, "EXCEPTION", e);
-                throw new StopObserverException(e);
-            } finally {
-                COLLECTION_ATTRIBUTE.set(false);
-                EMPTY_ATTRIBUTE.set(false);
+            } else {
+                throw new StopObserverException("Stopped");
             }
         }
 
@@ -188,11 +194,11 @@ public abstract class DObject<O> {
                                                                                                                                         }
                                                                                                                                     });
 
-    public static final Observed<DObject, DObserved>                                                           CONTAINING           = DObserved.of("CONTAINING", null, false, false, false, false, (o, b, a, f) -> {
+    public static final Setable<DObject, DObserved>                                                            CONTAINING           = DObserved.of("CONTAINING", null, false, false, false, true, (o, b, a, f) -> {
                                                                                                                                     }, null);
 
     @SuppressWarnings("unchecked")
-    public static final Setable<DObject, DObject>                                                              PARENT               = DObserved.of("PARENT", null, false, false, false, false, (o, b, a, f) -> {
+    public static final Setable<DObject, DObject>                                                              PARENT               = DObserved.of("PARENT", null, false, false, false, true, (o, b, a, f) -> {
                                                                                                                                     }, (tx, o, b, a) -> {
                                                                                                                                         if (b != null && a != null) {
                                                                                                                                             DObserved cont = CONTAINING.get(o);
@@ -203,19 +209,21 @@ public abstract class DObject<O> {
                                                                                                                                     }, null);
 
     public static final Setable<DObject, Set<? extends DObject>>                                               CHILDREN             = Observed.of("CHILDREN", Set.of(), (tx, o, b, a) -> {
-                                                                                                                                        Setable.<Set<? extends DObject>, DObject> diff(Set.of(), b, a,                   //
+                                                                                                                                        Setable.<Set<? extends DObject>, DObject> diff(Set.of(), b, a,                             //
                                                                                                                                                 e -> e.activate(o, tx.parent()), e -> e.deactivate(o, tx.parent()));
                                                                                                                                     });
     @SuppressWarnings("unchecked")
-    public static final Setable<DObject, Compound>                                                             TRANSACTION          = Observed.of("TRANSACTION", null, (tx, o, b, a) -> {
+    public static final Setable<DObject, Compound>                                                             TRANSACTION          = DObserved.of("TRANSACTION", null, false, false, false, true, (dObject, pre, post, first) -> {
+                                                                                                                                        if (first && pre != null && post == null) {
+                                                                                                                                            dObject.stop(dClareMPS());
+                                                                                                                                        }
+                                                                                                                                    }, (tx, o, b, a) -> {
                                                                                                                                         if (a != null) {
-                                                                                                                                            o.rule(CHILDREN, a,                                                          //
-                                                                                                                                                    () -> CHILDREN.set(o, o.getAllChildren().toSet()),                   //
+                                                                                                                                            o.rule(CHILDREN, a,                                                                    //
+                                                                                                                                                    () -> CHILDREN.set(o, o.getAllChildren().toSet()),                             //
                                                                                                                                                     () -> CHILDREN.set(o, Set.of()), Priority.pre);
                                                                                                                                         }
-                                                                                                                                    });
-
-    public static final Setable<DObject, DObjectState>                                                         STATE                = Observed.of("STATE", DObjectState.orphan);
+                                                                                                                                    }, null);
 
     private static final Setable<DObject, Set<Observer>>                                                       RULE_INSTANCES       = Setable.of("RULE_INSTANCES", Set.of(), (tx, o, b, a) -> {
                                                                                                                                         Setable.<Set<Observer>, Observer> diff(Set.of(), b, a, Leaf::trigger, tx::clear);
@@ -225,7 +233,7 @@ public abstract class DObject<O> {
 
     protected static final Setable<DObject, Map<DMessageType, Boolean>>                                        MESSAGES_OR_CHILDREN = Observed.of("MESSAGES_OR_CHILDREN", MESSAGE_BOOLEAN_MAP);
 
-    protected static final Setable<DObject, Map<DMessageType, QualifiedSet<Pair<DFeature, String>, DMessage>>> MESSAGES             = Observed.of("MESSAGES", Map.of());
+    protected static final Setable<DObject, Map<DMessageType, QualifiedSet<Pair<DFeature, String>, DMessage>>> MESSAGES             = Observed.of("MESSAGES", MESSAGE_QSET_MAP);
 
     public static DClareMPS dClareMPS() {
         return DClareMPS.instance();
@@ -259,16 +267,18 @@ public abstract class DObject<O> {
     }
 
     public Set<? extends DObject> getMessageChildren(DMessageType type) {
-        Set<? extends DObject> set = MESSAGE_CHILDREN.get(this).get(type);
-        return set != null ? set : Set.of();
+        return MESSAGE_CHILDREN.get(this).get(type);
     }
 
     public QualifiedSet<Pair<DFeature, String>, DMessage> getMessages(DMessageType type) {
-        QualifiedSet<Pair<DFeature, String>, DMessage> set = MESSAGES.get(this).get(type);
-        return set != null ? set : MESSAGES_SET;
+        return MESSAGES.get(this).get(type);
     }
 
     public abstract boolean isReadOnly();
+
+    public boolean isOwned() {
+        return PARENT.get(this) != null;
+    }
 
     @Override
     public String toString() {
@@ -306,16 +316,18 @@ public abstract class DObject<O> {
         }
     }
 
-    protected void init(DClareMPS dClareMPS) {
+    protected abstract ContainingCollection<? extends DObject<?>> init(DClareMPS dClareMPS);
+
+    protected final void start(DClareMPS dClareMPS) {
+        for (DObject<?> child : dClareMPS.read(() -> init(dClareMPS))) {
+            child.start(dClareMPS);
+        }
     }
 
     @SuppressWarnings("unchecked")
     protected Compound activate(DObject parent, Compound parentTx) {
-        DClareMPS dClareMPS = dClareMPS();
-        dClareMPS.read(() -> init(dClareMPS));
         Compound tx = Compound.of(this, parentTx);
         TRANSACTION.set(this, tx);
-        STATE.set(this, DObjectState.contained);
         rule(TYPE, tx, () -> {
             TYPE.set(this, getType());
         }, () -> TYPE.set(this, TYPE.getDefault()), Priority.pre);
@@ -325,11 +337,6 @@ public abstract class DObject<O> {
         rule(RULE_INSTANCES, tx, () -> {
             RULE_INSTANCES.set(this, TYPE.get(this).getRules().map(r -> rule(tx, r)).toSet());
         }, () -> RULE_INSTANCES.set(this, RULE_INSTANCES.getDefault()), Priority.pre);
-        if (!(this instanceof DRepository || this instanceof DModule)) {
-            rule(STATE, tx, () -> {
-                STATE.set(this, PARENT.get(this).state());
-            }, Priority.pre);
-        }
         rule(MESSAGES_OR_CHILDREN, tx, () -> {
             MESSAGES_OR_CHILDREN.set(this, MESSAGE_TYPES.toMap(t -> Entry.of(t, !getMessages(t).isEmpty() || !getMessageChildren(t).isEmpty())));
         }, () -> MESSAGES_OR_CHILDREN.set(this, MESSAGES_OR_CHILDREN.getDefault()), Priority.post);
@@ -352,7 +359,7 @@ public abstract class DObject<O> {
             for (DAttribute attr : TYPE.get(this).getAttributes()) {
                 if (attr instanceof DObservedAttribute && !attr.isComposite() && !attr.isSynthetic()) {
                     Set<DObject> orphans = Collection.of(attr.getIterable(this)).filter(DObject.class).filter(o -> {
-                        return !((DObject) o).isReadOnly() && !isInOtherRepository((DObject) o) && !((DObject) o).isOwned();
+                        return !((DObject) o).isReadOnly() && !isInOtherRepository((DObject) o) && TRANSACTION.get((DObject) o) == null;
                     }).toSet();
                     if (!orphans.isEmpty()) {
                         addMessage(attr, DMessageType.warning, "ORPHAN", "Non-composite attribute " + attr + " of " + this + " references orphans " + orphans.toString().substring(3));
@@ -380,8 +387,8 @@ public abstract class DObject<O> {
     protected void exit(DClareMPS dClareMPS) {
     }
 
-    protected DObjectState state() {
-        return STATE.get(this);
+    protected void stop(DClareMPS dClareMPS) {
+        exit(dClareMPS);
     }
 
     protected void deactivate(DObject parent, Compound parentTx) {
@@ -389,8 +396,6 @@ public abstract class DObject<O> {
         if (tx != null && Objects.equals(parentTx, tx.parent())) {
             TRANSACTION.set(this, null);
         }
-        STATE.set(this, DObjectState.orphan);
-        dClareMPS().read(() -> exit(dClareMPS()));
     }
 
     @SuppressWarnings("unchecked")
@@ -401,14 +406,6 @@ public abstract class DObject<O> {
             }
         }
         return null;
-    }
-
-    protected boolean isOwned() {
-        return PARENT.get(this) != null && STATE.get(this) != DObjectState.orphan;
-    }
-
-    protected boolean isActive() {
-        return PARENT.get(this) != null && STATE.get(this) == DObjectState.active;
     }
 
     protected abstract DType getType();
@@ -497,7 +494,7 @@ public abstract class DObject<O> {
     final private Observer makeRule(Object id, Compound tx, Runnable action, Runnable stop, Priority prio) {
         return new NonCheckingObserver(id, tx, () -> {
             if (tx.equals(DObject.TRANSACTION.get(this))) {
-                if (prio == Priority.pre ? isOwned() : isActive()) {
+                if (isOwned()) {
                     action.run();
                 }
             } else {

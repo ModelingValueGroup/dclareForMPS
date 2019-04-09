@@ -85,11 +85,11 @@ public class DRepository extends DObject<SRepository> implements SRepository {
     }
 
     @Override
-    protected void init(DClareMPS dClareMPS) {
-        super.init(dClareMPS);
-        MODULES.set(this, modules().map(m -> DModule.of(m)).toSet());
+    protected Set<? extends DObject<?>> init(DClareMPS dClareMPS) {
+        Set<DModule> modules = modules().map(m -> DModule.of(m)).toSet();
+        MODULES.set(this, modules);
         addRepositoryListener(new Listener(this, dClareMPS));
-        dClareMPS().root().put(this, () -> dClareMPS().schedule(() -> STATE.set(this, DObjectState.active)));
+        return modules;
     }
 
     protected static Set<SModule> modules() {
@@ -102,8 +102,9 @@ public class DRepository extends DObject<SRepository> implements SRepository {
         removeRepositoryListener(new Listener(this, dClareMPS));
     }
 
+    @Override
     protected void stop(DClareMPS dClareMPS) {
-        exit(dClareMPS);
+        super.stop(dClareMPS);
         for (DModule child : modules().map(m -> DModule.of(m))) {
             child.stop(dClareMPS);
         }
@@ -115,13 +116,8 @@ public class DRepository extends DObject<SRepository> implements SRepository {
     }
 
     @Override
-    protected final boolean isOwned() {
-        return STATE.get(this) != DObjectState.orphan;
-    }
-
-    @Override
-    protected final boolean isActive() {
-        return STATE.get(this) == DObjectState.active;
+    public boolean isOwned() {
+        return true;
     }
 
     @Override
@@ -169,20 +165,22 @@ public class DRepository extends DObject<SRepository> implements SRepository {
 
         @Override
         public void moduleAdded(SModule sModule) {
-            b().schedule(() -> {
+            b().handleMPSChange(() -> {
                 if (b().project.getProjectModules().contains(sModule)) {
                     DModule dModule = DModule.of(sModule);
                     MODULES.set(DRepository.this, Set::add, dModule);
+                    dModule.start(b());
                 }
             });
         }
 
         @Override
         public void beforeModuleRemoved(SModule sModule) {
-            b().schedule(() -> {
+            b().handleMPSChange(() -> {
                 if (b().project.getProjectModules().contains(sModule)) {
                     DModule dModule = DModule.of(sModule);
                     MODULES.set(DRepository.this, Set::remove, dModule);
+                    dModule.stop(b());
                 }
             });
         }
