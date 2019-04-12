@@ -34,7 +34,7 @@ import org.modelingvalue.transactions.EmptyMandatoryException;
 import org.modelingvalue.transactions.Leaf;
 import org.modelingvalue.transactions.Observed;
 import org.modelingvalue.transactions.Observer;
-import org.modelingvalue.transactions.Phase;
+import org.modelingvalue.transactions.Direction;
 import org.modelingvalue.transactions.Priority;
 import org.modelingvalue.transactions.Rule;
 import org.modelingvalue.transactions.Setable;
@@ -63,7 +63,7 @@ public abstract class DObject<O> {
     protected static final class DRuleObserver extends Observer {
 
         private DRuleObserver(DRule rule, Compound parent, Runnable action) {
-            super(RULE.get(rule), parent, () -> ((DRuleObserver) AbstractLeaf.getCurrent().transaction()).run(action), Phase.triggeredForward, Priority.postDepth);
+            super(RULE.get(rule), parent, () -> ((DRuleObserver) AbstractLeaf.getCurrent().transaction()).run(action), Direction.forward, Priority.postDepth);
         }
 
         private void run(Runnable action) {
@@ -158,7 +158,7 @@ public abstract class DObject<O> {
     protected final static class NonCheckingObserver extends Observer {
 
         protected NonCheckingObserver(Object id, Compound parent, Runnable action, Priority prio) {
-            super(DObject.RULE.get(id), parent, action, Phase.triggeredForward, prio);
+            super(DObject.RULE.get(id), parent, action, Direction.forward, prio);
         }
 
         @Override

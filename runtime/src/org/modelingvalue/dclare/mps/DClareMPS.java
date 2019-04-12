@@ -33,7 +33,7 @@ import org.modelingvalue.transactions.Constant;
 import org.modelingvalue.transactions.Imperative;
 import org.modelingvalue.transactions.Leaf;
 import org.modelingvalue.transactions.Observed;
-import org.modelingvalue.transactions.Phase;
+import org.modelingvalue.transactions.Direction;
 import org.modelingvalue.transactions.Priority;
 import org.modelingvalue.transactions.Root;
 import org.modelingvalue.transactions.Setable;
@@ -95,7 +95,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
 
             @Override
             protected State post(State pre) {
-                return run(trigger(pre, clearOrphans, Phase.triggeredBackward));
+                return run(trigger(pre, clearOrphans, Direction.backward));
             }
 
             @Override
