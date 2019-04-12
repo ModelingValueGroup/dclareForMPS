@@ -97,9 +97,6 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
     public void toMPS(O object, T pre, T post, boolean first) {
         try {
             toMPS.accept(object, pre, post, first);
-            if (object instanceof DObject) {
-                ((DObject) object).removeMessages(this, DMessageType.error, "TO MPS");
-            }
         } catch (Throwable t) {
             if (object instanceof DObject) {
                 ((DObject) object).addMessage(this, DMessageType.error, "TO MPS", t);

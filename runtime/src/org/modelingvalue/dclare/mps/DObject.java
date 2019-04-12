@@ -30,11 +30,11 @@ import org.modelingvalue.dclare.mps.DAttribute.DObservedAttribute;
 import org.modelingvalue.transactions.AbstractLeaf;
 import org.modelingvalue.transactions.Compound;
 import org.modelingvalue.transactions.Constant;
+import org.modelingvalue.transactions.Direction;
 import org.modelingvalue.transactions.EmptyMandatoryException;
 import org.modelingvalue.transactions.Leaf;
 import org.modelingvalue.transactions.Observed;
 import org.modelingvalue.transactions.Observer;
-import org.modelingvalue.transactions.Direction;
 import org.modelingvalue.transactions.Priority;
 import org.modelingvalue.transactions.Rule;
 import org.modelingvalue.transactions.Setable;
@@ -67,9 +67,6 @@ public abstract class DObject<O> {
         }
 
         private void run(Runnable action) {
-            if (firstTime()) {
-                object().removeMessages(dRule(), DMessageType.error, "EXCEPTION");
-            }
             if (parent.equals(DObject.TRANSACTION.get(object()))) {
                 if (object().isOwned()) {
                     try {
