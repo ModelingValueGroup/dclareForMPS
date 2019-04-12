@@ -137,14 +137,14 @@ public class DModule extends DObject<SModule> implements SModule {
         Compound tx = super.activate(parent, parentTx);
         rule(LANGUAGES, tx, () -> {
             LANGUAGES.set(this, dClareMPS().read(() -> languages(original())).addAll(MODELS.get(this).flatMap(DModel::getUsedLanguages)));
-        }, () -> LANGUAGES.set(this, Set.of()), Priority.pre);
+        }, () -> LANGUAGES.set(this, Set.of()), Priority.preDepth);
         rule(MODELS, tx, () -> {
             if (isAllwaysActive() && hasRuleSets(LANGUAGES.get(this))) {
                 MODELS.set(this, dClareMPS().read(() -> models(original())).map(m -> DModel.of(m)).toSet());
             } else {
                 MODELS.set(this, REFERENCED.get(this));
             }
-        }, () -> MODELS.set(this, Set.of()), Priority.pre);
+        }, () -> MODELS.set(this, Set.of()), Priority.preDepth);
         return tx;
     }
 

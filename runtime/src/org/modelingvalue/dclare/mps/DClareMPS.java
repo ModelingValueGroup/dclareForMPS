@@ -33,6 +33,7 @@ import org.modelingvalue.transactions.Constant;
 import org.modelingvalue.transactions.Imperative;
 import org.modelingvalue.transactions.Leaf;
 import org.modelingvalue.transactions.Observed;
+import org.modelingvalue.transactions.Phase;
 import org.modelingvalue.transactions.Priority;
 import org.modelingvalue.transactions.Root;
 import org.modelingvalue.transactions.Setable;
@@ -94,7 +95,14 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
 
             @Override
             protected State post(State pre) {
-                return run(trigger(pre, clearOrphans, Priority.post));
+                return run(trigger(pre, clearOrphans, Phase.triggeredBackward));
+            }
+
+            @Override
+            public void startOpposite() {
+                if (TRACE) {
+                    System.err.println(DCLARE + "START OPPOSITE " + this);
+                }
             }
 
             @Override
@@ -141,7 +149,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
             if (TRACE) {
                 System.err.println(DCLARE + "END READ " + this);
             }
-        }, Priority.pre);
+        }, Priority.preDepth);
         root.put("activate", () -> {
             imperative = root.addIntegration("MPSNative", this, r -> {
                 if (imperative != null && !COMMITTING.get()) {
@@ -159,7 +167,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
             if (TRACE) {
                 System.err.println(DCLARE + "END ACTIVATE " + this);
             }
-        }, Priority.pre);
+        }, Priority.preDepth);
     }
 
     @Override
@@ -182,7 +190,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
                 } else {
                     read(action);
                 }
-            }, Priority.high);
+            }, Priority.preDepth);
         }
     }
 

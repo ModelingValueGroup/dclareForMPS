@@ -151,12 +151,12 @@ public class DModel extends DObject<SModel> implements SModel {
         rule(USED_LANGUAGES, tx, () -> {
             Set<SLanguage> ls = dClareMPS().read(() -> Collection.of(((SModelBase) original()).importedLanguageIds()).toSet());
             USED_LANGUAGES.set(this, ls.addAll(ROOTS.get(this).flatMap(r -> DNode.USED_LANGUAGES.get(r))));
-        }, () -> USED_LANGUAGES.set(this, Set.of()), Priority.pre);
+        }, () -> USED_LANGUAGES.set(this, Set.of()), Priority.preDepth);
         rule(USED_MODELS, tx, () -> {
             DClareMPS dClareMPS = dClareMPS();
             Set<DModel> ls = dClareMPS.read(() -> Collection.of(((SModelBase) original()).getModelImports()).map(r -> DModel.of(r.resolve(dClareMPS.getRepository().original()))).toSet());
             USED_MODELS.set(this, ls.addAll(ROOTS.get(this).flatMap(r -> DNode.USED_MODELS.get(r))).remove(this));
-        }, () -> USED_MODELS.set(this, Set.of()), Priority.pre);
+        }, () -> USED_MODELS.set(this, Set.of()), Priority.preDepth);
         rule(DModule.REFERENCED, tx, () -> {
             USED_MODELS.get(this).forEach(m -> DModule.REFERENCED.set(DModule.of(m.original().getModule()), Set::add, m));
         });

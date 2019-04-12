@@ -34,6 +34,7 @@ import org.modelingvalue.transactions.EmptyMandatoryException;
 import org.modelingvalue.transactions.Leaf;
 import org.modelingvalue.transactions.Observed;
 import org.modelingvalue.transactions.Observer;
+import org.modelingvalue.transactions.Phase;
 import org.modelingvalue.transactions.Priority;
 import org.modelingvalue.transactions.Rule;
 import org.modelingvalue.transactions.Setable;
@@ -62,7 +63,7 @@ public abstract class DObject<O> {
     protected static final class DRuleObserver extends Observer {
 
         private DRuleObserver(DRule rule, Compound parent, Runnable action) {
-            super(RULE.get(rule), parent, () -> ((DRuleObserver) AbstractLeaf.getCurrent().transaction()).run(action), Priority.high);
+            super(RULE.get(rule), parent, () -> ((DRuleObserver) AbstractLeaf.getCurrent().transaction()).run(action), Phase.triggeredForward, Priority.postDepth);
         }
 
         private void run(Runnable action) {
@@ -157,7 +158,7 @@ public abstract class DObject<O> {
     protected final static class NonCheckingObserver extends Observer {
 
         protected NonCheckingObserver(Object id, Compound parent, Runnable action, Priority prio) {
-            super(DObject.RULE.get(id), parent, action, prio);
+            super(DObject.RULE.get(id), parent, action, Phase.triggeredForward, prio);
         }
 
         @Override
@@ -217,7 +218,7 @@ public abstract class DObject<O> {
                                                                                                                                         if (a != null) {
                                                                                                                                             o.rule(CHILDREN, a,                                                          //
                                                                                                                                                     () -> CHILDREN.set(o, o.getAllChildren().toSet()),                   //
-                                                                                                                                                    () -> CHILDREN.set(o, Set.of()), Priority.pre);
+                                                                                                                                                    () -> CHILDREN.set(o, Set.of()), Priority.preDepth);
                                                                                                                                         }
                                                                                                                                     });
 
@@ -335,19 +336,19 @@ public abstract class DObject<O> {
         TRANSACTION.set(this, tx);
         rule(TYPE, tx, () -> {
             TYPE.set(this, getType());
-        }, () -> TYPE.set(this, TYPE.getDefault()), Priority.pre);
+        }, () -> TYPE.set(this, TYPE.getDefault()), Priority.preDepth);
         rule("<CONSTANT_CONTAINMENT>", tx, () -> {
             TYPE.get(this).getAttributes().filter(DAttribute::isConstant).filter(DAttribute::isComposite).forEach(cc -> cc.get(this));
-        }, Priority.pre);
+        }, Priority.preDepth);
         rule(RULE_INSTANCES, tx, () -> {
             RULE_INSTANCES.set(this, TYPE.get(this).getRules().map(r -> rule(tx, r)).toSet());
-        }, () -> RULE_INSTANCES.set(this, RULE_INSTANCES.getDefault()), Priority.pre);
+        }, () -> RULE_INSTANCES.set(this, RULE_INSTANCES.getDefault()), Priority.preDepth);
         rule(MESSAGES_OR_CHILDREN, tx, () -> {
             MESSAGES_OR_CHILDREN.set(this, MESSAGE_TYPES.toMap(t -> Entry.of(t, !getMessages(t).isEmpty() || !getMessageChildren(t).isEmpty())));
-        }, () -> MESSAGES_OR_CHILDREN.set(this, MESSAGES_OR_CHILDREN.getDefault()), Priority.post);
+        }, () -> MESSAGES_OR_CHILDREN.set(this, MESSAGES_OR_CHILDREN.getDefault()), Priority.postDepth);
         rule(MESSAGE_CHILDREN, tx, () -> {
             MESSAGE_CHILDREN.set(this, MESSAGE_TYPES.toMap(t -> Entry.of(t, CHILDREN.get(this).filter(c -> MESSAGES_OR_CHILDREN.get(c).get(t)).toSet())));
-        }, () -> MESSAGE_CHILDREN.set(this, MESSAGE_CHILDREN.getDefault()), Priority.post);
+        }, () -> MESSAGE_CHILDREN.set(this, MESSAGE_CHILDREN.getDefault()), Priority.postDepth);
         rule("<EMPTY_MANDATORY>", tx, () -> {
             for (DAttribute attr : TYPE.get(this).getAttributes()) {
                 if (attr instanceof DObservedAttribute && attr.isMandatory() && !attr.isSynthetic()) {
@@ -358,7 +359,7 @@ public abstract class DObject<O> {
                     }
                 }
             }
-        }, () -> MESSAGES.set(this, MESSAGES.getDefault()), Priority.post);
+        }, () -> MESSAGES.set(this, MESSAGES.getDefault()), Priority.postDepth);
         rule("<REFERENCED_ORPHAN>", tx, () -> {
             for (DAttribute attr : TYPE.get(this).getAttributes()) {
                 if (attr instanceof DObservedAttribute && !attr.isComposite() && !attr.isSynthetic()) {
@@ -372,7 +373,7 @@ public abstract class DObject<O> {
                     }
                 }
             }
-        }, () -> MESSAGES.set(this, MESSAGES.getDefault()), Priority.post);
+        }, () -> MESSAGES.set(this, MESSAGES.getDefault()), Priority.postDepth);
         return tx;
 
     }
@@ -472,7 +473,7 @@ public abstract class DObject<O> {
 
     final public void rule(Object id, Compound tx, Runnable action) {
         makeRule(id, tx, action, () -> {
-        }, Priority.high).trigger();
+        }, Priority.postDepth).trigger();
     }
 
     final public void rule(Object id, Compound tx, Runnable action, Priority prio) {
@@ -481,7 +482,7 @@ public abstract class DObject<O> {
     }
 
     final public void rule(Object id, Compound tx, Runnable action, Runnable stop) {
-        makeRule(id, tx, action, stop, Priority.high).trigger();
+        makeRule(id, tx, action, stop, Priority.postDepth).trigger();
     }
 
     final public void rule(Object id, Compound tx, Runnable action, Runnable stop, Priority prio) {

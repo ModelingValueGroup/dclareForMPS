@@ -362,10 +362,10 @@ public class DNode extends DObject<SNode> implements SNode {
         rule(MODEL, tx, () -> {
             DNode p = ancestor(DNode.class);
             MODEL.set(this, p != null ? MODEL.get(p) : ancestor(DModel.class));
-        }, () -> MODEL.set(this, null), Priority.pre);
+        }, () -> MODEL.set(this, null), Priority.preDepth);
         rule(USED_LANGUAGES, tx, () -> {
             USED_LANGUAGES.set(this, getChildren().flatMap(r -> DNode.USED_LANGUAGES.get(r)).toSet().add(getConcept().getLanguage()));
-        }, () -> USED_LANGUAGES.set(this, Set.of()), Priority.pre);
+        }, () -> USED_LANGUAGES.set(this, Set.of()), Priority.preDepth);
         rule(USED_MODELS, tx, () -> {
             USED_MODELS.set(this, getChildren().flatMap(r -> DNode.USED_MODELS.get(r)).toSet().addAll(getReferenced().map(r -> {
                 DModel dm = MODEL.get(r);
@@ -377,7 +377,7 @@ public class DNode extends DObject<SNode> implements SNode {
                 }
                 return dm;
             }).toSet()));
-        }, () -> USED_MODELS.set(this, Set.of()), Priority.pre);
+        }, () -> USED_MODELS.set(this, Set.of()), Priority.preDepth);
         return tx;
     }
 
