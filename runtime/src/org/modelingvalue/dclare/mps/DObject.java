@@ -429,7 +429,7 @@ public abstract class DObject<O> {
     }
 
     protected void addMessage(DFeature feature, String id, TooManyObservedException tmse) {
-        DMessage message = new DMessage(this, feature, DMessageType.warning, id, tmse.getMessage());
+        DMessage message = new DMessage(this, feature, DMessageType.warning, id, tmse.getSimpleMessage());
         int number = 0;
         for (Slot slot : tmse.getObserved()) {
             Observed observed = slot.observed();
@@ -440,7 +440,7 @@ public abstract class DObject<O> {
     }
 
     protected void addMessage(DFeature feature, String id, TooManyObserversException tmse) {
-        DMessage message = new DMessage(this, feature, DMessageType.warning, id, tmse.getMessage());
+        DMessage message = new DMessage(this, feature, DMessageType.warning, id, tmse.getSimpleMessage());
         int number = 0;
         for (Observer observer : tmse.getObservers()) {
             if (observer instanceof DRuleObserver) {
