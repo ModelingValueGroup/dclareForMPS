@@ -25,7 +25,7 @@ In an installation of JetBrains MPS (2018.3 or higher) ...
 4. rebuild the example project  
 
 ## Examples
-Multiple examples can be found in the DcalreForMPS_Examples repository on GitHub:
+Multiple examples can be found in the DclareForMPS_Examples repository on GitHub:
 [DclareForMPS_Examples on GitHub](https://github.com/ModelingValueGroup/DclareForMPS_Examples)
 
-Please refer to the README.md files that are part of the examples
+For more info, please read to the README.md files that are part of the examples.
