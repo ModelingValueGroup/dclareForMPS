@@ -28,4 +28,4 @@ In an installation of JetBrains MPS (2018.3 or higher) ...
 Multiple examples can be found in the DclareForMPS_Examples repository on GitHub:
 [DclareForMPS_Examples on GitHub](https://github.com/ModelingValueGroup/DclareForMPS_Examples)
 
-For more info, please read to the README.md files that are part of the examples.
+For more info, please read the README.md files that are part of these examples.
