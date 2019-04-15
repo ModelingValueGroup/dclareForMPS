@@ -135,16 +135,16 @@ public class DModule extends DObject<SModule> implements SModule {
     @Override
     protected Compound activate(DObject parent, Compound parentTx) {
         Compound tx = super.activate(parent, parentTx);
-        rule(LANGUAGES, tx, () -> {
-            LANGUAGES.set(this, dClareMPS().read(() -> languages(original())).addAll(MODELS.get(this).flatMap(DModel::getUsedLanguages)));
-        }, () -> LANGUAGES.set(this, Set.of()), Priority.preDepth);
-        rule(MODELS, tx, () -> {
-            if (isAllwaysActive() && hasRuleSets(LANGUAGES.get(this))) {
-                MODELS.set(this, dClareMPS().read(() -> models(original())).map(m -> DModel.of(m)).toSet());
+        DObject.<DModule> rule(LANGUAGES, tx, o -> {
+            LANGUAGES.set(o, dClareMPS().read(() -> languages(o.original())).addAll(MODELS.get(o).flatMap(DModel::getUsedLanguages)));
+        }, o -> LANGUAGES.set(o, Set.of()), Priority.preDepth);
+        DObject.<DModule> rule(MODELS, tx, o -> {
+            if (isAllwaysActive() && hasRuleSets(LANGUAGES.get(o))) {
+                MODELS.set(o, dClareMPS().read(() -> models(o.original())).map(m -> DModel.of(m)).toSet());
             } else {
-                MODELS.set(this, REFERENCED.get(this));
+                MODELS.set(o, REFERENCED.get(o));
             }
-        }, () -> MODELS.set(this, Set.of()), Priority.preDepth);
+        }, o -> MODELS.set(o, Set.of()), Priority.preDepth);
         return tx;
     }
 

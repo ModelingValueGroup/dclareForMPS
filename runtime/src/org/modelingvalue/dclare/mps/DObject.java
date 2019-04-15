@@ -14,6 +14,7 @@
 package org.modelingvalue.dclare.mps;
 
 import java.util.Objects;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
@@ -58,12 +59,14 @@ public abstract class DObject<O> {
 
     private static final Map<DMessageType, QualifiedSet<Pair<DFeature, String>, DMessage>> MESSAGE_QSET_MAP    = MESSAGE_TYPES.sequential().toMap(t -> Entry.of(t, MESSAGE_QSET));
 
-    private static final Constant<Object, Rule>                                            RULE                = Constant.of("<RULE>", r -> new Rule(r));
+    @SuppressWarnings("unchecked")
+    private static final Constant<DRule, Rule>                                             RULE                = Constant.of("<RULE>",                                            //
+            r -> Rule.of(r, o -> ((DRuleObserver) AbstractLeaf.getCurrent().transaction()).run(() -> r.run(o))));
 
     protected static final class DRuleObserver extends Observer {
 
-        private DRuleObserver(DRule rule, Compound parent, Runnable action) {
-            super(RULE.get(rule), parent, () -> ((DRuleObserver) AbstractLeaf.getCurrent().transaction()).run(action), Direction.forward, Priority.postDepth);
+        private DRuleObserver(DRule rule, Compound parent) {
+            super(RULE.get(rule), parent, Direction.forward, Priority.postDepth);
         }
 
         private void run(Runnable action) {
@@ -154,8 +157,8 @@ public abstract class DObject<O> {
 
     protected final static class NonCheckingObserver extends Observer {
 
-        protected NonCheckingObserver(Object id, Compound parent, Runnable action, Priority prio) {
-            super(DObject.RULE.get(id), parent, action, Direction.forward, prio);
+        protected NonCheckingObserver(Rule rule, Compound parent, Priority prio) {
+            super(rule, parent, Direction.forward, prio);
         }
 
         @Override
@@ -211,11 +214,11 @@ public abstract class DObject<O> {
                                                                                                                                                 e -> e.activate(o, tx.parent()), e -> e.deactivate(o, tx.parent()));
                                                                                                                                     });
     @SuppressWarnings("unchecked")
-    public static final Setable<DObject, Compound>                                                             TRANSACTION          = Observed.of("TRANSACTION", null, (tx, o, b, a) -> {
+    public static final Setable<DObject, Compound>                                                             TRANSACTION          = Observed.of("TRANSACTION", null, (tx, x, b, a) -> {
                                                                                                                                         if (a != null) {
-                                                                                                                                            o.rule(CHILDREN, a,                                                          //
-                                                                                                                                                    () -> CHILDREN.set(o, o.getAllChildren().toSet()),                   //
-                                                                                                                                                    () -> CHILDREN.set(o, Set.of()), Priority.preDepth);
+                                                                                                                                            rule(CHILDREN, a,                                                            //
+                                                                                                                                                    o -> CHILDREN.set(o, o.getAllChildren().toSet()),                    //
+                                                                                                                                                    o -> CHILDREN.set(o, Set.of()), Priority.preDepth);
                                                                                                                                         }
                                                                                                                                     });
 
@@ -331,46 +334,46 @@ public abstract class DObject<O> {
     protected Compound activate(DObject parent, Compound parentTx) {
         Compound tx = Compound.of(this, parentTx);
         TRANSACTION.set(this, tx);
-        rule(TYPE, tx, () -> {
-            TYPE.set(this, getType());
-        }, () -> TYPE.set(this, TYPE.getDefault()), Priority.preDepth);
-        rule("<CONSTANT_CONTAINMENT>", tx, () -> {
-            TYPE.get(this).getAttributes().filter(DAttribute::isConstant).filter(DAttribute::isComposite).forEach(cc -> cc.get(this));
+        rule(TYPE, tx, o -> {
+            TYPE.set(o, getType());
+        }, o -> TYPE.set(o, TYPE.getDefault()), Priority.preDepth);
+        rule("<CONSTANT_CONTAINMENT>", tx, o -> {
+            TYPE.get(o).getAttributes().filter(DAttribute::isConstant).filter(DAttribute::isComposite).forEach(cc -> cc.get(o));
         }, Priority.preDepth);
-        rule(RULE_INSTANCES, tx, () -> {
-            RULE_INSTANCES.set(this, TYPE.get(this).getRules().map(r -> rule(tx, r)).toSet());
-        }, () -> RULE_INSTANCES.set(this, RULE_INSTANCES.getDefault()), Priority.preDepth);
-        rule(MESSAGES_OR_CHILDREN, tx, () -> {
-            MESSAGES_OR_CHILDREN.set(this, MESSAGE_TYPES.toMap(t -> Entry.of(t, !getMessages(t).isEmpty() || !getMessageChildren(t).isEmpty())));
-        }, () -> MESSAGES_OR_CHILDREN.set(this, MESSAGES_OR_CHILDREN.getDefault()), Priority.postDepth);
-        rule(MESSAGE_CHILDREN, tx, () -> {
-            MESSAGE_CHILDREN.set(this, MESSAGE_TYPES.toMap(t -> Entry.of(t, CHILDREN.get(this).filter(c -> MESSAGES_OR_CHILDREN.get(c).get(t)).toSet())));
-        }, () -> MESSAGE_CHILDREN.set(this, MESSAGE_CHILDREN.getDefault()), Priority.postDepth);
-        rule("<EMPTY_MANDATORY>", tx, () -> {
-            for (DAttribute attr : TYPE.get(this).getAttributes()) {
+        rule(RULE_INSTANCES, tx, o -> {
+            RULE_INSTANCES.set(o, TYPE.get(o).getRules().map(r -> o.rule(tx, r)).toSet());
+        }, o -> RULE_INSTANCES.set(o, RULE_INSTANCES.getDefault()), Priority.preDepth);
+        rule(MESSAGES_OR_CHILDREN, tx, o -> {
+            MESSAGES_OR_CHILDREN.set(o, MESSAGE_TYPES.toMap(t -> Entry.of(t, !getMessages(t).isEmpty() || !getMessageChildren(t).isEmpty())));
+        }, o -> MESSAGES_OR_CHILDREN.set(o, MESSAGES_OR_CHILDREN.getDefault()), Priority.postDepth);
+        rule(MESSAGE_CHILDREN, tx, o -> {
+            MESSAGE_CHILDREN.set(o, MESSAGE_TYPES.toMap(t -> Entry.of(t, CHILDREN.get(o).filter(c -> MESSAGES_OR_CHILDREN.get(c).get(t)).toSet())));
+        }, o -> MESSAGE_CHILDREN.set(o, MESSAGE_CHILDREN.getDefault()), Priority.postDepth);
+        rule("<EMPTY_MANDATORY>", tx, o -> {
+            for (DAttribute attr : TYPE.get(o).getAttributes()) {
                 if (attr instanceof DObservedAttribute && attr.isMandatory() && !attr.isSynthetic()) {
-                    if (attr.get(this) == null) {
-                        addMessage(attr, DMessageType.warning, "MANDATORY", "Mandatory attribute " + attr + " of " + this + " is null");
+                    if (attr.get(o) == null) {
+                        addMessage(attr, DMessageType.warning, "MANDATORY", "Mandatory attribute " + attr + " of " + o + " is null");
                     } else {
                         removeMessages(attr, DMessageType.warning, "MANDATORY");
                     }
                 }
             }
-        }, () -> MESSAGES.set(this, MESSAGES.getDefault()), Priority.postDepth);
-        rule("<REFERENCED_ORPHAN>", tx, () -> {
-            for (DAttribute attr : TYPE.get(this).getAttributes()) {
+        }, o -> MESSAGES.set(o, MESSAGES.getDefault()), Priority.postDepth);
+        rule("<REFERENCED_ORPHAN>", tx, o -> {
+            for (DAttribute attr : TYPE.get(o).getAttributes()) {
                 if (attr instanceof DObservedAttribute && !attr.isComposite() && !attr.isSynthetic()) {
-                    Set<DObject> orphans = Collection.of(attr.getIterable(this)).filter(DObject.class).filter(o -> {
-                        return !((DObject) o).isReadOnly() && !isInOtherRepository((DObject) o) && TRANSACTION.get((DObject) o) == null;
+                    Set<DObject> orphans = Collection.of(attr.getIterable(o)).filter(DObject.class).filter(r -> {
+                        return !((DObject) r).isReadOnly() && !isInOtherRepository((DObject) r) && TRANSACTION.get((DObject) r) == null;
                     }).toSet();
                     if (!orphans.isEmpty()) {
-                        addMessage(attr, DMessageType.warning, "ORPHAN", "Non-composite attribute " + attr + " of " + this + " references orphans " + orphans.toString().substring(3));
+                        addMessage(attr, DMessageType.warning, "ORPHAN", "Non-composite attribute " + attr + " of " + o + " references orphans " + orphans.toString().substring(3));
                     } else {
                         removeMessages(attr, DMessageType.warning, "ORPHAN");
                     }
                 }
             }
-        }, () -> MESSAGES.set(this, MESSAGES.getDefault()), Priority.postDepth);
+        }, o -> MESSAGES.set(o, MESSAGES.getDefault()), Priority.postDepth);
         return tx;
 
     }
@@ -405,9 +408,8 @@ public abstract class DObject<O> {
 
     protected abstract DType getType();
 
-    @SuppressWarnings("unchecked")
     private Observer rule(Compound parent, DRule rule) {
-        return new DRuleObserver(rule, parent, () -> rule.run(DObject.this));
+        return new DRuleObserver(rule, parent);
     }
 
     protected void addMessage(DFeature feature, String id, TooManyChangesException tmce) {
@@ -468,35 +470,36 @@ public abstract class DObject<O> {
         AbstractLeaf.getCurrent().runNonObserving(() -> MESSAGES.set(this, (m, s) -> m.put(type, s), getMessages(type).removeKey(Pair.of(feature, id))));
     }
 
-    final public void rule(Object id, Compound tx, Runnable action) {
-        makeRule(id, tx, action, () -> {
+    final public static <O extends DObject> void rule(Object id, Compound tx, Consumer<O> action) {
+        makeRule(id, tx, action, o -> {
         }, Priority.postDepth).trigger();
     }
 
-    final public void rule(Object id, Compound tx, Runnable action, Priority prio) {
-        makeRule(id, tx, action, () -> {
+    final public static <O extends DObject> void rule(Object id, Compound tx, Consumer<O> action, Priority prio) {
+        makeRule(id, tx, action, o -> {
         }, prio).trigger();
     }
 
-    final public void rule(Object id, Compound tx, Runnable action, Runnable stop) {
+    final public static <O extends DObject> void rule(Object id, Compound tx, Consumer<O> action, Consumer<O> stop) {
         makeRule(id, tx, action, stop, Priority.postDepth).trigger();
     }
 
-    final public void rule(Object id, Compound tx, Runnable action, Runnable stop, Priority prio) {
+    final public static <O extends DObject> void rule(Object id, Compound tx, Consumer<O> action, Consumer<O> stop, Priority prio) {
         makeRule(id, tx, action, stop, prio).trigger();
     }
 
-    final private Observer makeRule(Object id, Compound tx, Runnable action, Runnable stop, Priority prio) {
-        return new NonCheckingObserver(id, tx, () -> {
-            if (tx.equals(DObject.TRANSACTION.get(this))) {
-                if (isOwned()) {
-                    action.run();
+    @SuppressWarnings("unchecked")
+    final private static <O extends DObject> Observer makeRule(Object id, Compound tx, Consumer<O> action, Consumer<O> stop, Priority prio) {
+        return new NonCheckingObserver(Rule.of(id, o -> {
+            if (AbstractLeaf.getCurrent().parent().equals(DObject.TRANSACTION.get((O) o))) {
+                if (((O) o).isOwned()) {
+                    action.accept((O) o);
                 }
             } else {
-                stop.run();
+                stop.accept((O) o);
                 throw new StopObserverException("Stopped");
             }
-        }, prio);
+        }), tx, prio);
     }
 
 }

@@ -29,11 +29,12 @@ import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.collections.util.TriConsumer;
 import org.modelingvalue.transactions.AbstractLeaf;
 import org.modelingvalue.transactions.AbstractLeaf.AbstractLeafRun;
+import org.modelingvalue.transactions.Action;
 import org.modelingvalue.transactions.Constant;
+import org.modelingvalue.transactions.Direction;
 import org.modelingvalue.transactions.Imperative;
 import org.modelingvalue.transactions.Leaf;
 import org.modelingvalue.transactions.Observed;
-import org.modelingvalue.transactions.Direction;
 import org.modelingvalue.transactions.Priority;
 import org.modelingvalue.transactions.Root;
 import org.modelingvalue.transactions.Setable;
@@ -80,7 +81,8 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
             System.err.println(DCLARE + "START " + this);
         }
         root = new Root(this, thePool, prevState, 100, maxTotalNrOfChanges, maxNrOfChanges, maxNrOfObserved, maxNrOfObservers, 4, null) {
-            private final Leaf clearOrphans = Leaf.of("clearOrphans", this, this::clearOrphans);
+
+            private final Leaf clearOrphans = Leaf.of(Action.of("clearOrphans", o -> clearOrphans()), this);
 
             private void clearOrphans() {
                 if (!isTimeTraveling() && imperative != null) {

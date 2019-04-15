@@ -359,15 +359,15 @@ public class DNode extends DObject<SNode> implements SNode {
     @Override
     protected Compound activate(DObject parent, Compound parentTx) {
         Compound tx = super.activate(parent, parentTx);
-        rule(MODEL, tx, () -> {
-            DNode p = ancestor(DNode.class);
-            MODEL.set(this, p != null ? MODEL.get(p) : ancestor(DModel.class));
-        }, () -> MODEL.set(this, null), Priority.preDepth);
-        rule(USED_LANGUAGES, tx, () -> {
-            USED_LANGUAGES.set(this, getChildren().flatMap(r -> DNode.USED_LANGUAGES.get(r)).toSet().add(getConcept().getLanguage()));
-        }, () -> USED_LANGUAGES.set(this, Set.of()), Priority.preDepth);
-        rule(USED_MODELS, tx, () -> {
-            USED_MODELS.set(this, getChildren().flatMap(r -> DNode.USED_MODELS.get(r)).toSet().addAll(getReferenced().map(r -> {
+        DObject.<DNode> rule(MODEL, tx, o -> {
+            DNode p = o.ancestor(DNode.class);
+            MODEL.set(o, p != null ? MODEL.get(p) : o.ancestor(DModel.class));
+        }, o -> MODEL.set(o, null), Priority.preDepth);
+        DObject.<DNode> rule(USED_LANGUAGES, tx, o -> {
+            USED_LANGUAGES.set(o, o.getChildren().flatMap(r -> DNode.USED_LANGUAGES.get(r)).toSet().add(o.getConcept().getLanguage()));
+        }, o -> USED_LANGUAGES.set(o, Set.of()), Priority.preDepth);
+        DObject.<DNode> rule(USED_MODELS, tx, o -> {
+            USED_MODELS.set(o, o.getChildren().flatMap(r -> DNode.USED_MODELS.get(r)).toSet().addAll(o.getReferenced().map(r -> {
                 DModel dm = MODEL.get(r);
                 if (dm == null) {
                     SModel sm = r.original().getModel();
@@ -377,7 +377,7 @@ public class DNode extends DObject<SNode> implements SNode {
                 }
                 return dm;
             }).toSet()));
-        }, () -> USED_MODELS.set(this, Set.of()), Priority.preDepth);
+        }, o -> USED_MODELS.set(o, Set.of()), Priority.preDepth);
         return tx;
     }
 

@@ -51,20 +51,20 @@ public class DCopy extends DNode {
         SConcept c = original().getConcept();
         for (SProperty property : c.getProperties()) {
             Observed<DNode, String> observed = PROPERTY.get(property);
-            rule(observed, tx, () -> observed.set(this, observed.get(copied)));
+            DObject.<DCopy> rule(observed, tx, o -> observed.set(o, observed.get(copied)));
         }
         for (SContainmentLink containment : c.getContainmentLinks()) {
             if (containment.isMultiple()) {
                 Observed<DNode, List<DNode>> observed = MANY_CONTAINMENT.get(containment);
-                rule(observed, tx, () -> observed.set(this, copy(observed.get(copied))));
+                DObject.<DCopy> rule(observed, tx, o -> observed.set(o, o.copy(observed.get(copied))));
             } else {
                 Observed<DNode, DNode> observed = SINGLE_CONTAINMENT.get(containment);
-                rule(observed, tx, () -> observed.set(this, copy(observed.get(copied))));
+                DObject.<DCopy> rule(observed, tx, o -> observed.set(o, o.copy(observed.get(copied))));
             }
         }
         for (SReferenceLink reference : c.getReferenceLinks()) {
             Observed<DNode, DNode> observed = REFERENCE.get(reference);
-            rule(observed, tx, () -> observed.set(this, map(observed.get(copied))));
+            DObject.<DCopy> rule(observed, tx, o -> observed.set(o, o.map(observed.get(copied))));
         }
         return tx;
     }

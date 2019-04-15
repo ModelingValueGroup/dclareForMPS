@@ -148,17 +148,17 @@ public class DModel extends DObject<SModel> implements SModel {
     @Override
     protected Compound activate(DObject parent, Compound parentTx) {
         Compound tx = super.activate(parent, parentTx);
-        rule(USED_LANGUAGES, tx, () -> {
-            Set<SLanguage> ls = dClareMPS().read(() -> Collection.of(((SModelBase) original()).importedLanguageIds()).toSet());
-            USED_LANGUAGES.set(this, ls.addAll(ROOTS.get(this).flatMap(r -> DNode.USED_LANGUAGES.get(r))));
-        }, () -> USED_LANGUAGES.set(this, Set.of()), Priority.preDepth);
-        rule(USED_MODELS, tx, () -> {
+        DObject.<DModel> rule(USED_LANGUAGES, tx, o -> {
+            Set<SLanguage> ls = dClareMPS().read(() -> Collection.of(((SModelBase) o.original()).importedLanguageIds()).toSet());
+            USED_LANGUAGES.set(o, ls.addAll(ROOTS.get(o).flatMap(r -> DNode.USED_LANGUAGES.get(r))));
+        }, o -> USED_LANGUAGES.set(o, Set.of()), Priority.preDepth);
+        DObject.<DModel> rule(USED_MODELS, tx, o -> {
             DClareMPS dClareMPS = dClareMPS();
-            Set<DModel> ls = dClareMPS.read(() -> Collection.of(((SModelBase) original()).getModelImports()).map(r -> DModel.of(r.resolve(dClareMPS.getRepository().original()))).toSet());
-            USED_MODELS.set(this, ls.addAll(ROOTS.get(this).flatMap(r -> DNode.USED_MODELS.get(r))).remove(this));
-        }, () -> USED_MODELS.set(this, Set.of()), Priority.preDepth);
-        rule(DModule.REFERENCED, tx, () -> {
-            USED_MODELS.get(this).forEach(m -> DModule.REFERENCED.set(DModule.of(m.original().getModule()), Set::add, m));
+            Set<DModel> ls = dClareMPS.read(() -> Collection.of(((SModelBase) o.original()).getModelImports()).map(r -> DModel.of(r.resolve(dClareMPS.getRepository().original()))).toSet());
+            USED_MODELS.set(o, ls.addAll(ROOTS.get(o).flatMap(r -> DNode.USED_MODELS.get(r))).remove(o));
+        }, o -> USED_MODELS.set(o, Set.of()), Priority.preDepth);
+        DObject.<DModel> rule(DModule.REFERENCED, tx, o -> {
+            USED_MODELS.get(o).forEach(m -> DModule.REFERENCED.set(DModule.of(m.original().getModule()), Set::add, m));
         });
         return tx;
     }
