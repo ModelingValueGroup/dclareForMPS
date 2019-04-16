@@ -113,7 +113,7 @@ public abstract class DObject<O> {
         protected void checkTooManyObservers(AbstractLeafRun<?> run, Object object, Observed observed, Set<Observer> obervers) {
             if (object instanceof DObject && observed instanceof DObserved && !((DObserved) observed).isSynthetic()) {
                 try {
-                    super.checkTooManyObservers(run, object, observed, obervers.filter(o -> o instanceof DRuleObserver && !((DRuleObserver) o).dRule().isSynthetic()).toSet());
+                    super.checkTooManyObservers(run, object, observed, obervers.filter(o -> o instanceof DRuleObserver).toSet());
                 } catch (TooManyObserversException e) {
                     ((DObject) object).addMessage((DObserved) observed, "TOO_MANY_OBSERVERS", e);
                 }
