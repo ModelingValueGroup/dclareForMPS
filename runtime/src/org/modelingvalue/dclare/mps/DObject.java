@@ -60,13 +60,13 @@ public abstract class DObject<O> {
     private static final Map<DMessageType, QualifiedSet<Pair<DFeature, String>, DMessage>> MESSAGE_QSET_MAP    = MESSAGE_TYPES.sequential().toMap(t -> Entry.of(t, MESSAGE_QSET));
 
     @SuppressWarnings("unchecked")
-    private static final Constant<DRule, Rule>                                             RULE                = Constant.of("<RULE>",                                            //
-            r -> Rule.of(r, o -> ((DRuleObserver) AbstractLeaf.getCurrent().transaction()).run(() -> r.run(o))));
+    private static final Constant<DRule, Rule>                                             RULE                = Constant.of("RULE",                                              //
+            r -> Rule.of(r, o -> ((DRuleObserver) AbstractLeaf.getCurrent().transaction()).run(() -> r.run(o)), Direction.forward, Priority.postDepth));
 
     protected static final class DRuleObserver extends Observer {
 
         private DRuleObserver(DRule rule, Compound parent) {
-            super(RULE.get(rule), parent, Direction.forward, Priority.postDepth);
+            super(RULE.get(rule), parent);
         }
 
         private void run(Runnable action) {
@@ -157,8 +157,8 @@ public abstract class DObject<O> {
 
     protected final static class NonCheckingObserver extends Observer {
 
-        protected NonCheckingObserver(Rule rule, Compound parent, Priority prio) {
-            super(rule, parent, Direction.forward, prio);
+        protected NonCheckingObserver(Rule rule, Compound parent) {
+            super(rule, parent);
         }
 
         @Override
@@ -175,62 +175,116 @@ public abstract class DObject<O> {
 
     }
 
-    protected static final Context<Boolean>                                                                    EMPTY_ATTRIBUTE      = Context.of(false);
-    protected static final Context<Boolean>                                                                    COLLECTION_ATTRIBUTE = Context.of(false);
+    protected static final Context<Boolean>                                                                    EMPTY_ATTRIBUTE           = Context.of(false);
+    protected static final Context<Boolean>                                                                    COLLECTION_ATTRIBUTE      = Context.of(false);
 
-    public static final Setable<DObject, DType>                                                                TYPE                 = Observed.of("TYPE", new DType("<DUMMY_TYPE>") {
-                                                                                                                                        @Override
-                                                                                                                                        public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
-                                                                                                                                            return Set.of();
-                                                                                                                                        }
+    public static final Setable<DObject, DType>                                                                TYPE                      = Observed.of("TYPE", new DType("<DUMMY_TYPE>") {
+                                                                                                                                             @Override
+                                                                                                                                             public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
+                                                                                                                                                 return Set.of();
+                                                                                                                                             }
 
-                                                                                                                                        @Override
-                                                                                                                                        public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
-                                                                                                                                            return Set.of();
-                                                                                                                                        }
+                                                                                                                                             @Override
+                                                                                                                                             public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
+                                                                                                                                                 return Set.of();
+                                                                                                                                             }
 
-                                                                                                                                        @Override
-                                                                                                                                        public Set<SLanguage> getLanguages() {
-                                                                                                                                            return Set.of();
-                                                                                                                                        }
-                                                                                                                                    });
+                                                                                                                                             @Override
+                                                                                                                                             public Set<SLanguage> getLanguages() {
+                                                                                                                                                 return Set.of();
+                                                                                                                                             }
+                                                                                                                                         });
 
-    public static final Setable<DObject, DObserved>                                                            CONTAINING           = DObserved.of("CONTAINING", null, false, false, false, true, (o, b, a, f) -> {
-                                                                                                                                    }, null);
+    public static final Setable<DObject, DObserved>                                                            CONTAINING                = DObserved.of("CONTAINING", null, false, false, false, true, (o, b, a, f) -> {
+                                                                                                                                         }, null);
 
     @SuppressWarnings("unchecked")
-    public static final Setable<DObject, DObject>                                                              PARENT               = DObserved.of("PARENT", null, false, false, false, true, (o, b, a, f) -> {
-                                                                                                                                    }, (tx, o, b, a) -> {
-                                                                                                                                        if (b != null && a != null) {
-                                                                                                                                            DObserved cont = CONTAINING.get(o);
-                                                                                                                                            if (cont != null) {
-                                                                                                                                                cont.remove(b, o);
-                                                                                                                                            }
-                                                                                                                                        }
-                                                                                                                                    }, null);
+    public static final Setable<DObject, DObject>                                                              PARENT                    = DObserved.of("PARENT", null, false, false, false, true, (o, b, a, f) -> {
+                                                                                                                                         }, (tx, o, b, a) -> {
+                                                                                                                                             if (b != null && a != null) {
+                                                                                                                                                 DObserved cont = CONTAINING.get(o);
+                                                                                                                                                 if (cont != null) {
+                                                                                                                                                     cont.remove(b, o);
+                                                                                                                                                 }
+                                                                                                                                             }
+                                                                                                                                         }, null);
 
-    public static final Setable<DObject, Set<? extends DObject>>                                               CHILDREN             = Observed.of("CHILDREN", Set.of(), (tx, o, b, a) -> {
-                                                                                                                                        Setable.<Set<? extends DObject>, DObject> diff(Set.of(), b, a,                   //
-                                                                                                                                                e -> e.activate(o, tx.parent()), e -> e.deactivate(o, tx.parent()));
-                                                                                                                                    });
+    public static final Setable<DObject, Set<? extends DObject>>                                               CHILDREN                  = Observed.of("CHILDREN", Set.of(), (tx, o, b, a) -> {
+                                                                                                                                             Setable.<Set<? extends DObject>, DObject> diff(Set.of(), b, a,                                                                                                            //
+                                                                                                                                                     e -> e.activate(o, tx.parent()), e -> e.deactivate(o, tx.parent()));
+                                                                                                                                         });
     @SuppressWarnings("unchecked")
-    public static final Setable<DObject, Compound>                                                             TRANSACTION          = Observed.of("TRANSACTION", null, (tx, x, b, a) -> {
-                                                                                                                                        if (a != null) {
-                                                                                                                                            rule(CHILDREN, a,                                                            //
-                                                                                                                                                    o -> CHILDREN.set(o, o.getAllChildren().toSet()),                    //
-                                                                                                                                                    o -> CHILDREN.set(o, Set.of()), Priority.preDepth);
-                                                                                                                                        }
-                                                                                                                                    });
+    private static final Rule                                                                                  CHILDREN_RULE             = rule(CHILDREN, o -> {
+                                                                                                                                             CHILDREN.set(o, o.getAllChildren().toSet());
+                                                                                                                                         }, o -> {
+                                                                                                                                             CHILDREN.set(o, Set.of());
+                                                                                                                                         }, Priority.preDepth);
 
-    private static final Setable<DObject, Set<Observer>>                                                       RULE_INSTANCES       = Setable.of("RULE_INSTANCES", Set.of(), (tx, o, b, a) -> {
-                                                                                                                                        Setable.<Set<Observer>, Observer> diff(Set.of(), b, a, Leaf::trigger, tx::clear);
-                                                                                                                                    });
+    public static final Setable<DObject, Compound>                                                             TRANSACTION               = Observed.of("TRANSACTION", null, (tx, x, b, a) -> {
+                                                                                                                                             if (a != null) {
+                                                                                                                                                 trigger(DObject.CHILDREN_RULE, a);
+                                                                                                                                             }
+                                                                                                                                         });
 
-    protected static final Setable<DObject, Map<DMessageType, Set<? extends DObject>>>                         MESSAGE_CHILDREN     = Observed.of("MESSAGE_CHILDREN", MESSAGE_SET_MAP);
+    private static final Setable<DObject, Set<Observer>>                                                       RULE_INSTANCES            = Setable.of("RULE_INSTANCES", Set.of(), (tx, o, b, a) -> {
+                                                                                                                                             Setable.<Set<Observer>, Observer> diff(Set.of(), b, a, Leaf::trigger, tx::clear);
+                                                                                                                                         });
 
-    protected static final Setable<DObject, Map<DMessageType, Boolean>>                                        MESSAGES_OR_CHILDREN = Observed.of("MESSAGES_OR_CHILDREN", MESSAGE_BOOLEAN_MAP);
+    protected static final Setable<DObject, Map<DMessageType, Set<? extends DObject>>>                         MESSAGE_CHILDREN          = Observed.of("MESSAGE_CHILDREN", MESSAGE_SET_MAP);
 
-    protected static final Setable<DObject, Map<DMessageType, QualifiedSet<Pair<DFeature, String>, DMessage>>> MESSAGES             = Observed.of("MESSAGES", MESSAGE_QSET_MAP);
+    protected static final Setable<DObject, Map<DMessageType, Boolean>>                                        MESSAGES_OR_CHILDREN      = Observed.of("MESSAGES_OR_CHILDREN", MESSAGE_BOOLEAN_MAP);
+
+    protected static final Setable<DObject, Map<DMessageType, QualifiedSet<Pair<DFeature, String>, DMessage>>> MESSAGES                  = Observed.of("MESSAGES", MESSAGE_QSET_MAP);
+
+    private static final Rule                                                                                  TYPE_RULE                 = rule(TYPE, o -> {
+                                                                                                                                             TYPE.set(o, o.getType());
+                                                                                                                                         }, o -> TYPE.set(o, TYPE.getDefault()), Priority.preDepth);
+
+    @SuppressWarnings("unchecked")
+    private static final Rule                                                                                  CONSTANT_CONTAINMENT_RULE = rule("CONSTANT_CONTAINMENT", o -> {
+                                                                                                                                             TYPE.get(o).getAttributes().filter(DAttribute::isConstant).filter(DAttribute::isComposite).forEach(cc -> cc.get(o));
+                                                                                                                                         }, Priority.preDepth);
+
+    private static final Rule                                                                                  RULE_INSTANCES_RULE       = rule(RULE_INSTANCES, o -> {
+                                                                                                                                             Compound tx = AbstractLeaf.getCurrent().parent();
+                                                                                                                                             RULE_INSTANCES.set(o, TYPE.get(o).getRules().map(r -> o.rule(tx, r)).toSet());
+                                                                                                                                         }, o -> RULE_INSTANCES.set(o, RULE_INSTANCES.getDefault()), Priority.preDepth);
+
+    private static final Rule                                                                                  MESSAGES_OR_CHILDREN_RULE = rule(MESSAGES_OR_CHILDREN, o -> {
+                                                                                                                                             MESSAGES_OR_CHILDREN.set(o, MESSAGE_TYPES.toMap(t -> Entry.of(t, !o.getMessages(t).isEmpty() || !o.getMessageChildren(t).isEmpty())));
+                                                                                                                                         }, o -> MESSAGES_OR_CHILDREN.set(o, MESSAGES_OR_CHILDREN.getDefault()), Priority.postDepth);
+
+    private static final Rule                                                                                  MESSAGE_CHILDREN_RULE     = rule(MESSAGE_CHILDREN, o -> {
+                                                                                                                                             MESSAGE_CHILDREN.set(o, MESSAGE_TYPES.toMap(t -> Entry.of(t, CHILDREN.get(o).filter(c -> MESSAGES_OR_CHILDREN.get(c).get(t)).toSet())));
+                                                                                                                                         }, o -> MESSAGE_CHILDREN.set(o, MESSAGE_CHILDREN.getDefault()), Priority.postDepth);
+
+    @SuppressWarnings("unchecked")
+    private static final Rule                                                                                  EMPTY_MANDATORY_RULE      = rule("EMPTY_MANDATORY", o -> {
+                                                                                                                                             for (DAttribute attr : TYPE.get(o).getAttributes()) {
+                                                                                                                                                 if (attr instanceof DObservedAttribute && attr.isMandatory() && !attr.isSynthetic()) {
+                                                                                                                                                     if (attr.get(o) == null) {
+                                                                                                                                                         o.addMessage(attr, DMessageType.warning, "MANDATORY", "Mandatory attribute " + attr + " of " + o + " is null");
+                                                                                                                                                     } else {
+                                                                                                                                                         o.removeMessages(attr, DMessageType.warning, "MANDATORY");
+                                                                                                                                                     }
+                                                                                                                                                 }
+                                                                                                                                             }
+                                                                                                                                         }, o -> MESSAGES.set(o, MESSAGES.getDefault()), Priority.postDepth);
+
+    @SuppressWarnings("unchecked")
+    private static final Rule                                                                                  REFERENCED_ORPHAN_RULE    = rule("REFERENCED_ORPHAN", o -> {
+                                                                                                                                             for (DAttribute attr : TYPE.get(o).getAttributes()) {
+                                                                                                                                                 if (attr instanceof DObservedAttribute && !attr.isComposite() && !attr.isSynthetic()) {
+                                                                                                                                                     Set<DObject> orphans = Collection.of(attr.getIterable(o)).filter(DObject.class).filter(r ->                                                                       //
+                                                                                                                                                     !((DObject) r).isReadOnly() && !o.isInOtherRepository((DObject) r) && TRANSACTION.get((DObject) r) == null).toSet();
+                                                                                                                                                     if (!orphans.isEmpty()) {
+                                                                                                                                                         o.addMessage(attr, DMessageType.warning, "ORPHAN", "Non-composite attribute " + attr + " of " + o + " references orphans " + orphans.toString().substring(3));
+                                                                                                                                                     } else {
+                                                                                                                                                         o.removeMessages(attr, DMessageType.warning, "ORPHAN");
+                                                                                                                                                     }
+                                                                                                                                                 }
+                                                                                                                                             }
+                                                                                                                                         }, o -> MESSAGES.set(o, MESSAGES.getDefault()), Priority.postDepth);
 
     public static DClareMPS dClareMPS() {
         return DClareMPS.instance();
@@ -330,52 +384,17 @@ public abstract class DObject<O> {
         exit(dClareMPS);
     }
 
-    @SuppressWarnings("unchecked")
     protected Compound activate(DObject parent, Compound parentTx) {
         Compound tx = Compound.of(this, parentTx);
         TRANSACTION.set(this, tx);
-        rule(TYPE, tx, o -> {
-            TYPE.set(o, getType());
-        }, o -> TYPE.set(o, TYPE.getDefault()), Priority.preDepth);
-        rule("<CONSTANT_CONTAINMENT>", tx, o -> {
-            TYPE.get(o).getAttributes().filter(DAttribute::isConstant).filter(DAttribute::isComposite).forEach(cc -> cc.get(o));
-        }, Priority.preDepth);
-        rule(RULE_INSTANCES, tx, o -> {
-            RULE_INSTANCES.set(o, TYPE.get(o).getRules().map(r -> o.rule(tx, r)).toSet());
-        }, o -> RULE_INSTANCES.set(o, RULE_INSTANCES.getDefault()), Priority.preDepth);
-        rule(MESSAGES_OR_CHILDREN, tx, o -> {
-            MESSAGES_OR_CHILDREN.set(o, MESSAGE_TYPES.toMap(t -> Entry.of(t, !getMessages(t).isEmpty() || !getMessageChildren(t).isEmpty())));
-        }, o -> MESSAGES_OR_CHILDREN.set(o, MESSAGES_OR_CHILDREN.getDefault()), Priority.postDepth);
-        rule(MESSAGE_CHILDREN, tx, o -> {
-            MESSAGE_CHILDREN.set(o, MESSAGE_TYPES.toMap(t -> Entry.of(t, CHILDREN.get(o).filter(c -> MESSAGES_OR_CHILDREN.get(c).get(t)).toSet())));
-        }, o -> MESSAGE_CHILDREN.set(o, MESSAGE_CHILDREN.getDefault()), Priority.postDepth);
-        rule("<EMPTY_MANDATORY>", tx, o -> {
-            for (DAttribute attr : TYPE.get(o).getAttributes()) {
-                if (attr instanceof DObservedAttribute && attr.isMandatory() && !attr.isSynthetic()) {
-                    if (attr.get(o) == null) {
-                        addMessage(attr, DMessageType.warning, "MANDATORY", "Mandatory attribute " + attr + " of " + o + " is null");
-                    } else {
-                        removeMessages(attr, DMessageType.warning, "MANDATORY");
-                    }
-                }
-            }
-        }, o -> MESSAGES.set(o, MESSAGES.getDefault()), Priority.postDepth);
-        rule("<REFERENCED_ORPHAN>", tx, o -> {
-            for (DAttribute attr : TYPE.get(o).getAttributes()) {
-                if (attr instanceof DObservedAttribute && !attr.isComposite() && !attr.isSynthetic()) {
-                    Set<DObject> orphans = Collection.of(attr.getIterable(o)).filter(DObject.class).filter(r -> {
-                        return !((DObject) r).isReadOnly() && !isInOtherRepository((DObject) r) && TRANSACTION.get((DObject) r) == null;
-                    }).toSet();
-                    if (!orphans.isEmpty()) {
-                        addMessage(attr, DMessageType.warning, "ORPHAN", "Non-composite attribute " + attr + " of " + o + " references orphans " + orphans.toString().substring(3));
-                    } else {
-                        removeMessages(attr, DMessageType.warning, "ORPHAN");
-                    }
-                }
-            }
-        }, o -> MESSAGES.set(o, MESSAGES.getDefault()), Priority.postDepth);
+        trigger(TYPE_RULE, tx);
+        trigger(CONSTANT_CONTAINMENT_RULE, tx);
+        trigger(RULE_INSTANCES_RULE, tx);
+        trigger(MESSAGES_OR_CHILDREN_RULE, tx);
+        trigger(MESSAGE_CHILDREN_RULE, tx);
+        trigger(EMPTY_MANDATORY_RULE, tx);
+        trigger(REFERENCED_ORPHAN_RULE, tx);
         return tx;
-
     }
 
     protected void deactivate(DObject parent, Compound parentTx) {
@@ -470,27 +489,31 @@ public abstract class DObject<O> {
         AbstractLeaf.getCurrent().runNonObserving(() -> MESSAGES.set(this, (m, s) -> m.put(type, s), getMessages(type).removeKey(Pair.of(feature, id))));
     }
 
-    final public static <O extends DObject> void rule(Object id, Compound tx, Consumer<O> action) {
-        makeRule(id, tx, action, o -> {
-        }, Priority.postDepth).trigger();
+    final public static void trigger(Rule rule, Compound tx) {
+        new NonCheckingObserver(rule, tx).trigger();
     }
 
-    final public static <O extends DObject> void rule(Object id, Compound tx, Consumer<O> action, Priority prio) {
-        makeRule(id, tx, action, o -> {
-        }, prio).trigger();
+    final public static <O extends DObject> Rule rule(Object id, Consumer<O> action) {
+        return makeRule(id, action, o -> {
+        }, Priority.postDepth);
     }
 
-    final public static <O extends DObject> void rule(Object id, Compound tx, Consumer<O> action, Consumer<O> stop) {
-        makeRule(id, tx, action, stop, Priority.postDepth).trigger();
+    final public static <O extends DObject> Rule rule(Object id, Consumer<O> action, Priority prio) {
+        return makeRule(id, action, o -> {
+        }, prio);
     }
 
-    final public static <O extends DObject> void rule(Object id, Compound tx, Consumer<O> action, Consumer<O> stop, Priority prio) {
-        makeRule(id, tx, action, stop, prio).trigger();
+    final public static <O extends DObject> Rule rule(Object id, Consumer<O> action, Consumer<O> stop) {
+        return makeRule(id, action, stop, Priority.postDepth);
+    }
+
+    final public static <O extends DObject> Rule rule(Object id, Consumer<O> action, Consumer<O> stop, Priority prio) {
+        return makeRule(id, action, stop, prio);
     }
 
     @SuppressWarnings("unchecked")
-    final private static <O extends DObject> Observer makeRule(Object id, Compound tx, Consumer<O> action, Consumer<O> stop, Priority prio) {
-        return new NonCheckingObserver(Rule.of(id, o -> {
+    final private static <O extends DObject> Rule makeRule(Object id, Consumer<O> action, Consumer<O> stop, Priority prio) {
+        return Rule.of(id, o -> {
             if (AbstractLeaf.getCurrent().parent().equals(DObject.TRANSACTION.get((O) o))) {
                 if (((O) o).isOwned()) {
                     action.accept((O) o);
@@ -499,7 +522,7 @@ public abstract class DObject<O> {
                 stop.accept((O) o);
                 throw new StopObserverException("Stopped");
             }
-        }), tx, prio);
+        }, prio);
     }
 
 }

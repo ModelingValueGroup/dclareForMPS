@@ -19,17 +19,41 @@ import org.jetbrains.mps.openapi.language.SProperty;
 import org.jetbrains.mps.openapi.language.SReferenceLink;
 import org.jetbrains.mps.openapi.model.SNode;
 import org.modelingvalue.collections.List;
+import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.transactions.AbstractLeaf;
 import org.modelingvalue.transactions.Compound;
 import org.modelingvalue.transactions.Constant;
 import org.modelingvalue.transactions.Observed;
+import org.modelingvalue.transactions.Rule;
 
 public class DCopy extends DNode {
 
     private static final Constant<Pair<SNode, DNode>, DCopy> DCOPY       = Constant.of("DCOPY", p -> new DCopy(p.a(), p.b(), null));
 
     private static final Observed<Pair<DCopy, DNode>, DCopy> DCHILD_COPY = Observed.of("DCHILD_COPY", null);
+
+    private static final Constant<SConcept, Set<Rule>>       RULES       = Constant.of("RULES", c -> {
+                                                                             Set<Rule> rules = Set.of();
+                                                                             for (SProperty property : c.getProperties()) {
+                                                                                 Observed<DNode, String> observed = PROPERTY.get(property);
+                                                                                 rules = rules.add(DObject.<DCopy> rule(observed, o -> observed.set(o, observed.get(o.copied))));
+                                                                             }
+                                                                             for (SContainmentLink containment : c.getContainmentLinks()) {
+                                                                                 if (containment.isMultiple()) {
+                                                                                     Observed<DNode, List<DNode>> observed = MANY_CONTAINMENT.get(containment);
+                                                                                     rules = rules.add(DObject.<DCopy> rule(observed, o -> observed.set(o, o.copy(observed.get(o.copied)))));
+                                                                                 } else {
+                                                                                     Observed<DNode, DNode> observed = SINGLE_CONTAINMENT.get(containment);
+                                                                                     rules = rules.add(DObject.<DCopy> rule(observed, o -> observed.set(o, o.copy(observed.get(o.copied)))));
+                                                                                 }
+                                                                             }
+                                                                             for (SReferenceLink reference : c.getReferenceLinks()) {
+                                                                                 Observed<DNode, DNode> observed = REFERENCE.get(reference);
+                                                                                 rules = rules.add(DObject.<DCopy> rule(observed, o -> observed.set(o, o.map(observed.get(o.copied)))));
+                                                                             }
+                                                                             return rules;
+                                                                         });
 
     public static DCopy of(SNode copy, DNode copied) {
         return DCOPY.get(Pair.of(copy, copied));
@@ -48,23 +72,8 @@ public class DCopy extends DNode {
     @Override
     protected Compound activate(DObject parent, Compound parentTx) {
         Compound tx = super.activate(parent, parentTx);
-        SConcept c = original().getConcept();
-        for (SProperty property : c.getProperties()) {
-            Observed<DNode, String> observed = PROPERTY.get(property);
-            DObject.<DCopy> rule(observed, tx, o -> observed.set(o, observed.get(copied)));
-        }
-        for (SContainmentLink containment : c.getContainmentLinks()) {
-            if (containment.isMultiple()) {
-                Observed<DNode, List<DNode>> observed = MANY_CONTAINMENT.get(containment);
-                DObject.<DCopy> rule(observed, tx, o -> observed.set(o, o.copy(observed.get(copied))));
-            } else {
-                Observed<DNode, DNode> observed = SINGLE_CONTAINMENT.get(containment);
-                DObject.<DCopy> rule(observed, tx, o -> observed.set(o, o.copy(observed.get(copied))));
-            }
-        }
-        for (SReferenceLink reference : c.getReferenceLinks()) {
-            Observed<DNode, DNode> observed = REFERENCE.get(reference);
-            DObject.<DCopy> rule(observed, tx, o -> observed.set(o, o.map(observed.get(copied))));
+        for (Rule rule : RULES.get(original().getConcept())) {
+            trigger(rule, tx);
         }
         return tx;
     }
