@@ -71,7 +71,7 @@ public abstract class DObject<O> implements Contained {
         }
 
         private void run(Runnable action) {
-            if (parent.equals(DObject.TRANSACTION.get(object()))) {
+            if (parent().equals(DObject.TRANSACTION.get(object()))) {
                 if (object().isOwned()) {
                     try {
                         action.run();
@@ -103,7 +103,7 @@ public abstract class DObject<O> implements Contained {
         }
 
         private DObject object() {
-            return (DObject) parent.contained();
+            return (DObject) parent().contained();
         }
 
         private DRule dRule() {
