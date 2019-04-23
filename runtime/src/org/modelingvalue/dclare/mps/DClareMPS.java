@@ -31,6 +31,7 @@ import org.modelingvalue.transactions.AbstractLeaf;
 import org.modelingvalue.transactions.AbstractLeaf.AbstractLeafRun;
 import org.modelingvalue.transactions.Action;
 import org.modelingvalue.transactions.Constant;
+import org.modelingvalue.transactions.Contained;
 import org.modelingvalue.transactions.Direction;
 import org.modelingvalue.transactions.Imperative;
 import org.modelingvalue.transactions.Leaf;
@@ -43,7 +44,7 @@ import org.modelingvalue.transactions.State;
 import jetbrains.mps.smodel.language.LanguageRegistry;
 import jetbrains.mps.smodel.language.LanguageRuntime;
 
-public class DClareMPS implements TriConsumer<State, State, Boolean> {
+public class DClareMPS implements TriConsumer<State, State, Boolean>, Contained {
 
     protected static final boolean                          TRACE         = Boolean.getBoolean("DCLARE_TRACE");
 
@@ -252,7 +253,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
     }
 
     public static DClareMPS instance() {
-        return (DClareMPS) AbstractLeaf.getCurrent().root().getId();
+        return (DClareMPS) AbstractLeaf.getCurrent().root().contained();
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
@@ -338,5 +339,10 @@ public class DClareMPS implements TriConsumer<State, State, Boolean> {
 
     public Root root() {
         return root;
+    }
+
+    @Override
+    public Contained dContainer() {
+        return null;
     }
 }

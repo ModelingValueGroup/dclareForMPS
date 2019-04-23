@@ -31,6 +31,7 @@ import org.modelingvalue.dclare.mps.DAttribute.DObservedAttribute;
 import org.modelingvalue.transactions.AbstractLeaf;
 import org.modelingvalue.transactions.Compound;
 import org.modelingvalue.transactions.Constant;
+import org.modelingvalue.transactions.Contained;
 import org.modelingvalue.transactions.Direction;
 import org.modelingvalue.transactions.EmptyMandatoryException;
 import org.modelingvalue.transactions.Leaf;
@@ -47,7 +48,7 @@ import org.modelingvalue.transactions.TooManyObservedException;
 import org.modelingvalue.transactions.TooManyObserversException;
 
 @SuppressWarnings("rawtypes")
-public abstract class DObject<O> {
+public abstract class DObject<O> implements Contained {
 
     private static final QualifiedSet<Pair<DFeature, String>, DMessage>                    MESSAGE_QSET        = QualifiedSet.of(m -> Pair.of(m.feature(), m.id()));
 
@@ -102,7 +103,7 @@ public abstract class DObject<O> {
         }
 
         private DObject object() {
-            return (DObject) parent.getId();
+            return (DObject) parent.contained();
         }
 
         private DRule dRule() {
@@ -315,6 +316,11 @@ public abstract class DObject<O> {
         } else {
             return false;
         }
+    }
+
+    @Override
+    public Contained dContainer() {
+        return PARENT.get(this);
     }
 
     public Set<? extends DObject> getMessageChildren(DMessageType type) {
