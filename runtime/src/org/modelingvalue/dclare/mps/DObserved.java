@@ -26,9 +26,7 @@ import org.modelingvalue.collections.ContainingCollection;
 import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.QuadConsumer;
-import org.modelingvalue.dclare.mps.DObject.DRuleObserver;
-import org.modelingvalue.transactions.AbstractLeaf;
-import org.modelingvalue.transactions.AbstractLeaf.AbstractLeafRun;
+import org.modelingvalue.transactions.LeafTransaction;
 import org.modelingvalue.transactions.Observed;
 import org.modelingvalue.transactions.Setable;
 
@@ -39,7 +37,7 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
         return of(id, def, mandatory, composite, deferred, synthetic, toMPS, null, source);
     }
 
-    public static <C extends DObject, V> DObserved<C, V> of(Object id, V def, boolean mandatory, boolean composite, boolean deferred, boolean synthetic, QuadConsumer<C, V, V, Boolean> toMPS, QuadConsumer<AbstractLeafRun<?>, C, V, V> changed, Supplier<SNode> source) {
+    public static <C extends DObject, V> DObserved<C, V> of(Object id, V def, boolean mandatory, boolean composite, boolean deferred, boolean synthetic, QuadConsumer<C, V, V, Boolean> toMPS, QuadConsumer<LeafTransaction, C, V, V> changed, Supplier<SNode> source) {
         return new DObserved<C, V>(id, def, mandatory, composite, deferred, synthetic, toMPS, changed, source);
     }
 
@@ -48,17 +46,16 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
     private final boolean                        deferred;
     private final Supplier<SNode>                source;
     private final boolean                        synthetic;
-    private final boolean                        composite;
 
-    protected DObserved(Object id, T def, boolean mandatory, boolean composite, boolean deferred, boolean synthetic, QuadConsumer<O, T, T, Boolean> toMPS, QuadConsumer<AbstractLeafRun<?>, O, T, T> changed, Supplier<SNode> source) {
-        super(id, def, changed);
+    protected DObserved(Object id, T def, boolean mandatory, boolean composite, boolean deferred, boolean synthetic, QuadConsumer<O, T, T, Boolean> toMPS, QuadConsumer<LeafTransaction, O, T, T> changed, Supplier<SNode> source) {
+        super(id, def, composite, changed);
         if (composite) {
-            QuadConsumer<AbstractLeafRun<?>, O, T, T> superChanged = this.changed;
+            QuadConsumer<LeafTransaction, O, T, T> superChanged = this.changed;
             this.changed = (tx, o, b, a) -> {
                 if (superChanged != null) {
                     superChanged.accept(tx, o, b, a);
                 }
-                Setable.<Set<DObject<?>>, DObject<?>> diff(Set.of(), DObject.getDObjectSet(b), DObject.getDObjectSet(a), added -> {
+                Setable.<Set<DObject<?>>, DObject<?>> diff(DObject.getDObjectSet(b), DObject.getDObjectSet(a), added -> {
                     DObject.PARENT.set(added, o);
                     DObject.CONTAINING.set(added, this);
                     added.start(DObject.dClareMPS());
@@ -78,11 +75,10 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
         this.deferred = deferred;
         this.source = source;
         this.synthetic = synthetic;
-        this.composite = composite;
     }
 
     public boolean isComposite() {
-        return composite;
+        return containment();
     }
 
     public boolean isDeferred() {
@@ -174,12 +170,12 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
         T result = object != null ? super.get(object) : null;
         if (object != null) {
             if (result == null && mandatory) {
-                if (AbstractLeaf.getCurrent().transaction() instanceof DRuleObserver) {
-                    DObject.EMPTY_ATTRIBUTE.set(true);
+                if (LeafTransaction.getCurrent() instanceof DRule.DObserverTransaction) {
+                    DRule.EMPTY_ATTRIBUTE.set(true);
                 }
             } else if (result instanceof java.util.Collection || result instanceof ContainingCollection) {
-                if (AbstractLeaf.getCurrent().transaction() instanceof DRuleObserver) {
-                    DObject.COLLECTION_ATTRIBUTE.set(true);
+                if (LeafTransaction.getCurrent() instanceof DRule.DObserverTransaction) {
+                    DRule.COLLECTION_ATTRIBUTE.set(true);
                 }
             }
         }

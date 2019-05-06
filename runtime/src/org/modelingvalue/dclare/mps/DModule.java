@@ -31,11 +31,10 @@ import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.ContainingCollection;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
-import org.modelingvalue.transactions.Compound;
 import org.modelingvalue.transactions.Constant;
 import org.modelingvalue.transactions.Observed;
+import org.modelingvalue.transactions.Observer;
 import org.modelingvalue.transactions.Priority;
-import org.modelingvalue.transactions.Rule;
 import org.modelingvalue.transactions.Setable;
 
 import jetbrains.mps.extapi.model.SModelBase;
@@ -71,22 +70,22 @@ public class DModule extends DObject<SModule> implements SModule {
                                                                                        }, null);
 
     public static final Observed<DModule, Set<SLanguage>>               LANGUAGES      = Observed.of("LANGUAGES", Set.of(), (tx, o, b, a) -> {
-                                                                                           Setable.<Set<SLanguage>, SLanguage> diff(Set.of(), b, a,                                                                  //
+                                                                                           Setable.<Set<SLanguage>, SLanguage> diff(b, a,                                                                            //
                                                                                                    x -> DClareMPS.ALL_LANGUAGES.set(dClareMPS(), Set::add, x), x -> {
                                                                                                                                                                                       });
                                                                                        });
 
-    private static final Rule                                           LANGUAGES_RULE = DObject.<DModule> rule(LANGUAGES, o -> {
+    private static final Observer<DModule>                              LANGUAGES_RULE = DObject.<DModule> observer(LANGUAGES, o -> {
                                                                                            LANGUAGES.set(o, dClareMPS().read(() -> languages(o.original())).addAll(MODELS.get(o).flatMap(DModel::getUsedLanguages)));
-                                                                                       }, o -> LANGUAGES.set(o, Set.of()), Priority.preDepth);
+                                                                                       }, Priority.preDepth);
 
-    private static final Rule                                           MODELS_RULE    = DObject.<DModule> rule(MODELS, o -> {
+    private static final Observer<DModule>                              MODELS_RULE    = DObject.<DModule> observer(MODELS, o -> {
                                                                                            if (o.isAllwaysActive() && o.hasRuleSets(LANGUAGES.get(o))) {
                                                                                                MODELS.set(o, dClareMPS().read(() -> models(o.original())).map(m -> DModel.of(m)).toSet());
                                                                                            } else {
                                                                                                MODELS.set(o, REFERENCED.get(o));
                                                                                            }
-                                                                                       }, o -> MODELS.set(o, Set.of()), Priority.preDepth);
+                                                                                       }, Priority.preDepth);
 
     public static DModule of(SModule original) {
         return original instanceof DModule ? (DModule) original : DMODULE.get(original);
@@ -144,13 +143,11 @@ public class DModule extends DObject<SModule> implements SModule {
         }
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
-    protected Compound activate(DObject parent, Compound parentTx) {
-        Compound tx = super.activate(parent, parentTx);
-        trigger(LANGUAGES_RULE, tx);
-        trigger(MODELS_RULE, tx);
-        return tx;
+    protected void activate() {
+        super.activate();
+        LANGUAGES_RULE.trigger(this);
+        MODELS_RULE.trigger(this);
     }
 
     @Override

@@ -23,57 +23,61 @@ import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Entry;
 import org.modelingvalue.collections.Map;
 import org.modelingvalue.collections.Set;
+import org.modelingvalue.collections.util.Concurrent;
 import org.modelingvalue.collections.util.ContextThread;
 import org.modelingvalue.collections.util.ContextThread.ContextPool;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.collections.util.TriConsumer;
-import org.modelingvalue.transactions.AbstractLeaf;
-import org.modelingvalue.transactions.AbstractLeaf.AbstractLeafRun;
+import org.modelingvalue.dclare.mps.DRule.DObserverTransaction;
+import org.modelingvalue.dclare.mps.NonCheckingObserver.NonCheckingTransaction;
 import org.modelingvalue.transactions.Action;
 import org.modelingvalue.transactions.Constant;
-import org.modelingvalue.transactions.Contained;
 import org.modelingvalue.transactions.Direction;
-import org.modelingvalue.transactions.Imperative;
-import org.modelingvalue.transactions.Leaf;
+import org.modelingvalue.transactions.ImperativeTransaction;
+import org.modelingvalue.transactions.LeafTransaction;
 import org.modelingvalue.transactions.Observed;
 import org.modelingvalue.transactions.Priority;
-import org.modelingvalue.transactions.Root;
 import org.modelingvalue.transactions.Setable;
 import org.modelingvalue.transactions.State;
+import org.modelingvalue.transactions.TransactionList;
+import org.modelingvalue.transactions.Universe;
+import org.modelingvalue.transactions.UniverseTransaction;
 
 import jetbrains.mps.smodel.language.LanguageRegistry;
 import jetbrains.mps.smodel.language.LanguageRuntime;
 
-public class DClareMPS implements TriConsumer<State, State, Boolean>, Contained {
+public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
 
-    protected static final boolean                          TRACE         = Boolean.getBoolean("DCLARE_TRACE");
+    protected static final boolean                                                              TRACE         = Boolean.getBoolean("DCLARE_TRACE");
 
-    protected static final String                           DCLARE        = "---------> DCLARE ";
+    protected static final String                                                               DCLARE        = "---------> DCLARE ";
 
-    private final ThreadLocal<Boolean>                      COMMITTING    = new ThreadLocal<Boolean>() {
-                                                                              @Override
-                                                                              protected Boolean initialValue() {
-                                                                                  return false;
-                                                                              }
+    private final ThreadLocal<Boolean>                                                          COMMITTING    = new ThreadLocal<Boolean>() {
+                                                                                                                  @Override
+                                                                                                                  protected Boolean initialValue() {
+                                                                                                                      return false;
+                                                                                                                  }
 
-                                                                          };
+                                                                                                              };
 
-    public final static Observed<DClareMPS, Set<SLanguage>> ALL_LANGUAGES = Observed.of("ALL_LANGAUGES", Set.of());
+    public final static Observed<DClareMPS, Set<SLanguage>>                                     ALL_LANGUAGES = Observed.of("ALL_LANGAUGES", Set.of());
 
-    public final static Constant<SLanguage, Set<IRuleSet>>  RULE_SETS     = Constant.of("RULE_SETS", Set.of(), language -> {
-                                                                              LanguageRuntime rtLang = registry().getLanguage(language);
-                                                                              IRuleAspect aspect = rtLang != null ? rtLang.getAspect(IRuleAspect.class) : null;
-                                                                              return aspect != null ? Collection.of(aspect.getRuleSets()).toSet() : Set.of();
-                                                                          });
+    public final static Constant<SLanguage, Set<IRuleSet>>                                      RULE_SETS     = Constant.of("RULE_SETS", Set.of(), language -> {
+                                                                                                                  LanguageRuntime rtLang = registry().getLanguage(language);
+                                                                                                                  IRuleAspect aspect = rtLang != null ? rtLang.getAspect(IRuleAspect.class) : null;
+                                                                                                                  return aspect != null ? Collection.of(aspect.getRuleSets()).toSet() : Set.of();
+                                                                                                              });
 
-    private final ContextPool                               thePool       = ContextThread.createPool();
-    protected final Thread                                  waitForEndThread;
-    protected final Root                                    root;
-    protected final Project                                 project;
-    private final StartStopHandler                          startStopHandler;
-    private DRepository                                     repository;
-    private Imperative                                      imperative;
-    private boolean                                         running;
+    private final ContextPool                                                                   thePool       = ContextThread.createPool();
+    protected final Thread                                                                      waitForEndThread;
+    protected final UniverseTransaction                                                         universeTransaction;
+    protected final Project                                                                     project;
+    private final StartStopHandler                                                              startStopHandler;
+    private DRepository                                                                         repository;
+    private ImperativeTransaction                                                               imperativeTransaction;
+    private boolean                                                                             running;
+    protected final Concurrent<TransactionList<DRule.DObserver<?>, DObserverTransaction>>       dObserverTransactions;
+    protected final Concurrent<TransactionList<NonCheckingObserver<?>, NonCheckingTransaction>> nonCheckingTransactions;
 
     protected DClareMPS(Project project, State prevState, int maxTotalNrOfChanges, int maxNrOfChanges, int maxNrOfObserved, int maxNrOfObservers, StartStopHandler startStopHandler) {
         this.project = project;
@@ -81,15 +85,15 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Contained 
         if (TRACE) {
             System.err.println(DCLARE + "START " + this);
         }
-        root = new Root(this, thePool, prevState, 100, maxTotalNrOfChanges, maxNrOfChanges, maxNrOfObserved, maxNrOfObservers, 4, null) {
+        universeTransaction = new UniverseTransaction(this, thePool, prevState, 100, maxTotalNrOfChanges, maxNrOfChanges, maxNrOfObserved, maxNrOfObservers, 4, null) {
 
-            private final Leaf clearOrphans = Leaf.of(Action.of("clearOrphans", o -> clearOrphans()), this);
+            private final Action<DClareMPS> clearOrphans = Action.of("clearOrphans", o -> clearOrphans());
 
             private void clearOrphans() {
-                if (!isTimeTraveling() && imperative != null) {
-                    AbstractLeafRun<?> tx = AbstractLeaf.getCurrent();
+                if (!isTimeTraveling() && imperativeTransaction != null) {
+                    LeafTransaction tx = LeafTransaction.getCurrent();
                     preState().diff(tx.state(), o -> o instanceof DObject, s -> true).forEach(e0 -> {
-                        if (DObject.TRANSACTION.get((DObject<?>) e0.getKey()) == null) {
+                        if (!((DObject<?>) e0.getKey()).isOwned()) {
                             tx.clear(e0.getKey());
                         }
                     });
@@ -98,7 +102,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Contained 
 
             @Override
             protected State post(State pre) {
-                return run(trigger(pre, clearOrphans, Direction.backward));
+                return run(trigger(pre, DClareMPS.this, clearOrphans, Direction.backward));
             }
 
             @Override
@@ -122,10 +126,12 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Contained 
                 }
             }
         };
+        this.dObserverTransactions = Concurrent.of(() -> new TransactionList<>(universeTransaction));
+        this.nonCheckingTransactions = Concurrent.of(() -> new TransactionList<>(universeTransaction));
         waitForEndThread = new Thread(() -> {
-            State result = root.emptyState();
+            State result = universeTransaction.emptyState();
             try {
-                result = root.waitForEnd();
+                result = universeTransaction.waitForEnd();
                 thePool.shutdownNow();
             } catch (Throwable t) {
                 stop();
@@ -143,7 +149,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Contained 
         });
         waitForEndThread.setDaemon(true);
         waitForEndThread.start();
-        root.put("start", () -> {
+        universeTransaction.put("start", () -> {
             repository = DRepository.of(project.getRepository());
             if (TRACE) {
                 System.err.println(DCLARE + "START READ " + this);
@@ -153,9 +159,9 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Contained 
                 System.err.println(DCLARE + "END READ " + this);
             }
         }, Priority.preDepth);
-        root.put("activate", () -> {
-            imperative = root.addIntegration("MPSNative", this, r -> {
-                if (imperative != null && !COMMITTING.get()) {
+        universeTransaction.put("activate", () -> {
+            imperativeTransaction = universeTransaction.addIntegration("MPSNative", this, r -> {
+                if (imperativeTransaction != null && !COMMITTING.get()) {
                     if (!running) {
                         running = true;
                         command(() -> startStopHandler.start(project));
@@ -166,7 +172,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Contained 
             if (TRACE) {
                 System.err.println(DCLARE + "START ACTIVATE " + this);
             }
-            repository.activate(null, root);
+            repository.activate();
             if (TRACE) {
                 System.err.println(DCLARE + "END ACTIVATE " + this);
             }
@@ -184,12 +190,12 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Contained 
     }
 
     public void handleMPSChange(Runnable action) {
-        if (imperative != null) {
-            imperative.schedule(action);
+        if (imperativeTransaction != null) {
+            imperativeTransaction.schedule(action);
         } else {
-            root.put(action, () -> {
-                if (imperative != null) {
-                    imperative.schedule(action);
+            universeTransaction.put(action, () -> {
+                if (imperativeTransaction != null) {
+                    imperativeTransaction.schedule(action);
                 } else {
                     read(action);
                 }
@@ -253,7 +259,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Contained 
     }
 
     public static DClareMPS instance() {
-        return (DClareMPS) AbstractLeaf.getCurrent().root().contained();
+        return (DClareMPS) LeafTransaction.getCurrent().universeTransaction().mutable();
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
@@ -262,7 +268,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Contained 
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     public void accept(State pre, State post, Boolean last) {
-        if (imperative != null) {
+        if (imperativeTransaction != null) {
             if (TRACE) {
                 System.err.println(DCLARE + "START COMMIT " + this);
             }
@@ -312,11 +318,11 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Contained 
     }
 
     public void stop() {
-        if (imperative != null) {
-            imperative.stop();
-            imperative = null;
-            root.kill();
-            root.preState().run(() -> repository.stop(this));
+        if (imperativeTransaction != null) {
+            imperativeTransaction.stop();
+            imperativeTransaction = null;
+            universeTransaction.kill();
+            universeTransaction.preState().run(() -> repository.stop(this));
         }
     }
 
@@ -325,7 +331,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Contained 
     }
 
     public boolean isRunning() {
-        return imperative != null;
+        return imperativeTransaction != null;
     }
 
     private static LanguageRegistry registry() {
@@ -333,16 +339,12 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Contained 
     }
 
     public static <T> T pre(Supplier<T> supplier) {
-        DObject.EMPTY_ATTRIBUTE.set(true);
-        return AbstractLeaf.getCurrent().root().preState().get(supplier);
+        DRule.EMPTY_ATTRIBUTE.set(true);
+        return LeafTransaction.getCurrent().universeTransaction().preState().get(supplier);
     }
 
-    public Root root() {
-        return root;
+    public UniverseTransaction universeTransaction() {
+        return universeTransaction;
     }
 
-    @Override
-    public Contained dContainer() {
-        return null;
-    }
 }

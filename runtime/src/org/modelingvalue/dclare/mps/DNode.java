@@ -39,12 +39,12 @@ import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.Map;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
-import org.modelingvalue.transactions.AbstractLeaf;
-import org.modelingvalue.transactions.Compound;
+import org.modelingvalue.transactions.ActionInstance;
 import org.modelingvalue.transactions.Constant;
+import org.modelingvalue.transactions.LeafTransaction;
 import org.modelingvalue.transactions.Observed;
+import org.modelingvalue.transactions.Observer;
 import org.modelingvalue.transactions.Priority;
-import org.modelingvalue.transactions.Rule;
 import org.modelingvalue.transactions.Setable;
 
 import jetbrains.mps.smodel.SNodeUtil;
@@ -147,20 +147,20 @@ public class DNode extends DObject<SNode> implements SNode {
 
     public static final Observed<DNode, Set<DModel>>                             USED_MODELS         = Observed.of("USED_MODELS", Set.of());
 
-    protected static final Setable<DNode, AbstractLeaf>                          CREATOR             = Setable.of("CREATOR", null);
+    protected static final Setable<DNode, ActionInstance>                        CREATOR             = Setable.of("CREATOR", null);
 
     protected static final Setable<DNode, DNode>                                 REPLACEMENT         = Setable.of("REPLACEMENT", null);
 
-    private static final Rule                                                    MODEL_RULE          = DObject.<DNode> rule(MODEL, o -> {
+    private static final Observer<DNode>                                         MODEL_RULE          = DObject.<DNode> observer(MODEL, o -> {
                                                                                                          DNode p = o.ancestor(DNode.class);
                                                                                                          MODEL.set(o, p != null ? MODEL.get(p) : o.ancestor(DModel.class));
-                                                                                                     }, o -> MODEL.set(o, null), Priority.preDepth);
+                                                                                                     }, Priority.preDepth);
 
-    private static final Rule                                                    USED_LANGUAGES_RULE = DObject.<DNode> rule(USED_LANGUAGES, o -> {
+    private static final Observer<DNode>                                         USED_LANGUAGES_RULE = DObject.<DNode> observer(USED_LANGUAGES, o -> {
                                                                                                          USED_LANGUAGES.set(o, o.getChildren().flatMap(r -> DNode.USED_LANGUAGES.get(r)).toSet().add(o.getConcept().getLanguage()));
-                                                                                                     }, o -> USED_LANGUAGES.set(o, Set.of()), Priority.preDepth);
+                                                                                                     }, Priority.preDepth);
 
-    private static final Rule                                                    USED_MODELS_RULE    = DObject.<DNode> rule(USED_MODELS, o -> {
+    private static final Observer<DNode>                                         USED_MODELS_RULE    = DObject.<DNode> observer(USED_MODELS, o -> {
                                                                                                          USED_MODELS.set(o, o.getChildren().flatMap(r -> DNode.USED_MODELS.get(r)).toSet().addAll(o.getReferenced().map(r -> {
                                                                                                                                                                                                               DModel dm = MODEL.get(r);
                                                                                                                                                                                                               if (dm == null) {
@@ -171,7 +171,7 @@ public class DNode extends DObject<SNode> implements SNode {
                                                                                                                                                                                                               }
                                                                                                                                                                                                               return dm;
                                                                                                                                                                                                           }).toSet()));
-                                                                                                     }, o -> USED_MODELS.set(o, Set.of()), Priority.preDepth);
+                                                                                                     }, Priority.preDepth);
 
     public static DNode of(SNode original) {
         return original instanceof DNode ? (DNode) original : new DNode(original);
@@ -235,9 +235,9 @@ public class DNode extends DObject<SNode> implements SNode {
             }
             if (node == null) {
                 node = creator.get();
-                DNode.CREATOR.set((DNode) node, AbstractLeaf.getCurrent().transaction());
+                DNode.CREATOR.set((DNode) node, LeafTransaction.getCurrent().actionInstance());
             }
-        } else if (AbstractLeaf.getCurrent().transaction().equals(DNode.CREATOR.get((DNode) node))) {
+        } else if (LeafTransaction.getCurrent().actionInstance().equals(DNode.CREATOR.get((DNode) node))) {
             DNode repl = DNode.REPLACEMENT.get((DNode) node);
             if (repl != null) {
                 if (node instanceof DCopy) {
@@ -254,11 +254,11 @@ public class DNode extends DObject<SNode> implements SNode {
     public static <T> boolean setContainment(T pre, T post) {
         boolean replacement = false;
         if (post instanceof DNode && pre instanceof DNode) {
-            AbstractLeaf creator = DNode.CREATOR.get((DNode) post);
+            ActionInstance creator = DNode.CREATOR.get((DNode) post);
             if (creator != null && !post.equals(pre) && match((DNode) post, (DNode) pre)) {
                 REPLACEMENT.set((DNode) post, (DNode) pre);
                 replacement = true;
-                creator.trigger();
+                creator.action().trigger(creator.mutable());
             }
         } else if (post instanceof ContainingCollection && pre instanceof ContainingCollection) {
             if (((ContainingCollection<Object>) post).anyMatch(e -> e instanceof DNode)) {
@@ -266,14 +266,14 @@ public class DNode extends DObject<SNode> implements SNode {
                 ContainingCollection<DNode> postc = ((ContainingCollection<DNode>) post).removeAll((ContainingCollection<DNode>) pre);
                 if (!prec.isEmpty()) {
                     for (DNode elem : postc) {
-                        AbstractLeaf creator = DNode.CREATOR.get(elem);
+                        ActionInstance creator = DNode.CREATOR.get(elem);
                         if (creator != null) {
                             DNode matched = prec.filter(DNode.class).filter(n -> match(elem, n)).findFirst().orElse(null);
                             if (matched != null) {
                                 prec = prec.remove(matched);
                                 REPLACEMENT.set(elem, matched);
                                 replacement = true;
-                                creator.trigger();
+                                creator.action().trigger(creator.mutable());
                             }
                         }
                     }
@@ -285,14 +285,14 @@ public class DNode extends DObject<SNode> implements SNode {
                 java.util.List<DNode> postl = ((java.util.List<DNode>) post).stream().filter(e -> !((java.util.List<DNode>) pre).contains(e)).collect(Collectors.toList());
                 if (!prel.isEmpty()) {
                     for (DNode elem : postl) {
-                        AbstractLeaf creator = DNode.CREATOR.get(elem);
+                        ActionInstance creator = DNode.CREATOR.get(elem);
                         if (creator != null) {
                             DNode matched = prel.stream().filter(n -> n instanceof DNode && match(elem, n)).findFirst().orElse(null);
                             if (matched != null) {
                                 prel.remove(matched);
                                 REPLACEMENT.set(elem, matched);
                                 replacement = true;
-                                creator.trigger();
+                                creator.action().trigger(creator.mutable());
                             }
                         }
                     }
@@ -304,14 +304,14 @@ public class DNode extends DObject<SNode> implements SNode {
                 java.util.Set<DNode> posts = ((java.util.Set<DNode>) post).stream().filter(e -> !((java.util.Set<DNode>) pre).contains(e)).collect(Collectors.toSet());
                 if (!pres.isEmpty()) {
                     for (DNode elem : posts) {
-                        AbstractLeaf creator = DNode.CREATOR.get(elem);
+                        ActionInstance creator = DNode.CREATOR.get(elem);
                         if (creator != null) {
                             DNode matched = pres.stream().filter(n -> n instanceof DNode && match(elem, n)).findFirst().orElse(null);
                             if (matched != null) {
                                 pres.remove(matched);
                                 REPLACEMENT.set(elem, matched);
                                 replacement = true;
-                                creator.trigger();
+                                creator.action().trigger(creator.mutable());
                             }
                         }
                     }
@@ -378,14 +378,12 @@ public class DNode extends DObject<SNode> implements SNode {
         }
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
-    protected Compound activate(DObject parent, Compound parentTx) {
-        Compound tx = super.activate(parent, parentTx);
-        trigger(MODEL_RULE, tx);
-        trigger(USED_LANGUAGES_RULE, tx);
-        trigger(USED_MODELS_RULE, tx);
-        return tx;
+    protected void activate() {
+        super.activate();
+        MODEL_RULE.trigger(this);
+        USED_LANGUAGES_RULE.trigger(this);
+        USED_MODELS_RULE.trigger(this);
     }
 
     @Override

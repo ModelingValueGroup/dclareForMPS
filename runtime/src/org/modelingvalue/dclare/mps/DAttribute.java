@@ -230,14 +230,12 @@ public interface DAttribute<O, T> extends DFeature<O> {
     static class DConstant<C extends DObject, V> extends Constant<C, V> implements DAttribute<C, V> {
 
         private final String          name;
-        private final boolean         composite;
         private final boolean         synthetic;
         private final Supplier<SNode> source;
 
         public DConstant(Object id, String name, boolean synthetic, boolean composite, Supplier<SNode> source, Function<C, V> deriver) {
-            super(id, null, deriver, null);
+            super(id, null, composite, deriver, null);
             this.name = name;
-            this.composite = composite;
             this.synthetic = synthetic;
             this.source = source;
         }
@@ -254,7 +252,7 @@ public interface DAttribute<O, T> extends DFeature<O> {
 
         @Override
         public boolean isComposite() {
-            return composite;
+            return containment();
         }
 
         @Override

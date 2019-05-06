@@ -13,7 +13,6 @@
 
 package org.modelingvalue.dclare.mps;
 
-import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -25,159 +24,33 @@ import org.modelingvalue.collections.Entry;
 import org.modelingvalue.collections.Map;
 import org.modelingvalue.collections.QualifiedSet;
 import org.modelingvalue.collections.Set;
-import org.modelingvalue.collections.util.Context;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.dclare.mps.DAttribute.DObservedAttribute;
-import org.modelingvalue.transactions.AbstractLeaf;
-import org.modelingvalue.transactions.Compound;
-import org.modelingvalue.transactions.Constant;
-import org.modelingvalue.transactions.Contained;
+import org.modelingvalue.transactions.ActionInstance;
 import org.modelingvalue.transactions.Direction;
-import org.modelingvalue.transactions.EmptyMandatoryException;
-import org.modelingvalue.transactions.Leaf;
+import org.modelingvalue.transactions.LeafTransaction;
+import org.modelingvalue.transactions.Mutable;
 import org.modelingvalue.transactions.Observed;
+import org.modelingvalue.transactions.ObservedInstance;
 import org.modelingvalue.transactions.Observer;
 import org.modelingvalue.transactions.Priority;
-import org.modelingvalue.transactions.Rule;
 import org.modelingvalue.transactions.Setable;
-import org.modelingvalue.transactions.Slot;
-import org.modelingvalue.transactions.State;
-import org.modelingvalue.transactions.StopObserverException;
 import org.modelingvalue.transactions.TooManyChangesException;
 import org.modelingvalue.transactions.TooManyObservedException;
 import org.modelingvalue.transactions.TooManyObserversException;
 
 @SuppressWarnings("rawtypes")
-public abstract class DObject<O> implements Contained {
+public abstract class DObject<O> implements Mutable {
 
-    private static final QualifiedSet<Pair<DFeature, String>, DMessage>                    MESSAGE_QSET        = QualifiedSet.of(m -> Pair.of(m.feature(), m.id()));
+    private static final QualifiedSet<Pair<DFeature, String>, DMessage>                                        MESSAGE_QSET              = QualifiedSet.of(m -> Pair.of(m.feature(), m.id()));
 
-    private static final Set<DMessageType>                                                 MESSAGE_TYPES       = Collection.of(DMessageType.values()).toSet();
+    private static final Set<DMessageType>                                                                     MESSAGE_TYPES             = Collection.of(DMessageType.values()).toSet();
 
-    private static final Map<DMessageType, Boolean>                                        MESSAGE_BOOLEAN_MAP = MESSAGE_TYPES.sequential().toMap(t -> Entry.of(t, false));
+    private static final Map<DMessageType, Boolean>                                                            MESSAGE_BOOLEAN_MAP       = MESSAGE_TYPES.sequential().toMap(t -> Entry.of(t, false));
 
-    private static final Map<DMessageType, Set<? extends DObject>>                         MESSAGE_SET_MAP     = MESSAGE_TYPES.sequential().toMap(t -> Entry.of(t, Set.of()));
+    private static final Map<DMessageType, Set<? extends DObject>>                                             MESSAGE_SET_MAP           = MESSAGE_TYPES.sequential().toMap(t -> Entry.of(t, Set.of()));
 
-    private static final Map<DMessageType, QualifiedSet<Pair<DFeature, String>, DMessage>> MESSAGE_QSET_MAP    = MESSAGE_TYPES.sequential().toMap(t -> Entry.of(t, MESSAGE_QSET));
-
-    @SuppressWarnings("unchecked")
-    private static final Constant<DRule, Rule>                                             RULE                = Constant.of("RULE",                                              //
-            r -> Rule.of(r, o -> ((DRuleObserver) AbstractLeaf.getCurrent().transaction()).run(() -> r.run(o)), Direction.forward, Priority.postDepth));
-
-    protected static final class DRuleObserver extends Observer {
-
-        private DRuleObserver(DRule rule, Compound parent) {
-            super(RULE.get(rule), parent);
-        }
-
-        private void run(Runnable action) {
-            if (parent().equals(DObject.TRANSACTION.get(object()))) {
-                if (object().isOwned()) {
-                    try {
-                        action.run();
-                    } catch (NullPointerException e) {
-                        if (EMPTY_ATTRIBUTE.get()) {
-                            throw new EmptyMandatoryException();
-                        } else {
-                            object().addMessage(dRule(), DMessageType.error, "EXCEPTION", e);
-                            throw new StopObserverException(e);
-                        }
-                    } catch (IndexOutOfBoundsException e) {
-                        if (COLLECTION_ATTRIBUTE.get()) {
-                            throw new EmptyMandatoryException();
-                        } else {
-                            object().addMessage(dRule(), DMessageType.error, "EXCEPTION", e);
-                            throw new StopObserverException(e);
-                        }
-                    } catch (Throwable e) {
-                        object().addMessage(dRule(), DMessageType.error, "EXCEPTION", e);
-                        throw new StopObserverException(e);
-                    } finally {
-                        COLLECTION_ATTRIBUTE.set(false);
-                        EMPTY_ATTRIBUTE.set(false);
-                    }
-                }
-            } else {
-                throw new StopObserverException("Stopped");
-            }
-        }
-
-        private DObject object() {
-            return (DObject) parent().contained();
-        }
-
-        private DRule dRule() {
-            return (DRule) rule().id();
-        }
-
-        @Override
-        protected void checkTooManyObservers(AbstractLeafRun<?> run, Object object, Observed observed, Set<Observer> obervers) {
-            if (object instanceof DObject && observed instanceof DObserved && !((DObserved) observed).isSynthetic()) {
-                try {
-                    super.checkTooManyObservers(run, object, observed, obervers.filter(o -> o instanceof DRuleObserver).toSet());
-                } catch (TooManyObserversException e) {
-                    ((DObject) object).addMessage((DObserved) observed, "TOO_MANY_OBSERVERS", e);
-                }
-            }
-
-        }
-
-        @Override
-        protected void checkTooManyObserved(ObserverRun run, Set<Slot> sets, Set<Slot> gets) {
-            try {
-                super.checkTooManyObserved(run, //
-                        sets.filter(s -> s.observed() instanceof DObserved && !((DObserved) s.observed()).isSynthetic()).toSet(), //
-                        gets.filter(s -> s.observed() instanceof DObserved && !((DObserved) s.observed()).isSynthetic()).toSet());
-            } catch (TooManyObservedException e) {
-                object().addMessage(dRule(), "TOO_MANY_OBSERVED", e);
-            }
-        }
-
-        @Override
-        protected void countChanges(ObserverRun run, Observed observed) {
-            if (observed instanceof DObserved && !((DObserved) observed).isSynthetic()) {
-                super.countChanges(run, observed);
-            }
-        }
-
-        @Override
-        protected void checkTooManyChanges(ObserverRun run, State pre, Set<Slot> sets, Set<Slot> gets) {
-            if (run.root().isDebugging()) {
-                sets = sets.filter(s -> s.observed() instanceof DObserved && !((DObserved) s.observed()).isSynthetic()).toSet();
-                gets = gets.filter(s -> s.observed() instanceof DObserved && !((DObserved) s.observed()).isSynthetic()).toSet();
-            }
-            try {
-                super.checkTooManyChanges(run, pre, sets, gets);
-            } catch (TooManyChangesException e) {
-                object().addMessage(dRule(), "CONFLICTING_RULES", e);
-                throw new StopObserverException(e);
-            }
-        }
-
-    }
-
-    protected final static class NonCheckingObserver extends Observer {
-
-        protected NonCheckingObserver(Rule rule, Compound parent) {
-            super(rule, parent);
-        }
-
-        @Override
-        protected void countChanges(ObserverRun run, Observed observed) {
-        }
-
-        @Override
-        protected void checkTooManyObserved(ObserverRun run, Set<Slot> sets, Set<Slot> gets) {
-        }
-
-        @Override
-        protected void checkTooManyObservers(AbstractLeafRun<?> run, Object object, Observed observed, Set<Observer> obervers) {
-        }
-
-    }
-
-    protected static final Context<Boolean>                                                                    EMPTY_ATTRIBUTE           = Context.of(false);
-    protected static final Context<Boolean>                                                                    COLLECTION_ATTRIBUTE      = Context.of(false);
+    private static final Map<DMessageType, QualifiedSet<Pair<DFeature, String>, DMessage>>                     MESSAGE_QSET_MAP          = MESSAGE_TYPES.sequential().toMap(t -> Entry.of(t, MESSAGE_QSET));
 
     public static final Setable<DObject, DType>                                                                TYPE                      = Observed.of("TYPE", new DType("<DUMMY_TYPE>") {
                                                                                                                                              @Override
@@ -210,25 +83,16 @@ public abstract class DObject<O> implements Contained {
                                                                                                                                              }
                                                                                                                                          }, null);
 
-    public static final Setable<DObject, Set<? extends DObject>>                                               CHILDREN                  = Observed.of("CHILDREN", Set.of(), (tx, o, b, a) -> {
-                                                                                                                                             Setable.<Set<? extends DObject>, DObject> diff(Set.of(), b, a,                                                                                                            //
-                                                                                                                                                     e -> e.activate(o, tx.parent()), e -> e.deactivate(o, tx.parent()));
+    public static final Setable<DObject, Set<DObject>>                                                         CHILDREN                  = Observed.of("CHILDREN", Set.of(), (tx, o, b, a) -> {
+                                                                                                                                             Setable.<Set<? extends DObject>, DObject> diff(b, a,                                                                                                                      //
+                                                                                                                                                     e -> e.activate(), e -> e.deactivate());
                                                                                                                                          });
+
     @SuppressWarnings("unchecked")
-    private static final Rule                                                                                  CHILDREN_RULE             = rule(CHILDREN, o -> {
-                                                                                                                                             CHILDREN.set(o, o.getAllChildren().toSet());
-                                                                                                                                         }, o -> {
-                                                                                                                                             CHILDREN.set(o, Set.of());
-                                                                                                                                         }, Priority.preDepth);
-
-    public static final Setable<DObject, Compound>                                                             TRANSACTION               = Observed.of("TRANSACTION", null, (tx, x, b, a) -> {
-                                                                                                                                             if (a != null) {
-                                                                                                                                                 trigger(DObject.CHILDREN_RULE, a);
-                                                                                                                                             }
-                                                                                                                                         });
-
-    private static final Setable<DObject, Set<Observer>>                                                       RULE_INSTANCES            = Setable.of("RULE_INSTANCES", Set.of(), (tx, o, b, a) -> {
-                                                                                                                                             Setable.<Set<Observer>, Observer> diff(Set.of(), b, a, Leaf::trigger, tx::clear);
+    private static final Setable<DObject, Set<DRule.DObserver>>                                                RULE_INSTANCES            = Setable.of("RULE_INSTANCES", Set.of(), (tx, o, b, a) -> {
+                                                                                                                                             Setable.<Set<DRule.DObserver>, DRule.DObserver> diff(b, a,                                                                                                                //
+                                                                                                                                                     c -> ((DRule.DObserver<Mutable>) c).trigger(tx.parent().mutable()),                                                                                               //
+                                                                                                                                                     d -> ((DRule.DObserver<Mutable>) d).deObserve(tx.parent().mutable()));
                                                                                                                                          });
 
     protected static final Setable<DObject, Map<DMessageType, Set<? extends DObject>>>                         MESSAGE_CHILDREN          = Observed.of("MESSAGE_CHILDREN", MESSAGE_SET_MAP);
@@ -237,30 +101,34 @@ public abstract class DObject<O> implements Contained {
 
     protected static final Setable<DObject, Map<DMessageType, QualifiedSet<Pair<DFeature, String>, DMessage>>> MESSAGES                  = Observed.of("MESSAGES", MESSAGE_QSET_MAP);
 
-    private static final Rule                                                                                  TYPE_RULE                 = rule(TYPE, o -> {
+    private static final Observer<DObject>                                                                     TYPE_RULE                 = observer(TYPE, o -> {
                                                                                                                                              TYPE.set(o, o.getType());
-                                                                                                                                         }, o -> TYPE.set(o, TYPE.getDefault()), Priority.preDepth);
+                                                                                                                                         }, Priority.preDepth);
 
     @SuppressWarnings("unchecked")
-    private static final Rule                                                                                  CONSTANT_CONTAINMENT_RULE = rule("CONSTANT_CONTAINMENT", o -> {
+    private static final Observer<DObject>                                                                     CHILDREN_RULE             = observer(CHILDREN, o -> {
+                                                                                                                                             CHILDREN.set(o, o.getAllChildren().toSet());
+                                                                                                                                         }, Priority.preDepth);
+
+    @SuppressWarnings("unchecked")
+    private static final Observer<DObject>                                                                     CONSTANT_CONTAINMENT_RULE = observer("CONSTANT_CONTAINMENT", o -> {
                                                                                                                                              TYPE.get(o).getAttributes().filter(DAttribute::isConstant).filter(DAttribute::isComposite).forEach(cc -> cc.get(o));
                                                                                                                                          }, Priority.preDepth);
 
-    private static final Rule                                                                                  RULE_INSTANCES_RULE       = rule(RULE_INSTANCES, o -> {
-                                                                                                                                             Compound tx = AbstractLeaf.getCurrent().parent();
-                                                                                                                                             RULE_INSTANCES.set(o, TYPE.get(o).getRules().map(r -> o.rule(tx, r)).toSet());
-                                                                                                                                         }, o -> RULE_INSTANCES.set(o, RULE_INSTANCES.getDefault()), Priority.preDepth);
+    private static final Observer<DObject>                                                                     RULE_INSTANCES_RULE       = observer(RULE_INSTANCES, o -> {
+                                                                                                                                             RULE_INSTANCES.set(o, TYPE.get(o).getRules().map(r -> DRule.OBSERVER.get(r)).toSet());
+                                                                                                                                         }, Priority.preDepth);
 
-    private static final Rule                                                                                  MESSAGES_OR_CHILDREN_RULE = rule(MESSAGES_OR_CHILDREN, o -> {
+    private static final Observer<DObject>                                                                     MESSAGES_OR_CHILDREN_RULE = observer(MESSAGES_OR_CHILDREN, o -> {
                                                                                                                                              MESSAGES_OR_CHILDREN.set(o, MESSAGE_TYPES.toMap(t -> Entry.of(t, !o.getMessages(t).isEmpty() || !o.getMessageChildren(t).isEmpty())));
-                                                                                                                                         }, o -> MESSAGES_OR_CHILDREN.set(o, MESSAGES_OR_CHILDREN.getDefault()), Priority.postDepth);
+                                                                                                                                         }, Priority.postDepth);
 
-    private static final Rule                                                                                  MESSAGE_CHILDREN_RULE     = rule(MESSAGE_CHILDREN, o -> {
+    private static final Observer<DObject>                                                                     MESSAGE_CHILDREN_RULE     = observer(MESSAGE_CHILDREN, o -> {
                                                                                                                                              MESSAGE_CHILDREN.set(o, MESSAGE_TYPES.toMap(t -> Entry.of(t, CHILDREN.get(o).filter(c -> MESSAGES_OR_CHILDREN.get(c).get(t)).toSet())));
-                                                                                                                                         }, o -> MESSAGE_CHILDREN.set(o, MESSAGE_CHILDREN.getDefault()), Priority.postDepth);
+                                                                                                                                         }, Priority.postDepth);
 
     @SuppressWarnings("unchecked")
-    private static final Rule                                                                                  EMPTY_MANDATORY_RULE      = rule("EMPTY_MANDATORY", o -> {
+    private static final Observer<DObject>                                                                     EMPTY_MANDATORY_RULE      = observer("EMPTY_MANDATORY", o -> {
                                                                                                                                              for (DAttribute attr : TYPE.get(o).getAttributes()) {
                                                                                                                                                  if (attr instanceof DObservedAttribute && attr.isMandatory() && !attr.isSynthetic()) {
                                                                                                                                                      if (attr.get(o) == null) {
@@ -270,14 +138,14 @@ public abstract class DObject<O> implements Contained {
                                                                                                                                                      }
                                                                                                                                                  }
                                                                                                                                              }
-                                                                                                                                         }, o -> MESSAGES.set(o, MESSAGES.getDefault()), Priority.postDepth);
+                                                                                                                                         }, Priority.postDepth);
 
     @SuppressWarnings("unchecked")
-    private static final Rule                                                                                  REFERENCED_ORPHAN_RULE    = rule("REFERENCED_ORPHAN", o -> {
+    private static final Observer<DObject>                                                                     REFERENCED_ORPHAN_RULE    = observer("REFERENCED_ORPHAN", o -> {
                                                                                                                                              for (DAttribute attr : TYPE.get(o).getAttributes()) {
                                                                                                                                                  if (attr instanceof DObservedAttribute && !attr.isComposite() && !attr.isSynthetic()) {
                                                                                                                                                      Set<DObject> orphans = Collection.of(attr.getIterable(o)).filter(DObject.class).filter(r ->                                                                       //
-                                                                                                                                                     !((DObject) r).isReadOnly() && !o.isInOtherRepository((DObject) r) && TRANSACTION.get((DObject) r) == null).toSet();
+                                                                                                                                                     !((DObject) r).isReadOnly() && !o.isInOtherRepository((DObject) r) && !((DObject) r).isOwned()).toSet();
                                                                                                                                                      if (!orphans.isEmpty()) {
                                                                                                                                                          o.addMessage(attr, DMessageType.warning, "ORPHAN", "Non-composite attribute " + attr + " of " + o + " references orphans " + orphans.toString().substring(3));
                                                                                                                                                      } else {
@@ -285,7 +153,7 @@ public abstract class DObject<O> implements Contained {
                                                                                                                                                      }
                                                                                                                                                  }
                                                                                                                                              }
-                                                                                                                                         }, o -> MESSAGES.set(o, MESSAGES.getDefault()), Priority.postDepth);
+                                                                                                                                         }, Priority.postDepth);
 
     public static DClareMPS dClareMPS() {
         return DClareMPS.instance();
@@ -318,11 +186,6 @@ public abstract class DObject<O> implements Contained {
         }
     }
 
-    @Override
-    public Contained dContainer() {
-        return PARENT.get(this);
-    }
-
     public Set<? extends DObject> getMessageChildren(DMessageType type) {
         return MESSAGE_CHILDREN.get(this).get(type);
     }
@@ -351,7 +214,7 @@ public abstract class DObject<O> implements Contained {
     }
 
     @SuppressWarnings("unchecked")
-    public ContainingCollection<? extends DNode> getAllChildren() {
+    public ContainingCollection<DNode> getAllChildren() {
         return getContained().addAll((ContainingCollection) getChildren());
     }
 
@@ -390,24 +253,18 @@ public abstract class DObject<O> implements Contained {
         exit(dClareMPS);
     }
 
-    protected Compound activate(DObject parent, Compound parentTx) {
-        Compound tx = Compound.of(this, parentTx);
-        TRANSACTION.set(this, tx);
-        trigger(TYPE_RULE, tx);
-        trigger(CONSTANT_CONTAINMENT_RULE, tx);
-        trigger(RULE_INSTANCES_RULE, tx);
-        trigger(MESSAGES_OR_CHILDREN_RULE, tx);
-        trigger(MESSAGE_CHILDREN_RULE, tx);
-        trigger(EMPTY_MANDATORY_RULE, tx);
-        trigger(REFERENCED_ORPHAN_RULE, tx);
-        return tx;
+    protected void activate() {
+        CHILDREN_RULE.trigger(this);
+        TYPE_RULE.trigger(this);
+        CONSTANT_CONTAINMENT_RULE.trigger(this);
+        RULE_INSTANCES_RULE.trigger(this);
+        MESSAGES_OR_CHILDREN_RULE.trigger(this);
+        MESSAGE_CHILDREN_RULE.trigger(this);
+        EMPTY_MANDATORY_RULE.trigger(this);
+        REFERENCED_ORPHAN_RULE.trigger(this);
     }
 
-    protected void deactivate(DObject parent, Compound parentTx) {
-        Compound tx = TRANSACTION.get(this);
-        if (tx != null && Objects.equals(parentTx, tx.parent())) {
-            TRANSACTION.set(this, null);
-        }
+    protected void deactivate() {
     }
 
     protected abstract SRepository getOriginalRepository();
@@ -433,32 +290,28 @@ public abstract class DObject<O> implements Contained {
 
     protected abstract DType getType();
 
-    private Observer rule(Compound parent, DRule rule) {
-        return new DRuleObserver(rule, parent);
-    }
-
     protected void addMessage(DFeature feature, String id, TooManyChangesException tmce) {
         DMessage message = new DMessage(this, feature, DMessageType.error, id, "Conflicting rules, running " + feature + " changes=" + tmce.getNrOfChanges());
         tmce.getLast().trace(message, (m, r) -> {
-            m.addSubMessage(new DMessage(((DRuleObserver) r.observer()).object(), ((DRuleObserver) r.observer()).dRule(), DMessageType.error, id, //
-                    "run: " + ((DRuleObserver) r.observer()).object() + "." + ((DRuleObserver) r.observer()).dRule() + " nr: " + r.nrOfChanges()));
+            m.addSubMessage(new DMessage((DObject) r.mutable(), ((DRule.DObserver) r.observer()).rule(), DMessageType.error, id, //
+                    "run: " + r.mutable() + "." + ((DRule.DObserver) r.observer()).rule() + " nr: " + r.nrOfChanges()));
         }, (m, r, s) -> {
             m.addSubMessage(new DMessage((DObject) s.object(), (DObserved) s.observed(), DMessageType.error, id, //
                     "read: " + s.object() + "." + s.observed() + "=" + r.read().get(s)));
         }, (m, w, s) -> {
             m.subMessages().last().addSubMessage(new DMessage((DObject) s.object(), (DObserved) s.observed(), DMessageType.error, id, //
                     "write: " + s.object() + "." + s.observed() + "=" + w.written().get(s)));
-        }, m -> m.subMessages().last(), tmce.getObserver().root().maxNrOfChanges());
+        }, m -> m.subMessages().last(), tmce.getState().universeTransaction().maxNrOfChanges());
         addMessage(message);
     }
 
     protected void addMessage(DFeature feature, String id, TooManyObservedException tmse) {
         DMessage message = new DMessage(this, feature, DMessageType.warning, id, tmse.getSimpleMessage());
         int number = 0;
-        for (Slot slot : tmse.getObserved()) {
-            Observed observed = slot.observed();
+        for (ObservedInstance observedInstance : tmse.getObserved()) {
+            Observed observed = observedInstance.observed();
             number++;
-            message.addSubMessage(new DMessage(this, (DObserved) observed, DMessageType.warning, number + ")", slot.toString()));
+            message.addSubMessage(new DMessage(this, (DObserved) observed, DMessageType.warning, number + ")", observedInstance.toString()));
         }
         addMessage(message);
     }
@@ -466,10 +319,10 @@ public abstract class DObject<O> implements Contained {
     protected void addMessage(DFeature feature, String id, TooManyObserversException tmse) {
         DMessage message = new DMessage(this, feature, DMessageType.warning, id, tmse.getSimpleMessage());
         int number = 0;
-        for (Observer observer : tmse.getObservers()) {
-            if (observer instanceof DRuleObserver) {
+        for (ActionInstance ai : tmse.getObservers()) {
+            if (ai.action() instanceof DRule.DObserver) {
                 number++;
-                message.addSubMessage(new DMessage(this, ((DRuleObserver) observer).dRule(), DMessageType.warning, number + ")", observer.toString()));
+                message.addSubMessage(new DMessage(this, ((DRule.DObserver) ai.action()).rule(), DMessageType.warning, number + ")", ai.toString()));
             }
         }
         addMessage(message);
@@ -488,47 +341,23 @@ public abstract class DObject<O> implements Contained {
     }
 
     private void addMessage(DMessage message) {
-        AbstractLeaf.getCurrent().runNonObserving(() -> MESSAGES.set(this, (m, s) -> m.put(message.type(), s), getMessages(message.type()).add(message)));
+        LeafTransaction.getCurrent().runNonObserving(() -> MESSAGES.set(this, (m, s) -> m.put(message.type(), s), getMessages(message.type()).add(message)));
     }
 
     protected void removeMessages(DFeature feature, DMessageType type, String id) {
-        AbstractLeaf.getCurrent().runNonObserving(() -> MESSAGES.set(this, (m, s) -> m.put(type, s), getMessages(type).removeKey(Pair.of(feature, id))));
+        LeafTransaction.getCurrent().runNonObserving(() -> MESSAGES.set(this, (m, s) -> m.put(type, s), getMessages(type).removeKey(Pair.of(feature, id))));
     }
 
-    final public static void trigger(Rule rule, Compound tx) {
-        new NonCheckingObserver(rule, tx).trigger();
+    public static <O extends DObject> NonCheckingObserver<O> observer(Object id, Consumer<O> action) {
+        return observer(id, action, Priority.postDepth);
     }
 
-    final public static <O extends DObject> Rule rule(Object id, Consumer<O> action) {
-        return makeRule(id, action, o -> {
-        }, Priority.postDepth);
-    }
-
-    final public static <O extends DObject> Rule rule(Object id, Consumer<O> action, Priority prio) {
-        return makeRule(id, action, o -> {
-        }, prio);
-    }
-
-    final public static <O extends DObject> Rule rule(Object id, Consumer<O> action, Consumer<O> stop) {
-        return makeRule(id, action, stop, Priority.postDepth);
-    }
-
-    final public static <O extends DObject> Rule rule(Object id, Consumer<O> action, Consumer<O> stop, Priority prio) {
-        return makeRule(id, action, stop, prio);
-    }
-
-    @SuppressWarnings("unchecked")
-    final private static <O extends DObject> Rule makeRule(Object id, Consumer<O> action, Consumer<O> stop, Priority prio) {
-        return Rule.of(id, o -> {
-            if (AbstractLeaf.getCurrent().parent().equals(DObject.TRANSACTION.get((O) o))) {
-                if (((O) o).isOwned()) {
-                    action.accept((O) o);
-                }
-            } else {
-                stop.accept((O) o);
-                throw new StopObserverException("Stopped");
+    public static <O extends DObject> NonCheckingObserver<O> observer(Object id, Consumer<O> action, Priority prio) {
+        return NonCheckingObserver.of(id, o -> {
+            if (o.isOwned()) {
+                action.accept(o);
             }
-        }, prio);
+        }, Direction.forward, prio);
     }
 
 }
