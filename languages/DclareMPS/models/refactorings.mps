@@ -334,7 +334,7 @@
                   <ref role="3cqZAo" node="18IIFqC44IE" resolve="duplicates" />
                 </node>
                 <node concept="liA8E" id="18IIFqC4aGs" role="2OqNvi">
-                  <ref role="37wK5l" to="33ny:~List.add(java.lang.Object):boolean" resolve="add" />
+                  <ref role="37wK5l" to="33ny:~List.add(java.lang.Object)" resolve="add" />
                   <node concept="37vLTw" id="18IIFqC4aXP" role="37wK5m">
                     <ref role="3cqZAo" node="18IIFqBwGtV" resolve="expr" />
                   </node>
@@ -348,7 +348,7 @@
                 <ref role="3cqZAo" node="18IIFqC44IE" resolve="duplicates" />
               </node>
               <node concept="liA8E" id="18IIFqC496q" role="2OqNvi">
-                <ref role="37wK5l" to="33ny:~List.contains(java.lang.Object):boolean" resolve="contains" />
+                <ref role="37wK5l" to="33ny:~List.contains(java.lang.Object)" resolve="contains" />
                 <node concept="37vLTw" id="18IIFqC496r" role="37wK5m">
                   <ref role="3cqZAo" node="18IIFqBwGtV" resolve="expr" />
                 </node>
@@ -379,7 +379,7 @@
               <ref role="3cqZAo" node="18IIFqC44IE" resolve="duplicates" />
             </node>
             <node concept="liA8E" id="18IIFqC4dpp" role="2OqNvi">
-              <ref role="37wK5l" to="wyt6:~Iterable.forEach(java.util.function.Consumer):void" resolve="forEach" />
+              <ref role="37wK5l" to="wyt6:~Iterable.forEach(java.util.function.Consumer)" resolve="forEach" />
               <node concept="1bVj0M" id="18IIFqC4eL_" role="37wK5m">
                 <node concept="3clFbS" id="18IIFqC4eLA" role="1bW5cS">
                   <node concept="3clFbF" id="18IIFqC4fkB" role="3cqZAp">

@@ -491,7 +491,7 @@
             <node concept="2OqwBi" id="5FinwQPbkhc" role="3clFbG">
               <node concept="1Q80Hx" id="5FinwQPbkah" role="2Oq$k0" />
               <node concept="liA8E" id="5FinwQPbZmP" role="2OqNvi">
-                <ref role="37wK5l" to="cj4x:~EditorContext.select(org.jetbrains.mps.openapi.model.SNode):void" resolve="select" />
+                <ref role="37wK5l" to="cj4x:~EditorContext.select(org.jetbrains.mps.openapi.model.SNode)" resolve="select" />
                 <node concept="2OqwBi" id="5FinwQPbZvs" role="37wK5m">
                   <node concept="0IXxy" id="5FinwQPbZnn" role="2Oq$k0" />
                   <node concept="3TrEf2" id="5FinwQPbZE6" role="2OqNvi">

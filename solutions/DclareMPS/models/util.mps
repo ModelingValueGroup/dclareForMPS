@@ -230,7 +230,7 @@
                 </node>
               </node>
               <node concept="liA8E" id="4Y8BM43oaxi" role="2OqNvi">
-                <ref role="37wK5l" to="t4tl:~DObject.getNonSyntheticAttributes():java.util.List" resolve="getNonSyntheticAttributes" />
+                <ref role="37wK5l" to="t4tl:~DObject.getNonSyntheticAttributes()" resolve="getNonSyntheticAttributes" />
               </node>
             </node>
             <node concept="A3Dl8" id="4Y8BM43oaMe" role="10QFUM">
@@ -312,7 +312,7 @@
           <node concept="2OqwBi" id="1lQ5DPQtwTS" role="3clFbG">
             <node concept="2YIFZM" id="7byyZgEhYNP" role="2Oq$k0">
               <ref role="1Pybhc" to="t4tl:~DAttribute" resolve="DAttribute" />
-              <ref role="37wK5l" to="t4tl:~DAttribute.of(java.lang.Object,java.lang.String,boolean,boolean,boolean,int,java.util.function.Supplier,java.util.function.Function):org.modelingvalue.dclare.mps.DAttribute" resolve="of" />
+              <ref role="37wK5l" to="t4tl:~DAttribute.of(java.lang.Object,java.lang.String,boolean,boolean,boolean,int,java.util.function.Supplier,java.util.function.Function)" resolve="of" />
               <node concept="37vLTw" id="7byyZgEhYNQ" role="37wK5m">
                 <ref role="3cqZAo" node="1lQ5DPQtstn" resolve="attributeId" />
               </node>
@@ -345,7 +345,7 @@
               </node>
             </node>
             <node concept="liA8E" id="1lQ5DPQtxzb" role="2OqNvi">
-              <ref role="37wK5l" to="t4tl:~DAttribute.get(java.lang.Object):java.lang.Object" resolve="get" />
+              <ref role="37wK5l" to="t4tl:~DAttribute.get(java.lang.Object)" resolve="get" />
               <node concept="37vLTw" id="1lQ5DPQtxFz" role="37wK5m">
                 <ref role="3cqZAo" node="1lQ5DPQtsij" resolve="object" />
               </node>
@@ -428,7 +428,7 @@
             </node>
             <node concept="2YIFZM" id="6JwApsoXmB3" role="33vP2m">
               <ref role="1Pybhc" to="t4tl:~DAttribute" resolve="DAttribute" />
-              <ref role="37wK5l" to="t4tl:~DAttribute.of(java.lang.Object,java.lang.String,boolean,boolean,boolean,int,java.util.function.Supplier,java.util.function.Function):org.modelingvalue.dclare.mps.DAttribute" resolve="of" />
+              <ref role="37wK5l" to="t4tl:~DAttribute.of(java.lang.Object,java.lang.String,boolean,boolean,boolean,int,java.util.function.Supplier,java.util.function.Function)" resolve="of" />
               <node concept="37vLTw" id="6JwApsoXmB4" role="37wK5m">
                 <ref role="3cqZAo" node="1lQ5DPQt_o9" resolve="attributeId" />
               </node>
@@ -480,7 +480,7 @@
                           <ref role="3cqZAo" node="6JwApsoXmB2" resolve="attr" />
                         </node>
                         <node concept="liA8E" id="6JwApsoXCgE" role="2OqNvi">
-                          <ref role="37wK5l" to="t4tl:~DAttribute.get(java.lang.Object):java.lang.Object" resolve="get" />
+                          <ref role="37wK5l" to="t4tl:~DAttribute.get(java.lang.Object)" resolve="get" />
                           <node concept="37vLTw" id="6JwApsoXCwg" role="37wK5m">
                             <ref role="3cqZAo" node="1lQ5DPQt_ob" resolve="object" />
                           </node>
@@ -502,7 +502,7 @@
               <ref role="3cqZAo" node="6JwApsoXmB2" resolve="attr" />
             </node>
             <node concept="liA8E" id="1lQ5DPQt_oi" role="2OqNvi">
-              <ref role="37wK5l" to="t4tl:~DAttribute.set(java.lang.Object,java.lang.Object):java.lang.Object" resolve="set" />
+              <ref role="37wK5l" to="t4tl:~DAttribute.set(java.lang.Object,java.lang.Object)" resolve="set" />
               <node concept="37vLTw" id="1lQ5DPQt_oj" role="37wK5m">
                 <ref role="3cqZAo" node="1lQ5DPQt_ob" resolve="object" />
               </node>
@@ -558,7 +558,7 @@
                               </node>
                             </node>
                             <node concept="liA8E" id="6JwApsoWLGF" role="2OqNvi">
-                              <ref role="37wK5l" to="t4tl:~DModel.getRootNodes(org.jetbrains.mps.openapi.language.SAbstractConcept):java.util.Collection" resolve="getRootNodes" />
+                              <ref role="37wK5l" to="t4tl:~DModel.getRootNodes(org.jetbrains.mps.openapi.language.SAbstractConcept)" resolve="getRootNodes" />
                               <node concept="37vLTw" id="6JwApsoWNap" role="37wK5m">
                                 <ref role="3cqZAo" node="2v4o0zdGz0T" resolve="concept" />
                               </node>
@@ -587,7 +587,7 @@
                   </node>
                 </node>
                 <node concept="liA8E" id="2v4o0zdF6NA" role="2OqNvi">
-                  <ref role="37wK5l" to="t4tl:~DModel.setRootNodes(org.jetbrains.mps.openapi.language.SAbstractConcept,java.util.Collection):void" resolve="setRootNodes" />
+                  <ref role="37wK5l" to="t4tl:~DModel.setRootNodes(org.jetbrains.mps.openapi.language.SAbstractConcept,java.util.Collection)" resolve="setRootNodes" />
                   <node concept="37vLTw" id="2v4o0zdGzaE" role="37wK5m">
                     <ref role="3cqZAo" node="2v4o0zdGz0T" resolve="concept" />
                   </node>
@@ -664,7 +664,7 @@
                             </node>
                           </node>
                           <node concept="liA8E" id="6JwApsoXDtC" role="2OqNvi">
-                            <ref role="37wK5l" to="t4tl:~DNode.getFeature(org.jetbrains.mps.openapi.language.SConceptFeature):java.lang.Object" resolve="getFeature" />
+                            <ref role="37wK5l" to="t4tl:~DNode.getFeature(org.jetbrains.mps.openapi.language.SConceptFeature)" resolve="getFeature" />
                             <node concept="37vLTw" id="6JwApsoXDtD" role="37wK5m">
                               <ref role="3cqZAo" node="6QNGPTyqVnp" resolve="feature" />
                             </node>
@@ -702,7 +702,7 @@
               </node>
             </node>
             <node concept="liA8E" id="2v4o0zdEXQ8" role="2OqNvi">
-              <ref role="37wK5l" to="t4tl:~DNode.setFeature(org.jetbrains.mps.openapi.language.SConceptFeature,java.lang.Object):void" resolve="setFeature" />
+              <ref role="37wK5l" to="t4tl:~DNode.setFeature(org.jetbrains.mps.openapi.language.SConceptFeature,java.lang.Object)" resolve="setFeature" />
               <node concept="37vLTw" id="2v4o0zdEXYw" role="37wK5m">
                 <ref role="3cqZAo" node="6QNGPTyqVnp" resolve="feature" />
               </node>
@@ -741,7 +741,7 @@
         <node concept="3clFbF" id="6JwApsoY72Z" role="3cqZAp">
           <node concept="2YIFZM" id="6JwApsoY7l$" role="3clFbG">
             <ref role="1Pybhc" to="t4tl:~DNode" resolve="DNode" />
-            <ref role="37wK5l" to="t4tl:~DNode.setContainment(java.lang.Object,java.lang.Object):boolean" resolve="setContainment" />
+            <ref role="37wK5l" to="t4tl:~DNode.setContainment(java.lang.Object,java.lang.Object)" resolve="setContainment" />
             <node concept="37vLTw" id="6JwApsoY7FU" role="37wK5m">
               <ref role="3cqZAo" node="6JwApsoWeLw" resolve="pre" />
             </node>
@@ -790,7 +790,7 @@
                 </node>
               </node>
               <node concept="liA8E" id="29R9$zZq4Io" role="2OqNvi">
-                <ref role="37wK5l" to="t4tl:~DNode.getReferenceSources(org.jetbrains.mps.openapi.language.SReferenceLink):java.lang.Iterable" resolve="getReferenceSources" />
+                <ref role="37wK5l" to="t4tl:~DNode.getReferenceSources(org.jetbrains.mps.openapi.language.SReferenceLink)" resolve="getReferenceSources" />
                 <node concept="37vLTw" id="29R9$zZq4Ip" role="37wK5m">
                   <ref role="3cqZAo" node="29R9$zZq4Ix" resolve="oppos" />
                 </node>
@@ -842,7 +842,7 @@
                 <ref role="3cqZAo" node="5hwIp2JMqup" resolve="model" />
               </node>
               <node concept="liA8E" id="7fAqG1ajPn" role="2OqNvi">
-                <ref role="37wK5l" to="mhbf:~SModel.getModule():org.jetbrains.mps.openapi.module.SModule" resolve="getModule" />
+                <ref role="37wK5l" to="mhbf:~SModel.getModule()" resolve="getModule" />
               </node>
             </node>
             <node concept="37vLTw" id="7fAqG1ajSU" role="37wK5m">
@@ -903,7 +903,7 @@
               <ref role="3cqZAo" node="7fAqG1ai8H" resolve="module" />
             </node>
             <node concept="liA8E" id="7fAqG1ai93" role="2OqNvi">
-              <ref role="37wK5l" to="lui2:~SModule.getModels():java.lang.Iterable" resolve="getModels" />
+              <ref role="37wK5l" to="lui2:~SModule.getModels()" resolve="getModels" />
             </node>
           </node>
         </node>
@@ -924,11 +924,11 @@
         <node concept="3clFbF" id="6ndASaeSBKb" role="3cqZAp">
           <node concept="2OqwBi" id="acrA1QgTkG" role="3clFbG">
             <node concept="2YIFZM" id="acrA1QgPEd" role="2Oq$k0">
-              <ref role="37wK5l" to="t4tl:~DClareMPS.instance():org.modelingvalue.dclare.mps.DClareMPS" resolve="instance" />
+              <ref role="37wK5l" to="t4tl:~DClareMPS.instance()" resolve="instance" />
               <ref role="1Pybhc" to="t4tl:~DClareMPS" resolve="DClareMPS" />
             </node>
             <node concept="liA8E" id="acrA1QgTEd" role="2OqNvi">
-              <ref role="37wK5l" to="t4tl:~DClareMPS.read(java.util.function.Supplier):java.lang.Object" resolve="read" />
+              <ref role="37wK5l" to="t4tl:~DClareMPS.read(java.util.function.Supplier)" resolve="read" />
               <node concept="2ShNRf" id="acrA1QgPEe" role="37wK5m">
                 <node concept="YeOm9" id="acrA1QgPEf" role="2ShVmc">
                   <node concept="1Y3b0j" id="acrA1QgPEg" role="YeSDq">
@@ -1006,7 +1006,7 @@
           <node concept="10QFUN" id="4wJaMXe_UbJ" role="3clFbG">
             <node concept="2YIFZM" id="4wJaMXe_Q06" role="10QFUP">
               <ref role="1Pybhc" to="t4tl:~DCopy" resolve="DCopy" />
-              <ref role="37wK5l" to="t4tl:~DCopy.of(org.jetbrains.mps.openapi.model.SNode,org.modelingvalue.dclare.mps.DNode):org.modelingvalue.dclare.mps.DCopy" resolve="of" />
+              <ref role="37wK5l" to="t4tl:~DCopy.of(org.jetbrains.mps.openapi.model.SNode,org.modelingvalue.dclare.mps.DNode)" resolve="of" />
               <node concept="37vLTw" id="4wJaMXfcJQa" role="37wK5m">
                 <ref role="3cqZAo" node="4wJaMXfcFVP" resolve="copy" />
               </node>
@@ -1114,7 +1114,7 @@
                           </node>
                         </node>
                         <node concept="liA8E" id="5vtCMlZQk2Y" role="2OqNvi">
-                          <ref role="37wK5l" to="t4tl:~DCopy.getCopied():org.modelingvalue.dclare.mps.DNode" resolve="getCopied" />
+                          <ref role="37wK5l" to="t4tl:~DCopy.getCopied()" resolve="getCopied" />
                         </node>
                       </node>
                     </node>
@@ -1172,7 +1172,7 @@
                         <ref role="3cqZAo" node="5vtCMlZQ0h6" resolve="n" />
                       </node>
                       <node concept="liA8E" id="5vtCMlZQ22E" role="2OqNvi">
-                        <ref role="37wK5l" to="mhbf:~SNode.getConcept():org.jetbrains.mps.openapi.language.SConcept" resolve="getConcept" />
+                        <ref role="37wK5l" to="mhbf:~SNode.getConcept()" resolve="getConcept" />
                       </node>
                     </node>
                   </node>
@@ -1243,7 +1243,7 @@
       <node concept="3clFbS" id="5vtCMlZPOe$" role="3clF47">
         <node concept="3cpWs6" id="5vtCMlZPOgp" role="3cqZAp">
           <node concept="2YIFZM" id="3kW6CMU7EaZ" role="3cqZAk">
-            <ref role="37wK5l" to="t4tl:~DNode.newNode(java.util.List,java.util.List,java.util.function.Predicate,java.util.function.Supplier,java.util.List):org.jetbrains.mps.openapi.model.SNode" resolve="newNode" />
+            <ref role="37wK5l" to="t4tl:~DNode.newNode(java.util.List,java.util.List,java.util.function.Predicate,java.util.function.Supplier,java.util.List)" resolve="newNode" />
             <ref role="1Pybhc" to="t4tl:~DNode" resolve="DNode" />
             <node concept="37vLTw" id="3kW6CMU7KlX" role="37wK5m">
               <ref role="3cqZAo" node="3nckJKQXliX" resolve="pre" />
@@ -1473,7 +1473,7 @@
       <node concept="3clFbS" id="3Qetf3dBkK$" role="3clF47">
         <node concept="3clFbF" id="3Qetf3dBlui" role="3cqZAp">
           <node concept="2YIFZM" id="3Qetf3dBlvO" role="3clFbG">
-            <ref role="37wK5l" to="t4tl:~SClass.of(java.lang.Object,java.lang.String,org.modelingvalue.dclare.mps.SClass...):org.modelingvalue.dclare.mps.SClass" resolve="of" />
+            <ref role="37wK5l" to="t4tl:~SClass.of(java.lang.Object,java.lang.String,org.modelingvalue.dclare.mps.SClass...)" resolve="of" />
             <ref role="1Pybhc" to="t4tl:~SClass" resolve="SClass" />
             <node concept="37vLTw" id="3Qetf3dBlyc" role="37wK5m">
               <ref role="3cqZAo" node="3Qetf3dBlad" resolve="classId" />
@@ -1519,7 +1519,7 @@
       <node concept="3clFbS" id="3Qetf3dya9z" role="3clF47">
         <node concept="3clFbF" id="3Qetf3dya$d" role="3cqZAp">
           <node concept="2YIFZM" id="3Qetf3dymIp" role="3clFbG">
-            <ref role="37wK5l" to="t4tl:~DClassObject.wrap(org.modelingvalue.dclare.mps.SClassObject):org.modelingvalue.dclare.mps.DClassObject" resolve="wrap" />
+            <ref role="37wK5l" to="t4tl:~DClassObject.wrap(org.modelingvalue.dclare.mps.SClassObject)" resolve="wrap" />
             <ref role="1Pybhc" to="t4tl:~DClassObject" resolve="DClassObject" />
             <node concept="2ShNRf" id="3Qetf3dymIq" role="37wK5m">
               <node concept="1pGfFk" id="69ZubXXjE__" role="2ShVmc">
@@ -1570,26 +1570,19 @@
       </node>
       <node concept="3clFbS" id="7S$pNDLb3U1" role="3clF47">
         <node concept="3clFbF" id="7S$pNDLb3U2" role="3cqZAp">
-          <node concept="10QFUN" id="7S$pNDLb3U3" role="3clFbG">
-            <node concept="2OqwBi" id="7S$pNDLb3U4" role="10QFUP">
-              <node concept="10M0yZ" id="7S$pNDLb3U5" role="2Oq$k0">
-                <ref role="3cqZAo" to="t4tl:~DObject.PARENT" resolve="PARENT" />
-                <ref role="1PxDUh" to="t4tl:~DRepository" resolve="DRepository" />
-              </node>
-              <node concept="liA8E" id="7S$pNDLb3U6" role="2OqNvi">
-                <ref role="37wK5l" to="dy39:~Getable.get(java.lang.Object):java.lang.Object" resolve="get" />
-                <node concept="10QFUN" id="7S$pNDLb3U7" role="37wK5m">
-                  <node concept="3uibUv" id="7S$pNDLb6Nj" role="10QFUM">
-                    <ref role="3uigEE" to="t4tl:~DModule" resolve="DModule" />
-                  </node>
-                  <node concept="37vLTw" id="7S$pNDLb3U9" role="10QFUP">
-                    <ref role="3cqZAo" node="7S$pNDLb3TZ" resolve="module" />
-                  </node>
+          <node concept="2OqwBi" id="7KI$$uj_yWi" role="3clFbG">
+            <node concept="1eOMI4" id="7KI$$uj_xQV" role="2Oq$k0">
+              <node concept="10QFUN" id="7KI$$uj_xQS" role="1eOMHV">
+                <node concept="3uibUv" id="7KI$$uj_xW4" role="10QFUM">
+                  <ref role="3uigEE" to="t4tl:~DModule" resolve="DModule" />
+                </node>
+                <node concept="37vLTw" id="7KI$$uj_y7E" role="10QFUP">
+                  <ref role="3cqZAo" node="7S$pNDLb3TZ" resolve="module" />
                 </node>
               </node>
             </node>
-            <node concept="3uibUv" id="7S$pNDLb72l" role="10QFUM">
-              <ref role="3uigEE" to="t4tl:~DRepository" resolve="DRepository" />
+            <node concept="liA8E" id="7KI$$uj_zYd" role="2OqNvi">
+              <ref role="37wK5l" to="t4tl:~DModule.getRepository()" resolve="getRepository" />
             </node>
           </node>
         </node>
@@ -1612,27 +1605,20 @@
         </node>
       </node>
       <node concept="3clFbS" id="7S$pNDL7zVD" role="3clF47">
-        <node concept="3clFbF" id="7S$pNDL7zVE" role="3cqZAp">
-          <node concept="10QFUN" id="7S$pNDL7A9G" role="3clFbG">
-            <node concept="2OqwBi" id="7S$pNDL7zVF" role="10QFUP">
-              <node concept="10M0yZ" id="7S$pNDL7_Sl" role="2Oq$k0">
-                <ref role="3cqZAo" to="t4tl:~DObject.PARENT" resolve="PARENT" />
-                <ref role="1PxDUh" to="t4tl:~DModel" resolve="DModel" />
-              </node>
-              <node concept="liA8E" id="7S$pNDL7zVH" role="2OqNvi">
-                <ref role="37wK5l" to="dy39:~Getable.get(java.lang.Object):java.lang.Object" resolve="get" />
-                <node concept="10QFUN" id="7S$pNDL7zVI" role="37wK5m">
-                  <node concept="3uibUv" id="7S$pNDL7_Ev" role="10QFUM">
-                    <ref role="3uigEE" to="t4tl:~DModel" resolve="DModel" />
-                  </node>
-                  <node concept="37vLTw" id="7S$pNDL7zVK" role="10QFUP">
-                    <ref role="3cqZAo" node="7S$pNDL7zVB" resolve="model" />
-                  </node>
+        <node concept="3clFbF" id="7KI$$uj__Hf" role="3cqZAp">
+          <node concept="2OqwBi" id="7KI$$uj_AK9" role="3clFbG">
+            <node concept="1eOMI4" id="7KI$$uj__Hd" role="2Oq$k0">
+              <node concept="10QFUN" id="7KI$$uj__Ha" role="1eOMHV">
+                <node concept="3uibUv" id="7KI$$uj__HB" role="10QFUM">
+                  <ref role="3uigEE" to="t4tl:~DModel" resolve="DModel" />
+                </node>
+                <node concept="37vLTw" id="7KI$$uj__Vw" role="10QFUP">
+                  <ref role="3cqZAo" node="7S$pNDL7zVB" resolve="model" />
                 </node>
               </node>
             </node>
-            <node concept="3uibUv" id="7S$pNDL7AD3" role="10QFUM">
-              <ref role="3uigEE" to="t4tl:~DModule" resolve="DModule" />
+            <node concept="liA8E" id="7KI$$uj_C7i" role="2OqNvi">
+              <ref role="37wK5l" to="t4tl:~DModel.getModule()" resolve="getModule" />
             </node>
           </node>
         </node>
@@ -1662,7 +1648,7 @@
               <ref role="1PxDUh" to="t4tl:~DNode" resolve="DNode" />
             </node>
             <node concept="liA8E" id="7S$pNDL7ybr" role="2OqNvi">
-              <ref role="37wK5l" to="dy39:~Getable.get(java.lang.Object):java.lang.Object" resolve="get" />
+              <ref role="37wK5l" to="dy39:~Getable.get(java.lang.Object)" resolve="get" />
               <node concept="10QFUN" id="7S$pNDL7yy6" role="37wK5m">
                 <node concept="3uibUv" id="7S$pNDL7yBL" role="10QFUM">
                   <ref role="3uigEE" to="t4tl:~DNode" resolve="DNode" />
@@ -1694,21 +1680,19 @@
       </node>
       <node concept="3clFbS" id="67uyCwCP1zS" role="3clF47">
         <node concept="3clFbF" id="67uyCwCP2y$" role="3cqZAp">
-          <node concept="2OqwBi" id="67uyCwCP2OD" role="3clFbG">
-            <node concept="10M0yZ" id="67uyCwCP2$f" role="2Oq$k0">
-              <ref role="3cqZAo" to="t4tl:~DObject.PARENT" resolve="PARENT" />
-              <ref role="1PxDUh" to="t4tl:~DObject" resolve="DObject" />
-            </node>
-            <node concept="liA8E" id="67uyCwCP38x" role="2OqNvi">
-              <ref role="37wK5l" to="dy39:~Getable.get(java.lang.Object):java.lang.Object" resolve="get" />
-              <node concept="10QFUN" id="67uyCwCP4nE" role="37wK5m">
-                <node concept="3uibUv" id="67uyCwCP4uI" role="10QFUM">
-                  <ref role="3uigEE" to="t4tl:~DObject" resolve="DObject" />
+          <node concept="2OqwBi" id="7KI$$uj_HEK" role="3clFbG">
+            <node concept="1eOMI4" id="7KI$$uj_G$c" role="2Oq$k0">
+              <node concept="10QFUN" id="7KI$$uj_G$9" role="1eOMHV">
+                <node concept="3uibUv" id="7KI$$uj_G$$" role="10QFUM">
+                  <ref role="3uigEE" to="t4tl:~DClassObject" resolve="DClassObject" />
                 </node>
-                <node concept="37vLTw" id="67uyCwCP3em" role="10QFUP">
+                <node concept="37vLTw" id="7KI$$uj_GNx" role="10QFUP">
                   <ref role="3cqZAo" node="67uyCwCP2su" resolve="obj" />
                 </node>
               </node>
+            </node>
+            <node concept="liA8E" id="7KI$$uj_ICf" role="2OqNvi">
+              <ref role="37wK5l" to="t4tl:~DObject.getParent()" resolve="getParent" />
             </node>
           </node>
         </node>
@@ -1736,7 +1720,7 @@
       <node concept="3clFbS" id="3HLMRNkuJ6M" role="3clF47">
         <node concept="3clFbF" id="3HLMRNkuN9V" role="3cqZAp">
           <node concept="2YIFZM" id="3HLMRNkuNg3" role="3clFbG">
-            <ref role="37wK5l" to="t4tl:~DClareMPS.pre(java.util.function.Supplier):java.lang.Object" resolve="pre" />
+            <ref role="37wK5l" to="t4tl:~DClareMPS.pre(java.util.function.Supplier)" resolve="pre" />
             <ref role="1Pybhc" to="t4tl:~DClareMPS" resolve="DClareMPS" />
             <node concept="2ShNRf" id="3HLMRNkuNkF" role="37wK5m">
               <node concept="YeOm9" id="3HLMRNkuRHf" role="2ShVmc">

@@ -646,7 +646,7 @@
                       <node concept="2OqwBi" id="2Bet8mWh58_" role="33vP2m">
                         <node concept="1Q79dO" id="2Bet8mWh58$" role="2Oq$k0" />
                         <node concept="liA8E" id="2Bet8mWh58D" role="2OqNvi">
-                          <ref role="37wK5l" to="w1kc:~IOperationContext.getProject():jetbrains.mps.project.Project" resolve="getProject" />
+                          <ref role="37wK5l" to="w1kc:~IOperationContext.getProject()" resolve="getProject" />
                         </node>
                       </node>
                     </node>
@@ -698,7 +698,7 @@
                               <ref role="3cqZAo" node="2Bet8mWh28w" resolve="name" />
                             </node>
                             <node concept="2YIFZM" id="2Bet8mWh5_Z" role="3K4GZi">
-                              <ref role="37wK5l" to="18ew:~NameUtil.capitalize(java.lang.String):java.lang.String" resolve="capitalize" />
+                              <ref role="37wK5l" to="18ew:~NameUtil.capitalize(java.lang.String)" resolve="capitalize" />
                               <ref role="1Pybhc" to="18ew:~NameUtil" resolve="NameUtil" />
                               <node concept="37vLTw" id="3GM_nagTtv7" role="37wK5m">
                                 <ref role="3cqZAo" node="2Bet8mWh28w" resolve="name" />

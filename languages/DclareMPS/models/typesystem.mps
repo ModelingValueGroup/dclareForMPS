@@ -457,7 +457,7 @@
                     </node>
                   </node>
                   <node concept="liA8E" id="2TGnmG1CSsw" role="2OqNvi">
-                    <ref role="37wK5l" to="wyt6:~String.toUpperCase():java.lang.String" resolve="toUpperCase" />
+                    <ref role="37wK5l" to="wyt6:~String.toUpperCase()" resolve="toUpperCase" />
                   </node>
                 </node>
                 <node concept="2OqwBi" id="2TGnmG1CMaf" role="3uHU7B">
@@ -470,7 +470,7 @@
                     </node>
                   </node>
                   <node concept="liA8E" id="2TGnmG1CMAE" role="2OqNvi">
-                    <ref role="37wK5l" to="wyt6:~String.toUpperCase():java.lang.String" resolve="toUpperCase" />
+                    <ref role="37wK5l" to="wyt6:~String.toUpperCase()" resolve="toUpperCase" />
                   </node>
                 </node>
               </node>
@@ -1499,7 +1499,7 @@
                     </node>
                   </node>
                   <node concept="liA8E" id="6HWpSUECLNE" role="2OqNvi">
-                    <ref role="37wK5l" to="wyt6:~String.toUpperCase():java.lang.String" resolve="toUpperCase" />
+                    <ref role="37wK5l" to="wyt6:~String.toUpperCase()" resolve="toUpperCase" />
                   </node>
                 </node>
                 <node concept="2OqwBi" id="6HWpSUECLNF" role="3uHU7B">
@@ -1512,7 +1512,7 @@
                     </node>
                   </node>
                   <node concept="liA8E" id="6HWpSUECLNJ" role="2OqNvi">
-                    <ref role="37wK5l" to="wyt6:~String.toUpperCase():java.lang.String" resolve="toUpperCase" />
+                    <ref role="37wK5l" to="wyt6:~String.toUpperCase()" resolve="toUpperCase" />
                   </node>
                 </node>
               </node>
@@ -2442,7 +2442,7 @@
                 <ref role="3cqZAo" node="4h_NvYovosV" resolve="sconcept" />
               </node>
               <node concept="liA8E" id="2SzbAVeCSa$" role="2OqNvi">
-                <ref role="37wK5l" to="c17a:~SAbstractConcept.isAbstract():boolean" resolve="isAbstract" />
+                <ref role="37wK5l" to="c17a:~SAbstractConcept.isAbstract()" resolve="isAbstract" />
               </node>
             </node>
             <node concept="3y3z36" id="2SzbAVeCRK6" role="3uHU7B">

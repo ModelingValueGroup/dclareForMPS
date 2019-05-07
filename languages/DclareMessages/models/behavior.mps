@@ -330,12 +330,12 @@
                 <ref role="3cqZAo" node="5j905zHgyHW" resolve="getter" />
               </node>
               <node concept="liA8E" id="5TKknZxavct" role="2OqNvi">
-                <ref role="37wK5l" to="t4tl:~Getter.get(java.util.function.Supplier):java.lang.Object" resolve="get" />
+                <ref role="37wK5l" to="t4tl:~Getter.get(java.util.function.Supplier)" resolve="get" />
                 <node concept="1bVj0M" id="5TKknZxavd1" role="37wK5m">
                   <node concept="3clFbS" id="5TKknZxavd2" role="1bW5cS">
                     <node concept="3clFbF" id="5TKknZxavkS" role="3cqZAp">
                       <node concept="2YIFZM" id="5TKknZxavlL" role="3clFbG">
-                        <ref role="37wK5l" to="t4tl:~DClareMPS.instance():org.modelingvalue.dclare.mps.DClareMPS" resolve="instance" />
+                        <ref role="37wK5l" to="t4tl:~DClareMPS.instance()" resolve="instance" />
                         <ref role="1Pybhc" to="t4tl:~DClareMPS" resolve="DClareMPS" />
                       </node>
                     </node>
@@ -351,7 +351,7 @@
               <ref role="3cqZAo" node="5TKknZxas_t" resolve="dClareMPS" />
             </node>
             <node concept="liA8E" id="5TKknZxazAr" role="2OqNvi">
-              <ref role="37wK5l" to="t4tl:~DClareMPS.command(java.lang.Runnable):void" resolve="command" />
+              <ref role="37wK5l" to="t4tl:~DClareMPS.command(java.lang.Runnable)" resolve="command" />
               <node concept="1bVj0M" id="5TKknZxazAT" role="37wK5m">
                 <node concept="3clFbS" id="5TKknZxazAU" role="1bW5cS">
                   <node concept="3clFbJ" id="1KqhpdFKLJ1" role="3cqZAp">
@@ -379,7 +379,7 @@
                                       </node>
                                       <node concept="2OqwBi" id="1KqhpdFS8Pr" role="10QFUP">
                                         <node concept="liA8E" id="1KqhpdFS8Ps" role="2OqNvi">
-                                          <ref role="37wK5l" to="t4tl:~Getter.get(java.util.function.Supplier):java.lang.Object" resolve="get" />
+                                          <ref role="37wK5l" to="t4tl:~Getter.get(java.util.function.Supplier)" resolve="get" />
                                           <node concept="1bVj0M" id="1KqhpdFS8Pt" role="37wK5m">
                                             <node concept="3clFbS" id="1KqhpdFS8Pu" role="1bW5cS">
                                               <node concept="3clFbF" id="1KqhpdFS8Pv" role="3cqZAp">
@@ -388,7 +388,7 @@
                                                     <ref role="3cqZAo" node="1KqhpdFRBWg" resolve="dMessage" />
                                                   </node>
                                                   <node concept="liA8E" id="1KqhpdFS8Py" role="2OqNvi">
-                                                    <ref role="37wK5l" to="t4tl:~DMessage.subMessages():org.modelingvalue.collections.List" resolve="subMessages" />
+                                                    <ref role="37wK5l" to="t4tl:~DMessage.subMessages()" resolve="subMessages" />
                                                   </node>
                                                 </node>
                                               </node>
@@ -402,7 +402,7 @@
                                     </node>
                                   </node>
                                   <node concept="liA8E" id="1KqhpdFS8P_" role="2OqNvi">
-                                    <ref role="37wK5l" to="zrbp:~Collection.map(java.util.function.Function):org.modelingvalue.collections.Collection" resolve="map" />
+                                    <ref role="37wK5l" to="zrbp:~Collection.map(java.util.function.Function)" resolve="map" />
                                     <node concept="1bVj0M" id="1KqhpdFS8PA" role="37wK5m">
                                       <node concept="3clFbS" id="1KqhpdFS8PB" role="1bW5cS">
                                         <node concept="3clFbF" id="1KqhpdFS8PC" role="3cqZAp">
@@ -435,7 +435,7 @@
                                   </node>
                                 </node>
                                 <node concept="liA8E" id="1KqhpdFS8PL" role="2OqNvi">
-                                  <ref role="37wK5l" to="zrbp:~Collection.toList():org.modelingvalue.collections.List" resolve="toList" />
+                                  <ref role="37wK5l" to="zrbp:~Collection.toList()" resolve="toList" />
                                 </node>
                               </node>
                             </node>
@@ -495,7 +495,7 @@
                                       </node>
                                       <node concept="2OqwBi" id="1KqhpdFMssU" role="10QFUP">
                                         <node concept="liA8E" id="1KqhpdFMssV" role="2OqNvi">
-                                          <ref role="37wK5l" to="t4tl:~Getter.get(java.util.function.Supplier):java.lang.Object" resolve="get" />
+                                          <ref role="37wK5l" to="t4tl:~Getter.get(java.util.function.Supplier)" resolve="get" />
                                           <node concept="1bVj0M" id="1KqhpdFMssW" role="37wK5m">
                                             <node concept="3clFbS" id="1KqhpdFMssX" role="1bW5cS">
                                               <node concept="3clFbF" id="1KqhpdFMssY" role="3cqZAp">
@@ -504,7 +504,7 @@
                                                     <ref role="3cqZAo" node="5j905zHgnux" resolve="dObject" />
                                                   </node>
                                                   <node concept="liA8E" id="1KqhpdFMst1" role="2OqNvi">
-                                                    <ref role="37wK5l" to="t4tl:~DObject.getMessages(org.modelingvalue.dclare.mps.DMessageType):org.modelingvalue.collections.QualifiedSet" resolve="getMessages" />
+                                                    <ref role="37wK5l" to="t4tl:~DObject.getMessages(org.modelingvalue.dclare.mps.DMessageType)" resolve="getMessages" />
                                                     <node concept="37vLTw" id="1KqhpdFMst2" role="37wK5m">
                                                       <ref role="3cqZAo" node="5j905zHgti7" resolve="type" />
                                                     </node>
@@ -521,7 +521,7 @@
                                     </node>
                                   </node>
                                   <node concept="liA8E" id="1KqhpdFOGd0" role="2OqNvi">
-                                    <ref role="37wK5l" to="zrbp:~Collection.map(java.util.function.Function):org.modelingvalue.collections.Collection" resolve="map" />
+                                    <ref role="37wK5l" to="zrbp:~Collection.map(java.util.function.Function)" resolve="map" />
                                     <node concept="1bVj0M" id="1KqhpdFOOzY" role="37wK5m">
                                       <node concept="3clFbS" id="1KqhpdFOO$0" role="1bW5cS">
                                         <node concept="3clFbF" id="1KqhpdFP61V" role="3cqZAp">
@@ -554,7 +554,7 @@
                                   </node>
                                 </node>
                                 <node concept="liA8E" id="1KqhpdFMst4" role="2OqNvi">
-                                  <ref role="37wK5l" to="zrbp:~Collection.toSet():org.modelingvalue.collections.Set" resolve="toSet" />
+                                  <ref role="37wK5l" to="zrbp:~Collection.toSet()" resolve="toSet" />
                                 </node>
                               </node>
                             </node>
@@ -571,7 +571,7 @@
                               <node concept="2OqwBi" id="5TKknZx2E8G" role="33vP2m">
                                 <node concept="2OqwBi" id="5TKknZx2y$O" role="2Oq$k0">
                                   <node concept="liA8E" id="5TKknZx2$$j" role="2OqNvi">
-                                    <ref role="37wK5l" to="zrbp:~Collection.map(java.util.function.Function):org.modelingvalue.collections.Collection" resolve="map" />
+                                    <ref role="37wK5l" to="zrbp:~Collection.map(java.util.function.Function)" resolve="map" />
                                     <node concept="1bVj0M" id="5TKknZx2_lw" role="37wK5m">
                                       <node concept="3clFbS" id="5TKknZx2_lx" role="1bW5cS">
                                         <node concept="3clFbF" id="5TKknZx2CSM" role="3cqZAp">
@@ -612,7 +612,7 @@
                                       </node>
                                       <node concept="2OqwBi" id="5TKknZx2vkV" role="10QFUP">
                                         <node concept="liA8E" id="5TKknZx2vkW" role="2OqNvi">
-                                          <ref role="37wK5l" to="t4tl:~Getter.get(java.util.function.Supplier):java.lang.Object" resolve="get" />
+                                          <ref role="37wK5l" to="t4tl:~Getter.get(java.util.function.Supplier)" resolve="get" />
                                           <node concept="1bVj0M" id="5TKknZx2vkX" role="37wK5m">
                                             <node concept="3clFbS" id="5TKknZx2vkY" role="1bW5cS">
                                               <node concept="3clFbF" id="5TKknZx2vkZ" role="3cqZAp">
@@ -621,7 +621,7 @@
                                                     <ref role="3cqZAo" node="5j905zHgnux" resolve="dObject" />
                                                   </node>
                                                   <node concept="liA8E" id="5TKknZx2vl2" role="2OqNvi">
-                                                    <ref role="37wK5l" to="t4tl:~DObject.getMessageChildren(org.modelingvalue.dclare.mps.DMessageType):org.modelingvalue.collections.Set" resolve="getMessageChildren" />
+                                                    <ref role="37wK5l" to="t4tl:~DObject.getMessageChildren(org.modelingvalue.dclare.mps.DMessageType)" resolve="getMessageChildren" />
                                                     <node concept="37vLTw" id="5TKknZx2vl3" role="37wK5m">
                                                       <ref role="3cqZAo" node="5j905zHgti7" resolve="type" />
                                                     </node>
@@ -639,7 +639,7 @@
                                   </node>
                                 </node>
                                 <node concept="liA8E" id="5TKknZx2GrJ" role="2OqNvi">
-                                  <ref role="37wK5l" to="zrbp:~Collection.toSet():org.modelingvalue.collections.Set" resolve="toSet" />
+                                  <ref role="37wK5l" to="zrbp:~Collection.toSet()" resolve="toSet" />
                                 </node>
                               </node>
                             </node>
@@ -742,7 +742,7 @@
                       <ref role="3cqZAo" node="1KqhpdFNfb6" resolve="dMessage" />
                     </node>
                     <node concept="liA8E" id="1KqhpdFQ72W" role="2OqNvi">
-                      <ref role="37wK5l" to="t4tl:~DMessage.id():java.lang.String" resolve="id" />
+                      <ref role="37wK5l" to="t4tl:~DMessage.id()" resolve="id" />
                     </node>
                   </node>
                 </node>
@@ -754,11 +754,11 @@
                         <ref role="3cqZAo" node="1KqhpdFNfb6" resolve="dMessage" />
                       </node>
                       <node concept="liA8E" id="1KqhpdFPPh7" role="2OqNvi">
-                        <ref role="37wK5l" to="t4tl:~DMessage.content():java.lang.Object" resolve="content" />
+                        <ref role="37wK5l" to="t4tl:~DMessage.content()" resolve="content" />
                       </node>
                     </node>
                     <node concept="liA8E" id="1KqhpdFPPr9" role="2OqNvi">
-                      <ref role="37wK5l" to="wyt6:~Object.toString():java.lang.String" resolve="toString" />
+                      <ref role="37wK5l" to="wyt6:~Object.toString()" resolve="toString" />
                     </node>
                   </node>
                 </node>
@@ -770,11 +770,11 @@
                         <ref role="3cqZAo" node="1KqhpdFNfb6" resolve="dMessage" />
                       </node>
                       <node concept="liA8E" id="1KqhpdFQ34o" role="2OqNvi">
-                        <ref role="37wK5l" to="t4tl:~DMessage.context():org.modelingvalue.dclare.mps.DObject" resolve="context" />
+                        <ref role="37wK5l" to="t4tl:~DMessage.context()" resolve="context" />
                       </node>
                     </node>
                     <node concept="liA8E" id="1KqhpdFQ3jR" role="2OqNvi">
-                      <ref role="37wK5l" to="t4tl:~DObject.toString():java.lang.String" resolve="toString" />
+                      <ref role="37wK5l" to="t4tl:~DObject.toString()" resolve="toString" />
                     </node>
                   </node>
                 </node>
@@ -795,7 +795,7 @@
                         <ref role="3cqZAo" node="1KqhpdFNfb6" resolve="dMessage" />
                       </node>
                       <node concept="liA8E" id="1KqhpdFPSDh" role="2OqNvi">
-                        <ref role="37wK5l" to="t4tl:~DMessage.source():org.jetbrains.mps.openapi.model.SNode" resolve="source" />
+                        <ref role="37wK5l" to="t4tl:~DMessage.source()" resolve="source" />
                       </node>
                     </node>
                   </node>
@@ -812,7 +812,7 @@
               </node>
             </node>
             <node concept="liA8E" id="1KqhpdFNfbH" role="2OqNvi">
-              <ref role="37wK5l" to="mhbf:~SNode.putUserObject(java.lang.Object,java.lang.Object):void" resolve="putUserObject" />
+              <ref role="37wK5l" to="mhbf:~SNode.putUserObject(java.lang.Object,java.lang.Object)" resolve="putUserObject" />
               <node concept="Xl_RD" id="1KqhpdFNfbI" role="37wK5m">
                 <property role="Xl_RC" value="D_MESSAGE" />
               </node>
@@ -830,7 +830,7 @@
               </node>
             </node>
             <node concept="liA8E" id="1KqhpdFNfbO" role="2OqNvi">
-              <ref role="37wK5l" to="mhbf:~SNode.putUserObject(java.lang.Object,java.lang.Object):void" resolve="putUserObject" />
+              <ref role="37wK5l" to="mhbf:~SNode.putUserObject(java.lang.Object,java.lang.Object)" resolve="putUserObject" />
               <node concept="Xl_RD" id="1KqhpdFNfbP" role="37wK5m">
                 <property role="Xl_RC" value="GETTER" />
               </node>
@@ -848,7 +848,7 @@
               </node>
             </node>
             <node concept="liA8E" id="1KqhpdFNfbV" role="2OqNvi">
-              <ref role="37wK5l" to="mhbf:~SNode.putUserObject(java.lang.Object,java.lang.Object):void" resolve="putUserObject" />
+              <ref role="37wK5l" to="mhbf:~SNode.putUserObject(java.lang.Object,java.lang.Object)" resolve="putUserObject" />
               <node concept="Xl_RD" id="1KqhpdFNfbW" role="37wK5m">
                 <property role="Xl_RC" value="D_TYPE" />
               </node>
@@ -907,7 +907,7 @@
                       <ref role="3cqZAo" node="5j905zH3rzL" resolve="dObject" />
                     </node>
                     <node concept="liA8E" id="1KqhpdG7lMY" role="2OqNvi">
-                      <ref role="37wK5l" to="t4tl:~DObject.toString():java.lang.String" resolve="toString" />
+                      <ref role="37wK5l" to="t4tl:~DObject.toString()" resolve="toString" />
                     </node>
                   </node>
                 </node>
@@ -936,7 +936,7 @@
                           </node>
                         </node>
                         <node concept="liA8E" id="1KqhpdFTLHj" role="2OqNvi">
-                          <ref role="37wK5l" to="t4tl:~DObject.original():java.lang.Object" resolve="original" />
+                          <ref role="37wK5l" to="t4tl:~DObject.original()" resolve="original" />
                         </node>
                       </node>
                       <node concept="10Nm6u" id="5j905zH3$2l" role="3K4GZi" />
@@ -965,7 +965,7 @@
               </node>
             </node>
             <node concept="liA8E" id="5j905zH1Bjo" role="2OqNvi">
-              <ref role="37wK5l" to="mhbf:~SNode.putUserObject(java.lang.Object,java.lang.Object):void" resolve="putUserObject" />
+              <ref role="37wK5l" to="mhbf:~SNode.putUserObject(java.lang.Object,java.lang.Object)" resolve="putUserObject" />
               <node concept="Xl_RD" id="5j905zH1Bjp" role="37wK5m">
                 <property role="Xl_RC" value="D_OBJECT" />
               </node>
@@ -983,7 +983,7 @@
               </node>
             </node>
             <node concept="liA8E" id="5j905zH26Iw" role="2OqNvi">
-              <ref role="37wK5l" to="mhbf:~SNode.putUserObject(java.lang.Object,java.lang.Object):void" resolve="putUserObject" />
+              <ref role="37wK5l" to="mhbf:~SNode.putUserObject(java.lang.Object,java.lang.Object)" resolve="putUserObject" />
               <node concept="Xl_RD" id="5j905zH26Ix" role="37wK5m">
                 <property role="Xl_RC" value="GETTER" />
               </node>
@@ -1001,7 +1001,7 @@
               </node>
             </node>
             <node concept="liA8E" id="5j905zHfMLn" role="2OqNvi">
-              <ref role="37wK5l" to="mhbf:~SNode.putUserObject(java.lang.Object,java.lang.Object):void" resolve="putUserObject" />
+              <ref role="37wK5l" to="mhbf:~SNode.putUserObject(java.lang.Object,java.lang.Object)" resolve="putUserObject" />
               <node concept="Xl_RD" id="5j905zHfMLo" role="37wK5m">
                 <property role="Xl_RC" value="D_TYPE" />
               </node>
@@ -1035,7 +1035,7 @@
                 <node concept="13iPFW" id="5j905zHfN9m" role="2JrQYb" />
               </node>
               <node concept="liA8E" id="5j905zHfN9n" role="2OqNvi">
-                <ref role="37wK5l" to="mhbf:~SNode.getUserObject(java.lang.Object):java.lang.Object" resolve="getUserObject" />
+                <ref role="37wK5l" to="mhbf:~SNode.getUserObject(java.lang.Object)" resolve="getUserObject" />
                 <node concept="Xl_RD" id="5j905zHfN9o" role="37wK5m">
                   <property role="Xl_RC" value="D_TYPE" />
                 </node>
@@ -1062,7 +1062,7 @@
                 <node concept="13iPFW" id="5j905zH3oV$" role="2JrQYb" />
               </node>
               <node concept="liA8E" id="5j905zH3oV_" role="2OqNvi">
-                <ref role="37wK5l" to="mhbf:~SNode.getUserObject(java.lang.Object):java.lang.Object" resolve="getUserObject" />
+                <ref role="37wK5l" to="mhbf:~SNode.getUserObject(java.lang.Object)" resolve="getUserObject" />
                 <node concept="Xl_RD" id="5j905zH3oVA" role="37wK5m">
                   <property role="Xl_RC" value="GETTER" />
                 </node>
@@ -1089,7 +1089,7 @@
                 <node concept="13iPFW" id="5j905zH3p43" role="2JrQYb" />
               </node>
               <node concept="liA8E" id="5j905zH3p44" role="2OqNvi">
-                <ref role="37wK5l" to="mhbf:~SNode.getUserObject(java.lang.Object):java.lang.Object" resolve="getUserObject" />
+                <ref role="37wK5l" to="mhbf:~SNode.getUserObject(java.lang.Object)" resolve="getUserObject" />
                 <node concept="Xl_RD" id="5j905zH3p45" role="37wK5m">
                   <property role="Xl_RC" value="D_OBJECT" />
                 </node>
@@ -1116,7 +1116,7 @@
                 <node concept="13iPFW" id="1KqhpdFQcyt" role="2JrQYb" />
               </node>
               <node concept="liA8E" id="1KqhpdFQcyu" role="2OqNvi">
-                <ref role="37wK5l" to="mhbf:~SNode.getUserObject(java.lang.Object):java.lang.Object" resolve="getUserObject" />
+                <ref role="37wK5l" to="mhbf:~SNode.getUserObject(java.lang.Object)" resolve="getUserObject" />
                 <node concept="Xl_RD" id="1KqhpdFQcyv" role="37wK5m">
                   <property role="Xl_RC" value="D_MESSAGE" />
                 </node>
