@@ -1691,8 +1691,8 @@
                 </node>
               </node>
             </node>
-            <node concept="liA8E" id="7KI$$uj_ICf" role="2OqNvi">
-              <ref role="37wK5l" to="t4tl:~DObject.getParent()" resolve="getParent" />
+            <node concept="liA8E" id="2DAKF84NYLb" role="2OqNvi">
+              <ref role="37wK5l" to="t4tl:~DObject.dObjectParent()" resolve="dObjectParent" />
             </node>
           </node>
         </node>
