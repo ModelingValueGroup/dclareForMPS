@@ -16,7 +16,6 @@ package org.modelingvalue.dclare.mps;
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.jetbrains.mps.openapi.module.SRepository;
 import org.modelingvalue.collections.Collection;
-import org.modelingvalue.collections.ContainingCollection;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.transactions.Constant;
@@ -56,12 +55,6 @@ public class DClassObject extends DObject<SClassObject> implements SClassObject 
         super(original);
     }
 
-    @SuppressWarnings("rawtypes")
-    @Override
-    protected ContainingCollection<? extends DObject> getChildren() {
-        return Set.of();
-    }
-
     @Override
     public boolean isReadOnly() {
         return false;
@@ -74,7 +67,7 @@ public class DClassObject extends DObject<SClassObject> implements SClassObject 
 
     @Override
     protected DType getType() {
-        return TYPE.get(Pair.of(DObject.TYPE.get(PARENT.get(this)).getLanguages(), original().getSClass()));
+        return TYPE.get(Pair.of(DObject.TYPE.get(getParent()).getLanguages(), original().getSClass()));
     }
 
     @Override

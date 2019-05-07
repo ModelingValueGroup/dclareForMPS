@@ -18,6 +18,7 @@ import org.jetbrains.mps.openapi.language.SContainmentLink;
 import org.jetbrains.mps.openapi.language.SProperty;
 import org.jetbrains.mps.openapi.language.SReferenceLink;
 import org.jetbrains.mps.openapi.model.SNode;
+import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
@@ -68,11 +69,8 @@ public class DCopy extends DNode {
     }
 
     @Override
-    protected void activate() {
-        super.activate();
-        for (Observer<DCopy> observer : RULES.get(original().getConcept())) {
-            observer.trigger(this);
-        }
+    public Collection<? extends Observer<?>> dObservers() {
+        return Collection.concat(super.dObservers(), RULES.get(original().getConcept()));
     }
 
     private List<DNode> copy(List<DNode> children) {

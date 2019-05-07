@@ -28,7 +28,6 @@ import org.jetbrains.mps.openapi.module.SModuleReference;
 import org.jetbrains.mps.openapi.module.SRepository;
 import org.jetbrains.mps.openapi.persistence.ModelRoot;
 import org.modelingvalue.collections.Collection;
-import org.modelingvalue.collections.ContainingCollection;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.transactions.Constant;
@@ -96,11 +95,6 @@ public class DModule extends DObject<SModule> implements SModule {
     }
 
     @Override
-    protected ContainingCollection<DModel> getChildren() {
-        return MODELS.get(this);
-    }
-
-    @Override
     protected SRepository getOriginalRepository() {
         return original().getRepository();
     }
@@ -144,10 +138,8 @@ public class DModule extends DObject<SModule> implements SModule {
     }
 
     @Override
-    protected void activate() {
-        super.activate();
-        LANGUAGES_RULE.trigger(this);
-        MODELS_RULE.trigger(this);
+    public Collection<? extends Observer<?>> dObservers() {
+        return Collection.concat(super.dObservers(), Collection.of(LANGUAGES_RULE, MODELS_RULE));
     }
 
     @Override
@@ -194,7 +186,7 @@ public class DModule extends DObject<SModule> implements SModule {
 
     @Override
     public DRepository getRepository() {
-        return (DRepository) PARENT.get(this);
+        return (DRepository) getParent();
     }
 
     @Override

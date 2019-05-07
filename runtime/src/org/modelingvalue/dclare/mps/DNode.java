@@ -42,6 +42,7 @@ import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.transactions.ActionInstance;
 import org.modelingvalue.transactions.Constant;
 import org.modelingvalue.transactions.LeafTransaction;
+import org.modelingvalue.transactions.Mutable;
 import org.modelingvalue.transactions.Observed;
 import org.modelingvalue.transactions.Observer;
 import org.modelingvalue.transactions.Priority;
@@ -51,127 +52,128 @@ import jetbrains.mps.smodel.SNodeUtil;
 
 public class DNode extends DObject<SNode> implements SNode {
 
-    private static final Constant<Pair<Set<SLanguage>, SConcept>, DType>         TYPE                = Constant.of("NODE_TYPE", null, p -> new DType(p) {
-                                                                                                         @SuppressWarnings({"unchecked", "rawtypes"})
-                                                                                                         @Override
-                                                                                                         public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
-                                                                                                             return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getNodeRules(p.b()))).toSet();
-                                                                                                         }
+    private static final Constant<Pair<Set<SLanguage>, SConcept>, DType>          TYPE                = Constant.of("NODE_TYPE", null, p -> new DType(p) {
+                                                                                                          @SuppressWarnings({"unchecked", "rawtypes"})
+                                                                                                          @Override
+                                                                                                          public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
+                                                                                                              return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getNodeRules(p.b()))).toSet();
+                                                                                                          }
 
-                                                                                                         @SuppressWarnings({"unchecked", "rawtypes"})
-                                                                                                         @Override
-                                                                                                         public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
-                                                                                                             return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getNodeAttributes(p.b()))).toSet();
-                                                                                                         }
+                                                                                                          @SuppressWarnings({"unchecked", "rawtypes"})
+                                                                                                          @Override
+                                                                                                          public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
+                                                                                                              return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getNodeAttributes(p.b()))).toSet();
+                                                                                                          }
 
-                                                                                                         @Override
-                                                                                                         public Set<SLanguage> getLanguages() {
-                                                                                                             return p.a();
-                                                                                                         }
-                                                                                                     });
+                                                                                                          @Override
+                                                                                                          public Set<SLanguage> getLanguages() {
+                                                                                                              return p.a();
+                                                                                                          }
+                                                                                                      });
 
-    public static final Observed<DNode, DModel>                                  MODEL               = Observed.of("MODEL", null);
+    public static final Observed<DNode, DModel>                                   MODEL               = Observed.of("MODEL", null);
 
-    public static final Observed<DNode, Map<Object, Object>>                     USER_OBJECTS        = Observed.of("USER_OBJECTS", Map.of());
-
-    @SuppressWarnings("deprecation")
-    public static final Constant<SContainmentLink, Observed<DNode, List<DNode>>> MANY_CONTAINMENT    = Constant.of("MANY_CONTAINMENT", sc -> {
-                                                                                                         return DObserved.<DNode, List<DNode>> of(sc, List.of(), !sc.isOptional(), true, false, false,                                                //
-                                                                                                                 (dNode, pre, post, first) -> {
-                                                                                                                     if (first) {
-                                                                                                                         DObserved.map(DNode.children(dNode.original(), sc), post.map(DNode::original).toList(),                                      //
-                                                                                                                                 (n, a) -> {
-                                                                                                                                 }, r -> dNode.original().removeChild(r));
-                                                                                                                     } else {
-                                                                                                                         DObserved.map(DNode.children(dNode.original(), sc), post.map(DNode::original).toList(),                                      //
-                                                                                                                                 (n, a) -> dNode.original().insertChildAfter(sc, n, a), r -> {
-                                                                                                                                                                                                                                  });
-                                                                                                                     }
-                                                                                                                 }, () -> sc.getDeclarationNode());
-                                                                                                     });
+    public static final Observed<DNode, Map<Object, Object>>                      USER_OBJECTS        = Observed.of("USER_OBJECTS", Map.of());
 
     @SuppressWarnings("deprecation")
-    public static final Constant<SContainmentLink, Observed<DNode, DNode>>       SINGLE_CONTAINMENT  = Constant.of("SINGLE_CONTAINMENT", sc -> {
-                                                                                                         return DObserved.<DNode, DNode> of(sc, null, !sc.isOptional(), true, false, false,                                                           //
-                                                                                                                 (dNode, pre, post, first) -> {
-                                                                                                                     SNode sNode = dNode.original();
-                                                                                                                     List<SNode> cs = children(sNode, sc);
-                                                                                                                     if (first) {
-                                                                                                                         List<SNode> toBeRemoved = cs.filter((s) -> post == null || !s.equals(post.original)).toList();
-                                                                                                                         for (SNode sn : toBeRemoved) {
-                                                                                                                             sNode.removeChild(sn);
-                                                                                                                         }
-                                                                                                                     }
-                                                                                                                     if (!first && post != null && !cs.contains(post.original())) {
-                                                                                                                         sNode.addChild(sc, post.original());
-                                                                                                                     }
-                                                                                                                 }, () -> sc.getDeclarationNode());
-                                                                                                     });
+    public static final Constant<SContainmentLink, DObserved<DNode, List<DNode>>> MANY_CONTAINMENT    = Constant.of("MANY_CONTAINMENT", sc -> {
+                                                                                                          return DObserved.<DNode, List<DNode>> of(sc, List.of(), !sc.isOptional(), true, false, false,                                                 //
+                                                                                                                  (dNode, pre, post, first) -> {
+                                                                                                                      if (first) {
+                                                                                                                          DObserved.map(DNode.children(dNode.original(), sc), post.map(DNode::original).toList(),                                       //
+                                                                                                                                  (n, a) -> {
+                                                                                                                                  }, r -> dNode.original().removeChild(r));
+                                                                                                                      } else {
+                                                                                                                          DObserved.map(DNode.children(dNode.original(), sc), post.map(DNode::original).toList(),                                       //
+                                                                                                                                  (n, a) -> dNode.original().insertChildAfter(sc, n, a), r -> {
+                                                                                                                                                                                                                                    });
+                                                                                                                      }
+                                                                                                                  }, () -> sc.getDeclarationNode());
+                                                                                                      });
 
     @SuppressWarnings("deprecation")
-    public static final Constant<SReferenceLink, Observed<DNode, DNode>>         REFERENCE           = Constant.of("REFERENCE", sr -> {
-                                                                                                         Observed<DNode, Set<DNode>> oppos = DNode.OPPOSITE.get(sr);
-                                                                                                         return DObserved.<DNode, DNode> of(sr, null, !sr.isOptional(), false, true, false,                                                           //
-                                                                                                                 (dNode, pre, post, first) -> {
-                                                                                                                     if (first) {
-                                                                                                                         SNode ref = post != null ? post.original() : null;
-                                                                                                                         if (!Objects.equals(dNode.original().getReferenceTarget(sr), ref)) {
-                                                                                                                             dNode.original().setReferenceTarget(sr, ref);
-                                                                                                                         }
-                                                                                                                     }
-                                                                                                                 },                                                                                                                                   //
-                                                                                                                 (tx, o, b, a) -> {
-                                                                                                                     if (a != null) {
-                                                                                                                         oppos.set(a, Set::add, o);
-                                                                                                                     }
-                                                                                                                     if (b != null) {
-                                                                                                                         oppos.set(b, Set::remove, o);
-                                                                                                                     }
-                                                                                                                 }, () -> sr.getDeclarationNode());
+    public static final Constant<SContainmentLink, DObserved<DNode, DNode>>       SINGLE_CONTAINMENT  = Constant.of("SINGLE_CONTAINMENT", sc -> {
+                                                                                                          return DObserved.<DNode, DNode> of(sc, null, !sc.isOptional(), true, false, false,                                                            //
+                                                                                                                  (dNode, pre, post, first) -> {
+                                                                                                                      SNode sNode = dNode.original();
+                                                                                                                      List<SNode> cs = children(sNode, sc);
+                                                                                                                      if (first) {
+                                                                                                                          List<SNode> toBeRemoved = cs.filter((s) -> post == null || !s.equals(post.original)).toList();
+                                                                                                                          for (SNode sn : toBeRemoved) {
+                                                                                                                              sNode.removeChild(sn);
+                                                                                                                          }
+                                                                                                                      }
+                                                                                                                      if (!first && post != null && !cs.contains(post.original())) {
+                                                                                                                          sNode.addChild(sc, post.original());
+                                                                                                                      }
+                                                                                                                  }, () -> sc.getDeclarationNode());
+                                                                                                      });
 
-                                                                                                     });
-    public static final Constant<SReferenceLink, Observed<DNode, Set<DNode>>>    OPPOSITE            = Constant.of("OPPOSITE", sr -> {
-                                                                                                         return Observed.<DNode, Set<DNode>> of(Pair.of(sr, "OPPOSITE"), Set.of());
-                                                                                                     });
     @SuppressWarnings("deprecation")
-    public static final Constant<SProperty, Observed<DNode, String>>             PROPERTY            = Constant.of("PROPERTY", sp -> {
-                                                                                                         return DObserved.<DNode, String> of(sp, null, true, false, false, false,                                                                     //
-                                                                                                                 (dNode, pre, post, first) -> {
-                                                                                                                     if (first && !Objects.equals(dNode.original().getProperty(sp), post)) {
-                                                                                                                         dNode.original().setProperty(sp, post);
-                                                                                                                     }
-                                                                                                                 }, () -> sp.getDeclarationNode());
-                                                                                                     });
+    public static final Constant<SReferenceLink, DObserved<DNode, DNode>>         REFERENCE           = Constant.of("REFERENCE", sr -> {
+                                                                                                          Observed<DNode, Set<DNode>> oppos = DNode.OPPOSITE.get(sr);
+                                                                                                          return DObserved.<DNode, DNode> of(sr, null, !sr.isOptional(), false, true, false,                                                            //
+                                                                                                                  (dNode, pre, post, first) -> {
+                                                                                                                      if (first) {
+                                                                                                                          SNode ref = post != null ? post.original() : null;
+                                                                                                                          if (!Objects.equals(dNode.original().getReferenceTarget(sr), ref)) {
+                                                                                                                              dNode.original().setReferenceTarget(sr, ref);
+                                                                                                                          }
+                                                                                                                      }
+                                                                                                                  },                                                                                                                                    //
+                                                                                                                  (tx, o, b, a) -> {
+                                                                                                                      if (a != null) {
+                                                                                                                          oppos.set(a, Set::add, o);
+                                                                                                                      }
+                                                                                                                      if (b != null) {
+                                                                                                                          oppos.set(b, Set::remove, o);
+                                                                                                                      }
+                                                                                                                  }, () -> sr.getDeclarationNode());
 
-    public static final Observed<DNode, Set<SLanguage>>                          USED_LANGUAGES      = Observed.of("USED_LANGUAGES", Set.of());
+                                                                                                      });
 
-    public static final Observed<DNode, Set<DModel>>                             USED_MODELS         = Observed.of("USED_MODELS", Set.of());
+    public static final Constant<SReferenceLink, Observed<DNode, Set<DNode>>>     OPPOSITE            = Constant.of("OPPOSITE", sr -> {
+                                                                                                          return Observed.<DNode, Set<DNode>> of(Pair.of(sr, "OPPOSITE"), Set.of());
+                                                                                                      });
+    @SuppressWarnings("deprecation")
+    public static final Constant<SProperty, DObserved<DNode, String>>             PROPERTY            = Constant.of("PROPERTY", sp -> {
+                                                                                                          return DObserved.<DNode, String> of(sp, null, true, false, false, false,                                                                      //
+                                                                                                                  (dNode, pre, post, first) -> {
+                                                                                                                      if (first && !Objects.equals(dNode.original().getProperty(sp), post)) {
+                                                                                                                          dNode.original().setProperty(sp, post);
+                                                                                                                      }
+                                                                                                                  }, () -> sp.getDeclarationNode());
+                                                                                                      });
 
-    protected static final Setable<DNode, ActionInstance>                        CREATOR             = Setable.of("CREATOR", null);
+    public static final Observed<DNode, Set<SLanguage>>                           USED_LANGUAGES      = Observed.of("USED_LANGUAGES", Set.of());
 
-    protected static final Setable<DNode, DNode>                                 REPLACEMENT         = Setable.of("REPLACEMENT", null);
+    public static final Observed<DNode, Set<DModel>>                              USED_MODELS         = Observed.of("USED_MODELS", Set.of());
 
-    private static final Observer<DNode>                                         MODEL_RULE          = DObject.<DNode> observer(MODEL, o -> {
-                                                                                                         DNode p = o.ancestor(DNode.class);
-                                                                                                         MODEL.set(o, p != null ? MODEL.get(p) : o.ancestor(DModel.class));
-                                                                                                     }, Priority.preDepth);
+    protected static final Setable<DNode, ActionInstance>                         CREATOR             = Setable.of("CREATOR", null);
 
-    private static final Observer<DNode>                                         USED_LANGUAGES_RULE = DObject.<DNode> observer(USED_LANGUAGES, o -> {
-                                                                                                         USED_LANGUAGES.set(o, o.getChildren().flatMap(r -> DNode.USED_LANGUAGES.get(r)).toSet().add(o.getConcept().getLanguage()));
-                                                                                                     }, Priority.preDepth);
+    protected static final Setable<DNode, DNode>                                  REPLACEMENT         = Setable.of("REPLACEMENT", null);
 
-    private static final Observer<DNode>                                         USED_MODELS_RULE    = DObject.<DNode> observer(USED_MODELS, o -> {
-                                                                                                         USED_MODELS.set(o, o.getChildren().flatMap(r -> DNode.USED_MODELS.get(r)).toSet().addAll(o.getReferenced().map(r -> {
-                                                                                                                                                                                                              DModel dm = MODEL.get(r);
-                                                                                                                                                                                                              if (dm == null) {
-                                                                                                                                                                                                                  SModel sm = r.original().getModel();
-                                                                                                                                                                                                                  if (sm != null) {
-                                                                                                                                                                                                                      dm = DModel.of(sm);
-                                                                                                                                                                                                                  }
-                                                                                                                                                                                                              }
-                                                                                                                                                                                                              return dm;
-                                                                                                                                                                                                          }).toSet()));
-                                                                                                     }, Priority.preDepth);
+    private static final Observer<DNode>                                          MODEL_RULE          = DObject.<DNode> observer(MODEL, o -> {
+                                                                                                          DNode p = o.ancestor(DNode.class);
+                                                                                                          MODEL.set(o, p != null ? MODEL.get(p) : o.ancestor(DModel.class));
+                                                                                                      }, Priority.preDepth);
+
+    private static final Observer<DNode>                                          USED_LANGUAGES_RULE = DObject.<DNode> observer(USED_LANGUAGES, o -> {
+                                                                                                          USED_LANGUAGES.set(o, o.getChildren().flatMap(r -> DNode.USED_LANGUAGES.get(r)).toSet().add(o.getConcept().getLanguage()));
+                                                                                                      }, Priority.preDepth);
+
+    private static final Observer<DNode>                                          USED_MODELS_RULE    = DObject.<DNode> observer(USED_MODELS, o -> {
+                                                                                                          USED_MODELS.set(o, o.getChildren().flatMap(r -> DNode.USED_MODELS.get(r)).toSet().addAll(o.getReferenced().map(r -> {
+                                                                                                                                                                                                                DModel dm = MODEL.get(r);
+                                                                                                                                                                                                                if (dm == null) {
+                                                                                                                                                                                                                    SModel sm = r.original().getModel();
+                                                                                                                                                                                                                    if (sm != null) {
+                                                                                                                                                                                                                        dm = DModel.of(sm);
+                                                                                                                                                                                                                    }
+                                                                                                                                                                                                                }
+                                                                                                                                                                                                                return dm;
+                                                                                                                                                                                                            }).toSet()));
+                                                                                                      }, Priority.preDepth);
 
     public static DNode of(SNode original) {
         return original instanceof DNode ? (DNode) original : new DNode(original);
@@ -327,7 +329,7 @@ public class DNode extends DObject<SNode> implements SNode {
 
     @Override
     protected DType getType() {
-        return TYPE.get(Pair.of(DObject.TYPE.get(PARENT.get(this)).getLanguages(), getConcept()));
+        return TYPE.get(Pair.of(DObject.TYPE.get(getParent()).getLanguages(), getConcept()));
     }
 
     @Override
@@ -379,11 +381,8 @@ public class DNode extends DObject<SNode> implements SNode {
     }
 
     @Override
-    protected void activate() {
-        super.activate();
-        MODEL_RULE.trigger(this);
-        USED_LANGUAGES_RULE.trigger(this);
-        USED_MODELS_RULE.trigger(this);
+    public Collection<? extends Observer<?>> dObservers() {
+        return Collection.concat(super.dObservers(), Collection.of(MODEL_RULE, USED_LANGUAGES_RULE, USED_MODELS_RULE));
     }
 
     @Override
@@ -511,11 +510,10 @@ public class DNode extends DObject<SNode> implements SNode {
         }
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
     public DNode getParent() {
-        DObject dObject = PARENT.get(this);
-        return dObject instanceof DNode ? (DNode) dObject : null;
+        Mutable parent = dParent();
+        return parent instanceof DNode ? (DNode) parent : null;
     }
 
     @Override
@@ -524,11 +522,10 @@ public class DNode extends DObject<SNode> implements SNode {
         return p != null ? p.getContainingRoot() : this;
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
     public SContainmentLink getContainmentLink() {
-        DObserved dObserved = CONTAINING.get(this);
-        return dObserved != null && dObserved.id() instanceof SContainmentLink ? (SContainmentLink) dObserved.id() : null;
+        Setable<Mutable, ?> containing = dContaining();
+        return containing != null && containing.id() instanceof SContainmentLink ? (SContainmentLink) containing.id() : null;
     }
 
     @Override

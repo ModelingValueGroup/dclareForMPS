@@ -38,10 +38,12 @@ import org.modelingvalue.transactions.UniverseTransaction;
 @SuppressWarnings("rawtypes")
 public interface DRule<O> extends DFeature<O> {
 
-    Constant<DRule, DRule.DObserver> OBSERVER             = Constant.of("OBSERVER",   //
+    Constant<DRule, DRule.DObserver<?>> OBSERVER             = Constant.of("OBSERVER",   //
             r -> DRule.DObserver.of(r, Direction.forward, Priority.postDepth));
-    Context<Boolean>                 EMPTY_ATTRIBUTE      = Context.of(false);
-    Context<Boolean>                 COLLECTION_ATTRIBUTE = Context.of(false);
+
+    Context<Boolean>                    EMPTY_ATTRIBUTE      = Context.of(false);
+
+    Context<Boolean>                    COLLECTION_ATTRIBUTE = Context.of(false);
 
     class DObserver<O extends Mutable> extends Observer<O> {
 

@@ -22,7 +22,6 @@ import org.jetbrains.mps.openapi.module.SModuleReference;
 import org.jetbrains.mps.openapi.module.SRepository;
 import org.jetbrains.mps.openapi.module.SRepositoryListener;
 import org.modelingvalue.collections.Collection;
-import org.modelingvalue.collections.ContainingCollection;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.transactions.Constant;
@@ -61,12 +60,6 @@ public class DRepository extends DObject<SRepository> implements SRepository {
 
     protected DRepository(SRepository original) {
         super(original);
-    }
-
-    @SuppressWarnings("rawtypes")
-    @Override
-    protected ContainingCollection<? extends DObject> getChildren() {
-        return MODULES.get(this);
     }
 
     @Override
@@ -114,16 +107,6 @@ public class DRepository extends DObject<SRepository> implements SRepository {
     }
 
     @Override
-    public SRepository getParent() {
-        return null;
-    }
-
-    @Override
-    public boolean isOwned() {
-        return true;
-    }
-
-    @Override
     public SModule getModule(SModuleId moduleId) {
         return MODULES.get(this).filter(m -> m.getModuleId().equals(moduleId)).findAny().orElse(null);
     }
@@ -157,6 +140,11 @@ public class DRepository extends DObject<SRepository> implements SRepository {
     @Override
     public void removeRepositoryListener(SRepositoryListener listener) {
         original().removeRepositoryListener(listener);
+    }
+
+    @Override
+    public DRepository getParent() {
+        return null;
     }
 
     private class Listener extends Pair<DRepository, DClareMPS> implements SRepositoryListener {

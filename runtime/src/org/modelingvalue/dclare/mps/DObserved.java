@@ -28,7 +28,6 @@ import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.QuadConsumer;
 import org.modelingvalue.transactions.LeafTransaction;
 import org.modelingvalue.transactions.Observed;
-import org.modelingvalue.transactions.Setable;
 
 @SuppressWarnings("rawtypes")
 public class DObserved<O extends DObject, T> extends Observed<O, T> implements DFeature<O> {
@@ -49,27 +48,6 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
 
     protected DObserved(Object id, T def, boolean mandatory, boolean composite, boolean deferred, boolean synthetic, QuadConsumer<O, T, T, Boolean> toMPS, QuadConsumer<LeafTransaction, O, T, T> changed, Supplier<SNode> source) {
         super(id, def, composite, changed);
-        if (composite) {
-            QuadConsumer<LeafTransaction, O, T, T> superChanged = this.changed;
-            this.changed = (tx, o, b, a) -> {
-                if (superChanged != null) {
-                    superChanged.accept(tx, o, b, a);
-                }
-                Setable.<Set<DObject<?>>, DObject<?>> diff(DObject.getDObjectSet(b), DObject.getDObjectSet(a), added -> {
-                    DObject.PARENT.set(added, o);
-                    DObject.CONTAINING.set(added, this);
-                    added.start(DObject.dClareMPS());
-                }, removed -> {
-                    if (o.equals(DObject.PARENT.get(removed))) {
-                        DObject.PARENT.set(removed, null);
-                        removed.stop(DObject.dClareMPS());
-                    }
-                    if (equals(DNode.CONTAINING.get(removed))) {
-                        DObject.CONTAINING.set(removed, null);
-                    }
-                });
-            };
-        }
         this.toMPS = toMPS;
         this.mandatory = mandatory;
         this.deferred = deferred;

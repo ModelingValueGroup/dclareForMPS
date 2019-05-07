@@ -39,7 +39,6 @@ import org.jetbrains.mps.openapi.module.SRepository;
 import org.jetbrains.mps.openapi.persistence.DataSource;
 import org.jetbrains.mps.openapi.persistence.ModelRoot;
 import org.modelingvalue.collections.Collection;
-import org.modelingvalue.collections.ContainingCollection;
 import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
@@ -147,7 +146,7 @@ public class DModel extends DObject<SModel> implements SModel {
 
     @Override
     protected DType getType() {
-        return TYPE.get(DObject.TYPE.get(PARENT.get(this)).getLanguages());
+        return TYPE.get(DObject.TYPE.get(getParent()).getLanguages());
     }
 
     protected Set<SLanguage> getUsedLanguages() {
@@ -155,16 +154,8 @@ public class DModel extends DObject<SModel> implements SModel {
     }
 
     @Override
-    protected ContainingCollection<DNode> getChildren() {
-        return ROOTS.get(this);
-    }
-
-    @Override
-    protected void activate() {
-        super.activate();
-        USED_LANGUAGES_RULE.trigger(this);
-        USED_MODELS_RULE.trigger(this);
-        REFERENCED_RULE.trigger(this);
+    public Collection<? extends Observer<?>> dObservers() {
+        return Collection.concat(super.dObservers(), Collection.of(USED_LANGUAGES_RULE, USED_MODELS_RULE, REFERENCED_RULE));
     }
 
     @Override
@@ -312,7 +303,7 @@ public class DModel extends DObject<SModel> implements SModel {
 
     @Override
     public DModule getModule() {
-        return (DModule) PARENT.get(this);
+        return (DModule) getParent();
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})

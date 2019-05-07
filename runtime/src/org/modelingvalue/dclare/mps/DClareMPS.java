@@ -36,6 +36,7 @@ import org.modelingvalue.transactions.Direction;
 import org.modelingvalue.transactions.ImperativeTransaction;
 import org.modelingvalue.transactions.LeafTransaction;
 import org.modelingvalue.transactions.Observed;
+import org.modelingvalue.transactions.Observer;
 import org.modelingvalue.transactions.Priority;
 import org.modelingvalue.transactions.Setable;
 import org.modelingvalue.transactions.State;
@@ -68,12 +69,13 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
                                                                                                                   return aspect != null ? Collection.of(aspect.getRuleSets()).toSet() : Set.of();
                                                                                                               });
 
+    private final static Constant<DClareMPS, DRepository>                                       REPOSITORY    = Constant.of("REPOSITORY", null, true, d -> DRepository.of(d.getRepository()));
+
     private final ContextPool                                                                   thePool       = ContextThread.createPool();
     protected final Thread                                                                      waitForEndThread;
     protected final UniverseTransaction                                                         universeTransaction;
     protected final Project                                                                     project;
     private final StartStopHandler                                                              startStopHandler;
-    private DRepository                                                                         repository;
     private ImperativeTransaction                                                               imperativeTransaction;
     private boolean                                                                             running;
     protected final Concurrent<TransactionList<DRule.DObserver<?>, DObserverTransaction>>       dObserverTransactions;
@@ -125,6 +127,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
                     System.err.println(DCLARE + "END PRIORITY   " + prio + "  " + this);
                 }
             }
+
         };
         this.dObserverTransactions = Concurrent.of(() -> new TransactionList<>(universeTransaction));
         this.nonCheckingTransactions = Concurrent.of(() -> new TransactionList<>(universeTransaction));
@@ -149,16 +152,6 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
         });
         waitForEndThread.setDaemon(true);
         waitForEndThread.start();
-        universeTransaction.put("start", () -> {
-            repository = DRepository.of(project.getRepository());
-            if (TRACE) {
-                System.err.println(DCLARE + "START READ " + this);
-            }
-            repository.start(this);
-            if (TRACE) {
-                System.err.println(DCLARE + "END READ " + this);
-            }
-        }, Priority.preDepth);
         universeTransaction.put("activate", () -> {
             imperativeTransaction = universeTransaction.addIntegration("MPSNative", this, r -> {
                 if (imperativeTransaction != null && !COMMITTING.get()) {
@@ -172,11 +165,22 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
             if (TRACE) {
                 System.err.println(DCLARE + "START ACTIVATE " + this);
             }
-            repository.activate();
+            dActivate();
             if (TRACE) {
                 System.err.println(DCLARE + "END ACTIVATE " + this);
             }
         }, Priority.preDepth);
+    }
+
+    @Override
+    public void init() {
+        if (TRACE) {
+            System.err.println(DCLARE + "START READ " + this);
+        }
+        getRepository().start(this);
+        if (TRACE) {
+            System.err.println(DCLARE + "END READ " + this);
+        }
     }
 
     @Override
@@ -306,7 +310,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
                         public <R> R get(Supplier<R> supplier) {
                             return post.get(supplier);
                         }
-                    }, repository);
+                    }, getRepository());
                 }
             } finally {
                 COMMITTING.set(false);
@@ -322,12 +326,12 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
             imperativeTransaction.stop();
             imperativeTransaction = null;
             universeTransaction.kill();
-            universeTransaction.preState().run(() -> repository.stop(this));
+            universeTransaction.preState().run(() -> getRepository().stop(this));
         }
     }
 
     public DRepository getRepository() {
-        return repository;
+        return REPOSITORY.get(this);
     }
 
     public boolean isRunning() {
@@ -335,7 +339,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     }
 
     private static LanguageRegistry registry() {
-        return LanguageRegistry.getInstance(instance().repository.original());
+        return LanguageRegistry.getInstance(instance().getRepository().original());
     }
 
     public static <T> T pre(Supplier<T> supplier) {
@@ -345,6 +349,11 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
 
     public UniverseTransaction universeTransaction() {
         return universeTransaction;
+    }
+
+    @Override
+    public Collection<? extends Observer<?>> dObservers() {
+        return Collection.of();
     }
 
 }

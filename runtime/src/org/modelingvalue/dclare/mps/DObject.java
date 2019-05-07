@@ -19,7 +19,6 @@ import java.util.stream.Collectors;
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.jetbrains.mps.openapi.module.SRepository;
 import org.modelingvalue.collections.Collection;
-import org.modelingvalue.collections.ContainingCollection;
 import org.modelingvalue.collections.Entry;
 import org.modelingvalue.collections.Map;
 import org.modelingvalue.collections.QualifiedSet;
@@ -69,32 +68,6 @@ public abstract class DObject<O> implements Mutable {
                                                                                                                                              }
                                                                                                                                          });
 
-    public static final Setable<DObject, DObserved>                                                            CONTAINING                = DObserved.of("CONTAINING", null, false, false, false, true, (o, b, a, f) -> {
-                                                                                                                                         }, null);
-
-    @SuppressWarnings("unchecked")
-    public static final Setable<DObject, DObject>                                                              PARENT                    = DObserved.of("PARENT", null, false, false, false, true, (o, b, a, f) -> {
-                                                                                                                                         }, (tx, o, b, a) -> {
-                                                                                                                                             if (b != null && a != null) {
-                                                                                                                                                 DObserved cont = CONTAINING.get(o);
-                                                                                                                                                 if (cont != null) {
-                                                                                                                                                     cont.remove(b, o);
-                                                                                                                                                 }
-                                                                                                                                             }
-                                                                                                                                         }, null);
-
-    public static final Setable<DObject, Set<DObject>>                                                         CHILDREN                  = Observed.of("CHILDREN", Set.of(), (tx, o, b, a) -> {
-                                                                                                                                             Setable.<Set<? extends DObject>, DObject> diff(b, a,                                                                                                                      //
-                                                                                                                                                     e -> e.activate(), e -> e.deactivate());
-                                                                                                                                         });
-
-    @SuppressWarnings("unchecked")
-    private static final Setable<DObject, Set<DRule.DObserver>>                                                RULE_INSTANCES            = Setable.of("RULE_INSTANCES", Set.of(), (tx, o, b, a) -> {
-                                                                                                                                             Setable.<Set<DRule.DObserver>, DRule.DObserver> diff(b, a,                                                                                                                //
-                                                                                                                                                     c -> ((DRule.DObserver<Mutable>) c).trigger(tx.parent().mutable()),                                                                                               //
-                                                                                                                                                     d -> ((DRule.DObserver<Mutable>) d).deObserve(tx.parent().mutable()));
-                                                                                                                                         });
-
     protected static final Setable<DObject, Map<DMessageType, Set<? extends DObject>>>                         MESSAGE_CHILDREN          = Observed.of("MESSAGE_CHILDREN", MESSAGE_SET_MAP);
 
     protected static final Setable<DObject, Map<DMessageType, Boolean>>                                        MESSAGES_OR_CHILDREN      = Observed.of("MESSAGES_OR_CHILDREN", MESSAGE_BOOLEAN_MAP);
@@ -105,26 +78,13 @@ public abstract class DObject<O> implements Mutable {
                                                                                                                                              TYPE.set(o, o.getType());
                                                                                                                                          }, Priority.preDepth);
 
-    @SuppressWarnings("unchecked")
-    private static final Observer<DObject>                                                                     CHILDREN_RULE             = observer(CHILDREN, o -> {
-                                                                                                                                             CHILDREN.set(o, o.getAllChildren().toSet());
-                                                                                                                                         }, Priority.preDepth);
-
-    @SuppressWarnings("unchecked")
-    private static final Observer<DObject>                                                                     CONSTANT_CONTAINMENT_RULE = observer("CONSTANT_CONTAINMENT", o -> {
-                                                                                                                                             TYPE.get(o).getAttributes().filter(DAttribute::isConstant).filter(DAttribute::isComposite).forEach(cc -> cc.get(o));
-                                                                                                                                         }, Priority.preDepth);
-
-    private static final Observer<DObject>                                                                     RULE_INSTANCES_RULE       = observer(RULE_INSTANCES, o -> {
-                                                                                                                                             RULE_INSTANCES.set(o, TYPE.get(o).getRules().map(r -> DRule.OBSERVER.get(r)).toSet());
-                                                                                                                                         }, Priority.preDepth);
-
     private static final Observer<DObject>                                                                     MESSAGES_OR_CHILDREN_RULE = observer(MESSAGES_OR_CHILDREN, o -> {
                                                                                                                                              MESSAGES_OR_CHILDREN.set(o, MESSAGE_TYPES.toMap(t -> Entry.of(t, !o.getMessages(t).isEmpty() || !o.getMessageChildren(t).isEmpty())));
                                                                                                                                          }, Priority.postDepth);
 
+    @SuppressWarnings("unchecked")
     private static final Observer<DObject>                                                                     MESSAGE_CHILDREN_RULE     = observer(MESSAGE_CHILDREN, o -> {
-                                                                                                                                             MESSAGE_CHILDREN.set(o, MESSAGE_TYPES.toMap(t -> Entry.of(t, CHILDREN.get(o).filter(c -> MESSAGES_OR_CHILDREN.get(c).get(t)).toSet())));
+                                                                                                                                             MESSAGE_CHILDREN.set(o, MESSAGE_TYPES.toMap(t -> Entry.of(t, o.getAllChildren().filter(c -> MESSAGES_OR_CHILDREN.get((DObject) c).get(t)).toSet())));
                                                                                                                                          }, Priority.postDepth);
 
     @SuppressWarnings("unchecked")
@@ -197,7 +157,7 @@ public abstract class DObject<O> implements Mutable {
     public abstract boolean isReadOnly();
 
     public boolean isOwned() {
-        return PARENT.get(this) != null;
+        return dParent() != null;
     }
 
     @Override
@@ -213,16 +173,15 @@ public abstract class DObject<O> implements Mutable {
         return TYPE.get(this).getNonSyntheticAttributes().collect(Collectors.toList());
     }
 
-    @SuppressWarnings("unchecked")
-    public ContainingCollection<DNode> getAllChildren() {
-        return getContained().addAll((ContainingCollection) getChildren());
+    @Override
+    public Collection<? extends Observer<?>> dObservers() {
+        return Collection.concat(TYPE.get(this).getRules().map(r -> DRule.OBSERVER.get(r)), //
+                Collection.of(TYPE_RULE, MESSAGES_OR_CHILDREN_RULE, MESSAGE_CHILDREN_RULE, EMPTY_MANDATORY_RULE, REFERENCED_ORPHAN_RULE));
     }
 
-    protected abstract ContainingCollection<? extends DObject> getChildren();
-
     @SuppressWarnings("unchecked")
-    private ContainingCollection<? extends DObject> getContained() {
-        return TYPE.get(this).getAttributes().filter(DAttribute::isComposite).flatMap(a -> getDObjectSet(a.get(this))).toSet();
+    public Collection<? extends DObject> getAllChildren() {
+        return (Collection<? extends DObject>) dChildren();
     }
 
     @SuppressWarnings("unchecked")
@@ -253,20 +212,6 @@ public abstract class DObject<O> implements Mutable {
         exit(dClareMPS);
     }
 
-    protected void activate() {
-        CHILDREN_RULE.trigger(this);
-        TYPE_RULE.trigger(this);
-        CONSTANT_CONTAINMENT_RULE.trigger(this);
-        RULE_INSTANCES_RULE.trigger(this);
-        MESSAGES_OR_CHILDREN_RULE.trigger(this);
-        MESSAGE_CHILDREN_RULE.trigger(this);
-        EMPTY_MANDATORY_RULE.trigger(this);
-        REFERENCED_ORPHAN_RULE.trigger(this);
-    }
-
-    protected void deactivate() {
-    }
-
     protected abstract SRepository getOriginalRepository();
 
     private boolean isInOtherRepository(DObject o) {
@@ -280,12 +225,17 @@ public abstract class DObject<O> implements Mutable {
 
     @SuppressWarnings("unchecked")
     public <T> T ancestor(Class<T> cls) {
-        for (DObject p = PARENT.get(this); p != null; p = PARENT.get(p)) {
+        for (DObject p = getParent(); p != null; p = p.getParent()) {
             if (cls.isInstance(p)) {
                 return (T) p;
             }
         }
         return null;
+    }
+
+    public DObject getParent() {
+        Object parent = dParent();
+        return parent instanceof DObject ? (DObject) parent : null;
     }
 
     protected abstract DType getType();
