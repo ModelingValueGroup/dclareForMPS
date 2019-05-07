@@ -146,7 +146,7 @@ public class DModel extends DObject<SModel> implements SModel {
 
     @Override
     protected DType getType() {
-        return TYPE.get(DObject.TYPE.get(getParent()).getLanguages());
+        return TYPE.get(DObject.TYPE.get(dObjectParent()).getLanguages());
     }
 
     protected Set<SLanguage> getUsedLanguages() {
@@ -303,7 +303,7 @@ public class DModel extends DObject<SModel> implements SModel {
 
     @Override
     public DModule getModule() {
-        return (DModule) getParent();
+        return (DModule) dParent();
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})

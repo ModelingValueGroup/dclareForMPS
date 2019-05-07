@@ -69,7 +69,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
                                                                                                                   return aspect != null ? Collection.of(aspect.getRuleSets()).toSet() : Set.of();
                                                                                                               });
 
-    private final static Constant<DClareMPS, DRepository>                                       REPOSITORY    = Constant.of("REPOSITORY", null, true, d -> DRepository.of(d.getRepository()));
+    private final static Constant<DClareMPS, DRepository>                                       REPOSITORY    = Constant.of("REPOSITORY", null, true, d -> DRepository.of(d.project.getRepository()));
 
     private final ContextPool                                                                   thePool       = ContextThread.createPool();
     protected final Thread                                                                      waitForEndThread;
@@ -152,34 +152,25 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
         });
         waitForEndThread.setDaemon(true);
         waitForEndThread.start();
-        universeTransaction.put("activate", () -> {
-            imperativeTransaction = universeTransaction.addIntegration("MPSNative", this, r -> {
-                if (imperativeTransaction != null && !COMMITTING.get()) {
-                    if (!running) {
-                        running = true;
-                        command(() -> startStopHandler.start(project));
-                    }
-                    command(r);
-                }
-            });
-            if (TRACE) {
-                System.err.println(DCLARE + "START ACTIVATE " + this);
-            }
-            dActivate();
-            if (TRACE) {
-                System.err.println(DCLARE + "END ACTIVATE " + this);
-            }
-        }, Priority.preDepth);
     }
 
     @Override
     public void init() {
+        imperativeTransaction = universeTransaction.addIntegration("MPSNative", this, r -> {
+            if (imperativeTransaction != null && !COMMITTING.get()) {
+                if (!running) {
+                    running = true;
+                    command(() -> startStopHandler.start(project));
+                }
+                command(r);
+            }
+        });
         if (TRACE) {
-            System.err.println(DCLARE + "START READ " + this);
+            System.err.println(DCLARE + "START INIT " + this);
         }
-        getRepository().start(this);
+        Universe.super.init();
         if (TRACE) {
-            System.err.println(DCLARE + "END READ " + this);
+            System.err.println(DCLARE + "END INIT " + this);
         }
     }
 

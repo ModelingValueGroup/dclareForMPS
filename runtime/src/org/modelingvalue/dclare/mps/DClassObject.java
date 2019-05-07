@@ -67,7 +67,7 @@ public class DClassObject extends DObject<SClassObject> implements SClassObject 
 
     @Override
     protected DType getType() {
-        return TYPE.get(Pair.of(DObject.TYPE.get(getParent()).getLanguages(), original().getSClass()));
+        return TYPE.get(Pair.of(DObject.TYPE.get(dObjectParent()).getLanguages(), original().getSClass()));
     }
 
     @Override

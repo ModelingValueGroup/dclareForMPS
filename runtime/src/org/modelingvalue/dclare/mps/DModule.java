@@ -186,7 +186,7 @@ public class DModule extends DObject<SModule> implements SModule {
 
     @Override
     public DRepository getRepository() {
-        return (DRepository) getParent();
+        return (DRepository) dParent();
     }
 
     @Override

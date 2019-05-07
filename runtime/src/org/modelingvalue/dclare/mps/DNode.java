@@ -154,8 +154,8 @@ public class DNode extends DObject<SNode> implements SNode {
     protected static final Setable<DNode, DNode>                                  REPLACEMENT         = Setable.of("REPLACEMENT", null);
 
     private static final Observer<DNode>                                          MODEL_RULE          = DObject.<DNode> observer(MODEL, o -> {
-                                                                                                          DNode p = o.ancestor(DNode.class);
-                                                                                                          MODEL.set(o, p != null ? MODEL.get(p) : o.ancestor(DModel.class));
+                                                                                                          DNode p = o.dAncestor(DNode.class);
+                                                                                                          MODEL.set(o, p != null ? MODEL.get(p) : o.dAncestor(DModel.class));
                                                                                                       }, Priority.preDepth);
 
     private static final Observer<DNode>                                          USED_LANGUAGES_RULE = DObject.<DNode> observer(USED_LANGUAGES, o -> {
@@ -329,7 +329,7 @@ public class DNode extends DObject<SNode> implements SNode {
 
     @Override
     protected DType getType() {
-        return TYPE.get(Pair.of(DObject.TYPE.get(getParent()).getLanguages(), getConcept()));
+        return TYPE.get(Pair.of(DObject.TYPE.get(dObjectParent()).getLanguages(), getConcept()));
     }
 
     @Override

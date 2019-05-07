@@ -196,6 +196,18 @@ public abstract class DObject<O> implements Mutable {
         }
     }
 
+    @Override
+    public void dActivate() {
+        Mutable.super.dActivate();
+        start(dClareMPS());
+    }
+
+    @Override
+    public void dDeactivate() {
+        Mutable.super.dDeactivate();
+        stop(dClareMPS());
+    }
+
     protected abstract void read(DClareMPS dClareMPS);
 
     protected void init(DClareMPS dClareMPS) {
@@ -224,17 +236,7 @@ public abstract class DObject<O> implements Mutable {
         }
     }
 
-    @SuppressWarnings("unchecked")
-    public <T> T ancestor(Class<T> cls) {
-        for (DObject p = getParent(); p != null; p = p.getParent()) {
-            if (cls.isInstance(p)) {
-                return (T) p;
-            }
-        }
-        return null;
-    }
-
-    public DObject getParent() {
+    public DObject dObjectParent() {
         Object parent = dParent();
         return parent instanceof DObject ? (DObject) parent : null;
     }
