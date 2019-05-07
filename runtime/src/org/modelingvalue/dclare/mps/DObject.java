@@ -173,9 +173,10 @@ public abstract class DObject<O> implements Mutable {
         return TYPE.get(this).getNonSyntheticAttributes().collect(Collectors.toList());
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public Collection<? extends Observer<?>> dObservers() {
-        return Collection.concat(TYPE.get(this).getRules().map(r -> DRule.OBSERVER.get(r)), //
+        return Collection.concat((Collection<? extends Observer<?>>) TYPE.get(this).getObservers(), //
                 Collection.of(TYPE_RULE, MESSAGES_OR_CHILDREN_RULE, MESSAGE_CHILDREN_RULE, EMPTY_MANDATORY_RULE, REFERENCED_ORPHAN_RULE));
     }
 

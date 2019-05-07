@@ -15,6 +15,7 @@ package org.modelingvalue.dclare.mps;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.Set;
+import org.modelingvalue.dclare.mps.DRule.DObserver;
 import org.modelingvalue.transactions.Constant;
 
 @SuppressWarnings("rawtypes")
@@ -22,7 +23,8 @@ public abstract class DType {
 
     private static final Constant<DType, Set<IRuleSet>>   TYPE_RULE_SETS = Constant.of("TYPE_RULE_SETS", Set.of(), t -> t.getLanguages().flatMap(l -> DClareMPS.RULE_SETS.get(l)).toSet());
 
-    private static final Constant<DType, Set<DRule>>      RULES          = Constant.<DType, Set<DRule>> of("RULES", Set.of(), t -> t.getRules(TYPE_RULE_SETS.get(t)));
+    private static final Constant<DType, Set<DObserver>>  OBSERVERS      = Constant.<DType, Set<DObserver>> of("OBSERVERS", Set.of(),                                                      //
+            t -> t.getRules(TYPE_RULE_SETS.get(t)).map(r -> DRule.OBSERVER.get(r)).toSet());
 
     private static final Constant<DType, Set<DAttribute>> ATTRIBUTES     = Constant.of("ATTRIBUTES", Set.of(), t -> t.getAttributes(TYPE_RULE_SETS.get(t)));
 
@@ -32,8 +34,8 @@ public abstract class DType {
 
     public abstract Set<SLanguage> getLanguages();
 
-    public final Set<DRule> getRules() {
-        return RULES.get(this);
+    public final Set<DObserver> getObservers() {
+        return OBSERVERS.get(this);
     }
 
     public final Set<DAttribute> getAttributes() {
