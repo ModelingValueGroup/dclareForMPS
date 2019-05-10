@@ -52,7 +52,7 @@ import jetbrains.mps.smodel.SNodeUtil;
 
 public class DNode extends DObject<SNode> implements SNode {
 
-    private static final Constant<Pair<Set<SLanguage>, SConcept>, DType>          TYPE                = Constant.of("NODE_TYPE", null, p -> new DType(p) {
+    private static final Constant<Pair<Set<SLanguage>, SConcept>, DType>          NODE_TYPE           = Constant.of("NODE_TYPE", null, p -> new DType(p) {
                                                                                                           @SuppressWarnings({"unchecked", "rawtypes"})
                                                                                                           @Override
                                                                                                           public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
@@ -329,7 +329,7 @@ public class DNode extends DObject<SNode> implements SNode {
 
     @Override
     protected DType getType() {
-        return TYPE.get(Pair.of(DObject.TYPE.get(dObjectParent()).getLanguages(), getConcept()));
+        return NODE_TYPE.get(Pair.of(TYPE.get(dObjectParent()).getLanguages(), getConcept()));
     }
 
     @Override

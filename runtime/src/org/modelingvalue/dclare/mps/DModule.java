@@ -44,7 +44,7 @@ public class DModule extends DObject<SModule> implements SModule {
 
     private static final Constant<SModule, DModule>                     DMODULE        = Constant.of("DMODULE", m -> new DModule(m));
 
-    private static final Constant<Pair<Boolean, Set<SLanguage>>, DType> TYPE           = Constant.of("MODULE_TYPE", null, p -> new DType(p) {
+    private static final Constant<Pair<Boolean, Set<SLanguage>>, DType> MODULE_TYPE    = Constant.of("MODULE_TYPE", null, p -> new DType(p) {
                                                                                            @SuppressWarnings({"unchecked", "rawtypes"})
                                                                                            @Override
                                                                                            public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
@@ -101,8 +101,8 @@ public class DModule extends DObject<SModule> implements SModule {
 
     @Override
     protected DType getType() {
-        return DRepository.ACTIVE.get(getRepository()) ? TYPE.getDefault() : //
-                TYPE.get(Pair.of(isAllwaysActive(), LANGUAGES.get(this).filter(l -> !DClareMPS.RULE_SETS.get(l).isEmpty()).toSet()));
+        return !DRepository.ACTIVE.get(getRepository()) ? TYPE.getDefault() : //
+                MODULE_TYPE.get(Pair.of(isAllwaysActive(), LANGUAGES.get(this).filter(l -> !DClareMPS.RULE_SETS.get(l).isEmpty()).toSet()));
     }
 
     private boolean isAllwaysActive() {

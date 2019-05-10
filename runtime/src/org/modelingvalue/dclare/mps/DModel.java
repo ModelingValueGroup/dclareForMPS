@@ -53,7 +53,7 @@ public class DModel extends DObject<SModel> implements SModel {
 
     private static final Constant<SModel, DModel>        DMODEL              = Constant.of("DMODEL", m -> new DModel(m));
 
-    private static final Constant<Set<SLanguage>, DType> TYPE                = Constant.of("MODEL_TYPE", null, ls -> new DType(ls) {
+    private static final Constant<Set<SLanguage>, DType> MODEL_TYPE          = Constant.of("MODEL_TYPE", null, ls -> new DType(ls) {
                                                                                  @SuppressWarnings({"unchecked", "rawtypes"})
                                                                                  @Override
                                                                                  public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
@@ -146,7 +146,7 @@ public class DModel extends DObject<SModel> implements SModel {
 
     @Override
     protected DType getType() {
-        return TYPE.get(DObject.TYPE.get(dObjectParent()).getLanguages());
+        return MODEL_TYPE.get(TYPE.get(dObjectParent()).getLanguages());
     }
 
     protected Set<SLanguage> getUsedLanguages() {

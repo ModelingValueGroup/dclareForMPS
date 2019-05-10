@@ -154,6 +154,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
         if (TRACE) {
             System.err.println(DCLARE + "INIT " + this);
         }
+        getRepository();
         Universe.super.init();
     }
 
