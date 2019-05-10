@@ -44,7 +44,7 @@ public class DModule extends DObject<SModule> implements SModule {
 
     private static final Constant<SModule, DModule>                     DMODULE        = Constant.of("DMODULE", m -> new DModule(m));
 
-    private static final Constant<Pair<Boolean, Set<SLanguage>>, DType> MODULE_TYPE    = Constant.of("MODULE_TYPE", null, p -> new DType(p) {
+    private static final Constant<Pair<Boolean, Set<SLanguage>>, DType> MODULE_TYPE    = Constant.of("MODULE_TYPE", p -> new DType(p) {
                                                                                            @SuppressWarnings({"unchecked", "rawtypes"})
                                                                                            @Override
                                                                                            public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
@@ -65,7 +65,7 @@ public class DModule extends DObject<SModule> implements SModule {
 
     public static final Observed<DModule, Set<DModel>>                  REFERENCED     = Observed.of("REFERENCED", Set.of());
 
-    public static final Observed<DModule, Set<DModel>>                  MODELS         = DObserved.of("MODELS", Set.of(), false, true, false, false, (o, pre, post, first) -> {
+    public static final Observed<DModule, Set<DModel>>                  MODELS         = DObserved.of("MODELS", Set.of(), false, true, null, false, false, (o, pre, post, first) -> {
                                                                                        }, null);
 
     public static final Observed<DModule, Set<SLanguage>>               LANGUAGES      = Observed.of("LANGUAGES", Set.of(), (tx, o, b, a) -> {

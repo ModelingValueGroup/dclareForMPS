@@ -34,7 +34,7 @@ public class DRepository extends DObject<SRepository> implements SRepository {
 
     private static final Constant<SRepository, DRepository> DREPOSITORY     = Constant.of("DREPOSITORY", r -> new DRepository(r));
 
-    private static final Constant<Set<SLanguage>, DType>    REPOSITORY_TYPE = Constant.of("REPOSITORY_TYPE", null, ls -> new DType(ls) {
+    private static final Constant<Set<SLanguage>, DType>    REPOSITORY_TYPE = Constant.of("REPOSITORY_TYPE", ls -> new DType(ls) {
                                                                                 @SuppressWarnings({"rawtypes", "unchecked"})
                                                                                 @Override
                                                                                 public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
@@ -53,7 +53,7 @@ public class DRepository extends DObject<SRepository> implements SRepository {
                                                                                 }
                                                                             });
 
-    public static final Observed<DRepository, Set<DModule>> MODULES         = DObserved.of("MODULES", Set.of(), false, true, false, false, (o, pre, post, first) -> {
+    public static final Observed<DRepository, Set<DModule>> MODULES         = DObserved.of("MODULES", Set.of(), false, true, null, false, false, (o, pre, post, first) -> {
                                                                             }, null);
 
     public static DRepository of(SRepository original) {

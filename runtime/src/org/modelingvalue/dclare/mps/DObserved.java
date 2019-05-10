@@ -28,16 +28,17 @@ import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.QuadConsumer;
 import org.modelingvalue.transactions.LeafTransaction;
 import org.modelingvalue.transactions.Observed;
+import org.modelingvalue.transactions.Setable;
 
 @SuppressWarnings("rawtypes")
 public class DObserved<O extends DObject, T> extends Observed<O, T> implements DFeature<O> {
 
-    public static <C extends DObject, V> DObserved<C, V> of(Object id, V def, boolean mandatory, boolean composite, boolean deferred, boolean synthetic, QuadConsumer<C, V, V, Boolean> toMPS, Supplier<SNode> source) {
-        return of(id, def, mandatory, composite, deferred, synthetic, toMPS, null, source);
+    public static <C extends DObject, V> DObserved<C, V> of(Object id, V def, boolean mandatory, boolean composite, Setable<?, ?> opposite, boolean deferred, boolean synthetic, QuadConsumer<C, V, V, Boolean> toMPS, Supplier<SNode> source) {
+        return new DObserved<C, V>(id, def, mandatory, composite, opposite, deferred, synthetic, toMPS, null, source);
     }
 
-    public static <C extends DObject, V> DObserved<C, V> of(Object id, V def, boolean mandatory, boolean composite, boolean deferred, boolean synthetic, QuadConsumer<C, V, V, Boolean> toMPS, QuadConsumer<LeafTransaction, C, V, V> changed, Supplier<SNode> source) {
-        return new DObserved<C, V>(id, def, mandatory, composite, deferred, synthetic, toMPS, changed, source);
+    public static <C extends DObject, V> DObserved<C, V> of(Object id, V def, boolean mandatory, boolean composite, Setable<?, ?> opposite, boolean deferred, boolean synthetic, QuadConsumer<C, V, V, Boolean> toMPS, QuadConsumer<LeafTransaction, C, V, V> changed, Supplier<SNode> source) {
+        return new DObserved<C, V>(id, def, mandatory, composite, opposite, deferred, synthetic, toMPS, changed, source);
     }
 
     private final QuadConsumer<O, T, T, Boolean> toMPS;
@@ -46,8 +47,8 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
     private final Supplier<SNode>                source;
     private final boolean                        synthetic;
 
-    protected DObserved(Object id, T def, boolean mandatory, boolean composite, boolean deferred, boolean synthetic, QuadConsumer<O, T, T, Boolean> toMPS, QuadConsumer<LeafTransaction, O, T, T> changed, Supplier<SNode> source) {
-        super(id, def, composite, changed);
+    protected DObserved(Object id, T def, boolean mandatory, boolean composite, Setable<?, ?> opposite, boolean deferred, boolean synthetic, QuadConsumer<O, T, T, Boolean> toMPS, QuadConsumer<LeafTransaction, O, T, T> changed, Supplier<SNode> source) {
+        super(id, def, composite, opposite, changed);
         this.toMPS = toMPS;
         this.mandatory = mandatory;
         this.deferred = deferred;

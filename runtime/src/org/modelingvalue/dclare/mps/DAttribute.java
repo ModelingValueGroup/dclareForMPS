@@ -109,7 +109,7 @@ public interface DAttribute<O, T> extends DFeature<O> {
         private final String name;
 
         public DObservedAttribute(Object id, String name, boolean synthetic, boolean optional, boolean composite, V def, Supplier<SNode> source) {
-            super(id, def, !optional, composite, false, synthetic, (o, b, a, first) -> {
+            super(id, def, !optional, composite, null, false, synthetic, (o, b, a, first) -> {
             }, null, source);
             this.name = name;
         }
@@ -234,7 +234,7 @@ public interface DAttribute<O, T> extends DFeature<O> {
         private final Supplier<SNode> source;
 
         public DConstant(Object id, String name, boolean synthetic, boolean composite, Supplier<SNode> source, Function<C, V> deriver) {
-            super(id, null, composite, deriver, null);
+            super(id, null, composite, null, deriver, null);
             this.name = name;
             this.synthetic = synthetic;
             this.source = source;

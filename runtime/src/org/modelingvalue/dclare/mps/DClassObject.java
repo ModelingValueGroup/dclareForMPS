@@ -24,7 +24,7 @@ public class DClassObject extends DObject<SClassObject> implements SClassObject 
 
     private static final Constant<SClassObject, DClassObject>          DCLASS_OBJECT     = Constant.of("DCLASS_OBJECT", c -> new DClassObject(c));
 
-    private static final Constant<Pair<Set<SLanguage>, SClass>, DType> CLASS_OBJECT_TYPE = Constant.of("CLASS_OBJECT_TYPE", null, p -> new DType(p) {
+    private static final Constant<Pair<Set<SLanguage>, SClass>, DType> CLASS_OBJECT_TYPE = Constant.of("CLASS_OBJECT_TYPE", p -> new DType(p) {
                                                                                              @SuppressWarnings({"rawtypes", "unchecked"})
                                                                                              @Override
                                                                                              public Set<DRule> getRules(Set<IRuleSet> ruleSets) {

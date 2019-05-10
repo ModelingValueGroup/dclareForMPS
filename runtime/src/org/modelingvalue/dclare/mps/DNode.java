@@ -52,7 +52,7 @@ import jetbrains.mps.smodel.SNodeUtil;
 
 public class DNode extends DObject<SNode> implements SNode {
 
-    private static final Constant<Pair<Set<SLanguage>, SConcept>, DType>          NODE_TYPE           = Constant.of("NODE_TYPE", null, p -> new DType(p) {
+    private static final Constant<Pair<Set<SLanguage>, SConcept>, DType>          NODE_TYPE           = Constant.of("NODE_TYPE", p -> new DType(p) {
                                                                                                           @SuppressWarnings({"unchecked", "rawtypes"})
                                                                                                           @Override
                                                                                                           public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
@@ -77,7 +77,7 @@ public class DNode extends DObject<SNode> implements SNode {
 
     @SuppressWarnings("deprecation")
     public static final Constant<SContainmentLink, DObserved<DNode, List<DNode>>> MANY_CONTAINMENT    = Constant.of("MANY_CONTAINMENT", sc -> {
-                                                                                                          return DObserved.<DNode, List<DNode>> of(sc, List.of(), !sc.isOptional(), true, false, false,                                                 //
+                                                                                                          return DObserved.<DNode, List<DNode>> of(sc, List.of(), !sc.isOptional(), true, null, false, false,                                           //
                                                                                                                   (dNode, pre, post, first) -> {
                                                                                                                       if (first) {
                                                                                                                           DObserved.map(DNode.children(dNode.original(), sc), post.map(DNode::original).toList(),                                       //
@@ -93,7 +93,7 @@ public class DNode extends DObject<SNode> implements SNode {
 
     @SuppressWarnings("deprecation")
     public static final Constant<SContainmentLink, DObserved<DNode, DNode>>       SINGLE_CONTAINMENT  = Constant.of("SINGLE_CONTAINMENT", sc -> {
-                                                                                                          return DObserved.<DNode, DNode> of(sc, null, !sc.isOptional(), true, false, false,                                                            //
+                                                                                                          return DObserved.<DNode, DNode> of(sc, null, !sc.isOptional(), true, null, false, false,                                                      //
                                                                                                                   (dNode, pre, post, first) -> {
                                                                                                                       SNode sNode = dNode.original();
                                                                                                                       List<SNode> cs = children(sNode, sc);
@@ -112,21 +112,13 @@ public class DNode extends DObject<SNode> implements SNode {
     @SuppressWarnings("deprecation")
     public static final Constant<SReferenceLink, DObserved<DNode, DNode>>         REFERENCE           = Constant.of("REFERENCE", sr -> {
                                                                                                           Observed<DNode, Set<DNode>> oppos = DNode.OPPOSITE.get(sr);
-                                                                                                          return DObserved.<DNode, DNode> of(sr, null, !sr.isOptional(), false, true, false,                                                            //
+                                                                                                          return DObserved.<DNode, DNode> of(sr, null, !sr.isOptional(), false, oppos, true, false,                                                     //
                                                                                                                   (dNode, pre, post, first) -> {
                                                                                                                       if (first) {
                                                                                                                           SNode ref = post != null ? post.original() : null;
                                                                                                                           if (!Objects.equals(dNode.original().getReferenceTarget(sr), ref)) {
                                                                                                                               dNode.original().setReferenceTarget(sr, ref);
                                                                                                                           }
-                                                                                                                      }
-                                                                                                                  },                                                                                                                                    //
-                                                                                                                  (tx, o, b, a) -> {
-                                                                                                                      if (a != null) {
-                                                                                                                          oppos.set(a, Set::add, o);
-                                                                                                                      }
-                                                                                                                      if (b != null) {
-                                                                                                                          oppos.set(b, Set::remove, o);
                                                                                                                       }
                                                                                                                   }, () -> sr.getDeclarationNode());
 
@@ -137,7 +129,7 @@ public class DNode extends DObject<SNode> implements SNode {
                                                                                                       });
     @SuppressWarnings("deprecation")
     public static final Constant<SProperty, DObserved<DNode, String>>             PROPERTY            = Constant.of("PROPERTY", sp -> {
-                                                                                                          return DObserved.<DNode, String> of(sp, null, true, false, false, false,                                                                      //
+                                                                                                          return DObserved.<DNode, String> of(sp, null, true, false, null, false, false,                                                                //
                                                                                                                   (dNode, pre, post, first) -> {
                                                                                                                       if (first && !Objects.equals(dNode.original().getProperty(sp), post)) {
                                                                                                                           dNode.original().setProperty(sp, post);

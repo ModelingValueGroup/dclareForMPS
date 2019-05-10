@@ -53,7 +53,7 @@ public class DModel extends DObject<SModel> implements SModel {
 
     private static final Constant<SModel, DModel>        DMODEL              = Constant.of("DMODEL", m -> new DModel(m));
 
-    private static final Constant<Set<SLanguage>, DType> MODEL_TYPE          = Constant.of("MODEL_TYPE", null, ls -> new DType(ls) {
+    private static final Constant<Set<SLanguage>, DType> MODEL_TYPE          = Constant.of("MODEL_TYPE", ls -> new DType(ls) {
                                                                                  @SuppressWarnings({"unchecked", "rawtypes"})
                                                                                  @Override
                                                                                  public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
@@ -72,7 +72,7 @@ public class DModel extends DObject<SModel> implements SModel {
                                                                                  }
                                                                              });
 
-    public static final Observed<DModel, Set<DNode>>     ROOTS               = DObserved.of("ROOTS", Set.of(), false, true, false, false, (dModel, pre, post, first) -> {
+    public static final Observed<DModel, Set<DNode>>     ROOTS               = DObserved.of("ROOTS", Set.of(), false, true, null, false, false, (dModel, pre, post, first) -> {
                                                                                  if (first) {
                                                                                      DObserved.map(DModel.roots(dModel.original()), post.map(DNode::original).toSet(),                                                                                            //
                                                                                              a -> {
@@ -84,7 +84,7 @@ public class DModel extends DObject<SModel> implements SModel {
                                                                                  }
                                                                              }, null);
 
-    public static final Observed<DModel, Set<SLanguage>> USED_LANGUAGES      = DObserved.of("USED_LANGUAGES", Set.of(), false, false, false, false, (dModel, pre, post, first) -> {
+    public static final Observed<DModel, Set<SLanguage>> USED_LANGUAGES      = DObserved.of("USED_LANGUAGES", Set.of(), false, false, null, false, false, (dModel, pre, post, first) -> {
                                                                                  if (first) {
                                                                                      SModelBase sModel = (SModelBase) dModel.original();
                                                                                      java.util.Collection<SLanguage> ls = sModel.importedLanguageIds();
@@ -96,7 +96,7 @@ public class DModel extends DObject<SModel> implements SModel {
                                                                                  }
                                                                              }, null);
 
-    public static final Observed<DModel, Set<DModel>>    USED_MODELS         = DObserved.of("USED_MODELS", Set.of(), false, false, false, false, (dModel, pre, post, first) -> {
+    public static final Observed<DModel, Set<DModel>>    USED_MODELS         = DObserved.of("USED_MODELS", Set.of(), false, false, null, false, false, (dModel, pre, post, first) -> {
                                                                                  if (first) {
                                                                                      SModelBase sModel = (SModelBase) dModel.original();
                                                                                      java.util.Collection<SModelReference> ls = sModel.getModelImports();

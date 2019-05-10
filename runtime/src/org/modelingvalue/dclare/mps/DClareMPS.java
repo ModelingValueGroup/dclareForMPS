@@ -67,7 +67,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
                                                                                                                   return aspect != null ? Collection.of(aspect.getRuleSets()).toSet() : Set.of();
                                                                                                               });
 
-    private final static Constant<DClareMPS, DRepository>                                       REPOSITORY    = Constant.of("REPOSITORY", null, true, d -> DRepository.of(d.project.getRepository()));
+    private final static Constant<DClareMPS, DRepository>                                       REPOSITORY    = Constant.of("REPOSITORY", true, d -> DRepository.of(d.project.getRepository()));
 
     private final ContextPool                                                                   thePool       = ContextThread.createPool();
     protected final Thread                                                                      waitForEndThread;
