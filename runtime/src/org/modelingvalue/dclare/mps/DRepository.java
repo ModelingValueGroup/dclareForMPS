@@ -30,6 +30,8 @@ import org.modelingvalue.transactions.Observed;
 @SuppressWarnings("deprecation")
 public class DRepository extends DObject<SRepository> implements SRepository {
 
+    static final Observed<DRepository, Boolean>             ACTIVE      = Observed.of("ACTIVE", false);
+
     private static final Constant<SRepository, DRepository> DREPOSITORY = Constant.of("DREPOSITORY", r -> new DRepository(r));
 
     private static final Constant<Set<SLanguage>, DType>    TYPE        = Constant.of("REPOSITORY_TYPE", null, ls -> new DType(ls) {
@@ -74,7 +76,12 @@ public class DRepository extends DObject<SRepository> implements SRepository {
 
     @Override
     protected DType getType() {
-        return TYPE.get(DClareMPS.ALL_LANGUAGES.get(dClareMPS()).filter(l -> !DClareMPS.RULE_SETS.get(l).isEmpty()).toSet());
+        return ACTIVE.get(this) ? TYPE.getDefault() : //
+                TYPE.get(DClareMPS.ALL_LANGUAGES.get(dClareMPS()).filter(l -> !DClareMPS.RULE_SETS.get(l).isEmpty()).toSet());
+    }
+
+    protected void setActive() {
+        ACTIVE.set(this, true);
     }
 
     @Override

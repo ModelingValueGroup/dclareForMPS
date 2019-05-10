@@ -30,9 +30,7 @@ import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.collections.util.TriConsumer;
 import org.modelingvalue.dclare.mps.DRule.DObserverTransaction;
 import org.modelingvalue.dclare.mps.NonCheckingObserver.NonCheckingTransaction;
-import org.modelingvalue.transactions.Action;
 import org.modelingvalue.transactions.Constant;
-import org.modelingvalue.transactions.Direction;
 import org.modelingvalue.transactions.ImperativeTransaction;
 import org.modelingvalue.transactions.LeafTransaction;
 import org.modelingvalue.transactions.Observed;
@@ -89,24 +87,6 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
         }
         universeTransaction = new UniverseTransaction(this, thePool, prevState, 100, maxTotalNrOfChanges, maxNrOfChanges, maxNrOfObserved, maxNrOfObservers, 4, null) {
 
-            private final Action<DClareMPS> clearOrphans = Action.of("clearOrphans", o -> clearOrphans());
-
-            private void clearOrphans() {
-                if (!isTimeTraveling() && imperativeTransaction != null) {
-                    LeafTransaction tx = LeafTransaction.getCurrent();
-                    preState().diff(tx.state(), o -> o instanceof DObject, s -> true).forEach(e0 -> {
-                        if (!((DObject<?>) e0.getKey()).isOwned()) {
-                            tx.clear(e0.getKey());
-                        }
-                    });
-                }
-            }
-
-            @Override
-            protected State post(State pre) {
-                return run(trigger(pre, DClareMPS.this, clearOrphans, Direction.backward));
-            }
-
             @Override
             public void startOpposite() {
                 if (TRACE) {
@@ -152,6 +132,12 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
         });
         waitForEndThread.setDaemon(true);
         waitForEndThread.start();
+        universeTransaction.put("activate", () -> {
+            if (TRACE) {
+                System.err.println(DCLARE + "ACTIVATE " + this);
+            }
+            getRepository().setActive();
+        });
     }
 
     @Override
@@ -166,12 +152,9 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
             }
         });
         if (TRACE) {
-            System.err.println(DCLARE + "START INIT " + this);
+            System.err.println(DCLARE + "INIT " + this);
         }
         Universe.super.init();
-        if (TRACE) {
-            System.err.println(DCLARE + "END INIT " + this);
-        }
     }
 
     @Override
