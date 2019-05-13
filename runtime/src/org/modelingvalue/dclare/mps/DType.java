@@ -28,6 +28,10 @@ public abstract class DType {
 
     private static final Constant<DType, Set<DAttribute>> ATTRIBUTES     = Constant.of("ATTRIBUTES", Set.of(), t -> t.getAttributes(TYPE_RULE_SETS.get(t)));
 
+    private static final Constant<DType, Set<DAttribute>> CONTAINERS     = Constant.of("CONTAINERS", Set.of(), t -> ATTRIBUTES.get(t).filter(DAttribute::isComposite).toSet());
+
+    private static final Constant<DType, Set<DAttribute>> NON_SYNTHETICS = Constant.of("NON_SYNTHETICS", Set.of(), t -> ATTRIBUTES.get(t).filter(a -> !a.isSynthetic()).toSet());
+
     public abstract Set<DRule> getRules(Set<IRuleSet> ruleSets);
 
     public abstract Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets);
@@ -43,7 +47,11 @@ public abstract class DType {
     }
 
     public final Set<DAttribute> getNonSyntheticAttributes() {
-        return ATTRIBUTES.get(this).filter(a -> !a.isSynthetic()).toSet();
+        return NON_SYNTHETICS.get(this);
+    }
+
+    public final Set<DAttribute> getContainerAttributes() {
+        return CONTAINERS.get(this);
     }
 
     private final Object identity;

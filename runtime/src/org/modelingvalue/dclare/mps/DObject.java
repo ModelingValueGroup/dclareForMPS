@@ -181,6 +181,12 @@ public abstract class DObject<O> implements Mutable {
     }
 
     @SuppressWarnings("unchecked")
+    @Override
+    public Collection<? extends Setable<? extends Mutable, ?>> dContainers() {
+        return (Collection<? extends Setable<? extends Mutable, ?>>) TYPE.get(this).getAttributes().filter(a -> a.isComposite());
+    }
+
+    @SuppressWarnings("unchecked")
     public Collection<? extends DObject> getAllChildren() {
         return (Collection<? extends DObject>) dChildren();
     }

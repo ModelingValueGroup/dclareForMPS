@@ -25,7 +25,9 @@ import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.transactions.Constant;
+import org.modelingvalue.transactions.Mutable;
 import org.modelingvalue.transactions.Observed;
+import org.modelingvalue.transactions.Setable;
 
 @SuppressWarnings("deprecation")
 public class DRepository extends DObject<SRepository> implements SRepository {
@@ -91,6 +93,11 @@ public class DRepository extends DObject<SRepository> implements SRepository {
 
     protected static Set<SModule> modules() {
         return Collection.of(dClareMPS().project.getProjectModules()).toSet();
+    }
+
+    @Override
+    public Collection<? extends Setable<? extends Mutable, ?>> dContainers() {
+        return Collection.concat(Set.of(MODULES), super.dContainers());
     }
 
     @Override

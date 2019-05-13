@@ -33,6 +33,7 @@ import org.modelingvalue.dclare.mps.NonCheckingObserver.NonCheckingTransaction;
 import org.modelingvalue.transactions.Constant;
 import org.modelingvalue.transactions.ImperativeTransaction;
 import org.modelingvalue.transactions.LeafTransaction;
+import org.modelingvalue.transactions.Mutable;
 import org.modelingvalue.transactions.Observed;
 import org.modelingvalue.transactions.Observer;
 import org.modelingvalue.transactions.Priority;
@@ -329,6 +330,11 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     @Override
     public Collection<? extends Observer<?>> dObservers() {
         return Collection.of();
+    }
+
+    @Override
+    public Collection<? extends Setable<? extends Mutable, ?>> dContainers() {
+        return Collection.of(REPOSITORY);
     }
 
 }

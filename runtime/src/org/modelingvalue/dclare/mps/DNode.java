@@ -167,6 +167,9 @@ public class DNode extends DObject<SNode> implements SNode {
                                                                                                                                                                                                             }).toSet()));
                                                                                                       }, Priority.preDepth);
 
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private static final Constant<SConcept, Set<DObserved<DNode, ?>>>             CONTAINERS          = Constant.of("", c -> (Set) Collection.of(c.getContainmentLinks()).map(DNode::container).toSet());
+
     public static DNode of(SNode original) {
         return original instanceof DNode ? (DNode) original : new DNode(original);
     }
@@ -378,6 +381,11 @@ public class DNode extends DObject<SNode> implements SNode {
     }
 
     @Override
+    public Collection<? extends Setable<? extends Mutable, ?>> dContainers() {
+        return Collection.concat(CONTAINERS.get(getConcept()), super.dContainers());
+    }
+
+    @Override
     public DModel getModel() {
         return MODEL.get(this);
     }
@@ -561,6 +569,10 @@ public class DNode extends DObject<SNode> implements SNode {
     @Override
     public Iterable<? extends DNode> getChildren(SContainmentLink role) {
         return role.isMultiple() ? MANY_CONTAINMENT.get(role).get(this) : (List) SINGLE_CONTAINMENT.get(role).getCollection(this).toList();
+    }
+
+    private static DObserved<DNode, ?> container(SContainmentLink role) {
+        return role.isMultiple() ? MANY_CONTAINMENT.get(role) : SINGLE_CONTAINMENT.get(role);
     }
 
     @Override

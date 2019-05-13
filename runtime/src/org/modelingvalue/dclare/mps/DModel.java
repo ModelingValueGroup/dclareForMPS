@@ -43,9 +43,11 @@ import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.transactions.Constant;
+import org.modelingvalue.transactions.Mutable;
 import org.modelingvalue.transactions.Observed;
 import org.modelingvalue.transactions.Observer;
 import org.modelingvalue.transactions.Priority;
+import org.modelingvalue.transactions.Setable;
 
 import jetbrains.mps.extapi.model.SModelBase;
 
@@ -156,6 +158,11 @@ public class DModel extends DObject<SModel> implements SModel {
     @Override
     public Collection<? extends Observer<?>> dObservers() {
         return Collection.concat(super.dObservers(), Collection.of(USED_LANGUAGES_RULE, USED_MODELS_RULE, REFERENCED_RULE));
+    }
+
+    @Override
+    public Collection<? extends Setable<? extends Mutable, ?>> dContainers() {
+        return Collection.concat(Set.of(ROOTS), super.dContainers());
     }
 
     @Override

@@ -31,6 +31,7 @@ import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.transactions.Constant;
+import org.modelingvalue.transactions.Mutable;
 import org.modelingvalue.transactions.Observed;
 import org.modelingvalue.transactions.Observer;
 import org.modelingvalue.transactions.Priority;
@@ -141,6 +142,11 @@ public class DModule extends DObject<SModule> implements SModule {
     @Override
     public Collection<? extends Observer<?>> dObservers() {
         return Collection.concat(super.dObservers(), Collection.of(LANGUAGES_RULE, MODELS_RULE));
+    }
+
+    @Override
+    public Collection<? extends Setable<? extends Mutable, ?>> dContainers() {
+        return Collection.concat(Set.of(MODELS), super.dContainers());
     }
 
     @Override
