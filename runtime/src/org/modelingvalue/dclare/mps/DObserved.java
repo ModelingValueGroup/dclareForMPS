@@ -33,11 +33,11 @@ import org.modelingvalue.transactions.Setable;
 @SuppressWarnings("rawtypes")
 public class DObserved<O extends DObject, T> extends Observed<O, T> implements DFeature<O> {
 
-    public static <C extends DObject, V> DObserved<C, V> of(Object id, V def, boolean mandatory, boolean composite, Setable<?, ?> opposite, boolean deferred, boolean synthetic, QuadConsumer<C, V, V, Boolean> toMPS, Supplier<SNode> source) {
+    public static <C extends DObject, V> DObserved<C, V> of(Object id, V def, boolean mandatory, boolean composite, Supplier<Setable<?, ?>> opposite, boolean deferred, boolean synthetic, QuadConsumer<C, V, V, Boolean> toMPS, Supplier<SNode> source) {
         return new DObserved<C, V>(id, def, mandatory, composite, opposite, deferred, synthetic, toMPS, null, source);
     }
 
-    public static <C extends DObject, V> DObserved<C, V> of(Object id, V def, boolean mandatory, boolean composite, Setable<?, ?> opposite, boolean deferred, boolean synthetic, QuadConsumer<C, V, V, Boolean> toMPS, QuadConsumer<LeafTransaction, C, V, V> changed, Supplier<SNode> source) {
+    public static <C extends DObject, V> DObserved<C, V> of(Object id, V def, boolean mandatory, boolean composite, Supplier<Setable<?, ?>> opposite, boolean deferred, boolean synthetic, QuadConsumer<C, V, V, Boolean> toMPS, QuadConsumer<LeafTransaction, C, V, V> changed, Supplier<SNode> source) {
         return new DObserved<C, V>(id, def, mandatory, composite, opposite, deferred, synthetic, toMPS, changed, source);
     }
 
@@ -47,7 +47,7 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
     private final Supplier<SNode>                source;
     private final boolean                        synthetic;
 
-    protected DObserved(Object id, T def, boolean mandatory, boolean composite, Setable<?, ?> opposite, boolean deferred, boolean synthetic, QuadConsumer<O, T, T, Boolean> toMPS, QuadConsumer<LeafTransaction, O, T, T> changed, Supplier<SNode> source) {
+    protected DObserved(Object id, T def, boolean mandatory, boolean composite, Supplier<Setable<?, ?>> opposite, boolean deferred, boolean synthetic, QuadConsumer<O, T, T, Boolean> toMPS, QuadConsumer<LeafTransaction, O, T, T> changed, Supplier<SNode> source) {
         super(id, def, composite, opposite, changed);
         this.toMPS = toMPS;
         this.mandatory = mandatory;

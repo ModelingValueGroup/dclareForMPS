@@ -111,8 +111,7 @@ public class DNode extends DObject<SNode> implements SNode {
 
     @SuppressWarnings("deprecation")
     public static final Constant<SReferenceLink, DObserved<DNode, DNode>>         REFERENCE           = Constant.of("REFERENCE", sr -> {
-                                                                                                          Observed<DNode, Set<DNode>> oppos = DNode.OPPOSITE.get(sr);
-                                                                                                          return DObserved.<DNode, DNode> of(sr, null, !sr.isOptional(), false, oppos, true, false,                                                     //
+                                                                                                          return DObserved.<DNode, DNode> of(sr, null, !sr.isOptional(), false, () -> DNode.OPPOSITE.get(sr), true, false,                              //
                                                                                                                   (dNode, pre, post, first) -> {
                                                                                                                       if (first) {
                                                                                                                           SNode ref = post != null ? post.original() : null;
@@ -125,7 +124,7 @@ public class DNode extends DObject<SNode> implements SNode {
                                                                                                       });
 
     public static final Constant<SReferenceLink, Observed<DNode, Set<DNode>>>     OPPOSITE            = Constant.of("OPPOSITE", sr -> {
-                                                                                                          return Observed.<DNode, Set<DNode>> of(Pair.of(sr, "OPPOSITE"), Set.of());
+                                                                                                          return Observed.<DNode, Set<DNode>> of(Pair.of(sr, "OPPOSITE"), Set.of(), () -> DNode.REFERENCE.get(sr));
                                                                                                       });
     @SuppressWarnings("deprecation")
     public static final Constant<SProperty, DObserved<DNode, String>>             PROPERTY            = Constant.of("PROPERTY", sp -> {
