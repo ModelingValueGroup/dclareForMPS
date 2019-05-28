@@ -120,10 +120,10 @@ public interface DRule<O> extends DFeature<O> {
         }
 
         @Override
-        protected void checkTooManyObservers(LeafTransaction leaf, Object object, Observed observed, Set<ActionInstance> obervers) {
+        protected void checkTooManyObservers(Object object, Observed observed, Set<ActionInstance> obervers) {
             if (object instanceof DObject && observed instanceof DObserved && !((DObserved) observed).isSynthetic()) {
                 try {
-                    super.checkTooManyObservers(leaf, object, observed, obervers.filter(o -> o.action() instanceof DObserver).toSet());
+                    super.checkTooManyObservers(object, observed, obervers.filter(o -> o.action() instanceof DObserver).toSet());
                 } catch (TooManyObserversException e) {
                     ((DObject) object).addMessage((DObserved) observed, "TOO_MANY_OBSERVERS", e);
                 }

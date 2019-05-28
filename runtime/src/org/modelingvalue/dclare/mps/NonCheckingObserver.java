@@ -5,7 +5,6 @@ import java.util.function.Consumer;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.transactions.ActionInstance;
 import org.modelingvalue.transactions.Direction;
-import org.modelingvalue.transactions.LeafTransaction;
 import org.modelingvalue.transactions.Mutable;
 import org.modelingvalue.transactions.MutableTransaction;
 import org.modelingvalue.transactions.Observed;
@@ -59,7 +58,7 @@ public class NonCheckingObserver<O extends Mutable> extends Observer<O> {
 
         @SuppressWarnings("rawtypes")
         @Override
-        protected void checkTooManyObservers(LeafTransaction leafTransaction, Object object, Observed observed, Set<ActionInstance> observers) {
+        protected void checkTooManyObservers(Object object, Observed observed, Set<ActionInstance> observers) {
         }
 
         @Override
