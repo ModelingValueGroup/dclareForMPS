@@ -109,6 +109,11 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
                 }
             }
 
+            @Override
+            protected void handleTooManyChanges(State state) {
+                // Do nothing: Already registered by messages framework.
+            }
+
         };
         this.dObserverTransactions = Concurrent.of(() -> new TransactionList<>(universeTransaction));
         this.nonCheckingTransactions = Concurrent.of(() -> new TransactionList<>(universeTransaction));
