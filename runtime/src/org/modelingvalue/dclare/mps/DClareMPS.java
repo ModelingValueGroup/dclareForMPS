@@ -342,4 +342,9 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
         return Collection.of(REPOSITORY);
     }
 
+    @Override
+    public Collection<? extends Constant<? extends Mutable, ?>> dConstants() {
+        return Collection.of();
+    }
+
 }

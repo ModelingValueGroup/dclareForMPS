@@ -26,6 +26,7 @@ import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.dclare.mps.DAttribute.DObservedAttribute;
 import org.modelingvalue.transactions.ActionInstance;
+import org.modelingvalue.transactions.Constant;
 import org.modelingvalue.transactions.Direction;
 import org.modelingvalue.transactions.LeafTransaction;
 import org.modelingvalue.transactions.Mutable;
@@ -184,6 +185,12 @@ public abstract class DObject<O> implements Mutable {
     @Override
     public Collection<? extends Setable<? extends Mutable, ?>> dContainers() {
         return (Collection<? extends Setable<? extends Mutable, ?>>) TYPE.get(this).getAttributes().filter(a -> a.isComposite());
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public Collection<? extends Constant<? extends Mutable, ?>> dConstants() {
+        return (Collection<? extends Constant<? extends Mutable, ?>>) TYPE.get(this).getAttributes().filter(a -> a instanceof Constant);
     }
 
     @SuppressWarnings("unchecked")
