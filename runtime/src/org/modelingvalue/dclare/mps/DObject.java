@@ -262,11 +262,11 @@ public abstract class DObject<O> implements Mutable {
             m.addSubMessage(new DMessage((DObject) r.mutable(), ((DRule.DObserver) r.observer()).rule(), DMessageType.error, id, //
                     "run: " + r.mutable() + "." + ((DRule.DObserver) r.observer()).rule() + " nr: " + r.nrOfChanges()));
         }, (m, r, s) -> {
-            m.addSubMessage(new DMessage((DObject) s.object(), (DObserved) s.observed(), DMessageType.error, id, //
-                    "read: " + s.object() + "." + s.observed() + "=" + r.read().get(s)));
+            m.addSubMessage(new DMessage((DObject) s.mutable(), (DObserved) s.observed(), DMessageType.error, id, //
+                    "read: " + s.mutable() + "." + s.observed() + "=" + r.read().get(s)));
         }, (m, w, s) -> {
-            m.subMessages().last().addSubMessage(new DMessage((DObject) s.object(), (DObserved) s.observed(), DMessageType.error, id, //
-                    "write: " + s.object() + "." + s.observed() + "=" + w.written().get(s)));
+            m.subMessages().last().addSubMessage(new DMessage((DObject) s.mutable(), (DObserved) s.observed(), DMessageType.error, id, //
+                    "write: " + s.mutable() + "." + s.observed() + "=" + w.written().get(s)));
         }, m -> m.subMessages().last(), tmce.getState().universeTransaction().maxNrOfChanges());
         addMessage(message);
     }
