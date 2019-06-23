@@ -25,13 +25,11 @@ import org.modelingvalue.collections.QualifiedSet;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.dclare.mps.DAttribute.DObservedAttribute;
-import org.modelingvalue.transactions.ActionInstance;
 import org.modelingvalue.transactions.Constant;
 import org.modelingvalue.transactions.Direction;
 import org.modelingvalue.transactions.LeafTransaction;
 import org.modelingvalue.transactions.Mutable;
 import org.modelingvalue.transactions.Observed;
-import org.modelingvalue.transactions.ObservedInstance;
 import org.modelingvalue.transactions.Observer;
 import org.modelingvalue.transactions.Priority;
 import org.modelingvalue.transactions.Setable;
@@ -274,10 +272,11 @@ public abstract class DObject<O> implements Mutable {
     protected void addMessage(DFeature feature, String id, TooManyObservedException tmse) {
         DMessage message = new DMessage(this, feature, DMessageType.warning, id, tmse.getSimpleMessage());
         int number = 0;
-        for (ObservedInstance observedInstance : tmse.getObserved()) {
-            Observed observed = observedInstance.observed();
-            number++;
-            message.addSubMessage(new DMessage(this, (DObserved) observed, DMessageType.warning, number + ")", observedInstance.toString()));
+        for (Entry<Observed, Set<Mutable>> e : tmse.getObserved()) {
+            if (e.getKey() instanceof DObserved) {
+                number++;
+                message.addSubMessage(new DMessage(this, (DObserved) e.getKey(), DMessageType.warning, number + ")", e.getValue().toString()));
+            }
         }
         addMessage(message);
     }
@@ -285,10 +284,10 @@ public abstract class DObject<O> implements Mutable {
     protected void addMessage(DFeature feature, String id, TooManyObserversException tmse) {
         DMessage message = new DMessage(this, feature, DMessageType.warning, id, tmse.getSimpleMessage());
         int number = 0;
-        for (ActionInstance ai : tmse.getObservers()) {
-            if (ai.action() instanceof DRule.DObserver) {
+        for (Entry<Observer, Set<Mutable>> e : tmse.getObservers()) {
+            if (e.getKey() instanceof DRule.DObserver) {
                 number++;
-                message.addSubMessage(new DMessage(this, ((DRule.DObserver) ai.action()).rule(), DMessageType.warning, number + ")", ai.toString()));
+                message.addSubMessage(new DMessage(this, ((DRule.DObserver) e.getKey()).rule(), DMessageType.warning, number + ")", e.getValue().toString()));
             }
         }
         addMessage(message);

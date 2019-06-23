@@ -13,9 +13,9 @@
 
 package org.modelingvalue.dclare.mps;
 
+import org.modelingvalue.collections.Map;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Context;
-import org.modelingvalue.transactions.ActionInstance;
 import org.modelingvalue.transactions.Constant;
 import org.modelingvalue.transactions.Direction;
 import org.modelingvalue.transactions.EmptyMandatoryException;
@@ -23,7 +23,6 @@ import org.modelingvalue.transactions.LeafTransaction;
 import org.modelingvalue.transactions.Mutable;
 import org.modelingvalue.transactions.MutableTransaction;
 import org.modelingvalue.transactions.Observed;
-import org.modelingvalue.transactions.ObservedInstance;
 import org.modelingvalue.transactions.Observer;
 import org.modelingvalue.transactions.ObserverTransaction;
 import org.modelingvalue.transactions.Priority;
@@ -120,10 +119,10 @@ public interface DRule<O> extends DFeature<O> {
         }
 
         @Override
-        protected void checkTooManyObservers(Object object, Observed observed, Set<ActionInstance> obervers) {
+        protected void checkTooManyObservers(Object object, Observed observed, Map<Observer, Set<Mutable>> obervers) {
             if (object instanceof DObject && observed instanceof DObserved && !((DObserved) observed).isSynthetic()) {
                 try {
-                    super.checkTooManyObservers(object, observed, obervers.filter(o -> o.action() instanceof DObserver).toSet());
+                    super.checkTooManyObservers(object, observed, obervers.filter(e -> e.getKey() instanceof DObserver).toMap(e -> e));
                 } catch (TooManyObserversException e) {
                     ((DObject) object).addMessage((DObserved) observed, "TOO_MANY_OBSERVERS", e);
                 }
@@ -131,11 +130,11 @@ public interface DRule<O> extends DFeature<O> {
         }
 
         @Override
-        protected void checkTooManyObserved(Set<ObservedInstance> sets, Set<ObservedInstance> gets) {
+        protected void checkTooManyObserved(Map<Observed, Set<Mutable>> sets, Map<Observed, Set<Mutable>> gets) {
             try {
                 super.checkTooManyObserved(//
-                        sets.filter(s -> s.observed() instanceof DObserved && !((DObserved) s.observed()).isSynthetic()).toSet(), //
-                        gets.filter(s -> s.observed() instanceof DObserved && !((DObserved) s.observed()).isSynthetic()).toSet());
+                        sets.filter(e -> e.getKey() instanceof DObserved && !((DObserved) e.getKey()).isSynthetic()).toMap(e -> e), //
+                        gets.filter(e -> e.getKey() instanceof DObserved && !((DObserved) e.getKey()).isSynthetic()).toMap(e -> e));
             } catch (TooManyObservedException e) {
                 object().addMessage(dRule(), "TOO_MANY_OBSERVED", e);
             }
@@ -149,10 +148,10 @@ public interface DRule<O> extends DFeature<O> {
         }
 
         @Override
-        protected void checkTooManyChanges(State pre, Set<ObservedInstance> sets, Set<ObservedInstance> gets) {
+        protected void checkTooManyChanges(State pre, Map<Observed, Set<Mutable>> sets, Map<Observed, Set<Mutable>> gets) {
             if (universeTransaction().isDebugging()) {
-                sets = sets.filter(s -> s.observed() instanceof DObserved && !((DObserved) s.observed()).isSynthetic()).toSet();
-                gets = gets.filter(s -> s.observed() instanceof DObserved && !((DObserved) s.observed()).isSynthetic()).toSet();
+                sets = sets.filter(e -> e.getKey() instanceof DObserved && !((DObserved) e.getKey()).isSynthetic()).toMap(e -> e);
+                gets = gets.filter(e -> e.getKey() instanceof DObserved && !((DObserved) e.getKey()).isSynthetic()).toMap(e -> e);
             }
             try {
                 super.checkTooManyChanges(pre, sets, gets);

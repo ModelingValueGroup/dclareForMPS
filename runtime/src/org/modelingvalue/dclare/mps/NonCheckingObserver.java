@@ -2,13 +2,12 @@ package org.modelingvalue.dclare.mps;
 
 import java.util.function.Consumer;
 
+import org.modelingvalue.collections.Map;
 import org.modelingvalue.collections.Set;
-import org.modelingvalue.transactions.ActionInstance;
 import org.modelingvalue.transactions.Direction;
 import org.modelingvalue.transactions.Mutable;
 import org.modelingvalue.transactions.MutableTransaction;
 import org.modelingvalue.transactions.Observed;
-import org.modelingvalue.transactions.ObservedInstance;
 import org.modelingvalue.transactions.Observer;
 import org.modelingvalue.transactions.ObserverTransaction;
 import org.modelingvalue.transactions.Priority;
@@ -52,17 +51,19 @@ public class NonCheckingObserver<O extends Mutable> extends Observer<O> {
         protected void countChanges(Observed observed) {
         }
 
+        @SuppressWarnings("rawtypes")
         @Override
-        protected void checkTooManyObserved(Set<ObservedInstance> sets, Set<ObservedInstance> gets) {
+        protected void checkTooManyObserved(Map<Observed, Set<Mutable>> sets, Map<Observed, Set<Mutable>> gets) {
         }
 
         @SuppressWarnings("rawtypes")
         @Override
-        protected void checkTooManyObservers(Object object, Observed observed, Set<ActionInstance> observers) {
+        protected void checkTooManyObservers(Object object, Observed observed, Map<Observer, Set<Mutable>> observers) {
         }
 
+        @SuppressWarnings("rawtypes")
         @Override
-        protected void checkTooManyChanges(State pre, Set<ObservedInstance> sets, Set<ObservedInstance> gets) {
+        protected void checkTooManyChanges(State pre, Map<Observed, Set<Mutable>> sets, Map<Observed, Set<Mutable>> gets) {
         }
 
     }
