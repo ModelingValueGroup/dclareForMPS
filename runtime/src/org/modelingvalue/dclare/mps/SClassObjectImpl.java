@@ -45,7 +45,9 @@ public final class SClassObjectImpl implements SClassObject {
             return false;
         } else {
             SClassObjectImpl other = (SClassObjectImpl) obj;
-            if (other.identity == identity) {
+            if (!sClass.equals(other.sClass)) {
+                return false;
+            } else if (other.identity == identity) {
                 return true;
             } else if (!Arrays.equals(identity, other.identity)) {
                 return false;
