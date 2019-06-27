@@ -275,44 +275,6 @@ public class DNode extends DObject<SNode> implements SNode {
                     }
                 }
             }
-        } else if (post instanceof java.util.List && pre instanceof java.util.List) {
-            if (((java.util.List<Object>) post).stream().anyMatch(e -> e instanceof DNode)) {
-                java.util.List<DNode> prel = ((java.util.List<DNode>) pre).stream().filter(e -> !((java.util.List<DNode>) post).contains(e)).collect(Collectors.toList());
-                java.util.List<DNode> postl = ((java.util.List<DNode>) post).stream().filter(e -> !((java.util.List<DNode>) pre).contains(e)).collect(Collectors.toList());
-                if (!prel.isEmpty()) {
-                    for (DNode elem : postl) {
-                        ActionInstance creator = DNode.CREATOR.get(elem);
-                        if (creator != null) {
-                            DNode matched = prel.stream().filter(n -> n instanceof DNode && match(elem, n)).findFirst().orElse(null);
-                            if (matched != null) {
-                                prel.remove(matched);
-                                REPLACEMENT.set(elem, matched);
-                                replacement = true;
-                                creator.action().trigger(creator.mutable());
-                            }
-                        }
-                    }
-                }
-            }
-        } else if (post instanceof java.util.Set && pre instanceof java.util.Set) {
-            if (((java.util.Set<Object>) post).stream().anyMatch(e -> e instanceof DNode)) {
-                java.util.Set<DNode> pres = ((java.util.Set<DNode>) pre).stream().filter(e -> !((java.util.Set<DNode>) post).contains(e)).collect(Collectors.toSet());
-                java.util.Set<DNode> posts = ((java.util.Set<DNode>) post).stream().filter(e -> !((java.util.Set<DNode>) pre).contains(e)).collect(Collectors.toSet());
-                if (!pres.isEmpty()) {
-                    for (DNode elem : posts) {
-                        ActionInstance creator = DNode.CREATOR.get(elem);
-                        if (creator != null) {
-                            DNode matched = pres.stream().filter(n -> n instanceof DNode && match(elem, n)).findFirst().orElse(null);
-                            if (matched != null) {
-                                pres.remove(matched);
-                                REPLACEMENT.set(elem, matched);
-                                replacement = true;
-                                creator.action().trigger(creator.mutable());
-                            }
-                        }
-                    }
-                }
-            }
         }
         return replacement;
     }
