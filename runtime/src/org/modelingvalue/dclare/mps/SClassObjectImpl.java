@@ -43,21 +43,18 @@ public final class SClassObjectImpl implements SClassObject {
             return false;
         } else if (!(obj instanceof SClassObjectImpl)) {
             return false;
-        } else {
-            SClassObjectImpl other = (SClassObjectImpl) obj;
-            if (!sClass.equals(other.sClass)) {
-                return false;
-            } else if (other.identity == identity) {
-                return true;
-            } else if (!Arrays.equals(identity, other.identity)) {
-                return false;
-            } else if (System.identityHashCode(other.identity) < System.identityHashCode(identity)) {
-                identity = other.identity;
-            } else {
-                other.identity = identity;
-            }
         }
-        return true;
+        SClassObjectImpl other = (SClassObjectImpl) obj;
+        if (!sClass.equals(other.sClass)) {
+            return false;
+        } else if (other.identity == identity) {
+            return true;
+        } else if (!Arrays.equals(identity, other.identity)) {
+            return false;
+        } else {
+            identity = other.identity;
+            return true;
+        }
     }
 
     @Override
