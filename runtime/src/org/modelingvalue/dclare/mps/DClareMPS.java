@@ -37,9 +37,9 @@ import org.modelingvalue.transactions.Mutable;
 import org.modelingvalue.transactions.Observed;
 import org.modelingvalue.transactions.Observer;
 import org.modelingvalue.transactions.Priority;
+import org.modelingvalue.transactions.ReusableTransaction;
 import org.modelingvalue.transactions.Setable;
 import org.modelingvalue.transactions.State;
-import org.modelingvalue.transactions.TransactionList;
 import org.modelingvalue.transactions.Universe;
 import org.modelingvalue.transactions.UniverseTransaction;
 
@@ -48,37 +48,37 @@ import jetbrains.mps.smodel.language.LanguageRuntime;
 
 public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
 
-    protected static final boolean                                                              TRACE         = Boolean.getBoolean("DCLARE_TRACE");
+    protected static final boolean                                                                  TRACE         = Boolean.getBoolean("DCLARE_TRACE");
 
-    protected static final String                                                               DCLARE        = "---------> DCLARE ";
+    protected static final String                                                                   DCLARE        = "---------> DCLARE ";
 
-    private final ThreadLocal<Boolean>                                                          COMMITTING    = new ThreadLocal<Boolean>() {
-                                                                                                                  @Override
-                                                                                                                  protected Boolean initialValue() {
-                                                                                                                      return false;
-                                                                                                                  }
+    private final ThreadLocal<Boolean>                                                              COMMITTING    = new ThreadLocal<Boolean>() {
+                                                                                                                      @Override
+                                                                                                                      protected Boolean initialValue() {
+                                                                                                                          return false;
+                                                                                                                      }
 
-                                                                                                              };
+                                                                                                                  };
 
-    public final static Observed<DClareMPS, Set<SLanguage>>                                     ALL_LANGUAGES = Observed.of("ALL_LANGAUGES", Set.of());
+    public final static Observed<DClareMPS, Set<SLanguage>>                                         ALL_LANGUAGES = Observed.of("ALL_LANGAUGES", Set.of());
 
-    public final static Constant<SLanguage, Set<IRuleSet>>                                      RULE_SETS     = Constant.of("RULE_SETS", Set.of(), language -> {
-                                                                                                                  LanguageRuntime rtLang = registry().getLanguage(language);
-                                                                                                                  IRuleAspect aspect = rtLang != null ? rtLang.getAspect(IRuleAspect.class) : null;
-                                                                                                                  return aspect != null ? Collection.of(aspect.getRuleSets()).toSet() : Set.of();
-                                                                                                              });
+    public final static Constant<SLanguage, Set<IRuleSet>>                                          RULE_SETS     = Constant.of("RULE_SETS", Set.of(), language -> {
+                                                                                                                      LanguageRuntime rtLang = registry().getLanguage(language);
+                                                                                                                      IRuleAspect aspect = rtLang != null ? rtLang.getAspect(IRuleAspect.class) : null;
+                                                                                                                      return aspect != null ? Collection.of(aspect.getRuleSets()).toSet() : Set.of();
+                                                                                                                  });
 
-    private final static Constant<DClareMPS, DRepository>                                       REPOSITORY    = Constant.of("REPOSITORY", true, d -> DRepository.of(d.project.getRepository()));
+    private final static Constant<DClareMPS, DRepository>                                           REPOSITORY    = Constant.of("REPOSITORY", true, d -> DRepository.of(d.project.getRepository()));
 
-    private final ContextPool                                                                   thePool       = ContextThread.createPool();
-    protected final Thread                                                                      waitForEndThread;
-    protected final UniverseTransaction                                                         universeTransaction;
-    protected final Project                                                                     project;
-    private final StartStopHandler                                                              startStopHandler;
-    private ImperativeTransaction                                                               imperativeTransaction;
-    private boolean                                                                             running;
-    protected final Concurrent<TransactionList<DRule.DObserver<?>, DObserverTransaction>>       dObserverTransactions;
-    protected final Concurrent<TransactionList<NonCheckingObserver<?>, NonCheckingTransaction>> nonCheckingTransactions;
+    private final ContextPool                                                                       thePool       = ContextThread.createPool();
+    protected final Thread                                                                          waitForEndThread;
+    protected final UniverseTransaction                                                             universeTransaction;
+    protected final Project                                                                         project;
+    private final StartStopHandler                                                                  startStopHandler;
+    private ImperativeTransaction                                                                   imperativeTransaction;
+    private boolean                                                                                 running;
+    protected final Concurrent<ReusableTransaction<DRule.DObserver<?>, DObserverTransaction>>       dObserverTransactions;
+    protected final Concurrent<ReusableTransaction<NonCheckingObserver<?>, NonCheckingTransaction>> nonCheckingTransactions;
 
     protected DClareMPS(Project project, State prevState, int maxTotalNrOfChanges, int maxNrOfChanges, int maxNrOfObserved, int maxNrOfObservers, StartStopHandler startStopHandler) {
         this.project = project;
@@ -115,8 +115,8 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
             }
 
         };
-        this.dObserverTransactions = Concurrent.of(() -> new TransactionList<>(universeTransaction));
-        this.nonCheckingTransactions = Concurrent.of(() -> new TransactionList<>(universeTransaction));
+        this.dObserverTransactions = Concurrent.of(() -> new ReusableTransaction<>(universeTransaction));
+        this.nonCheckingTransactions = Concurrent.of(() -> new ReusableTransaction<>(universeTransaction));
         waitForEndThread = new Thread(() -> {
             State result = universeTransaction.emptyState();
             try {
