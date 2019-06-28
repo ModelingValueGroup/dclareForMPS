@@ -6664,6 +6664,25 @@
       <node concept="10P_77" id="3Qetf3dk3dL" role="3clF45" />
       <node concept="3Tm1VV" id="3Qetf3dk3dM" role="1B3o_S" />
     </node>
+    <node concept="13i0hz" id="5KzMV0dY8Zb" role="13h7CS">
+      <property role="13i0iv" value="false" />
+      <property role="TrG5h" value="getJavaType" />
+      <property role="13i0it" value="false" />
+      <ref role="13i0hy" to="tpek:hEwIzO1" resolve="getJavaType" />
+      <node concept="3Tm1VV" id="5KzMV0dY8Zc" role="1B3o_S" />
+      <node concept="3clFbS" id="5KzMV0dY8Zd" role="3clF47">
+        <node concept="3clFbF" id="5KzMV0dY8Zl" role="3cqZAp">
+          <node concept="2c44tf" id="5KzMV0dY8Zm" role="3clFbG">
+            <node concept="3uibUv" id="5GTBd9DMX9P" role="2c44tc">
+              <ref role="3uigEE" to="t4tl:~SClassObject" resolve="SClassObject" />
+            </node>
+          </node>
+        </node>
+      </node>
+      <node concept="3Tqbb2" id="5KzMV0dY8Ze" role="3clF45">
+        <ref role="ehGHo" to="tpee:fz3vP1H" resolve="Type" />
+      </node>
+    </node>
     <node concept="13hLZK" id="3Qetf3dk3dl" role="13h7CW">
       <node concept="3clFbS" id="3Qetf3dk3dm" role="2VODD2" />
     </node>
