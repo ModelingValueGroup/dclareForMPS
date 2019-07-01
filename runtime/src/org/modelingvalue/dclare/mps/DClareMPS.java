@@ -138,7 +138,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
         });
         waitForEndThread.setDaemon(true);
         waitForEndThread.start();
-        universeTransaction.put("activate", () -> {
+        universeTransaction.put("$activate", () -> {
             if (TRACE) {
                 System.err.println(DCLARE + "ACTIVATE " + this);
             }

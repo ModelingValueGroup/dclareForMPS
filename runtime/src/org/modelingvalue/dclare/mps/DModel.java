@@ -128,6 +128,9 @@ public class DModel extends DObject<SModel> implements SModel {
                                                                                  USED_MODELS.get(o).forEach(m -> DModule.REFERENCED.set(DModule.of(m.original().getModule()), Set::add, m));
                                                                              });
 
+    @SuppressWarnings("rawtypes")
+    protected static final Set<Observer>                 RULES               = DObject.RULES.addAll(Set.of(USED_LANGUAGES_RULE, USED_MODELS_RULE, REFERENCED_RULE));
+
     public static DModel of(SModel original) {
         return original instanceof DModel ? (DModel) original : DMODEL.get(original);
     }
@@ -155,9 +158,10 @@ public class DModel extends DObject<SModel> implements SModel {
         return USED_LANGUAGES.get(this);
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
-    public Collection<? extends Observer<?>> dObservers() {
-        return Collection.concat(super.dObservers(), Collection.of(USED_LANGUAGES_RULE, USED_MODELS_RULE, REFERENCED_RULE));
+    protected Collection<? extends Observer> observers() {
+        return RULES;
     }
 
     @Override

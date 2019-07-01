@@ -114,6 +114,8 @@ public abstract class DObject<O> implements Mutable {
                                                                                                                                              }
                                                                                                                                          }, Priority.postDepth);
 
+    protected static final Set<Observer>                                                                       RULES                     = Set.of(TYPE_RULE, MESSAGES_OR_CHILDREN_RULE, MESSAGE_CHILDREN_RULE, EMPTY_MANDATORY_RULE, REFERENCED_ORPHAN_RULE);
+
     public static DClareMPS dClareMPS() {
         return DClareMPS.instance();
     }
@@ -174,9 +176,14 @@ public abstract class DObject<O> implements Mutable {
 
     @SuppressWarnings("unchecked")
     @Override
-    public Collection<? extends Observer<?>> dObservers() {
-        return Collection.concat((Collection<? extends Observer<?>>) TYPE.get(this).getObservers(), //
-                Collection.of(TYPE_RULE, MESSAGES_OR_CHILDREN_RULE, MESSAGE_CHILDREN_RULE, EMPTY_MANDATORY_RULE, REFERENCED_ORPHAN_RULE));
+    public final Collection<? extends Observer<?>> dObservers() {
+        DType dType = TYPE.get(this);
+        return dType == TYPE.getDefault() ? Set.of(TYPE_RULE) : //
+                (Collection<? extends Observer<?>>) Collection.concat(observers(), dType.getObservers());
+    }
+
+    protected Collection<? extends Observer> observers() {
+        return RULES;
     }
 
     @SuppressWarnings("unchecked")

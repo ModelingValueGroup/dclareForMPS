@@ -87,6 +87,9 @@ public class DModule extends DObject<SModule> implements SModule {
                                                                                            }
                                                                                        }, Priority.preDepth);
 
+    @SuppressWarnings("rawtypes")
+    protected static final Set<Observer>                                RULES          = DObject.RULES.addAll(Set.of(LANGUAGES_RULE, MODELS_RULE));
+
     public static DModule of(SModule original) {
         return original instanceof DModule ? (DModule) original : DMODULE.get(original);
     }
@@ -139,9 +142,10 @@ public class DModule extends DObject<SModule> implements SModule {
         }
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
-    public Collection<? extends Observer<?>> dObservers() {
-        return Collection.concat(super.dObservers(), Collection.of(LANGUAGES_RULE, MODELS_RULE));
+    protected Collection<? extends Observer> observers() {
+        return RULES;
     }
 
     @Override

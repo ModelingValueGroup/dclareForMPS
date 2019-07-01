@@ -68,9 +68,10 @@ public class DCopy extends DNode {
         this.root = root != null ? root : this;
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
-    public Collection<? extends Observer<?>> dObservers() {
-        return Collection.concat(super.dObservers(), RULES.get(original().getConcept()));
+    protected Collection<? extends Observer> observers() {
+        return Collection.concat(super.observers(), RULES.get(original().getConcept()));
     }
 
     private List<DNode> copy(List<DNode> children) {

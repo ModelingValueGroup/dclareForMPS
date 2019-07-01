@@ -169,6 +169,9 @@ public class DNode extends DObject<SNode> implements SNode {
     @SuppressWarnings({"unchecked", "rawtypes"})
     private static final Constant<SConcept, Set<DObserved<DNode, ?>>>             CONTAINERS          = Constant.of("", c -> (Set) Collection.of(c.getContainmentLinks()).map(DNode::container).toSet());
 
+    @SuppressWarnings("rawtypes")
+    protected static final Set<Observer>                                          RULES               = DObject.RULES.addAll(Set.of(MODEL_RULE, USED_LANGUAGES_RULE, USED_MODELS_RULE));
+
     public static DNode of(SNode original) {
         return original instanceof DNode ? (DNode) original : new DNode(original);
     }
@@ -336,9 +339,10 @@ public class DNode extends DObject<SNode> implements SNode {
         }
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
-    public Collection<? extends Observer<?>> dObservers() {
-        return Collection.concat(super.dObservers(), Collection.of(MODEL_RULE, USED_LANGUAGES_RULE, USED_MODELS_RULE));
+    protected Collection<? extends Observer> observers() {
+        return RULES;
     }
 
     @Override
