@@ -105,8 +105,7 @@ public class DModule extends DObject<SModule> implements SModule {
 
     @Override
     protected DType getType() {
-        return !DRepository.ACTIVE.get(getRepository()) ? TYPE.getDefault() : //
-                MODULE_TYPE.get(Pair.of(isAllwaysActive(), LANGUAGES.get(this).filter(l -> !DClareMPS.RULE_SETS.get(l).isEmpty()).toSet()));
+        return MODULE_TYPE.get(Pair.of(isAllwaysActive(), LANGUAGES.get(this).filter(l -> !DClareMPS.RULE_SETS.get(l).isEmpty()).toSet()));
     }
 
     private boolean isAllwaysActive() {
@@ -135,10 +134,10 @@ public class DModule extends DObject<SModule> implements SModule {
 
     @Override
     protected void read(DClareMPS dClareMPS) {
-        Set<SLanguage> languages = languages(original());
+        Set<SLanguage> languages = dClareMPS.read(() -> languages(original()));
         LANGUAGES.set(this, languages);
         if (isAllwaysActive() && hasRuleSets(languages)) {
-            MODELS.set(this, models(original()).map(m -> DModel.of(m)).toSet());
+            MODELS.set(this, dClareMPS.read(() -> models(original())).map(m -> DModel.of(m)).toSet());
         }
     }
 

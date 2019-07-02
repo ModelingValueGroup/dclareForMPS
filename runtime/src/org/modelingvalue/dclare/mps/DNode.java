@@ -320,14 +320,16 @@ public class DNode extends DObject<SNode> implements SNode {
 
     @Override
     protected void read(DClareMPS dClareMPS) {
-        for (SProperty property : original().getProperties()) {
-            PROPERTY.get(property).set(this, original().getProperty(property));
-        }
-        for (SReference reference : original().getReferences()) {
-            SNode targetNode = reference.getTargetNode();
-            REFERENCE.get(reference.getLink()).set(this, targetNode != null ? of(targetNode) : null);
-        }
-        for (DNode dChild : Collection.of(original().getChildren()).map(n -> of(n))) {
+        dClareMPS.read(() -> {
+            for (SProperty property : original().getProperties()) {
+                PROPERTY.get(property).set(this, original().getProperty(property));
+            }
+            for (SReference reference : original().getReferences()) {
+                SNode targetNode = reference.getTargetNode();
+                REFERENCE.get(reference.getLink()).set(this, targetNode != null ? of(targetNode) : null);
+            }
+        });
+        for (DNode dChild : dClareMPS.read(() -> Collection.of(original().getChildren()).map(n -> of(n)).toList())) {
             SContainmentLink cl = dChild.original.getContainmentLink();
             if (!cl.getName().equals("smodelAttribute")) {
                 if (cl.isMultiple()) {

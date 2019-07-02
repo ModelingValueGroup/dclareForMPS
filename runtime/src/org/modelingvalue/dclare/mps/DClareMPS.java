@@ -17,6 +17,8 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.Supplier;
 
+import javax.swing.SwingUtilities;
+
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.jetbrains.mps.openapi.project.Project;
 import org.modelingvalue.collections.Collection;
@@ -30,6 +32,7 @@ import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.collections.util.TriConsumer;
 import org.modelingvalue.dclare.mps.DRule.DObserverTransaction;
 import org.modelingvalue.dclare.mps.NonCheckingObserver.NonCheckingTransaction;
+import org.modelingvalue.transactions.Action;
 import org.modelingvalue.transactions.Constant;
 import org.modelingvalue.transactions.ImperativeTransaction;
 import org.modelingvalue.transactions.LeafTransaction;
@@ -48,29 +51,30 @@ import jetbrains.mps.smodel.language.LanguageRuntime;
 
 public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
 
-    protected static final boolean                                                                  TRACE         = Boolean.getBoolean("DCLARE_TRACE");
+    protected static final boolean                                                                  TRACE                = Boolean.getBoolean("DCLARE_TRACE");
 
-    protected static final String                                                                   DCLARE        = "---------> DCLARE ";
+    protected static final String                                                                   DCLARE               = "---------> DCLARE ";
 
-    private final ThreadLocal<Boolean>                                                              COMMITTING    = new ThreadLocal<Boolean>() {
-                                                                                                                      @Override
-                                                                                                                      protected Boolean initialValue() {
-                                                                                                                          return false;
-                                                                                                                      }
+    private final ThreadLocal<Boolean>                                                              COMMITTING           = new ThreadLocal<Boolean>() {
+                                                                                                                             @Override
+                                                                                                                             protected Boolean initialValue() {
+                                                                                                                                 return false;
+                                                                                                                             }
 
-                                                                                                                  };
+                                                                                                                         };
 
-    public final static Observed<DClareMPS, Set<SLanguage>>                                         ALL_LANGUAGES = Observed.of("ALL_LANGAUGES", Set.of());
+    public final static Observed<DClareMPS, Set<SLanguage>>                                         ALL_LANGUAGES        = Observed.of("ALL_LANGAUGES", Set.of());
 
-    public final static Constant<SLanguage, Set<IRuleSet>>                                          RULE_SETS     = Constant.of("RULE_SETS", Set.of(), language -> {
-                                                                                                                      LanguageRuntime rtLang = registry().getLanguage(language);
-                                                                                                                      IRuleAspect aspect = rtLang != null ? rtLang.getAspect(IRuleAspect.class) : null;
-                                                                                                                      return aspect != null ? Collection.of(aspect.getRuleSets()).toSet() : Set.of();
-                                                                                                                  });
+    public final static Constant<SLanguage, Set<IRuleSet>>                                          RULE_SETS            = Constant.of("RULE_SETS", Set.of(), language -> {
+                                                                                                                             LanguageRuntime rtLang = registry().getLanguage(language);
+                                                                                                                             IRuleAspect aspect = rtLang != null ? rtLang.getAspect(IRuleAspect.class) : null;
+                                                                                                                             return aspect != null ? Collection.of(aspect.getRuleSets()).toSet() : Set.of();
+                                                                                                                         });
 
-    private final static Constant<DClareMPS, DRepository>                                           REPOSITORY    = Constant.of("REPOSITORY", true, d -> DRepository.of(d.project.getRepository()));
+    private final static Constant<DClareMPS, DRepository>                                           REPOSITORY_CONSTANT  = Constant.of("REPOSITORY_CONSTANT", false, d -> DRepository.of(d.project.getRepository()));
+    private final static Setable<DClareMPS, DRepository>                                            REPOSITORY_CONTAINER = Setable.of("REPOSITORY_CONTAINER", null, true);
 
-    private final ContextPool                                                                       thePool       = ContextThread.createPool();
+    private final ContextPool                                                                       thePool              = ContextThread.createPool();
     protected final Thread                                                                          waitForEndThread;
     protected final UniverseTransaction                                                             universeTransaction;
     protected final Project                                                                         project;
@@ -91,27 +95,48 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
             @Override
             public void startOpposite() {
                 if (TRACE) {
-                    System.err.println(DCLARE + "START OPPOSITE " + this);
+                    System.err.println(DCLARE + "    START OPPOSITE " + this);
                 }
             }
 
             @Override
             public void startPriority(Priority prio) {
                 if (TRACE) {
-                    System.err.println(DCLARE + "START PRIORITY " + prio + "  " + this);
+                    System.err.println(DCLARE + "    START PRIORITY " + prio + "  " + this);
                 }
             }
 
             @Override
             public void endPriority(Priority prio) {
                 if (TRACE) {
-                    System.err.println(DCLARE + "END PRIORITY   " + prio + "  " + this);
+                    System.err.println(DCLARE + "    END PRIORITY   " + prio + "  " + this);
+                }
+            }
+
+            @Override
+            public void start(Action<Universe> action) {
+                if (TRACE) {
+                    System.err.println(DCLARE + "START ACTION " + action + "  " + this);
+                }
+            }
+
+            @Override
+            public void end(Action<Universe> action) {
+                if (TRACE) {
+                    System.err.println(DCLARE + "END ACTION   " + action + "  " + this);
                 }
             }
 
             @Override
             protected void handleTooManyChanges(State state) {
                 // Do nothing: Already registered by messages framework.
+            }
+
+            @Override
+            protected void clearOrphans(Universe universe) {
+                if (imperativeTransaction != null) {
+                    super.clearOrphans(universe);
+                }
             }
 
         };
@@ -131,7 +156,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
                     System.err.println(DCLARE + "END   " + this);
                     for (@SuppressWarnings("rawtypes")
                     Entry<Setable, Integer> e : result.count()) {
-                        System.err.println(DCLARE + "COUNT " + e.getKey() + " = " + e.getValue());
+                        System.err.println(DCLARE + "    COUNT " + e.getKey() + " = " + e.getValue());
                     }
                 }
             }
@@ -139,29 +164,23 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
         waitForEndThread.setDaemon(true);
         waitForEndThread.start();
         universeTransaction.put("$activate", () -> {
-            if (TRACE) {
-                System.err.println(DCLARE + "ACTIVATE " + this);
-            }
-            getRepository().setActive();
+            imperativeTransaction = universeTransaction.addIntegration("MPSNative", this, r -> {
+                if (imperativeTransaction != null && !COMMITTING.get()) {
+                    if (!running) {
+                        running = true;
+                        command(() -> startStopHandler.start(project));
+                    }
+                    command(r);
+                }
+            });
+            REPOSITORY_CONTAINER.set(this, getRepository());
         });
     }
 
     @Override
     public void init() {
-        imperativeTransaction = universeTransaction.addIntegration("MPSNative", this, r -> {
-            if (imperativeTransaction != null && !COMMITTING.get()) {
-                if (!running) {
-                    running = true;
-                    command(() -> startStopHandler.start(project));
-                }
-                command(r);
-            }
-        });
-        if (TRACE) {
-            System.err.println(DCLARE + "INIT " + this);
-        }
-        getRepository();
         Universe.super.init();
+        getRepository().read(this);
     }
 
     @Override
@@ -186,6 +205,10 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
                 }
             }, Priority.preDepth);
         }
+    }
+
+    public void invokeLater(Runnable runnable) {
+        SwingUtilities.invokeLater(runnable);
     }
 
     public void command(Runnable runnable) {
@@ -255,7 +278,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     public void accept(State pre, State post, Boolean last) {
         if (imperativeTransaction != null) {
             if (TRACE) {
-                System.err.println(DCLARE + "START COMMIT " + this);
+                System.err.println(DCLARE + "    START COMMIT " + this);
             }
             COMMITTING.set(true);
             try {
@@ -296,7 +319,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
             } finally {
                 COMMITTING.set(false);
                 if (TRACE) {
-                    System.err.println(DCLARE + "END COMMIT " + this);
+                    System.err.println(DCLARE + "    END COMMIT " + this);
                 }
             }
         }
@@ -304,7 +327,8 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
 
     public void stop() {
         if (imperativeTransaction != null) {
-            imperativeTransaction.stop();
+            ImperativeTransaction it = imperativeTransaction;
+            invokeLater(() -> it.stop());
             imperativeTransaction = null;
             universeTransaction.kill();
             universeTransaction.preState().run(() -> getRepository().stop(this));
@@ -312,7 +336,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     }
 
     public DRepository getRepository() {
-        return REPOSITORY.get(this);
+        return REPOSITORY_CONSTANT.get(this);
     }
 
     public boolean isRunning() {
@@ -339,7 +363,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
 
     @Override
     public Collection<? extends Setable<? extends Mutable, ?>> dContainers() {
-        return Collection.of(REPOSITORY);
+        return Collection.of(REPOSITORY_CONTAINER);
     }
 
     @Override

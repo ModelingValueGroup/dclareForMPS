@@ -171,8 +171,8 @@ public class DModel extends DObject<SModel> implements SModel {
 
     @Override
     protected void read(DClareMPS dClareMPS) {
-        MODEL_ROOT.set(this, original().getModelRoot());
-        ROOTS.set(this, Collection.of(original().getRootNodes()).map(n -> DNode.of(n)).toSet());
+        MODEL_ROOT.set(this, dClareMPS.read(() -> original().getModelRoot()));
+        ROOTS.set(this, dClareMPS.read(() -> Collection.of(original().getRootNodes()).map(n -> DNode.of(n)).toSet()));
     }
 
     @Override

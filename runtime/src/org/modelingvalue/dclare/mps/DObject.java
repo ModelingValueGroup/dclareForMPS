@@ -236,7 +236,7 @@ public abstract class DObject<O> implements Mutable {
 
     protected final void start(DClareMPS dClareMPS) {
         init(dClareMPS);
-        dClareMPS.read(() -> read(dClareMPS));
+        read(dClareMPS);
     }
 
     protected void stop(DClareMPS dClareMPS) {
