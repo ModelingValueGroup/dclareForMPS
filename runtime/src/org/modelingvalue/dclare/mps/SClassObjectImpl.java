@@ -15,6 +15,8 @@ package org.modelingvalue.dclare.mps;
 
 import java.util.Arrays;
 
+import org.modelingvalue.collections.util.Age;
+
 public final class SClassObjectImpl implements SClassObject {
 
     private final SClass sClass;
@@ -51,6 +53,9 @@ public final class SClassObjectImpl implements SClassObject {
             return true;
         } else if (!Arrays.equals(identity, other.identity)) {
             return false;
+        } else if (Age.age(identity) > Age.age(other.identity)) {
+            other.identity = identity;
+            return true;
         } else {
             identity = other.identity;
             return true;
