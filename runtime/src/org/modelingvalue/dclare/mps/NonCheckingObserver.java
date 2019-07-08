@@ -2,7 +2,7 @@ package org.modelingvalue.dclare.mps;
 
 import java.util.function.Consumer;
 
-import org.modelingvalue.collections.Map;
+import org.modelingvalue.collections.DefaultMap;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.transactions.Direction;
 import org.modelingvalue.transactions.Mutable;
@@ -48,22 +48,23 @@ public class NonCheckingObserver<O extends Mutable> extends Observer<O> {
 
         @SuppressWarnings("rawtypes")
         @Override
-        protected void countChanges(Observed observed) {
+        protected boolean countChanges(Observed observed) {
+            return false;
         }
 
         @SuppressWarnings("rawtypes")
         @Override
-        protected void checkTooManyObserved(Map<Observed, Set<Mutable>> sets, Map<Observed, Set<Mutable>> gets) {
+        protected void checkTooManyObserved(DefaultMap<Observed, Set<Mutable>> sets, DefaultMap<Observed, Set<Mutable>> gets) {
         }
 
         @SuppressWarnings("rawtypes")
         @Override
-        protected void checkTooManyObservers(Object object, Observed observed, Map<Observer, Set<Mutable>> observers) {
+        protected void checkTooManyObservers(Object object, Observed observed, DefaultMap<Observer, Set<Mutable>> observers) {
         }
 
         @SuppressWarnings("rawtypes")
         @Override
-        protected void checkTooManyChanges(State pre, Map<Observed, Set<Mutable>> sets, Map<Observed, Set<Mutable>> gets) {
+        protected void checkTooManyChanges(State pre, DefaultMap<Observed, Set<Mutable>> sets, DefaultMap<Observed, Set<Mutable>> gets) {
         }
 
     }

@@ -13,7 +13,7 @@
 
 package org.modelingvalue.dclare.mps;
 
-import org.modelingvalue.collections.Map;
+import org.modelingvalue.collections.DefaultMap;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Context;
 import org.modelingvalue.transactions.Constant;
@@ -119,10 +119,10 @@ public interface DRule<O> extends DFeature<O> {
         }
 
         @Override
-        protected void checkTooManyObservers(Object object, Observed observed, Map<Observer, Set<Mutable>> obervers) {
+        protected void checkTooManyObservers(Object object, Observed observed, DefaultMap<Observer, Set<Mutable>> obervers) {
             if (object instanceof DObject && observed instanceof DObserved && !((DObserved) observed).isSynthetic()) {
                 try {
-                    super.checkTooManyObservers(object, observed, obervers.filter(e -> e.getKey() instanceof DObserver).toMap(e -> e));
+                    super.checkTooManyObservers(object, observed, obervers.filter(k -> k instanceof DObserver, v -> true));
                 } catch (TooManyObserversException e) {
                     ((DObject) object).addMessage((DObserved) observed, "TOO_MANY_OBSERVERS", e);
                 }
@@ -130,28 +130,30 @@ public interface DRule<O> extends DFeature<O> {
         }
 
         @Override
-        protected void checkTooManyObserved(Map<Observed, Set<Mutable>> sets, Map<Observed, Set<Mutable>> gets) {
+        protected void checkTooManyObserved(DefaultMap<Observed, Set<Mutable>> sets, DefaultMap<Observed, Set<Mutable>> gets) {
             try {
                 super.checkTooManyObserved(//
-                        sets.filter(e -> e.getKey() instanceof DObserved && !((DObserved) e.getKey()).isSynthetic()).toMap(e -> e), //
-                        gets.filter(e -> e.getKey() instanceof DObserved && !((DObserved) e.getKey()).isSynthetic()).toMap(e -> e));
+                        sets.filter(k -> k instanceof DObserved && !((DObserved) k).isSynthetic(), v -> true), //
+                        gets.filter(k -> k instanceof DObserved && !((DObserved) k).isSynthetic(), v -> true));
             } catch (TooManyObservedException e) {
                 object().addMessage(dRule(), "TOO_MANY_OBSERVED", e);
             }
         }
 
         @Override
-        protected void countChanges(Observed observed) {
+        protected boolean countChanges(Observed observed) {
             if (observed instanceof DObserved && !((DObserved) observed).isSynthetic()) {
-                super.countChanges(observed);
+                return super.countChanges(observed);
+            } else {
+                return false;
             }
         }
 
         @Override
-        protected void checkTooManyChanges(State pre, Map<Observed, Set<Mutable>> sets, Map<Observed, Set<Mutable>> gets) {
+        protected void checkTooManyChanges(State pre, DefaultMap<Observed, Set<Mutable>> sets, DefaultMap<Observed, Set<Mutable>> gets) {
             if (universeTransaction().isDebugging()) {
-                sets = sets.filter(e -> e.getKey() instanceof DObserved && !((DObserved) e.getKey()).isSynthetic()).toMap(e -> e);
-                gets = gets.filter(e -> e.getKey() instanceof DObserved && !((DObserved) e.getKey()).isSynthetic()).toMap(e -> e);
+                sets = sets.filter(k -> k instanceof DObserved && !((DObserved) k).isSynthetic(), v -> true);
+                gets = gets.filter(k -> k instanceof DObserved && !((DObserved) k).isSynthetic(), v -> true);
             }
             try {
                 super.checkTooManyChanges(pre, sets, gets);
