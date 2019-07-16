@@ -11,6 +11,9 @@
   <registry>
     <language id="798100da-4f0a-421a-b991-71f8c50ce5d2" name="jetbrains.mps.build">
       <concept id="5481553824944787378" name="jetbrains.mps.build.structure.BuildSourceProjectRelativePath" flags="ng" index="55IIr" />
+      <concept id="9126048691955220717" name="jetbrains.mps.build.structure.BuildLayout_File" flags="ng" index="28jJK3">
+        <child id="9126048691955220762" name="path" index="28jJRO" />
+      </concept>
       <concept id="7321017245476976379" name="jetbrains.mps.build.structure.BuildRelativePath" flags="ng" index="iG8Mu">
         <child id="7321017245477039051" name="compositePart" index="iGT6I" />
       </concept>
@@ -33,7 +36,9 @@
       <concept id="7389400916848050060" name="jetbrains.mps.build.structure.BuildLayout_NamedContainer" flags="ng" index="3981dR">
         <child id="4380385936562148502" name="containerName" index="Nbhlr" />
       </concept>
-      <concept id="7389400916848136194" name="jetbrains.mps.build.structure.BuildFolderMacro" flags="ng" index="398rNT" />
+      <concept id="7389400916848136194" name="jetbrains.mps.build.structure.BuildFolderMacro" flags="ng" index="398rNT">
+        <child id="7389400916848144618" name="defaultPath" index="398pKh" />
+      </concept>
       <concept id="7389400916848153117" name="jetbrains.mps.build.structure.BuildSourceMacroRelativePath" flags="ng" index="398BVA">
         <reference id="7389400916848153130" name="macro" index="398BVh" />
       </concept>
@@ -111,7 +116,9 @@
       <concept id="3189788309731981027" name="jetbrains.mps.build.mps.structure.BuildMps_ModuleSolutionRuntime" flags="ng" index="1E0d5M">
         <reference id="3189788309731981028" name="solution" index="1E0d5P" />
       </concept>
-      <concept id="3189788309731840247" name="jetbrains.mps.build.mps.structure.BuildMps_Solution" flags="ng" index="1E1JtA" />
+      <concept id="3189788309731840247" name="jetbrains.mps.build.mps.structure.BuildMps_Solution" flags="ng" index="1E1JtA">
+        <property id="269707337715731330" name="sourcesKind" index="aoJFB" />
+      </concept>
       <concept id="3189788309731840248" name="jetbrains.mps.build.mps.structure.BuildMps_Language" flags="ng" index="1E1JtD">
         <child id="3189788309731917348" name="runtime" index="1E1XAP" />
         <child id="9200313594498201639" name="generator" index="1TViLv" />
@@ -134,6 +141,10 @@
     <node concept="398rNT" id="5TmHY1kYraK" role="1l3spd">
       <property role="TrG5h" value="mps_home" />
     </node>
+    <node concept="398rNT" id="3Lt_N8a$ptU" role="1l3spd">
+      <property role="TrG5h" value="dclare_home" />
+      <node concept="55IIr" id="3Lt_N8a$pui" role="398pKh" />
+    </node>
     <node concept="2sgV4H" id="5TmHY1kYraL" role="1l3spa">
       <ref role="1l3spb" to="ffeo:3IKDaVZmzS6" resolve="mps" />
       <node concept="398BVA" id="5TmHY1kYraM" role="2JcizS">
@@ -149,27 +160,32 @@
         </node>
         <node concept="m$_wl" id="5TmHY1kYrbj" role="39821P">
           <ref role="m_rDy" node="5TmHY1kYrb6" resolve="DclareForMPS" />
-          <node concept="2HvfSZ" id="7dEOGAXaJA$" role="39821P">
-            <node concept="55IIr" id="7dEOGAXaKLy" role="2HvfZ0">
-              <node concept="2Ry0Ak" id="7dEOGAXaKLT" role="iGT6I">
-                <property role="2Ry0Am" value="solutions" />
-                <node concept="2Ry0Ak" id="7dEOGAXaKLY" role="2Ry0An">
-                  <property role="2Ry0Am" value="DclareMPSRuntime" />
-                  <node concept="2Ry0Ak" id="7dEOGAXaKM3" role="2Ry0An">
-                    <property role="2Ry0Am" value="lib" />
+          <node concept="2HvfSZ" id="3Lt_N8a$pyj" role="39821P">
+            <node concept="398BVA" id="3Lt_N8a$pyI" role="2HvfZ0">
+              <ref role="398BVh" node="3Lt_N8a$ptU" resolve="dclare_home" />
+              <node concept="2Ry0Ak" id="3Lt_N8a$pyY" role="iGT6I">
+                <property role="2Ry0Am" value="languages" />
+                <node concept="2Ry0Ak" id="3Lt_N8a$pz3" role="2Ry0An">
+                  <property role="2Ry0Am" value="DclareMPS" />
+                  <node concept="2Ry0Ak" id="3Lt_N8a$pz8" role="2Ry0An">
+                    <property role="2Ry0Am" value="icons" />
                   </node>
                 </node>
               </node>
             </node>
           </node>
-          <node concept="2HvfSZ" id="4nSJqiCddlE" role="39821P">
-            <node concept="55IIr" id="4nSJqiCddlG" role="2HvfZ0">
-              <node concept="2Ry0Ak" id="4nSJqiCddml" role="iGT6I">
-                <property role="2Ry0Am" value="languages" />
-                <node concept="2Ry0Ak" id="4nSJqiCddms" role="2Ry0An">
-                  <property role="2Ry0Am" value="DclareMPS" />
-                  <node concept="2Ry0Ak" id="4nSJqiCddmz" role="2Ry0An">
-                    <property role="2Ry0Am" value="icons" />
+          <node concept="28jJK3" id="3Lt_N8a$ptt" role="39821P">
+            <node concept="398BVA" id="3Lt_N8a$puu" role="28jJRO">
+              <ref role="398BVh" node="3Lt_N8a$ptU" resolve="dclare_home" />
+              <node concept="2Ry0Ak" id="3Lt_N8a$puI" role="iGT6I">
+                <property role="2Ry0Am" value="solutions" />
+                <node concept="2Ry0Ak" id="3Lt_N8a$puN" role="2Ry0An">
+                  <property role="2Ry0Am" value="DclareMPSRuntime" />
+                  <node concept="2Ry0Ak" id="3Lt_N8a$puS" role="2Ry0An">
+                    <property role="2Ry0Am" value="lib" />
+                    <node concept="2Ry0Ak" id="3Lt_N8a$puX" role="2Ry0An">
+                      <property role="2Ry0Am" value="DclareMps.jar" />
+                    </node>
                   </node>
                 </node>
               </node>
@@ -461,6 +477,7 @@
         <property role="BnDLt" value="false" />
         <property role="TrG5h" value="DclareMPSRuntime" />
         <property role="3LESm3" value="55d6b6f5-8095-4cd0-a39b-779da8d12940" />
+        <property role="aoJFB" value="sources" />
         <node concept="3rtmxn" id="1gvgm7ih8N" role="3bR31x">
           <node concept="3LXTmp" id="1gvgm7ih8O" role="3rtmxm">
             <node concept="55IIr" id="1gvgm7ih8P" role="3LXTmr">
@@ -496,27 +513,28 @@
             <ref role="3bR37D" to="ffeo:1H905DlDUSw" resolve="MPS.OpenAPI" />
           </node>
         </node>
-        <node concept="1SiIV0" id="5TmHY1kYrc8" role="3bR37C">
-          <node concept="1BurEX" id="5TmHY1kYrc9" role="1SiIV1">
-            <node concept="55IIr" id="7GFT0aymk3N" role="1BurEY">
-              <node concept="2Ry0Ak" id="7GFT0aymk4t" role="iGT6I">
+        <node concept="1SiIV0" id="2s2J4CrwgjP" role="3bR37C">
+          <node concept="3bR9La" id="2s2J4CrwgjQ" role="1SiIV1">
+            <ref role="3bR37D" to="ffeo:mXGwHwhVPj" resolve="JDK" />
+          </node>
+        </node>
+        <node concept="1SiIV0" id="3Lt_N8a$pEw" role="3bR37C">
+          <node concept="1BurEX" id="3Lt_N8a$pEx" role="1SiIV1">
+            <node concept="398BVA" id="3Lt_N8a$pEm" role="1BurEY">
+              <ref role="398BVh" node="3Lt_N8a$ptU" resolve="dclare_home" />
+              <node concept="2Ry0Ak" id="3Lt_N8a$pEn" role="iGT6I">
                 <property role="2Ry0Am" value="solutions" />
-                <node concept="2Ry0Ak" id="7GFT0aymk56" role="2Ry0An">
+                <node concept="2Ry0Ak" id="3Lt_N8a$pEo" role="2Ry0An">
                   <property role="2Ry0Am" value="DclareMPSRuntime" />
-                  <node concept="2Ry0Ak" id="7GFT0aymk5J" role="2Ry0An">
+                  <node concept="2Ry0Ak" id="3Lt_N8a$pEp" role="2Ry0An">
                     <property role="2Ry0Am" value="lib" />
-                    <node concept="2Ry0Ak" id="7GFT0aymk6o" role="2Ry0An">
+                    <node concept="2Ry0Ak" id="3Lt_N8a$pEq" role="2Ry0An">
                       <property role="2Ry0Am" value="DclareMps.jar" />
                     </node>
                   </node>
                 </node>
               </node>
             </node>
-          </node>
-        </node>
-        <node concept="1SiIV0" id="2s2J4CrwgjP" role="3bR37C">
-          <node concept="3bR9La" id="2s2J4CrwgjQ" role="1SiIV1">
-            <ref role="3bR37D" to="ffeo:mXGwHwhVPj" resolve="JDK" />
           </node>
         </node>
       </node>
