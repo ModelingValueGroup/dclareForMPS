@@ -154,7 +154,7 @@
               <node concept="2Ry0Ak" id="7dEOGAXaKLT" role="iGT6I">
                 <property role="2Ry0Am" value="solutions" />
                 <node concept="2Ry0Ak" id="7dEOGAXaKLY" role="2Ry0An">
-                  <property role="2Ry0Am" value="DclareMPS" />
+                  <property role="2Ry0Am" value="DclareMPSRuntime" />
                   <node concept="2Ry0Ak" id="7dEOGAXaKM3" role="2Ry0An">
                     <property role="2Ry0Am" value="lib" />
                   </node>
@@ -469,7 +469,7 @@
               </node>
             </node>
             <node concept="3qWCbU" id="1gvgm7ih8R" role="3LXTna">
-              <property role="3qWCbO" value="DclareMPS/util/*.png" />
+              <property role="3qWCbO" value="DclareMPSRuntime/util/*.png,DclareMPSRuntime/lib/*.jar" />
             </node>
           </node>
         </node>
@@ -477,9 +477,9 @@
           <node concept="2Ry0Ak" id="5TmHY1kYraU" role="iGT6I">
             <property role="2Ry0Am" value="solutions" />
             <node concept="2Ry0Ak" id="5TmHY1kYraV" role="2Ry0An">
-              <property role="2Ry0Am" value="DclareMPS" />
+              <property role="2Ry0Am" value="DclareMPSRuntime" />
               <node concept="2Ry0Ak" id="5TmHY1kYraW" role="2Ry0An">
-                <property role="2Ry0Am" value="DclareMPS.msd" />
+                <property role="2Ry0Am" value="DclareMPSRuntime.msd" />
               </node>
             </node>
           </node>
@@ -502,7 +502,7 @@
               <node concept="2Ry0Ak" id="7GFT0aymk4t" role="iGT6I">
                 <property role="2Ry0Am" value="solutions" />
                 <node concept="2Ry0Ak" id="7GFT0aymk56" role="2Ry0An">
-                  <property role="2Ry0Am" value="DclareMPS" />
+                  <property role="2Ry0Am" value="DclareMPSRuntime" />
                   <node concept="2Ry0Ak" id="7GFT0aymk5J" role="2Ry0An">
                     <property role="2Ry0Am" value="lib" />
                     <node concept="2Ry0Ak" id="7GFT0aymk6o" role="2Ry0An">
