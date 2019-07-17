@@ -79,12 +79,12 @@ public abstract class DObject<O> implements Mutable {
 
     private static final Observer<DObject>                                                                     MESSAGES_OR_CHILDREN_RULE = observer(MESSAGES_OR_CHILDREN, o -> {
                                                                                                                                              MESSAGES_OR_CHILDREN.set(o, MESSAGE_TYPES.toMap(t -> Entry.of(t, !o.getMessages(t).isEmpty() || !o.getMessageChildren(t).isEmpty())));
-                                                                                                                                         }, Priority.postDepth);
+                                                                                                                                         }, Direction.backward, Priority.postDepth);
 
     @SuppressWarnings("unchecked")
     private static final Observer<DObject>                                                                     MESSAGE_CHILDREN_RULE     = observer(MESSAGE_CHILDREN, o -> {
                                                                                                                                              MESSAGE_CHILDREN.set(o, MESSAGE_TYPES.toMap(t -> Entry.of(t, o.getAllChildren().filter(c -> MESSAGES_OR_CHILDREN.get((DObject) c).get(t)).toSet())));
-                                                                                                                                         }, Priority.postDepth);
+                                                                                                                                         }, Direction.backward, Priority.postDepth);
 
     @SuppressWarnings("unchecked")
     private static final Observer<DObject>                                                                     EMPTY_MANDATORY_RULE      = observer("EMPTY_MANDATORY", o -> {
@@ -97,7 +97,7 @@ public abstract class DObject<O> implements Mutable {
                                                                                                                                                      }
                                                                                                                                                  }
                                                                                                                                              }
-                                                                                                                                         }, Priority.postDepth);
+                                                                                                                                         }, Direction.backward, Priority.postDepth);
 
     @SuppressWarnings("unchecked")
     private static final Observer<DObject>                                                                     REFERENCED_ORPHAN_RULE    = observer("REFERENCED_ORPHAN", o -> {
@@ -112,7 +112,7 @@ public abstract class DObject<O> implements Mutable {
                                                                                                                                                      }
                                                                                                                                                  }
                                                                                                                                              }
-                                                                                                                                         }, Priority.postDepth);
+                                                                                                                                         }, Direction.backward, Priority.postDepth);
 
     protected static final Set<Observer>                                                                       RULES                     = Set.of(TYPE_RULE, MESSAGES_OR_CHILDREN_RULE, MESSAGE_CHILDREN_RULE, EMPTY_MANDATORY_RULE, REFERENCED_ORPHAN_RULE);
 
@@ -325,11 +325,15 @@ public abstract class DObject<O> implements Mutable {
     }
 
     public static <O extends DObject> NonCheckingObserver<O> observer(Object id, Consumer<O> action, Priority prio) {
+        return observer(id, action, Direction.forward, prio);
+    }
+
+    public static <O extends DObject> NonCheckingObserver<O> observer(Object id, Consumer<O> action, Direction dir, Priority prio) {
         return NonCheckingObserver.of(id, o -> {
             if (o.isOwned()) {
                 action.accept(o);
             }
-        }, Direction.forward, prio);
+        }, dir, prio);
     }
 
 }
