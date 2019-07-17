@@ -189,23 +189,6 @@ public class DNode extends DObject<SNode> implements SNode {
     }
 
     @Override
-    public int hashCode() {
-        return getNodeId().hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        } else if (obj instanceof DNode) {
-            DNode other = (DNode) obj;
-            return getNodeId().equals(other.getNodeId());
-        } else {
-            return false;
-        }
-    }
-
-    @Override
     protected SRepository getOriginalRepository() {
         SModel me = original().getModel();
         SModule mu = me != null ? me.getModule() : null;
