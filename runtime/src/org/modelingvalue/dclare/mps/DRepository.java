@@ -26,35 +26,34 @@ import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.transactions.Constant;
 import org.modelingvalue.transactions.Mutable;
-import org.modelingvalue.transactions.Observed;
 import org.modelingvalue.transactions.Setable;
 
 @SuppressWarnings("deprecation")
 public class DRepository extends DObject<SRepository> implements SRepository {
 
-    private static final Constant<SRepository, DRepository> DREPOSITORY     = Constant.of("DREPOSITORY", r -> new DRepository(r));
+    private static final Constant<SRepository, DRepository>  DREPOSITORY     = Constant.of("DREPOSITORY", r -> new DRepository(r));
 
-    private static final Constant<Set<SLanguage>, DType>    REPOSITORY_TYPE = Constant.of("REPOSITORY_TYPE", ls -> new DType(ls) {
-                                                                                @SuppressWarnings({"rawtypes", "unchecked"})
-                                                                                @Override
-                                                                                public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
-                                                                                    return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getRepositoryRules())).toSet();
-                                                                                }
+    private static final Constant<Set<SLanguage>, DType>     REPOSITORY_TYPE = Constant.of("REPOSITORY_TYPE", ls -> new DType(ls) {
+                                                                                 @SuppressWarnings({"rawtypes", "unchecked"})
+                                                                                 @Override
+                                                                                 public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
+                                                                                     return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getRepositoryRules())).toSet();
+                                                                                 }
 
-                                                                                @SuppressWarnings({"rawtypes", "unchecked"})
-                                                                                @Override
-                                                                                public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
-                                                                                    return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getRepositoryAttributes())).toSet();
-                                                                                }
+                                                                                 @SuppressWarnings({"rawtypes", "unchecked"})
+                                                                                 @Override
+                                                                                 public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
+                                                                                     return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getRepositoryAttributes())).toSet();
+                                                                                 }
 
-                                                                                @Override
-                                                                                public Set<SLanguage> getLanguages() {
-                                                                                    return ls;
-                                                                                }
-                                                                            });
+                                                                                 @Override
+                                                                                 public Set<SLanguage> getLanguages() {
+                                                                                     return ls;
+                                                                                 }
+                                                                             });
 
-    public static final Observed<DRepository, Set<DModule>> MODULES         = DObserved.of("MODULES", Set.of(), false, true, null, false, false, (o, pre, post, first) -> {
-                                                                            }, null);
+    public static final DObserved<DRepository, Set<DModule>> MODULES         = DObserved.of("MODULES", Set.of(), false, true, null, false, false, (o, pre, post, first) -> {
+                                                                             }, null);
 
     public static DRepository of(SRepository original) {
         return original instanceof DRepository ? (DRepository) original : DREPOSITORY.get(original);

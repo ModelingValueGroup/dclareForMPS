@@ -128,8 +128,8 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
             }
 
             @Override
-            protected void handleTooManyChanges(State state) {
-                // Do nothing: Already registered by messages framework.
+            protected void handleException(Throwable t) {
+                put(t, () -> getRepository().addMessage(DRepository.MODULES, DMessageType.error, "EXCEPTION", t));
             }
 
             @Override
