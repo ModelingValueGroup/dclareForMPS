@@ -38,6 +38,10 @@ public abstract class DType {
 
     public abstract Set<SLanguage> getLanguages();
 
+    public final Set<IRuleSet> getRuleSets() {
+        return TYPE_RULE_SETS.get(this);
+    }
+
     public final Set<DObserver> getObservers() {
         return OBSERVERS.get(this);
     }

@@ -271,7 +271,8 @@ public class DNode extends DObject<SNode> implements SNode {
 
     @Override
     protected DType getType() {
-        return NODE_TYPE.get(Pair.of(TYPE.get(dObjectParent()).getLanguages(), getConcept()));
+        DType pType = TYPE.get(dObjectParent());
+        return pType.getRuleSets().isEmpty() ? TYPE.getDefault() : NODE_TYPE.get(Pair.of(pType.getLanguages(), getConcept()));
     }
 
     @Override

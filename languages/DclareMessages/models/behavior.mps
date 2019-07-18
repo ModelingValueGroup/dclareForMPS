@@ -700,6 +700,12 @@
         </node>
       </node>
     </node>
+    <node concept="13i0hz" id="5mT2CTpGohL" role="13h7CS">
+      <property role="TrG5h" value="collapsChildren" />
+      <node concept="3Tm1VV" id="5mT2CTpGohM" role="1B3o_S" />
+      <node concept="3cqZAl" id="5mT2CTpGuPv" role="3clF45" />
+      <node concept="3clFbS" id="5mT2CTpGohO" role="3clF47" />
+    </node>
     <node concept="13i0hz" id="1KqhpdFNfb5" role="13h7CS">
       <property role="2Ki8OM" value="true" />
       <property role="TrG5h" value="create" />

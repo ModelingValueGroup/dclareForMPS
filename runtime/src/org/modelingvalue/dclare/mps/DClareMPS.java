@@ -129,7 +129,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
 
             @Override
             protected void handleException(Throwable t) {
-                put(t, () -> getRepository().addMessage(DRepository.MODULES, DMessageType.error, "EXCEPTION", t));
+                put("$exception", () -> getRepository().addMessage(DRepository.MODULES, DMessageType.error, "EXCEPTION", t));
             }
 
             @Override
@@ -168,7 +168,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
                 if (imperativeTransaction != null && !COMMITTING.get()) {
                     if (!running) {
                         running = true;
-                        command(() -> startStopHandler.start(project));
+                        command(() -> this.startStopHandler.start(project));
                     }
                     command(r);
                 }
