@@ -271,8 +271,9 @@ public class DNode extends DObject<SNode> implements SNode {
 
     @Override
     protected DType getType() {
-        DType pType = TYPE.get(dObjectParent());
-        return pType.getRuleSets().isEmpty() ? TYPE.getDefault() : NODE_TYPE.get(Pair.of(pType.getLanguages(), getConcept()));
+        DNode parentNode = getParent();
+        return parentNode != null && DClareMPS.RULE_SETS.get(parentNode.getConcept().getLanguage()).isEmpty() ? TYPE.getDefault() : //
+                NODE_TYPE.get(Pair.of(TYPE.get(dObjectParent()).getLanguages(), getConcept()));
     }
 
     @Override
