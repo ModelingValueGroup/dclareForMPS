@@ -129,7 +129,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
 
             @Override
             protected void handleException(Throwable t) {
-                put("$exception", () -> getRepository().addMessage(DRepository.MODULES, DMessageType.error, "EXCEPTION", t));
+                put("$exception", () -> getRepository().addMessage(DRepository.MODULES, t));
             }
 
             @Override

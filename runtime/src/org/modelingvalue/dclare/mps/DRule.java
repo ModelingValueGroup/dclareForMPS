@@ -90,18 +90,18 @@ public interface DRule<O> extends DFeature<O> {
                     if (EMPTY_ATTRIBUTE.get()) {
                         throw new EmptyMandatoryException();
                     } else {
-                        object().addMessage(dRule(), DMessageType.error, "EXCEPTION", e);
+                        object().addMessage(dRule(), e);
                         throw new StopObserverException(e);
                     }
                 } catch (IndexOutOfBoundsException e) {
                     if (COLLECTION_ATTRIBUTE.get()) {
                         throw new EmptyMandatoryException();
                     } else {
-                        object().addMessage(dRule(), DMessageType.error, "EXCEPTION", e);
+                        object().addMessage(dRule(), e);
                         throw new StopObserverException(e);
                     }
                 } catch (Throwable e) {
-                    object().addMessage(dRule(), DMessageType.error, "EXCEPTION", e);
+                    object().addMessage(dRule(), e);
                     throw new StopObserverException(e);
                 } finally {
                     COLLECTION_ATTRIBUTE.set(false);
@@ -124,7 +124,7 @@ public interface DRule<O> extends DFeature<O> {
                 try {
                     super.checkTooManyObservers(object, observed, obervers.filter(k -> k instanceof DObserver, v -> true));
                 } catch (TooManyObserversException e) {
-                    ((DObject) object).addMessage((DObserved) observed, "TOO_MANY_OBSERVERS", e);
+                    ((DObject) object).addMessage((DObserved) observed, e);
                 }
             }
         }
@@ -136,7 +136,7 @@ public interface DRule<O> extends DFeature<O> {
                         sets.filter(k -> k instanceof DObserved && !((DObserved) k).isSynthetic(), v -> true), //
                         gets.filter(k -> k instanceof DObserved && !((DObserved) k).isSynthetic(), v -> true));
             } catch (TooManyObservedException e) {
-                object().addMessage(dRule(), "TOO_MANY_OBSERVED", e);
+                object().addMessage(dRule(), e);
             }
         }
 
@@ -158,7 +158,7 @@ public interface DRule<O> extends DFeature<O> {
             try {
                 super.checkTooManyChanges(pre, sets, gets);
             } catch (TooManyChangesException e) {
-                object().addMessage(dRule(), "CONFLICTING_RULES", e);
+                object().addMessage(dRule(), e);
                 throw new StopObserverException(e);
             }
         }

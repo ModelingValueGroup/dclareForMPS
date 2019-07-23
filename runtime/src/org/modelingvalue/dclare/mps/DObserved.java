@@ -74,7 +74,7 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
             toMPS.accept(object, pre, post, first);
         } catch (Throwable t) {
             if (object instanceof DObject) {
-                ((DObject) object).addMessage(this, DMessageType.error, "TO MPS", t);
+                ((DObject) object).addMessage(this, t);
             } else {
                 System.err.println(DClareMPS.DCLARE + "TO MPS " + object + "." + this + "=" + post);
                 t.setStackTrace(Arrays.copyOf(t.getStackTrace(), 8));

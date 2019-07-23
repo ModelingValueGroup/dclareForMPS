@@ -261,7 +261,8 @@ public abstract class DObject<O> implements Mutable {
 
     protected abstract DType getType();
 
-    protected void addMessage(DFeature feature, String id, TooManyChangesException tmce) {
+    protected void addMessage(DFeature feature, TooManyChangesException tmce) {
+        String id = "CONFLICTING_RULES";
         DMessage message = new DMessage(this, feature, DMessageType.error, id, "Conflicting rules, running " + feature + " changes=" + tmce.getNrOfChanges());
         tmce.getLast().trace(message, (m, r) -> {
             m.addSubMessage(new DMessage((DObject) r.mutable(), ((DRule.DObserver) r.observer()).rule(), DMessageType.error, id, //
@@ -276,7 +277,8 @@ public abstract class DObject<O> implements Mutable {
         addMessage(message);
     }
 
-    protected void addMessage(DFeature feature, String id, TooManyObservedException tmse) {
+    protected void addMessage(DFeature feature, TooManyObservedException tmse) {
+        String id = "TOO_MANY_OBSERVED";
         DMessage message = new DMessage(this, feature, DMessageType.warning, id, tmse.getSimpleMessage());
         int number = 0;
         for (Entry<Observed, Set<Mutable>> e : tmse.getObserved()) {
@@ -288,7 +290,8 @@ public abstract class DObject<O> implements Mutable {
         addMessage(message);
     }
 
-    protected void addMessage(DFeature feature, String id, TooManyObserversException tmse) {
+    protected void addMessage(DFeature feature, TooManyObserversException tmse) {
+        String id = "TOO_MANY_OBSERVERS";
         DMessage message = new DMessage(this, feature, DMessageType.warning, id, tmse.getSimpleMessage());
         int number = 0;
         for (Entry<Observer, Set<Mutable>> e : tmse.getObservers()) {
@@ -300,15 +303,24 @@ public abstract class DObject<O> implements Mutable {
         addMessage(message);
     }
 
-    protected void addMessage(DFeature feature, DMessageType type, String id, Throwable content) {
-        DMessage message = new DMessage(this, feature, type, id, content);
-        for (StackTraceElement ste : content.getStackTrace()) {
-            message.addSubMessage(new DMessage(this, feature, type, id, ste));
+    protected void addMessage(DFeature feature, Throwable t) {
+        if (t instanceof TooManyChangesException) {
+            addMessage(feature, (TooManyChangesException) t);
+        } else if (t instanceof TooManyObservedException) {
+            addMessage(feature, (TooManyObservedException) t);
+        } else if (t instanceof TooManyObserversException) {
+            addMessage(feature, (TooManyObserversException) t);
+        } else {
+            String id = "EXCEPTION";
+            DMessage message = new DMessage(this, feature, DMessageType.error, id, t);
+            for (StackTraceElement ste : t.getStackTrace()) {
+                message.addSubMessage(new DMessage(this, feature, DMessageType.error, id, ste));
+            }
+            addMessage(message);
         }
-        addMessage(message);
     }
 
-    protected void addMessage(DFeature feature, DMessageType type, String id, Object content) {
+    protected void addMessage(DFeature feature, DMessageType type, String id, String content) {
         addMessage(new DMessage(this, feature, type, id, content));
     }
 
