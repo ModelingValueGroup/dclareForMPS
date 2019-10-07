@@ -156,6 +156,11 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
             }
 
             @Override
+            protected State pre(State pre) {
+                return pre.set(getRepository(), DRepository.MESSAGES, DRepository.MESSAGES.getDefault());
+            }
+
+            @Override
             protected State handleException(State state, Throwable t) {
                 state = run(trigger(state, universe(), Action.of("$handleException", o -> addMessage(t)), Direction.backward));
                 dummy();
