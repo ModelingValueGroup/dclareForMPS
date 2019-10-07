@@ -22,6 +22,7 @@ import javax.swing.SwingUtilities;
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.jetbrains.mps.openapi.project.Project;
 import org.modelingvalue.collections.Collection;
+import org.modelingvalue.collections.DefaultMap;
 import org.modelingvalue.collections.Entry;
 import org.modelingvalue.collections.Map;
 import org.modelingvalue.collections.Set;
@@ -173,6 +174,11 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
                 if (imperativeTransaction != null) {
                     super.checkConsistency(pre, post);
                 }
+            }
+
+            @SuppressWarnings("rawtypes")
+            @Override
+            protected void checkOrphanState(Entry<Object, Pair<DefaultMap<Setable, Object>, DefaultMap<Setable, Object>>> e0) {
             }
 
         };
