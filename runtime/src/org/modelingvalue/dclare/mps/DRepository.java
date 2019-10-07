@@ -226,12 +226,12 @@ public class DRepository extends DObject<SRepository> implements SRepository {
     @SuppressWarnings("rawtypes")
     private void addTooManyObservedExceptionMessage(DObject context, DFeature feature, TooManyObservedException tmse) {
         String id = "TOO_MANY_OBSERVED";
-        DMessage message = new DMessage(context, feature, DMessageType.warning, id, tmse.getSimpleMessage());
+        DMessage message = new DMessage(context, feature, DMessageType.error, id, tmse.getSimpleMessage());
         int number = 0;
         for (Entry<Observed, Set<Mutable>> e : tmse.getObserved()) {
             if (e.getKey() instanceof DObserved) {
                 number++;
-                message.addSubMessage(new DMessage(this, (DObserved) e.getKey(), DMessageType.warning, number + ")", e.getValue().toString()));
+                message.addSubMessage(new DMessage(this, (DObserved) e.getKey(), DMessageType.error, number + ")", e.getValue().toString()));
             }
         }
         addMessage(message);
@@ -240,12 +240,12 @@ public class DRepository extends DObject<SRepository> implements SRepository {
     @SuppressWarnings("rawtypes")
     private void addTooManyObserversExceptionMessage(DObject context, DFeature feature, TooManyObserversException tmse) {
         String id = "TOO_MANY_OBSERVERS";
-        DMessage message = new DMessage(context, feature, DMessageType.warning, id, tmse.getSimpleMessage());
+        DMessage message = new DMessage(context, feature, DMessageType.error, id, tmse.getSimpleMessage());
         int number = 0;
         for (Entry<Observer, Set<Mutable>> e : tmse.getObservers()) {
             if (e.getKey() instanceof DRule.DObserver) {
                 number++;
-                message.addSubMessage(new DMessage(this, ((DRule.DObserver) e.getKey()).rule(), DMessageType.warning, number + ")", e.getValue().toString()));
+                message.addSubMessage(new DMessage(this, ((DRule.DObserver) e.getKey()).rule(), DMessageType.error, number + ")", e.getValue().toString()));
             }
         }
         addMessage(message);
@@ -254,28 +254,28 @@ public class DRepository extends DObject<SRepository> implements SRepository {
     @SuppressWarnings("rawtypes")
     private void addReferencedOrphanExceptionMessage(DObject context, DFeature feature, ReferencedOrphanException roe) {
         String id = "REFERENCED_ORPHAN";
-        DMessage message = new DMessage(context, feature, DMessageType.warning, id, roe.getMessage());
+        DMessage message = new DMessage(context, feature, DMessageType.error, id, roe.getMessage());
         addMessage(message);
     }
 
     @SuppressWarnings("rawtypes")
     private void addEmptyMandatoryExceptionMessage(DObject context, DFeature feature, EmptyMandatoryException eme) {
         String id = "EMPTY_MANDATORY";
-        DMessage message = new DMessage(context, feature, DMessageType.warning, id, eme.getMessage());
+        DMessage message = new DMessage(context, feature, DMessageType.error, id, eme.getMessage());
         addMessage(message);
     }
 
     @SuppressWarnings("rawtypes")
     private void addNonDeterministicExceptionMessage(DObject context, DFeature feature, NonDeterministicException nde) {
         String id = "NON_DETERMINISTIC";
-        DMessage message = new DMessage(context, feature, DMessageType.warning, id, nde.getMessage());
+        DMessage message = new DMessage(context, feature, DMessageType.error, id, nde.getMessage());
         addMessage(message);
     }
 
     @SuppressWarnings("rawtypes")
     private void addOutOfScopeExceptionMessage(DObject context, DFeature feature, OutOfScopeException oose) {
         String id = "OUT_OF_SCOPE";
-        DMessage message = new DMessage(context, feature, DMessageType.warning, id, oose.getMessage());
+        DMessage message = new DMessage(context, feature, DMessageType.error, id, oose.getMessage());
         addMessage(message);
     }
 

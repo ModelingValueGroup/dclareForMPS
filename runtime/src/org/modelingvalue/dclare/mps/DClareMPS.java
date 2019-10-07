@@ -36,6 +36,7 @@ import org.modelingvalue.dclare.mps.NonCheckingObserver.NonCheckingTransaction;
 import org.modelingvalue.transactions.Action;
 import org.modelingvalue.transactions.ConsistencyError;
 import org.modelingvalue.transactions.Constant;
+import org.modelingvalue.transactions.Direction;
 import org.modelingvalue.transactions.ImperativeTransaction;
 import org.modelingvalue.transactions.LeafTransaction;
 import org.modelingvalue.transactions.Mutable;
@@ -154,8 +155,10 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
             }
 
             @Override
-            protected void handleException(Throwable t) {
-                put("$exception", () -> addMessage(t));
+            protected State handleException(State state, Throwable t) {
+                state = run(trigger(state, universe(), Action.of("$handleException", o -> addMessage(t)), Direction.backward));
+                dummy();
+                return state;
             }
 
             @Override
@@ -166,9 +169,9 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
             }
 
             @Override
-            protected void checkConsistemcy(State pre, State post) {
+            protected void checkConsistency(State pre, State post) {
                 if (imperativeTransaction != null) {
-                    super.checkConsistemcy(pre, post);
+                    super.checkConsistency(pre, post);
                 }
             }
 
@@ -196,8 +199,9 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
         });
         waitForEndThread.setDaemon(true);
         waitForEndThread.start();
-        universeTransaction.put("$activate", () -> {
-            imperativeTransaction = universeTransaction.addImperative("MPSNative", this, r -> {
+        ImperativeTransaction[] it = new ImperativeTransaction[1];
+        universeTransaction.put("$connect", () -> {
+            it[0] = universeTransaction.addImperative("$MPSNative", this, r -> {
                 if (imperativeTransaction != null && !COMMITTING.get()) {
                     if (!running) {
                         running = true;
@@ -206,6 +210,9 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
                     command(r);
                 }
             });
+        });
+        universeTransaction.put("$activate", () -> {
+            imperativeTransaction = it[0];
             REPOSITORY_CONTAINER.set(this, getRepository());
         });
     }

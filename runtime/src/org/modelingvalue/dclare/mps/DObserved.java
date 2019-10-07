@@ -25,6 +25,7 @@ import org.modelingvalue.collections.ContainingCollection;
 import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.QuadConsumer;
+import org.modelingvalue.transactions.EmptyMandatoryException;
 import org.modelingvalue.transactions.LeafTransaction;
 import org.modelingvalue.transactions.Mutable;
 import org.modelingvalue.transactions.Observed;
@@ -172,6 +173,21 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
             return true;
         }
         return false;
+    }
+
+    @Override
+    public boolean checkConsistency() {
+        return super.checkConsistency() || mandatory;
+    }
+
+    @Override
+    public void checkConsistency(State state, O object, T pre, T post) {
+        if (super.checkConsistency()) {
+            super.checkConsistency(state, object, pre, post);
+        }
+        if (mandatory && post == null) {
+            throw new EmptyMandatoryException(object, this);
+        }
     }
 
 }
