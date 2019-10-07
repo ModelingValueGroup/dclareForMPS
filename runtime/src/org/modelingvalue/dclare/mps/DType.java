@@ -14,12 +14,17 @@
 package org.modelingvalue.dclare.mps;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
+import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.dclare.mps.DRule.DObserver;
 import org.modelingvalue.transactions.Constant;
+import org.modelingvalue.transactions.Mutable;
+import org.modelingvalue.transactions.MutableClass;
+import org.modelingvalue.transactions.Observer;
+import org.modelingvalue.transactions.Setable;
 
 @SuppressWarnings("rawtypes")
-public abstract class DType {
+public abstract class DType implements MutableClass {
 
     private static final Constant<DType, Set<IRuleSet>>   TYPE_RULE_SETS = Constant.of("TYPE_RULE_SETS", Set.of(), t -> t.getLanguages().flatMap(l -> DClareMPS.RULE_SETS.get(l)).toSet());
 
@@ -42,7 +47,7 @@ public abstract class DType {
         return TYPE_RULE_SETS.get(this);
     }
 
-    public final Set<DObserver> getObservers() {
+    public Set<DObserver> getObservers() {
         return OBSERVERS.get(this);
     }
 
@@ -78,4 +83,34 @@ public abstract class DType {
     public String toString() {
         return getClass().getSimpleName() + ":" + identity;
     }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public final Collection<? extends Observer<?>> dObservers() {
+        return this == DObject.TYPE.getDefault() ? Set.of(DObject.TYPE_RULE) : //
+                (Collection<? extends Observer<?>>) Collection.concat(observers(), getObservers());
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public Collection<? extends Setable<? extends Mutable, ?>> dContainers() {
+        return (Collection<? extends Setable<? extends Mutable, ?>>) getAttributes().filter(a -> a instanceof Setable && a.isComposite());
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public Collection<? extends Constant<? extends Mutable, ?>> dConstants() {
+        return (Collection<? extends Constant<? extends Mutable, ?>>) getAttributes().filter(a -> a instanceof Constant);
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public Collection<? extends Setable<? extends Mutable, ?>> dSetables() {
+        return (Collection<? extends Setable<? extends Mutable, ?>>) getAttributes().filter(a -> a instanceof Setable);
+    }
+
+    protected Collection<? extends Observer> observers() {
+        return DObject.RULES;
+    }
+
 }

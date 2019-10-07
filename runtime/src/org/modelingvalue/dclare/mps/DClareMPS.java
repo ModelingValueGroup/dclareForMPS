@@ -30,19 +30,23 @@ import org.modelingvalue.collections.util.ContextThread;
 import org.modelingvalue.collections.util.ContextThread.ContextPool;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.collections.util.TriConsumer;
+import org.modelingvalue.dclare.mps.DRule.DObserver;
 import org.modelingvalue.dclare.mps.DRule.DObserverTransaction;
 import org.modelingvalue.dclare.mps.NonCheckingObserver.NonCheckingTransaction;
 import org.modelingvalue.transactions.Action;
+import org.modelingvalue.transactions.ConsistencyError;
 import org.modelingvalue.transactions.Constant;
 import org.modelingvalue.transactions.ImperativeTransaction;
 import org.modelingvalue.transactions.LeafTransaction;
 import org.modelingvalue.transactions.Mutable;
+import org.modelingvalue.transactions.MutableClass;
 import org.modelingvalue.transactions.Observed;
 import org.modelingvalue.transactions.Observer;
 import org.modelingvalue.transactions.Priority;
 import org.modelingvalue.transactions.ReusableTransaction;
 import org.modelingvalue.transactions.Setable;
 import org.modelingvalue.transactions.State;
+import org.modelingvalue.transactions.TransactionException;
 import org.modelingvalue.transactions.Universe;
 import org.modelingvalue.transactions.UniverseTransaction;
 
@@ -50,6 +54,28 @@ import jetbrains.mps.smodel.language.LanguageRegistry;
 import jetbrains.mps.smodel.language.LanguageRuntime;
 
 public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
+
+    private static final MutableClass                                                               UNIVERSE_CLASS       = new MutableClass() {
+                                                                                                                             @Override
+                                                                                                                             public Collection<? extends Observer<?>> dObservers() {
+                                                                                                                                 return Collection.of();
+                                                                                                                             }
+
+                                                                                                                             @Override
+                                                                                                                             public Collection<? extends Setable<? extends Mutable, ?>> dContainers() {
+                                                                                                                                 return Collection.of(REPOSITORY_CONTAINER);
+                                                                                                                             }
+
+                                                                                                                             @Override
+                                                                                                                             public Collection<? extends Constant<? extends Mutable, ?>> dConstants() {
+                                                                                                                                 return Collection.of();
+                                                                                                                             }
+
+                                                                                                                             @Override
+                                                                                                                             public Collection<? extends Setable<? extends Mutable, ?>> dSetables() {
+                                                                                                                                 return Collection.of();
+                                                                                                                             }
+                                                                                                                         };
 
     protected static final boolean                                                                  TRACE                = Boolean.getBoolean("DCLARE_TRACE");
 
@@ -129,13 +155,20 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
 
             @Override
             protected void handleException(Throwable t) {
-                put("$exception", () -> getRepository().addMessage(DRepository.MODULES, t));
+                put("$exception", () -> addMessage(t));
             }
 
             @Override
             protected void clearOrphans(Universe universe) {
                 if (imperativeTransaction != null) {
                     super.clearOrphans(universe);
+                }
+            }
+
+            @Override
+            protected void checkConsistemcy(State pre, State post) {
+                if (imperativeTransaction != null) {
+                    super.checkConsistemcy(pre, post);
                 }
             }
 
@@ -164,7 +197,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
         waitForEndThread.setDaemon(true);
         waitForEndThread.start();
         universeTransaction.put("$activate", () -> {
-            imperativeTransaction = universeTransaction.addIntegration("MPSNative", this, r -> {
+            imperativeTransaction = universeTransaction.addImperative("MPSNative", this, r -> {
                 if (imperativeTransaction != null && !COMMITTING.get()) {
                     if (!running) {
                         running = true;
@@ -175,6 +208,26 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
             });
             REPOSITORY_CONTAINER.set(this, getRepository());
         });
+    }
+
+    @SuppressWarnings("rawtypes")
+    private void addMessage(Throwable t) {
+        DObject object = getRepository();
+        DFeature feature = DRepository.EXCEPTIONS;
+        while (t instanceof TransactionException) {
+            if (((TransactionException) t).getTransactionClass() instanceof DObserver) {
+                feature = ((DObserver) ((TransactionException) t).getTransactionClass()).rule();
+            }
+            if (((TransactionException) t).getTransactionClass() instanceof DObject) {
+                object = (DObject) ((TransactionException) t).getTransactionClass();
+            }
+            t = t.getCause();
+        }
+        if (t instanceof ConsistencyError) {
+            getRepository().addMessage((ConsistencyError) t);
+        } else {
+            getRepository().addThrowableMessage(object, feature, t);
+        }
     }
 
     @Override
@@ -357,18 +410,13 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     }
 
     @Override
-    public Collection<? extends Observer<?>> dObservers() {
-        return Collection.of();
+    public MutableClass dClass() {
+        return UNIVERSE_CLASS;
     }
 
     @Override
-    public Collection<? extends Setable<? extends Mutable, ?>> dContainers() {
-        return Collection.of(REPOSITORY_CONTAINER);
-    }
-
-    @Override
-    public Collection<? extends Constant<? extends Mutable, ?>> dConstants() {
-        return Collection.of();
+    public Collection<? extends Observer<?>> dMutableObservers() {
+        return Set.of();
     }
 
 }

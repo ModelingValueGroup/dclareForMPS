@@ -234,7 +234,7 @@ public interface DAttribute<O, T> extends DFeature<O> {
         private final Supplier<SNode> source;
 
         public DConstant(Object id, String name, boolean synthetic, boolean composite, Supplier<SNode> source, Function<C, V> deriver) {
-            super(id, null, composite, null, deriver, null);
+            super(id, null, composite, null, null, deriver, null, true);
             this.name = name;
             this.synthetic = synthetic;
             this.source = source;

@@ -62,6 +62,17 @@ public class DModule extends DObject<SModule> implements SModule {
                                                                                            public Set<SLanguage> getLanguages() {
                                                                                                return p.b();
                                                                                            }
+
+                                                                                           @SuppressWarnings("rawtypes")
+                                                                                           @Override
+                                                                                           protected Collection<? extends Observer> observers() {
+                                                                                               return RULES;
+                                                                                           }
+
+                                                                                           @Override
+                                                                                           public Collection<? extends Setable<? extends Mutable, ?>> dContainers() {
+                                                                                               return Collection.concat(Set.of(MODELS), super.dContainers());
+                                                                                           }
                                                                                        });
 
     public static final Observed<DModule, Set<DModel>>                  REFERENCED     = Observed.of("REFERENCED", Set.of());
@@ -139,17 +150,6 @@ public class DModule extends DObject<SModule> implements SModule {
         if (isAllwaysActive() && hasRuleSets(languages)) {
             MODELS.set(this, dClareMPS.read(() -> models(original())).map(m -> DModel.of(m)).toSet());
         }
-    }
-
-    @SuppressWarnings("rawtypes")
-    @Override
-    protected Collection<? extends Observer> observers() {
-        return RULES;
-    }
-
-    @Override
-    public Collection<? extends Setable<? extends Mutable, ?>> dContainers() {
-        return Collection.concat(Set.of(MODELS), super.dContainers());
     }
 
     @Override

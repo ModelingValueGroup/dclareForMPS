@@ -17,8 +17,8 @@ import org.modelingvalue.collections.DefaultMap;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Context;
 import org.modelingvalue.transactions.Constant;
+import org.modelingvalue.transactions.DeferException;
 import org.modelingvalue.transactions.Direction;
-import org.modelingvalue.transactions.EmptyMandatoryException;
 import org.modelingvalue.transactions.LeafTransaction;
 import org.modelingvalue.transactions.Mutable;
 import org.modelingvalue.transactions.MutableTransaction;
@@ -27,10 +27,6 @@ import org.modelingvalue.transactions.Observer;
 import org.modelingvalue.transactions.ObserverTransaction;
 import org.modelingvalue.transactions.Priority;
 import org.modelingvalue.transactions.State;
-import org.modelingvalue.transactions.StopObserverException;
-import org.modelingvalue.transactions.TooManyChangesException;
-import org.modelingvalue.transactions.TooManyObservedException;
-import org.modelingvalue.transactions.TooManyObserversException;
 import org.modelingvalue.transactions.Transaction;
 import org.modelingvalue.transactions.UniverseTransaction;
 
@@ -88,21 +84,16 @@ public interface DRule<O> extends DFeature<O> {
                     action.run();
                 } catch (NullPointerException e) {
                     if (EMPTY_ATTRIBUTE.get()) {
-                        throw new EmptyMandatoryException();
+                        throw new DeferException();
                     } else {
-                        object().addMessage(dRule(), e);
-                        throw new StopObserverException(e);
+                        throw e;
                     }
                 } catch (IndexOutOfBoundsException e) {
                     if (COLLECTION_ATTRIBUTE.get()) {
-                        throw new EmptyMandatoryException();
+                        throw new DeferException();
                     } else {
-                        object().addMessage(dRule(), e);
-                        throw new StopObserverException(e);
+                        throw e;
                     }
-                } catch (Throwable e) {
-                    object().addMessage(dRule(), e);
-                    throw new StopObserverException(e);
                 } finally {
                     COLLECTION_ATTRIBUTE.set(false);
                     EMPTY_ATTRIBUTE.set(false);
@@ -114,30 +105,18 @@ public interface DRule<O> extends DFeature<O> {
             return (DObject) parent().mutable();
         }
 
-        private DRule dRule() {
-            return (DRule) observer().id();
-        }
-
         @Override
         protected void checkTooManyObservers(Object object, Observed observed, DefaultMap<Observer, Set<Mutable>> obervers) {
             if (object instanceof DObject && observed instanceof DObserved && !((DObserved) observed).isSynthetic()) {
-                try {
-                    super.checkTooManyObservers(object, observed, obervers.filter(k -> k instanceof DObserver, v -> true));
-                } catch (TooManyObserversException e) {
-                    ((DObject) object).addMessage((DObserved) observed, e);
-                }
+                super.checkTooManyObservers(object, observed, obervers.filter(k -> k instanceof DObserver, v -> true));
             }
         }
 
         @Override
         protected void checkTooManyObserved(DefaultMap<Observed, Set<Mutable>> sets, DefaultMap<Observed, Set<Mutable>> gets) {
-            try {
-                super.checkTooManyObserved(//
-                        sets.filter(k -> k instanceof DObserved && !((DObserved) k).isSynthetic(), v -> true), //
-                        gets.filter(k -> k instanceof DObserved && !((DObserved) k).isSynthetic(), v -> true));
-            } catch (TooManyObservedException e) {
-                object().addMessage(dRule(), e);
-            }
+            super.checkTooManyObserved(//
+                    sets.filter(k -> k instanceof DObserved && !((DObserved) k).isSynthetic(), v -> true), //
+                    gets.filter(k -> k instanceof DObserved && !((DObserved) k).isSynthetic(), v -> true));
         }
 
         @Override
@@ -155,12 +134,7 @@ public interface DRule<O> extends DFeature<O> {
                 sets = sets.filter(k -> k instanceof DObserved && !((DObserved) k).isSynthetic(), v -> true);
                 gets = gets.filter(k -> k instanceof DObserved && !((DObserved) k).isSynthetic(), v -> true);
             }
-            try {
-                super.checkTooManyChanges(pre, sets, gets);
-            } catch (TooManyChangesException e) {
-                object().addMessage(dRule(), e);
-                throw new StopObserverException(e);
-            }
+            super.checkTooManyChanges(pre, sets, gets);
         }
 
     }

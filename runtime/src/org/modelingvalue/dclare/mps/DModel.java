@@ -72,6 +72,18 @@ public class DModel extends DObject<SModel> implements SModel {
                                                                                  public Set<SLanguage> getLanguages() {
                                                                                      return ls;
                                                                                  }
+
+                                                                                 @Override
+                                                                                 public Collection<? extends Setable<? extends Mutable, ?>> dContainers() {
+                                                                                     return Collection.concat(Set.of(ROOTS), super.dContainers());
+                                                                                 }
+
+                                                                                 @SuppressWarnings("rawtypes")
+                                                                                 @Override
+                                                                                 protected Collection<? extends Observer> observers() {
+                                                                                     return RULES;
+                                                                                 }
+
                                                                              });
 
     public static final Observed<DModel, Set<DNode>>     ROOTS               = DObserved.of("ROOTS", Set.of(), false, true, null, false, false, (dModel, pre, post, first) -> {
@@ -156,17 +168,6 @@ public class DModel extends DObject<SModel> implements SModel {
 
     protected Set<SLanguage> getUsedLanguages() {
         return USED_LANGUAGES.get(this);
-    }
-
-    @SuppressWarnings("rawtypes")
-    @Override
-    protected Collection<? extends Observer> observers() {
-        return RULES;
-    }
-
-    @Override
-    public Collection<? extends Setable<? extends Mutable, ?>> dContainers() {
-        return Collection.concat(Set.of(ROOTS), super.dContainers());
     }
 
     @Override

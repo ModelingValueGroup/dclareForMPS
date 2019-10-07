@@ -83,5 +83,4 @@ public class DClassObject extends DObject<SClassObject> implements SClassObject 
     @Override
     protected void read(DClareMPS dClareMPS) {
     }
-
 }

@@ -52,24 +52,7 @@ import jetbrains.mps.smodel.SNodeUtil;
 
 public class DNode extends DObject<SNode> implements SNode {
 
-    private static final Constant<Pair<Set<SLanguage>, SConcept>, DType>          NODE_TYPE           = Constant.of("NODE_TYPE", p -> new DType(p) {
-                                                                                                          @SuppressWarnings({"unchecked", "rawtypes"})
-                                                                                                          @Override
-                                                                                                          public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
-                                                                                                              return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getNodeRules(p.b()))).toSet();
-                                                                                                          }
-
-                                                                                                          @SuppressWarnings({"unchecked", "rawtypes"})
-                                                                                                          @Override
-                                                                                                          public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
-                                                                                                              return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getNodeAttributes(p.b()))).toSet();
-                                                                                                          }
-
-                                                                                                          @Override
-                                                                                                          public Set<SLanguage> getLanguages() {
-                                                                                                              return p.a();
-                                                                                                          }
-                                                                                                      });
+    private static final Constant<Pair<Set<SLanguage>, SConcept>, DType>          NODE_TYPE           = Constant.of("NODE_TYPE", p -> new DNodeType(p));
 
     public static final Observed<DNode, DModel>                                   MODEL               = Observed.of("MODEL", null);
 
@@ -167,7 +150,7 @@ public class DNode extends DObject<SNode> implements SNode {
                                                                                                       }, Priority.preDepth);
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    private static final Constant<SConcept, Set<DObserved<DNode, ?>>>             CONTAINERS          = Constant.of("", c -> (Set) Collection.of(c.getContainmentLinks()).map(DNode::container).toSet());
+    protected static final Constant<SConcept, Set<DObserved<DNode, ?>>>           CONTAINERS          = Constant.of("", c -> (Set) Collection.of(c.getContainmentLinks()).map(DNode::container).toSet());
 
     @SuppressWarnings("rawtypes")
     protected static final Set<Observer>                                          RULES               = DObject.RULES.addAll(Set.of(MODEL_RULE, USED_LANGUAGES_RULE, USED_MODELS_RULE));
@@ -324,17 +307,6 @@ public class DNode extends DObject<SNode> implements SNode {
                 }
             }
         }
-    }
-
-    @SuppressWarnings("rawtypes")
-    @Override
-    protected Collection<? extends Observer> observers() {
-        return RULES;
-    }
-
-    @Override
-    public Collection<? extends Setable<? extends Mutable, ?>> dContainers() {
-        return Collection.concat(CONTAINERS.get(getConcept()), super.dContainers());
     }
 
     @Override

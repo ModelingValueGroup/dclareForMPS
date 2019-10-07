@@ -14,7 +14,6 @@
 package org.modelingvalue.dclare.mps;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.function.BiConsumer;
@@ -27,8 +26,10 @@ import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.QuadConsumer;
 import org.modelingvalue.transactions.LeafTransaction;
+import org.modelingvalue.transactions.Mutable;
 import org.modelingvalue.transactions.Observed;
 import org.modelingvalue.transactions.Setable;
+import org.modelingvalue.transactions.State;
 
 @SuppressWarnings("rawtypes")
 public class DObserved<O extends DObject, T> extends Observed<O, T> implements DFeature<O> {
@@ -48,7 +49,7 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
     private final boolean                        synthetic;
 
     protected DObserved(Object id, T def, boolean mandatory, boolean composite, Supplier<Setable<?, ?>> opposite, boolean deferred, boolean synthetic, QuadConsumer<O, T, T, Boolean> toMPS, QuadConsumer<LeafTransaction, O, T, T> changed, Supplier<SNode> source) {
-        super(id, def, composite, opposite, changed);
+        super(id, def, composite, opposite, null, changed, true);
         this.toMPS = toMPS;
         this.mandatory = mandatory;
         this.deferred = deferred;
@@ -74,11 +75,9 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
             toMPS.accept(object, pre, post, first);
         } catch (Throwable t) {
             if (object instanceof DObject) {
-                ((DObject) object).addMessage(this, t);
+                DObject.dClareMPS().getRepository().addThrowableMessage(object, this, t);
             } else {
-                System.err.println(DClareMPS.DCLARE + "TO MPS " + object + "." + this + "=" + post);
-                t.setStackTrace(Arrays.copyOf(t.getStackTrace(), 8));
-                t.printStackTrace();
+                DObject.dClareMPS().getRepository().addThrowableMessage(DObject.dClareMPS().getRepository(), this, t);
             }
         }
     }
@@ -159,6 +158,20 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
             }
         }
         return result;
+    }
+
+    @Override
+    protected boolean isOrphan(State state, Mutable m) {
+        if (super.isOrphan(state, m)) {
+            if (m instanceof DObject) {
+                DObject o = (DObject) m;
+                if (o.isReadOnly() || !DObject.dClareMPS().getRepository().original().equals(o.getOriginalRepository())) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
     }
 
 }
