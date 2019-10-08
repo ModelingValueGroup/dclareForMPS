@@ -2,7 +2,7 @@
 <model ref="r:d496f872-14f4-4415-9dd1-a59394188d3a(DclareMessages.editor)">
   <persistence version="9" />
   <languages>
-    <use id="18bc6592-03a6-4e29-a83a-7ff23bde13ba" name="jetbrains.mps.lang.editor" version="12" />
+    <use id="18bc6592-03a6-4e29-a83a-7ff23bde13ba" name="jetbrains.mps.lang.editor" version="13" />
     <devkit ref="fbc25dd2-5da4-483a-8b19-70928e1b62d7(jetbrains.mps.devkit.general-purpose)" />
   </languages>
   <imports>
@@ -212,7 +212,7 @@
           <node concept="3F0ifn" id="5FinwQP4AMI" role="2czzBI">
             <property role="3F0ifm" value="&lt;none&gt;    " />
             <node concept="VechU" id="1KqhpdG7b7i" role="3F10Kt">
-              <property role="Vb096" value="lightGray" />
+              <property role="Vb096" value="fLJRk5A/lightGray" />
             </node>
           </node>
         </node>
@@ -246,7 +246,7 @@
           <node concept="3F0ifn" id="1KqhpdG7bbI" role="2czzBI">
             <property role="3F0ifm" value="&lt;none&gt;    " />
             <node concept="VechU" id="1KqhpdG7bbJ" role="3F10Kt">
-              <property role="Vb096" value="lightGray" />
+              <property role="Vb096" value="fLJRk5A/lightGray" />
             </node>
           </node>
         </node>
@@ -280,7 +280,7 @@
           <node concept="3F0ifn" id="1KqhpdG7bfG" role="2czzBI">
             <property role="3F0ifm" value="&lt;none&gt;    " />
             <node concept="VechU" id="1KqhpdG7bfH" role="3F10Kt">
-              <property role="Vb096" value="lightGray" />
+              <property role="Vb096" value="fLJRk5A/lightGray" />
             </node>
           </node>
         </node>
@@ -314,7 +314,7 @@
           <node concept="3F0ifn" id="1KqhpdG7bhX" role="2czzBI">
             <property role="3F0ifm" value="&lt;none&gt;    " />
             <node concept="VechU" id="1KqhpdG7bhY" role="3F10Kt">
-              <property role="Vb096" value="lightGray" />
+              <property role="Vb096" value="fLJRk5A/lightGray" />
             </node>
           </node>
         </node>
@@ -498,7 +498,7 @@
     <property role="TrG5h" value="SourceSelection" />
     <ref role="1h_SK9" to="wknp:7e_PmaZxfwQ" resolve="Message" />
     <node concept="1hA7zw" id="5FinwQPbka3" role="1h_SK8">
-      <property role="1hAc7j" value="click_action_id" />
+      <property role="1hAc7j" value="1FSxSwWqMNJ/click_action_id" />
       <property role="1hHO97" value="select source" />
       <node concept="1hAIg9" id="5FinwQPbka4" role="1hA7z_">
         <node concept="3clFbS" id="5FinwQPbka5" role="2VODD2">
@@ -524,7 +524,7 @@
     <property role="TrG5h" value="Expand" />
     <ref role="1h_SK9" to="wknp:7e_PmaZxfwQ" resolve="Message" />
     <node concept="1hA7zw" id="1KqhpdG5TiX" role="1h_SK8">
-      <property role="1hAc7j" value="click_action_id" />
+      <property role="1hAc7j" value="1FSxSwWqMNJ/click_action_id" />
       <property role="1hHO97" value="expand" />
       <node concept="1hAIg9" id="1KqhpdG5TiY" role="1hA7z_">
         <node concept="3clFbS" id="1KqhpdG5TiZ" role="2VODD2">

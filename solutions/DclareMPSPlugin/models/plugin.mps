@@ -4,8 +4,8 @@
   <languages>
     <use id="28f9e497-3b42-4291-aeba-0a1039153ab1" name="jetbrains.mps.lang.plugin" version="4" />
     <use id="ef7bf5ac-d06c-4342-b11d-e42104eb9343" name="jetbrains.mps.lang.plugin.standalone" version="0" />
-    <use id="f3061a53-9226-4cc5-a443-f952ceaf5816" name="jetbrains.mps.baseLanguage" version="8" />
-    <use id="7866978e-a0f0-4cc7-81bc-4d213d9375e1" name="jetbrains.mps.lang.smodel" version="13" />
+    <use id="f3061a53-9226-4cc5-a443-f952ceaf5816" name="jetbrains.mps.baseLanguage" version="9" />
+    <use id="7866978e-a0f0-4cc7-81bc-4d213d9375e1" name="jetbrains.mps.lang.smodel" version="17" />
     <use id="69b8a993-9b87-4d96-bf0c-3559f4bb0c63" name="jetbrains.mps.lang.slanguage" version="0" />
     <use id="aee9cad2-acd4-4608-aef2-0004f6a1cdbd" name="jetbrains.mps.lang.actions" version="4" />
     <use id="3ecd7c84-cde3-45de-886c-135ecc69b742" name="jetbrains.mps.lang.refactoring" version="0" />
@@ -345,11 +345,8 @@
         <child id="1144231399730" name="condition" index="1Dwp0S" />
         <child id="1144231408325" name="iteration" index="1Dwrff" />
       </concept>
-      <concept id="6329021646629104957" name="jetbrains.mps.baseLanguage.structure.TextCommentPart" flags="nn" index="3SKdUq">
-        <property id="6329021646629104958" name="text" index="3SKdUp" />
-      </concept>
       <concept id="6329021646629104954" name="jetbrains.mps.baseLanguage.structure.SingleLineComment" flags="nn" index="3SKdUt">
-        <child id="6329021646629175155" name="commentPart" index="3SKWNk" />
+        <child id="1350122676458893092" name="text" index="3ndbpf" />
       </concept>
       <concept id="1146644602865" name="jetbrains.mps.baseLanguage.structure.PublicVisibility" flags="nn" index="3Tm1VV" />
       <concept id="1146644623116" name="jetbrains.mps.baseLanguage.structure.PrivateVisibility" flags="nn" index="3Tm6S6" />
@@ -445,6 +442,14 @@
     <language id="ceab5195-25ea-4f22-9b92-103b95ca8c0c" name="jetbrains.mps.lang.core">
       <concept id="1169194658468" name="jetbrains.mps.lang.core.structure.INamedConcept" flags="ng" index="TrEIO">
         <property id="1169194664001" name="name" index="TrG5h" />
+      </concept>
+    </language>
+    <language id="c7fb639f-be78-4307-89b0-b5959c3fa8c8" name="jetbrains.mps.lang.text">
+      <concept id="155656958578482948" name="jetbrains.mps.lang.text.structure.Word" flags="ng" index="3oM_SD">
+        <property id="155656958578482949" name="value" index="3oM_SC" />
+      </concept>
+      <concept id="2535923850359271782" name="jetbrains.mps.lang.text.structure.Line" flags="ng" index="1PaTwC">
+        <child id="2535923850359271783" name="elements" index="1PaTwD" />
       </concept>
     </language>
     <language id="83888646-71ce-4f1c-9c53-c54016f6ad4f" name="jetbrains.mps.baseLanguage.collections">
@@ -2336,18 +2341,147 @@
           </node>
         </node>
         <node concept="3SKdUt" id="7POWRVZMxgo" role="3cqZAp">
-          <node concept="3SKdUq" id="7POWRVZMxgp" role="3SKWNk">
-            <property role="3SKdUp" value="We should be sure that node and base node are inside the same module. " />
+          <node concept="1PaTwC" id="7$u7SPmR_uv" role="3ndbpf">
+            <node concept="3oM_SD" id="7$u7SPmR_uw" role="1PaTwD">
+              <property role="3oM_SC" value="We" />
+            </node>
+            <node concept="3oM_SD" id="7$u7SPmR_ux" role="1PaTwD">
+              <property role="3oM_SC" value="should" />
+            </node>
+            <node concept="3oM_SD" id="7$u7SPmR_uy" role="1PaTwD">
+              <property role="3oM_SC" value="be" />
+            </node>
+            <node concept="3oM_SD" id="7$u7SPmR_uz" role="1PaTwD">
+              <property role="3oM_SC" value="sure" />
+            </node>
+            <node concept="3oM_SD" id="7$u7SPmR_u$" role="1PaTwD">
+              <property role="3oM_SC" value="that" />
+            </node>
+            <node concept="3oM_SD" id="7$u7SPmR_u_" role="1PaTwD">
+              <property role="3oM_SC" value="node" />
+            </node>
+            <node concept="3oM_SD" id="7$u7SPmR_uA" role="1PaTwD">
+              <property role="3oM_SC" value="and" />
+            </node>
+            <node concept="3oM_SD" id="7$u7SPmR_uB" role="1PaTwD">
+              <property role="3oM_SC" value="base" />
+            </node>
+            <node concept="3oM_SD" id="7$u7SPmR_uC" role="1PaTwD">
+              <property role="3oM_SC" value="node" />
+            </node>
+            <node concept="3oM_SD" id="7$u7SPmR_uD" role="1PaTwD">
+              <property role="3oM_SC" value="are" />
+            </node>
+            <node concept="3oM_SD" id="7$u7SPmR_uE" role="1PaTwD">
+              <property role="3oM_SC" value="inside" />
+            </node>
+            <node concept="3oM_SD" id="7$u7SPmR_uF" role="1PaTwD">
+              <property role="3oM_SC" value="the" />
+            </node>
+            <node concept="3oM_SD" id="7$u7SPmR_uG" role="1PaTwD">
+              <property role="3oM_SC" value="same" />
+            </node>
+            <node concept="3oM_SD" id="7$u7SPmR_uH" role="1PaTwD">
+              <property role="3oM_SC" value="module." />
+            </node>
           </node>
         </node>
         <node concept="3SKdUt" id="7POWRVZMxgq" role="3cqZAp">
-          <node concept="3SKdUq" id="7POWRVZMxgr" role="3SKWNk">
-            <property role="3SKdUp" value="Otherwise, tabbed editor for base node will be opened, but there will be no tab for &quot;node&quot;" />
+          <node concept="1PaTwC" id="7$u7SPmR_uI" role="3ndbpf">
+            <node concept="3oM_SD" id="7$u7SPmR_uJ" role="1PaTwD">
+              <property role="3oM_SC" value="Otherwise," />
+            </node>
+            <node concept="3oM_SD" id="7$u7SPmR_uK" role="1PaTwD">
+              <property role="3oM_SC" value="tabbed" />
+            </node>
+            <node concept="3oM_SD" id="7$u7SPmR_uL" role="1PaTwD">
+              <property role="3oM_SC" value="editor" />
+            </node>
+            <node concept="3oM_SD" id="7$u7SPmR_uM" role="1PaTwD">
+              <property role="3oM_SC" value="for" />
+            </node>
+            <node concept="3oM_SD" id="7$u7SPmR_uN" role="1PaTwD">
+              <property role="3oM_SC" value="base" />
+            </node>
+            <node concept="3oM_SD" id="7$u7SPmR_uO" role="1PaTwD">
+              <property role="3oM_SC" value="node" />
+            </node>
+            <node concept="3oM_SD" id="7$u7SPmR_uP" role="1PaTwD">
+              <property role="3oM_SC" value="will" />
+            </node>
+            <node concept="3oM_SD" id="7$u7SPmR_uQ" role="1PaTwD">
+              <property role="3oM_SC" value="be" />
+            </node>
+            <node concept="3oM_SD" id="7$u7SPmR_uR" role="1PaTwD">
+              <property role="3oM_SC" value="opened," />
+            </node>
+            <node concept="3oM_SD" id="7$u7SPmR_uS" role="1PaTwD">
+              <property role="3oM_SC" value="but" />
+            </node>
+            <node concept="3oM_SD" id="7$u7SPmR_uT" role="1PaTwD">
+              <property role="3oM_SC" value="there" />
+            </node>
+            <node concept="3oM_SD" id="7$u7SPmR_uU" role="1PaTwD">
+              <property role="3oM_SC" value="will" />
+            </node>
+            <node concept="3oM_SD" id="7$u7SPmR_uV" role="1PaTwD">
+              <property role="3oM_SC" value="be" />
+            </node>
+            <node concept="3oM_SD" id="7$u7SPmR_uW" role="1PaTwD">
+              <property role="3oM_SC" value="no" />
+            </node>
+            <node concept="3oM_SD" id="7$u7SPmR_uX" role="1PaTwD">
+              <property role="3oM_SC" value="tab" />
+            </node>
+            <node concept="3oM_SD" id="7$u7SPmR_uY" role="1PaTwD">
+              <property role="3oM_SC" value="for" />
+            </node>
+            <node concept="3oM_SD" id="7$u7SPmR_uZ" role="1PaTwD">
+              <property role="3oM_SC" value="&quot;node&quot;" />
+            </node>
           </node>
         </node>
         <node concept="3SKdUt" id="7POWRVZMxgs" role="3cqZAp">
-          <node concept="3SKdUq" id="7POWRVZMxgt" role="3SKWNk">
-            <property role="3SKdUp" value="So, the user will not be able to open node by a double-click" />
+          <node concept="1PaTwC" id="7$u7SPmR_v0" role="3ndbpf">
+            <node concept="3oM_SD" id="7$u7SPmR_v1" role="1PaTwD">
+              <property role="3oM_SC" value="So," />
+            </node>
+            <node concept="3oM_SD" id="7$u7SPmR_v2" role="1PaTwD">
+              <property role="3oM_SC" value="the" />
+            </node>
+            <node concept="3oM_SD" id="7$u7SPmR_v3" role="1PaTwD">
+              <property role="3oM_SC" value="user" />
+            </node>
+            <node concept="3oM_SD" id="7$u7SPmR_v4" role="1PaTwD">
+              <property role="3oM_SC" value="will" />
+            </node>
+            <node concept="3oM_SD" id="7$u7SPmR_v5" role="1PaTwD">
+              <property role="3oM_SC" value="not" />
+            </node>
+            <node concept="3oM_SD" id="7$u7SPmR_v6" role="1PaTwD">
+              <property role="3oM_SC" value="be" />
+            </node>
+            <node concept="3oM_SD" id="7$u7SPmR_v7" role="1PaTwD">
+              <property role="3oM_SC" value="able" />
+            </node>
+            <node concept="3oM_SD" id="7$u7SPmR_v8" role="1PaTwD">
+              <property role="3oM_SC" value="to" />
+            </node>
+            <node concept="3oM_SD" id="7$u7SPmR_v9" role="1PaTwD">
+              <property role="3oM_SC" value="open" />
+            </node>
+            <node concept="3oM_SD" id="7$u7SPmR_va" role="1PaTwD">
+              <property role="3oM_SC" value="node" />
+            </node>
+            <node concept="3oM_SD" id="7$u7SPmR_vb" role="1PaTwD">
+              <property role="3oM_SC" value="by" />
+            </node>
+            <node concept="3oM_SD" id="7$u7SPmR_vc" role="1PaTwD">
+              <property role="3oM_SC" value="a" />
+            </node>
+            <node concept="3oM_SD" id="7$u7SPmR_vd" role="1PaTwD">
+              <property role="3oM_SC" value="double-click" />
+            </node>
           </node>
         </node>
         <node concept="3cpWs8" id="7POWRVZMxgu" role="3cqZAp">
