@@ -225,7 +225,9 @@ public class DNode extends DObject<SNode> implements SNode {
                 replacement = true;
                 creator.action().trigger(creator.mutable());
             }
-        } else if (post instanceof ContainingCollection && pre instanceof ContainingCollection) {
+        } else if (post instanceof java.util.Collection && pre instanceof java.util.Collection) {
+            pre = (T) List.<DNode> of((java.util.Collection<DNode>) pre);
+            post = (T) List.<DNode> of((java.util.Collection<DNode>) post);
             if (((ContainingCollection<Object>) post).anyMatch(e -> e instanceof DNode)) {
                 ContainingCollection<DNode> prec = ((ContainingCollection<DNode>) pre).removeAll((ContainingCollection<DNode>) post);
                 ContainingCollection<DNode> postc = ((ContainingCollection<DNode>) post).removeAll((ContainingCollection<DNode>) pre);
