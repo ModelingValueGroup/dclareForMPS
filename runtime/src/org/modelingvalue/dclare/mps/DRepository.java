@@ -186,7 +186,8 @@ public class DRepository extends DObject<SRepository> implements SRepository {
     @SuppressWarnings("rawtypes")
     protected void addMessage(ConsistencyError t) {
         DObject object = t.getObject() instanceof DObject ? (DObject) t.getObject() : this;
-        DFeature feature = t.getFeature() instanceof DFeature ? (DFeature) t.getFeature() : EXCEPTIONS;
+        DFeature feature = t.getFeature() instanceof DRule.DObserver ? ((DRule.DObserver) t.getFeature()).rule() : //
+                t.getFeature() instanceof DFeature ? (DFeature) t.getFeature() : EXCEPTIONS;
         if (t instanceof OutOfScopeException) {
             addOutOfScopeExceptionMessage(object, feature, (OutOfScopeException) t);
         } else if (t instanceof NonDeterministicException) {
