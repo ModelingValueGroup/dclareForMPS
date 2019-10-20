@@ -353,7 +353,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
             }
             COMMITTING.set(true);
             try {
-                pre.diff(post, o -> o instanceof DObject, p -> p instanceof DObserved).forEach(e0 -> {
+                pre.diff(post, o -> o instanceof DObject && post.get((DObject) o, Mutable.D_PARENT_CONTAINING) != null, p -> p instanceof DObserved).forEach(e0 -> {
                     DObject dObject = (DObject) e0.getKey();
                     e0.getValue().forEach(e1 -> {
                         DObserved mpsObserved = (DObserved) e1.getKey();
@@ -362,7 +362,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
                         }
                     });
                 });
-                pre.diff(post, o -> o instanceof DObject, p -> p instanceof DObserved).forEach(e0 -> {
+                pre.diff(post, o -> o instanceof DObject && post.get((DObject) o, Mutable.D_PARENT_CONTAINING) != null, p -> p instanceof DObserved).forEach(e0 -> {
                     DObject dObject = (DObject) e0.getKey();
                     e0.getValue().forEach(e1 -> {
                         DObserved mpsObserved = (DObserved) e1.getKey();
