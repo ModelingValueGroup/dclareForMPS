@@ -1,0 +1,37 @@
+:experimental:
+= Hints on using DclareForMPS
+
+== General
+* We have to switch on the engine at menu:File[Settings > Other Settings > Dclare > Engine on].
+* Attribute inheritance works, i.e. attributes for concept `SuperConcept` can be referred to in concept `SubConcept extends SuperConcept`.
+* We can have circular change rules, as long as they don't conflict.
++
+Example: In model `A`, we have a named node of concept `X`.
+A rule creates model `B` and within it a named node of concept `Y`.
+We can propagate name changes from `X` to `Y` **and** from `Y` to `X`.
+
+== Model change / write access
+* Inside Dclare, we can only write to the model with the `:=` operator or by calling `concat()` on a collection.
+
+== Syntax
+* We can use variables in the _Rules_ section by nesting them into curly braces:
++
+[source, java]
+----
+{
+  node<Something> = this.someRefOfTypeSomething;
+}
+----
+
+* We can find opposites of references with the `~` operator:
++
+[source, java]
+----
+nlist<Inhabitant> inhabitants := this.address.~Inhabitant::home;
+----
+
+* We can set an attribute to optional, if it might be `null`.
+Prefix the attribute with `optional`, or use the intention menu.
+
+== UI
+* The menu:Context Menu[Refactoring > Extract Attribute] works as expected.
