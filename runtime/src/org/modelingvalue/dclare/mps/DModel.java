@@ -88,11 +88,11 @@ public class DModel extends DObject<SModel> implements SModel {
 
     public static final Observed<DModel, Set<DNode>>     ROOTS               = DObserved.of("ROOTS", Set.of(), false, true, null, false, false, (dModel, pre, post, first) -> {
                                                                                  if (first) {
-                                                                                     DObserved.map(DModel.roots(dModel.original()), post.map(DNode::original).toSet(),                                                                                            //
+                                                                                     DObserved.map(DModel.roots(dModel.original()), post.map(DNode::original).toSet(),                                //
                                                                                              a -> {
                                                                                              }, r -> dModel.original().removeRootNode(r));
                                                                                  } else {
-                                                                                     DObserved.map(DModel.roots(dModel.original()), post.map(DNode::original).toSet(),                                                                                            //
+                                                                                     DObserved.map(DModel.roots(dModel.original()), post.map(DNode::original).toSet(),                                //
                                                                                              a -> dModel.original().addRootNode(a), r -> {
                                                                                                                                                                       });
                                                                                  }
@@ -132,7 +132,8 @@ public class DModel extends DObject<SModel> implements SModel {
 
     private static final Observer<DModel>                USED_MODELS_RULE    = DObject.<DModel> observer(USED_MODELS, o -> {
                                                                                  DClareMPS dClareMPS = dClareMPS();
-                                                                                 Set<DModel> ls = dClareMPS.read(() -> Collection.of(((SModelBase) o.original()).getModelImports()).map(r -> DModel.of(r.resolve(dClareMPS.getRepository().original()))).toSet());
+                                                                                 Set<DModel> ls = dClareMPS.read(() -> Collection.of(((SModelBase) o.original()).getModelImports()).                  //
+                                                                                 map(r -> r.resolve(dClareMPS.getRepository().original())).notNull().map(r -> DModel.of(r)).toSet());
                                                                                  USED_MODELS.set(o, ls.addAll(ROOTS.get(o).flatMap(r -> DNode.USED_MODELS.get(r))).remove(o));
                                                                              }, Priority.preDepth);
 

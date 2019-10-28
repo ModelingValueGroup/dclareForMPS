@@ -87,9 +87,7 @@ public class DCopy extends DNode {
 
     @Override
     protected DType getType() {
-        DNode parentNode = getParent();
-        return parentNode != null && DClareMPS.RULE_SETS.get(parentNode.getConcept().getLanguage()).isEmpty() ? TYPE.getDefault() : //
-                COPY_TYPE.get(Pair.of(TYPE.get(dObjectParent()).getLanguages(), getConcept()));
+        return COPY_TYPE.get(Pair.of(Set.of(), getConcept()));
     }
 
     private List<DNode> copy(List<DNode> children) {
