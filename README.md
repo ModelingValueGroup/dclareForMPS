@@ -1,4 +1,5 @@
-# DclareForMPS
+DclareForMPS [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0) [![Actions Status](https://github.com/ModelingValueGroup/DclareForMPS/workflows/build/badge.svg)](https://github.com/ModelingValueGroup/DclareForMPS/actions)
+================================
 DclareForMPS adds a language aspect named 'rules' to MPS.  
 A rule typically derives some part of a model.  
 Rules can trigger other rules.  
@@ -22,7 +23,7 @@ In an installation of JetBrains MPS (2019.2 or higher) ...
 1. install the DclareForMPS.zip plugin  
 2. open one of the example MPS Projects from [DclareForMPS_Examples on GitHub](https://github.com/ModelingValueGroup/DclareForMPS_Examples)  
 3. switch on the Dclare engine (Settings... > Dclare)  
-![picture alt](docs/engineOn.jpg "Engine on")  
+![check the engine checkbox](docs/engineOn.png "Engine on")  
 4. rebuild the example project  
 
 ## Examples
