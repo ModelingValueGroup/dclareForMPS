@@ -9,5 +9,5 @@ if [ ! -f "$tarCache" ]; then
 	wget -q "https://download.jetbrains.com/mps/$mpsVersion/MPS-$mpsVersionFull.tar.gz" -O "$tarCache"
 fi
 tar xf "$tarCache"
-mv 'MPS $mpsVersion' MPS
+mv "MPS $mpsVersion" MPS
 
