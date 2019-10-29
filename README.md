@@ -1,4 +1,4 @@
-DclareForMPS [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0) [![Actions Status](https://github.com/ModelingValueGroup/DclareForMPS/workflows/build%20and%20test/badge.svg)](https://github.com/ModelingValueGroup/DclareForMPS/actions)
+DclareForMPS [![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0) [![Actions Status](https://github.com/ModelingValueGroup/DclareForMPS/workflows/build/badge.svg)](https://github.com/ModelingValueGroup/DclareForMPS/actions)
 ================================
 DclareForMPS adds a language aspect named 'rules' to MPS.  
 A rule typically derives some part of a model.  
