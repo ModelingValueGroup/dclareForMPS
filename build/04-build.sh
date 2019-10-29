@@ -2,4 +2,5 @@
 set -ue
 . 00-vars.sh
 ################################################################
-echo "...maybe later"
+echo "...running ant"
+ant generate
