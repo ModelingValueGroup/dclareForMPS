@@ -2,6 +2,7 @@
 set -ue
 . 00-vars.sh
 ################################################################
+set -x
 echo "...get MPS $mpsVersionFull from jetbrains"
 tarCache="MPS-$mpsVersionFull.tar.gz"
 if [ ! -f "$tarCache" ]; then
