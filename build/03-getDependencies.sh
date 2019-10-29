@@ -11,4 +11,5 @@ fi
 tar xf "$tarCache"
 mv "MPS $mpsVersion" MPS
 
-echo "ANT_OPTS='$ANT_OPTS -Dmps_home=MPS'" >> 00-vars.sh
+ANT_OPTS+=" -Dmps_home=MPS"
+declare -p ANT_OPTS >> 00-vars.sh
