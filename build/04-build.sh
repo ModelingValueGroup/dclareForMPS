@@ -5,5 +5,5 @@ set -ue
 echo "...running ant"
 cat 00-vars.sh
 echo "ANT_OPTS=$ANT_OPTS"
-ant generate || :
+ant || :
 sed 's/^/@@@ /' languages/DclareMPS/source_gen/DclareMPS/behavior/StructRuleSet__BehaviorDescriptor.java
