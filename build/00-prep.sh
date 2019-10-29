@@ -25,4 +25,6 @@ varNames=(
     OUR_PRODUCT
     units
 )
-declare -p "${varNames[@]}" > 00-vars.sh
+(   declare -p "${varNames[@]}"
+    echo ". buildParameters.sh"
+) > 00-vars.sh
