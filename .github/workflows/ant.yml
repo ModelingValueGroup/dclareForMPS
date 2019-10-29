@@ -29,5 +29,6 @@ jobs:
       run:  build/05-test.sh
     - name: generate javadoc
       run:  build/06-javadoc.sh
+
     - name: publish
       run:  build/07-publish.sh
