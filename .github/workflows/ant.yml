@@ -1,0 +1,33 @@
+name: build and test
+
+on: [push]
+
+jobs:
+  build:
+ 
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: checkout...
+      uses: actions/checkout@v1
+    - name: setup JDK...
+      uses: actions/setup-java@v1
+      with:
+        java-version: 11
+
+    - name: prepare...
+      run:  build/00-prep.sh
+    - name: get tools
+      run:  build/01-getTools.sh
+    - name: make poms
+      run:  build/02-makePoms.sh
+    - name: get dependencies
+      run:  build/03-getDependencies.sh
+    - name: build
+      run:  build/04-build.sh
+    - name: test
+      run:  build/05-test.sh
+    - name: generate javadoc
+      run:  build/06-javadoc.sh
+    - name: publish
+      run:  build/07-publish.sh

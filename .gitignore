@@ -5,5 +5,6 @@ test_gen.caches
 workspace.xml
 artifacts
 tmp
-/build/
+/build/tmp
+/build/artifacts
 .DS_Store
