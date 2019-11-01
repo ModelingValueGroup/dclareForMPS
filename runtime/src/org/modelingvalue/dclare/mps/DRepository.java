@@ -46,49 +46,46 @@ import org.modelingvalue.transactions.TooManyObserversException;
 @SuppressWarnings("deprecation")
 public class DRepository extends DObject<SRepository> implements SRepository {
 
-    private static final Set<DMessageType>                                                                                    MESSAGE_TYPES    = Collection.of(DMessageType.values()).toSet();
+    private static final Set<DMessageType>                                                                                          MESSAGE_TYPES    = Collection.of(DMessageType.values()).toSet();
 
-    @SuppressWarnings("rawtypes")
-    private static final QualifiedSet<Triple<DObject, DFeature, String>, DMessage>                                            MESSAGE_QSET     = QualifiedSet.of(m -> Triple.of(m.context(), m.feature(), m.id()));
+    private static final QualifiedSet<Triple<DObject<?>, DFeature<?>, String>, DMessage>                                            MESSAGE_QSET     = QualifiedSet.of(m -> Triple.of(m.context(), m.feature(), m.id()));
 
-    @SuppressWarnings("rawtypes")
-    private static final Map<DMessageType, QualifiedSet<Triple<DObject, DFeature, String>, DMessage>>                         MESSAGE_QSET_MAP = MESSAGE_TYPES.sequential().toMap(t -> Entry.of(t, MESSAGE_QSET));
+    private static final Map<DMessageType, QualifiedSet<Triple<DObject<?>, DFeature<?>, String>, DMessage>>                         MESSAGE_QSET_MAP = MESSAGE_TYPES.sequential().toMap(t -> Entry.of(t, MESSAGE_QSET));
 
-    @SuppressWarnings("rawtypes")
-    protected static final Setable<DRepository, Map<DMessageType, QualifiedSet<Triple<DObject, DFeature, String>, DMessage>>> MESSAGES         = Setable.of("MESSAGES", MESSAGE_QSET_MAP);
+    protected static final Setable<DRepository, Map<DMessageType, QualifiedSet<Triple<DObject<?>, DFeature<?>, String>, DMessage>>> MESSAGES         = Setable.of("MESSAGES", MESSAGE_QSET_MAP);
 
-    private static final Constant<SRepository, DRepository>                                                                   DREPOSITORY      = Constant.of("DREPOSITORY", r -> new DRepository(r));
+    private static final Constant<SRepository, DRepository>                                                                         DREPOSITORY      = Constant.of("DREPOSITORY", r -> new DRepository(r));
 
-    private static final Constant<Set<SLanguage>, DType>                                                                      REPOSITORY_TYPE  = Constant.of("REPOSITORY_TYPE", ls -> new DType(ls) {
-                                                                                                                                                   @SuppressWarnings({"rawtypes", "unchecked"})
-                                                                                                                                                   @Override
-                                                                                                                                                   public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
-                                                                                                                                                       return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getRepositoryRules())).toSet();
-                                                                                                                                                   }
+    private static final Constant<Set<SLanguage>, DType>                                                                            REPOSITORY_TYPE  = Constant.of("REPOSITORY_TYPE", ls -> new DType(ls) {
+                                                                                                                                                         @SuppressWarnings({"rawtypes", "unchecked"})
+                                                                                                                                                         @Override
+                                                                                                                                                         public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
+                                                                                                                                                             return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getRepositoryRules())).toSet();
+                                                                                                                                                         }
 
-                                                                                                                                                   @SuppressWarnings({"rawtypes", "unchecked"})
-                                                                                                                                                   @Override
-                                                                                                                                                   public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
-                                                                                                                                                       return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getRepositoryAttributes())).toSet();
-                                                                                                                                                   }
+                                                                                                                                                         @SuppressWarnings({"rawtypes", "unchecked"})
+                                                                                                                                                         @Override
+                                                                                                                                                         public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
+                                                                                                                                                             return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getRepositoryAttributes())).toSet();
+                                                                                                                                                         }
 
-                                                                                                                                                   @Override
-                                                                                                                                                   public Set<SLanguage> getLanguages() {
-                                                                                                                                                       return ls;
-                                                                                                                                                   }
+                                                                                                                                                         @Override
+                                                                                                                                                         public Set<SLanguage> getLanguages() {
+                                                                                                                                                             return ls;
+                                                                                                                                                         }
 
-                                                                                                                                                   @Override
-                                                                                                                                                   public Collection<? extends Setable<? extends Mutable, ?>> dContainers() {
-                                                                                                                                                       return Collection.concat(Set.of(MODULES), super.dContainers());
-                                                                                                                                                   }
+                                                                                                                                                         @Override
+                                                                                                                                                         public Collection<? extends Setable<? extends Mutable, ?>> dContainers() {
+                                                                                                                                                             return Collection.concat(Set.of(MODULES), super.dContainers());
+                                                                                                                                                         }
 
-                                                                                                                                               });
+                                                                                                                                                     });
 
-    public static final DObserved<DRepository, Set<DModule>>                                                                  MODULES          = DObserved.of("MODULES", Set.of(), false, true, null, false, false, (o, pre, post, first) -> {
-                                                                                                                                               }, null);
+    public static final DObserved<DRepository, Set<DModule>>                                                                        MODULES          = DObserved.of("MODULES", Set.of(), false, true, null, false, false, (o, pre, post, first) -> {
+                                                                                                                                                     }, null);
 
-    public static final DObserved<DRepository, Set<?>>                                                                        EXCEPTIONS       = DObserved.of("EXCEPTIONS", Set.of(), false, false, null, false, false, (o, pre, post, first) -> {
-                                                                                                                                               }, null);
+    public static final DObserved<DRepository, Set<?>>                                                                              EXCEPTIONS       = DObserved.of("EXCEPTIONS", Set.of(), false, false, null, false, false, (o, pre, post, first) -> {
+                                                                                                                                                     }, null);
 
     public static DRepository of(SRepository original) {
         return original instanceof DRepository ? (DRepository) original : DREPOSITORY.get(original);
@@ -294,8 +291,7 @@ public class DRepository extends DObject<SRepository> implements SRepository {
         LeafTransaction.getCurrent().runNonObserving(() -> MESSAGES.set(this, (m, a) -> m.put(message.type(), m.get(message.type()).add(a)), message));
     }
 
-    @SuppressWarnings("rawtypes")
-    public QualifiedSet<Triple<DObject, DFeature, String>, DMessage> getMessages(DMessageType type) {
+    public QualifiedSet<Triple<DObject<?>, DFeature<?>, String>, DMessage> getMessages(DMessageType type) {
         return MESSAGES.get(this).get(type);
     }
 
@@ -353,6 +349,11 @@ public class DRepository extends DObject<SRepository> implements SRepository {
         @Override
         public void repositoryCommandFinished(SRepository repository) {
         }
+    }
+
+    @Override
+    public String id() {
+        return original.toString();
     }
 
 }

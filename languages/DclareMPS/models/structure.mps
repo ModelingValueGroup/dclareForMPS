@@ -575,5 +575,21 @@
       <ref role="20lvS9" to="tpck:gw2VY9q" resolve="BaseConcept" />
     </node>
   </node>
+  <node concept="1TIwiD" id="rTfv3GWr7J">
+    <property role="TrG5h" value="CopyImplicitSelect" />
+    <property role="2_RsDV" value="4G1g3fIR8JG/none" />
+    <property role="EcuMT" value="502500938405229039" />
+    <property role="34LRSv" value="copy" />
+    <ref role="1TJDcQ" to="tpck:gw2VY9q" resolve="BaseConcept" />
+    <node concept="1TJgyj" id="rTfv3GWr7K" role="1TKVEi">
+      <property role="20kJfa" value="attribute" />
+      <property role="20lbJX" value="fLJekj4/_1" />
+      <property role="IQ2ns" value="502500938405229040" />
+      <ref role="20lvS9" node="4$MeK2bmw9s" resolve="Attribute" />
+    </node>
+    <node concept="PrWs8" id="rTfv3GWr7L" role="PzmwI">
+      <ref role="PrY4T" to="tpee:hqOqG0K" resolve="IOperation" />
+    </node>
+  </node>
 </model>
 

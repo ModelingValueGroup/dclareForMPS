@@ -75,12 +75,12 @@ public class DModule extends DObject<SModule> implements SModule {
                                                                                            }
                                                                                        });
 
-    public static final Observed<DModule, Set<DModel>>                  REFERENCED     = Observed.of("REFERENCED", Set.of());
+    public static final Observed<DModule, Set<DModel>>                  REFERENCED     = NonCheckingObserved.of("REFERENCED", Set.of());
 
     public static final Observed<DModule, Set<DModel>>                  MODELS         = DObserved.of("MODELS", Set.of(), false, true, null, false, false, (o, pre, post, first) -> {
                                                                                        }, null);
 
-    public static final Observed<DModule, Set<SLanguage>>               LANGUAGES      = Observed.of("LANGUAGES", Set.of(), (tx, o, b, a) -> {
+    public static final Observed<DModule, Set<SLanguage>>               LANGUAGES      = NonCheckingObserved.of("LANGUAGES", Set.of(), (tx, o, b, a) -> {
                                                                                            Setable.<Set<SLanguage>, SLanguage> diff(b, a,                                                                            //
                                                                                                    x -> DClareMPS.ALL_LANGUAGES.set(dClareMPS(), Set::add, x), x -> {
                                                                                                                                                                                       });
@@ -357,5 +357,10 @@ public class DModule extends DObject<SModule> implements SModule {
     @Override
     public String toString() {
         return getModuleName();
+    }
+
+    @Override
+    public String id() {
+        return original.getModuleId().toString();
     }
 }

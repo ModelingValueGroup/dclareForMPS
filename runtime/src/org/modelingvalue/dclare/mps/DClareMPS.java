@@ -91,7 +91,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
 
                                                                                                                          };
 
-    public final static Observed<DClareMPS, Set<SLanguage>>                                         ALL_LANGUAGES        = Observed.of("ALL_LANGAUGES", Set.of());
+    public final static Observed<DClareMPS, Set<SLanguage>>                                         ALL_LANGUAGES        = NonCheckingObserved.of("ALL_LANGAUGES", Set.of());
 
     public final static Constant<SLanguage, Set<IRuleSet>>                                          RULE_SETS            = Constant.of("RULE_SETS", Set.of(), language -> {
                                                                                                                              LanguageRuntime rtLang = registry().getLanguage(language);

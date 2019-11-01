@@ -34,29 +34,27 @@ import org.jetbrains.mps.openapi.model.SReference;
 import org.jetbrains.mps.openapi.module.SModule;
 import org.jetbrains.mps.openapi.module.SRepository;
 import org.modelingvalue.collections.Collection;
-import org.modelingvalue.collections.ContainingCollection;
 import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.Map;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
-import org.modelingvalue.transactions.ActionInstance;
 import org.modelingvalue.transactions.Constant;
-import org.modelingvalue.transactions.LeafTransaction;
 import org.modelingvalue.transactions.Mutable;
 import org.modelingvalue.transactions.Observed;
 import org.modelingvalue.transactions.Observer;
 import org.modelingvalue.transactions.Priority;
 import org.modelingvalue.transactions.Setable;
 
+import jetbrains.mps.smodel.SNodeId.Foreign;
 import jetbrains.mps.smodel.SNodeUtil;
 
 public class DNode extends DObject<SNode> implements SNode {
 
     private static final Constant<Pair<Set<SLanguage>, SConcept>, DType>          NODE_TYPE           = Constant.of("NODE_TYPE", p -> new DNodeType(p));
 
-    public static final Observed<DNode, DModel>                                   MODEL               = Observed.of("MODEL", null);
+    public static final Observed<DNode, DModel>                                   MODEL               = NonCheckingObserved.of("MODEL", null);
 
-    public static final Observed<DNode, Map<Object, Object>>                      USER_OBJECTS        = Observed.of("USER_OBJECTS", Map.of());
+    public static final Observed<DNode, Map<Object, Object>>                      USER_OBJECTS        = NonCheckingObserved.of("USER_OBJECTS", Map.of());
 
     @SuppressWarnings("deprecation")
     public static final Constant<SContainmentLink, DObserved<DNode, List<DNode>>> MANY_CONTAINMENT    = Constant.of("MANY_CONTAINMENT", sc -> {
@@ -106,8 +104,11 @@ public class DNode extends DObject<SNode> implements SNode {
 
                                                                                                       });
 
+    @SuppressWarnings("deprecation")
     public static final Constant<SReferenceLink, Observed<DNode, Set<DNode>>>     OPPOSITE            = Constant.of("OPPOSITE", sr -> {
-                                                                                                          return Observed.<DNode, Set<DNode>> of(Pair.of(sr, "OPPOSITE"), Set.of(), () -> DNode.REFERENCE.get(sr));
+                                                                                                          return DObserved.<DNode, Set<DNode>> of(Pair.of(sr, "OPPOSITE"), Set.of(), false, false, () -> DNode.REFERENCE.get(sr), false, false,         //
+                                                                                                                  (dNode, pre, post, first) -> {
+                                                                                                                  }, () -> sr.getDeclarationNode());
                                                                                                       });
     @SuppressWarnings("deprecation")
     public static final Constant<SProperty, DObserved<DNode, String>>             PROPERTY            = Constant.of("PROPERTY", sp -> {
@@ -119,13 +120,9 @@ public class DNode extends DObject<SNode> implements SNode {
                                                                                                                   }, () -> sp.getDeclarationNode());
                                                                                                       });
 
-    public static final Observed<DNode, Set<SLanguage>>                           USED_LANGUAGES      = Observed.of("USED_LANGUAGES", Set.of());
+    public static final Observed<DNode, Set<SLanguage>>                           USED_LANGUAGES      = NonCheckingObserved.of("USED_LANGUAGES", Set.of());
 
-    public static final Observed<DNode, Set<DModel>>                              USED_MODELS         = Observed.of("USED_MODELS", Set.of());
-
-    protected static final Setable<DNode, ActionInstance>                         CREATOR             = Setable.of("CREATOR", null);
-
-    protected static final Setable<DNode, DNode>                                  REPLACEMENT         = Setable.of("REPLACEMENT", null);
+    public static final Observed<DNode, Set<DModel>>                              USED_MODELS         = NonCheckingObserved.of("USED_MODELS", Set.of());
 
     private static final Observer<DNode>                                          MODEL_RULE          = DObject.<DNode> observer(MODEL, o -> {
                                                                                                           DNode p = o.dAncestor(DNode.class);
@@ -155,20 +152,41 @@ public class DNode extends DObject<SNode> implements SNode {
     @SuppressWarnings("rawtypes")
     protected static final Set<Observer>                                          RULES               = DObject.RULES.addAll(Set.of(MODEL_RULE, USED_LANGUAGES_RULE, USED_MODELS_RULE));
 
+    protected static final String                                                 DCLARE_PREFIX       = Foreign.ID_PREFIX + "@DC@";
+
+    public static DNode of(SConcept concept, String id) {
+        return of(newSNode(concept, id));
+    }
+
     public static DNode of(SNode original) {
-        return original instanceof DNode ? (DNode) original : new DNode(original);
+        return original instanceof DNode ? (DNode) original : DCopy.isCopy(original) ? new DCopy(original) : new DNode(original);
     }
 
     public static SNode wrap(SNode original) {
         return of(original);
     }
 
-    public static SNode newSNode(SConcept concept) {
-        return new jetbrains.mps.smodel.SNode(concept, jetbrains.mps.smodel.SModel.generateUniqueId());
+    private static SNode newSNode(SConcept concept, String id) {
+        return new jetbrains.mps.smodel.SNode(concept, new Foreign(DCLARE_PREFIX + id));
     }
 
     protected DNode(SNode original) {
         super(original);
+    }
+
+    protected boolean isFromDclare() {
+        SNodeId id = getNodeId();
+        return id instanceof Foreign && ((Foreign) id).getId().startsWith(DCLARE_PREFIX);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof DNode && isFromDclare() ? getNodeId().equals(((DNode) obj).getNodeId()) : super.equals(obj);
+    }
+
+    @Override
+    public int hashCode() {
+        return isFromDclare() ? getNodeId().hashCode() : super.hashCode();
     }
 
     @Override
@@ -200,58 +218,35 @@ public class DNode extends DObject<SNode> implements SNode {
             }
             if (node == null) {
                 node = creator.get();
-                DNode.CREATOR.set((DNode) node, LeafTransaction.getCurrent().actionInstance());
-            }
-        } else if (LeafTransaction.getCurrent().actionInstance().equals(DNode.CREATOR.get((DNode) node))) {
-            DNode repl = DNode.REPLACEMENT.get((DNode) node);
-            if (repl != null) {
-                if (node instanceof DCopy) {
-                    repl = DCopy.of(repl.original(), ((DCopy) node).getCopied());
-                }
-                node = (T) repl;
             }
         }
         var.add(node);
         return node;
     }
 
-    @SuppressWarnings({"unchecked", "resource"})
+    @SuppressWarnings("unchecked")
     public static <T> boolean setContainment(T pre, T post) {
-        boolean replacement = false;
         if (post instanceof DNode && pre instanceof DNode) {
-            ActionInstance creator = DNode.CREATOR.get((DNode) post);
-            if (creator != null && !post.equals(pre) && match((DNode) post, (DNode) pre)) {
-                REPLACEMENT.set((DNode) post, (DNode) pre);
-                replacement = true;
-                creator.action().trigger(creator.mutable());
+            if (((DNode) post).original.getModel() == null) {
+                if (pre != post && pre.equals(post)) {
+                    ((DNode) post).original = ((DNode) pre).original;
+                }
             }
         } else if (post instanceof java.util.Collection && pre instanceof java.util.Collection) {
-            pre = (T) List.<DNode> of((java.util.Collection<DNode>) pre);
-            post = (T) List.<DNode> of((java.util.Collection<DNode>) post);
-            if (((ContainingCollection<Object>) post).anyMatch(e -> e instanceof DNode)) {
-                ContainingCollection<DNode> prec = ((ContainingCollection<DNode>) pre).removeAll((ContainingCollection<DNode>) post);
-                ContainingCollection<DNode> postc = ((ContainingCollection<DNode>) post).removeAll((ContainingCollection<DNode>) pre);
-                if (!prec.isEmpty()) {
-                    for (DNode elem : postc) {
-                        ActionInstance creator = DNode.CREATOR.get(elem);
-                        if (creator != null) {
-                            DNode matched = prec.filter(DNode.class).filter(n -> match(elem, n)).findFirst().orElse(null);
-                            if (matched != null) {
-                                prec = prec.remove(matched);
-                                REPLACEMENT.set(elem, matched);
-                                replacement = true;
-                                creator.action().trigger(creator.mutable());
+            for (DNode po : (java.util.Collection<DNode>) post) {
+                if (po.original.getModel() == null) {
+                    for (DNode pr : (java.util.Collection<DNode>) pre) {
+                        if (po.equals(pr)) {
+                            if (pr != po) {
+                                po.original = pr.original;
                             }
+                            break;
                         }
                     }
                 }
             }
         }
-        return replacement;
-    }
-
-    private static boolean match(DNode post, DNode pre) {
-        return pre.getConcept().equals(post.getConcept()) && Objects.equals(pre.getName(), post.getName());
+        return false;
     }
 
     @Override
@@ -722,5 +717,18 @@ public class DNode extends DObject<SNode> implements SNode {
     public boolean hasAncestor(DNode dNode) {
         DNode parent = getParent();
         return equals(dNode) || (parent != null && parent.hasAncestor(dNode));
+    }
+
+    @Override
+    public String id() {
+        return original.getNodeId().toString();
+    }
+
+    public static String getNodeIdString(Object object) {
+        if (object instanceof DObject) {
+            return ((DObject<?>) object).id();
+        } else {
+            return object.toString();
+        }
     }
 }

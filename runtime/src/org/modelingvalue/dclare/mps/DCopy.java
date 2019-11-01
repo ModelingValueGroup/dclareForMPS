@@ -19,15 +19,18 @@ import org.jetbrains.mps.openapi.language.SLanguage;
 import org.jetbrains.mps.openapi.language.SProperty;
 import org.jetbrains.mps.openapi.language.SReferenceLink;
 import org.jetbrains.mps.openapi.model.SNode;
+import org.jetbrains.mps.openapi.model.SNodeId;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.dclare.mps.DRule.DObserver;
 import org.modelingvalue.transactions.Constant;
-import org.modelingvalue.transactions.LeafTransaction;
 import org.modelingvalue.transactions.Observed;
 import org.modelingvalue.transactions.Observer;
+
+import jetbrains.mps.smodel.SNodeId.Foreign;
+import jetbrains.mps.smodel.SNodePointer;
 
 public class DCopy extends DNode {
 
@@ -46,9 +49,7 @@ public class DCopy extends DNode {
                                                                                          }
                                                                                      });
 
-    private static final Constant<Pair<SNode, DNode>, DCopy>             DCOPY       = Constant.of("DCOPY", p -> new DCopy(p.a(), p.b(), null));
-
-    private static final Observed<Pair<DCopy, DNode>, DCopy>             DCHILD_COPY = Observed.of("DCHILD_COPY", null);
+    private static final Observed<Pair<DCopy, DNode>, DCopy>             DCHILD_COPY = NonCheckingObserved.of("DCHILD_COPY", null);
 
     private static final Constant<SConcept, Set<Observer<DCopy>>>        RULES       = Constant.of("RULES", c -> {
                                                                                          Set<Observer<DCopy>> observers = Set.of();
@@ -72,8 +73,14 @@ public class DCopy extends DNode {
                                                                                          return observers;
                                                                                      });
 
-    public static DCopy of(SNode copy, DNode copied) {
-        return DCOPY.get(Pair.of(copy, copied));
+    private static final String                                          COPY_PREFIX = DNode.DCLARE_PREFIX + "@COPY@";
+
+    private static final String                                          SEPARATOR_1 = "@1@";
+
+    private static final String                                          SEPARATOR_2 = "@2@";
+
+    public static DCopy of(DNode copied, String id) {
+        return new DCopy(newSNode(id, copied, null), copied, null);
     }
 
     private final DNode copied;
@@ -83,6 +90,27 @@ public class DCopy extends DNode {
         super(copy);
         this.copied = copied;
         this.root = root != null ? root : this;
+    }
+
+    protected DCopy(SNode copy) {
+        super(copy);
+        String id = copy.getNodeId().toString();
+        int i = id.indexOf(SEPARATOR_2);
+        String cref = id.substring(id.indexOf(SEPARATOR_1) + SEPARATOR_1.length(), i >= 0 ? i : id.length());
+        String rref = i >= 0 ? id.substring(i + SEPARATOR_2.length()) : null;
+        this.copied = DNode.of(SNodePointer.deserialize(cref).resolve(DClareMPS.instance().getRepository().original()));
+        this.root = rref != null ? new DCopy(SNodePointer.deserialize(rref).resolve(DClareMPS.instance().getRepository().original())) : this;
+    }
+
+    private static SNode newSNode(String id, SNode copied, SNode root) {
+        String cref = copied.getReference().toString();
+        String rref = root == null ? null : root.getReference().toString();
+        return new jetbrains.mps.smodel.SNode(copied.getConcept(), new Foreign(COPY_PREFIX + id + SEPARATOR_1 + cref + (rref != null ? (SEPARATOR_2 + rref) : "")));
+    }
+
+    public static boolean isCopy(SNode node) {
+        SNodeId id = node.getNodeId();
+        return id instanceof Foreign && ((Foreign) id).getId().startsWith(COPY_PREFIX);
     }
 
     @Override
@@ -100,20 +128,19 @@ public class DCopy extends DNode {
                 referenced;
     }
 
+    @Override
+    public String id() {
+        String id = getNodeId().toString();
+        return id.substring(COPY_PREFIX.length(), id.indexOf(SEPARATOR_1));
+    }
+
     private DNode copy(DNode child) {
         if (child != null) {
             Pair<DCopy, DNode> key = Pair.of(root, child);
             DCopy copy = DCHILD_COPY.get(key);
-            if (copy != null) {
-                DNode repl = DNode.REPLACEMENT.get(copy);
-                if (repl != null) {
-                    copy = new DCopy(repl.original(), key.b(), key.a());
-                    DCHILD_COPY.set(key, copy);
-                }
-            } else {
-                copy = new DCopy(DNode.newSNode(key.b().getConcept()), key.b(), key.a());
+            if (copy == null) {
+                copy = new DCopy(DCopy.newSNode(root.id(), child.original, root.original), key.b(), key.a());
                 DCHILD_COPY.set(key, copy);
-                DNode.CREATOR.set(copy, LeafTransaction.getCurrent().actionInstance());
             }
             return copy;
         } else {

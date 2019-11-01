@@ -22,7 +22,6 @@ import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.transactions.Direction;
 import org.modelingvalue.transactions.Mutable;
-import org.modelingvalue.transactions.Observed;
 import org.modelingvalue.transactions.Observer;
 import org.modelingvalue.transactions.Priority;
 import org.modelingvalue.transactions.Setable;
@@ -30,7 +29,7 @@ import org.modelingvalue.transactions.Setable;
 @SuppressWarnings("rawtypes")
 public abstract class DObject<O> implements Mutable {
 
-    public static final Setable<DObject, DType> TYPE      = Observed.of("TYPE", new DType("<DUMMY_TYPE>") {
+    public static final Setable<DObject, DType> TYPE      = NonCheckingObserved.of("TYPE", new DType("<DUMMY_TYPE>") {
                                                               @Override
                                                               public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
                                                                   return Set.of();
@@ -57,7 +56,7 @@ public abstract class DObject<O> implements Mutable {
         return DClareMPS.instance();
     }
 
-    protected final O original;
+    protected O original;
 
     protected DObject(O original) {
         this.original = original;
@@ -183,4 +182,5 @@ public abstract class DObject<O> implements Mutable {
         }, dir, prio);
     }
 
+    public abstract String id();
 }

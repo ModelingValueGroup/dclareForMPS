@@ -123,7 +123,7 @@ public class DModel extends DObject<SModel> implements SModel {
                                                                                  }
                                                                              }, null);
 
-    public static final Observed<DModel, ModelRoot>      MODEL_ROOT          = Observed.of("MODEL_ROOT", null);
+    public static final Observed<DModel, ModelRoot>      MODEL_ROOT          = NonCheckingObserved.of("MODEL_ROOT", null);
 
     private static final Observer<DModel>                USED_LANGUAGES_RULE = DObject.<DModel> observer(USED_LANGUAGES, o -> {
                                                                                  Set<SLanguage> ls = dClareMPS().read(() -> Collection.of(((SModelBase) o.original()).importedLanguageIds()).toSet());
@@ -435,4 +435,8 @@ public class DModel extends DObject<SModel> implements SModel {
         return getName().getSimpleName();
     }
 
+    @Override
+    public String id() {
+        return original.getModelId().toString();
+    }
 }
