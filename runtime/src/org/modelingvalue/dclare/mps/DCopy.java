@@ -30,7 +30,6 @@ import org.modelingvalue.transactions.Observed;
 import org.modelingvalue.transactions.Observer;
 
 import jetbrains.mps.smodel.SNodeId.Foreign;
-import jetbrains.mps.smodel.SNodePointer;
 
 public class DCopy extends DNode {
 
@@ -73,18 +72,14 @@ public class DCopy extends DNode {
                                                                                          return observers;
                                                                                      });
 
-    private static final String                                          COPY_PREFIX = DNode.DCLARE_PREFIX + "@COPY@";
-
-    private static final String                                          SEPARATOR_1 = "@1@";
-
-    private static final String                                          SEPARATOR_2 = "@2@";
+    private static final String                                          COPY_PREFIX = DNode.DCLARE_PREFIX + "CP@";
 
     public static DCopy of(DNode copied, String id) {
-        return new DCopy(newSNode(id, copied, null), copied, null);
+        return new DCopy(newSNode(copied.getConcept(), id), copied, null);
     }
 
-    private final DNode copied;
-    private final DCopy root;
+    private DNode copied;
+    private DCopy root;
 
     protected DCopy(SNode copy, DNode copied, DCopy root) {
         super(copy);
@@ -94,23 +89,28 @@ public class DCopy extends DNode {
 
     protected DCopy(SNode copy) {
         super(copy);
-        String id = copy.getNodeId().toString();
-        int i = id.indexOf(SEPARATOR_2);
-        String cref = id.substring(id.indexOf(SEPARATOR_1) + SEPARATOR_1.length(), i >= 0 ? i : id.length());
-        String rref = i >= 0 ? id.substring(i + SEPARATOR_2.length()) : null;
-        this.copied = DNode.of(SNodePointer.deserialize(cref).resolve(DClareMPS.instance().getRepository().original()));
-        this.root = rref != null ? new DCopy(SNodePointer.deserialize(rref).resolve(DClareMPS.instance().getRepository().original())) : this;
     }
 
-    private static SNode newSNode(String id, SNode copied, SNode root) {
-        String cref = copied.getReference().toString();
-        String rref = root == null ? null : root.getReference().toString();
-        return new jetbrains.mps.smodel.SNode(copied.getConcept(), new Foreign(COPY_PREFIX + id + SEPARATOR_1 + cref + (rref != null ? (SEPARATOR_2 + rref) : "")));
+    @Override
+    protected void deduplicate(DNode object) {
+        super.deduplicate(object);
+        DCopy other = (DCopy) object;
+        if (copied == null) {
+            copied = other.copied;
+            root = other.root;
+        } else if (other.copied == null) {
+            other.copied = copied;
+            other.root = root;
+        }
+    }
+
+    private static SNode newSNode(SConcept concept, String id) {
+        return new jetbrains.mps.smodel.SNode(concept, new Foreign(COPY_PREFIX + id));
     }
 
     public static boolean isCopy(SNode node) {
         SNodeId id = node.getNodeId();
-        return id instanceof Foreign && ((Foreign) id).getId().startsWith(COPY_PREFIX);
+        return id instanceof Foreign && ((Foreign) id).toString().startsWith(COPY_PREFIX);
     }
 
     @Override
@@ -131,7 +131,7 @@ public class DCopy extends DNode {
     @Override
     public String id() {
         String id = getNodeId().toString();
-        return id.substring(COPY_PREFIX.length(), id.indexOf(SEPARATOR_1));
+        return id.substring(COPY_PREFIX.length());
     }
 
     private DNode copy(DNode child) {
@@ -139,7 +139,7 @@ public class DCopy extends DNode {
             Pair<DCopy, DNode> key = Pair.of(root, child);
             DCopy copy = DCHILD_COPY.get(key);
             if (copy == null) {
-                copy = new DCopy(DCopy.newSNode(root.id(), child.original, root.original), key.b(), key.a());
+                copy = new DCopy(DCopy.newSNode(child.getConcept(), root.id()), key.b(), key.a());
                 DCHILD_COPY.set(key, copy);
             }
             return copy;

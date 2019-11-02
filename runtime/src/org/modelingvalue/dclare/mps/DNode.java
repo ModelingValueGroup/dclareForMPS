@@ -176,12 +176,34 @@ public class DNode extends DObject<SNode> implements SNode {
 
     protected boolean isFromDclare() {
         SNodeId id = getNodeId();
-        return id instanceof Foreign && ((Foreign) id).getId().startsWith(DCLARE_PREFIX);
+        return id instanceof Foreign && ((Foreign) id).toString().startsWith(DCLARE_PREFIX);
     }
 
     @Override
     public boolean equals(Object obj) {
-        return obj instanceof DNode && isFromDclare() ? getNodeId().equals(((DNode) obj).getNodeId()) : super.equals(obj);
+        if (obj == this) {
+            return true;
+        } else if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        DNode other = (DNode) obj;
+        if (isFromDclare() && other.isFromDclare()) {
+            if (getNodeId().equals(other.getNodeId())) {
+                deduplicate(other);
+                return true;
+            }
+            return false;
+        } else {
+            return super.equals(obj);
+        }
+    }
+
+    protected void deduplicate(DNode other) {
+        if (original.getModel() == null) {
+            original = other.original;
+        } else if (other.original.getModel() == null) {
+            other.original = original;
+        }
     }
 
     @Override
@@ -222,31 +244,6 @@ public class DNode extends DObject<SNode> implements SNode {
         }
         var.add(node);
         return node;
-    }
-
-    @SuppressWarnings("unchecked")
-    public static <T> boolean setContainment(T pre, T post) {
-        if (post instanceof DNode && pre instanceof DNode) {
-            if (((DNode) post).original.getModel() == null) {
-                if (pre != post && pre.equals(post)) {
-                    ((DNode) post).original = ((DNode) pre).original;
-                }
-            }
-        } else if (post instanceof java.util.Collection && pre instanceof java.util.Collection) {
-            for (DNode po : (java.util.Collection<DNode>) post) {
-                if (po.original.getModel() == null) {
-                    for (DNode pr : (java.util.Collection<DNode>) pre) {
-                        if (po.equals(pr)) {
-                            if (pr != po) {
-                                po.original = pr.original;
-                            }
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-        return false;
     }
 
     @Override
