@@ -182,5 +182,4 @@ public abstract class DObject<O> implements Mutable {
         }, dir, prio);
     }
 
-    public abstract String id();
 }

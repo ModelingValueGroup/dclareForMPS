@@ -17,7 +17,7 @@ import org.jetbrains.mps.openapi.language.SConcept;
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
-import org.modelingvalue.collections.util.Pair;
+import org.modelingvalue.collections.util.Triple;
 import org.modelingvalue.transactions.Mutable;
 import org.modelingvalue.transactions.Observer;
 import org.modelingvalue.transactions.Setable;
@@ -26,28 +26,34 @@ public class DNodeType extends DType {
 
     protected final Set<SLanguage> languages;
     protected final SConcept       concept;
+    protected final String         anonymousType;
 
-    public DNodeType(Pair<Set<SLanguage>, SConcept> pair) {
-        super(pair);
-        languages = pair.a();
-        concept = pair.b();
+    public DNodeType(Triple<Set<SLanguage>, SConcept, String> triple) {
+        super(triple);
+        languages = triple.a();
+        concept = triple.b();
+        anonymousType = triple.c();
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
-        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getNodeRules(concept))).toSet();
+        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getNodeRules(concept, anonymousType))).toSet();
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
-        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getNodeAttributes(concept))).toSet();
+        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getNodeAttributes(concept, anonymousType))).toSet();
     }
 
     @Override
     public Set<SLanguage> getLanguages() {
         return languages;
+    }
+
+    public SConcept getConcept() {
+        return concept;
     }
 
     @Override

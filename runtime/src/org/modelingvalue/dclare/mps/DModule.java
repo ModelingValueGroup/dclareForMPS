@@ -359,8 +359,4 @@ public class DModule extends DObject<SModule> implements SModule {
         return getModuleName();
     }
 
-    @Override
-    public String id() {
-        return original.getModuleId().toString();
-    }
 }

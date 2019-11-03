@@ -84,8 +84,4 @@ public class DClassObject extends DObject<SClassObject> implements SClassObject 
     protected void read(DClareMPS dClareMPS) {
     }
 
-    @Override
-    public String id() {
-        return original.toString();
-    }
 }

@@ -25,29 +25,37 @@ import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.DefaultMap;
 import org.modelingvalue.collections.Entry;
 import org.modelingvalue.collections.Map;
+import org.modelingvalue.collections.QualifiedSet;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Concurrent;
 import org.modelingvalue.collections.util.ContextThread;
 import org.modelingvalue.collections.util.ContextThread.ContextPool;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.collections.util.TriConsumer;
+import org.modelingvalue.collections.util.Triple;
 import org.modelingvalue.dclare.mps.DRule.DObserver;
 import org.modelingvalue.dclare.mps.DRule.DObserverTransaction;
 import org.modelingvalue.dclare.mps.NonCheckingObserver.NonCheckingTransaction;
 import org.modelingvalue.transactions.Action;
 import org.modelingvalue.transactions.ConsistencyError;
 import org.modelingvalue.transactions.Constant;
-import org.modelingvalue.transactions.Direction;
+import org.modelingvalue.transactions.EmptyMandatoryException;
 import org.modelingvalue.transactions.ImperativeTransaction;
 import org.modelingvalue.transactions.LeafTransaction;
 import org.modelingvalue.transactions.Mutable;
 import org.modelingvalue.transactions.MutableClass;
+import org.modelingvalue.transactions.NonDeterministicException;
 import org.modelingvalue.transactions.Observed;
 import org.modelingvalue.transactions.Observer;
+import org.modelingvalue.transactions.OutOfScopeException;
 import org.modelingvalue.transactions.Priority;
+import org.modelingvalue.transactions.ReferencedOrphanException;
 import org.modelingvalue.transactions.ReusableTransaction;
 import org.modelingvalue.transactions.Setable;
 import org.modelingvalue.transactions.State;
+import org.modelingvalue.transactions.TooManyChangesException;
+import org.modelingvalue.transactions.TooManyObservedException;
+import org.modelingvalue.transactions.TooManyObserversException;
 import org.modelingvalue.transactions.TransactionException;
 import org.modelingvalue.transactions.Universe;
 import org.modelingvalue.transactions.UniverseTransaction;
@@ -57,60 +65,67 @@ import jetbrains.mps.smodel.language.LanguageRuntime;
 
 public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
 
-    private static final MutableClass                                                               UNIVERSE_CLASS       = new MutableClass() {
-                                                                                                                             @Override
-                                                                                                                             public Collection<? extends Observer<?>> dObservers() {
-                                                                                                                                 return Collection.of();
-                                                                                                                             }
+    private static final Set<DMessageType>                                                                    MESSAGE_TYPES        = Collection.of(DMessageType.values()).toSet();
 
-                                                                                                                             @Override
-                                                                                                                             public Collection<? extends Setable<? extends Mutable, ?>> dContainers() {
-                                                                                                                                 return Collection.of(REPOSITORY_CONTAINER);
-                                                                                                                             }
+    private static final QualifiedSet<Triple<DObject<?>, DFeature<?>, String>, DMessage>                      MESSAGE_QSET         = QualifiedSet.of(m -> Triple.of(m.context(), m.feature(), m.id()));
 
-                                                                                                                             @Override
-                                                                                                                             public Collection<? extends Constant<? extends Mutable, ?>> dConstants() {
-                                                                                                                                 return Collection.of();
-                                                                                                                             }
+    protected static final Map<DMessageType, QualifiedSet<Triple<DObject<?>, DFeature<?>, String>, DMessage>> MESSAGE_QSET_MAP     = MESSAGE_TYPES.sequential().toMap(t -> Entry.of(t, MESSAGE_QSET));
 
-                                                                                                                             @Override
-                                                                                                                             public Collection<? extends Setable<? extends Mutable, ?>> dSetables() {
-                                                                                                                                 return Collection.of();
-                                                                                                                             }
-                                                                                                                         };
+    private static final MutableClass                                                                         UNIVERSE_CLASS       = new MutableClass() {
+                                                                                                                                       @Override
+                                                                                                                                       public Collection<? extends Observer<?>> dObservers() {
+                                                                                                                                           return Collection.of();
+                                                                                                                                       }
 
-    protected static final boolean                                                                  TRACE                = Boolean.getBoolean("DCLARE_TRACE");
+                                                                                                                                       @Override
+                                                                                                                                       public Collection<? extends Setable<? extends Mutable, ?>> dContainers() {
+                                                                                                                                           return Collection.of(REPOSITORY_CONTAINER);
+                                                                                                                                       }
 
-    protected static final String                                                                   DCLARE               = "---------> DCLARE ";
+                                                                                                                                       @Override
+                                                                                                                                       public Collection<? extends Constant<? extends Mutable, ?>> dConstants() {
+                                                                                                                                           return Collection.of();
+                                                                                                                                       }
 
-    private final ThreadLocal<Boolean>                                                              COMMITTING           = new ThreadLocal<Boolean>() {
-                                                                                                                             @Override
-                                                                                                                             protected Boolean initialValue() {
-                                                                                                                                 return false;
-                                                                                                                             }
+                                                                                                                                       @Override
+                                                                                                                                       public Collection<? extends Setable<? extends Mutable, ?>> dSetables() {
+                                                                                                                                           return Collection.of();
+                                                                                                                                       }
+                                                                                                                                   };
 
-                                                                                                                         };
+    protected static final boolean                                                                            TRACE                = Boolean.getBoolean("DCLARE_TRACE");
 
-    public final static Observed<DClareMPS, Set<SLanguage>>                                         ALL_LANGUAGES        = NonCheckingObserved.of("ALL_LANGAUGES", Set.of());
+    protected static final String                                                                             DCLARE               = "---------> DCLARE ";
 
-    public final static Constant<SLanguage, Set<IRuleSet>>                                          RULE_SETS            = Constant.of("RULE_SETS", Set.of(), language -> {
-                                                                                                                             LanguageRuntime rtLang = registry().getLanguage(language);
-                                                                                                                             IRuleAspect aspect = rtLang != null ? rtLang.getAspect(IRuleAspect.class) : null;
-                                                                                                                             return aspect != null ? Collection.of(aspect.getRuleSets()).toSet() : Set.of();
-                                                                                                                         });
+    private final ThreadLocal<Boolean>                                                                        COMMITTING           = new ThreadLocal<Boolean>() {
+                                                                                                                                       @Override
+                                                                                                                                       protected Boolean initialValue() {
+                                                                                                                                           return false;
+                                                                                                                                       }
 
-    private final static Constant<DClareMPS, DRepository>                                           REPOSITORY_CONSTANT  = Constant.of("REPOSITORY_CONSTANT", false, d -> DRepository.of(d.project.getRepository()));
-    private final static Setable<DClareMPS, DRepository>                                            REPOSITORY_CONTAINER = Setable.of("REPOSITORY_CONTAINER", null, true);
+                                                                                                                                   };
 
-    private final ContextPool                                                                       thePool              = ContextThread.createPool();
-    protected final Thread                                                                          waitForEndThread;
-    protected final UniverseTransaction                                                             universeTransaction;
-    protected final Project                                                                         project;
-    private final StartStopHandler                                                                  startStopHandler;
-    private ImperativeTransaction                                                                   imperativeTransaction;
-    private boolean                                                                                 running;
-    protected final Concurrent<ReusableTransaction<DRule.DObserver<?>, DObserverTransaction>>       dObserverTransactions;
-    protected final Concurrent<ReusableTransaction<NonCheckingObserver<?>, NonCheckingTransaction>> nonCheckingTransactions;
+    public final static Observed<DClareMPS, Set<SLanguage>>                                                   ALL_LANGUAGES        = NonCheckingObserved.of("ALL_LANGAUGES", Set.of());
+
+    public final static Constant<SLanguage, Set<IRuleSet>>                                                    RULE_SETS            = Constant.of("RULE_SETS", Set.of(), language -> {
+                                                                                                                                       LanguageRuntime rtLang = registry().getLanguage(language);
+                                                                                                                                       IRuleAspect aspect = rtLang != null ? rtLang.getAspect(IRuleAspect.class) : null;
+                                                                                                                                       return aspect != null ? Collection.of(aspect.getRuleSets()).toSet() : Set.of();
+                                                                                                                                   });
+
+    private final static Constant<DClareMPS, DRepository>                                                     REPOSITORY_CONSTANT  = Constant.of("REPOSITORY_CONSTANT", false, d -> DRepository.of(d.project.getRepository()));
+    private final static Setable<DClareMPS, DRepository>                                                      REPOSITORY_CONTAINER = Setable.of("REPOSITORY_CONTAINER", null, true);
+
+    private final ContextPool                                                                                 thePool              = ContextThread.createPool();
+    protected final Thread                                                                                    waitForEndThread;
+    protected final UniverseTransaction                                                                       universeTransaction;
+    protected final Project                                                                                   project;
+    private final StartStopHandler                                                                            startStopHandler;
+    private ImperativeTransaction                                                                             imperativeTransaction;
+    private boolean                                                                                           running;
+    protected final Concurrent<ReusableTransaction<DRule.DObserver<?>, DObserverTransaction>>                 dObserverTransactions;
+    protected final Concurrent<ReusableTransaction<NonCheckingObserver<?>, NonCheckingTransaction>>           nonCheckingTransactions;
+    protected Map<DMessageType, QualifiedSet<Triple<DObject<?>, DFeature<?>, String>, DMessage>>              messages             = MESSAGE_QSET_MAP;
 
     protected DClareMPS(Project project, State prevState, int maxTotalNrOfChanges, int maxNrOfChanges, int maxNrOfObserved, int maxNrOfObservers, StartStopHandler startStopHandler) {
         this.project = project;
@@ -156,15 +171,8 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
             }
 
             @Override
-            protected State pre(State pre) {
-                return pre.set(getRepository(), DRepository.MESSAGES, DRepository.MESSAGES.getDefault());
-            }
-
-            @Override
-            protected State handleException(State state, Throwable t) {
-                State result = state.get(() -> run(trigger(state, universe(), Action.of("$handleException", o -> addMessage(t)), Direction.backward)));
-                dummy();
-                return result;
+            protected void handleException(Throwable t) {
+                addMessage(t);
             }
 
             @Override
@@ -242,16 +250,132 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
             t = t.getCause();
         }
         if (t instanceof ConsistencyError) {
-            getRepository().addMessage((ConsistencyError) t);
+            addMessage((ConsistencyError) t);
         } else {
-            getRepository().addThrowableMessage(object, feature, t);
+            addThrowableMessage(object, feature, t);
         }
+    }
+
+    @SuppressWarnings("rawtypes")
+    private void addMessage(ConsistencyError t) {
+        DObject object = t.getObject() instanceof DObject ? (DObject) t.getObject() : getRepository();
+        DFeature feature = t.getFeature() instanceof DRule.DObserver ? ((DRule.DObserver) t.getFeature()).rule() : //
+                t.getFeature() instanceof DFeature ? (DFeature) t.getFeature() : DRepository.EXCEPTIONS;
+        if (t instanceof OutOfScopeException) {
+            addOutOfScopeExceptionMessage(object, feature, (OutOfScopeException) t);
+        } else if (t instanceof NonDeterministicException) {
+            addNonDeterministicExceptionMessage(object, feature, (NonDeterministicException) t);
+        } else if (t instanceof EmptyMandatoryException) {
+            addEmptyMandatoryExceptionMessage(object, feature, (EmptyMandatoryException) t);
+        } else if (t instanceof ReferencedOrphanException) {
+            addReferencedOrphanExceptionMessage(object, feature, (ReferencedOrphanException) t);
+        } else if (t instanceof TooManyChangesException) {
+            addTooManyChangesExceptionMessage(object, feature, (TooManyChangesException) t);
+        } else if (t instanceof TooManyObservedException) {
+            addTooManyObservedExceptionMessage(object, feature, (TooManyObservedException) t);
+        } else if (t instanceof TooManyObserversException) {
+            addTooManyObserversExceptionMessage(object, feature, (TooManyObserversException) t);
+        } else {
+            throw new Error(t.getClass().getSimpleName() + " not expected");
+        }
+    }
+
+    @SuppressWarnings("rawtypes")
+    private void addTooManyChangesExceptionMessage(DObject context, DFeature feature, TooManyChangesException tmce) {
+        String id = "CONFLICTING_RULES";
+        DMessage message = new DMessage(context, feature, DMessageType.error, id, "Conflicting rules, running " + feature + " changes=" + tmce.getNrOfChanges());
+        tmce.getLast().trace(message, (m, r) -> {
+            m.addSubMessage(new DMessage((DObject) r.mutable(), ((DRule.DObserver) r.observer()).rule(), DMessageType.error, id, //
+                    "run: " + r.mutable() + "." + ((DRule.DObserver) r.observer()).rule() + " nr: " + r.nrOfChanges()));
+        }, (m, r, s) -> {
+            m.addSubMessage(new DMessage((DObject) s.mutable(), (DObserved) s.observed(), DMessageType.error, id, //
+                    "read: " + s.mutable() + "." + s.observed() + "=" + r.read().get(s)));
+        }, (m, w, s) -> {
+            m.subMessages().last().addSubMessage(new DMessage((DObject) s.mutable(), (DObserved) s.observed(), DMessageType.error, id, //
+                    "write: " + s.mutable() + "." + s.observed() + "=" + w.written().get(s)));
+        }, m -> m.subMessages().last(), tmce.getState().universeTransaction().maxNrOfChanges());
+        addMessage(message);
+    }
+
+    @SuppressWarnings("rawtypes")
+    private void addTooManyObservedExceptionMessage(DObject context, DFeature feature, TooManyObservedException tmse) {
+        String id = "TOO_MANY_OBSERVED";
+        DMessage message = new DMessage(context, feature, DMessageType.error, id, tmse.getSimpleMessage());
+        int number = 0;
+        for (Entry<Observed, Set<Mutable>> e : tmse.getObserved()) {
+            if (e.getKey() instanceof DObserved) {
+                number++;
+                message.addSubMessage(new DMessage(context, (DObserved) e.getKey(), DMessageType.error, number + ")", e.getValue().toString()));
+            }
+        }
+        addMessage(message);
+    }
+
+    @SuppressWarnings("rawtypes")
+    private void addTooManyObserversExceptionMessage(DObject context, DFeature feature, TooManyObserversException tmse) {
+        String id = "TOO_MANY_OBSERVERS";
+        DMessage message = new DMessage(context, feature, DMessageType.error, id, tmse.getSimpleMessage());
+        int number = 0;
+        for (Entry<Observer, Set<Mutable>> e : tmse.getObservers()) {
+            if (e.getKey() instanceof DRule.DObserver) {
+                number++;
+                message.addSubMessage(new DMessage(context, ((DRule.DObserver) e.getKey()).rule(), DMessageType.error, number + ")", e.getValue().toString()));
+            }
+        }
+        addMessage(message);
+    }
+
+    @SuppressWarnings("rawtypes")
+    private void addReferencedOrphanExceptionMessage(DObject context, DFeature feature, ReferencedOrphanException roe) {
+        String id = "REFERENCED_ORPHAN";
+        DMessage message = new DMessage(context, feature, DMessageType.error, id, roe.getMessage());
+        addMessage(message);
+    }
+
+    @SuppressWarnings("rawtypes")
+    private void addEmptyMandatoryExceptionMessage(DObject context, DFeature feature, EmptyMandatoryException eme) {
+        String id = "EMPTY_MANDATORY";
+        DMessage message = new DMessage(context, feature, DMessageType.error, id, eme.getMessage());
+        addMessage(message);
+    }
+
+    @SuppressWarnings("rawtypes")
+    private void addNonDeterministicExceptionMessage(DObject context, DFeature feature, NonDeterministicException nde) {
+        String id = "NON_DETERMINISTIC";
+        DMessage message = new DMessage(context, feature, DMessageType.error, id, nde.getMessage());
+        addMessage(message);
+    }
+
+    @SuppressWarnings("rawtypes")
+    private void addOutOfScopeExceptionMessage(DObject context, DFeature feature, OutOfScopeException oose) {
+        String id = "OUT_OF_SCOPE";
+        DMessage message = new DMessage(context, feature, DMessageType.error, id, oose.getMessage());
+        addMessage(message);
+    }
+
+    protected @SuppressWarnings("rawtypes") void addThrowableMessage(DObject context, DFeature feature, Throwable t) {
+        String id = "EXCEPTION";
+        DMessage message = new DMessage(context, feature, DMessageType.error, id, t);
+        for (StackTraceElement ste : t.getStackTrace()) {
+            message.addSubMessage(new DMessage(context, feature, DMessageType.error, id, ste));
+        }
+        addMessage(message);
+    }
+
+    private void addMessage(DMessage message) {
+        messages = messages.put(message.type(), messages.get(message.type()).add(message));
+        universeTransaction.kill();
+    }
+
+    public QualifiedSet<Triple<DObject<?>, DFeature<?>, String>, DMessage> getMessages(DMessageType type) {
+        return messages.get(type);
     }
 
     @Override
     public void init() {
         Universe.super.init();
-        getRepository().read(this);
+        DRepository repository = getRepository();
+        repository.read(this);
     }
 
     @Override
@@ -283,21 +407,39 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     }
 
     public void command(Runnable runnable) {
-        project.getModelAccess().executeCommandInEDT(runnable);
+        project.getModelAccess().executeCommandInEDT(() -> {
+            try {
+                runnable.run();
+            } catch (Throwable t) {
+                addMessage(t);
+            }
+        });
     }
 
     public void read(Runnable runnable) {
-        project.getModelAccess().runReadAction(runnable);
+        project.getModelAccess().runReadAction(() -> {
+            try {
+                runnable.run();
+            } catch (Throwable t) {
+                addMessage(t);
+            }
+        });
     }
 
     public void write(Runnable runnable) {
-        project.getModelAccess().runWriteAction(runnable);
+        project.getModelAccess().runWriteAction(() -> {
+            try {
+                runnable.run();
+            } catch (Throwable t) {
+                addMessage(t);
+            }
+        });
     }
 
     @SuppressWarnings("unchecked")
     public <R> R command(Supplier<R> supplier) {
         BlockingQueue<Object> queue = new LinkedBlockingQueue<>(1);
-        project.getModelAccess().executeCommandInEDT(() -> {
+        command(() -> {
             try {
                 try {
                     queue.put(supplier.get());
@@ -326,14 +468,14 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     @SuppressWarnings("unchecked")
     public <R> R read(Supplier<R> supplier) {
         R[] result = (R[]) new Object[1];
-        project.getModelAccess().runReadAction(() -> result[0] = supplier.get());
+        read(() -> result[0] = supplier.get());
         return result[0];
     }
 
     @SuppressWarnings("unchecked")
     public <R> R write(Supplier<R> supplier) {
         R[] result = (R[]) new Object[1];
-        project.getModelAccess().runWriteAction(() -> result[0] = supplier.get());
+        write(() -> result[0] = supplier.get());
         return result[0];
     }
 
@@ -385,7 +527,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
                         public <R> R get(Supplier<R> supplier) {
                             return post.get(supplier);
                         }
-                    }, getRepository());
+                    }, this);
                 }
             } finally {
                 COMMITTING.set(false);
@@ -398,11 +540,18 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
 
     public void stop() {
         if (imperativeTransaction != null) {
+            State state = universeTransaction.preState();
+            project.getModelAccess().executeCommandInEDT(() -> startStopHandler.off(project, new Getter() {
+                @Override
+                public <R> R get(Supplier<R> supplier) {
+                    return state.get(supplier);
+                }
+            }, this));
             ImperativeTransaction it = imperativeTransaction;
             invokeLater(() -> it.stop());
             imperativeTransaction = null;
             universeTransaction.kill();
-            universeTransaction.preState().run(() -> getRepository().stop(this));
+            state.run(() -> getRepository().stop(this));
         }
     }
 

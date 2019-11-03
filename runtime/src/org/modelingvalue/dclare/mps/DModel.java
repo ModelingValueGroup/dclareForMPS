@@ -96,7 +96,7 @@ public class DModel extends DObject<SModel> implements SModel {
                                                                                              a -> dModel.original().addRootNode(a), r -> {
                                                                                                                                                                       });
                                                                                  }
-                                                                             }, null);
+                                                                             }, (tx, o, b, a) -> DNode.reuse(b, a), null);
 
     public static final Observed<DModel, Set<SLanguage>> USED_LANGUAGES      = DObserved.of("USED_LANGUAGES", Set.of(), false, false, null, false, false, (dModel, pre, post, first) -> {
                                                                                  if (first) {
@@ -435,8 +435,4 @@ public class DModel extends DObject<SModel> implements SModel {
         return getName().getSimpleName();
     }
 
-    @Override
-    public String id() {
-        return original.getModelId().toString();
-    }
 }

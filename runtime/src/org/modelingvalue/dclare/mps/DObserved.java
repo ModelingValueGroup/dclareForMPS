@@ -75,11 +75,7 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
         try {
             toMPS.accept(object, pre, post, first);
         } catch (Throwable t) {
-            if (object instanceof DObject) {
-                DObject.dClareMPS().getRepository().addThrowableMessage(object, this, t);
-            } else {
-                DObject.dClareMPS().getRepository().addThrowableMessage(DObject.dClareMPS().getRepository(), this, t);
-            }
+            DObject.dClareMPS().addThrowableMessage(object, this, t);
         }
     }
 
