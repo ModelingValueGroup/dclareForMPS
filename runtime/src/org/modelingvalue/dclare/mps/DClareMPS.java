@@ -126,9 +126,11 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     protected final Concurrent<ReusableTransaction<DRule.DObserver<?>, DObserverTransaction>>                 dObserverTransactions;
     protected final Concurrent<ReusableTransaction<NonCheckingObserver<?>, NonCheckingTransaction>>           nonCheckingTransactions;
     protected Map<DMessageType, QualifiedSet<Triple<DObject<?>, DFeature<?>, String>, DMessage>>              messages             = MESSAGE_QSET_MAP;
+    private final DclareForMPSEngine                                                                          engine;
 
-    protected DClareMPS(Project project, State prevState, int maxTotalNrOfChanges, int maxNrOfChanges, int maxNrOfObserved, int maxNrOfObservers, StartStopHandler startStopHandler) {
+    protected DClareMPS(DclareForMPSEngine engine, Project project, State prevState, int maxTotalNrOfChanges, int maxNrOfChanges, int maxNrOfObserved, int maxNrOfObservers, StartStopHandler startStopHandler) {
         this.project = project;
+        this.engine = engine;
         this.startStopHandler = startStopHandler;
         if (TRACE) {
             System.err.println(DCLARE + "START " + this);
@@ -203,7 +205,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
                 result = universeTransaction.waitForEnd();
                 thePool.shutdownNow();
             } catch (Throwable t) {
-                stop();
+                engine.stopEngine();
                 thePool.shutdownNow();
                 throw t;
             } finally {
@@ -364,7 +366,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
 
     private void addMessage(DMessage message) {
         messages = messages.put(message.type(), messages.get(message.type()).add(message));
-        universeTransaction.kill();
+        engine.stopEngine();
     }
 
     public QualifiedSet<Triple<DObject<?>, DFeature<?>, String>, DMessage> getMessages(DMessageType type) {
@@ -468,14 +470,18 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     @SuppressWarnings("unchecked")
     public <R> R read(Supplier<R> supplier) {
         R[] result = (R[]) new Object[1];
-        read(() -> result[0] = supplier.get());
+        read(() -> {
+            result[0] = supplier.get();
+        });
         return result[0];
     }
 
     @SuppressWarnings("unchecked")
     public <R> R write(Supplier<R> supplier) {
         R[] result = (R[]) new Object[1];
-        write(() -> result[0] = supplier.get());
+        write(() -> {
+            result[0] = supplier.get();
+        });
         return result[0];
     }
 
@@ -538,7 +544,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
         }
     }
 
-    public void stop() {
+    protected void stop() {
         if (imperativeTransaction != null) {
             State state = universeTransaction.preState();
             project.getModelAccess().executeCommandInEDT(() -> startStopHandler.off(project, new Getter() {
