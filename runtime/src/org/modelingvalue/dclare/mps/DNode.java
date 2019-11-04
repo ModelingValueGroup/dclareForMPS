@@ -266,7 +266,7 @@ public class DNode extends DObject<SNode> implements SNode {
     protected void read(DClareMPS dClareMPS) {
         if (original == null) {
             original = newSNode(concept);
-        } else if (identity.length == 1 && identity[0] == original) {
+        } else if (isReadNode()) {
             dClareMPS.read(() -> {
                 for (SProperty property : original().getProperties()) {
                     PROPERTY.get(property).set(this, original().getProperty(property));
@@ -287,6 +287,10 @@ public class DNode extends DObject<SNode> implements SNode {
                 }
             }
         }
+    }
+
+    private boolean isReadNode() {
+        return identity.length == 1 && identity[0] == original;
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
@@ -392,7 +396,7 @@ public class DNode extends DObject<SNode> implements SNode {
     @Override
     public String toString() {
         String name = getName();
-        return getConcept().getName() + "#" + (name != null && name.length() > 0 ? name : Arrays.toString(identity));
+        return getConcept().getName() + "#" + (name != null && name.length() > 0 ? name : isReadNode() ? original.getNodeId() : Arrays.toString(identity));
     }
 
     @Override
