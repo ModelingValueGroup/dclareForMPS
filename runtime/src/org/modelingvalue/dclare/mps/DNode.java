@@ -159,7 +159,7 @@ public class DNode extends DObject<SNode> implements SNode {
     }
 
     public static DNode of(SNode original) {
-        return new DNode(original, original.getConcept(), null, new Object[]{original});
+        return original instanceof DNode ? (DNode) original : new DNode(original, original.getConcept(), null, new Object[]{original});
     }
 
     public static SNode wrap(SNode original) {
