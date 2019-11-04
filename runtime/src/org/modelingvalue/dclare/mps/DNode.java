@@ -58,19 +58,19 @@ public class DNode extends DObject<SNode> implements SNode {
     public static final Observed<DNode, Map<Object, Object>>                       USER_OBJECTS        = NonCheckingObserved.of("USER_OBJECTS", Map.of());
 
     @SuppressWarnings("deprecation")
-    public static final Constant<SContainmentLink, DObserved<DNode, List<DNode>>>  MANY_CONTAINMENT    = Constant.of("MANY_CONTAINMENT", sc -> {
-                                                                                                           return DObserved.<DNode, List<DNode>> of(sc, List.of(), !sc.isOptional(), true, null, false, false,                                                          //
+    public static final Constant<SContainmentLink, DObserved<DNode, List<DNode>>>  MANY_CONTAINMENT    = Constant.of("MANY_CONTAINMENT", mc -> {
+                                                                                                           return DObserved.<DNode, List<DNode>> of(mc, List.of(), !mc.isOptional(), true, null, false, false,                                                          //
                                                                                                                    (dNode, pre, post, first) -> {
                                                                                                                        if (first) {
-                                                                                                                           DObserved.map(DNode.children(dNode.original(), sc), post.map(DNode::original).toList(),                                                      //
+                                                                                                                           DObserved.map(DNode.children(dNode.original(), mc), post.map(DNode::original).toList(),                                                      //
                                                                                                                                    (n, a) -> {
                                                                                                                                    }, r -> dNode.original().removeChild(r));
                                                                                                                        } else {
-                                                                                                                           DObserved.map(DNode.children(dNode.original(), sc), post.map(DNode::original).toList(),                                                      //
-                                                                                                                                   (n, a) -> dNode.original().insertChildAfter(sc, n, a), r -> {
+                                                                                                                           DObserved.map(DNode.children(dNode.original(), mc), post.map(DNode::original).toList(),                                                      //
+                                                                                                                                   (n, a) -> dNode.original().insertChildAfter(mc, n, a), r -> {
                                                                                                                                                                                                                                       });
                                                                                                                        }
-                                                                                                                   }, (tx, o, b, a) -> DNode.reuse(b, a), () -> sc.getDeclarationNode());
+                                                                                                                   }, (tx, o, b, a) -> DNode.reuse(o, DNode.MANY_CONTAINMENT.get(mc), a), () -> mc.getDeclarationNode());
                                                                                                        });
 
     @SuppressWarnings("deprecation")
@@ -88,7 +88,7 @@ public class DNode extends DObject<SNode> implements SNode {
                                                                                                                        if (!first && post != null && !cs.contains(post.original())) {
                                                                                                                            sNode.addChild(sc, post.original());
                                                                                                                        }
-                                                                                                                   }, (tx, o, b, a) -> DNode.reuse(b, a), () -> sc.getDeclarationNode());
+                                                                                                                   }, (tx, o, b, a) -> DNode.reuse(o, DNode.SINGLE_CONTAINMENT.get(sc), a), () -> sc.getDeclarationNode());
                                                                                                        });
 
     @SuppressWarnings("deprecation")
@@ -264,37 +264,40 @@ public class DNode extends DObject<SNode> implements SNode {
 
     @Override
     protected void read(DClareMPS dClareMPS) {
-        dClareMPS.read(() -> {
-            for (SProperty property : original().getProperties()) {
-                PROPERTY.get(property).set(this, original().getProperty(property));
-            }
-            for (SReference reference : original().getReferences()) {
-                SNode targetNode = reference.getTargetNode();
-                REFERENCE.get(reference.getLink()).set(this, targetNode != null ? of(targetNode) : null);
-            }
-        });
-        for (DNode dChild : dClareMPS.read(() -> Collection.of(original().getChildren()).map(n -> of(n)).toList())) {
-            SContainmentLink cl = dChild.original.getContainmentLink();
-            if (!cl.getName().equals("smodelAttribute")) {
-                if (cl.isMultiple()) {
-                    MANY_CONTAINMENT.get(cl).set(this, (l, e) -> l.addUnique(e), dChild);
-                } else {
-                    SINGLE_CONTAINMENT.get(cl).set(this, dChild);
+        if (original == null) {
+            original = newSNode(concept);
+        } else if (identity.length == 1 && identity[0] == original) {
+            dClareMPS.read(() -> {
+                for (SProperty property : original().getProperties()) {
+                    PROPERTY.get(property).set(this, original().getProperty(property));
+                }
+                for (SReference reference : original().getReferences()) {
+                    SNode targetNode = reference.getTargetNode();
+                    REFERENCE.get(reference.getLink()).set(this, targetNode != null ? of(targetNode) : null);
+                }
+            });
+            for (DNode dChild : dClareMPS.read(() -> Collection.of(original().getChildren()).map(n -> of(n)).toList())) {
+                SContainmentLink cl = dChild.original.getContainmentLink();
+                if (!cl.getName().equals("smodelAttribute")) {
+                    if (cl.isMultiple()) {
+                        MANY_CONTAINMENT.get(cl).set(this, (l, e) -> l.addUnique(e), dChild);
+                    } else {
+                        SINGLE_CONTAINMENT.get(cl).set(this, dChild);
+                    }
                 }
             }
         }
     }
 
-    @SuppressWarnings("unchecked")
-    protected static void reuse(Object pre, Object post) {
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    protected static void reuse(DObject object, Setable containing, Object post) {
+        Object pre = containing.pre(object);
         if (post instanceof DNode && pre instanceof DNode) {
             DNode postNode = (DNode) post;
             DNode preNode = (DNode) pre;
             if (postNode.original == null) {
                 if (preNode.original != null && preNode.concept.equals(postNode.concept)) {
                     postNode.replaceSNode(preNode);
-                } else {
-                    postNode.original = newSNode(postNode.concept);
                 }
             }
         } else if (post instanceof ContainingCollection && pre instanceof ContainingCollection) {
@@ -302,21 +305,20 @@ public class DNode extends DObject<SNode> implements SNode {
             ContainingCollection<DNode> postNodes = (ContainingCollection<DNode>) post;
             postNodes = postNodes.removeAll(preNodes);
             preNodes = preNodes.removeAll(postNodes);
-            for (DNode postNode : postNodes) {
-                if (postNode.original == null) {
-                    for (DNode preNode : preNodes) {
-                        if (preNode.original != null && preNode.concept.equals(postNode.concept) && Objects.equals(preNode.getName(), postNode.getName())) {
-                            preNodes = preNodes.remove(preNode);
-                            postNode.replaceSNode(preNode);
-                            break;
+            if (!preNodes.isEmpty()) {
+                for (DNode postNode : postNodes) {
+                    if (postNode.original == null) {
+                        for (DNode preNode : preNodes) {
+                            if (preNode.original != null && preNode.concept.equals(postNode.concept) && Objects.equals(preNode.getName(), postNode.getName())) {
+                                preNodes = preNodes.remove(preNode);
+                                postNode.replaceSNode(preNode);
+                                break;
+                            }
                         }
                     }
-                    if (postNode.original == null) {
-                        postNode.original = newSNode(postNode.concept);
-                    }
                 }
-
             }
+
         }
     }
 

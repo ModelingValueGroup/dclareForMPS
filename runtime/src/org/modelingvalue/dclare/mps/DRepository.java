@@ -31,8 +31,6 @@ import org.modelingvalue.transactions.Setable;
 @SuppressWarnings("deprecation")
 public class DRepository extends DObject<SRepository> implements SRepository {
 
-    private static final Constant<SRepository, DRepository>  DREPOSITORY     = Constant.of("DREPOSITORY", r -> new DRepository(r));
-
     private static final Constant<Set<SLanguage>, DType>     REPOSITORY_TYPE = Constant.of("REPOSITORY_TYPE", ls -> new DType(ls) {
                                                                                  @SuppressWarnings({"rawtypes", "unchecked"})
                                                                                  @Override
@@ -63,10 +61,6 @@ public class DRepository extends DObject<SRepository> implements SRepository {
 
     protected static final DObserved<DRepository, Set<?>>    EXCEPTIONS      = DObserved.of("EXCEPTIONS", Set.of(), false, false, null, false, false, (o, pre, post, first) -> {
                                                                              }, null);
-
-    public static DRepository of(SRepository original) {
-        return original instanceof DRepository ? (DRepository) original : DREPOSITORY.get(original);
-    }
 
     protected DRepository(SRepository original) {
         super(original);

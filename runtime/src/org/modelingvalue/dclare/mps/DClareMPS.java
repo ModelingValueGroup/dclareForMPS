@@ -113,7 +113,6 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
                                                                                                                                        return aspect != null ? Collection.of(aspect.getRuleSets()).toSet() : Set.of();
                                                                                                                                    });
 
-    private final static Constant<DClareMPS, DRepository>                                                     REPOSITORY_CONSTANT  = Constant.of("REPOSITORY_CONSTANT", false, d -> DRepository.of(d.project.getRepository()));
     private final static Setable<DClareMPS, DRepository>                                                      REPOSITORY_CONTAINER = Setable.of("REPOSITORY_CONTAINER", null, true);
 
     private final ContextPool                                                                                 thePool              = ContextThread.createPool();
@@ -127,11 +126,13 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     protected final Concurrent<ReusableTransaction<NonCheckingObserver<?>, NonCheckingTransaction>>           nonCheckingTransactions;
     protected Map<DMessageType, QualifiedSet<Triple<DObject<?>, DFeature<?>, String>, DMessage>>              messages             = MESSAGE_QSET_MAP;
     private final DclareForMPSEngine                                                                          engine;
+    private final DRepository                                                                                 dRepository;
 
     protected DClareMPS(DclareForMPSEngine engine, Project project, State prevState, int maxTotalNrOfChanges, int maxNrOfChanges, int maxNrOfObserved, int maxNrOfObservers, StartStopHandler startStopHandler) {
         this.project = project;
         this.engine = engine;
         this.startStopHandler = startStopHandler;
+        this.dRepository = new DRepository(project.getRepository());
         if (TRACE) {
             System.err.println(DCLARE + "START " + this);
         }
@@ -173,8 +174,8 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
             }
 
             @Override
-            protected void handleException(Throwable t) {
-                addMessage(t);
+            protected void handleException(State state, Throwable t) {
+                addMessage(state, t);
             }
 
             @Override
@@ -239,23 +240,26 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     }
 
     @SuppressWarnings("rawtypes")
-    private void addMessage(Throwable t) {
-        DObject object = getRepository();
-        DFeature feature = DRepository.EXCEPTIONS;
-        while (t instanceof TransactionException) {
-            if (((TransactionException) t).getTransactionClass() instanceof DObserver) {
-                feature = ((DObserver) ((TransactionException) t).getTransactionClass()).rule();
+    protected void addMessage(State state, Throwable throwable) {
+        state.run(() -> {
+            DObject object = getRepository();
+            DFeature feature = DRepository.EXCEPTIONS;
+            Throwable t = throwable;
+            while (t instanceof TransactionException) {
+                if (((TransactionException) t).getTransactionClass() instanceof DObserver) {
+                    feature = ((DObserver) ((TransactionException) t).getTransactionClass()).rule();
+                }
+                if (((TransactionException) t).getTransactionClass() instanceof DObject) {
+                    object = (DObject) ((TransactionException) t).getTransactionClass();
+                }
+                t = t.getCause();
             }
-            if (((TransactionException) t).getTransactionClass() instanceof DObject) {
-                object = (DObject) ((TransactionException) t).getTransactionClass();
+            if (t instanceof ConsistencyError) {
+                addMessage((ConsistencyError) t);
+            } else {
+                addThrowableMessage(object, feature, t);
             }
-            t = t.getCause();
-        }
-        if (t instanceof ConsistencyError) {
-            addMessage((ConsistencyError) t);
-        } else {
-            addThrowableMessage(object, feature, t);
-        }
+        });
     }
 
     @SuppressWarnings("rawtypes")
@@ -278,7 +282,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
         } else if (t instanceof TooManyObserversException) {
             addTooManyObserversExceptionMessage(object, feature, (TooManyObserversException) t);
         } else {
-            throw new Error(t.getClass().getSimpleName() + " not expected");
+            addThrowableMessage(object, feature, t);
         }
     }
 
@@ -355,7 +359,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
         addMessage(message);
     }
 
-    protected @SuppressWarnings("rawtypes") void addThrowableMessage(DObject context, DFeature feature, Throwable t) {
+    private @SuppressWarnings("rawtypes") void addThrowableMessage(DObject context, DFeature feature, Throwable t) {
         String id = "EXCEPTION";
         DMessage message = new DMessage(context, feature, DMessageType.error, id, t);
         for (StackTraceElement ste : t.getStackTrace()) {
@@ -413,7 +417,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
             try {
                 runnable.run();
             } catch (Throwable t) {
-                addMessage(t);
+                addMessage(LeafTransaction.getCurrent().state(), t);
             }
         });
     }
@@ -423,7 +427,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
             try {
                 runnable.run();
             } catch (Throwable t) {
-                addMessage(t);
+                addMessage(LeafTransaction.getCurrent().state(), t);
             }
         });
     }
@@ -433,7 +437,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
             try {
                 runnable.run();
             } catch (Throwable t) {
-                addMessage(t);
+                addMessage(LeafTransaction.getCurrent().state(), t);
             }
         });
     }
@@ -506,7 +510,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
                     e0.getValue().forEach(e1 -> {
                         DObserved mpsObserved = (DObserved) e1.getKey();
                         if (!mpsObserved.isDeferred()) {
-                            mpsObserved.toMPS(dObject, e1.getValue().a(), e1.getValue().b(), true);
+                            mpsObserved.toMPS(post, dObject, e1.getValue().a(), e1.getValue().b(), true);
                         }
                     });
                 });
@@ -519,13 +523,13 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
                             Pair<Object, Object> old = deferred[0].get(slot);
                             deferred[0] = deferred[0].put(slot, old != null ? Pair.of(old.a(), e1.getValue().b()) : Pair.of(e1.getValue().a(), e1.getValue().b()));
                         } else {
-                            mpsObserved.toMPS(dObject, e1.getValue().a(), e1.getValue().b(), false);
+                            mpsObserved.toMPS(post, dObject, e1.getValue().a(), e1.getValue().b(), false);
                         }
                     });
                 });
                 if (last) {
-                    deferred[0].forEach(e -> e.getKey().b().toMPS(e.getKey().a(), e.getValue().a(), e.getValue().b(), true));
-                    deferred[0].forEach(e -> e.getKey().b().toMPS(e.getKey().a(), e.getValue().a(), e.getValue().b(), false));
+                    deferred[0].forEach(e -> e.getKey().b().toMPS(post, e.getKey().a(), e.getValue().a(), e.getValue().b(), true));
+                    deferred[0].forEach(e -> e.getKey().b().toMPS(post, e.getKey().a(), e.getValue().a(), e.getValue().b(), false));
                     deferred[0] = Map.of();
                     running = false;
                     startStopHandler.stop(project, new Getter() {
@@ -562,7 +566,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     }
 
     public DRepository getRepository() {
-        return REPOSITORY_CONSTANT.get(this);
+        return dRepository;
     }
 
     public boolean isRunning() {

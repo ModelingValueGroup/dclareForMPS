@@ -31,6 +31,7 @@ import org.modelingvalue.transactions.Mutable;
 import org.modelingvalue.transactions.Observed;
 import org.modelingvalue.transactions.Setable;
 import org.modelingvalue.transactions.State;
+import org.modelingvalue.transactions.ThrowableError;
 
 @SuppressWarnings("rawtypes")
 public class DObserved<O extends DObject, T> extends Observed<O, T> implements DFeature<O> {
@@ -71,11 +72,11 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
         return source != null ? source.get() : null;
     }
 
-    public void toMPS(O object, T pre, T post, boolean first) {
+    public void toMPS(State state, O object, T pre, T post, boolean first) {
         try {
             toMPS.accept(object, pre, post, first);
         } catch (Throwable t) {
-            DObject.dClareMPS().addThrowableMessage(object, this, t);
+            DObject.dClareMPS().addMessage(state, new ThrowableError(object, this, t));
         }
     }
 
