@@ -76,7 +76,7 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
         try {
             toMPS.accept(object, pre, post, first);
         } catch (Throwable t) {
-            DObject.dClareMPS().addMessage(state, new ThrowableError(object, this, t));
+            DObject.dClareMPS().addMessage(new ThrowableError(object, this, t));
         }
     }
 

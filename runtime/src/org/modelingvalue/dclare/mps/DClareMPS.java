@@ -174,8 +174,8 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
             }
 
             @Override
-            protected void handleException(State state, Throwable t) {
-                addMessage(state, t);
+            protected void handleException(Throwable t) {
+                addMessage(t);
             }
 
             @Override
@@ -240,8 +240,8 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     }
 
     @SuppressWarnings("rawtypes")
-    protected void addMessage(State state, Throwable throwable) {
-        state.run(() -> {
+    protected void addMessage(Throwable throwable) {
+        universeTransaction().currentState().run(() -> {
             DObject object = getRepository();
             DFeature feature = DRepository.EXCEPTIONS;
             Throwable t = throwable;
@@ -417,7 +417,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
             try {
                 runnable.run();
             } catch (Throwable t) {
-                addMessage(LeafTransaction.getCurrent().state(), t);
+                addMessage(t);
             }
         });
     }
@@ -427,7 +427,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
             try {
                 runnable.run();
             } catch (Throwable t) {
-                addMessage(LeafTransaction.getCurrent().state(), t);
+                addMessage(t);
             }
         });
     }
@@ -437,7 +437,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
             try {
                 runnable.run();
             } catch (Throwable t) {
-                addMessage(LeafTransaction.getCurrent().state(), t);
+                addMessage(t);
             }
         });
     }
