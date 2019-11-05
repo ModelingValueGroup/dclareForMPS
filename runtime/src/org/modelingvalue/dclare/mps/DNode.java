@@ -41,6 +41,7 @@ import org.modelingvalue.collections.util.Age;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.collections.util.Triple;
 import org.modelingvalue.transactions.Constant;
+import org.modelingvalue.transactions.LeafTransaction;
 import org.modelingvalue.transactions.Mutable;
 import org.modelingvalue.transactions.Observed;
 import org.modelingvalue.transactions.Observer;
@@ -153,6 +154,8 @@ public class DNode extends DObject<SNode> implements SNode {
 
     @SuppressWarnings("rawtypes")
     protected static final Set<Observer>                                           RULES               = DObject.RULES.addAll(Set.of(MODEL_RULE, USED_LANGUAGES_RULE, USED_MODELS_RULE));
+
+    private static final Setable<DNode, String>                                    NAME_OBSERVED       = PROPERTY.get(SNodeUtil.property_INamedConcept_name);
 
     public static DNode of(SConcept concept, String anonymousType, Object[] identity) {
         return new DNode(null, concept, anonymousType, identity);
@@ -306,7 +309,7 @@ public class DNode extends DObject<SNode> implements SNode {
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     protected static void reuse(DObject object, Setable containing, Object post) {
-        Object pre = containing.pre(object);
+        Object pre = containing.pre(object instanceof DNode && !((DNode) object).isReadNode() ? DNode.of(((DNode) object).original) : object);
         if (post instanceof DNode && pre instanceof DNode) {
             DNode postNode = (DNode) post;
             DNode preNode = (DNode) pre;
@@ -316,6 +319,7 @@ public class DNode extends DObject<SNode> implements SNode {
                 }
             }
         } else if (post instanceof ContainingCollection && pre instanceof ContainingCollection) {
+            LeafTransaction tx = LeafTransaction.getCurrent();
             ContainingCollection<DNode> preNodes = (ContainingCollection<DNode>) pre;
             ContainingCollection<DNode> postNodes = (ContainingCollection<DNode>) post;
             postNodes = postNodes.removeAll(preNodes);
@@ -323,7 +327,7 @@ public class DNode extends DObject<SNode> implements SNode {
             for (DNode postNode : postNodes) {
                 if (!postNode.isReadNode() && postNode.original == null) {
                     for (DNode preNode : preNodes) {
-                        if (preNode.isReadNode() && preNode.original != null && preNode.isReadNode() && preNode.concept.equals(postNode.concept) && Objects.equals(preNode.getName(), postNode.getName())) {
+                        if (preNode.isReadNode() && preNode.original != null && preNode.concept.equals(postNode.concept) && Objects.equals(preNode.getName(), tx.current(postNode, NAME_OBSERVED))) {
                             preNodes = preNodes.remove(preNode);
                             postNode.replaceSNode(preNode);
                             break;
@@ -414,7 +418,7 @@ public class DNode extends DObject<SNode> implements SNode {
 
     @Override
     public String getName() {
-        return getProperty(SNodeUtil.property_INamedConcept_name);
+        return NAME_OBSERVED.get(this);
     }
 
     @Override

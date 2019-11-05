@@ -20,6 +20,8 @@
     <import index="zrbp" ref="55d6b6f5-8095-4cd0-a39b-779da8d12940/java:org.modelingvalue.collections(DclareMPSRuntime/)" />
     <import index="1ctc" ref="6354ebe7-c22a-4a0f-ac54-50b52ab9b065/java:java.util.stream(JDK/)" />
     <import index="tpck" ref="r:00000000-0000-4000-0000-011c89590288(jetbrains.mps.lang.core.structure)" />
+    <import index="cttk" ref="r:5ff047e0-2953-4750-806a-bdc16824aa89(jetbrains.mps.smodel)" />
+    <import index="w1kc" ref="6ed54515-acc8-4d1e-a16c-9fd6cfe951ea/java:jetbrains.mps.smodel(MPS.Core/)" />
   </imports>
   <registry>
     <language id="f3061a53-9226-4cc5-a443-f952ceaf5816" name="jetbrains.mps.baseLanguage">
@@ -1425,7 +1427,7 @@
                 </node>
                 <node concept="liA8E" id="70QPEjRBaZz" role="2OqNvi">
                   <ref role="37wK5l" to="t4tl:~DNode.setProperty(org.jetbrains.mps.openapi.language.SProperty,java.lang.String)" resolve="setProperty" />
-                  <node concept="355D3s" id="70QPEjRBbjJ" role="37wK5m">
+                  <node concept="355D3s" id="517eQlPlHkL" role="37wK5m">
                     <ref role="355D3t" to="tpck:h0TrEE$" resolve="INamedConcept" />
                     <ref role="355D3u" to="tpck:h0TrG11" resolve="name" />
                   </node>
