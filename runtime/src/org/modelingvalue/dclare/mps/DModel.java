@@ -347,12 +347,12 @@ public class DModel extends DObject<SModel> implements SModel {
         ROOTS.set(this, Set::remove, dNode);
     }
 
-    public void setRootNodes(SAbstractConcept concept, java.util.Collection<? extends SNode> roots) {
+    public void setRootNodes(SAbstractConcept concept, Iterable<DNode> roots) {
         ROOTS.set(this, (rs, cs) -> cs == null ? rs : cs.addAll(rs.filter(r -> !r.isInstanceOfConcept(concept))), //
                 roots != null ? Collection.of(roots).map(n -> DNode.of(n)).toSet() : null);
     }
 
-    public java.util.Collection<? extends SNode> getRootNodes(SAbstractConcept concept) {
+    public java.util.Collection<DNode> getRootNodes(SAbstractConcept concept) {
         return ROOTS.get(this).filter(r -> r.isInstanceOfConcept(concept)).collect(Collectors.toList());
     }
 

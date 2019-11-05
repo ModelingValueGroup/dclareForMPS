@@ -96,11 +96,10 @@ public class DCopy extends DNode {
             return true;
         if (!super.equals(obj))
             return false;
-        if (getClass() != obj.getClass())
-            return false;
         DCopy other = (DCopy) obj;
         if (!copied.equals(other.copied))
             return false;
+        shareOriginal(other);
         return true;
     }
 

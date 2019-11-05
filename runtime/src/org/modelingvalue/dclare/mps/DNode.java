@@ -212,7 +212,18 @@ public class DNode extends DObject<SNode> implements SNode {
             other.identity = identity;
         else
             identity = other.identity;
+        if (getClass() == DNode.class) {
+            shareOriginal(other);
+        }
         return true;
+    }
+
+    protected void shareOriginal(DNode other) {
+        if (original == null && other.original != null) {
+            original = other.original;
+        } else if (original != null && other.original == null) {
+            other.original = original;
+        }
     }
 
     @Override
@@ -602,14 +613,14 @@ public class DNode extends DObject<SNode> implements SNode {
         REFERENCE.get(role).set(this, (DNode) reference.getTargetNode());
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
+    @SuppressWarnings("unchecked")
     public void setFeature(SConceptFeature feature, Object value) {
         if (feature instanceof SProperty) {
             PROPERTY.get((SProperty) feature).set(this, value == null ? null : value.toString());
         } else if (feature instanceof SContainmentLink) {
             SContainmentLink cl = (SContainmentLink) feature;
             if (cl.isMultiple()) {
-                List<DNode> element = value != null ? List.<DNode> of((java.util.Collection) value) : null;
+                List<DNode> element = value != null ? Collection.of((Iterable<DNode>) value).toList() : null;
                 MANY_CONTAINMENT.get(cl).set(this, (i, s) -> s == null || Objects.equals(s, i) ? i : s, element);
             } else {
                 SINGLE_CONTAINMENT.get(cl).set(this, (DNode) value);
@@ -764,6 +775,10 @@ public class DNode extends DObject<SNode> implements SNode {
     public boolean hasAncestor(DNode dNode) {
         DNode parent = getParent();
         return equals(dNode) || (parent != null && parent.hasAncestor(dNode));
+    }
+
+    public Object[] getIdentity() {
+        return identity;
     }
 
 }

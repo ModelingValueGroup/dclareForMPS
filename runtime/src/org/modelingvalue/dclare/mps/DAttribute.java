@@ -175,7 +175,11 @@ public interface DAttribute<O, T> extends DFeature<O> {
         @SuppressWarnings("unchecked")
         @Override
         public V get(C object) {
-            return (V) ((SClassObject) object).getIdentity()[index];
+            if (object instanceof SClassObject) {
+                return (V) ((SClassObject) object).getIdentity()[index];
+            } else {
+                return (V) ((DNode) object).getIdentity()[index];
+            }
         }
 
         @Override

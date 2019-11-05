@@ -45,14 +45,14 @@ public class DclareForMPSEngine implements DeployListener {
         classLoaderManager.addListener(this);
     }
 
-    private void startEngine() {
+    private synchronized void startEngine() {
         if (dClareMPS == null || !dClareMPS.isRunning()) {
             project.getModelAccess().executeCommandInEDT(() -> startStopHandler.on(project));
             dClareMPS = new DClareMPS(this, project, null, maxTotalNrOfChanges, maxNrOfChanges, maxNrOfObserved, maxNrOfObservers, startStopHandler);
         }
     }
 
-    protected void stopEngine() {
+    protected synchronized void stopEngine() {
         if (dClareMPS != null && dClareMPS.isRunning()) {
             dClareMPS.stop();
             dClareMPS = null;

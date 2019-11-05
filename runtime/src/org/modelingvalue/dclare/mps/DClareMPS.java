@@ -260,6 +260,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
                 addThrowableMessage(object, feature, t);
             }
         });
+        engine.stopEngine();
     }
 
     @SuppressWarnings("rawtypes")
@@ -370,7 +371,6 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
 
     private void addMessage(DMessage message) {
         messages = messages.put(message.type(), messages.get(message.type()).add(message));
-        engine.stopEngine();
     }
 
     public QualifiedSet<Triple<DObject<?>, DFeature<?>, String>, DMessage> getMessages(DMessageType type) {
