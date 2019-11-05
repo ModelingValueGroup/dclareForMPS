@@ -310,8 +310,8 @@ public class DNode extends DObject<SNode> implements SNode {
         if (post instanceof DNode && pre instanceof DNode) {
             DNode postNode = (DNode) post;
             DNode preNode = (DNode) pre;
-            if (postNode.original == null) {
-                if (preNode.original != null && preNode.concept.equals(postNode.concept)) {
+            if (!postNode.isReadNode() && postNode.original == null) {
+                if (preNode.isReadNode() && preNode.original != null && preNode.concept.equals(postNode.concept)) {
                     postNode.replaceSNode(preNode);
                 }
             }
@@ -320,20 +320,17 @@ public class DNode extends DObject<SNode> implements SNode {
             ContainingCollection<DNode> postNodes = (ContainingCollection<DNode>) post;
             postNodes = postNodes.removeAll(preNodes);
             preNodes = preNodes.removeAll(postNodes);
-            if (!preNodes.isEmpty()) {
-                for (DNode postNode : postNodes) {
-                    if (postNode.original == null) {
-                        for (DNode preNode : preNodes) {
-                            if (preNode.original != null && preNode.concept.equals(postNode.concept) && Objects.equals(preNode.getName(), postNode.getName())) {
-                                preNodes = preNodes.remove(preNode);
-                                postNode.replaceSNode(preNode);
-                                break;
-                            }
+            for (DNode postNode : postNodes) {
+                if (!postNode.isReadNode() && postNode.original == null) {
+                    for (DNode preNode : preNodes) {
+                        if (preNode.isReadNode() && preNode.original != null && preNode.isReadNode() && preNode.concept.equals(postNode.concept) && Objects.equals(preNode.getName(), postNode.getName())) {
+                            preNodes = preNodes.remove(preNode);
+                            postNode.replaceSNode(preNode);
+                            break;
                         }
                     }
                 }
             }
-
         }
     }
 
