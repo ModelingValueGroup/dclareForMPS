@@ -52,6 +52,8 @@ import jetbrains.mps.smodel.SNodeUtil;
 
 public class DNode extends DObject<SNode> implements SNode {
 
+    private static final Object                                                    DNODE_REF           = "@DNODE_REF@";
+
     private static final Constant<Triple<Set<SLanguage>, SConcept, String>, DType> NODE_TYPE           = Constant.of("NODE_TYPE", t -> new DNodeType(t));
 
     public static final Observed<DNode, DModel>                                    MODEL               = NonCheckingObserved.of("MODEL", null);
@@ -162,7 +164,16 @@ public class DNode extends DObject<SNode> implements SNode {
     }
 
     public static DNode of(SNode original) {
-        return original instanceof DNode ? (DNode) original : new DNode(original, original.getConcept(), null, new Object[]{original});
+        if (original instanceof DNode) {
+            return (DNode) original;
+        } else {
+            DNode dNode = (DNode) original.getUserObject(DNODE_REF);
+            return dNode != null ? dNode : readNode(original);
+        }
+    }
+
+    private static DNode readNode(SNode original) {
+        return new DNode(original, original.getConcept(), null, new Object[]{original});
     }
 
     public static SNode wrap(SNode original) {
@@ -280,6 +291,7 @@ public class DNode extends DObject<SNode> implements SNode {
     protected void read(DClareMPS dClareMPS) {
         if (original == null) {
             original = newSNode(concept);
+            original.putUserObject(DNODE_REF, this);
         } else if (isReadNode()) {
             dClareMPS.read(() -> {
                 for (SProperty property : original().getProperties()) {
@@ -309,7 +321,7 @@ public class DNode extends DObject<SNode> implements SNode {
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     protected static void reuse(DObject object, Setable containing, Object post) {
-        Object pre = containing.pre(object instanceof DNode && !((DNode) object).isReadNode() ? DNode.of(((DNode) object).original) : object);
+        Object pre = containing.pre(object instanceof DNode && !((DNode) object).isReadNode() ? readNode(((DNode) object).original) : object);
         if (post instanceof DNode && pre instanceof DNode) {
             DNode postNode = (DNode) post;
             DNode preNode = (DNode) pre;
@@ -341,6 +353,7 @@ public class DNode extends DObject<SNode> implements SNode {
     private void replaceSNode(DNode other) {
         original = other.original;
         other.original = null;
+        original.putUserObject(DNODE_REF, this);
         for (SProperty property : concept.getProperties()) {
             DObserved<DNode, String> dObserved = PROPERTY.get(property);
             dObserved.set(this, dObserved.pre(other));

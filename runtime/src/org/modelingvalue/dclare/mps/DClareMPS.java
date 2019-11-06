@@ -53,6 +53,7 @@ import org.modelingvalue.transactions.ReferencedOrphanException;
 import org.modelingvalue.transactions.ReusableTransaction;
 import org.modelingvalue.transactions.Setable;
 import org.modelingvalue.transactions.State;
+import org.modelingvalue.transactions.ThrowableError;
 import org.modelingvalue.transactions.TooManyChangesException;
 import org.modelingvalue.transactions.TooManyObservedException;
 import org.modelingvalue.transactions.TooManyObserversException;
@@ -282,6 +283,8 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
             addTooManyObservedExceptionMessage(object, feature, (TooManyObservedException) t);
         } else if (t instanceof TooManyObserversException) {
             addTooManyObserversExceptionMessage(object, feature, (TooManyObserversException) t);
+        } else if (t instanceof ThrowableError) {
+            addThrowableMessage(object, feature, t.getCause());
         } else {
             addThrowableMessage(object, feature, t);
         }
