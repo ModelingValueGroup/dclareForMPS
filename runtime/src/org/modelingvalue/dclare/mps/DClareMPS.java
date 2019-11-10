@@ -118,7 +118,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
 
     private final ContextPool                                                                                 thePool              = ContextThread.createPool();
     protected final Thread                                                                                    waitForEndThread;
-    protected final UniverseTransaction                                                                       universeTransaction;
+    private final UniverseTransaction                                                                         universeTransaction;
     protected final Project                                                                                   project;
     private final StartStopHandler                                                                            startStopHandler;
     private ImperativeTransaction                                                                             imperativeTransaction;
@@ -222,22 +222,21 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
         });
         waitForEndThread.setDaemon(true);
         waitForEndThread.start();
-        ImperativeTransaction[] it = new ImperativeTransaction[1];
-        universeTransaction.put("$connect", () -> {
-            it[0] = universeTransaction.addImperative("$MPSNative", this, r -> {
-                if (imperativeTransaction != null && !COMMITTING.get()) {
-                    if (!running) {
-                        running = true;
-                        command(() -> this.startStopHandler.start(project));
-                    }
-                    command(r);
+    }
+
+    @Override
+    public void init() {
+        Universe.super.init();
+        imperativeTransaction = universeTransaction.addImperative("$MPS_NATIVE", this, r -> {
+            if (imperativeTransaction != null && !COMMITTING.get()) {
+                if (!running) {
+                    running = true;
+                    command(() -> this.startStopHandler.start(project));
                 }
-            });
+                command(r);
+            }
         });
-        universeTransaction.put("$activate", () -> {
-            imperativeTransaction = it[0];
-            REPOSITORY_CONTAINER.set(this, getRepository());
-        });
+        REPOSITORY_CONTAINER.set(this, getRepository());
     }
 
     @SuppressWarnings("rawtypes")
@@ -378,13 +377,6 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
 
     public QualifiedSet<Triple<DObject<?>, DFeature<?>, String>, DMessage> getMessages(DMessageType type) {
         return messages.get(type);
-    }
-
-    @Override
-    public void init() {
-        Universe.super.init();
-        DRepository repository = getRepository();
-        repository.read(this);
     }
 
     @Override

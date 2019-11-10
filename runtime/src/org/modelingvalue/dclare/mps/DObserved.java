@@ -22,7 +22,9 @@ import java.util.function.Supplier;
 
 import org.jetbrains.mps.openapi.model.SNode;
 import org.modelingvalue.collections.ContainingCollection;
+import org.modelingvalue.collections.Entry;
 import org.modelingvalue.collections.List;
+import org.modelingvalue.collections.Map;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.QuadConsumer;
 import org.modelingvalue.transactions.EmptyMandatoryException;
@@ -111,6 +113,19 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
                 }
                 add.accept(n, is > 0 ? ist.get(is - 1) : null);
                 ist = ist.insert(is, n);
+            }
+        }
+    }
+
+    public static <K, V> void map(Map<K, V> ist, Map<K, V> soll, BiConsumer<K, V> set) {
+        for (Entry<K, V> e : ist) {
+            if (soll.get(e.getKey()) == null) {
+                set.accept(e.getKey(), null);
+            }
+        }
+        for (Entry<K, V> e : soll) {
+            if (!soll.get(e.getKey()).equals(ist.get(e.getKey()))) {
+                set.accept(e.getKey(), e.getValue());
             }
         }
     }

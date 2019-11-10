@@ -92,15 +92,19 @@ public class DCopy extends DNode {
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (!super.equals(obj))
+        } else if (!super.equals(obj)) {
             return false;
-        DCopy other = (DCopy) obj;
-        if (!copied.equals(other.copied))
-            return false;
-        shareOriginal(other);
-        return true;
+        } else {
+            DCopy other = (DCopy) obj;
+            if (!copied.equals(other.copied)) {
+                return false;
+            } else {
+                shareOriginal(other);
+                return true;
+            }
+        }
     }
 
     @Override

@@ -24,8 +24,11 @@ import org.jetbrains.mps.openapi.module.SRepositoryListener;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
+import org.modelingvalue.transactions.Action;
 import org.modelingvalue.transactions.Constant;
+import org.modelingvalue.transactions.Direction;
 import org.modelingvalue.transactions.Mutable;
+import org.modelingvalue.transactions.Priority;
 import org.modelingvalue.transactions.Setable;
 
 @SuppressWarnings("deprecation")
@@ -62,6 +65,10 @@ public class DRepository extends DObject<SRepository> implements SRepository {
     protected static final DObserved<DRepository, Set<?>>    EXCEPTIONS      = DObserved.of("EXCEPTIONS", Set.of(), false, false, null, false, false, (o, pre, post, first) -> {
                                                                              }, null);
 
+    private static final Action<DRepository>                 READ_MODULES    = Action.of("$READ_MODULES", r -> {
+                                                                                 MODULES.set(r, dClareMPS().read(() -> modules()).map(m -> DModule.of(m)).toSet());
+                                                                             }, Direction.forward, Priority.preDepth);
+
     protected DRepository(SRepository original) {
         super(original);
     }
@@ -83,7 +90,7 @@ public class DRepository extends DObject<SRepository> implements SRepository {
 
     @Override
     protected void read(DClareMPS dClareMPS) {
-        MODULES.set(this, dClareMPS.read(() -> modules()).map(m -> DModule.of(m)).toSet());
+        READ_MODULES.trigger(this);
     }
 
     protected static Set<SModule> modules() {

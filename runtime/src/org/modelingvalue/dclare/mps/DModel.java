@@ -42,7 +42,9 @@ import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
+import org.modelingvalue.transactions.Action;
 import org.modelingvalue.transactions.Constant;
+import org.modelingvalue.transactions.Direction;
 import org.modelingvalue.transactions.Mutable;
 import org.modelingvalue.transactions.Observed;
 import org.modelingvalue.transactions.Observer;
@@ -96,7 +98,10 @@ public class DModel extends DObject<SModel> implements SModel {
                                                                                              a -> dModel.original().addRootNode(a), r -> {
                                                                                                                                                                       });
                                                                                  }
-                                                                             }, (tx, o, b, a) -> DNode.reuse(o, DModel.ROOTS, a), null);
+                                                                             },                                                                                                                       //
+            (tx, o, b, a) -> {
+                DNode.reuse(() -> dClareMPS().read(() -> Collection.of(o.original().getRootNodes()).map(r -> DNode.of(r)).toSet()), b, a);
+            }, null);
 
     public static final Observed<DModel, Set<SLanguage>> USED_LANGUAGES      = DObserved.of("USED_LANGUAGES", Set.of(), false, false, null, false, false, (dModel, pre, post, first) -> {
                                                                                  if (first) {
@@ -144,6 +149,11 @@ public class DModel extends DObject<SModel> implements SModel {
     @SuppressWarnings("rawtypes")
     protected static final Set<Observer>                 RULES               = DObject.RULES.addAll(Set.of(USED_LANGUAGES_RULE, USED_MODELS_RULE, REFERENCED_RULE));
 
+    private static final Action<DModel>                  READ_ROOTS          = Action.of("$READ_ROOTS", m -> {
+                                                                                 MODEL_ROOT.set(m, dClareMPS().read(() -> m.original().getModelRoot()));
+                                                                                 ROOTS.set(m, dClareMPS().read(() -> Collection.of(m.original().getRootNodes()).map(n -> DNode.of(n)).toSet()));
+                                                                             }, Direction.forward, Priority.preDepth);
+
     public static DModel of(SModel original) {
         return original instanceof DModel ? (DModel) original : DMODEL.get(original);
     }
@@ -173,15 +183,16 @@ public class DModel extends DObject<SModel> implements SModel {
 
     @Override
     protected void read(DClareMPS dClareMPS) {
-        MODEL_ROOT.set(this, dClareMPS.read(() -> original().getModelRoot()));
-        ROOTS.set(this, dClareMPS.read(() -> Collection.of(original().getRootNodes()).map(n -> DNode.of(n)).toSet()));
+        READ_ROOTS.trigger(this);
     }
 
     @Override
     protected void init(DClareMPS dClareMPS) {
         super.init(dClareMPS);
         if (!isReadOnly()) {
-            original().addChangeListener(new Listener(this, dClareMPS));
+            Listener l = new Listener(this, dClareMPS);
+            original().addChangeListener(l);
+            original().addModelListener(l);
         }
     }
 
@@ -189,11 +200,13 @@ public class DModel extends DObject<SModel> implements SModel {
     protected void exit(DClareMPS dClareMPS) {
         super.exit(dClareMPS);
         if (!isReadOnly()) {
-            original().removeChangeListener(new Listener(this, dClareMPS));
+            Listener l = new Listener(this, dClareMPS);
+            original().removeModelListener(l);
+            original().removeChangeListener(l);
         }
     }
 
-    private class Listener extends Pair<DModel, DClareMPS> implements SNodeChangeListener {
+    private class Listener extends Pair<DModel, DClareMPS> implements SNodeChangeListener, SModelListener {
         private static final long serialVersionUID = -5189200443861195660L;
 
         private Listener(DModel dModel, DClareMPS dClareMPS) {
@@ -254,6 +267,39 @@ public class DModel extends DObject<SModel> implements SModel {
                     }
                 }
             });
+        }
+
+        @Override
+        public void modelLoaded(SModel model, boolean partially) {
+        }
+
+        @Override
+        public void modelReplaced(SModel model) {
+            b().universeTransaction().put("$REFRESH", () -> REFRESH.trigger(DModel.of(model)));
+        }
+
+        @Override
+        public void modelUnloaded(SModel model) {
+        }
+
+        @Override
+        public void modelSaved(SModel model) {
+        }
+
+        @Override
+        public void modelAttached(SModel model, SRepository repository) {
+        }
+
+        @Override
+        public void modelDetached(SModel model, SRepository repository) {
+        }
+
+        @Override
+        public void conflictDetected(SModel model) {
+        }
+
+        @Override
+        public void problemsDetected(SModel model, Iterable<Problem> problems) {
         }
     }
 
