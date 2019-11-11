@@ -369,7 +369,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
         addMessage(message);
     }
 
-    private void addMessage(DMessage message) {
+    private synchronized void addMessage(DMessage message) {
         messages = messages.put(message.type(), messages.get(message.type()).add(message));
     }
 
