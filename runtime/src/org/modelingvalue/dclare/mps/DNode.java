@@ -204,6 +204,12 @@ public class DNode extends DObject<SNode> implements SNode {
                                                                                                            }
                                                                                                        }, Direction.forward, Priority.preDepth);
 
+    private static final Constant<DNode, SNode>                                    ORIGINAL            = Constant.of("$ORIGINAL", d -> {
+                                                                                                           SNode original = newSNode(d.concept);
+                                                                                                           original.putUserObject(DNODE_REF, d);
+                                                                                                           return original;
+                                                                                                       });
+
     public static DNode of(SConcept concept, String anonymousType, Object[] identity) {
         return new DNode(null, concept, anonymousType, identity);
     }
@@ -338,8 +344,7 @@ public class DNode extends DObject<SNode> implements SNode {
     @Override
     public SNode original() {
         if (original == null) {
-            original = newSNode(concept);
-            original.putUserObject(DNODE_REF, this);
+            original = ORIGINAL.get(this);
         }
         return original;
     }
