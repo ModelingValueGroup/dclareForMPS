@@ -30,6 +30,10 @@ public class NonCheckingObserved<O, T> extends Observed<O, T> {
         return new NonCheckingObserved<C, V>(id, def, false, null, null, null, true);
     }
 
+    public static <C, V> Observed<C, V> of(Object id, V def, QuadConsumer<LeafTransaction, C, V, V> changed) {
+        return new NonCheckingObserved<C, V>(id, def, false, null, null, changed, true);
+    }
+
     protected NonCheckingObserved(Object id, T def, boolean containment, Supplier<Setable<?, ?>> opposite, Supplier<Setable<O, Set<?>>> scope, QuadConsumer<LeafTransaction, O, T, T> changed, boolean checkConsistency) {
         super(id, def, containment, opposite, scope, changed, checkConsistency);
     }

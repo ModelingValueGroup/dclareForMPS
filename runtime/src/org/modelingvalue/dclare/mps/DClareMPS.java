@@ -291,16 +291,15 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
 
     @SuppressWarnings("rawtypes")
     private void addTooManyChangesExceptionMessage(DObject context, DFeature feature, TooManyChangesException tmce) {
-        String id = "CONFLICTING_RULES";
-        DMessage message = new DMessage(context, feature, DMessageType.error, id, "Conflicting rules, running " + feature + " changes=" + tmce.getNrOfChanges());
+        DMessage message = new DMessage(context, feature, DMessageType.error, "TOO_MANY_CHANGES", "Too many changes, running " + feature + " changes=" + tmce.getNrOfChanges());
         tmce.getLast().trace(message, (m, r) -> {
-            m.addSubMessage(new DMessage((DObject) r.mutable(), ((DRule.DObserver) r.observer()).rule(), DMessageType.error, id, //
+            m.addSubMessage(new DMessage((DObject) r.mutable(), ((DRule.DObserver) r.observer()).rule(), DMessageType.error, " ", //
                     "run: " + r.mutable() + "." + ((DRule.DObserver) r.observer()).rule() + " nr: " + r.nrOfChanges()));
         }, (m, r, s) -> {
-            m.addSubMessage(new DMessage((DObject) s.mutable(), (DObserved) s.observed(), DMessageType.error, id, //
+            m.addSubMessage(new DMessage((DObject) s.mutable(), (DObserved) s.observed(), DMessageType.error, " ", //
                     "read: " + s.mutable() + "." + s.observed() + "=" + r.read().get(s)));
         }, (m, w, s) -> {
-            m.subMessages().last().addSubMessage(new DMessage((DObject) s.mutable(), (DObserved) s.observed(), DMessageType.error, id, //
+            m.subMessages().last().addSubMessage(new DMessage((DObject) s.mutable(), (DObserved) s.observed(), DMessageType.error, " ", //
                     "write: " + s.mutable() + "." + s.observed() + "=" + w.written().get(s)));
         }, m -> m.subMessages().last(), tmce.getState().universeTransaction().maxNrOfChanges());
         addMessage(message);
@@ -308,13 +307,15 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
 
     @SuppressWarnings("rawtypes")
     private void addTooManyObservedExceptionMessage(DObject context, DFeature feature, TooManyObservedException tmse) {
-        String id = "TOO_MANY_OBSERVED";
-        DMessage message = new DMessage(context, feature, DMessageType.error, id, tmse.getSimpleMessage());
-        int number = 0;
+        DMessage message = new DMessage(context, feature, DMessageType.error, "TOO_MANY_OBSERVED", tmse.getSimpleMessage());
         for (Entry<Observed, Set<Mutable>> e : tmse.getObserved()) {
             if (e.getKey() instanceof DObserved) {
-                number++;
-                message.addSubMessage(new DMessage(context, (DObserved) e.getKey(), DMessageType.error, number + ")", e.getValue().toString()));
+                DObserved observed = (DObserved) e.getKey();
+                for (Mutable o : e.getValue()) {
+                    if (o.resolve(context) instanceof DObject) {
+                        message.addSubMessage(new DMessage((DObject) o.resolve(context), observed, DMessageType.error, " ", "Observed: " + observed));
+                    }
+                }
             }
         }
         addMessage(message);
@@ -322,13 +323,15 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
 
     @SuppressWarnings("rawtypes")
     private void addTooManyObserversExceptionMessage(DObject context, DFeature feature, TooManyObserversException tmse) {
-        String id = "TOO_MANY_OBSERVERS";
-        DMessage message = new DMessage(context, feature, DMessageType.error, id, tmse.getSimpleMessage());
-        int number = 0;
+        DMessage message = new DMessage(context, feature, DMessageType.error, "TOO_MANY_OBSERVERS", tmse.getSimpleMessage());
         for (Entry<Observer, Set<Mutable>> e : tmse.getObservers()) {
             if (e.getKey() instanceof DRule.DObserver) {
-                number++;
-                message.addSubMessage(new DMessage(context, ((DRule.DObserver) e.getKey()).rule(), DMessageType.error, number + ")", e.getValue().toString()));
+                DRule rule = ((DRule.DObserver) e.getKey()).rule();
+                for (Mutable o : e.getValue()) {
+                    if (o.resolve(context) instanceof DObject) {
+                        message.addSubMessage(new DMessage((DObject) o.resolve(context), rule, DMessageType.error, " ", "Rule: " + rule));
+                    }
+                }
             }
         }
         addMessage(message);
@@ -336,37 +339,32 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
 
     @SuppressWarnings("rawtypes")
     private void addReferencedOrphanExceptionMessage(DObject context, DFeature feature, ReferencedOrphanException roe) {
-        String id = "REFERENCED_ORPHAN";
-        DMessage message = new DMessage(context, feature, DMessageType.error, id, roe.getMessage());
+        DMessage message = new DMessage(context, feature, DMessageType.error, "REFERENCED_ORPHAN", roe.getMessage());
         addMessage(message);
     }
 
     @SuppressWarnings("rawtypes")
     private void addEmptyMandatoryExceptionMessage(DObject context, DFeature feature, EmptyMandatoryException eme) {
-        String id = "EMPTY_MANDATORY";
-        DMessage message = new DMessage(context, feature, DMessageType.error, id, eme.getMessage());
+        DMessage message = new DMessage(context, feature, DMessageType.error, "EMPTY_MANDATORY", eme.getMessage());
         addMessage(message);
     }
 
     @SuppressWarnings("rawtypes")
     private void addNonDeterministicExceptionMessage(DObject context, DFeature feature, NonDeterministicException nde) {
-        String id = "NON_DETERMINISTIC";
-        DMessage message = new DMessage(context, feature, DMessageType.error, id, nde.getMessage());
+        DMessage message = new DMessage(context, feature, DMessageType.error, "NON_DETERMINISTIC", nde.getMessage());
         addMessage(message);
     }
 
     @SuppressWarnings("rawtypes")
     private void addOutOfScopeExceptionMessage(DObject context, DFeature feature, OutOfScopeException oose) {
-        String id = "OUT_OF_SCOPE";
-        DMessage message = new DMessage(context, feature, DMessageType.error, id, oose.getMessage());
+        DMessage message = new DMessage(context, feature, DMessageType.error, "OUT_OF_SCOPE", oose.getMessage());
         addMessage(message);
     }
 
     private @SuppressWarnings("rawtypes") void addThrowableMessage(DObject context, DFeature feature, Throwable t) {
-        String id = "EXCEPTION";
-        DMessage message = new DMessage(context, feature, DMessageType.error, id, t);
+        DMessage message = new DMessage(context, feature, DMessageType.error, "EXCEPTION", t);
         for (StackTraceElement ste : t.getStackTrace()) {
-            message.addSubMessage(new DMessage(context, feature, DMessageType.error, id, ste));
+            message.addSubMessage(new DMessage(context, feature, DMessageType.error, " ", ste));
         }
         addMessage(message);
     }

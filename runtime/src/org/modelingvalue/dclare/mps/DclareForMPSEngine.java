@@ -86,13 +86,7 @@ public class DclareForMPSEngine implements DeployListener {
     }
 
     public void setMaxTotalNrOfChanges(int maxTotalNrOfChanges) {
-        if (this.maxTotalNrOfChanges != maxTotalNrOfChanges) {
-            this.maxTotalNrOfChanges = maxTotalNrOfChanges;
-            if (on) {
-                stopEngine();
-                startEngine();
-            }
-        }
+        this.maxTotalNrOfChanges = maxTotalNrOfChanges;
     }
 
     public int getMaxNrOfChanges() {
@@ -100,13 +94,7 @@ public class DclareForMPSEngine implements DeployListener {
     }
 
     public void setMaxNrOfChanges(int maxNrOfChanges) {
-        if (this.maxNrOfChanges != maxNrOfChanges) {
-            this.maxNrOfChanges = maxNrOfChanges;
-            if (on) {
-                stopEngine();
-                startEngine();
-            }
-        }
+        this.maxNrOfChanges = maxNrOfChanges;
     }
 
     public int getNrOfObserved() {
@@ -114,13 +102,7 @@ public class DclareForMPSEngine implements DeployListener {
     }
 
     public void setNrOfObserved(int maxNrOfObserved) {
-        if (this.maxNrOfObserved != maxNrOfObserved) {
-            this.maxNrOfObserved = maxNrOfObserved;
-            if (on) {
-                stopEngine();
-                startEngine();
-            }
-        }
+        this.maxNrOfObserved = maxNrOfObserved;
     }
 
     public int getNrOfObservers() {
@@ -128,13 +110,7 @@ public class DclareForMPSEngine implements DeployListener {
     }
 
     public void setNrOfObservers(int maxNrOfObservers) {
-        if (this.maxNrOfObservers != maxNrOfObservers) {
-            this.maxNrOfObservers = maxNrOfObservers;
-            if (on) {
-                stopEngine();
-                startEngine();
-            }
-        }
+        this.maxNrOfObservers = maxNrOfObservers;
     }
 
     @Override
