@@ -15,6 +15,7 @@ package org.modelingvalue.dclare.mps;
 
 import java.util.Set;
 
+import org.jetbrains.mps.openapi.module.SModule;
 import org.jetbrains.mps.openapi.project.Project;
 import org.jetbrains.mps.openapi.util.ProgressMonitor;
 
@@ -36,7 +37,6 @@ public class DclareForMPSEngine implements DeployListener {
     private int                        maxNrOfChanges;
     private int                        maxNrOfObserved;
     private int                        maxNrOfObservers;
-    private boolean                    loaded;
 
     public DclareForMPSEngine(Project project, StartStopHandler startStopHandler) {
         this.startStopHandler = startStopHandler;
@@ -72,9 +72,7 @@ public class DclareForMPSEngine implements DeployListener {
         if (on != this.on) {
             this.on = on;
             if (on) {
-                if (loaded) {
-                    startEngine();
-                }
+                startEngine();
             } else {
                 stopEngine();
             }
@@ -115,15 +113,23 @@ public class DclareForMPSEngine implements DeployListener {
 
     @Override
     public void onUnloaded(Set<ReloadableModule> unloadedModules, ProgressMonitor monitor) {
-        stopEngine();
-        loaded = false;
+        for (SModule m : project.getProjectModules()) {
+            if (unloadedModules.contains(m)) {
+                stopEngine();
+                break;
+            }
+        }
     }
 
     @Override
     public void onLoaded(Set<ReloadableModule> loadedModules, ProgressMonitor monitor) {
-        loaded = true;
-        if (on) {
-            startEngine();
+        for (SModule m : project.getProjectModules()) {
+            if (loadedModules.contains(m)) {
+                if (on) {
+                    startEngine();
+                }
+                break;
+            }
         }
     }
 
