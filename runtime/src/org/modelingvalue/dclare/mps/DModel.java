@@ -39,7 +39,6 @@ import org.jetbrains.mps.openapi.module.SRepository;
 import org.jetbrains.mps.openapi.persistence.DataSource;
 import org.jetbrains.mps.openapi.persistence.ModelRoot;
 import org.modelingvalue.collections.Collection;
-import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.transactions.Action;
@@ -100,7 +99,7 @@ public class DModel extends DObject<SModel> implements SModel {
                                                                                  }
                                                                              },                                                                                                                       //
             (tx, o, b, a) -> {
-                DNode.reuse(() -> dClareMPS().read(() -> Collection.of(o.original().getRootNodes()).map(r -> DNode.of(r)).toSet()), b, a);
+                o.reuse(() -> dClareMPS().read(() -> Collection.of(o.original.getRootNodes()).map(r -> DNode.of(r)).toSet()), b, a);
             }, null);
 
     public static final Observed<DModel, Set<SLanguage>> USED_LANGUAGES      = DObserved.of("USED_LANGUAGES", Set.of(), false, false, null, false, false, (dModel, pre, post, first) -> {
@@ -232,7 +231,8 @@ public class DModel extends DObject<SModel> implements SModel {
         @Override
         public void nodeAdded(SNodeAddEvent event) {
             b().handleMPSChange(() -> {
-                DNode dNode = DNode.of(event.getChild());
+                SNode sNode = event.getChild();
+                DNode dNode = DNode.of(sNode);
                 DModel dModel = DModel.of(event.getModel());
                 if (event.isRoot()) {
                     DModel.ROOTS.set(dModel, (l, e) -> l.add(e), dNode);
@@ -240,8 +240,8 @@ public class DModel extends DObject<SModel> implements SModel {
                     SContainmentLink al = event.getAggregationLink();
                     if (!al.getName().equals("smodelAttribute")) {
                         if (al.isMultiple()) {
-                            List<SNode> list = DNode.children(event.getParent(), al);
-                            DNode.MANY_CONTAINMENT.get(al).set(DNode.of(event.getParent()), (l, e) -> l.remove(e).insert(list.firstIndexOf(e.original()), e), dNode);
+                            int index = DNode.children(event.getParent(), al).firstIndexOf(sNode);
+                            DNode.MANY_CONTAINMENT.get(al).set(DNode.of(event.getParent()), (l, e) -> l.remove(e).insert(index, e), dNode);
                         } else {
                             DNode.SINGLE_CONTAINMENT.get(al).set(DNode.of(event.getParent()), dNode);
                         }
@@ -262,7 +262,7 @@ public class DModel extends DObject<SModel> implements SModel {
                         if (al.isMultiple()) {
                             DNode.MANY_CONTAINMENT.get(al).set(DNode.of(event.getParent()), (l, e) -> l.remove(e), dNode);
                         } else {
-                            DNode.SINGLE_CONTAINMENT.get(al).set(DNode.of(event.getParent()), (v, e) -> dNode.equals(v) ? null : v, dNode);
+                            DNode.SINGLE_CONTAINMENT.get(al).set(DNode.of(event.getParent()), (v, e) -> e.equals(v) ? null : v, dNode);
                         }
                     }
                 }

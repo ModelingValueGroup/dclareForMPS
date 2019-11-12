@@ -13,19 +13,25 @@
 
 package org.modelingvalue.dclare.mps;
 
+import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.jetbrains.mps.openapi.module.SRepository;
 import org.modelingvalue.collections.Collection;
+import org.modelingvalue.collections.ContainingCollection;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.transactions.Action;
 import org.modelingvalue.transactions.Direction;
+import org.modelingvalue.transactions.LeafTransaction;
 import org.modelingvalue.transactions.Mutable;
 import org.modelingvalue.transactions.Observer;
 import org.modelingvalue.transactions.Priority;
 import org.modelingvalue.transactions.Setable;
+
+import jetbrains.mps.smodel.SNodeUtil;
 
 @SuppressWarnings("rawtypes")
 public abstract class DObject<O> implements Mutable {
@@ -177,6 +183,40 @@ public abstract class DObject<O> implements Mutable {
     }
 
     protected abstract DType getType();
+
+    protected void reuse(Supplier<DNode> read, DNode pre, DNode post) {
+        if (original != null) {
+            if (post != null && !post.isReadNode() && post.original == null) {
+                pre = read.get();
+                if (pre != null && pre.isReadNode() && pre.concept.equals(post.concept)) {
+                    post.setOriginal(pre.original);
+                }
+            }
+        }
+    }
+
+    protected void reuse(Supplier<ContainingCollection<DNode>> read, ContainingCollection<DNode> pres, ContainingCollection<DNode> posts) {
+        if (original != null) {
+            LeafTransaction tx = LeafTransaction.getCurrent();
+            DClareMPS dClare = dClareMPS();
+            ContainingCollection<DNode> reads = null;
+            for (DNode post : posts) {
+                if (!post.isReadNode() && post.original == null) {
+                    if (reads == null) {
+                        reads = read.get();
+                    }
+                    for (DNode pre : reads) {
+                        if (pre.isReadNode() && pre.concept.equals(post.concept) && //
+                                Objects.equals(dClare.read(() -> pre.original.getProperty(SNodeUtil.property_INamedConcept_name)), tx.current(post, DNode.NAME_OBSERVED))) {
+                            post.setOriginal(pre.original);
+                            reads = reads.remove(pre);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     public static <O extends DObject> NonCheckingObserver<O> observer(Object id, Consumer<O> action) {
         return observer(id, action, Priority.postDepth);
