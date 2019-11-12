@@ -45,16 +45,15 @@ public class DclareForMPSEngine implements DeployListener {
         classLoaderManager.addListener(this);
     }
 
-    private void startEngine() {
+    private synchronized void startEngine() {
         if (dClareMPS == null || !dClareMPS.isRunning()) {
             project.getModelAccess().executeCommandInEDT(() -> startStopHandler.on(project));
-            dClareMPS = new DClareMPS(project, null, maxTotalNrOfChanges, maxNrOfChanges, maxNrOfObserved, maxNrOfObservers, startStopHandler);
+            dClareMPS = new DClareMPS(this, project, null, maxTotalNrOfChanges, maxNrOfChanges, maxNrOfObserved, maxNrOfObservers, startStopHandler);
         }
     }
 
-    private void stopEngine() {
+    protected synchronized void stopEngine() {
         if (dClareMPS != null && dClareMPS.isRunning()) {
-            project.getModelAccess().executeCommandInEDT(() -> startStopHandler.off(project));
             dClareMPS.stop();
             dClareMPS = null;
         }
@@ -87,13 +86,7 @@ public class DclareForMPSEngine implements DeployListener {
     }
 
     public void setMaxTotalNrOfChanges(int maxTotalNrOfChanges) {
-        if (this.maxTotalNrOfChanges != maxTotalNrOfChanges) {
-            this.maxTotalNrOfChanges = maxTotalNrOfChanges;
-            if (on) {
-                stopEngine();
-                startEngine();
-            }
-        }
+        this.maxTotalNrOfChanges = maxTotalNrOfChanges;
     }
 
     public int getMaxNrOfChanges() {
@@ -101,13 +94,7 @@ public class DclareForMPSEngine implements DeployListener {
     }
 
     public void setMaxNrOfChanges(int maxNrOfChanges) {
-        if (this.maxNrOfChanges != maxNrOfChanges) {
-            this.maxNrOfChanges = maxNrOfChanges;
-            if (on) {
-                stopEngine();
-                startEngine();
-            }
-        }
+        this.maxNrOfChanges = maxNrOfChanges;
     }
 
     public int getNrOfObserved() {
@@ -115,13 +102,7 @@ public class DclareForMPSEngine implements DeployListener {
     }
 
     public void setNrOfObserved(int maxNrOfObserved) {
-        if (this.maxNrOfObserved != maxNrOfObserved) {
-            this.maxNrOfObserved = maxNrOfObserved;
-            if (on) {
-                stopEngine();
-                startEngine();
-            }
-        }
+        this.maxNrOfObserved = maxNrOfObserved;
     }
 
     public int getNrOfObservers() {
@@ -129,13 +110,7 @@ public class DclareForMPSEngine implements DeployListener {
     }
 
     public void setNrOfObservers(int maxNrOfObservers) {
-        if (this.maxNrOfObservers != maxNrOfObservers) {
-            this.maxNrOfObservers = maxNrOfObservers;
-            if (on) {
-                stopEngine();
-                startEngine();
-            }
-        }
+        this.maxNrOfObservers = maxNrOfObservers;
     }
 
     @Override

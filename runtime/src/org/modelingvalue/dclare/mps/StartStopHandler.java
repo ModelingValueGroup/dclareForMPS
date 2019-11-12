@@ -19,10 +19,10 @@ public interface StartStopHandler {
 
     void on(Project project);
 
-    void off(Project project);
+    void off(Project project, Getter getter, DClareMPS engine);
 
     void start(Project project);
 
-    void stop(Project project, Getter getter, DRepository repository);
+    void stop(Project project, Getter getter, DClareMPS engine);
 
 }

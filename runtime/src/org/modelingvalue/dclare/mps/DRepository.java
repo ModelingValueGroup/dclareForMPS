@@ -22,77 +22,52 @@ import org.jetbrains.mps.openapi.module.SModuleReference;
 import org.jetbrains.mps.openapi.module.SRepository;
 import org.jetbrains.mps.openapi.module.SRepositoryListener;
 import org.modelingvalue.collections.Collection;
-import org.modelingvalue.collections.Entry;
-import org.modelingvalue.collections.Map;
-import org.modelingvalue.collections.QualifiedSet;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
-import org.modelingvalue.collections.util.Triple;
-import org.modelingvalue.transactions.ConsistencyError;
+import org.modelingvalue.transactions.Action;
 import org.modelingvalue.transactions.Constant;
-import org.modelingvalue.transactions.EmptyMandatoryException;
-import org.modelingvalue.transactions.LeafTransaction;
+import org.modelingvalue.transactions.Direction;
 import org.modelingvalue.transactions.Mutable;
-import org.modelingvalue.transactions.NonDeterministicException;
-import org.modelingvalue.transactions.Observed;
-import org.modelingvalue.transactions.Observer;
-import org.modelingvalue.transactions.OutOfScopeException;
-import org.modelingvalue.transactions.ReferencedOrphanException;
+import org.modelingvalue.transactions.Priority;
 import org.modelingvalue.transactions.Setable;
-import org.modelingvalue.transactions.TooManyChangesException;
-import org.modelingvalue.transactions.TooManyObservedException;
-import org.modelingvalue.transactions.TooManyObserversException;
 
 @SuppressWarnings("deprecation")
 public class DRepository extends DObject<SRepository> implements SRepository {
 
-    private static final Set<DMessageType>                                                                                    MESSAGE_TYPES    = Collection.of(DMessageType.values()).toSet();
+    private static final Constant<Set<SLanguage>, DType>     REPOSITORY_TYPE = Constant.of("REPOSITORY_TYPE", ls -> new DType(ls) {
+                                                                                 @SuppressWarnings({"rawtypes", "unchecked"})
+                                                                                 @Override
+                                                                                 public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
+                                                                                     return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getRepositoryRules())).toSet();
+                                                                                 }
 
-    @SuppressWarnings("rawtypes")
-    private static final QualifiedSet<Triple<DObject, DFeature, String>, DMessage>                                            MESSAGE_QSET     = QualifiedSet.of(m -> Triple.of(m.context(), m.feature(), m.id()));
+                                                                                 @SuppressWarnings({"rawtypes", "unchecked"})
+                                                                                 @Override
+                                                                                 public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
+                                                                                     return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getRepositoryAttributes())).toSet();
+                                                                                 }
 
-    @SuppressWarnings("rawtypes")
-    private static final Map<DMessageType, QualifiedSet<Triple<DObject, DFeature, String>, DMessage>>                         MESSAGE_QSET_MAP = MESSAGE_TYPES.sequential().toMap(t -> Entry.of(t, MESSAGE_QSET));
+                                                                                 @Override
+                                                                                 public Set<SLanguage> getLanguages() {
+                                                                                     return ls;
+                                                                                 }
 
-    @SuppressWarnings("rawtypes")
-    protected static final Setable<DRepository, Map<DMessageType, QualifiedSet<Triple<DObject, DFeature, String>, DMessage>>> MESSAGES         = Setable.of("MESSAGES", MESSAGE_QSET_MAP);
+                                                                                 @Override
+                                                                                 public Collection<? extends Setable<? extends Mutable, ?>> dContainers() {
+                                                                                     return Collection.concat(Set.of(MODULES), super.dContainers());
+                                                                                 }
 
-    private static final Constant<SRepository, DRepository>                                                                   DREPOSITORY      = Constant.of("DREPOSITORY", r -> new DRepository(r));
+                                                                             });
 
-    private static final Constant<Set<SLanguage>, DType>                                                                      REPOSITORY_TYPE  = Constant.of("REPOSITORY_TYPE", ls -> new DType(ls) {
-                                                                                                                                                   @SuppressWarnings({"rawtypes", "unchecked"})
-                                                                                                                                                   @Override
-                                                                                                                                                   public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
-                                                                                                                                                       return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getRepositoryRules())).toSet();
-                                                                                                                                                   }
+    public static final DObserved<DRepository, Set<DModule>> MODULES         = DObserved.of("MODULES", Set.of(), false, true, null, false, false, (o, pre, post, first) -> {
+                                                                             }, null);
 
-                                                                                                                                                   @SuppressWarnings({"rawtypes", "unchecked"})
-                                                                                                                                                   @Override
-                                                                                                                                                   public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
-                                                                                                                                                       return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getRepositoryAttributes())).toSet();
-                                                                                                                                                   }
+    protected static final DObserved<DRepository, Set<?>>    EXCEPTIONS      = DObserved.of("EXCEPTIONS", Set.of(), false, false, null, false, false, (o, pre, post, first) -> {
+                                                                             }, null);
 
-                                                                                                                                                   @Override
-                                                                                                                                                   public Set<SLanguage> getLanguages() {
-                                                                                                                                                       return ls;
-                                                                                                                                                   }
-
-                                                                                                                                                   @Override
-                                                                                                                                                   public Collection<? extends Setable<? extends Mutable, ?>> dContainers() {
-                                                                                                                                                       return Collection.concat(Set.of(MODULES), super.dContainers());
-                                                                                                                                                   }
-
-                                                                                                                                               });
-
-    public static final DObserved<DRepository, Set<DModule>>                                                                  MODULES          = DObserved.of("MODULES", Set.of(), false, true, null, false, false, (o, pre, post, first) -> {
-                                                                                                                                               }, null);
-
-    public static final DObserved<DRepository, Set<?>>                                                                        EXCEPTIONS       = DObserved.of("EXCEPTIONS", Set.of(), false, false, null, false, false, (o, pre, post, first) -> {
-                                                                                                                                               }, null);
-
-    public static DRepository of(SRepository original) {
-        return original instanceof DRepository ? (DRepository) original : DREPOSITORY.get(original);
-    }
+    private static final Action<DRepository>                 READ_MODULES    = Action.of("$READ_MODULES", r -> {
+                                                                                 MODULES.set(r, dClareMPS().read(() -> modules()).map(m -> DModule.of(m)).toSet());
+                                                                             }, Direction.forward, Priority.preDepth);
 
     protected DRepository(SRepository original) {
         super(original);
@@ -115,7 +90,7 @@ public class DRepository extends DObject<SRepository> implements SRepository {
 
     @Override
     protected void read(DClareMPS dClareMPS) {
-        MODULES.set(this, dClareMPS.read(() -> modules()).map(m -> DModule.of(m)).toSet());
+        READ_MODULES.trigger(this);
     }
 
     protected static Set<SModule> modules() {
@@ -181,122 +156,6 @@ public class DRepository extends DObject<SRepository> implements SRepository {
     @Override
     public DRepository getParent() {
         return null;
-    }
-
-    @SuppressWarnings("rawtypes")
-    protected void addMessage(ConsistencyError t) {
-        DObject object = t.getObject() instanceof DObject ? (DObject) t.getObject() : this;
-        DFeature feature = t.getFeature() instanceof DRule.DObserver ? ((DRule.DObserver) t.getFeature()).rule() : //
-                t.getFeature() instanceof DFeature ? (DFeature) t.getFeature() : EXCEPTIONS;
-        if (t instanceof OutOfScopeException) {
-            addOutOfScopeExceptionMessage(object, feature, (OutOfScopeException) t);
-        } else if (t instanceof NonDeterministicException) {
-            addNonDeterministicExceptionMessage(object, feature, (NonDeterministicException) t);
-        } else if (t instanceof EmptyMandatoryException) {
-            addEmptyMandatoryExceptionMessage(object, feature, (EmptyMandatoryException) t);
-        } else if (t instanceof ReferencedOrphanException) {
-            addReferencedOrphanExceptionMessage(object, feature, (ReferencedOrphanException) t);
-        } else if (t instanceof TooManyChangesException) {
-            addTooManyChangesExceptionMessage(object, feature, (TooManyChangesException) t);
-        } else if (t instanceof TooManyObservedException) {
-            addTooManyObservedExceptionMessage(object, feature, (TooManyObservedException) t);
-        } else if (t instanceof TooManyObserversException) {
-            addTooManyObserversExceptionMessage(object, feature, (TooManyObserversException) t);
-        } else {
-            throw new Error(t.getClass().getSimpleName() + " not expected");
-        }
-    }
-
-    @SuppressWarnings("rawtypes")
-    private void addTooManyChangesExceptionMessage(DObject context, DFeature feature, TooManyChangesException tmce) {
-        String id = "CONFLICTING_RULES";
-        DMessage message = new DMessage(context, feature, DMessageType.error, id, "Conflicting rules, running " + feature + " changes=" + tmce.getNrOfChanges());
-        tmce.getLast().trace(message, (m, r) -> {
-            m.addSubMessage(new DMessage((DObject) r.mutable(), ((DRule.DObserver) r.observer()).rule(), DMessageType.error, id, //
-                    "run: " + r.mutable() + "." + ((DRule.DObserver) r.observer()).rule() + " nr: " + r.nrOfChanges()));
-        }, (m, r, s) -> {
-            m.addSubMessage(new DMessage((DObject) s.mutable(), (DObserved) s.observed(), DMessageType.error, id, //
-                    "read: " + s.mutable() + "." + s.observed() + "=" + r.read().get(s)));
-        }, (m, w, s) -> {
-            m.subMessages().last().addSubMessage(new DMessage((DObject) s.mutable(), (DObserved) s.observed(), DMessageType.error, id, //
-                    "write: " + s.mutable() + "." + s.observed() + "=" + w.written().get(s)));
-        }, m -> m.subMessages().last(), tmce.getState().universeTransaction().maxNrOfChanges());
-        addMessage(message);
-    }
-
-    @SuppressWarnings("rawtypes")
-    private void addTooManyObservedExceptionMessage(DObject context, DFeature feature, TooManyObservedException tmse) {
-        String id = "TOO_MANY_OBSERVED";
-        DMessage message = new DMessage(context, feature, DMessageType.error, id, tmse.getSimpleMessage());
-        int number = 0;
-        for (Entry<Observed, Set<Mutable>> e : tmse.getObserved()) {
-            if (e.getKey() instanceof DObserved) {
-                number++;
-                message.addSubMessage(new DMessage(this, (DObserved) e.getKey(), DMessageType.error, number + ")", e.getValue().toString()));
-            }
-        }
-        addMessage(message);
-    }
-
-    @SuppressWarnings("rawtypes")
-    private void addTooManyObserversExceptionMessage(DObject context, DFeature feature, TooManyObserversException tmse) {
-        String id = "TOO_MANY_OBSERVERS";
-        DMessage message = new DMessage(context, feature, DMessageType.error, id, tmse.getSimpleMessage());
-        int number = 0;
-        for (Entry<Observer, Set<Mutable>> e : tmse.getObservers()) {
-            if (e.getKey() instanceof DRule.DObserver) {
-                number++;
-                message.addSubMessage(new DMessage(this, ((DRule.DObserver) e.getKey()).rule(), DMessageType.error, number + ")", e.getValue().toString()));
-            }
-        }
-        addMessage(message);
-    }
-
-    @SuppressWarnings("rawtypes")
-    private void addReferencedOrphanExceptionMessage(DObject context, DFeature feature, ReferencedOrphanException roe) {
-        String id = "REFERENCED_ORPHAN";
-        DMessage message = new DMessage(context, feature, DMessageType.error, id, roe.getMessage());
-        addMessage(message);
-    }
-
-    @SuppressWarnings("rawtypes")
-    private void addEmptyMandatoryExceptionMessage(DObject context, DFeature feature, EmptyMandatoryException eme) {
-        String id = "EMPTY_MANDATORY";
-        DMessage message = new DMessage(context, feature, DMessageType.error, id, eme.getMessage());
-        addMessage(message);
-    }
-
-    @SuppressWarnings("rawtypes")
-    private void addNonDeterministicExceptionMessage(DObject context, DFeature feature, NonDeterministicException nde) {
-        String id = "NON_DETERMINISTIC";
-        DMessage message = new DMessage(context, feature, DMessageType.error, id, nde.getMessage());
-        addMessage(message);
-    }
-
-    @SuppressWarnings("rawtypes")
-    private void addOutOfScopeExceptionMessage(DObject context, DFeature feature, OutOfScopeException oose) {
-        String id = "OUT_OF_SCOPE";
-        DMessage message = new DMessage(context, feature, DMessageType.error, id, oose.getMessage());
-        addMessage(message);
-    }
-
-    @SuppressWarnings("rawtypes")
-    protected void addThrowableMessage(DObject context, DFeature feature, Throwable t) {
-        String id = "EXCEPTION";
-        DMessage message = new DMessage(context, feature, DMessageType.error, id, t);
-        for (StackTraceElement ste : t.getStackTrace()) {
-            message.addSubMessage(new DMessage(this, feature, DMessageType.error, id, ste));
-        }
-        addMessage(message);
-    }
-
-    private void addMessage(DMessage message) {
-        LeafTransaction.getCurrent().runNonObserving(() -> MESSAGES.set(this, (m, a) -> m.put(message.type(), m.get(message.type()).add(a)), message));
-    }
-
-    @SuppressWarnings("rawtypes")
-    public QualifiedSet<Triple<DObject, DFeature, String>, DMessage> getMessages(DMessageType type) {
-        return MESSAGES.get(this).get(type);
     }
 
     private class Listener extends Pair<DRepository, DClareMPS> implements SRepositoryListener {

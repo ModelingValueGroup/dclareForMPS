@@ -30,7 +30,9 @@ import org.jetbrains.mps.openapi.persistence.ModelRoot;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
+import org.modelingvalue.transactions.Action;
 import org.modelingvalue.transactions.Constant;
+import org.modelingvalue.transactions.Direction;
 import org.modelingvalue.transactions.Mutable;
 import org.modelingvalue.transactions.Observed;
 import org.modelingvalue.transactions.Observer;
@@ -75,12 +77,12 @@ public class DModule extends DObject<SModule> implements SModule {
                                                                                            }
                                                                                        });
 
-    public static final Observed<DModule, Set<DModel>>                  REFERENCED     = Observed.of("REFERENCED", Set.of());
+    public static final Observed<DModule, Set<DModel>>                  REFERENCED     = NonCheckingObserved.of("REFERENCED", Set.of());
 
     public static final Observed<DModule, Set<DModel>>                  MODELS         = DObserved.of("MODELS", Set.of(), false, true, null, false, false, (o, pre, post, first) -> {
                                                                                        }, null);
 
-    public static final Observed<DModule, Set<SLanguage>>               LANGUAGES      = Observed.of("LANGUAGES", Set.of(), (tx, o, b, a) -> {
+    public static final Observed<DModule, Set<SLanguage>>               LANGUAGES      = NonCheckingObserved.of("LANGUAGES", Set.of(), (tx, o, b, a) -> {
                                                                                            Setable.<Set<SLanguage>, SLanguage> diff(b, a,                                                                            //
                                                                                                    x -> DClareMPS.ALL_LANGUAGES.set(dClareMPS(), Set::add, x), x -> {
                                                                                                                                                                                       });
@@ -100,6 +102,14 @@ public class DModule extends DObject<SModule> implements SModule {
 
     @SuppressWarnings("rawtypes")
     protected static final Set<Observer>                                RULES          = DObject.RULES.addAll(Set.of(LANGUAGES_RULE, MODELS_RULE));
+
+    private static final Action<DModule>                                READ_MODELS    = Action.of("$READ_MODELS", m -> {
+                                                                                           Set<SLanguage> languages = dClareMPS().read(() -> languages(m.original()));
+                                                                                           LANGUAGES.set(m, languages);
+                                                                                           if (m.isAllwaysActive() && m.hasRuleSets(languages)) {
+                                                                                               MODELS.set(m, dClareMPS().read(() -> models(m.original())).map(mo -> DModel.of(mo)).toSet());
+                                                                                           }
+                                                                                       }, Direction.forward, Priority.preDepth);
 
     public static DModule of(SModule original) {
         return original instanceof DModule ? (DModule) original : DMODULE.get(original);
@@ -145,11 +155,7 @@ public class DModule extends DObject<SModule> implements SModule {
 
     @Override
     protected void read(DClareMPS dClareMPS) {
-        Set<SLanguage> languages = dClareMPS.read(() -> languages(original()));
-        LANGUAGES.set(this, languages);
-        if (isAllwaysActive() && hasRuleSets(languages)) {
-            MODELS.set(this, dClareMPS.read(() -> models(original())).map(m -> DModel.of(m)).toSet());
-        }
+        READ_MODELS.trigger(this);
     }
 
     @Override
@@ -313,6 +319,7 @@ public class DModule extends DObject<SModule> implements SModule {
 
         @Override
         public void moduleChanged(SModule module) {
+            System.err.println("moduleChanged");
         }
 
     }
@@ -358,4 +365,5 @@ public class DModule extends DObject<SModule> implements SModule {
     public String toString() {
         return getModuleName();
     }
+
 }

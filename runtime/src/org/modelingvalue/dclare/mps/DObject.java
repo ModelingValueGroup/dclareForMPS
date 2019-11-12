@@ -20,9 +20,9 @@ import org.jetbrains.mps.openapi.language.SLanguage;
 import org.jetbrains.mps.openapi.module.SRepository;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
+import org.modelingvalue.transactions.Action;
 import org.modelingvalue.transactions.Direction;
 import org.modelingvalue.transactions.Mutable;
-import org.modelingvalue.transactions.Observed;
 import org.modelingvalue.transactions.Observer;
 import org.modelingvalue.transactions.Priority;
 import org.modelingvalue.transactions.Setable;
@@ -30,34 +30,45 @@ import org.modelingvalue.transactions.Setable;
 @SuppressWarnings("rawtypes")
 public abstract class DObject<O> implements Mutable {
 
-    public static final Setable<DObject, DType> TYPE      = Observed.of("TYPE", new DType("<DUMMY_TYPE>") {
-                                                              @Override
-                                                              public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
-                                                                  return Set.of();
-                                                              }
+    public static final Setable<DObject, DType> TYPE             = NonCheckingObserved.of("TYPE", new DType("<DUMMY_TYPE>") {
+                                                                     @Override
+                                                                     public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
+                                                                         return Set.of();
+                                                                     }
 
-                                                              @Override
-                                                              public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
-                                                                  return Set.of();
-                                                              }
+                                                                     @Override
+                                                                     public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
+                                                                         return Set.of();
+                                                                     }
 
-                                                              @Override
-                                                              public Set<SLanguage> getLanguages() {
-                                                                  return Set.of();
-                                                              }
-                                                          });
+                                                                     @Override
+                                                                     public Set<SLanguage> getLanguages() {
+                                                                         return Set.of();
+                                                                     }
+                                                                 });
 
-    protected static final Observer<DObject>    TYPE_RULE = observer(TYPE, o -> {
-                                                              TYPE.set(o, o.getType());
-                                                          }, Priority.preDepth);
+    protected static final Observer<DObject>    TYPE_RULE        = observer(TYPE, o -> {
+                                                                     TYPE.set(o, o.getType());
+                                                                 }, Priority.preDepth);
 
-    protected static final Set<Observer>        RULES     = Set.of(TYPE_RULE);
+    protected static final Set<Observer>        RULES            = Set.of(TYPE_RULE);
+
+    protected static final Action<DObject<?>>   REFRESH_CHILDREN = Action.of("$REFRESH_CHILDREN", o -> {
+                                                                     for (DObject<?> c : o.getAllChildren()) {
+                                                                         DObject.REFRESH.trigger(c);
+                                                                     }
+                                                                 }, Direction.forward, Priority.preDepth);
+
+    protected static final Action<DObject<?>>   REFRESH          = Action.of("$REFRESH", o -> {
+                                                                     o.read(dClareMPS());
+                                                                     DObject.REFRESH_CHILDREN.trigger(o);
+                                                                 }, Direction.forward, Priority.preDepth);
 
     public static DClareMPS dClareMPS() {
         return DClareMPS.instance();
     }
 
-    protected final O original;
+    protected O original;
 
     protected DObject(O original) {
         this.original = original;
@@ -114,8 +125,8 @@ public abstract class DObject<O> implements Mutable {
     }
 
     @SuppressWarnings("unchecked")
-    public Collection<? extends DObject> getAllChildren() {
-        return (Collection<? extends DObject>) dChildren();
+    public Collection<DObject<?>> getAllChildren() {
+        return (Collection<DObject<?>>) dChildren();
     }
 
     @SuppressWarnings("unchecked")
