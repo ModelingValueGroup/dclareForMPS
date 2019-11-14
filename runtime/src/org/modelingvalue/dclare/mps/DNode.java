@@ -68,8 +68,8 @@ public class DNode extends DObject<SNode> implements SNode {
                                                                                                            return DObserved.<DNode, List<DNode>> of(mc, List.of(), !mc.isOptional(), true, null, false,                                                       //
                                                                                                                    (dNode, pre, post) -> {
                                                                                                                        SNode sNode = dNode.original();
-                                                                                                                       List<SNode> ist = DNode.children(sNode, mc);
                                                                                                                        List<SNode> soll = post.map(DNode::original).toList();
+                                                                                                                       List<SNode> ist = DNode.children(sNode, mc);
                                                                                                                        DObserved.map(ist, soll,                                                                                                               //
                                                                                                                                (n, a) -> {
                                                                                                                                }, r -> sNode.removeChild(r));
@@ -88,8 +88,8 @@ public class DNode extends DObject<SNode> implements SNode {
                                                                                                            return DObserved.<DNode, DNode> of(sc, null, !sc.isOptional(), true, null, false,                                                                  //
                                                                                                                    (dNode, pre, post) -> {
                                                                                                                        SNode sNode = dNode.original();
-                                                                                                                       SNode ist = children(sNode, sc).first();
                                                                                                                        SNode soll = post != null ? post.original() : null;
+                                                                                                                       SNode ist = children(sNode, sc).first();
                                                                                                                        if (ist != null && !ist.equals(soll)) {
                                                                                                                            sNode.removeChild(ist);
                                                                                                                        }

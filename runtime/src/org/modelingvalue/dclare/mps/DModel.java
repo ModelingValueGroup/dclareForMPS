@@ -88,8 +88,8 @@ public class DModel extends DNonNode<SModel> implements SModel {
 
     public static final Observed<DModel, Set<DNode>>     ROOTS               = DObserved.of("ROOTS", Set.of(), false, true, null, false, (dModel, pre, post) -> {
                                                                                  SModel sModel = dModel.original();
-                                                                                 Set<SNode> ist = DModel.roots(sModel);
                                                                                  Set<SNode> soll = post.map(DNode::original).toSet();
+                                                                                 Set<SNode> ist = DModel.roots(sModel);
                                                                                  DObserved.map(ist, soll,                                                                                             //
                                                                                          a -> sModel.addRootNode(a),                                                                                  //
                                                                                          r -> sModel.removeRootNode(r));
