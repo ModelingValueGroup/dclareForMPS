@@ -32,6 +32,7 @@ import org.jetbrains.mps.openapi.model.SNode;
 import org.jetbrains.mps.openapi.model.SNodeAccessListener;
 import org.jetbrains.mps.openapi.model.SNodeChangeListener;
 import org.jetbrains.mps.openapi.model.SNodeId;
+import org.jetbrains.mps.openapi.model.SNodeReference;
 import org.jetbrains.mps.openapi.model.SReference;
 import org.jetbrains.mps.openapi.module.SModule;
 import org.jetbrains.mps.openapi.module.SRepository;
@@ -88,7 +89,7 @@ public class DModel extends DNonNode<SModel> implements SModel {
 
     public static final Observed<DModel, Set<DNode>>     ROOTS               = DObserved.of("ROOTS", Set.of(), false, true, null, false, (dModel, pre, post) -> {
                                                                                  SModel sModel = dModel.original();
-                                                                                 Set<SNode> soll = post.map(DNode::original).toSet();
+                                                                                 Set<SNode> soll = post.map(r -> r.sNode(true)).toSet();
                                                                                  Set<SNode> ist = DModel.roots(sModel);
                                                                                  DObserved.map(ist, soll,                                                                                             //
                                                                                          a -> sModel.addRootNode(a),                                                                                  //
@@ -246,7 +247,9 @@ public class DModel extends DNonNode<SModel> implements SModel {
         public void nodeRemoved(SNodeRemoveEvent event) {
             b().handleMPSChange(() -> {
                 SNode child = event.getChild();
-                DNode dNode = DNode.of(child.getConcept(), new jetbrains.mps.smodel.SNodePointer(original().getReference(), child.getNodeId()));
+                SNodeReference ref = new jetbrains.mps.smodel.SNodePointer(original().getReference(), child.getNodeId());
+                DNode dNode = DNode.of(child.getConcept(), ref);
+                dNode.cashed = child;
                 if (event.isRoot()) {
                     DModel.ROOTS.set(DModel.of(event.getModel()), (l, e) -> l.remove(e), dNode);
                 } else {
