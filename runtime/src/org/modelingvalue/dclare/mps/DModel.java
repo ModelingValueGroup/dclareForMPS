@@ -34,7 +34,6 @@ import org.jetbrains.mps.openapi.model.SNodeChangeListener;
 import org.jetbrains.mps.openapi.model.SNodeId;
 import org.jetbrains.mps.openapi.model.SReference;
 import org.jetbrains.mps.openapi.module.SModule;
-import org.jetbrains.mps.openapi.module.SModuleReference;
 import org.jetbrains.mps.openapi.module.SRepository;
 import org.jetbrains.mps.openapi.persistence.DataSource;
 import org.jetbrains.mps.openapi.persistence.ModelRoot;
@@ -52,7 +51,7 @@ import org.modelingvalue.transactions.Setable;
 
 import jetbrains.mps.extapi.model.SModelBase;
 
-public class DModel extends DObject<SModel> implements SModel {
+public class DModel extends DNonNode<SModel> implements SModel {
 
     private static final Constant<SModel, DModel>        DMODEL              = Constant.of("DMODEL", m -> new DModel(m));
 
@@ -87,42 +86,35 @@ public class DModel extends DObject<SModel> implements SModel {
 
                                                                              });
 
-    public static final Observed<DModel, Set<DNode>>     ROOTS               = DObserved.of("ROOTS", Set.of(), false, true, null, false, false, (dModel, pre, post, first) -> {
-                                                                                 if (first) {
-                                                                                     DObserved.map(DModel.roots(dModel.original()), post.map(DNode::original).toSet(),                                //
-                                                                                             a -> {
-                                                                                             }, r -> dModel.original().removeRootNode(r));
-                                                                                 } else {
-                                                                                     DObserved.map(DModel.roots(dModel.original()), post.map(DNode::original).toSet(),                                //
-                                                                                             a -> dModel.original().addRootNode(a), r -> {
-                                                                                                                                                                      });
-                                                                                 }
+    public static final Observed<DModel, Set<DNode>>     ROOTS               = DObserved.of("ROOTS", Set.of(), false, true, null, false, (dModel, pre, post) -> {
+                                                                                 SModel sModel = dModel.original();
+                                                                                 Set<SNode> ist = DModel.roots(sModel);
+                                                                                 Set<SNode> soll = post.map(DNode::original).toSet();
+                                                                                 DObserved.map(ist, soll,                                                                                             //
+                                                                                         a -> sModel.addRootNode(a),                                                                                  //
+                                                                                         r -> sModel.removeRootNode(r));
                                                                              },                                                                                                                       //
             (tx, o, b, a) -> {
-                o.reuse(() -> dClareMPS().read(() -> Collection.of(o.original.getRootNodes()).map(r -> DNode.of(r)).toSet()), b, a);
+                DNode.reuse(o, () -> dClareMPS().read(() -> Collection.of(o.original().getRootNodes()).map(r -> DNode.of(r)).toSet()), b, a);
             }, null);
 
-    public static final Observed<DModel, Set<SLanguage>> USED_LANGUAGES      = DObserved.of("USED_LANGUAGES", Set.of(), false, false, null, false, false, (dModel, pre, post, first) -> {
-                                                                                 if (first) {
-                                                                                     SModelBase sModel = (SModelBase) dModel.original();
-                                                                                     java.util.Collection<SLanguage> ls = sModel.importedLanguageIds();
-                                                                                     for (SLanguage l : post) {
-                                                                                         if (!ls.contains(l)) {
-                                                                                             sModel.addLanguage(l);
-                                                                                         }
+    public static final Observed<DModel, Set<SLanguage>> USED_LANGUAGES      = DObserved.of("USED_LANGUAGES", Set.of(), false, false, null, false, (dModel, pre, post) -> {
+                                                                                 SModelBase sModel = (SModelBase) dModel.original();
+                                                                                 java.util.Collection<SLanguage> ls = sModel.importedLanguageIds();
+                                                                                 for (SLanguage l : post) {
+                                                                                     if (!ls.contains(l)) {
+                                                                                         sModel.addLanguage(l);
                                                                                      }
                                                                                  }
                                                                              }, null);
 
-    public static final Observed<DModel, Set<DModel>>    USED_MODELS         = DObserved.of("USED_MODELS", Set.of(), false, false, null, false, false, (dModel, pre, post, first) -> {
-                                                                                 if (first) {
-                                                                                     SModelBase sModel = (SModelBase) dModel.original();
-                                                                                     java.util.Collection<SModelReference> ls = sModel.getModelImports();
-                                                                                     for (DModel dm : post) {
-                                                                                         SModel sm = dm.original();
-                                                                                         if (!ls.stream().anyMatch(r -> r.getModelId().equals(sm.getModelId()))) {
-                                                                                             sModel.addModelImport(sm.getReference());
-                                                                                         }
+    public static final Observed<DModel, Set<DModel>>    USED_MODELS         = DObserved.of("USED_MODELS", Set.of(), false, false, null, false, (dModel, pre, post) -> {
+                                                                                 SModelBase sModel = (SModelBase) dModel.original();
+                                                                                 java.util.Collection<SModelReference> ls = sModel.getModelImports();
+                                                                                 for (DModel dm : post) {
+                                                                                     SModel sm = dm.original();
+                                                                                     if (!ls.stream().anyMatch(r -> r.getModelId().equals(sm.getModelId()))) {
+                                                                                         sModel.addModelImport(sm.getReference());
                                                                                      }
                                                                                  }
                                                                              }, null);
@@ -253,7 +245,8 @@ public class DModel extends DObject<SModel> implements SModel {
         @Override
         public void nodeRemoved(SNodeRemoveEvent event) {
             b().handleMPSChange(() -> {
-                DNode dNode = DNode.of(event.getChild());
+                SNode child = event.getChild();
+                DNode dNode = DNode.of(child.getConcept(), new jetbrains.mps.smodel.SNodePointer(original().getReference(), child.getNodeId()));
                 if (event.isRoot()) {
                     DModel.ROOTS.set(DModel.of(event.getModel()), (l, e) -> l.remove(e), dNode);
                 } else {
@@ -325,34 +318,7 @@ public class DModel extends DObject<SModel> implements SModel {
 
     @Override
     public SModelReference getReference() {
-        return new SModelReference() {
-            SModelReference ref = original().getReference();
-
-            @Override
-            public SModelId getModelId() {
-                return ref.getModelId();
-            }
-
-            @Override
-            public String getModelName() {
-                return ref.getModelName();
-            }
-
-            @Override
-            public SModelName getName() {
-                return ref.getName();
-            }
-
-            @Override
-            public SModuleReference getModuleReference() {
-                return ref.getModuleReference();
-            }
-
-            @Override
-            public SModel resolve(SRepository repo) {
-                return DModel.of(ref.resolve(repo));
-            }
-        };
+        return original().getReference();
     }
 
     @Override

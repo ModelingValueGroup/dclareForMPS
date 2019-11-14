@@ -32,7 +32,7 @@ import org.modelingvalue.transactions.Priority;
 import org.modelingvalue.transactions.Setable;
 
 @SuppressWarnings("deprecation")
-public class DRepository extends DObject<SRepository> implements SRepository {
+public class DRepository extends DNonNode<SRepository> implements SRepository {
 
     private static final Constant<Set<SLanguage>, DType>     REPOSITORY_TYPE = Constant.of("REPOSITORY_TYPE", ls -> new DType(ls) {
                                                                                  @SuppressWarnings({"rawtypes", "unchecked"})
@@ -59,10 +59,10 @@ public class DRepository extends DObject<SRepository> implements SRepository {
 
                                                                              });
 
-    public static final DObserved<DRepository, Set<DModule>> MODULES         = DObserved.of("MODULES", Set.of(), false, true, null, false, false, (o, pre, post, first) -> {
+    public static final DObserved<DRepository, Set<DModule>> MODULES         = DObserved.of("MODULES", Set.of(), false, true, null, false, (o, pre, post) -> {
                                                                              }, null);
 
-    protected static final DObserved<DRepository, Set<?>>    EXCEPTIONS      = DObserved.of("EXCEPTIONS", Set.of(), false, false, null, false, false, (o, pre, post, first) -> {
+    protected static final DObserved<DRepository, Set<?>>    EXCEPTIONS      = DObserved.of("EXCEPTIONS", Set.of(), false, false, null, false, (o, pre, post) -> {
                                                                              }, null);
 
     private static final Action<DRepository>                 READ_MODULES    = Action.of("$READ_MODULES", r -> {

@@ -126,7 +126,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     protected final Concurrent<ReusableTransaction<DRule.DObserver<?>, DObserverTransaction>>                 dObserverTransactions;
     protected final Concurrent<ReusableTransaction<NonCheckingObserver<?>, NonCheckingTransaction>>           nonCheckingTransactions;
     protected Map<DMessageType, QualifiedSet<Triple<DObject<?>, DFeature<?>, String>, DMessage>>              messages             = MESSAGE_QSET_MAP;
-    private final DclareForMPSEngine                                                                          engine;
+    protected final DclareForMPSEngine                                                                        engine;
     private final DRepository                                                                                 dRepository;
 
     protected DClareMPS(DclareForMPSEngine engine, Project project, State prevState, int maxTotalNrOfChanges, int maxNrOfChanges, int maxNrOfObserved, int maxNrOfObservers, StartStopHandler startStopHandler) {
@@ -486,9 +486,6 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
         return (DClareMPS) LeafTransaction.getCurrent().universeTransaction().mutable();
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    private final Map<Pair<DObject, DObserved>, Pair<Object, Object>>[] deferred = new Map[]{Map.of()};
-
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     public void accept(State pre, State post, Boolean last) {
@@ -502,28 +499,10 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
                     DObject dObject = (DObject) e0.getKey();
                     e0.getValue().forEach(e1 -> {
                         DObserved mpsObserved = (DObserved) e1.getKey();
-                        if (!mpsObserved.isDeferred()) {
-                            mpsObserved.toMPS(post, dObject, e1.getValue().a(), e1.getValue().b(), true);
-                        }
-                    });
-                });
-                pre.diff(post, o -> o instanceof DObject && post.get((DObject) o, Mutable.D_PARENT_CONTAINING) != null, p -> p instanceof DObserved).forEach(e0 -> {
-                    DObject dObject = (DObject) e0.getKey();
-                    e0.getValue().forEach(e1 -> {
-                        DObserved mpsObserved = (DObserved) e1.getKey();
-                        if (mpsObserved.isDeferred()) {
-                            Pair<DObject, DObserved> slot = Pair.of(dObject, mpsObserved);
-                            Pair<Object, Object> old = deferred[0].get(slot);
-                            deferred[0] = deferred[0].put(slot, old != null ? Pair.of(old.a(), e1.getValue().b()) : Pair.of(e1.getValue().a(), e1.getValue().b()));
-                        } else {
-                            mpsObserved.toMPS(post, dObject, e1.getValue().a(), e1.getValue().b(), false);
-                        }
+                        mpsObserved.toMPS(post, dObject, e1.getValue().a(), e1.getValue().b());
                     });
                 });
                 if (last) {
-                    deferred[0].forEach(e -> e.getKey().b().toMPS(post, e.getKey().a(), e.getValue().a(), e.getValue().b(), true));
-                    deferred[0].forEach(e -> e.getKey().b().toMPS(post, e.getKey().a(), e.getValue().a(), e.getValue().b(), false));
-                    deferred[0] = Map.of();
                     running = false;
                     startStopHandler.stop(project, new Getter() {
                         @Override

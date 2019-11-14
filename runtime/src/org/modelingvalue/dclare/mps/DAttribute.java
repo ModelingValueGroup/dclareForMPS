@@ -111,7 +111,7 @@ public interface DAttribute<O, T> extends DFeature<O> {
         private final String name;
 
         public DObservedAttribute(Object id, String name, boolean synthetic, boolean optional, boolean composite, V def, Supplier<SNode> source) {
-            super(id, def, !optional, composite, null, false, synthetic, (o, b, a, first) -> {
+            super(id, def, !optional, composite, null, synthetic, (o, b, a) -> {
             }, null, source);
             this.name = name;
         }

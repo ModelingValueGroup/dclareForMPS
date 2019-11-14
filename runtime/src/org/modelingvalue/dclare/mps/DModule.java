@@ -43,7 +43,7 @@ import jetbrains.mps.extapi.model.SModelBase;
 import jetbrains.mps.extapi.module.SModuleBase;
 import jetbrains.mps.smodel.Language;
 
-public class DModule extends DObject<SModule> implements SModule {
+public class DModule extends DNonNode<SModule> implements SModule {
 
     private static final Constant<SModule, DModule>                     DMODULE        = Constant.of("DMODULE", m -> new DModule(m));
 
@@ -79,7 +79,7 @@ public class DModule extends DObject<SModule> implements SModule {
 
     public static final Observed<DModule, Set<DModel>>                  REFERENCED     = NonCheckingObserved.of("REFERENCED", Set.of());
 
-    public static final Observed<DModule, Set<DModel>>                  MODELS         = DObserved.of("MODELS", Set.of(), false, true, null, false, false, (o, pre, post, first) -> {
+    public static final Observed<DModule, Set<DModel>>                  MODELS         = DObserved.of("MODELS", Set.of(), false, true, null, false, (o, pre, post) -> {
                                                                                        }, null);
 
     public static final Observed<DModule, Set<SLanguage>>               LANGUAGES      = NonCheckingObserved.of("LANGUAGES", Set.of(), (tx, o, b, a) -> {

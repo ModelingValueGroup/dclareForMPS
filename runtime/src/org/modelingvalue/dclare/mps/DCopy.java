@@ -77,7 +77,7 @@ public class DCopy extends DNode {
     private final DCopy root;
 
     private DCopy(DNode copied, DCopy root, Object[] identity) {
-        super(null, copied.getConcept(), null, identity);
+        super(copied.getConcept(), null, identity);
         this.copied = copied;
         this.root = root != null ? root : this;
     }
@@ -98,12 +98,7 @@ public class DCopy extends DNode {
             return false;
         } else {
             DCopy other = (DCopy) obj;
-            if (!copied.equals(other.copied)) {
-                return false;
-            } else {
-                shareOriginal(other);
-                return true;
-            }
+            return copied.equals(other.copied);
         }
     }
 

@@ -20,7 +20,7 @@ import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.transactions.Constant;
 
-public class DClassObject extends DObject<SClassObject> implements SClassObject {
+public class DClassObject extends DNonNode<SClassObject> implements SClassObject {
 
     private static final Constant<SClassObject, DClassObject>          DCLASS_OBJECT     = Constant.of("DCLASS_OBJECT", c -> new DClassObject(c));
 
