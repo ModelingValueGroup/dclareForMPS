@@ -132,10 +132,6 @@
       <concept id="1079359253375" name="jetbrains.mps.baseLanguage.structure.ParenthesizedExpression" flags="nn" index="1eOMI4">
         <child id="1079359253376" name="expression" index="1eOMHV" />
       </concept>
-      <concept id="1154542696413" name="jetbrains.mps.baseLanguage.structure.ArrayCreatorWithInitializer" flags="nn" index="3g6Rrh">
-        <child id="1154542793668" name="componentType" index="3g7fb8" />
-        <child id="1154542803372" name="initValue" index="3g7hyw" />
-      </concept>
       <concept id="1204053956946" name="jetbrains.mps.baseLanguage.structure.IMethodCall" flags="ng" index="1ndlxa">
         <reference id="1068499141037" name="baseMethodDeclaration" index="37wK5l" />
         <child id="1068499141038" name="actualArgument" index="37wK5m" />
@@ -1380,7 +1376,7 @@
               </node>
               <node concept="2YIFZM" id="70QPEjRB58$" role="10QFUP">
                 <ref role="1Pybhc" to="t4tl:~DCopy" resolve="DCopy" />
-                <ref role="37wK5l" to="t4tl:~DCopy.of(org.modelingvalue.dclare.mps.DNode,java.lang.Object[])" resolve="of" />
+                <ref role="37wK5l" to="t4tl:~DCopy.of(org.modelingvalue.dclare.mps.DNode,java.lang.Object,java.lang.Object)" resolve="of" />
                 <node concept="10QFUN" id="70QPEjRB58_" role="37wK5m">
                   <node concept="3uibUv" id="70QPEjRB58A" role="10QFUM">
                     <ref role="3uigEE" to="t4tl:~DNode" resolve="DNode" />
@@ -1389,18 +1385,11 @@
                     <ref role="3cqZAo" node="4wJaMXe_PK4" resolve="copied" />
                   </node>
                 </node>
-                <node concept="2ShNRf" id="70QPEjRB58C" role="37wK5m">
-                  <node concept="3g6Rrh" id="70QPEjRB58D" role="2ShVmc">
-                    <node concept="37vLTw" id="70QPEjRB58E" role="3g7hyw">
-                      <ref role="3cqZAo" node="2cgEAjOjw8z" resolve="ctx" />
-                    </node>
-                    <node concept="37vLTw" id="70QPEjRB58F" role="3g7hyw">
-                      <ref role="3cqZAo" node="2cgEAjNTkFc" resolve="id" />
-                    </node>
-                    <node concept="3uibUv" id="70QPEjRB58G" role="3g7fb8">
-                      <ref role="3uigEE" to="wyt6:~Object" resolve="Object" />
-                    </node>
-                  </node>
+                <node concept="37vLTw" id="6_VR9GIb_wK" role="37wK5m">
+                  <ref role="3cqZAo" node="2cgEAjOjw8z" resolve="ctx" />
+                </node>
+                <node concept="37vLTw" id="6_VR9GIb_Re" role="37wK5m">
+                  <ref role="3cqZAo" node="2cgEAjNTkFc" resolve="id" />
                 </node>
               </node>
             </node>

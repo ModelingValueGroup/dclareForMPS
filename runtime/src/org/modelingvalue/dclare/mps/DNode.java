@@ -174,7 +174,7 @@ public class DNode extends DObject<SNode> implements SNode {
                                                                                                                    () -> {
                                                                                                                        SNode sNode = n.sNode(false);
                                                                                                                        if (sNode != null) {
-                                                                                                                           for (SProperty property : n.concept.getProperties()) {
+                                                                                                                           for (SProperty property : n.getConcept().getProperties()) {
                                                                                                                                PROPERTY.get(property).set(n, sNode.getProperty(property));
                                                                                                                            }
                                                                                                                        }
@@ -186,7 +186,7 @@ public class DNode extends DObject<SNode> implements SNode {
                                                                                                                    () -> {
                                                                                                                        SNode sNode = n.sNode(false);
                                                                                                                        if (sNode != null) {
-                                                                                                                           for (SReferenceLink link : n.concept.getReferenceLinks()) {
+                                                                                                                           for (SReferenceLink link : n.getConcept().getReferenceLinks()) {
                                                                                                                                SNode targetNode = sNode.getReferenceTarget(link);
                                                                                                                                REFERENCE.get(link).set(n, targetNode != null ? of(targetNode) : null);
                                                                                                                            }
@@ -199,7 +199,7 @@ public class DNode extends DObject<SNode> implements SNode {
                                                                                                                    () -> {
                                                                                                                        SNode sNode = n.sNode(false);
                                                                                                                        if (sNode != null) {
-                                                                                                                           for (SContainmentLink link : n.concept.getContainmentLinks()) {
+                                                                                                                           for (SContainmentLink link : n.getConcept().getContainmentLinks()) {
                                                                                                                                if (!link.getName().equals("smodelAttribute")) {
                                                                                                                                    List<DNode> list = Collection.of(sNode.getChildren(link)).map(c -> of(c)).toList();
                                                                                                                                    if (link.isMultiple()) {
@@ -220,7 +220,14 @@ public class DNode extends DObject<SNode> implements SNode {
     protected static final Setable<DNode, SNode>                                   DETACHED            = Setable.of("$DETACHED", null);
 
     public static DNode of(SConcept concept, String anonymousType, Object[] identity) {
-        return new DNode(concept, anonymousType, identity);
+        identity = Arrays.copyOf(identity, identity.length + (anonymousType != null ? 2 : 1));
+        if (anonymousType != null) {
+            identity[identity.length - 2] = concept;
+            identity[identity.length - 1] = anonymousType;
+        } else {
+            identity[identity.length - 1] = concept;
+        }
+        return new DNode(identity);
     }
 
     public static DNode of(SNode original) {
@@ -237,34 +244,26 @@ public class DNode extends DObject<SNode> implements SNode {
     }
 
     private static DNode readNode(SConcept concept, SNodeReference ref) {
-        return new DNode(concept, null, new Object[]{ref});
+        return new DNode(new Object[]{ref, concept});
     }
 
     private boolean isReadNode() {
-        return identity.length == 1 && identity[0] instanceof SNodeReference;
+        return identity.length == 2 && identity[0] instanceof SNodeReference;
     }
 
     public static SNode wrap(SNode original) {
         return of(original);
     }
 
-    protected final SConcept concept;
-    protected final String   anonymousType;
-    protected Object[]       identity;
+    protected Object[] identity;
 
-    protected DNode(SConcept concept, String anonymousType, Object[] identity) {
-        this.concept = concept;
+    protected DNode(Object[] identity) {
         this.identity = identity;
-        this.anonymousType = anonymousType;
     }
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = ((anonymousType == null) ? 0 : anonymousType.hashCode());
-        result = prime * result + concept.hashCode();
-        result = prime * result + Arrays.deepHashCode(identity);
-        return result;
+        return Arrays.deepHashCode(identity);
     }
 
     @Override
@@ -277,11 +276,7 @@ public class DNode extends DObject<SNode> implements SNode {
             return false;
         } else {
             DNode other = (DNode) obj;
-            if (!Objects.equals(anonymousType, other.anonymousType)) {
-                return false;
-            } else if (!concept.equals(other.concept)) {
-                return false;
-            } else if (!Arrays.deepEquals(identity, other.identity)) {
+            if (!Arrays.deepEquals(identity, other.identity)) {
                 return false;
             } else {
                 if (Age.age(identity) > Age.age(other.identity)) {
@@ -313,7 +308,7 @@ public class DNode extends DObject<SNode> implements SNode {
 
     @Override
     protected DType getType() {
-        return NODE_TYPE.get(Triple.of(TYPE.get(dObjectParent()).getLanguages(), getConcept(), anonymousType));
+        return NODE_TYPE.get(Triple.of(TYPE.get(dObjectParent()).getLanguages(), getConcept(), getAnonymousType()));
     }
 
     @Override
@@ -369,7 +364,7 @@ public class DNode extends DObject<SNode> implements SNode {
         if (parent instanceof DNonNode || ((DNode) parent).isReadNode() || NODE_REF.get((DNode) parent) != null) {
             if (post != null && !post.isReadNode() && NODE_REF.get(post) == null) {
                 pre = read.get();
-                if (pre != null && (pre.equals(post) || (pre.isReadNode() && pre.concept.equals(post.concept)))) {
+                if (pre != null && (pre.equals(post) || (pre.isReadNode() && pre.getConcept().equals(post.getConcept())))) {
                     post.setOriginal(pre.reference(false));
                 }
             }
@@ -389,7 +384,7 @@ public class DNode extends DObject<SNode> implements SNode {
                             reads = read.get();
                         }
                         for (DNode pre : reads) {
-                            if (pre.equals(post) || (pre.isReadNode() && pre.concept.equals(post.concept) && //
+                            if (pre.equals(post) || (pre.isReadNode() && pre.getConcept().equals(post.getConcept()) && //
                                     Objects.equals(dClare.read(() -> pre.sNode(false).getProperty(SNodeUtil.property_INamedConcept_name)), tx.current(post, DNode.NAME_OBSERVED)))) {
                                 post.setOriginal(pre.reference(false));
                                 reads = reads.remove(pre);
@@ -413,7 +408,7 @@ public class DNode extends DObject<SNode> implements SNode {
         } else {
             SNodeReference ref = NODE_REF.get(this);
             if (create && ref == null) {
-                SNode sNode = getModel().original().createNode(concept);
+                SNode sNode = getModel().original().createNode(getConcept());
                 addSNode(sNode);
                 ref = sNode.getReference();
                 NODE_REF.set(this, ref);
@@ -451,12 +446,18 @@ public class DNode extends DObject<SNode> implements SNode {
 
     @Override
     public SConcept getConcept() {
-        return concept;
+        Object last = identity[identity.length - 1];
+        return last instanceof String ? (SConcept) identity[identity.length - 2] : (SConcept) last;
+    }
+
+    public String getAnonymousType() {
+        Object last = identity[identity.length - 1];
+        return last instanceof String ? (String) last : null;
     }
 
     @Override
     public boolean isInstanceOfConcept(SAbstractConcept c) {
-        return concept.isSubConceptOf(c);
+        return getConcept().isSubConceptOf(c);
     }
 
     @Override
