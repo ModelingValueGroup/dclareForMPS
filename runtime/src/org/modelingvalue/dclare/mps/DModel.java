@@ -249,7 +249,7 @@ public class DModel extends DNonNode<SModel> implements SModel {
                 SNode child = event.getChild();
                 SNodeReference ref = new jetbrains.mps.smodel.SNodePointer(original().getReference(), child.getNodeId());
                 DNode dNode = DNode.of(child.getConcept(), ref);
-                dNode.cashed = child;
+                DNode.DETACHED.set(dNode, child);
                 if (event.isRoot()) {
                     DModel.ROOTS.set(DModel.of(event.getModel()), (l, e) -> l.remove(e), dNode);
                 } else {

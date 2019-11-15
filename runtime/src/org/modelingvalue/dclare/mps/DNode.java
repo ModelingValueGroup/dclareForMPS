@@ -217,6 +217,8 @@ public class DNode extends DObject<SNode> implements SNode {
 
     private static final Setable<DNode, SNodeReference>                            NODE_REF            = Setable.of("$NODE_REF", null);
 
+    protected static final Setable<DNode, SNode>                                   DETACHED            = Setable.of("$DETACHED", null);
+
     public static DNode of(SConcept concept, String anonymousType, Object[] identity) {
         return new DNode(concept, anonymousType, identity);
     }
@@ -249,7 +251,6 @@ public class DNode extends DObject<SNode> implements SNode {
     protected final SConcept concept;
     protected final String   anonymousType;
     protected Object[]       identity;
-    protected SNode          cashed = null;
 
     protected DNode(SConcept concept, String anonymousType, Object[] identity) {
         this.concept = concept;
@@ -427,10 +428,12 @@ public class DNode extends DObject<SNode> implements SNode {
         SNodeReference ref = reference(create);
         if (ref != null) {
             sNode = dClareMPS().read(() -> ref.resolve(null));
-            if (create && sNode == null && cashed != null) {
-                sNode = cashed;
-                addSNode(sNode);
-                cashed = null;
+            if (create && sNode == null) {
+                sNode = DETACHED.get(this);
+                if (sNode != null) {
+                    addSNode(sNode);
+                    DETACHED.set(this, null);
+                }
             }
         }
         return sNode;
