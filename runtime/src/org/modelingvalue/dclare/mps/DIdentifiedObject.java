@@ -13,32 +13,21 @@
 
 package org.modelingvalue.dclare.mps;
 
-import org.modelingvalue.collections.Set;
-import org.modelingvalue.collections.util.Triple;
-import org.modelingvalue.transactions.Constant;
+import java.util.Arrays;
 
-public class SClass {
+import org.modelingvalue.collections.util.Age;
 
-    private static final Constant<Triple<Object, String, Set<SClass>>, SClass> DCLASS = Constant.of("DCLASS", p -> new SClass(p.a(), p.b(), p.c()));
+public abstract class DIdentifiedObject extends DObject {
 
-    public static SClass of(Object id, String name, SClass... supers) {
-        return DCLASS.get(Triple.of(id, name, Set.of(supers)));
-    }
+    protected Object[] identity;
 
-    private final Object      id;
-    private final String      name;
-    private final Set<SClass> supers;
-
-    private SClass(Object id, String name, Set<SClass> supers) {
-        super();
-        this.id = id;
-        this.name = name;
-        this.supers = supers;
+    protected DIdentifiedObject(Object[] identity) {
+        this.identity = identity;
     }
 
     @Override
     public int hashCode() {
-        return id.hashCode();
+        return Arrays.deepHashCode(identity);
     }
 
     @Override
@@ -50,18 +39,25 @@ public class SClass {
         } else if (getClass() != obj.getClass()) {
             return false;
         } else {
-            SClass other = (SClass) obj;
-            return id.equals(other.id);
+            DIdentifiedObject other = (DIdentifiedObject) obj;
+            if (other.identity == identity) {
+                return true;
+            } else if (!Arrays.deepEquals(identity, other.identity)) {
+                return false;
+            } else {
+                if (Age.age(identity) > Age.age(other.identity)) {
+                    other.identity = identity;
+                } else {
+                    identity = other.identity;
+                }
+                return true;
+            }
         }
-    }
-
-    public boolean isAssignableFrom(SClass sub) {
-        return equals(sub) || sub.supers.anyMatch(s -> isAssignableFrom(s));
     }
 
     @Override
     public String toString() {
-        return name;
+        return Arrays.toString(identity);
     }
 
 }

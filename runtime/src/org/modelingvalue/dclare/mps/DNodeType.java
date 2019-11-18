@@ -14,6 +14,7 @@
 package org.modelingvalue.dclare.mps;
 
 import org.jetbrains.mps.openapi.language.SConcept;
+import org.jetbrains.mps.openapi.language.SContainmentLink;
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
@@ -64,7 +65,11 @@ public class DNodeType extends DType {
     @SuppressWarnings("rawtypes")
     @Override
     protected Collection<? extends Observer> observers() {
-        return DNode.RULES;
+        Set<Observer> rules = DNode.RULES;
+        for (SContainmentLink cl : concept.getContainmentLinks()) {
+            rules = rules.add(DNode.READ_MATCHER.get(cl));
+        }
+        return rules;
     }
 
 }

@@ -13,6 +13,7 @@
 
 package org.modelingvalue.dclare.mps;
 
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.jetbrains.mps.openapi.event.SNodeAddEvent;
@@ -52,7 +53,7 @@ import org.modelingvalue.transactions.Setable;
 
 import jetbrains.mps.extapi.model.SModelBase;
 
-public class DModel extends DNonNode<SModel> implements SModel {
+public class DModel extends DFromOriginalObject<SModel> implements SModel {
 
     private static final Constant<SModel, DModel>        DMODEL              = Constant.of("DMODEL", m -> new DModel(m));
 
@@ -94,10 +95,13 @@ public class DModel extends DNonNode<SModel> implements SModel {
                                                                                  DObserved.map(ist, soll,                                                                                             //
                                                                                          a -> sModel.addRootNode(a),                                                                                  //
                                                                                          r -> sModel.removeRootNode(r));
-                                                                             },                                                                                                                       //
-            (tx, o, b, a) -> {
-                DNode.reuse(o, () -> dClareMPS().read(() -> Collection.of(o.original().getRootNodes()).map(r -> DNode.of(r)).toSet()), b, a);
-            }, null);
+                                                                             }, null);
+
+    private static final Function<DModel, Set<DNode>>    READ_ROOTS_FUNCTION = m -> dClareMPS().read(() -> Collection.of(m.original().getRootNodes()).map(r -> DNode.of(r)).toSet());
+
+    protected static final Observer<DModel>              ROOTS_READ_MATCHER  = DObject.<DModel> observer("$ROTTS_READ_MATCHER", m -> {
+                                                                                 DNode.reuse(m, READ_ROOTS_FUNCTION, ROOTS.get(m));
+                                                                             }, Priority.preDepth);
 
     public static final Observed<DModel, Set<SLanguage>> USED_LANGUAGES      = DObserved.of("USED_LANGUAGES", Set.of(), false, false, null, false, (dModel, pre, post) -> {
                                                                                  SModelBase sModel = (SModelBase) dModel.original();
@@ -139,7 +143,7 @@ public class DModel extends DNonNode<SModel> implements SModel {
                                                                              });
 
     @SuppressWarnings("rawtypes")
-    protected static final Set<Observer>                 RULES               = DObject.RULES.addAll(Set.of(USED_LANGUAGES_RULE, USED_MODELS_RULE, REFERENCED_RULE));
+    protected static final Set<Observer>                 RULES               = DObject.RULES.add(ROOTS_READ_MATCHER).addAll(Set.of(USED_LANGUAGES_RULE, USED_MODELS_RULE, REFERENCED_RULE));
 
     private static final Action<DModel>                  READ_ROOTS          = Action.of("$READ_ROOTS", m -> {
                                                                                  MODEL_ROOT.set(m, dClareMPS().read(() -> m.original().getModelRoot()));

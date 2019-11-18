@@ -13,55 +13,38 @@
 
 package org.modelingvalue.dclare.mps;
 
-import org.modelingvalue.collections.Set;
-import org.modelingvalue.collections.util.Triple;
-import org.modelingvalue.transactions.Constant;
+public abstract class DFromOriginalObject<O> extends DObject {
 
-public class SClass {
+    private final O original;
 
-    private static final Constant<Triple<Object, String, Set<SClass>>, SClass> DCLASS = Constant.of("DCLASS", p -> new SClass(p.a(), p.b(), p.c()));
-
-    public static SClass of(Object id, String name, SClass... supers) {
-        return DCLASS.get(Triple.of(id, name, Set.of(supers)));
+    protected DFromOriginalObject(O original) {
+        this.original = original;
     }
 
-    private final Object      id;
-    private final String      name;
-    private final Set<SClass> supers;
-
-    private SClass(Object id, String name, Set<SClass> supers) {
-        super();
-        this.id = id;
-        this.name = name;
-        this.supers = supers;
+    public O original() {
+        return original;
     }
 
     @Override
     public int hashCode() {
-        return id.hashCode();
+        return original.hashCode();
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj) {
+        if (obj == this) {
             return true;
-        } else if (obj == null) {
-            return false;
-        } else if (getClass() != obj.getClass()) {
-            return false;
+        } else if (obj instanceof DFromOriginalObject) {
+            DFromOriginalObject<?> other = (DFromOriginalObject<?>) obj;
+            return original.equals(other.original);
         } else {
-            SClass other = (SClass) obj;
-            return id.equals(other.id);
+            return false;
         }
-    }
-
-    public boolean isAssignableFrom(SClass sub) {
-        return equals(sub) || sub.supers.anyMatch(s -> isAssignableFrom(s));
     }
 
     @Override
     public String toString() {
-        return name;
+        return original.toString();
     }
 
 }

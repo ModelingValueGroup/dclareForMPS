@@ -28,7 +28,7 @@ import org.modelingvalue.transactions.Priority;
 import org.modelingvalue.transactions.Setable;
 
 @SuppressWarnings("rawtypes")
-public abstract class DObject<O> implements Mutable {
+public abstract class DObject implements Mutable {
 
     public static final Setable<DObject, DType> TYPE             = NonCheckingObserved.of("TYPE", new DType("<DUMMY_TYPE>") {
                                                                      @Override
@@ -53,13 +53,13 @@ public abstract class DObject<O> implements Mutable {
 
     protected static final Set<Observer>        RULES            = Set.of(TYPE_RULE);
 
-    protected static final Action<DObject<?>>   REFRESH_CHILDREN = Action.of("$REFRESH_CHILDREN", o -> {
-                                                                     for (DObject<?> c : o.getAllChildren()) {
+    protected static final Action<DObject>      REFRESH_CHILDREN = Action.of("$REFRESH_CHILDREN", o -> {
+                                                                     for (DObject c : o.getAllChildren()) {
                                                                          DObject.REFRESH.trigger(c);
                                                                      }
                                                                  }, Direction.forward, Priority.preDepth);
 
-    protected static final Action<DObject<?>>   REFRESH          = Action.of("$REFRESH", o -> {
+    protected static final Action<DObject>      REFRESH          = Action.of("$REFRESH", o -> {
                                                                      o.read(dClareMPS());
                                                                      DObject.REFRESH_CHILDREN.trigger(o);
                                                                  }, Direction.forward, Priority.preDepth);
@@ -93,12 +93,12 @@ public abstract class DObject<O> implements Mutable {
     }
 
     @SuppressWarnings("unchecked")
-    public Collection<DObject<?>> getAllChildren() {
-        return (Collection<DObject<?>>) dChildren();
+    public Collection<DObject> getAllChildren() {
+        return (Collection<DObject>) dChildren();
     }
 
     @SuppressWarnings("unchecked")
-    public static Set<DObject<?>> getDObjectSet(Object v) {
+    public static Set<DObject> getDObjectSet(Object v) {
         if (v instanceof Collection) {
             return ((Collection) v).toSet();
         } else if (v instanceof java.util.Collection) {

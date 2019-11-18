@@ -43,7 +43,7 @@ import jetbrains.mps.extapi.model.SModelBase;
 import jetbrains.mps.extapi.module.SModuleBase;
 import jetbrains.mps.smodel.Language;
 
-public class DModule extends DNonNode<SModule> implements SModule {
+public class DModule extends DFromOriginalObject<SModule> implements SModule {
 
     private static final Constant<SModule, DModule>                     DMODULE        = Constant.of("DMODULE", m -> new DModule(m));
 

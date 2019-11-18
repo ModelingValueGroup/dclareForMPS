@@ -32,7 +32,7 @@ import org.modelingvalue.transactions.Priority;
 import org.modelingvalue.transactions.Setable;
 
 @SuppressWarnings("deprecation")
-public class DRepository extends DNonNode<SRepository> implements SRepository {
+public class DRepository extends DFromOriginalObject<SRepository> implements SRepository {
 
     private static final Constant<Set<SLanguage>, DType>     REPOSITORY_TYPE = Constant.of("REPOSITORY_TYPE", ls -> new DType(ls) {
                                                                                  @SuppressWarnings({"rawtypes", "unchecked"})
