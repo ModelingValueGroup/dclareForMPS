@@ -35,7 +35,6 @@ import org.modelingvalue.collections.util.TriConsumer;
 import org.modelingvalue.collections.util.Triple;
 import org.modelingvalue.dclare.mps.DRule.DObserver;
 import org.modelingvalue.dclare.mps.DRule.DObserverTransaction;
-import org.modelingvalue.dclare.mps.NonCheckingObserver.NonCheckingTransaction;
 import org.modelingvalue.transactions.Action;
 import org.modelingvalue.transactions.ConsistencyError;
 import org.modelingvalue.transactions.Constant;
@@ -44,6 +43,7 @@ import org.modelingvalue.transactions.ImperativeTransaction;
 import org.modelingvalue.transactions.LeafTransaction;
 import org.modelingvalue.transactions.Mutable;
 import org.modelingvalue.transactions.MutableClass;
+import org.modelingvalue.transactions.NonCheckingObserved;
 import org.modelingvalue.transactions.NonDeterministicException;
 import org.modelingvalue.transactions.Observed;
 import org.modelingvalue.transactions.Observer;
@@ -124,7 +124,6 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     private ImperativeTransaction                                                                          imperativeTransaction;
     private boolean                                                                                        running;
     protected final Concurrent<ReusableTransaction<DRule.DObserver<?>, DObserverTransaction>>              dObserverTransactions;
-    protected final Concurrent<ReusableTransaction<NonCheckingObserver<?>, NonCheckingTransaction>>        nonCheckingTransactions;
     protected Map<DMessageType, QualifiedSet<Triple<DObject, DFeature<?>, String>, DMessage>>              messages             = MESSAGE_QSET_MAP;
     protected final DclareForMPSEngine                                                                     engine;
     private final DRepository                                                                              dRepository;
@@ -200,7 +199,6 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
 
         };
         this.dObserverTransactions = Concurrent.of(() -> new ReusableTransaction<>(universeTransaction));
-        this.nonCheckingTransactions = Concurrent.of(() -> new ReusableTransaction<>(universeTransaction));
         waitForEndThread = new Thread(() -> {
             State result = universeTransaction.emptyState();
             try {

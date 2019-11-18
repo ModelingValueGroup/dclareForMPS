@@ -23,6 +23,8 @@ import org.modelingvalue.collections.Set;
 import org.modelingvalue.transactions.Action;
 import org.modelingvalue.transactions.Direction;
 import org.modelingvalue.transactions.Mutable;
+import org.modelingvalue.transactions.NonCheckingObserved;
+import org.modelingvalue.transactions.NonCheckingObserver;
 import org.modelingvalue.transactions.Observer;
 import org.modelingvalue.transactions.Priority;
 import org.modelingvalue.transactions.Setable;

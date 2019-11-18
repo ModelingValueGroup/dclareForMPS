@@ -34,6 +34,7 @@ import org.modelingvalue.transactions.Action;
 import org.modelingvalue.transactions.Constant;
 import org.modelingvalue.transactions.Direction;
 import org.modelingvalue.transactions.Mutable;
+import org.modelingvalue.transactions.NonCheckingObserved;
 import org.modelingvalue.transactions.Observed;
 import org.modelingvalue.transactions.Observer;
 import org.modelingvalue.transactions.Priority;
