@@ -178,4 +178,8 @@ public abstract class DObject implements Mutable {
         return Mutable.D_PARENT_CONTAINING.get(this) == null || CONTAINING_ATTRIBUTE.get(this) != null;
     }
 
+    protected boolean isExternal() {
+        return isReadOnly() || !dClareMPS().getRepository().original().equals(getOriginalRepository());
+    }
+
 }

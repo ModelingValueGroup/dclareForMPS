@@ -269,14 +269,14 @@ public class DNode extends DIdentifiedObject implements SNode {
     }
 
     protected SModel getOriginalModel() {
-        return isReadNode() ? ((SNodeReference) identity[0]).getModelReference().resolve(dClareMPS().getRepository()) : null;
+        return isReadNode() ? ((SNodeReference) identity[0]).getModelReference().resolve(null) : null;
     }
 
     @Override
     protected SRepository getOriginalRepository() {
         SModel m = getOriginalModel();
         SModule md = m != null ? m.getModule() : null;
-        return md != null ? md.getRepository() : null;
+        return md != null ? md.getRepository() : dClareMPS().getRepository().original();
     }
 
     @Override

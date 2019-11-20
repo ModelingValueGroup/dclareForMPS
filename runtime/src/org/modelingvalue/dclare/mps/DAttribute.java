@@ -23,6 +23,8 @@ import org.jetbrains.mps.openapi.model.SNode;
 import org.modelingvalue.collections.util.Triple;
 import org.modelingvalue.transactions.Constant;
 import org.modelingvalue.transactions.Getable;
+import org.modelingvalue.transactions.Mutable;
+import org.modelingvalue.transactions.State;
 
 @SuppressWarnings("rawtypes")
 public interface DAttribute<O, T> extends DFeature<O> {
@@ -295,5 +297,11 @@ public interface DAttribute<O, T> extends DFeature<O> {
         public SNode getSource() {
             return source != null ? source.get() : null;
         }
+
+        @Override
+        protected boolean isOrphan(State state, Mutable m) {
+            return m instanceof DObject && super.isOrphan(state, m) && !((DObject) m).isExternal();
+        }
+
     }
 }

@@ -135,7 +135,7 @@ public class DModel extends DFromOriginalObject<SModel> implements SModel {
     private static final Observer<DModel>                USED_MODELS_RULE    = DObject.<DModel> observer(USED_MODELS, o -> {
                                                                                  DClareMPS dClareMPS = dClareMPS();
                                                                                  Set<DModel> ls = dClareMPS.read(() -> Collection.of(((SModelBase) o.original()).getModelImports()).                  //
-                                                                                 map(r -> r.resolve(dClareMPS.getRepository().original())).notNull().map(r -> DModel.of(r)).toSet());
+                                                                                 map(r -> r.resolve(null)).notNull().map(r -> DModel.of(r)).toSet());
                                                                                  USED_MODELS.set(o, ls.addAll(ROOTS.get(o).flatMap(r -> DNode.USED_MODELS.get(r))).remove(o));
                                                                              }, Priority.preDepth);
 

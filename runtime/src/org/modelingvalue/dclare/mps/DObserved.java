@@ -170,16 +170,7 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
 
     @Override
     protected boolean isOrphan(State state, Mutable m) {
-        if (super.isOrphan(state, m)) {
-            if (m instanceof DObject) {
-                DObject o = (DObject) m;
-                if (o.isReadOnly() || !DObject.dClareMPS().getRepository().original().equals(o.getOriginalRepository())) {
-                    return false;
-                }
-            }
-            return true;
-        }
-        return false;
+        return m instanceof DObject && super.isOrphan(state, m) && !((DObject) m).isExternal();
     }
 
     @Override
@@ -188,9 +179,9 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
     }
 
     @Override
-    public void checkConsistency(State state, O object, T pre, T post) {
+    public void checkConsistency(State state, O object, T post) {
         if (super.checkConsistency()) {
-            super.checkConsistency(state, object, pre, post);
+            super.checkConsistency(state, object, post);
         }
         if (mandatory && post == null) {
             throw new EmptyMandatoryException(object, this);

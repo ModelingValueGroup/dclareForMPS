@@ -65,7 +65,7 @@ public class DClassObject extends DIdentifiedObject implements SClassObject {
 
     @Override
     protected SRepository getOriginalRepository() {
-        return null;
+        return dClareMPS().getRepository().original();
     }
 
     @Override
