@@ -65,7 +65,7 @@ public class DNode extends DIdentifiedObject implements SNode {
                                                                                                               return DObserved.<DNode, List<DNode>> of(mc, List.of(), !mc.isOptional(), true, null, false,                                     //
                                                                                                                       (dNode, pre, post) -> {
                                                                                                                           SNode sNode = dNode.sNode(true);
-                                                                                                                          List<SNode> soll = post.map(c -> c.sNode(true)).toList();
+                                                                                                                          List<SNode> soll = post.map(c -> c.reParent(sNode, mc, c.sNode(true))).toList();
                                                                                                                           List<SNode> ist = DNode.children(sNode, mc);
                                                                                                                           DObserved.map(ist, soll,                                                                                             //
                                                                                                                                   (n, a) -> {
@@ -82,7 +82,7 @@ public class DNode extends DIdentifiedObject implements SNode {
                                                                                                               return DObserved.<DNode, DNode> of(sc, null, !sc.isOptional(), true, null, false,                                                //
                                                                                                                       (dNode, pre, post) -> {
                                                                                                                           SNode sNode = dNode.sNode(true);
-                                                                                                                          SNode soll = post != null ? post.sNode(true) : null;
+                                                                                                                          SNode soll = post != null ? post.reParent(sNode, sc, post.sNode(true)) : null;
                                                                                                                           SNode ist = children(sNode, sc).first();
                                                                                                                           if (ist != null && !ist.equals(soll)) {
                                                                                                                               sNode.removeChild(ist);
@@ -414,6 +414,21 @@ public class DNode extends DIdentifiedObject implements SNode {
             SNode sParent = ((DNode) parent).sNode(true);
             sParent.addChild(getContainmentLink(), sNode);
         }
+    }
+
+    protected SNode reParent(Object sParent, SContainmentLink container, SNode sNode) {
+        Object istParent = sNode.getParent();
+        if (istParent == null) {
+            istParent = sNode.getModel();
+        }
+        if (istParent != null && (istParent != sParent || container != sNode.getContainmentLink())) {
+            if (istParent instanceof SModel) {
+                ((SModel) istParent).removeRootNode(sNode);
+            } else {
+                ((SNode) istParent).removeChild(sNode);
+            }
+        }
+        return sNode;
     }
 
     @Override

@@ -91,7 +91,7 @@ public class DModel extends DFromOriginalObject<SModel> implements SModel {
 
     public static final Observed<DModel, Set<DNode>>     ROOTS               = DObserved.of("ROOTS", Set.of(), false, true, null, false, (dModel, pre, post) -> {
                                                                                  SModel sModel = dModel.original();
-                                                                                 Set<SNode> soll = post.map(r -> r.sNode(true)).toSet();
+                                                                                 Set<SNode> soll = post.map(r -> r.reParent(sModel, null, r.sNode(true))).toSet();
                                                                                  Set<SNode> ist = DModel.roots(sModel);
                                                                                  DObserved.map(ist, soll,                                                                                             //
                                                                                          a -> sModel.addRootNode(a),                                                                                  //
