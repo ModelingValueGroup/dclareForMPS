@@ -87,4 +87,9 @@ public class DClassObject extends DIdentifiedObject implements SClassObject {
     protected void read(DClareMPS dClareMPS) {
     }
 
+    @Override
+    public boolean isDclareOnly() {
+        return true;
+    }
+
 }

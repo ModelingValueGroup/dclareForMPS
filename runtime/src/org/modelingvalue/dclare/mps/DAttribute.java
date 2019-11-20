@@ -136,6 +136,11 @@ public interface DAttribute<O, T> extends DFeature<O> {
             return mandatory;
         }
 
+        @Override
+        public boolean isDclareOnly() {
+            return true;
+        }
+
     }
 
     final static class DIdentifyingAttribute<C extends DObject, V> implements DAttribute<C, V> {

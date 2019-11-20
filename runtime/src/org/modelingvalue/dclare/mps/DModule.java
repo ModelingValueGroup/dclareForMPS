@@ -80,8 +80,7 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
 
     public static final Observed<DModule, Set<DModel>>                  REFERENCED     = NonCheckingObserved.of("REFERENCED", Set.of());
 
-    public static final Observed<DModule, Set<DModel>>                  MODELS         = DObserved.of("MODELS", Set.of(), false, true, null, false, (o, pre, post) -> {
-                                                                                       }, null);
+    public static final Observed<DModule, Set<DModel>>                  MODELS         = DObserved.of("MODELS", Set.of(), false, true, null, false, null, null);
 
     public static final Observed<DModule, Set<SLanguage>>               LANGUAGES      = NonCheckingObserved.of("LANGUAGES", Set.of(), (tx, o, b, a) -> {
                                                                                            Setable.<Set<SLanguage>, SLanguage> diff(b, a,                                                                            //

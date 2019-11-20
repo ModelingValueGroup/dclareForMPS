@@ -58,9 +58,7 @@ public class DNode extends DIdentifiedObject implements SNode {
 
     public static final Observed<DNode, DModel>                                    MODEL                  = NonCheckingObserved.of("$MODEL", null);
 
-    public static final Observed<DNode, Map<Object, Object>>                       USER_OBJECTS           = DObserved.of("USER_OBJECTS", Map.of(), false, false, null, false, (dNode, pre, post) -> {
-                                                                                                              //    DObserved.map(pre, post, (k, v) -> dNode.putUserObject(k, v));
-                                                                                                          }, null);
+    public static final Observed<DNode, Map<Object, Object>>                       USER_OBJECTS           = DObserved.of("USER_OBJECTS", Map.of(), false, false, null, false, null, null);
 
     @SuppressWarnings("deprecation")
     public static final Constant<SContainmentLink, DObserved<DNode, List<DNode>>>  MANY_CONTAINMENT       = Constant.of("MANY_CONTAINMENT", mc -> {
@@ -121,8 +119,7 @@ public class DNode extends DIdentifiedObject implements SNode {
     @SuppressWarnings("deprecation")
     public static final Constant<SReferenceLink, Observed<DNode, Set<DNode>>>      OPPOSITE               = Constant.of("OPPOSITE", sr -> {
                                                                                                               return DObserved.<DNode, Set<DNode>> of(Pair.of(sr, "OPPOSITE"), Set.of(), false, false, () -> DNode.REFERENCE.get(sr), false,   //
-                                                                                                                      (dNode, pre, post) -> {
-                                                                                                                      }, () -> sr.getDeclarationNode());
+                                                                                                                      null, () -> sr.getDeclarationNode());
                                                                                                           });
     @SuppressWarnings("deprecation")
     public static final Constant<SProperty, DObserved<DNode, String>>              PROPERTY               = Constant.of("PROPERTY", sp -> {

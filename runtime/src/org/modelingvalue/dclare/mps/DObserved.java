@@ -197,4 +197,8 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
         }
     }
 
+    public boolean isDclareOnly() {
+        return toMPS == null;
+    }
+
 }
