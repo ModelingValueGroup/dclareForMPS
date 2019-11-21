@@ -239,6 +239,9 @@ public class DNode extends DIdentifiedObject implements SNode {
 
     public static DNode of(SConcept concept, SNodeReference ref) {
         DNode dNode = D_NODE.force(ref);
+        if (dNode != null && !ref.equals(NODE_REF.get(dNode))) {
+            dNode.setOriginal(ref);
+        }
         return dNode != null ? dNode : readNode(concept, ref);
     }
 
@@ -351,7 +354,10 @@ public class DNode extends DIdentifiedObject implements SNode {
                     }
                     for (DNode pre : pres) {
                         if (pre.equals(post) || (pre.isReadNode() && pre.getConcept().equals(post.getConcept()) && post.matches(dClare, pre))) {
-                            post.setOriginal(pre.reference(false));
+                            SNodeReference ref = pre.reference(false);
+                            if (ref != null) {
+                                post.setOriginal(ref);
+                            }
                             pres = pres.remove(pre);
                             break;
                         }
