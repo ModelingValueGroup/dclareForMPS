@@ -240,7 +240,7 @@ public class DNode extends DIdentifiedObject implements SNode {
     public static DNode of(SConcept concept, SNodeReference ref) {
         DNode dNode = D_NODE.force(ref);
         if (dNode != null && !ref.equals(NODE_REF.get(dNode))) {
-            dNode.setOriginal(ref);
+            NODE_REF.set(dNode, ref);
         }
         return dNode != null ? dNode : readNode(concept, ref);
     }

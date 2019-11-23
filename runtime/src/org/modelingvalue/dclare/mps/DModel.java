@@ -100,7 +100,7 @@ public class DModel extends DFromOriginalObject<SModel> implements SModel {
 
     private static final Function<DModel, Set<DNode>>    READ_ROOTS_FUNCTION = m -> dClareMPS().read(() -> Collection.of(m.original().getRootNodes()).map(r -> DNode.of(r)).toSet());
 
-    protected static final Observer<DModel>              ROOTS_READ_MATCHER  = DObject.<DModel> observer("$ROTTS_READ_MATCHER", m -> {
+    protected static final Observer<DModel>              ROOTS_READ_MATCHER  = DObject.<DModel> observer("$ROOTS_READ_MATCHER", m -> {
                                                                                  DNode.reuse(m, READ_ROOTS_FUNCTION, ROOTS.get(m));
                                                                              }, Priority.preDepth);
 

@@ -133,6 +133,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
         this.engine = engine;
         this.startStopHandler = startStopHandler;
         this.dRepository = new DRepository(project.getRepository());
+        project.getModelAccess().executeCommandInEDT(() -> startStopHandler.on(project));
         if (TRACE) {
             System.err.println(DCLARE + "START " + this);
         }
@@ -239,26 +240,28 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
 
     @SuppressWarnings("rawtypes")
     protected void addMessage(Throwable throwable) {
-        universeTransaction().currentState().run(() -> {
-            DObject object = getRepository();
-            DFeature feature = DRepository.EXCEPTIONS;
-            Throwable t = throwable;
-            while (t instanceof TransactionException) {
-                if (((TransactionException) t).getTransactionClass() instanceof DObserver) {
-                    feature = ((DObserver) ((TransactionException) t).getTransactionClass()).rule();
+        if (!universeTransaction.isKilled()) {
+            universeTransaction().currentState().run(() -> {
+                DObject object = getRepository();
+                DFeature feature = DRepository.EXCEPTIONS;
+                Throwable t = throwable;
+                while (t instanceof TransactionException) {
+                    if (((TransactionException) t).getTransactionClass() instanceof DObserver) {
+                        feature = ((DObserver) ((TransactionException) t).getTransactionClass()).rule();
+                    }
+                    if (((TransactionException) t).getTransactionClass() instanceof DObject) {
+                        object = (DObject) ((TransactionException) t).getTransactionClass();
+                    }
+                    t = t.getCause();
                 }
-                if (((TransactionException) t).getTransactionClass() instanceof DObject) {
-                    object = (DObject) ((TransactionException) t).getTransactionClass();
+                if (t instanceof ConsistencyError) {
+                    addMessage((ConsistencyError) t);
+                } else {
+                    addThrowableMessage(object, feature, t);
                 }
-                t = t.getCause();
-            }
-            if (t instanceof ConsistencyError) {
-                addMessage((ConsistencyError) t);
-            } else {
-                addThrowableMessage(object, feature, t);
-            }
-        });
-        engine.stopEngine();
+            });
+            engine.stopEngine();
+        }
     }
 
     @SuppressWarnings("rawtypes")
@@ -487,7 +490,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     public void accept(State pre, State post, Boolean last) {
-        if (imperativeTransaction != null) {
+        if (imperativeTransaction != null && !universeTransaction.isKilled()) {
             if (TRACE) {
                 System.err.println(DCLARE + "    START COMMIT " + this);
             }
