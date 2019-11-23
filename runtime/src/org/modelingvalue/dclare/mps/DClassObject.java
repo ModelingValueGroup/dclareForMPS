@@ -13,6 +13,8 @@
 
 package org.modelingvalue.dclare.mps;
 
+import java.util.Arrays;
+
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.jetbrains.mps.openapi.module.SRepository;
 import org.modelingvalue.collections.Collection;
@@ -20,39 +22,40 @@ import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.transactions.Constant;
 
-public class DClassObject extends DNonNode<SClassObject> implements SClassObject {
-
-    private static final Constant<SClassObject, DClassObject>          DCLASS_OBJECT     = Constant.of("DCLASS_OBJECT", c -> new DClassObject(c));
+public class DClassObject extends DIdentifiedObject implements SClassObject {
 
     private static final Constant<Pair<Set<SLanguage>, SClass>, DType> CLASS_OBJECT_TYPE = Constant.of("CLASS_OBJECT_TYPE", p -> new DType(p) {
-                                                                                             @SuppressWarnings({"rawtypes", "unchecked"})
-                                                                                             @Override
-                                                                                             public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
-                                                                                                 return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getClassRules(p.b()))).toSet();
-                                                                                             }
+        @SuppressWarnings({"rawtypes", "unchecked"})
+        @Override
+        public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
+            return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getClassRules(p.b()))).toSet();
+        }
 
-                                                                                             @SuppressWarnings({"rawtypes", "unchecked"})
-                                                                                             @Override
-                                                                                             public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
-                                                                                                 return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getClassAttributes(p.b()))).toSet();
-                                                                                             }
+        @SuppressWarnings({"rawtypes", "unchecked"})
+        @Override
+        public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
+            return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getClassAttributes(p.b()))).toSet();
+        }
 
-                                                                                             @Override
-                                                                                             public Set<SLanguage> getLanguages() {
-                                                                                                 return p.a();
-                                                                                             }
-                                                                                         });
+        @Override
+        public Set<SLanguage> getLanguages() {
+            return p.a();
+        }
+    });
 
-    public static DClassObject of(SClassObject original) {
-        return original instanceof DClassObject ? (DClassObject) original : DCLASS_OBJECT.get(original);
+    public static DClassObject of(SClass cls, Object[] identity) {
+        identity = Arrays.copyOf(identity, identity.length + 1);
+        identity[identity.length - 1] = cls;
+        return new DClassObject(identity);
     }
 
-    public static DClassObject wrap(SClassObject original) {
-        return of(original);
+    private DClassObject(Object[] identity) {
+        super(identity);
     }
 
-    protected DClassObject(SClassObject original) {
-        super(original);
+    @Override
+    public String toString() {
+        return getSClass() + super.toString();
     }
 
     @Override
@@ -62,26 +65,31 @@ public class DClassObject extends DNonNode<SClassObject> implements SClassObject
 
     @Override
     protected SRepository getOriginalRepository() {
-        return null;
+        return dClareMPS().getRepository().original();
     }
 
     @Override
     protected DType getType() {
-        return CLASS_OBJECT_TYPE.get(Pair.of(TYPE.get(dObjectParent()).getLanguages(), original().getSClass()));
+        return CLASS_OBJECT_TYPE.get(Pair.of(TYPE.get(dObjectParent()).getLanguages(), getSClass()));
     }
 
     @Override
     public SClass getSClass() {
-        return original().getSClass();
+        return (SClass) identity[identity.length - 1];
     }
 
     @Override
     public Object[] getIdentity() {
-        return original().getIdentity();
+        return identity;
     }
 
     @Override
     protected void read(DClareMPS dClareMPS) {
+    }
+
+    @Override
+    public boolean isDclareOnly() {
+        return true;
     }
 
 }

@@ -13,7 +13,6 @@
 
 package org.modelingvalue.dclare.mps;
 
-import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -23,6 +22,8 @@ import org.jetbrains.mps.openapi.model.SNode;
 import org.modelingvalue.collections.util.Triple;
 import org.modelingvalue.transactions.Constant;
 import org.modelingvalue.transactions.Getable;
+import org.modelingvalue.transactions.Mutable;
+import org.modelingvalue.transactions.State;
 
 @SuppressWarnings("rawtypes")
 public interface DAttribute<O, T> extends DFeature<O> {
@@ -31,8 +32,8 @@ public interface DAttribute<O, T> extends DFeature<O> {
 
         private static final long serialVersionUID = -403866123495976516L;
 
-        public static <X, Y> Key<X, Y> of(Object id, String name, boolean synthetic, boolean optional, boolean composite, int identifyingNr, Y def, Supplier<SNode> source, Function<X, Y> function) {
-            return new Key<X, Y>(id, name, synthetic, optional, composite, identifyingNr, def, source, function);
+        public static <X, Y> Key<X, Y> of(Object id, String name, boolean synthetic, boolean optional, boolean composite, int identifyingNr, Y def, Class<?> cls, Supplier<SNode> source, Function<X, Y> function) {
+            return new Key<X, Y>(id, name, synthetic, optional, composite, identifyingNr, def, cls, source, function);
         }
 
         private final Function<C, V>  function;
@@ -41,8 +42,9 @@ public interface DAttribute<O, T> extends DFeature<O> {
         private final boolean         composite;
         private final Supplier<SNode> source;
         private final V               def;
+        private final Class<?>        cls;
 
-        private Key(Object id, String name, boolean synthetic, boolean optional, boolean composite, int identifyingNr, V def, Supplier<SNode> source, Function<C, V> function) {
+        private Key(Object id, String name, boolean synthetic, boolean optional, boolean composite, int identifyingNr, V def, Class<?> cls, Supplier<SNode> source, Function<C, V> function) {
             super(id, name, identifyingNr);
             this.function = function;
             this.optional = optional;
@@ -50,6 +52,7 @@ public interface DAttribute<O, T> extends DFeature<O> {
             this.composite = composite;
             this.source = source;
             this.def = def;
+            this.cls = cls;
         }
 
         private Object id() {
@@ -63,18 +66,17 @@ public interface DAttribute<O, T> extends DFeature<O> {
         private int identifyingNr() {
             return c();
         }
-
     }
 
     @SuppressWarnings("unchecked")
     static final Getable<Key, DAttribute> ATTRIBUTE = Constant.of("ATTRIBUTE", key -> {
-        return key.identifyingNr() >= 0 ? new DIdentifyingAttribute(key.id(), key.name(), key.synthetic, key.composite, key.identifyingNr(), key.source) : key.function != null ? //
-        new DConstant(key.id(), key.name(), key.synthetic, key.composite, key.source, key.function) : new DObservedAttribute(key.id(), key.name(), key.synthetic, key.optional, key.composite, key.def, key.source);
+        return key.identifyingNr() >= 0 ? new DIdentifyingAttribute(key.id(), key.name(), key.synthetic, key.composite, key.identifyingNr(), key.cls, key.source) : key.function != null ? //
+        new DConstant(key.id(), key.name(), key.synthetic, key.composite, key.cls, key.source, key.function) : new DObservedAttribute(key.id(), key.name(), key.synthetic, key.optional, key.composite, key.def, key.cls, key.source);
     });
 
     @SuppressWarnings("unchecked")
-    public static <C, V> DAttribute<C, V> of(Object id, String name, boolean synthetic, boolean optional, boolean composite, int identifyingNr, V def, Supplier<SNode> source, Function<C, V> deriver) {
-        return ATTRIBUTE.get(Key.of(id, name, synthetic, optional, composite, identifyingNr, def, source, deriver));
+    public static <C, V> DAttribute<C, V> of(Object id, String name, boolean synthetic, boolean optional, boolean composite, int identifyingNr, V def, Class<?> cls, Supplier<SNode> source, Function<C, V> deriver) {
+        return ATTRIBUTE.get(Key.of(id, name, synthetic, optional, composite, identifyingNr, def, cls, source, deriver));
     }
 
     T pre(O object);
@@ -104,16 +106,18 @@ public interface DAttribute<O, T> extends DFeature<O> {
 
     boolean isMandatory();
 
+    Class<?> cls();
+
     final static class DObservedAttribute<C extends DObject, V> extends DObserved<C, V> implements DAttribute<C, V> {
 
-        Method               m;
+        private final String   name;
+        private final Class<?> cls;
 
-        private final String name;
-
-        public DObservedAttribute(Object id, String name, boolean synthetic, boolean optional, boolean composite, V def, Supplier<SNode> source) {
+        public DObservedAttribute(Object id, String name, boolean synthetic, boolean optional, boolean composite, V def, Class<?> cls, Supplier<SNode> source) {
             super(id, def, !optional, composite, null, synthetic, (o, b, a) -> {
             }, null, source);
             this.name = name;
+            this.cls = cls;
         }
 
         @Override
@@ -136,6 +140,16 @@ public interface DAttribute<O, T> extends DFeature<O> {
             return mandatory;
         }
 
+        @Override
+        public boolean isDclareOnly() {
+            return true;
+        }
+
+        @Override
+        public Class<?> cls() {
+            return cls;
+        }
+
     }
 
     final static class DIdentifyingAttribute<C extends DObject, V> implements DAttribute<C, V> {
@@ -145,14 +159,16 @@ public interface DAttribute<O, T> extends DFeature<O> {
         private final int             index;
         private final boolean         synthetic;
         private final Supplier<SNode> source;
+        private final Class<?>        cls;
 
-        public DIdentifyingAttribute(Object id, String name, boolean synthetic, boolean composite, int index, Supplier<SNode> source) {
+        public DIdentifyingAttribute(Object id, String name, boolean synthetic, boolean composite, int index, Class<?> cls, Supplier<SNode> source) {
             this.id = id;
             this.name = name;
             this.composite = composite;
             this.index = index;
             this.synthetic = synthetic;
             this.source = source;
+            this.cls = cls;
         }
 
         @Override
@@ -231,6 +247,12 @@ public interface DAttribute<O, T> extends DFeature<O> {
         public SNode getSource() {
             return source != null ? source.get() : null;
         }
+
+        @Override
+        public Class<?> cls() {
+            return cls;
+        }
+
     }
 
     static class DConstant<C extends DObject, V> extends Constant<C, V> implements DAttribute<C, V> {
@@ -238,12 +260,14 @@ public interface DAttribute<O, T> extends DFeature<O> {
         private final String          name;
         private final boolean         synthetic;
         private final Supplier<SNode> source;
+        private final Class<?>        cls;
 
-        public DConstant(Object id, String name, boolean synthetic, boolean composite, Supplier<SNode> source, Function<C, V> deriver) {
+        public DConstant(Object id, String name, boolean synthetic, boolean composite, Class<?> cls, Supplier<SNode> source, Function<C, V> deriver) {
             super(id, null, composite, null, null, deriver, null, true);
             this.name = name;
             this.synthetic = synthetic;
             this.source = source;
+            this.cls = cls;
         }
 
         @Override
@@ -290,5 +314,16 @@ public interface DAttribute<O, T> extends DFeature<O> {
         public SNode getSource() {
             return source != null ? source.get() : null;
         }
+
+        @Override
+        protected boolean isOrphan(State state, Mutable m) {
+            return m instanceof DObject && super.isOrphan(state, m) && !((DObject) m).isExternal();
+        }
+
+        @Override
+        public Class<?> cls() {
+            return cls;
+        }
+
     }
 }

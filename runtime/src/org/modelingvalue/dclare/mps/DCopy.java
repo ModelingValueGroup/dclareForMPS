@@ -13,6 +13,8 @@
 
 package org.modelingvalue.dclare.mps;
 
+import java.util.Objects;
+
 import org.jetbrains.mps.openapi.language.SConcept;
 import org.jetbrains.mps.openapi.language.SContainmentLink;
 import org.jetbrains.mps.openapi.language.SLanguage;
@@ -67,6 +69,7 @@ public class DCopy extends DNode {
                                                                                              });
 
     public static DCopy of(DNode copied, Object ctx, Object id) {
+        Objects.requireNonNull(copied);
         return new DCopy(new Object[]{ctx, id, copied});
     }
 

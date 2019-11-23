@@ -13,34 +13,51 @@
 
 package org.modelingvalue.dclare.mps;
 
-import java.util.function.Supplier;
+import java.util.Arrays;
 
-import org.modelingvalue.collections.DefaultMap;
-import org.modelingvalue.collections.Set;
-import org.modelingvalue.collections.util.QuadConsumer;
-import org.modelingvalue.transactions.LeafTransaction;
-import org.modelingvalue.transactions.Mutable;
-import org.modelingvalue.transactions.Observed;
-import org.modelingvalue.transactions.Observer;
-import org.modelingvalue.transactions.Setable;
+import org.modelingvalue.collections.util.Age;
 
-public class NonCheckingObserved<O, T> extends Observed<O, T> {
+public abstract class DIdentifiedObject extends DObject {
 
-    public static <C, V> Observed<C, V> of(Object id, V def) {
-        return new NonCheckingObserved<C, V>(id, def, false, null, null, null, true);
+    protected Object[] identity;
+
+    protected DIdentifiedObject(Object[] identity) {
+        this.identity = identity;
     }
 
-    public static <C, V> Observed<C, V> of(Object id, V def, QuadConsumer<LeafTransaction, C, V, V> changed) {
-        return new NonCheckingObserved<C, V>(id, def, false, null, null, changed, true);
-    }
-
-    protected NonCheckingObserved(Object id, T def, boolean containment, Supplier<Setable<?, ?>> opposite, Supplier<Setable<O, Set<?>>> scope, QuadConsumer<LeafTransaction, O, T, T> changed, boolean checkConsistency) {
-        super(id, def, containment, opposite, scope, changed, checkConsistency);
-    }
-
-    @SuppressWarnings("rawtypes")
     @Override
-    protected void checkTooManyObservers(LeafTransaction tx, Object object, DefaultMap<Observer, Set<Mutable>> observers) {
+    public int hashCode() {
+        return Arrays.deepHashCode(identity);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        } else if (obj == null) {
+            return false;
+        } else if (getClass() != obj.getClass()) {
+            return false;
+        } else {
+            DIdentifiedObject other = (DIdentifiedObject) obj;
+            if (other.identity == identity) {
+                return true;
+            } else if (!Arrays.deepEquals(identity, other.identity)) {
+                return false;
+            } else {
+                if (Age.age(identity) > Age.age(other.identity)) {
+                    other.identity = identity;
+                } else {
+                    identity = other.identity;
+                }
+                return true;
+            }
+        }
+    }
+
+    @Override
+    public String toString() {
+        return Arrays.toString(identity);
     }
 
 }
