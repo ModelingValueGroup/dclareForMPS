@@ -14,15 +14,11 @@
 package org.modelingvalue.dclare.mps;
 
 import org.modelingvalue.collections.Set;
-import org.modelingvalue.collections.util.Triple;
-import org.modelingvalue.transactions.Constant;
 
 public class SClass {
 
-    private static final Constant<Triple<Object, String, Set<SClass>>, SClass> DCLASS = Constant.of("DCLASS", p -> new SClass(p.a(), p.b(), p.c()));
-
     public static SClass of(Object id, String name, SClass... supers) {
-        return DCLASS.get(Triple.of(id, name, Set.of(supers)));
+        return new SClass(id, name, Set.of(supers));
     }
 
     private final Object      id;

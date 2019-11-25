@@ -19,64 +19,17 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import org.jetbrains.mps.openapi.model.SNode;
-import org.modelingvalue.collections.util.Triple;
 import org.modelingvalue.transactions.Constant;
-import org.modelingvalue.transactions.Getable;
 import org.modelingvalue.transactions.Mutable;
 import org.modelingvalue.transactions.State;
 
 @SuppressWarnings("rawtypes")
 public interface DAttribute<O, T> extends DFeature<O> {
 
-    static class Key<C, V> extends Triple<Object, String, Integer> {
-
-        private static final long serialVersionUID = -403866123495976516L;
-
-        public static <X, Y> Key<X, Y> of(Object id, String name, boolean synthetic, boolean optional, boolean composite, int identifyingNr, Y def, Class<?> cls, Supplier<SNode> source, Function<X, Y> function) {
-            return new Key<X, Y>(id, name, synthetic, optional, composite, identifyingNr, def, cls, source, function);
-        }
-
-        private final Function<C, V>  function;
-        private final boolean         optional;
-        private final boolean         synthetic;
-        private final boolean         composite;
-        private final Supplier<SNode> source;
-        private final V               def;
-        private final Class<?>        cls;
-
-        private Key(Object id, String name, boolean synthetic, boolean optional, boolean composite, int identifyingNr, V def, Class<?> cls, Supplier<SNode> source, Function<C, V> function) {
-            super(id, name, identifyingNr);
-            this.function = function;
-            this.optional = optional;
-            this.synthetic = synthetic;
-            this.composite = composite;
-            this.source = source;
-            this.def = def;
-            this.cls = cls;
-        }
-
-        private Object id() {
-            return a();
-        }
-
-        private String name() {
-            return b();
-        }
-
-        private int identifyingNr() {
-            return c();
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    static final Getable<Key, DAttribute> ATTRIBUTE = Constant.of("ATTRIBUTE", key -> {
-        return key.identifyingNr() >= 0 ? new DIdentifyingAttribute(key.id(), key.name(), key.synthetic, key.composite, key.identifyingNr(), key.cls, key.source) : key.function != null ? //
-        new DConstant(key.id(), key.name(), key.synthetic, key.composite, key.cls, key.source, key.function) : new DObservedAttribute(key.id(), key.name(), key.synthetic, key.optional, key.composite, key.def, key.cls, key.source);
-    });
-
     @SuppressWarnings("unchecked")
     public static <C, V> DAttribute<C, V> of(Object id, String name, boolean synthetic, boolean optional, boolean composite, int identifyingNr, V def, Class<?> cls, Supplier<SNode> source, Function<C, V> deriver) {
-        return ATTRIBUTE.get(Key.of(id, name, synthetic, optional, composite, identifyingNr, def, cls, source, deriver));
+        return identifyingNr >= 0 ? new DIdentifyingAttribute(id, name, synthetic, composite, identifyingNr, cls, source) : deriver != null ? //
+                new DConstant(id, name, synthetic, composite, cls, source, deriver) : new DObservedAttribute(id, name, synthetic, optional, composite, def, cls, source);
     }
 
     T pre(O object);
