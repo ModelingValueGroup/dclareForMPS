@@ -98,7 +98,7 @@ public class DModel extends DFromOriginalObject<SModel> implements SModel {
                                                                                          r -> sModel.removeRootNode(r));
                                                                              }, null);
 
-    private static final Function<DModel, Set<DNode>>    READ_ROOTS_FUNCTION = m -> dClareMPS().read(() -> Collection.of(m.original().getRootNodes()).map(r -> DNode.of(r)).toSet());
+    private static final Function<DModel, Set<SNode>>    READ_ROOTS_FUNCTION = m -> dClareMPS().read(() -> Collection.of(m.original().getRootNodes()).toSet());
 
     protected static final Observer<DModel>              ROOTS_READ_MATCHER  = DObject.<DModel> observer("$ROOTS_READ_MATCHER", m -> {
                                                                                  DNode.reuse(m, READ_ROOTS_FUNCTION, ROOTS.get(m));

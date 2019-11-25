@@ -93,8 +93,8 @@ public class DNode extends DIdentifiedObject implements SNode {
                                                                                                                       }, () -> sc.getDeclarationNode());
                                                                                                           });
 
-    private static final Constant<SContainmentLink, Function<DNode, List<DNode>>>  READ_CHILDREN_FUNCTION = Constant.of("READ_CHILDREN_FUNCTION",                                                                                              //
-            cl -> n -> dClareMPS().read(() -> Collection.of(n.sNode(false).getChildren(cl)).map(c -> DNode.of(c)).toList()));
+    private static final Constant<SContainmentLink, Function<DNode, List<SNode>>>  READ_CHILDREN_FUNCTION = Constant.of("READ_CHILDREN_FUNCTION",                                                                                              //
+            cl -> n -> dClareMPS().read(() -> Collection.of(n.sNode(false).getChildren(cl)).map(c -> (SNode) c).toList()));
 
     protected static final Constant<SContainmentLink, Observer<DNode>>             READ_MATCHER           = Constant.of("READ_MATCHER", cl -> DObject.<DNode> observer(Pair.of("MATCHER", cl), n -> {
                                                                                                               DNode.reuse(n, READ_CHILDREN_FUNCTION.get(cl), cl.isMultiple() ?                                                                 //
@@ -212,9 +212,9 @@ public class DNode extends DIdentifiedObject implements SNode {
                                                                                                                       });
                                                                                                           }, Direction.forward, Priority.preDepth);
 
-    private static final Constant<SNodeReference, DNode>                           D_NODE                 = Constant.of("$D_NODE", null);
+    private static final Setable<SNodeReference, DNode>                            D_NODE                 = Setable.of("$D_NODE", null);
 
-    private static final Observed<DNode, SNodeReference>                           NODE_REF               = NonCheckingObserved.of("$NODE_REF", null);
+    private static final Observed<DNode, SNodeReference>                           NODE_REF               = NonCheckingObserved.of("$NODE_REF", null, () -> D_NODE);
 
     protected static final Setable<DNode, SNode>                                   DETACHED               = Setable.of("$DETACHED", null);
 
@@ -238,10 +238,7 @@ public class DNode extends DIdentifiedObject implements SNode {
     }
 
     public static DNode of(SConcept concept, SNodeReference ref) {
-        DNode dNode = D_NODE.force(ref);
-        if (dNode != null && !ref.equals(NODE_REF.get(dNode))) {
-            NODE_REF.set(dNode, ref);
-        }
+        DNode dNode = D_NODE.get(ref);
         return dNode != null ? dNode : readNode(concept, ref);
     }
 
@@ -327,7 +324,6 @@ public class DNode extends DIdentifiedObject implements SNode {
 
     protected void setOriginal(SNodeReference ref) {
         NODE_REF.set(this, ref);
-        D_NODE.force(ref, this);
         READ_PROPERTIES.trigger(this);
         READ_CHILDREN.trigger(this);
         READ_REFERENCES.trigger(this);
@@ -342,9 +338,9 @@ public class DNode extends DIdentifiedObject implements SNode {
         }
     }
 
-    protected static <O extends DObject> void reuse(O parent, Function<O, ? extends ContainingCollection<DNode>> read, ContainingCollection<DNode> posts) {
+    protected static <O extends DObject> void reuse(O parent, Function<O, ? extends ContainingCollection<SNode>> read, ContainingCollection<DNode> posts) {
         if (parent instanceof DFromOriginalObject || ((DNode) parent).isReadNode() || NODE_REF.get((DNode) parent) != null) {
-            ContainingCollection<DNode> pres = null;
+            ContainingCollection<SNode> pres = null;
             DClareMPS dClare = null;
             for (DNode post : posts) {
                 if (!post.isReadNode() && NODE_REF.get(post) == null) {
@@ -352,12 +348,9 @@ public class DNode extends DIdentifiedObject implements SNode {
                         dClare = dClareMPS();
                         pres = read.apply(parent);
                     }
-                    for (DNode pre : pres) {
-                        if (pre.equals(post) || (pre.isReadNode() && pre.getConcept().equals(post.getConcept()) && post.matches(dClare, pre))) {
-                            SNodeReference ref = pre.reference(false);
-                            if (ref != null) {
-                                post.setOriginal(ref);
-                            }
+                    for (SNode pre : pres) {
+                        if (pre.getConcept().equals(post.getConcept()) && post.matches(dClare, pre)) {
+                            post.setOriginal(pre.getReference());
                             pres = pres.remove(pre);
                             break;
                         }
@@ -367,9 +360,9 @@ public class DNode extends DIdentifiedObject implements SNode {
         }
     }
 
-    private boolean matches(DClareMPS dClare, DNode read) {
+    private boolean matches(DClareMPS dClare, SNode read) {
         if (getConcept().isSubConceptOf(SNodeUtil.concept_INamedConcept)) {
-            return Objects.equals(dClare.read(() -> read.sNode(false).getProperty(SNodeUtil.property_INamedConcept_name)), NAME_OBSERVED.get(this));
+            return Objects.equals(dClare.read(() -> read.getProperty(SNodeUtil.property_INamedConcept_name)), NAME_OBSERVED.get(this));
         } else {
             return true;
         }
@@ -390,7 +383,6 @@ public class DNode extends DIdentifiedObject implements SNode {
                 addSNode(sNode);
                 ref = sNode.getReference();
                 NODE_REF.set(this, ref);
-                D_NODE.force(ref, this);
             }
             return ref;
         }
