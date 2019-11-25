@@ -343,23 +343,18 @@ public class DNode extends DIdentifiedObject implements SNode {
             ContainingCollection<SNode> pres = null;
             DClareMPS dClare = null;
             Set<SNodeReference> refs = null;
-            for (DNode post : posts) {
-                if (!post.isReadNode()) {
-                    SNodeReference ref = NODE_REF.get(post);
-                    if (ref == null) {
-                        if (pres == null) {
-                            dClare = dClareMPS();
-                            pres = read.apply(parent);
-                            refs = posts.filter(p -> !p.isReadNode()).map(p -> NODE_REF.get(p)).notNull().toSet();
-                        }
-                        for (SNode pre : pres) {
-                            ref = pre.getReference();
-                            if (!refs.contains(ref) && pre.getConcept().equals(post.getConcept()) && post.matches(dClare, pre)) {
-                                post.setOriginal(ref);
-                                pres = pres.remove(pre);
-                                break;
-                            }
-                        }
+            for (DNode post : posts.filter(p -> p.reference(false) == null)) {
+                if (pres == null) {
+                    dClare = dClareMPS();
+                    pres = read.apply(parent);
+                    refs = posts.map(p -> p.reference(false)).notNull().toSet();
+                }
+                for (SNode pre : pres) {
+                    SNodeReference ref = pre.getReference();
+                    if (!refs.contains(ref) && pre.getConcept().equals(post.getConcept()) && post.matches(dClare, pre)) {
+                        post.setOriginal(ref);
+                        pres = pres.remove(pre);
+                        break;
                     }
                 }
             }
