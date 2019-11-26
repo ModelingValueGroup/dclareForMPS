@@ -29,8 +29,6 @@ In an installation of JetBrains MPS (2019.2 or higher) ...
 ## Examples
 Multiple examples can be found in the DclareForMPS_Examples repository on GitHub:
 
-[DclareForMPS_Examples on GitHub](https://github.com/ModelingValueGroup/DclareForMPS_Examples)
-
 [Sudoku on GitHub](https://github.com/ModelingValueGroup/Sudoku)
 
 [EntityClassJava on GitHub](https://github.com/ModelingValueGroup/EntityClassJava)
