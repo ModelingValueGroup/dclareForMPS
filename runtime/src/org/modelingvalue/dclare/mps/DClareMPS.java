@@ -407,27 +407,17 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     }
 
     public void command(Runnable runnable) {
-        project.getModelAccess().executeCommandInEDT(() -> {
+        project.getModelAccess().runWriteInEDT(() -> project.getModelAccess().executeUndoTransparentCommand(() -> {
             try {
                 runnable.run();
             } catch (Throwable t) {
                 addMessage(t);
             }
-        });
+        }));
     }
 
     public void read(Runnable runnable) {
         project.getModelAccess().runReadAction(() -> {
-            try {
-                runnable.run();
-            } catch (Throwable t) {
-                addMessage(t);
-            }
-        });
-    }
-
-    public void write(Runnable runnable) {
-        project.getModelAccess().runWriteAction(() -> {
             try {
                 runnable.run();
             } catch (Throwable t) {
@@ -469,15 +459,6 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     public <R> R read(Supplier<R> supplier) {
         R[] result = (R[]) new Object[1];
         read(() -> {
-            result[0] = supplier.get();
-        });
-        return result[0];
-    }
-
-    @SuppressWarnings("unchecked")
-    public <R> R write(Supplier<R> supplier) {
-        R[] result = (R[]) new Object[1];
-        write(() -> {
             result[0] = supplier.get();
         });
         return result[0];
