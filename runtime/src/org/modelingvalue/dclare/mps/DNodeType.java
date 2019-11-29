@@ -19,9 +19,9 @@ import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Triple;
-import org.modelingvalue.transactions.Mutable;
-import org.modelingvalue.transactions.Observer;
-import org.modelingvalue.transactions.Setable;
+import org.modelingvalue.dclare.Mutable;
+import org.modelingvalue.dclare.Observer;
+import org.modelingvalue.dclare.Setable;
 
 public class DNodeType extends DType {
 

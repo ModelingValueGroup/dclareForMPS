@@ -11,8 +11,8 @@
         </sealing>
     </manifest>
     <selectedElements exportClassFiles="true" exportJavaFiles="true" exportOutputFolder="false">
+        <javaElement handleIdentifier="=org.modelingvalue.dclare/src"/>
         <javaElement handleIdentifier="=org.modelingvalue.collections/src"/>
         <javaElement handleIdentifier="=org.modelingvalue.dclare.mps/src"/>
-        <javaElement handleIdentifier="=org.modelingvalue.transactions/src"/>
     </selectedElements>
 </jardesc>

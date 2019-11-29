@@ -24,10 +24,10 @@ import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Triple;
+import org.modelingvalue.dclare.Constant;
+import org.modelingvalue.dclare.Observed;
+import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.mps.DRule.DObserver;
-import org.modelingvalue.transactions.Constant;
-import org.modelingvalue.transactions.Observed;
-import org.modelingvalue.transactions.Observer;
 
 public class DCopy extends DNode {
 
