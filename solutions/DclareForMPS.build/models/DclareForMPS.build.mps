@@ -204,7 +204,7 @@
       </node>
       <node concept="3_J27D" id="5TmHY1kYrb9" role="m$_w8">
         <node concept="3Mxwew" id="5TmHY1kYrba" role="3MwsjC">
-          <property role="3MwjfP" value="1.0 alpha 5" />
+          <property role="3MwjfP" value="1.0 alpha 6" />
         </node>
       </node>
       <node concept="m$_yC" id="5TmHY1kYrbc" role="m$_yJ">
