@@ -21,7 +21,7 @@ The JDclare project can be found here: [JDclare on GitHub](https://github.com/Mo
 ## Installation
 In an installation of JetBrains MPS (2019.2 or higher) ...  
 1. install the DclareForMPS.zip plugin  
-2. open one of the example MPS-Projects  
+2. open one of the example MPS-Projects (see below)
 3. switch on the Dclare engine (Settings... > Dclare)  
 ![check the engine checkbox](docs/engineOn.png "Engine on")  
 4. rebuild the example project  
