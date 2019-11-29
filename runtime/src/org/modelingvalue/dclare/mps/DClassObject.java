@@ -20,7 +20,7 @@ import org.jetbrains.mps.openapi.module.SRepository;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
-import org.modelingvalue.transactions.Constant;
+import org.modelingvalue.dclare.Constant;
 
 public class DClassObject extends DIdentifiedObject implements SClassObject {
 

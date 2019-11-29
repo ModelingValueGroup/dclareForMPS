@@ -11,7 +11,6 @@
     <import index="mhbf" ref="8865b7a8-5271-43d3-884c-6fd1d9cfdd34/java:org.jetbrains.mps.openapi.model(MPS.OpenAPI/)" />
     <import index="wyt6" ref="6354ebe7-c22a-4a0f-ac54-50b52ab9b065/java:java.lang(JDK/)" />
     <import index="t4tl" ref="55d6b6f5-8095-4cd0-a39b-779da8d12940/java:org.modelingvalue.dclare.mps(DclareMPSRuntime/)" />
-    <import index="dy39" ref="55d6b6f5-8095-4cd0-a39b-779da8d12940/java:org.modelingvalue.transactions(DclareMPSRuntime/)" />
     <import index="c17a" ref="8865b7a8-5271-43d3-884c-6fd1d9cfdd34/java:org.jetbrains.mps.openapi.language(MPS.OpenAPI/)" />
     <import index="lui2" ref="8865b7a8-5271-43d3-884c-6fd1d9cfdd34/java:org.jetbrains.mps.openapi.module(MPS.OpenAPI/)" />
     <import index="42m3" ref="55d6b6f5-8095-4cd0-a39b-779da8d12940/java:org.modelingvalue.collections.util(DclareMPSRuntime/)" />
@@ -20,6 +19,7 @@
     <import index="zrbp" ref="55d6b6f5-8095-4cd0-a39b-779da8d12940/java:org.modelingvalue.collections(DclareMPSRuntime/)" />
     <import index="1ctc" ref="6354ebe7-c22a-4a0f-ac54-50b52ab9b065/java:java.util.stream(JDK/)" />
     <import index="tpck" ref="r:00000000-0000-4000-0000-011c89590288(jetbrains.mps.lang.core.structure)" />
+    <import index="kag7" ref="55d6b6f5-8095-4cd0-a39b-779da8d12940/java:org.modelingvalue.dclare(DclareMPSRuntime/)" />
   </imports>
   <registry>
     <language id="f3061a53-9226-4cc5-a443-f952ceaf5816" name="jetbrains.mps.baseLanguage">
@@ -1349,11 +1349,11 @@
         <node concept="3clFbF" id="1vHs6rJYE4S" role="3cqZAp">
           <node concept="2OqwBi" id="1vHs6rJYE$9" role="3clFbG">
             <node concept="2YIFZM" id="1vHs6rJYEpE" role="2Oq$k0">
-              <ref role="37wK5l" to="dy39:~LeafTransaction.getCurrent()" resolve="getCurrent" />
-              <ref role="1Pybhc" to="dy39:~LeafTransaction" resolve="LeafTransaction" />
+              <ref role="1Pybhc" to="kag7:~LeafTransaction" resolve="LeafTransaction" />
+              <ref role="37wK5l" to="kag7:~LeafTransaction.getCurrent()" resolve="getCurrent" />
             </node>
             <node concept="liA8E" id="1vHs6rJYEIL" role="2OqNvi">
-              <ref role="37wK5l" to="dy39:~LeafTransaction.runNonObserving(java.lang.Runnable)" resolve="runNonObserving" />
+              <ref role="37wK5l" to="kag7:~LeafTransaction.runNonObserving(java.lang.Runnable)" resolve="runNonObserving" />
               <node concept="1bVj0M" id="1vHs6rJYNWw" role="37wK5m">
                 <node concept="3clFbS" id="1vHs6rJYNWy" role="1bW5cS">
                   <node concept="3clFbF" id="1vHs6rJYO0D" role="3cqZAp">
@@ -1789,7 +1789,7 @@
               <ref role="1PxDUh" to="t4tl:~DNode" resolve="DNode" />
             </node>
             <node concept="liA8E" id="7S$pNDL7ybr" role="2OqNvi">
-              <ref role="37wK5l" to="dy39:~Getable.get(java.lang.Object)" resolve="get" />
+              <ref role="37wK5l" to="kag7:~Getable.get(java.lang.Object)" resolve="get" />
               <node concept="10QFUN" id="7S$pNDL7yy6" role="37wK5m">
                 <node concept="3uibUv" id="7S$pNDL7yBL" role="10QFUM">
                   <ref role="3uigEE" to="t4tl:~DNode" resolve="DNode" />

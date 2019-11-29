@@ -28,13 +28,13 @@ import org.modelingvalue.collections.Map;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.QuadConsumer;
 import org.modelingvalue.collections.util.TriConsumer;
-import org.modelingvalue.transactions.EmptyMandatoryException;
-import org.modelingvalue.transactions.LeafTransaction;
-import org.modelingvalue.transactions.Mutable;
-import org.modelingvalue.transactions.Observed;
-import org.modelingvalue.transactions.Setable;
-import org.modelingvalue.transactions.State;
-import org.modelingvalue.transactions.ThrowableError;
+import org.modelingvalue.dclare.EmptyMandatoryException;
+import org.modelingvalue.dclare.LeafTransaction;
+import org.modelingvalue.dclare.Mutable;
+import org.modelingvalue.dclare.Observed;
+import org.modelingvalue.dclare.Setable;
+import org.modelingvalue.dclare.State;
+import org.modelingvalue.dclare.ThrowableError;
 
 @SuppressWarnings("rawtypes")
 public class DObserved<O extends DObject, T> extends Observed<O, T> implements DFeature<O> {

@@ -14,17 +14,17 @@
 package org.modelingvalue.dclare.mps;
 
 import org.modelingvalue.collections.util.Context;
-import org.modelingvalue.transactions.Constant;
-import org.modelingvalue.transactions.DeferException;
-import org.modelingvalue.transactions.Direction;
-import org.modelingvalue.transactions.LeafTransaction;
-import org.modelingvalue.transactions.Mutable;
-import org.modelingvalue.transactions.MutableTransaction;
-import org.modelingvalue.transactions.Observer;
-import org.modelingvalue.transactions.ObserverTransaction;
-import org.modelingvalue.transactions.Priority;
-import org.modelingvalue.transactions.Transaction;
-import org.modelingvalue.transactions.UniverseTransaction;
+import org.modelingvalue.dclare.Constant;
+import org.modelingvalue.dclare.DeferException;
+import org.modelingvalue.dclare.Direction;
+import org.modelingvalue.dclare.LeafTransaction;
+import org.modelingvalue.dclare.Mutable;
+import org.modelingvalue.dclare.MutableTransaction;
+import org.modelingvalue.dclare.Observer;
+import org.modelingvalue.dclare.ObserverTransaction;
+import org.modelingvalue.dclare.Priority;
+import org.modelingvalue.dclare.Transaction;
+import org.modelingvalue.dclare.UniverseTransaction;
 
 @SuppressWarnings("rawtypes")
 public interface DRule<O> extends DFeature<O> {

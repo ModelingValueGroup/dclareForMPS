@@ -19,9 +19,9 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import org.jetbrains.mps.openapi.model.SNode;
-import org.modelingvalue.transactions.Constant;
-import org.modelingvalue.transactions.Mutable;
-import org.modelingvalue.transactions.State;
+import org.modelingvalue.dclare.Constant;
+import org.modelingvalue.dclare.Mutable;
+import org.modelingvalue.dclare.State;
 
 @SuppressWarnings("rawtypes")
 public interface DAttribute<O, T> extends DFeature<O> {

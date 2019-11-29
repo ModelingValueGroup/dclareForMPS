@@ -16,12 +16,12 @@ package org.modelingvalue.dclare.mps;
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
+import org.modelingvalue.dclare.Constant;
+import org.modelingvalue.dclare.Mutable;
+import org.modelingvalue.dclare.MutableClass;
+import org.modelingvalue.dclare.Observer;
+import org.modelingvalue.dclare.Setable;
 import org.modelingvalue.dclare.mps.DRule.DObserver;
-import org.modelingvalue.transactions.Constant;
-import org.modelingvalue.transactions.Mutable;
-import org.modelingvalue.transactions.MutableClass;
-import org.modelingvalue.transactions.Observer;
-import org.modelingvalue.transactions.Setable;
 
 @SuppressWarnings("rawtypes")
 public abstract class DType implements MutableClass {

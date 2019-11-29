@@ -42,15 +42,15 @@ import org.jetbrains.mps.openapi.persistence.ModelRoot;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
-import org.modelingvalue.transactions.Action;
-import org.modelingvalue.transactions.Constant;
-import org.modelingvalue.transactions.Direction;
-import org.modelingvalue.transactions.Mutable;
-import org.modelingvalue.transactions.NonCheckingObserved;
-import org.modelingvalue.transactions.Observed;
-import org.modelingvalue.transactions.Observer;
-import org.modelingvalue.transactions.Priority;
-import org.modelingvalue.transactions.Setable;
+import org.modelingvalue.dclare.Action;
+import org.modelingvalue.dclare.Constant;
+import org.modelingvalue.dclare.Direction;
+import org.modelingvalue.dclare.Mutable;
+import org.modelingvalue.dclare.NonCheckingObserved;
+import org.modelingvalue.dclare.Observed;
+import org.modelingvalue.dclare.Observer;
+import org.modelingvalue.dclare.Priority;
+import org.modelingvalue.dclare.Setable;
 
 import jetbrains.mps.extapi.model.SModelBase;
 
