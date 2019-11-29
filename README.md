@@ -9,7 +9,7 @@ The regular MPS base-language can be used to specify the rules.
 Rules definitions typically use quotations (light or not) to define the derivations.  
 The rules are executed incrementally, meaning they perform a minimal amount of changes to derive the defined patterns (expressed in quotations).
 
-## Work in progress
+## Alpha phase
 DclareForMPS is in progress.
 We are working hard to publish the 1.0 version soon. It will then be available as a standard plugin in MPS, without the need to download it here.  
 All feedback, functional or technical, is appreciated.
@@ -21,13 +21,13 @@ The JDclare project can be found here: [JDclare on GitHub](https://github.com/Mo
 ## Installation
 In an installation of JetBrains MPS (2019.2 or higher) ...  
 1. install the DclareForMPS.zip plugin  
-2. open one of the example MPS Projects from [DclareForMPS_Examples on GitHub](https://github.com/ModelingValueGroup/DclareForMPS_Examples)  
+2. open one of the example MPS-Projects  
 3. switch on the Dclare engine (Settings... > Dclare)  
 ![check the engine checkbox](docs/engineOn.png "Engine on")  
 4. rebuild the example project  
 
 ## Examples
-Multiple examples can be found in the DclareForMPS_Examples repository on GitHub:
+Multiple MPS-project examples can be found on GitHub:
 
 [Sudoku on GitHub](https://github.com/ModelingValueGroup/Sudoku)
 
