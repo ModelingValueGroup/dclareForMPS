@@ -35,5 +35,6 @@ Multiple examples can be found in the DclareForMPS_Examples repository on GitHub
 
 [NiamToOO on GitHub](https://github.com/ModelingValueGroup/NiamToOO)
 
+[FlattenAndCopy on GitHub](https://github.com/ModelingValueGroup/FlattenAndCopy)
 
 For more info, please read the README.md files that are part of these examples.
