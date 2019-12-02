@@ -34,7 +34,7 @@
       <idea-plugin xmlns:xi="http://www.w3.org/2001/XInclude">
         <id>DclareForMPS</id>
         <name>DclareForMPS</name>
-        <version>1.0 alpha 5</version>
+        <version>1.0 alpha 6</version>
         <depends>jetbrains.mps.core</depends>
         <depends>jetbrains.mps.ide.devkit</depends>
         <depends>jetbrains.mps.build</depends>
