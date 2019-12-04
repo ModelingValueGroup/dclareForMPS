@@ -9,8 +9,8 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="var" path="MPS_HOME/lib/mps-openapi.jar" sourcepath="/MPS_HOME/lib/MPS-src.zip"/>
-	<classpathentry kind="var" path="MPS_HOME/lib/mps-platform.jar"/>
+	<classpathentry kind="var" path="MPS_HOME/lib/mps-platform.jar" sourcepath="/MPS_SRC"/>
 	<classpathentry kind="var" path="MPS_HOME/lib/platform-api.jar"/>
-	<classpathentry kind="var" path="MPS_HOME/lib/mps-core.jar"/>
+	<classpathentry kind="var" path="MPS_HOME/lib/mps-core.jar" sourcepath="/MPS_SRC"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
