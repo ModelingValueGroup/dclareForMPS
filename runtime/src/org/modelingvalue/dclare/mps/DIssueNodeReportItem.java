@@ -20,6 +20,7 @@ import java.util.Set;
 import org.jetbrains.mps.openapi.language.SAbstractLink;
 import org.jetbrains.mps.openapi.language.SConceptFeature;
 import org.jetbrains.mps.openapi.language.SProperty;
+import org.jetbrains.mps.openapi.model.SNode;
 import org.modelingvalue.dclare.Constant;
 
 import jetbrains.mps.errors.MessageStatus;
@@ -30,7 +31,6 @@ import jetbrains.mps.errors.messageTargets.MessageTarget;
 import jetbrains.mps.errors.messageTargets.NodeMessageTarget;
 import jetbrains.mps.errors.messageTargets.PropertyMessageTarget;
 import jetbrains.mps.errors.messageTargets.ReferenceMessageTarget;
-import jetbrains.mps.smodel.SNode;
 
 public class DIssueNodeReportItem extends NodeReportItemBase implements NodeReportItem {
 
