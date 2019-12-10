@@ -20,6 +20,7 @@
     <import index="tp2q" ref="r:00000000-0000-4000-0000-011c8959032e(jetbrains.mps.baseLanguage.collections.structure)" />
     <import index="c17a" ref="8865b7a8-5271-43d3-884c-6fd1d9cfdd34/java:org.jetbrains.mps.openapi.language(MPS.OpenAPI/)" />
     <import index="tp2v" ref="r:00000000-0000-4000-0000-011c8959032b(jetbrains.mps.baseLanguage.collections.typesystem)" />
+    <import index="d6hs" ref="6ed54515-acc8-4d1e-a16c-9fd6cfe951ea/java:jetbrains.mps.errors.item(MPS.Core/)" />
     <import index="tpck" ref="r:00000000-0000-4000-0000-011c89590288(jetbrains.mps.lang.core.structure)" implicit="true" />
     <import index="wyt6" ref="6354ebe7-c22a-4a0f-ac54-50b52ab9b065/java:java.lang(JDK/)" implicit="true" />
     <import index="tpek" ref="r:00000000-0000-4000-0000-011c895902c0(jetbrains.mps.baseLanguage.behavior)" implicit="true" />
@@ -3064,6 +3065,34 @@
     <node concept="1YaCAy" id="rTfv3GZ67t" role="1YuTPh">
       <property role="TrG5h" value="copy" />
       <ref role="1YaFvo" to="7ggn:rTfv3GWr7J" resolve="CopyImplicitSelect" />
+    </node>
+  </node>
+  <node concept="1YbPZF" id="45beoc8pUoI">
+    <property role="TrG5h" value="typeof_IssuesOperation" />
+    <property role="3GE5qa" value="issues" />
+    <node concept="3clFbS" id="45beoc8pUoJ" role="18ibNy">
+      <node concept="1Z5TYs" id="45beoc8pUoP" role="3cqZAp">
+        <node concept="mw_s8" id="45beoc8pUoQ" role="1ZfhKB">
+          <node concept="2c44tf" id="45beoc8pUoR" role="mwGJk">
+            <node concept="2hMVRd" id="45beoc8pUr$" role="2c44tc">
+              <node concept="3uibUv" id="45beoc8qusf" role="2hN53Y">
+                <ref role="3uigEE" to="d6hs:~IssueKindReportItem" resolve="IssueKindReportItem" />
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="mw_s8" id="45beoc8pUoU" role="1ZfhK$">
+          <node concept="1Z2H0r" id="45beoc8pUoV" role="mwGJk">
+            <node concept="1YBJjd" id="45beoc8pYX8" role="1Z2MuG">
+              <ref role="1YBMHb" node="45beoc8pUoL" resolve="issuesOperation" />
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+    <node concept="1YaCAy" id="45beoc8pUoL" role="1YuTPh">
+      <property role="TrG5h" value="issuesOperation" />
+      <ref role="1YaFvo" to="7ggn:45beoc8pRWf" resolve="IssuesOperation" />
     </node>
   </node>
 </model>

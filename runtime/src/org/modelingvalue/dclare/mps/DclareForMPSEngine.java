@@ -16,7 +16,6 @@ package org.modelingvalue.dclare.mps;
 import java.util.Set;
 
 import org.jetbrains.mps.openapi.module.SModule;
-import org.jetbrains.mps.openapi.project.Project;
 import org.jetbrains.mps.openapi.util.ProgressMonitor;
 
 import com.intellij.openapi.application.ApplicationManager;
@@ -25,10 +24,11 @@ import jetbrains.mps.classloading.ClassLoaderManager;
 import jetbrains.mps.classloading.DeployListener;
 import jetbrains.mps.ide.MPSCoreComponents;
 import jetbrains.mps.module.ReloadableModule;
+import jetbrains.mps.project.ProjectBase;
 
 public class DclareForMPSEngine implements DeployListener {
 
-    private final Project              project;
+    private final ProjectBase          project;
     protected final ClassLoaderManager classLoaderManager;
     private final StartStopHandler     startStopHandler;
     private DClareMPS                  dClareMPS;
@@ -38,7 +38,7 @@ public class DclareForMPSEngine implements DeployListener {
     private int                        maxNrOfObserved;
     private int                        maxNrOfObservers;
 
-    public DclareForMPSEngine(Project project, StartStopHandler startStopHandler) {
+    public DclareForMPSEngine(ProjectBase project, StartStopHandler startStopHandler) {
         this.startStopHandler = startStopHandler;
         this.project = project;
         classLoaderManager = ApplicationManager.getApplication().getComponent(MPSCoreComponents.class).getClassLoaderManager();

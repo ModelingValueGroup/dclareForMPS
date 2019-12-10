@@ -20,7 +20,10 @@ import java.util.function.Supplier;
 import javax.swing.SwingUtilities;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
-import org.jetbrains.mps.openapi.project.Project;
+import org.jetbrains.mps.openapi.model.SNode;
+import org.jetbrains.mps.openapi.module.SRepository;
+import org.jetbrains.mps.openapi.util.Consumer;
+import org.jetbrains.mps.openapi.util.ProgressMonitor;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.DefaultMap;
 import org.modelingvalue.collections.Entry;
@@ -61,6 +64,12 @@ import org.modelingvalue.dclare.UniverseTransaction;
 import org.modelingvalue.dclare.mps.DRule.DObserver;
 import org.modelingvalue.dclare.mps.DRule.DObserverTransaction;
 
+import jetbrains.mps.checkers.IChecker;
+import jetbrains.mps.errors.CheckerRegistry;
+import jetbrains.mps.errors.item.IssueKindReportItem;
+import jetbrains.mps.errors.item.IssueKindReportItem.KindLevel;
+import jetbrains.mps.errors.item.NodeReportItem;
+import jetbrains.mps.project.ProjectBase;
 import jetbrains.mps.smodel.language.LanguageRegistry;
 import jetbrains.mps.smodel.language.LanguageRuntime;
 
@@ -119,7 +128,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     private final ContextPool                                                                              thePool              = ContextThread.createPool();
     protected final Thread                                                                                 waitForEndThread;
     private final UniverseTransaction                                                                      universeTransaction;
-    protected final Project                                                                                project;
+    protected final ProjectBase                                                                            project;
     private final StartStopHandler                                                                         startStopHandler;
     private ImperativeTransaction                                                                          imperativeTransaction;
     private boolean                                                                                        running;
@@ -127,12 +136,16 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     protected Map<DMessageType, QualifiedSet<Triple<DObject, DFeature<?>, String>, DMessage>>              messages             = MESSAGE_QSET_MAP;
     protected final DclareForMPSEngine                                                                     engine;
     private final DRepository                                                                              dRepository;
+    private final NodeChecker                                                                              nodeChecker;
 
-    protected DClareMPS(DclareForMPSEngine engine, Project project, State prevState, int maxTotalNrOfChanges, int maxNrOfChanges, int maxNrOfObserved, int maxNrOfObservers, StartStopHandler startStopHandler) {
+    protected DClareMPS(DclareForMPSEngine engine, ProjectBase project, State prevState, int maxTotalNrOfChanges, int maxNrOfChanges, int maxNrOfObserved, int maxNrOfObservers, StartStopHandler startStopHandler) {
         this.project = project;
         this.engine = engine;
         this.startStopHandler = startStopHandler;
         this.dRepository = new DRepository(project.getRepository());
+        this.nodeChecker = new NodeChecker();
+        CheckerRegistry checkerRegistry = project.getPlatform().findComponent(CheckerRegistry.class);
+        checkerRegistry.registerChecker(nodeChecker);
         project.getModelAccess().executeCommandInEDT(() -> startStopHandler.on(project));
         if (TRACE) {
             System.err.println(DCLARE + "START " + this);
@@ -511,6 +524,8 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
                     return state.get(supplier);
                 }
             }, this));
+            CheckerRegistry checkerRegistry = project.getPlatform().findComponent(CheckerRegistry.class);
+            checkerRegistry.unregisterChecker(nodeChecker);
             ImperativeTransaction it = imperativeTransaction;
             invokeLater(() -> it.stop());
             imperativeTransaction = null;
@@ -548,6 +563,28 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     @Override
     public Collection<? extends Observer<?>> dMutableObservers() {
         return Set.of();
+    }
+
+    private class NodeChecker extends IChecker.AbstractNodeChecker<NodeReportItem> {
+
+        @Override
+        public AbstractRootChecker<NodeReportItem> asRootChecker() {
+            return universeTransaction.preState().get(() -> super.asRootChecker());
+        }
+
+        @Override
+        public void check(SNode object, SRepository repository, Consumer<? super NodeReportItem> consumer, ProgressMonitor monitor) {
+            DNode dNode = DNode.of(object.getConcept(), object.getReference());
+            for (IssueKindReportItem issue : DObject.ISSUES.get(dNode)) {
+                consumer.consume((NodeReportItem) issue);
+            }
+        }
+
+        @Override
+        public IssueKindReportItem.CheckerCategory getCategory() {
+            return new IssueKindReportItem.CheckerCategory(KindLevel.MANUAL, "Dclare");
+        }
+
     }
 
 }

@@ -1806,5 +1806,12 @@
       <ref role="PMmxG" to="tpco:2wZex4PafBj" resolve="alias" />
     </node>
   </node>
+  <node concept="24kQdi" id="45beoc8pRWH">
+    <property role="3GE5qa" value="issues" />
+    <ref role="1XX52x" to="7ggn:45beoc8pRWf" resolve="IssuesOperation" />
+    <node concept="PMmxH" id="45beoc8pRWJ" role="2wV5jI">
+      <ref role="PMmxG" to="tpco:2wZex4PafBj" resolve="alias" />
+    </node>
+  </node>
 </model>
 

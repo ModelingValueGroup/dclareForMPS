@@ -32,6 +32,17 @@
       </concept>
     </language>
     <language id="c72da2b9-7cce-4447-8389-f407dc1158b7" name="jetbrains.mps.lang.structure">
+      <concept id="3348158742936976480" name="jetbrains.mps.lang.structure.structure.EnumerationMemberDeclaration" flags="ng" index="25R33">
+        <property id="1421157252384165432" name="memberId" index="3tVfz5" />
+        <property id="672037151186491528" name="presentation" index="1L1pqM" />
+      </concept>
+      <concept id="3348158742936976479" name="jetbrains.mps.lang.structure.structure.EnumerationDeclaration" flags="ng" index="25R3W">
+        <reference id="1075010451642646892" name="defaultMember" index="1H5jkz" />
+        <child id="3348158742936976577" name="members" index="25R1y" />
+      </concept>
+      <concept id="1082978164218" name="jetbrains.mps.lang.structure.structure.DataTypeDeclaration" flags="ng" index="AxPO6">
+        <property id="7791109065626895363" name="datatypeId" index="3F6X1D" />
+      </concept>
       <concept id="1169125787135" name="jetbrains.mps.lang.structure.structure.AbstractConceptDeclaration" flags="ig" index="PkWjJ">
         <property id="6714410169261853888" name="conceptId" index="EcuMT" />
         <property id="4628067390765907488" name="conceptShortDescription" index="R4oN_" />
@@ -593,6 +604,70 @@
     <ref role="1TJDcQ" to="tpck:gw2VY9q" resolve="BaseConcept" />
     <node concept="PrWs8" id="rTfv3GWr7L" role="PzmwI">
       <ref role="PrY4T" to="tpee:hqOqG0K" resolve="IOperation" />
+    </node>
+  </node>
+  <node concept="1TIwiD" id="45beoc8pRWf">
+    <property role="EcuMT" value="4704917470663114511" />
+    <property role="TrG5h" value="IssuesOperation" />
+    <property role="34LRSv" value="issues" />
+    <property role="3GE5qa" value="issues" />
+    <ref role="1TJDcQ" to="tpck:gw2VY9q" resolve="BaseConcept" />
+    <node concept="PrWs8" id="45beoc8pRWg" role="PzmwI">
+      <ref role="PrY4T" to="tpee:hqOqG0K" resolve="IOperation" />
+    </node>
+  </node>
+  <node concept="1TIwiD" id="41CotWWrJg$">
+    <property role="EcuMT" value="4641067027424801828" />
+    <property role="3GE5qa" value="issues" />
+    <property role="TrG5h" value="NewIssue" />
+    <ref role="1TJDcQ" to="tpee:fz3vP1J" resolve="Expression" />
+    <node concept="1TJgyi" id="41CotWWs4Oa" role="1TKVEl">
+      <property role="IQ2nx" value="4641067027424890122" />
+      <property role="TrG5h" value="message" />
+      <ref role="AX2Wp" to="tpck:fKAOsGN" resolve="string" />
+    </node>
+    <node concept="1TJgyi" id="41CotWWs4Oi" role="1TKVEl">
+      <property role="IQ2nx" value="4641067027424890130" />
+      <property role="TrG5h" value="severity" />
+      <ref role="AX2Wp" node="41CotWWs4Oo" resolve="MessageType" />
+    </node>
+    <node concept="1TJgyj" id="41CotWWs4Oc" role="1TKVEi">
+      <property role="IQ2ns" value="4641067027424890124" />
+      <property role="20lmBu" value="fLJjDmT/aggregation" />
+      <property role="20kJfa" value="node" />
+      <property role="20lbJX" value="fLJekj4/_1" />
+      <ref role="20lvS9" to="tpee:fz3vP1J" resolve="Expression" />
+    </node>
+    <node concept="1TJgyj" id="41CotWWsaDq" role="1TKVEi">
+      <property role="IQ2ns" value="4641067027424914010" />
+      <property role="20kJfa" value="link" />
+      <ref role="20lvS9" to="tpce:f_TJgxE" resolve="LinkDeclaration" />
+    </node>
+    <node concept="1TJgyj" id="41CotWWsaDt" role="1TKVEi">
+      <property role="IQ2ns" value="4641067027424914013" />
+      <property role="20kJfa" value="property" />
+      <ref role="20lvS9" to="tpce:f_TJgxF" resolve="PropertyDeclaration" />
+    </node>
+  </node>
+  <node concept="25R3W" id="41CotWWs4Oo">
+    <property role="3F6X1D" value="4641067027424890136" />
+    <property role="3GE5qa" value="issues" />
+    <property role="TrG5h" value="MessageType" />
+    <ref role="1H5jkz" node="41CotWWs4Op" resolve="error" />
+    <node concept="25R33" id="41CotWWs4Op" role="25R1y">
+      <property role="3tVfz5" value="4641067027424890137" />
+      <property role="TrG5h" value="error" />
+      <property role="1L1pqM" value="error" />
+    </node>
+    <node concept="25R33" id="41CotWWs4Oq" role="25R1y">
+      <property role="3tVfz5" value="4641067027424890138" />
+      <property role="TrG5h" value="warning" />
+      <property role="1L1pqM" value="warning" />
+    </node>
+    <node concept="25R33" id="41CotWWs4Ot" role="25R1y">
+      <property role="3tVfz5" value="4641067027424890141" />
+      <property role="TrG5h" value="info" />
+      <property role="1L1pqM" value="info" />
     </node>
   </node>
 </model>
