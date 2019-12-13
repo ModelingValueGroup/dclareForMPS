@@ -1131,19 +1131,6 @@
         </node>
       </node>
     </node>
-    <node concept="3aamgX" id="41CotWWrSo4" role="3acgRq">
-      <ref role="30HIoZ" to="7ggn:41CotWWrJg$" resolve="NewIssue" />
-      <node concept="gft3U" id="41CotWWrVYT" role="1lVwrX">
-        <node concept="2YIFZM" id="41CotWWs4I4" role="gfFT$">
-          <ref role="37wK5l" to="u4ym:41CotWWs3bj" resolve="createIssue" />
-          <ref role="1Pybhc" to="u4ym:30fQumnG8Au" resolve="DclareUtil" />
-          <node concept="10Nm6u" id="GHx16DmktI" role="37wK5m" />
-          <node concept="10Nm6u" id="GHx16Dmkuu" role="37wK5m" />
-          <node concept="10Nm6u" id="GHx16Dmkvi" role="37wK5m" />
-          <node concept="10Nm6u" id="GHx16Dmkwa" role="37wK5m" />
-        </node>
-      </node>
-    </node>
     <node concept="3aamgX" id="29R9$zYZk5g" role="3acgRq">
       <ref role="30HIoZ" to="7ggn:29R9$zYWiFR" resolve="OppositeLinkAccess" />
       <node concept="gft3U" id="29R9$zYZljF" role="1lVwrX">
