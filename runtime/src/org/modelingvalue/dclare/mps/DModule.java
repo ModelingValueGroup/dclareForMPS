@@ -33,7 +33,6 @@ import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.dclare.Action;
 import org.modelingvalue.dclare.Constant;
 import org.modelingvalue.dclare.Direction;
-import org.modelingvalue.dclare.Mutable;
 import org.modelingvalue.dclare.NonCheckingObserved;
 import org.modelingvalue.dclare.Observed;
 import org.modelingvalue.dclare.Observer;
@@ -68,13 +67,14 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
 
                                                                                            @SuppressWarnings("rawtypes")
                                                                                            @Override
-                                                                                           protected Collection<? extends Observer> observers() {
-                                                                                               return RULES;
+                                                                                           protected Collection<Observer> observers() {
+                                                                                               return OBSERVERS;
                                                                                            }
 
+                                                                                           @SuppressWarnings("rawtypes")
                                                                                            @Override
-                                                                                           public Collection<? extends Setable<? extends Mutable, ?>> dContainers() {
-                                                                                               return Collection.concat(Set.of(MODELS), super.dContainers());
+                                                                                           public Collection<Setable> setables() {
+                                                                                               return SETABLES;
                                                                                            }
                                                                                        });
 
@@ -100,9 +100,6 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
                                                                                            }
                                                                                        }, Priority.preDepth);
 
-    @SuppressWarnings("rawtypes")
-    protected static final Set<Observer>                                RULES          = DObject.RULES.addAll(Set.of(LANGUAGES_RULE, MODELS_RULE));
-
     private static final Action<DModule>                                READ_MODELS    = Action.of("$READ_MODELS", m -> {
                                                                                            Set<SLanguage> languages = dClareMPS().read(() -> languages(m.original()));
                                                                                            LANGUAGES.set(m, languages);
@@ -110,6 +107,11 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
                                                                                                MODELS.set(m, dClareMPS().read(() -> models(m.original())).map(mo -> DModel.of(mo)).toSet());
                                                                                            }
                                                                                        }, Direction.forward, Priority.preDepth);
+    @SuppressWarnings("rawtypes")
+    protected static final Set<Observer>                                OBSERVERS      = DObject.OBSERVERS.addAll(Set.of(LANGUAGES_RULE, MODELS_RULE));
+
+    @SuppressWarnings("rawtypes")
+    protected static final Set<Setable>                                 SETABLES       = DObject.SETABLES.addAll(Set.of(REFERENCED, MODELS, LANGUAGES));
 
     public static DModule of(SModule original) {
         return original instanceof DModule ? (DModule) original : DMODULE.get(original);

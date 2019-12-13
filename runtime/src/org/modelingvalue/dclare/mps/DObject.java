@@ -71,8 +71,6 @@ public abstract class DObject implements Mutable {
                                                                                                                                                      pc.b() instanceof DAttribute ? (DAttribute) pc.b() : CONTAINING_ATTRIBUTE.get((DObject) pc.a()));
                                                                                                                                                  }, Priority.preDepth);
 
-    protected static final Set<Observer>                                                                               RULES                     = Set.of(TYPE_RULE, CONTAINING_ATTRIBUTE_RULE);
-
     protected static final Action<DObject>                                                                             REFRESH_CHILDREN          = Action.of("$REFRESH_CHILDREN", o -> {
                                                                                                                                                      for (DObject c : o.getAllChildren()) {
                                                                                                                                                          DObject.REFRESH.trigger(c);
@@ -84,7 +82,15 @@ public abstract class DObject implements Mutable {
                                                                                                                                                      DObject.REFRESH_CHILDREN.trigger(o);
                                                                                                                                                  }, Direction.forward, Priority.preDepth);
 
-    public static final DObserved<DObject, QualifiedSet<Triple<ItemKind, MessageStatus, String>, IssueKindReportItem>> ISSUES                    = DObserved.of("$ISSUES", EMPTY_ISSUES, false, false, null, false, null, null);
+    public static final DObserved<DObject, QualifiedSet<Triple<ItemKind, MessageStatus, String>, IssueKindReportItem>> MPS_ISSUES                = DObserved.of("$MPS_ISSUES", EMPTY_ISSUES, false, false, null, false, null, null);
+
+    public static final Setable<DObject, Set<DIssue>>                                                                  DRULE_ISSUES              = Setable.of("$DRULE_ISSUES", Set.of(), true);
+
+    public static final Setable<DObject, Set<DIssue>>                                                                  DCLARE_ISSUES             = Setable.of("$DCLARE_ISSUES", Set.of());
+
+    protected static final Set<Observer>                                                                               OBSERVERS                 = Set.of(TYPE_RULE, CONTAINING_ATTRIBUTE_RULE);
+
+    protected static final Set<Setable>                                                                                SETABLES                  = Set.of(TYPE, MPS_ISSUES, DRULE_ISSUES, DCLARE_ISSUES, CONTAINING_ATTRIBUTE);
 
     public static DClareMPS dClareMPS() {
         return DClareMPS.instance();
@@ -101,15 +107,15 @@ public abstract class DObject implements Mutable {
     }
 
     public java.util.Set<IssueKindReportItem> getIssues() {
-        return ISSUES.get(this).collect(Collectors.toSet());
+        return MPS_ISSUES.get(this).collect(Collectors.toSet());
     }
 
     public void setIssues(java.util.Set<IssueKindReportItem> issues) {
-        ISSUES.set(this, Collection.of(issues).toQualifiedSet(EMPTY_ISSUES.qualifier()));
+        MPS_ISSUES.set(this, Collection.of(issues).toQualifiedSet(EMPTY_ISSUES.qualifier()));
     }
 
     public void clearAllIssues() {
-        ISSUES.set(this, EMPTY_ISSUES);
+        MPS_ISSUES.set(this, EMPTY_ISSUES);
         for (DObject child : getAllChildren()) {
             child.clearAllIssues();
         }

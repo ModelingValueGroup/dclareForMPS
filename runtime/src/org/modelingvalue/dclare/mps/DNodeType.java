@@ -14,12 +14,10 @@
 package org.modelingvalue.dclare.mps;
 
 import org.jetbrains.mps.openapi.language.SConcept;
-import org.jetbrains.mps.openapi.language.SContainmentLink;
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Triple;
-import org.modelingvalue.dclare.Mutable;
 import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.Setable;
 
@@ -57,19 +55,16 @@ public class DNodeType extends DType {
         return concept;
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
-    public Collection<? extends Setable<? extends Mutable, ?>> dContainers() {
-        return Collection.concat(DNode.CONTAINERS.get(concept), super.dContainers());
+    public Collection<Setable> setables() {
+        return Collection.concat(DNode.SETABLES, DNode.CONCEPT_SETABLES.get(concept));
     }
 
     @SuppressWarnings("rawtypes")
     @Override
-    protected Collection<? extends Observer> observers() {
-        Set<Observer> rules = DNode.RULES;
-        for (SContainmentLink cl : concept.getContainmentLinks()) {
-            rules = rules.add(DNode.READ_MATCHER.get(cl));
-        }
-        return rules;
+    protected Collection<Observer> observers() {
+        return Collection.concat(DNode.OBSERVERS, DNode.CONCEPT_OBSERVERS.get(concept));
     }
 
 }

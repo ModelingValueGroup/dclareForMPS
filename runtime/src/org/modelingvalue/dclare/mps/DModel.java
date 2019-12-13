@@ -45,7 +45,6 @@ import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.dclare.Action;
 import org.modelingvalue.dclare.Constant;
 import org.modelingvalue.dclare.Direction;
-import org.modelingvalue.dclare.Mutable;
 import org.modelingvalue.dclare.NonCheckingObserved;
 import org.modelingvalue.dclare.Observed;
 import org.modelingvalue.dclare.Observer;
@@ -76,15 +75,16 @@ public class DModel extends DFromOriginalObject<SModel> implements SModel {
                                                                                      return ls;
                                                                                  }
 
+                                                                                 @SuppressWarnings("rawtypes")
                                                                                  @Override
-                                                                                 public Collection<? extends Setable<? extends Mutable, ?>> dContainers() {
-                                                                                     return Collection.concat(Set.of(ROOTS), super.dContainers());
+                                                                                 public Collection<Setable> setables() {
+                                                                                     return SETABLES;
                                                                                  }
 
                                                                                  @SuppressWarnings("rawtypes")
                                                                                  @Override
-                                                                                 protected Collection<? extends Observer> observers() {
-                                                                                     return RULES;
+                                                                                 protected Collection<Observer> observers() {
+                                                                                     return OBSERVERS;
                                                                                  }
 
                                                                              });
@@ -143,13 +143,16 @@ public class DModel extends DFromOriginalObject<SModel> implements SModel {
                                                                                  USED_MODELS.get(o).forEach(m -> DModule.REFERENCED.set(DModule.of(m.original().getModule()), Set::add, m));
                                                                              });
 
-    @SuppressWarnings("rawtypes")
-    protected static final Set<Observer>                 RULES               = DObject.RULES.add(ROOTS_READ_MATCHER).addAll(Set.of(USED_LANGUAGES_RULE, USED_MODELS_RULE, REFERENCED_RULE));
-
     private static final Action<DModel>                  READ_ROOTS          = Action.of("$READ_ROOTS", m -> {
                                                                                  MODEL_ROOT.set(m, dClareMPS().read(() -> m.original().getModelRoot()));
                                                                                  ROOTS.set(m, dClareMPS().read(() -> Collection.of(m.original().getRootNodes()).map(n -> DNode.of(n)).toSet()));
                                                                              }, Direction.forward, Priority.preDepth);
+
+    @SuppressWarnings("rawtypes")
+    protected static final Set<Observer>                 OBSERVERS           = DObject.OBSERVERS.addAll(Set.of(ROOTS_READ_MATCHER, USED_LANGUAGES_RULE, USED_MODELS_RULE, REFERENCED_RULE));
+
+    @SuppressWarnings("rawtypes")
+    protected static final Set<Setable>                  SETABLES            = DObject.SETABLES.addAll(Set.of(ROOTS, MODEL_ROOT, USED_MODELS, USED_LANGUAGES));
 
     public static DModel of(SModel original) {
         return original instanceof DModel ? (DModel) original : DMODEL.get(original);

@@ -20,7 +20,9 @@ import java.util.function.Supplier;
 import javax.swing.SwingUtilities;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
+import org.jetbrains.mps.openapi.model.SModel;
 import org.jetbrains.mps.openapi.model.SNode;
+import org.jetbrains.mps.openapi.module.SModule;
 import org.jetbrains.mps.openapi.module.SRepository;
 import org.jetbrains.mps.openapi.util.Consumer;
 import org.jetbrains.mps.openapi.util.ProgressMonitor;
@@ -66,8 +68,9 @@ import org.modelingvalue.dclare.mps.DRule.DObserverTransaction;
 
 import jetbrains.mps.checkers.IChecker;
 import jetbrains.mps.errors.CheckerRegistry;
-import jetbrains.mps.errors.item.IssueKindReportItem;
-import jetbrains.mps.errors.item.IssueKindReportItem.KindLevel;
+import jetbrains.mps.errors.item.IssueKindReportItem.CheckerCategory;
+import jetbrains.mps.errors.item.ModelReportItem;
+import jetbrains.mps.errors.item.ModuleReportItem;
 import jetbrains.mps.errors.item.NodeReportItem;
 import jetbrains.mps.project.ProjectBase;
 import jetbrains.mps.smodel.language.LanguageRegistry;
@@ -136,6 +139,8 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     protected Map<DMessageType, QualifiedSet<Triple<DObject, DFeature<?>, String>, DMessage>>              messages             = MESSAGE_QSET_MAP;
     protected final DclareForMPSEngine                                                                     engine;
     private final DRepository                                                                              dRepository;
+    private final ModuleChecker                                                                            moduleChecker;
+    private final ModelChecker                                                                             modelChecker;
     private final NodeChecker                                                                              nodeChecker;
 
     protected DClareMPS(DclareForMPSEngine engine, ProjectBase project, State prevState, int maxTotalNrOfChanges, int maxNrOfChanges, int maxNrOfObserved, int maxNrOfObservers, StartStopHandler startStopHandler) {
@@ -143,8 +148,12 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
         this.engine = engine;
         this.startStopHandler = startStopHandler;
         this.dRepository = new DRepository(project.getRepository());
+        this.moduleChecker = new ModuleChecker();
+        this.modelChecker = new ModelChecker();
         this.nodeChecker = new NodeChecker();
         CheckerRegistry checkerRegistry = project.getPlatform().findComponent(CheckerRegistry.class);
+        checkerRegistry.registerChecker(moduleChecker);
+        checkerRegistry.registerChecker(modelChecker);
         checkerRegistry.registerChecker(nodeChecker);
         project.getModelAccess().executeCommandInEDT(() -> startStopHandler.on(project));
         if (TRACE) {
@@ -525,6 +534,8 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
                 }
             }, this));
             CheckerRegistry checkerRegistry = project.getPlatform().findComponent(CheckerRegistry.class);
+            checkerRegistry.unregisterChecker(moduleChecker);
+            checkerRegistry.unregisterChecker(modelChecker);
             checkerRegistry.unregisterChecker(nodeChecker);
             ImperativeTransaction it = imperativeTransaction;
             invokeLater(() -> it.stop());
@@ -565,26 +576,58 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
         return Set.of();
     }
 
-    private class NodeChecker extends IChecker.AbstractNodeChecker<NodeReportItem> {
+    private class ModuleChecker extends IChecker.AbstractModuleChecker<ModuleReportItem> {
+        @Override
+        public void check(SModule sModule, SRepository repository, Consumer<? super ModuleReportItem> consumer, ProgressMonitor monitor) {
+            universeTransaction.preState().run(() -> {
+                DModule dModule = DModule.of(sModule);
+                for (DIssue issue : DObject.DCLARE_ISSUES.get(dModule)) {
+                    consumer.consume((ModuleReportItem) issue.getItem());
+                }
+            });
+        }
 
+        @Override
+        public CheckerCategory getCategory() {
+            return DIssue.CHECKER_CATEGORY;
+        }
+    }
+
+    private class ModelChecker extends IChecker.AbstractModelChecker<ModelReportItem> {
+        @Override
+        public void check(SModel sModel, SRepository repository, Consumer<? super ModelReportItem> consumer, ProgressMonitor monitor) {
+            universeTransaction.preState().run(() -> {
+                DModel dModel = DModel.of(sModel);
+                for (DIssue issue : DObject.DCLARE_ISSUES.get(dModel)) {
+                    consumer.consume((ModelReportItem) issue.getItem());
+                }
+            });
+        }
+
+        @Override
+        public CheckerCategory getCategory() {
+            return DIssue.CHECKER_CATEGORY;
+        }
+    }
+
+    private class NodeChecker extends IChecker.AbstractNodeChecker<NodeReportItem> {
         @Override
         public AbstractRootChecker<NodeReportItem> asRootChecker() {
             return universeTransaction.preState().get(() -> super.asRootChecker());
         }
 
         @Override
-        public void check(SNode object, SRepository repository, Consumer<? super NodeReportItem> consumer, ProgressMonitor monitor) {
-            DNode dNode = DNode.of(object.getConcept(), object.getReference());
-            for (IssueKindReportItem issue : DObject.ISSUES.get(dNode)) {
-                consumer.consume((NodeReportItem) issue);
+        public void check(SNode sNode, SRepository repository, Consumer<? super NodeReportItem> consumer, ProgressMonitor monitor) {
+            DNode dNode = DNode.of(sNode.getConcept(), sNode.getReference());
+            for (DIssue issue : DObject.DCLARE_ISSUES.get(dNode)) {
+                consumer.consume((NodeReportItem) issue.getItem());
             }
         }
 
         @Override
-        public IssueKindReportItem.CheckerCategory getCategory() {
-            return new IssueKindReportItem.CheckerCategory(KindLevel.MANUAL, "Dclare");
+        public CheckerCategory getCategory() {
+            return DIssue.CHECKER_CATEGORY;
         }
-
     }
 
 }

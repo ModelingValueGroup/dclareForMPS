@@ -24,7 +24,6 @@ import org.jetbrains.mps.openapi.model.SNode;
 import org.modelingvalue.dclare.Constant;
 
 import jetbrains.mps.errors.MessageStatus;
-import jetbrains.mps.errors.item.IssueKindReportItem;
 import jetbrains.mps.errors.item.NodeReportItem;
 import jetbrains.mps.errors.item.NodeReportItemBase;
 import jetbrains.mps.errors.messageTargets.MessageTarget;
@@ -52,10 +51,6 @@ public class DIssueNodeReportItem extends NodeReportItemBase implements NodeRepo
         this(severity, node, feature != null ? MESSAGE_TARGET.get(feature) : NODE_MESSAGE_TARGET, severity.getPresentation() + ": " + message);
     }
 
-    public DIssueNodeReportItem(NodeReportItem original, SNode node) {
-        this(original.getSeverity(), node, (MessageTarget) null, original.getMessage());
-    }
-
     private DIssueNodeReportItem(MessageStatus severity, SNode node, MessageTarget messageTarget, String message) {
         super(severity, node.getReference(), message);
         this.messageTarget = messageTarget;
@@ -73,6 +68,6 @@ public class DIssueNodeReportItem extends NodeReportItemBase implements NodeRepo
 
     @Override
     public ItemKind getIssueKind() {
-        return IssueKindReportItem.TYPESYSTEM.deriveItemKind();
+        return DIssue.ITEM_KIND;
     }
 }
