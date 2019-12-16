@@ -91,18 +91,8 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
                                                                                                                                     }
 
                                                                                                                                     @Override
-                                                                                                                                    public Collection<? extends Setable<? extends Mutable, ?>> dContainers() {
-                                                                                                                                        return Collection.of(REPOSITORY_CONTAINER);
-                                                                                                                                    }
-
-                                                                                                                                    @Override
-                                                                                                                                    public Collection<? extends Constant<? extends Mutable, ?>> dConstants() {
-                                                                                                                                        return Collection.of();
-                                                                                                                                    }
-
-                                                                                                                                    @Override
                                                                                                                                     public Collection<? extends Setable<? extends Mutable, ?>> dSetables() {
-                                                                                                                                        return Collection.of();
+                                                                                                                                        return SETABLES;
                                                                                                                                     }
                                                                                                                                 };
 
@@ -127,6 +117,8 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
                                                                                                                                 });
 
     private final static Setable<DClareMPS, DRepository>                                                   REPOSITORY_CONTAINER = Setable.of("REPOSITORY_CONTAINER", null, true);
+
+    protected static final Set<? extends Setable<? extends Mutable, ?>>                                    SETABLES             = Set.of(REPOSITORY_CONTAINER);
 
     private final ContextPool                                                                              thePool              = ContextThread.createPool();
     protected final Thread                                                                                 waitForEndThread;
@@ -569,11 +561,6 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     @Override
     public MutableClass dClass() {
         return UNIVERSE_CLASS;
-    }
-
-    @Override
-    public Collection<? extends Observer<?>> dMutableObservers() {
-        return Set.of();
     }
 
     private class ModuleChecker extends IChecker.AbstractModuleChecker<ModuleReportItem> {

@@ -130,11 +130,6 @@ public abstract class DObject implements Mutable {
         return TYPE.get(this);
     }
 
-    @Override
-    public Collection<? extends Observer<?>> dMutableObservers() {
-        return Set.of();
-    }
-
     @SuppressWarnings("unchecked")
     public Collection<DObject> getAllChildren() {
         return (Collection<DObject>) dChildren();

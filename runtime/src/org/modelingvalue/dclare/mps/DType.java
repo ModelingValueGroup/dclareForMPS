@@ -107,15 +107,4 @@ public abstract class DType implements MutableClass {
         return DObject.SETABLES;
     }
 
-    @Override
-    public final Collection<? extends Setable<? extends Mutable, ?>> dContainers() {
-        return dSetables().filter(a -> a.containment());
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public final Collection<? extends Constant<? extends Mutable, ?>> dConstants() {
-        return (Collection<? extends Constant<? extends Mutable, ?>>) dSetables().filter(a -> a instanceof Constant);
-    }
-
 }
