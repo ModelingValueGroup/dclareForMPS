@@ -65,7 +65,7 @@ public class DNode extends DIdentifiedObject implements SNode {
                                                                                                               return DObserved.<DNode, List<DNode>> of(mc, List.of(), !mc.isOptional(), true, null, false,                                     //
                                                                                                                       (dNode, pre, post) -> {
                                                                                                                           SNode sNode = dNode.sNode(true);
-                                                                                                                          List<SNode> soll = post.map(c -> c.reParent(sNode, mc, c.sNode(true))).distinct().toList();
+                                                                                                                          List<SNode> soll = post.map(c -> c.reParent(sNode, mc, c.sNode(true))).toList();
                                                                                                                           List<SNode> ist = DNode.children(sNode, mc);
                                                                                                                           DObserved.map(ist, soll,                                                                                             //
                                                                                                                                   (n, a) -> {
@@ -123,7 +123,7 @@ public class DNode extends DIdentifiedObject implements SNode {
                                                                                                           });
     @SuppressWarnings("deprecation")
     public static final Constant<SProperty, DObserved<DNode, String>>              PROPERTY               = Constant.of("PROPERTY", sp -> {
-                                                                                                              return DObserved.<DNode, String> of(sp, null, true, false, null, false,                                                          //
+                                                                                                              return DObserved.<DNode, String> of(sp, null, false, false, null, false,                                                         //
                                                                                                                       (dNode, pre, post) -> {
                                                                                                                           SNode sNode = dNode.sNode(true);
                                                                                                                           String ist = sNode.getProperty(sp);

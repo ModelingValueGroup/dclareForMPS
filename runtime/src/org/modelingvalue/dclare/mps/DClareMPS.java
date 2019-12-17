@@ -67,7 +67,9 @@ import org.modelingvalue.dclare.mps.DRule.DObserver;
 import org.modelingvalue.dclare.mps.DRule.DObserverTransaction;
 
 import jetbrains.mps.checkers.IChecker;
+import jetbrains.mps.checkers.ICheckingPostprocessor;
 import jetbrains.mps.errors.CheckerRegistry;
+import jetbrains.mps.errors.item.IssueKindReportItem;
 import jetbrains.mps.errors.item.IssueKindReportItem.CheckerCategory;
 import jetbrains.mps.errors.item.ModelReportItem;
 import jetbrains.mps.errors.item.ModuleReportItem;
@@ -600,7 +602,30 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     private class NodeChecker extends IChecker.AbstractNodeChecker<NodeReportItem> {
         @Override
         public AbstractRootChecker<NodeReportItem> asRootChecker() {
-            return universeTransaction.preState().get(() -> super.asRootChecker());
+            AbstractRootChecker<NodeReportItem> rootChecker = super.asRootChecker();
+            return new AbstractRootChecker<NodeReportItem>() {
+                @Override
+                public IssueKindReportItem.CheckerCategory getCategory() {
+                    return rootChecker.getCategory();
+                }
+
+                @Override
+                public ICheckingPostprocessor<NodeReportItem> getPostprocessor() {
+                    return rootChecker.getPostprocessor();
+                }
+
+                @Override
+                public String toString() {
+                    return rootChecker.toString();
+                }
+
+                @Override
+                public void check(SNode root, SRepository repository, Consumer<? super NodeReportItem> errorCollector, ProgressMonitor monitor) {
+                    universeTransaction.preState().run(() -> {
+                        rootChecker.check(root, repository, errorCollector, monitor);
+                    });
+                }
+            };
         }
 
         @Override
