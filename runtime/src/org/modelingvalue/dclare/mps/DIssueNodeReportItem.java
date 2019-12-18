@@ -17,43 +17,25 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.jetbrains.mps.openapi.language.SAbstractLink;
-import org.jetbrains.mps.openapi.language.SConceptFeature;
-import org.jetbrains.mps.openapi.language.SProperty;
 import org.jetbrains.mps.openapi.model.SNode;
-import org.modelingvalue.dclare.Constant;
 
 import jetbrains.mps.errors.MessageStatus;
 import jetbrains.mps.errors.item.NodeReportItem;
 import jetbrains.mps.errors.item.NodeReportItemBase;
 import jetbrains.mps.errors.messageTargets.MessageTarget;
 import jetbrains.mps.errors.messageTargets.NodeMessageTarget;
-import jetbrains.mps.errors.messageTargets.PropertyMessageTarget;
-import jetbrains.mps.errors.messageTargets.ReferenceMessageTarget;
 
 public class DIssueNodeReportItem extends NodeReportItemBase implements NodeReportItem {
 
-    private static final NodeMessageTarget                  NODE_MESSAGE_TARGET = new NodeMessageTarget();
+    private static final NodeMessageTarget                NODE_MESSAGE_TARGET = new NodeMessageTarget();
 
-    private static final HashSet<ReportItemFlavour<?, ?>>   FLAVOURS            = new HashSet<>(Arrays.asList(FLAVOUR_ISSUE_KIND, FLAVOUR_NODE));
+    private static final HashSet<ReportItemFlavour<?, ?>> FLAVOURS            = new HashSet<>(Arrays.asList(FLAVOUR_ISSUE_KIND, FLAVOUR_NODE));
 
-    private static Constant<SConceptFeature, MessageTarget> MESSAGE_TARGET      = Constant.of("$MESSAGE_TARGET", cf -> {
-                                                                                    if (cf instanceof SProperty) {
-                                                                                        return new PropertyMessageTarget((SProperty) cf);
-                                                                                    } else {
-                                                                                        return new ReferenceMessageTarget((SAbstractLink) cf);
-                                                                                    }
-                                                                                });
+    private final MessageTarget                           messageTarget;
 
-    private final MessageTarget                             messageTarget;
-
-    public DIssueNodeReportItem(MessageStatus severity, SNode node, SConceptFeature feature, String message) {
-        this(severity, node, feature != null ? MESSAGE_TARGET.get(feature) : NODE_MESSAGE_TARGET, severity.getPresentation() + ": " + message);
-    }
-
-    private DIssueNodeReportItem(MessageStatus severity, SNode node, MessageTarget messageTarget, String message) {
+    public DIssueNodeReportItem(MessageStatus severity, SNode node, MessageTarget messageTarget, String message) {
         super(severity, node.getReference(), message);
-        this.messageTarget = messageTarget;
+        this.messageTarget = messageTarget != null ? messageTarget : NODE_MESSAGE_TARGET;
     }
 
     @Override

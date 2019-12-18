@@ -22,6 +22,9 @@
     <import index="kag7" ref="55d6b6f5-8095-4cd0-a39b-779da8d12940/java:org.modelingvalue.dclare(DclareMPSRuntime/)" />
     <import index="d6hs" ref="6ed54515-acc8-4d1e-a16c-9fd6cfe951ea/java:jetbrains.mps.errors.item(MPS.Core/)" />
     <import index="2gg1" ref="6ed54515-acc8-4d1e-a16c-9fd6cfe951ea/java:jetbrains.mps.errors(MPS.Core/)" />
+    <import index="tpce" ref="r:00000000-0000-4000-0000-011c89590292(jetbrains.mps.lang.structure.structure)" />
+    <import index="tpd4" ref="r:00000000-0000-4000-0000-011c895902b4(jetbrains.mps.lang.typesystem.structure)" />
+    <import index="zavc" ref="6ed54515-acc8-4d1e-a16c-9fd6cfe951ea/java:jetbrains.mps.errors.messageTargets(MPS.Core/)" />
   </imports>
   <registry>
     <language id="f3061a53-9226-4cc5-a443-f952ceaf5816" name="jetbrains.mps.baseLanguage">
@@ -289,12 +292,12 @@
     </node>
     <node concept="2tJIrI" id="4Y8BM43o7rh" role="jymVt" />
     <node concept="2YIFZL" id="41CotWWs3bj" role="jymVt">
-      <property role="TrG5h" value="createIssue" />
+      <property role="TrG5h" value="dIssue" />
       <node concept="3clFbS" id="45beoc8yCW7" role="3clF47">
         <node concept="3clFbF" id="2iL65LTRi45" role="3cqZAp">
           <node concept="2YIFZM" id="2iL65LTRi7m" role="3clFbG">
-            <ref role="37wK5l" to="t4tl:~DIssue.of(org.modelingvalue.dclare.mps.DObject,jetbrains.mps.errors.MessageStatus,org.jetbrains.mps.openapi.language.SConceptFeature,java.util.function.Supplier,java.lang.Object[])" resolve="of" />
             <ref role="1Pybhc" to="t4tl:~DIssue" resolve="DIssue" />
+            <ref role="37wK5l" to="t4tl:~DIssue.of(org.modelingvalue.dclare.mps.DObject,jetbrains.mps.errors.MessageStatus,jetbrains.mps.errors.messageTargets.MessageTarget,java.util.function.Supplier,java.lang.Object[])" resolve="of" />
             <node concept="1eOMI4" id="2iL65LTRlY_" role="37wK5m">
               <node concept="10QFUN" id="2iL65LTRlYy" role="1eOMHV">
                 <node concept="3uibUv" id="2iL65LTRm1q" role="10QFUM">
@@ -344,7 +347,7 @@
                 </node>
               </node>
             </node>
-            <node concept="37vLTw" id="2iL65LTRvwv" role="37wK5m">
+            <node concept="37vLTw" id="6GOaSdwDed_" role="37wK5m">
               <ref role="3cqZAo" node="2iL65LTRmg0" resolve="identity" />
             </node>
           </node>
@@ -356,16 +359,16 @@
           <ref role="3uigEE" to="wyt6:~Object" resolve="Object" />
         </node>
       </node>
-      <node concept="37vLTG" id="45beoc8ySQP" role="3clF46">
-        <property role="TrG5h" value="feature" />
-        <node concept="3uibUv" id="45beoc8yTUE" role="1tU5fm">
-          <ref role="3uigEE" to="c17a:~SConceptFeature" resolve="SConceptFeature" />
-        </node>
-      </node>
       <node concept="37vLTG" id="45beoc8yLLT" role="3clF46">
         <property role="TrG5h" value="severity" />
         <node concept="3uibUv" id="45beoc8yPzi" role="1tU5fm">
           <ref role="3uigEE" to="2gg1:~MessageStatus" resolve="MessageStatus" />
+        </node>
+      </node>
+      <node concept="37vLTG" id="45beoc8ySQP" role="3clF46">
+        <property role="TrG5h" value="feature" />
+        <node concept="3uibUv" id="6GOaSdwKn60" role="1tU5fm">
+          <ref role="3uigEE" to="zavc:~MessageTarget" resolve="MessageTarget" />
         </node>
       </node>
       <node concept="37vLTG" id="2iL65LTRo1G" role="3clF46">
@@ -377,9 +380,8 @@
       </node>
       <node concept="37vLTG" id="2iL65LTRmg0" role="3clF46">
         <property role="TrG5h" value="identity" />
-        <property role="3TUv4t" value="true" />
-        <node concept="10Q1$e" id="2iL65LTRmg1" role="1tU5fm">
-          <node concept="3uibUv" id="2iL65LTRmg2" role="10Q1$1">
+        <node concept="10Q1$e" id="6GOaSdwDatf" role="1tU5fm">
+          <node concept="3uibUv" id="6GOaSdwDatg" role="10Q1$1">
             <ref role="3uigEE" to="wyt6:~Object" resolve="Object" />
           </node>
         </node>

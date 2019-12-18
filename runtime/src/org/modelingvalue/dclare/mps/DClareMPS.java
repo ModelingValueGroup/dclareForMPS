@@ -13,6 +13,7 @@
 
 package org.modelingvalue.dclare.mps;
 
+import java.util.Collections;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.Supplier;
@@ -66,14 +67,18 @@ import org.modelingvalue.dclare.UniverseTransaction;
 import org.modelingvalue.dclare.mps.DRule.DObserver;
 import org.modelingvalue.dclare.mps.DRule.DObserverTransaction;
 
+import jetbrains.mps.checkers.AbstractNodeCheckerInEditor;
 import jetbrains.mps.checkers.IChecker;
 import jetbrains.mps.checkers.ICheckingPostprocessor;
+import jetbrains.mps.checkers.LanguageErrorsCollector;
+import jetbrains.mps.editor.runtime.LanguageEditorChecker;
 import jetbrains.mps.errors.CheckerRegistry;
 import jetbrains.mps.errors.item.IssueKindReportItem;
 import jetbrains.mps.errors.item.IssueKindReportItem.CheckerCategory;
 import jetbrains.mps.errors.item.ModelReportItem;
 import jetbrains.mps.errors.item.ModuleReportItem;
 import jetbrains.mps.errors.item.NodeReportItem;
+import jetbrains.mps.nodeEditor.Highlighter;
 import jetbrains.mps.project.ProjectBase;
 import jetbrains.mps.smodel.language.LanguageRegistry;
 import jetbrains.mps.smodel.language.LanguageRuntime;
@@ -136,6 +141,8 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     private final ModuleChecker                                                                            moduleChecker;
     private final ModelChecker                                                                             modelChecker;
     private final NodeChecker                                                                              nodeChecker;
+    private final NodeCheckerInEditor                                                                      nodeCheckerInEditor;
+    private final LanguageEditorChecker                                                                    languageEditorChecker;
 
     protected DClareMPS(DclareForMPSEngine engine, ProjectBase project, State prevState, int maxTotalNrOfChanges, int maxNrOfChanges, int maxNrOfObserved, int maxNrOfObservers, StartStopHandler startStopHandler) {
         this.project = project;
@@ -145,10 +152,14 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
         this.moduleChecker = new ModuleChecker();
         this.modelChecker = new ModelChecker();
         this.nodeChecker = new NodeChecker();
+        this.nodeCheckerInEditor = new NodeCheckerInEditor();
+        this.languageEditorChecker = new LanguageEditorChecker(project.getRepository(), Collections.singletonList(nodeCheckerInEditor));
         CheckerRegistry checkerRegistry = project.getPlatform().findComponent(CheckerRegistry.class);
         checkerRegistry.registerChecker(moduleChecker);
         checkerRegistry.registerChecker(modelChecker);
         checkerRegistry.registerChecker(nodeChecker);
+        Highlighter highlighter = project.getComponent(Highlighter.class);
+        highlighter.addChecker(languageEditorChecker);
         project.getModelAccess().executeCommandInEDT(() -> startStopHandler.on(project));
         if (TRACE) {
             System.err.println(DCLARE + "START " + this);
@@ -531,6 +542,8 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
             checkerRegistry.unregisterChecker(moduleChecker);
             checkerRegistry.unregisterChecker(modelChecker);
             checkerRegistry.unregisterChecker(nodeChecker);
+            Highlighter highlighter = project.getComponent(Highlighter.class);
+            project.getModelAccess().runReadInEDT(() -> highlighter.removeChecker(languageEditorChecker));
             ImperativeTransaction it = imperativeTransaction;
             invokeLater(() -> it.stop());
             imperativeTransaction = null;
@@ -634,6 +647,24 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
             for (DIssue issue : DObject.DCLARE_ISSUES.get(dNode)) {
                 consumer.consume((NodeReportItem) issue.getItem());
             }
+        }
+
+        @Override
+        public CheckerCategory getCategory() {
+            return DIssue.CHECKER_CATEGORY;
+        }
+    }
+
+    private class NodeCheckerInEditor extends AbstractNodeCheckerInEditor {
+
+        @Override
+        protected void checkNodeInEditor(SNode sNode, LanguageErrorsCollector errorsCollector, SRepository repository) {
+            universeTransaction.preState().run(() -> {
+                DNode dNode = DNode.of(sNode.getConcept(), sNode.getReference());
+                for (DIssue issue : DObject.DCLARE_ISSUES.get(dNode)) {
+                    errorsCollector.addError((NodeReportItem) issue.getItem());
+                }
+            });
         }
 
         @Override

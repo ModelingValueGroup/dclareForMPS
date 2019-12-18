@@ -11,6 +11,7 @@
     <import index="tp25" ref="r:00000000-0000-4000-0000-011c89590301(jetbrains.mps.lang.smodel.structure)" />
     <import index="tp3r" ref="r:00000000-0000-4000-0000-011c8959034b(jetbrains.mps.lang.quotation.structure)" />
     <import index="tp2q" ref="r:00000000-0000-4000-0000-011c8959032e(jetbrains.mps.baseLanguage.collections.structure)" />
+    <import index="tpd4" ref="r:00000000-0000-4000-0000-011c895902b4(jetbrains.mps.lang.typesystem.structure)" />
     <import index="tpck" ref="r:00000000-0000-4000-0000-011c89590288(jetbrains.mps.lang.core.structure)" implicit="true" />
   </imports>
   <registry>
@@ -621,7 +622,7 @@
     <property role="3GE5qa" value="issues" />
     <property role="TrG5h" value="Issue" />
     <property role="R5$K7" value="true" />
-    <ref role="1TJDcQ" to="tpee:fz3vP1J" resolve="Expression" />
+    <ref role="1TJDcQ" to="tpee:fzclF8l" resolve="Statement" />
     <node concept="1TJgyi" id="41CotWWs4Oi" role="1TKVEl">
       <property role="IQ2nx" value="4641067027424890130" />
       <property role="TrG5h" value="severity" />
@@ -669,10 +670,11 @@
     <property role="TrG5h" value="NodeIssue" />
     <property role="34LRSv" value="node issue" />
     <ref role="1TJDcQ" node="41CotWWrJg$" resolve="Issue" />
-    <node concept="1TJgyj" id="41CotWWsaDt" role="1TKVEi">
-      <property role="IQ2ns" value="4641067027424914013" />
-      <property role="20kJfa" value="feature" />
-      <ref role="20lvS9" to="tpce:1ob16QT2yIl" resolve="INamedLanguageElement" />
+    <node concept="1TJgyj" id="hQOEWAg" role="1TKVEi">
+      <property role="20lmBu" value="fLJjDmT/aggregation" />
+      <property role="20kJfa" value="messageTarget" />
+      <property role="IQ2ns" value="1227096836496" />
+      <ref role="20lvS9" to="tpd4:hQOD_u3" resolve="MessageTarget" />
     </node>
   </node>
   <node concept="1TIwiD" id="2iL65LTVkL0">

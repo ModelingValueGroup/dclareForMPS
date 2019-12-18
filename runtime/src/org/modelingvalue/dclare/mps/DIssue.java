@@ -13,10 +13,8 @@
 
 package org.modelingvalue.dclare.mps;
 
-import java.util.Arrays;
 import java.util.function.Supplier;
 
-import org.jetbrains.mps.openapi.language.SConceptFeature;
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.jetbrains.mps.openapi.module.SRepository;
 import org.modelingvalue.collections.Collection;
@@ -32,6 +30,7 @@ import jetbrains.mps.errors.item.IssueKindReportItem;
 import jetbrains.mps.errors.item.IssueKindReportItem.CheckerCategory;
 import jetbrains.mps.errors.item.IssueKindReportItem.ItemKind;
 import jetbrains.mps.errors.item.IssueKindReportItem.KindLevel;
+import jetbrains.mps.errors.messageTargets.MessageTarget;
 
 public class DIssue extends DIdentifiedObject {
 
@@ -82,30 +81,31 @@ public class DIssue extends DIdentifiedObject {
     @SuppressWarnings("rawtypes")
     protected static final Set<Setable>                  SETABLES         = DObject.SETABLES.addAll(Set.of(MESSAGE, DOBJECT));
 
-    public static DIssue of(DObject object, MessageStatus severity, SConceptFeature feature, Supplier<String> message, Object[] identity) {
-        identity = Arrays.copyOf(identity, identity.length + 2);
-        identity[identity.length - 2] = feature;
-        identity[identity.length - 1] = severity;
-        return new DIssue(((DObserver<?>) LeafTransaction.getCurrent().cls()).rule(), object, message, identity);
+    public static DIssue of(DObject object, MessageStatus severity, MessageTarget feature, Supplier<String> message, Object[] identity) {
+        return new DIssue(((DObserver<?>) LeafTransaction.getCurrent().cls()).rule(), object, severity, feature, message, identity);
     }
 
     private final Supplier<String> message;
     private final DRule<?>         rule;
+    private final MessageStatus    severity;
+    private final MessageTarget    feature;
 
-    private DIssue(DRule<?> rule, DObject object, Supplier<String> message, Object[] identity) {
+    private DIssue(DRule<?> rule, DObject object, MessageStatus severity, MessageTarget feature, Supplier<String> message, Object[] identity) {
         super(identity);
         this.rule = rule;
         this.message = message;
+        this.severity = severity;
+        this.feature = feature;
         DOBJECT.set(this, object);
         DRule.DISUES.set(Set::add, this);
     }
 
-    public SConceptFeature getFeature() {
-        return (SConceptFeature) identity[identity.length - 2];
+    public MessageTarget getFeature() {
+        return feature;
     }
 
     public MessageStatus getSeverity() {
-        return (MessageStatus) identity[identity.length - 1];
+        return severity;
     }
 
     public DRule<?> getRule() {

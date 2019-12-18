@@ -18,6 +18,7 @@
     <import index="z1c3" ref="6ed54515-acc8-4d1e-a16c-9fd6cfe951ea/java:jetbrains.mps.project(MPS.Core/)" />
     <import index="w1kc" ref="6ed54515-acc8-4d1e-a16c-9fd6cfe951ea/java:jetbrains.mps.smodel(MPS.Core/)" />
     <import index="18ew" ref="6ed54515-acc8-4d1e-a16c-9fd6cfe951ea/java:jetbrains.mps.util(MPS.Core/)" />
+    <import index="tpd4" ref="r:00000000-0000-4000-0000-011c895902b4(jetbrains.mps.lang.typesystem.structure)" />
     <import index="7ggn" ref="r:38c3b7db-3776-47fb-ba27-a4f002c4edc7(DclareMPS.structure)" implicit="true" />
     <import index="tp25" ref="r:00000000-0000-4000-0000-011c89590301(jetbrains.mps.lang.smodel.structure)" implicit="true" />
     <import index="tpcn" ref="r:00000000-0000-4000-0000-011c8959028b(jetbrains.mps.lang.structure.behavior)" implicit="true" />
@@ -1842,6 +1843,7 @@
       </node>
       <node concept="3F0A7n" id="2iL65LTYX2q" role="3EZMnx">
         <ref role="1NtTu8" to="7ggn:41CotWWs4Oi" resolve="severity" />
+        <ref role="1k5W1q" to="tpen:hgVS8CF" resolve="KeyWord" />
       </node>
       <node concept="3F1sOY" id="2iL65LTYX30" role="3EZMnx">
         <ref role="1NtTu8" to="7ggn:2iL65LTUI5t" resolve="message" />
@@ -1851,24 +1853,6 @@
       </node>
       <node concept="3F1sOY" id="2iL65LTYX2A" role="3EZMnx">
         <ref role="1NtTu8" to="7ggn:41CotWWs4Oc" resolve="object" />
-      </node>
-      <node concept="3F0ifn" id="2iL65LTYX2I" role="3EZMnx">
-        <property role="3F0ifm" value="." />
-        <node concept="11L4FC" id="2iL65LTZ4rT" role="3F10Kt">
-          <property role="VOm3f" value="true" />
-        </node>
-        <node concept="11LMrY" id="2iL65LTZ4s7" role="3F10Kt">
-          <property role="VOm3f" value="true" />
-        </node>
-      </node>
-      <node concept="1iCGBv" id="2iL65LTYX3q" role="3EZMnx">
-        <ref role="1NtTu8" to="7ggn:41CotWWsaDt" resolve="feature" />
-        <node concept="1sVBvm" id="2iL65LTYX3s" role="1sWHZn">
-          <node concept="3F0A7n" id="2iL65LTYX3C" role="2wV5jI">
-            <property role="1Intyy" value="true" />
-            <ref role="1NtTu8" to="tpck:h0TrG11" resolve="name" />
-          </node>
-        </node>
       </node>
       <node concept="3F0ifn" id="4IP40Bi2Gw_" role="3EZMnx">
         <property role="3F0ifm" value="&gt;" />
@@ -1882,6 +1866,12 @@
         <node concept="3mYdg7" id="4IP40Bi2GwC" role="3F10Kt">
           <property role="1rAbXj" value="true" />
           <property role="1413C4" value="quot" />
+        </node>
+      </node>
+      <node concept="3F0ifn" id="1Kikqj8rn6q" role="3EZMnx">
+        <property role="3F0ifm" value=";" />
+        <node concept="11L4FC" id="1Kikqj8rLzw" role="3F10Kt">
+          <property role="VOm3f" value="true" />
         </node>
       </node>
     </node>
@@ -1910,6 +1900,7 @@
       </node>
       <node concept="3F0A7n" id="2iL65LU1O82" role="3EZMnx">
         <ref role="1NtTu8" to="7ggn:41CotWWs4Oi" resolve="severity" />
+        <ref role="1k5W1q" to="tpen:hgVS8CF" resolve="KeyWord" />
       </node>
       <node concept="3F1sOY" id="2iL65LU1O83" role="3EZMnx">
         <ref role="1NtTu8" to="7ggn:2iL65LTUI5t" resolve="message" />
@@ -1932,6 +1923,12 @@
         <node concept="3mYdg7" id="2iL65LU1O89" role="3F10Kt">
           <property role="1rAbXj" value="true" />
           <property role="1413C4" value="quot" />
+        </node>
+      </node>
+      <node concept="3F0ifn" id="1Kikqj8rn5V" role="3EZMnx">
+        <property role="3F0ifm" value=";" />
+        <node concept="11L4FC" id="1Kikqj8szVB" role="3F10Kt">
+          <property role="VOm3f" value="true" />
         </node>
       </node>
     </node>
@@ -1960,6 +1957,9 @@
       </node>
       <node concept="3F0A7n" id="2iL65LU1O6V" role="3EZMnx">
         <ref role="1NtTu8" to="7ggn:41CotWWs4Oi" resolve="severity" />
+        <node concept="11L4FC" id="1Kikqj8szVD" role="3F10Kt">
+          <property role="VOm3f" value="true" />
+        </node>
       </node>
       <node concept="3F1sOY" id="2iL65LU1O6W" role="3EZMnx">
         <ref role="1NtTu8" to="7ggn:2iL65LTUI5t" resolve="message" />
@@ -1983,6 +1983,10 @@
           <property role="1rAbXj" value="true" />
           <property role="1413C4" value="quot" />
         </node>
+      </node>
+      <node concept="3F0ifn" id="1Kikqj8rn5s" role="3EZMnx">
+        <property role="3F0ifm" value=";" />
+        <ref role="1k5W1q" to="tpen:hgVS8CF" resolve="KeyWord" />
       </node>
     </node>
   </node>
