@@ -12,5 +12,8 @@
 	<classpathentry kind="var" path="MPS_HOME/lib/mps-platform.jar" sourcepath="/MPS_SRC"/>
 	<classpathentry kind="var" path="MPS_HOME/lib/platform-api.jar"/>
 	<classpathentry kind="var" path="MPS_HOME/lib/mps-core.jar" sourcepath="/MPS_SRC"/>
+	<classpathentry kind="var" path="MPS_HOME/lib/extensions.jar"/>
+	<classpathentry kind="var" path="MPS_HOME/lib/mps-project-check.jar"/>
+	<classpathentry kind="var" path="MPS_HOME/lib/mps-closures.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
