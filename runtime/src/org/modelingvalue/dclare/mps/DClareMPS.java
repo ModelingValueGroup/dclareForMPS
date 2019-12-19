@@ -13,7 +13,11 @@
 
 package org.modelingvalue.dclare.mps;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.Supplier;
@@ -30,6 +34,7 @@ import org.jetbrains.mps.openapi.util.ProgressMonitor;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.DefaultMap;
 import org.modelingvalue.collections.Entry;
+import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.Map;
 import org.modelingvalue.collections.QualifiedSet;
 import org.modelingvalue.collections.Set;
@@ -71,6 +76,7 @@ import jetbrains.mps.checkers.AbstractNodeCheckerInEditor;
 import jetbrains.mps.checkers.IChecker;
 import jetbrains.mps.checkers.ICheckingPostprocessor;
 import jetbrains.mps.checkers.LanguageErrorsCollector;
+import jetbrains.mps.checkers.ModelCheckerBuilder;
 import jetbrains.mps.editor.runtime.LanguageEditorChecker;
 import jetbrains.mps.errors.CheckerRegistry;
 import jetbrains.mps.errors.item.IssueKindReportItem;
@@ -79,6 +85,7 @@ import jetbrains.mps.errors.item.ModelReportItem;
 import jetbrains.mps.errors.item.ModuleReportItem;
 import jetbrains.mps.errors.item.NodeReportItem;
 import jetbrains.mps.nodeEditor.Highlighter;
+import jetbrains.mps.progress.EmptyProgressMonitor;
 import jetbrains.mps.project.ProjectBase;
 import jetbrains.mps.smodel.language.LanguageRegistry;
 import jetbrains.mps.smodel.language.LanguageRuntime;
@@ -686,7 +693,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
 			ModelCheckerBuilder.ItemsToCheck itemsToCheck = new ModelCheckerBuilder.ItemsToCheck();
 			itemsToCheck.models = new ArrayList(Arrays.asList(models.toArray()));
 			
-			new ModelCheckerBuilder(new ModelsExtractorImpl().excludeGenerators()).createChecker(checkers)
+			new ModelCheckerBuilder(new ModelCheckerBuilder.ModelsExtractorImpl().excludeGenerators()).createChecker(checkers)
 					.check(itemsToCheck, repos, (x -> {
 						if (x instanceof NodeReportItem) {
 							DNode n = DNode.of(((NodeReportItem) x).getNode().resolve(repos));
