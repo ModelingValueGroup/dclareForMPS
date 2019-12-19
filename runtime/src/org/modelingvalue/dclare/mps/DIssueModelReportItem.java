@@ -19,37 +19,26 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.jetbrains.mps.openapi.model.SNode;
+import org.jetbrains.mps.openapi.model.SModel;
 
 import jetbrains.mps.errors.MessageStatus;
-import jetbrains.mps.errors.item.NodeReportItemBase;
+import jetbrains.mps.errors.item.ModelReportItemBase;
 import jetbrains.mps.errors.item.RuleIdFlavouredItem;
-import jetbrains.mps.errors.messageTargets.MessageTarget;
-import jetbrains.mps.errors.messageTargets.NodeMessageTarget;
 
-public class DIssueNodeReportItem extends NodeReportItemBase implements RuleIdFlavouredItem {
+public class DIssueModelReportItem extends ModelReportItemBase implements RuleIdFlavouredItem {
 
-    private static final NodeMessageTarget                NODE_MESSAGE_TARGET = new NodeMessageTarget();
+    private static final HashSet<ReportItemFlavour<?, ?>> FLAVOURS = new HashSet<>(Arrays.asList(FLAVOUR_ISSUE_KIND, FLAVOUR_MODEL, FLAVOUR_RULE_ID));
 
-    private static final HashSet<ReportItemFlavour<?, ?>> FLAVOURS            = new HashSet<>(Arrays.asList(FLAVOUR_ISSUE_KIND, FLAVOUR_NODE, FLAVOUR_RULE_ID));
-
-    private final MessageTarget                           messageTarget;
     private final TypesystemRuleId                        ruleId;
 
-    public DIssueNodeReportItem(MessageStatus severity, SNode node, MessageTarget messageTarget, String message, TypesystemRuleId ruleId) {
-        super(severity, node.getReference(), message);
-        this.messageTarget = messageTarget != null ? messageTarget : NODE_MESSAGE_TARGET;
+    public DIssueModelReportItem(MessageStatus severity, SModel model, String message, TypesystemRuleId ruleId) {
+        super(severity, model.getReference(), severity.getPresentation() + ": " + message);
         this.ruleId = ruleId;
     }
 
     @Override
     public Set<ReportItemFlavour<?, ?>> getIdFlavours() {
         return FLAVOURS;
-    }
-
-    @Override
-    public MessageTarget getMessageTarget() {
-        return messageTarget;
     }
 
     @Override
@@ -61,4 +50,5 @@ public class DIssueNodeReportItem extends NodeReportItemBase implements RuleIdFl
     public Collection<TypesystemRuleId> getRuleId() {
         return Collections.singleton(ruleId);
     }
+
 }

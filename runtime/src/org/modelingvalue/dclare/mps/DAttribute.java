@@ -20,6 +20,7 @@ import java.util.function.Supplier;
 
 import org.jetbrains.mps.openapi.model.SNode;
 import org.modelingvalue.dclare.Constant;
+import org.modelingvalue.dclare.EmptyMandatoryException;
 import org.modelingvalue.dclare.Mutable;
 import org.modelingvalue.dclare.State;
 
@@ -101,6 +102,14 @@ public interface DAttribute<O, T> extends DFeature<O> {
         @Override
         public Class<?> cls() {
             return cls;
+        }
+
+        @Override
+        public void checkConsistency(State state, C object, V post) {
+            super.checkConsistency(state, object, post);
+            if (mandatory && post == null) {
+                throw new EmptyMandatoryException(object, this);
+            }
         }
 
     }

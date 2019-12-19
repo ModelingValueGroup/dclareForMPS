@@ -19,26 +19,26 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.jetbrains.mps.openapi.model.SNode;
+import org.jetbrains.mps.openapi.module.SModule;
+import org.jetbrains.mps.openapi.module.SModuleReference;
 
 import jetbrains.mps.errors.MessageStatus;
-import jetbrains.mps.errors.item.NodeReportItemBase;
+import jetbrains.mps.errors.item.ModuleReportItem;
 import jetbrains.mps.errors.item.RuleIdFlavouredItem;
-import jetbrains.mps.errors.messageTargets.MessageTarget;
-import jetbrains.mps.errors.messageTargets.NodeMessageTarget;
 
-public class DIssueNodeReportItem extends NodeReportItemBase implements RuleIdFlavouredItem {
+public class DIssueModuleReportItem implements ModuleReportItem, RuleIdFlavouredItem {
 
-    private static final NodeMessageTarget                NODE_MESSAGE_TARGET = new NodeMessageTarget();
+    private static final HashSet<ReportItemFlavour<?, ?>> FLAVOURS = new HashSet<>(Arrays.asList(FLAVOUR_ISSUE_KIND, FLAVOUR_MODULE, FLAVOUR_RULE_ID));
 
-    private static final HashSet<ReportItemFlavour<?, ?>> FLAVOURS            = new HashSet<>(Arrays.asList(FLAVOUR_ISSUE_KIND, FLAVOUR_NODE, FLAVOUR_RULE_ID));
-
-    private final MessageTarget                           messageTarget;
+    private final MessageStatus                           severity;
+    private final SModuleReference                        module;
+    private final String                                  message;
     private final TypesystemRuleId                        ruleId;
 
-    public DIssueNodeReportItem(MessageStatus severity, SNode node, MessageTarget messageTarget, String message, TypesystemRuleId ruleId) {
-        super(severity, node.getReference(), message);
-        this.messageTarget = messageTarget != null ? messageTarget : NODE_MESSAGE_TARGET;
+    public DIssueModuleReportItem(MessageStatus severity, SModule module, String message, TypesystemRuleId ruleId) {
+        this.severity = severity;
+        this.module = module.getModuleReference();
+        this.message = severity.getPresentation() + ": " + message;
         this.ruleId = ruleId;
     }
 
@@ -48,17 +48,28 @@ public class DIssueNodeReportItem extends NodeReportItemBase implements RuleIdFl
     }
 
     @Override
-    public MessageTarget getMessageTarget() {
-        return messageTarget;
+    public ItemKind getIssueKind() {
+        return DIssue.ITEM_KIND;
     }
 
     @Override
-    public ItemKind getIssueKind() {
-        return DIssue.ITEM_KIND;
+    public SModuleReference getModule() {
+        return module;
+    }
+
+    @Override
+    public String getMessage() {
+        return message;
+    }
+
+    @Override
+    public MessageStatus getSeverity() {
+        return severity;
     }
 
     @Override
     public Collection<TypesystemRuleId> getRuleId() {
         return Collections.singleton(ruleId);
     }
+
 }

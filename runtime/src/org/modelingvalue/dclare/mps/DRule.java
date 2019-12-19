@@ -13,6 +13,7 @@
 
 package org.modelingvalue.dclare.mps;
 
+import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Context;
 import org.modelingvalue.dclare.Constant;
 import org.modelingvalue.dclare.DeferException;
@@ -36,7 +37,9 @@ public interface DRule<O> extends DFeature<O> {
 
     Context<Boolean>           COLLECTION_ATTRIBUTE = Context.of(false);
 
-    class DObserver<O extends Mutable> extends Observer<O> {
+    Context<Set<DIssue>>       DISUES               = Context.of(Set.of());
+
+    public class DObserver<O extends Mutable> extends Observer<O> {
 
         public static <M extends Mutable> DObserver of(DRule rule, Direction initDirection, Priority priority) {
             return new DObserver<M>(rule, initDirection, priority);
@@ -75,7 +78,8 @@ public interface DRule<O> extends DFeature<O> {
         }
 
         void run(Runnable action) {
-            if (object().isOwned()) {
+            DObject dObject = object();
+            if (dObject.isOwned()) {
                 try {
                     action.run();
                 } catch (NullPointerException e) {
@@ -91,6 +95,8 @@ public interface DRule<O> extends DFeature<O> {
                         throw e;
                     }
                 } finally {
+                    DObject.DRULE_ISSUES.set(dObject, (b, a) -> a.addAll(b.filter(i -> !i.getRule().equals(rule()))), DISUES.get());
+                    DISUES.set(Set.of());
                     COLLECTION_ATTRIBUTE.set(false);
                     EMPTY_ATTRIBUTE.set(false);
                 }
@@ -99,6 +105,10 @@ public interface DRule<O> extends DFeature<O> {
 
         private DObject object() {
             return (DObject) parent().mutable();
+        }
+
+        private DRule rule() {
+            return ((DObserver) observer()).rule();
         }
 
     }

@@ -123,7 +123,7 @@ public class DNode extends DIdentifiedObject implements SNode {
                                                                                                           });
     @SuppressWarnings("deprecation")
     public static final Constant<SProperty, DObserved<DNode, String>>              PROPERTY               = Constant.of("PROPERTY", sp -> {
-                                                                                                              return DObserved.<DNode, String> of(sp, null, true, false, null, false,                                                          //
+                                                                                                              return DObserved.<DNode, String> of(sp, null, false, false, null, false,                                                         //
                                                                                                                       (dNode, pre, post) -> {
                                                                                                                           SNode sNode = dNode.sNode(true);
                                                                                                                           String ist = sNode.getProperty(sp);
@@ -159,12 +159,6 @@ public class DNode extends DIdentifiedObject implements SNode {
                                                                                                                           return dm;
                                                                                                                       }).toSet()));
                                                                                                           }, Priority.preDepth);
-
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    protected static final Constant<SConcept, Set<DObserved<DNode, ?>>>            CONTAINERS             = Constant.of("", c -> (Set) Collection.of(c.getContainmentLinks()).map(DNode::container).toSet());
-
-    @SuppressWarnings("rawtypes")
-    protected static final Set<Observer>                                           RULES                  = DObject.RULES.addAll(Set.of(MODEL_RULE, USED_LANGUAGES_RULE, USED_MODELS_RULE));
 
     protected static final Setable<DNode, String>                                  NAME_OBSERVED          = PROPERTY.get(SNodeUtil.property_INamedConcept_name);
 
@@ -217,6 +211,21 @@ public class DNode extends DIdentifiedObject implements SNode {
     private static final Observed<DNode, SNodeReference>                           NODE_REF               = NonCheckingObserved.of("$NODE_REF", null, () -> D_NODE);
 
     protected static final Setable<DNode, SNode>                                   DETACHED               = Setable.of("$DETACHED", null);
+
+    @SuppressWarnings("rawtypes")
+    protected static final Constant<SConcept, Set<? extends Setable>>              CONCEPT_SETABLES       = Constant.of("$CONCEPT_SETABLES", c -> Collection.concat(                                                                           //
+            Collection.of(c.getProperties()),                                                                                                                                                                                                  //
+            Collection.of(c.getContainmentLinks()),                                                                                                                                                                                            //
+            Collection.of(c.getReferenceLinks())).map(DNode::setable).toSet());
+
+    @SuppressWarnings("rawtypes")
+    protected static final Constant<SConcept, Set<? extends Observer>>             CONCEPT_OBSERVERS      = Constant.of("$CONCEPT_OBSERVERS", c -> Collection.of(c.getContainmentLinks()).map(cl -> READ_MATCHER.get(cl)).toSet());
+
+    @SuppressWarnings("rawtypes")
+    protected static final Set<Observer>                                           OBSERVERS              = DObject.OBSERVERS.addAll(Set.of(MODEL_RULE, USED_LANGUAGES_RULE, USED_MODELS_RULE));
+
+    @SuppressWarnings("rawtypes")
+    protected static final Set<Setable>                                            SETABLES               = DObject.SETABLES.addAll(Set.of(NODE_REF, DETACHED, NAME_OBSERVED, MODEL, USER_OBJECTS, USED_MODELS, USED_LANGUAGES));
 
     public static DNode of(SConcept concept, String anonymousType, Object[] identity) {
         identity = Arrays.copyOf(identity, identity.length + (anonymousType != null ? 2 : 1));
@@ -584,8 +593,16 @@ public class DNode extends DIdentifiedObject implements SNode {
         return role.isMultiple() ? MANY_CONTAINMENT.get(role).get(this) : (List) SINGLE_CONTAINMENT.get(role).getCollection(this).toList();
     }
 
-    private static DObserved<DNode, ?> container(SContainmentLink role) {
-        return role.isMultiple() ? MANY_CONTAINMENT.get(role) : SINGLE_CONTAINMENT.get(role);
+    @SuppressWarnings("rawtypes")
+    private static Setable setable(SConceptFeature feature) {
+        if (feature instanceof SProperty) {
+            return PROPERTY.get((SProperty) feature);
+        } else if (feature instanceof SContainmentLink) {
+            SContainmentLink cl = (SContainmentLink) feature;
+            return cl.isMultiple() ? MANY_CONTAINMENT.get(cl) : SINGLE_CONTAINMENT.get(cl);
+        } else {
+            return REFERENCE.get((SReferenceLink) feature);
+        }
     }
 
     @Override

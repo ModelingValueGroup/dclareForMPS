@@ -51,7 +51,7 @@ public abstract class DType implements MutableClass {
         return OBSERVERS.get(this);
     }
 
-    public final Set<DAttribute> getAttributes() {
+    public Set<DAttribute> getAttributes() {
         return ATTRIBUTES.get(this);
     }
 
@@ -93,24 +93,18 @@ public abstract class DType implements MutableClass {
 
     @SuppressWarnings("unchecked")
     @Override
-    public Collection<? extends Setable<? extends Mutable, ?>> dContainers() {
-        return (Collection<? extends Setable<? extends Mutable, ?>>) getAttributes().filter(a -> a instanceof Setable && a.isComposite());
+    public final Collection<? extends Setable<? extends Mutable, ?>> dSetables() {
+        return this == DObject.TYPE.getDefault() ? Set.of(DObject.TYPE) : //
+                Collection.concat((Collection<? extends Setable<? extends Mutable, ?>>) getAttributes().filter(a -> a instanceof Setable), //
+                        (Collection<? extends Setable<? extends Mutable, ?>>) setables());
     }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public Collection<? extends Constant<? extends Mutable, ?>> dConstants() {
-        return (Collection<? extends Constant<? extends Mutable, ?>>) getAttributes().filter(a -> a instanceof Constant);
+    protected Collection<Observer> observers() {
+        return DObject.OBSERVERS;
     }
 
-    @SuppressWarnings("unchecked")
-    @Override
-    public Collection<? extends Setable<? extends Mutable, ?>> dSetables() {
-        return (Collection<? extends Setable<? extends Mutable, ?>>) getAttributes().filter(a -> a instanceof Setable);
-    }
-
-    protected Collection<? extends Observer> observers() {
-        return DObject.RULES;
+    protected Collection<Setable> setables() {
+        return DObject.SETABLES;
     }
 
 }

@@ -15,5 +15,6 @@
 	<classpathentry kind="var" path="MPS_HOME/lib/extensions.jar"/>
 	<classpathentry kind="var" path="MPS_HOME/lib/mps-project-check.jar"/>
 	<classpathentry kind="var" path="MPS_HOME/lib/mps-closures.jar"/>
+    <classpathentry kind="var" path="MPS_HOME/lib/mps-editor.jar" sourcepath=""/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
