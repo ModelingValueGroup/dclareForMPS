@@ -14,21 +14,26 @@
 package org.modelingvalue.dclare.mps;
 
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.jetbrains.mps.openapi.model.SModel;
 
 import jetbrains.mps.errors.MessageStatus;
-import jetbrains.mps.errors.item.ModelReportItem;
 import jetbrains.mps.errors.item.ModelReportItemBase;
+import jetbrains.mps.errors.item.RuleIdFlavouredItem;
 
-public class DIssueModelReportItem extends ModelReportItemBase implements ModelReportItem {
+public class DIssueModelReportItem extends ModelReportItemBase implements RuleIdFlavouredItem {
 
-    private static final HashSet<ReportItemFlavour<?, ?>> FLAVOURS = new HashSet<>(Arrays.asList(FLAVOUR_ISSUE_KIND, FLAVOUR_MODEL));
+    private static final HashSet<ReportItemFlavour<?, ?>> FLAVOURS = new HashSet<>(Arrays.asList(FLAVOUR_ISSUE_KIND, FLAVOUR_MODEL, FLAVOUR_RULE_ID));
 
-    public DIssueModelReportItem(MessageStatus severity, SModel model, String message) {
+    private final TypesystemRuleId                        ruleId;
+
+    public DIssueModelReportItem(MessageStatus severity, SModel model, String message, TypesystemRuleId ruleId) {
         super(severity, model.getReference(), severity.getPresentation() + ": " + message);
+        this.ruleId = ruleId;
     }
 
     @Override
@@ -39,6 +44,11 @@ public class DIssueModelReportItem extends ModelReportItemBase implements ModelR
     @Override
     public ItemKind getIssueKind() {
         return DIssue.ITEM_KIND;
+    }
+
+    @Override
+    public Collection<TypesystemRuleId> getRuleId() {
+        return Collections.singleton(ruleId);
     }
 
 }

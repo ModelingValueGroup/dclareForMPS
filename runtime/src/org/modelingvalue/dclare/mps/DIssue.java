@@ -30,6 +30,7 @@ import jetbrains.mps.errors.item.IssueKindReportItem;
 import jetbrains.mps.errors.item.IssueKindReportItem.CheckerCategory;
 import jetbrains.mps.errors.item.IssueKindReportItem.ItemKind;
 import jetbrains.mps.errors.item.IssueKindReportItem.KindLevel;
+import jetbrains.mps.errors.item.RuleIdFlavouredItem.TypesystemRuleId;
 import jetbrains.mps.errors.messageTargets.MessageTarget;
 
 public class DIssue extends DIdentifiedObject {
@@ -75,28 +76,31 @@ public class DIssue extends DIdentifiedObject {
 
     public static final Setable<DIssue, DObject>         DOBJECT          = Setable.of("$DOBJECT", null, () -> DObject.DCLARE_ISSUES);
 
+    private static final Observer<DIssue>                DOBJECT_RULE     = DObject.<DIssue> observer(DOBJECT, o -> DOBJECT.set(o, o.dObject.get()));
+
     @SuppressWarnings("rawtypes")
-    protected static final Set<Observer>                 OBSERVERS        = DObject.OBSERVERS.add(MESSAGE_RULE);
+    protected static final Set<Observer>                 OBSERVERS        = DObject.OBSERVERS.addAll(Set.of(MESSAGE_RULE, DOBJECT_RULE));
 
     @SuppressWarnings("rawtypes")
     protected static final Set<Setable>                  SETABLES         = DObject.SETABLES.addAll(Set.of(MESSAGE, DOBJECT));
 
-    public static DIssue of(DObject object, MessageStatus severity, MessageTarget feature, Supplier<String> message, Object[] identity) {
+    public static DIssue of(Supplier<DObject> object, MessageStatus severity, MessageTarget feature, Supplier<String> message, Object[] identity) {
         return new DIssue(((DObserver<?>) LeafTransaction.getCurrent().cls()).rule(), object, severity, feature, message, identity);
     }
 
-    private final Supplier<String> message;
-    private final DRule<?>         rule;
-    private final MessageStatus    severity;
-    private final MessageTarget    feature;
+    private final Supplier<String>  message;
+    private final Supplier<DObject> dObject;
+    private final DRule<?>          rule;
+    private final MessageStatus     severity;
+    private final MessageTarget     feature;
 
-    private DIssue(DRule<?> rule, DObject object, MessageStatus severity, MessageTarget feature, Supplier<String> message, Object[] identity) {
+    private DIssue(DRule<?> rule, Supplier<DObject> dObject, MessageStatus severity, MessageTarget feature, Supplier<String> message, Object[] identity) {
         super(identity);
         this.rule = rule;
         this.message = message;
         this.severity = severity;
         this.feature = feature;
-        DOBJECT.set(this, object);
+        this.dObject = dObject;
         DRule.DISUES.set(Set::add, this);
     }
 
@@ -123,12 +127,16 @@ public class DIssue extends DIdentifiedObject {
     public IssueKindReportItem getItem() {
         DObject o = getObject();
         if (o instanceof DModule) {
-            return new DIssueModuleReportItem(getSeverity(), ((DModule) o).original(), getMessage());
+            return new DIssueModuleReportItem(getSeverity(), ((DModule) o).original(), getMessage(), ruleId());
         } else if (o instanceof DModel) {
-            return new DIssueModelReportItem(getSeverity(), ((DModel) o).original(), getMessage());
+            return new DIssueModelReportItem(getSeverity(), ((DModel) o).original(), getMessage(), ruleId());
         } else {
-            return new DIssueNodeReportItem(getSeverity(), ((DNode) o).sNode(true), getFeature(), getMessage());
+            return new DIssueNodeReportItem(getSeverity(), ((DNode) o).sNode(true), getFeature(), getMessage(), ruleId());
         }
+    }
+
+    private TypesystemRuleId ruleId() {
+        return new TypesystemRuleId(rule.getSource().getReference());
     }
 
     @Override

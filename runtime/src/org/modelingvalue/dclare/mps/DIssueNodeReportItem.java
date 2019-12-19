@@ -14,28 +14,32 @@
 package org.modelingvalue.dclare.mps;
 
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
 import org.jetbrains.mps.openapi.model.SNode;
 
 import jetbrains.mps.errors.MessageStatus;
-import jetbrains.mps.errors.item.NodeReportItem;
 import jetbrains.mps.errors.item.NodeReportItemBase;
+import jetbrains.mps.errors.item.RuleIdFlavouredItem;
 import jetbrains.mps.errors.messageTargets.MessageTarget;
 import jetbrains.mps.errors.messageTargets.NodeMessageTarget;
 
-public class DIssueNodeReportItem extends NodeReportItemBase implements NodeReportItem {
+public class DIssueNodeReportItem extends NodeReportItemBase implements RuleIdFlavouredItem {
 
     private static final NodeMessageTarget                NODE_MESSAGE_TARGET = new NodeMessageTarget();
 
-    private static final HashSet<ReportItemFlavour<?, ?>> FLAVOURS            = new HashSet<>(Arrays.asList(FLAVOUR_ISSUE_KIND, FLAVOUR_NODE));
+    private static final HashSet<ReportItemFlavour<?, ?>> FLAVOURS            = new HashSet<>(Arrays.asList(FLAVOUR_ISSUE_KIND, FLAVOUR_NODE, FLAVOUR_RULE_ID));
 
     private final MessageTarget                           messageTarget;
+    private final TypesystemRuleId                        ruleId;
 
-    public DIssueNodeReportItem(MessageStatus severity, SNode node, MessageTarget messageTarget, String message) {
+    public DIssueNodeReportItem(MessageStatus severity, SNode node, MessageTarget messageTarget, String message, TypesystemRuleId ruleId) {
         super(severity, node.getReference(), message);
         this.messageTarget = messageTarget != null ? messageTarget : NODE_MESSAGE_TARGET;
+        this.ruleId = ruleId;
     }
 
     @Override
@@ -51,5 +55,10 @@ public class DIssueNodeReportItem extends NodeReportItemBase implements NodeRepo
     @Override
     public ItemKind getIssueKind() {
         return DIssue.ITEM_KIND;
+    }
+
+    @Override
+    public Collection<TypesystemRuleId> getRuleId() {
+        return Collections.singleton(ruleId);
     }
 }

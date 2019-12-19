@@ -14,6 +14,8 @@
 package org.modelingvalue.dclare.mps;
 
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -22,19 +24,22 @@ import org.jetbrains.mps.openapi.module.SModuleReference;
 
 import jetbrains.mps.errors.MessageStatus;
 import jetbrains.mps.errors.item.ModuleReportItem;
+import jetbrains.mps.errors.item.RuleIdFlavouredItem;
 
-public class DIssueModuleReportItem implements ModuleReportItem {
+public class DIssueModuleReportItem implements ModuleReportItem, RuleIdFlavouredItem {
 
-    private static final HashSet<ReportItemFlavour<?, ?>> FLAVOURS = new HashSet<>(Arrays.asList(FLAVOUR_ISSUE_KIND, FLAVOUR_MODULE));
+    private static final HashSet<ReportItemFlavour<?, ?>> FLAVOURS = new HashSet<>(Arrays.asList(FLAVOUR_ISSUE_KIND, FLAVOUR_MODULE, FLAVOUR_RULE_ID));
 
     private final MessageStatus                           severity;
     private final SModuleReference                        module;
     private final String                                  message;
+    private final TypesystemRuleId                        ruleId;
 
-    public DIssueModuleReportItem(MessageStatus severity, SModule module, String message) {
+    public DIssueModuleReportItem(MessageStatus severity, SModule module, String message, TypesystemRuleId ruleId) {
         this.severity = severity;
         this.module = module.getModuleReference();
         this.message = severity.getPresentation() + ": " + message;
+        this.ruleId = ruleId;
     }
 
     @Override
@@ -60,6 +65,11 @@ public class DIssueModuleReportItem implements ModuleReportItem {
     @Override
     public MessageStatus getSeverity() {
         return severity;
+    }
+
+    @Override
+    public Collection<TypesystemRuleId> getRuleId() {
+        return Collections.singleton(ruleId);
     }
 
 }
