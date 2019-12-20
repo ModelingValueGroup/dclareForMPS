@@ -66,11 +66,11 @@ public class DNode extends DIdentifiedObject implements SNode {
                                                                                                                       (dNode, pre, post) -> {
                                                                                                                           SNode sNode = dNode.sNode(true);
                                                                                                                           List<SNode> soll = post.map(c -> c.reParent(sNode, mc, c.sNode(true))).toList();
-                                                                                                                          List<SNode> ist = DNode.children(sNode, mc);
+                                                                                                                          List<SNode> ist = children(sNode, mc);
                                                                                                                           DObserved.map(ist, soll,                                                                                             //
                                                                                                                                   (n, a) -> {
                                                                                                                                   }, r -> sNode.removeChild(r));
-                                                                                                                          ist = DNode.children(sNode, mc);
+                                                                                                                          ist = children(sNode, mc);
                                                                                                                           DObserved.map(ist, soll,                                                                                             //
                                                                                                                                   (n, a) -> sNode.insertChildAfter(mc, n, a), r -> {
                                                                                                                                                                                                                                         });
@@ -82,14 +82,15 @@ public class DNode extends DIdentifiedObject implements SNode {
                                                                                                               return DObserved.<DNode, DNode> of(sc, null, !sc.isOptional(), true, null, false,                                                //
                                                                                                                       (dNode, pre, post) -> {
                                                                                                                           SNode sNode = dNode.sNode(true);
-                                                                                                                          SNode soll = post != null ? post.reParent(sNode, sc, post.sNode(true)) : null;
-                                                                                                                          SNode ist = children(sNode, sc).first();
-                                                                                                                          if (ist != null && !ist.equals(soll)) {
-                                                                                                                              sNode.removeChild(ist);
-                                                                                                                          }
-                                                                                                                          if (post != null && !soll.equals(ist)) {
-                                                                                                                              sNode.addChild(sc, soll);
-                                                                                                                          }
+                                                                                                                          List<SNode> soll = post != null ? List.of(post.reParent(sNode, sc, post.sNode(true))) : List.of();
+                                                                                                                          List<SNode> ist = children(sNode, sc);
+                                                                                                                          DObserved.map(ist, soll,                                                                                             //
+                                                                                                                                  (n, a) -> {
+                                                                                                                                  }, r -> sNode.removeChild(r));
+                                                                                                                          ist = children(sNode, sc);
+                                                                                                                          DObserved.map(ist, soll,                                                                                             //
+                                                                                                                                  (n, a) -> sNode.addChild(sc, a), r -> {
+                                                                                                                                                                                                                                        });
                                                                                                                       }, () -> sc.getDeclarationNode());
                                                                                                           });
 
@@ -673,7 +674,7 @@ public class DNode extends DIdentifiedObject implements SNode {
         } else if (feature instanceof SContainmentLink) {
             SContainmentLink cl = (SContainmentLink) feature;
             if (cl.isMultiple()) {
-                List<DNode> element = value != null ? Collection.of((Iterable<DNode>) value).toList() : null;
+                List<DNode> element = value != null ? Collection.of((Iterable<DNode>) value).distinct().toList() : null;
                 MANY_CONTAINMENT.get(cl).set(this, (i, s) -> s == null || Objects.equals(s, i) ? i : s, element);
             } else {
                 SINGLE_CONTAINMENT.get(cl).set(this, (DNode) value);

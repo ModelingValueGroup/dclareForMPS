@@ -668,7 +668,7 @@
     <property role="EcuMT" value="2643921241704843759" />
     <property role="3GE5qa" value="issues" />
     <property role="TrG5h" value="NodeIssue" />
-    <property role="34LRSv" value="node issue" />
+    <property role="34LRSv" value="&lt;node issue&gt;" />
     <ref role="1TJDcQ" node="41CotWWrJg$" resolve="Issue" />
     <node concept="1TJgyj" id="hQOEWAg" role="1TKVEi">
       <property role="20lmBu" value="fLJjDmT/aggregation" />
@@ -676,20 +676,47 @@
       <property role="IQ2ns" value="1227096836496" />
       <ref role="20lvS9" to="tpd4:hQOD_u3" resolve="MessageTarget" />
     </node>
+    <node concept="1irR5M" id="rktk3X5CfR" role="rwd14">
+      <property role="2$rrk2" value="1" />
+      <node concept="1irPie" id="rktk3X5CfV" role="1irR9h">
+        <property role="1irPi9" value="n" />
+        <node concept="3PKj8D" id="rktk3X5Cg0" role="3PKjny">
+          <property role="3PKj8l" value="ff7777" />
+        </node>
+      </node>
+    </node>
   </node>
   <node concept="1TIwiD" id="2iL65LTVkL0">
     <property role="EcuMT" value="2643921241704844352" />
     <property role="3GE5qa" value="issues" />
     <property role="TrG5h" value="ModelIssue" />
-    <property role="34LRSv" value="model issue" />
+    <property role="34LRSv" value="&lt;model issue&gt;" />
     <ref role="1TJDcQ" node="41CotWWrJg$" resolve="Issue" />
+    <node concept="1irR5M" id="rktk3X5Cgb" role="rwd14">
+      <property role="2$rrk2" value="3" />
+      <node concept="1irPie" id="rktk3X5Cgf" role="1irR9h">
+        <property role="1irPi9" value="m" />
+        <node concept="3PKj8D" id="rktk3X5Cgg" role="3PKjny">
+          <property role="3PKj8l" value="ff7777" />
+        </node>
+      </node>
+    </node>
   </node>
   <node concept="1TIwiD" id="2iL65LTVkL1">
     <property role="EcuMT" value="2643921241704844353" />
     <property role="3GE5qa" value="issues" />
     <property role="TrG5h" value="ModuleIssue" />
-    <property role="34LRSv" value="module issue" />
+    <property role="34LRSv" value="&lt;module issue&gt;" />
     <ref role="1TJDcQ" node="41CotWWrJg$" resolve="Issue" />
+    <node concept="1irR5M" id="rktk3X5Cg3" role="rwd14">
+      <property role="2$rrk2" value="2" />
+      <node concept="1irPie" id="rktk3X5Cg7" role="1irR9h">
+        <property role="1irPi9" value="M" />
+        <node concept="3PKj8D" id="rktk3X5Cg8" role="3PKjny">
+          <property role="3PKj8l" value="ff7777" />
+        </node>
+      </node>
+    </node>
   </node>
 </model>
 
