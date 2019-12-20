@@ -417,15 +417,11 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
 
     public void handleMPSChange(Runnable action) {
         if (imperativeTransaction != null) {
-            imperativeTransaction.schedule(action);
-        } else {
-            universeTransaction.put(action, () -> {
-                if (imperativeTransaction != null) {
-                    imperativeTransaction.schedule(action);
-                } else {
-                    read(action);
-                }
-            }, Priority.preDepth);
+            if (LeafTransaction.getCurrent() == imperativeTransaction) {
+                action.run();
+            } else {
+                imperativeTransaction.schedule(action);
+            }
         }
     }
 
