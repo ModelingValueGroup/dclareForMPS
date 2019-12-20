@@ -13,7 +13,11 @@
 
 package org.modelingvalue.dclare.mps;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.Supplier;
@@ -30,6 +34,7 @@ import org.jetbrains.mps.openapi.util.ProgressMonitor;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.DefaultMap;
 import org.modelingvalue.collections.Entry;
+import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.Map;
 import org.modelingvalue.collections.QualifiedSet;
 import org.modelingvalue.collections.Set;
@@ -71,6 +76,7 @@ import jetbrains.mps.checkers.AbstractNodeCheckerInEditor;
 import jetbrains.mps.checkers.IChecker;
 import jetbrains.mps.checkers.ICheckingPostprocessor;
 import jetbrains.mps.checkers.LanguageErrorsCollector;
+import jetbrains.mps.checkers.ModelCheckerBuilder;
 import jetbrains.mps.editor.runtime.LanguageEditorChecker;
 import jetbrains.mps.errors.CheckerRegistry;
 import jetbrains.mps.errors.item.IssueKindReportItem;
@@ -79,6 +85,7 @@ import jetbrains.mps.errors.item.ModelReportItem;
 import jetbrains.mps.errors.item.ModuleReportItem;
 import jetbrains.mps.errors.item.NodeReportItem;
 import jetbrains.mps.nodeEditor.Highlighter;
+import jetbrains.mps.progress.EmptyProgressMonitor;
 import jetbrains.mps.project.ProjectBase;
 import jetbrains.mps.smodel.language.LanguageRegistry;
 import jetbrains.mps.smodel.language.LanguageRuntime;
@@ -509,6 +516,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
                 });
                 if (last) {
                     running = false;
+                    runModelCheck(pre, post);
                     startStopHandler.stop(project, new Getter() {
                         @Override
                         public <R> R get(Supplier<R> supplier) {
@@ -668,5 +676,30 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
             return DIssue.CHECKER_CATEGORY;
         }
     }
+    
+    private void runModelCheck(State pre, State post) {
+		List<SModel> models = pre.diff(post).filter(f -> f.getKey() instanceof DNode).map(c -> (DNode) c.getKey())
+				.map(m -> m.sNode(false) != null ? m.sNode(false).getModel() : null).filter(e -> e == null).toList();
+		if (!models.isEmpty()) {
+			SRepository repos = models.findFirst().get().getRepository();
+			CheckerRegistry checkerRegistry = project.getPlatform().findComponent(CheckerRegistry.class);
+			
+			java.util.List<IChecker<?, ?>> checkers = checkerRegistry.getCheckers();
+			java.util.Map<DNode, java.util.Set<IssueKindReportItem>> reportItems = new HashMap<>();
+			ModelCheckerBuilder.ItemsToCheck itemsToCheck = new ModelCheckerBuilder.ItemsToCheck();
+			itemsToCheck.models = new ArrayList(Arrays.asList(models.toArray()));
+			
+			new ModelCheckerBuilder(new ModelCheckerBuilder.ModelsExtractorImpl().excludeGenerators()).createChecker(checkers)
+					.check(itemsToCheck, repos, (x -> {
+						if (x instanceof NodeReportItem) {
+							DNode n = DNode.of(((NodeReportItem) x).getNode().resolve(repos));
+							reportItems.computeIfAbsent(n, k->new HashSet<>()).add(x);						}
+					}), new EmptyProgressMonitor());
+
+			for (java.util.Map.Entry<DNode, java.util.Set<IssueKindReportItem>> item : reportItems.entrySet()) {
+				item.getKey().setIssues(item.getValue());
+			}
+		}
+	}
 
 }
