@@ -1957,9 +1957,7 @@
       </node>
       <node concept="3F0A7n" id="2iL65LU1O6V" role="3EZMnx">
         <ref role="1NtTu8" to="7ggn:41CotWWs4Oi" resolve="severity" />
-        <node concept="11L4FC" id="1Kikqj8szVD" role="3F10Kt">
-          <property role="VOm3f" value="true" />
-        </node>
+        <ref role="1k5W1q" to="tpen:hgVS8CF" resolve="KeyWord" />
       </node>
       <node concept="3F1sOY" id="2iL65LU1O6W" role="3EZMnx">
         <ref role="1NtTu8" to="7ggn:2iL65LTUI5t" resolve="message" />

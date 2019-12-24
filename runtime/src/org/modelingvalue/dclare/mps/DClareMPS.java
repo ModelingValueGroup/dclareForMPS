@@ -152,6 +152,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     private final LanguageEditorChecker                                                                    languageEditorChecker;
     private final IAbstractChecker<ItemsToCheck, IssueKindReportItem>                                      mpsChecker;
     private final Concurrent<Set<SModel>>                                                                  changedModels        = Concurrent.of(Set.of());
+    private final Concurrent<Set<SModule>>                                                                 changedModules       = Concurrent.of(Set.of());
 
     protected DClareMPS(DclareForMPSEngine engine, ProjectBase project, State prevState, int maxTotalNrOfChanges, int maxNrOfChanges, int maxNrOfObserved, int maxNrOfObservers, StartStopHandler startStopHandler) {
         this.project = project;
@@ -520,6 +521,8 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
                         changedModels.change(s -> s.add(((DModel) dObject).original()));
                     } else if (dObject instanceof DNode) {
                         changedModels.change(s -> s.add(((DNode) dObject).getModel().original()));
+                    } else if (dObject instanceof DModule) {
+                        changedModules.change(s -> s.add(((DModule) dObject).original()));
                     }
                     e0.getValue().forEach(e1 -> {
                         DObserved mpsObserved = (DObserved) e1.getKey();
@@ -691,12 +694,15 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
 
     private void runModelCheck() {
         Set<SModel> models = changedModels.result();
+        Set<SModule> modules = changedModules.result();
         changedModels.init(Set.of());
-        if (!models.isEmpty()) {
+        changedModules.init(Set.of());
+        if (!models.isEmpty() || !modules.isEmpty()) {
             thePool.execute(() -> {
                 read(() -> {
                     ModelCheckerBuilder.ItemsToCheck itemsToCheck = new ModelCheckerBuilder.ItemsToCheck();
                     itemsToCheck.models = models.collect(Collectors.toList());
+                    itemsToCheck.modules = modules.collect(Collectors.toList());
                     java.util.List<IssueKindReportItem> reportItems = new ArrayList<>();
                     SRepository repos = getRepository().original();
                     mpsChecker.check(itemsToCheck, repos, reportItems::add, new EmptyProgressMonitor());
