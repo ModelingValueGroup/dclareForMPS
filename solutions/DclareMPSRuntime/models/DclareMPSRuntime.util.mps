@@ -336,7 +336,9 @@
             <node concept="37vLTw" id="2iL65LTRA4B" role="37wK5m">
               <ref role="3cqZAo" node="45beoc8yLLT" resolve="severity" />
             </node>
-            <node concept="10Nm6u" id="kut63bRI13" role="37wK5m" />
+            <node concept="37vLTw" id="6NZFdbTOBWz" role="37wK5m">
+              <ref role="3cqZAo" node="6NZFdbTOB$E" resolve="feature" />
+            </node>
             <node concept="2ShNRf" id="2iL65LTRvCz" role="37wK5m">
               <node concept="YeOm9" id="2iL65LTRvC$" role="2ShVmc">
                 <node concept="1Y3b0j" id="2iL65LTRvC_" role="YeSDq">
@@ -389,6 +391,12 @@
         <property role="TrG5h" value="severity" />
         <node concept="3uibUv" id="45beoc8yPzi" role="1tU5fm">
           <ref role="3uigEE" to="2gg1:~MessageStatus" resolve="MessageStatus" />
+        </node>
+      </node>
+      <node concept="37vLTG" id="6NZFdbTOB$E" role="3clF46">
+        <property role="TrG5h" value="feature" />
+        <node concept="3uibUv" id="6NZFdbTOBIF" role="1tU5fm">
+          <ref role="3uigEE" to="zavc:~MessageTarget" resolve="MessageTarget" />
         </node>
       </node>
       <node concept="37vLTG" id="2iL65LTRo1G" role="3clF46">
