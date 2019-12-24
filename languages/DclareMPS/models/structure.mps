@@ -670,12 +670,6 @@
     <property role="TrG5h" value="NodeIssue" />
     <property role="34LRSv" value="&lt;node issue&gt;" />
     <ref role="1TJDcQ" node="41CotWWrJg$" resolve="Issue" />
-    <node concept="1TJgyj" id="hQOEWAg" role="1TKVEi">
-      <property role="20lmBu" value="fLJjDmT/aggregation" />
-      <property role="20kJfa" value="messageTarget" />
-      <property role="IQ2ns" value="1227096836496" />
-      <ref role="20lvS9" to="tpd4:hQOD_u3" resolve="MessageTarget" />
-    </node>
     <node concept="1irR5M" id="rktk3X5CfR" role="rwd14">
       <property role="2$rrk2" value="1" />
       <node concept="1irPie" id="rktk3X5CfV" role="1irR9h">

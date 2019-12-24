@@ -50,13 +50,22 @@ import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.Priority;
 import org.modelingvalue.dclare.Setable;
 
+import jetbrains.mps.errors.item.IssueKindReportItem;
 import jetbrains.mps.smodel.SNodeUtil;
 
 public class DNode extends DIdentifiedObject implements SNode {
 
     private static final Constant<Triple<Set<SLanguage>, SConcept, String>, DType> NODE_TYPE              = Constant.of("NODE_TYPE", t -> new DNodeType(t));
 
-    public static final Observed<DNode, DModel>                                    MODEL                  = NonCheckingObserved.of("$MODEL", null);
+    public static final Observed<DNode, DModel>                                    MODEL                  = NonCheckingObserved.of("$MODEL", null, (tx, o, pre, post) -> {
+                                                                                                              Set<IssueKindReportItem> items = MPS_ISSUES.get(o);
+                                                                                                              if (pre != null) {
+                                                                                                                  DModel.ALL_MPS_ISSUES.set(pre, Set::removeAll, items);
+                                                                                                              }
+                                                                                                              if (post != null) {
+                                                                                                                  DModel.ALL_MPS_ISSUES.set(post, Set::addAll, items);
+                                                                                                              }
+                                                                                                          });
 
     public static final Observed<DNode, Map<Object, Object>>                       USER_OBJECTS           = DObserved.of("USER_OBJECTS", Map.of(), false, false, null, false, null, null);
 

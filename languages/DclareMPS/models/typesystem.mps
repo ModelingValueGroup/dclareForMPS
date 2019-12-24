@@ -2,7 +2,7 @@
 <model ref="r:b3bd6869-3f20-419a-be47-753c4d00d5e8(DclareMPS.typesystem)">
   <persistence version="9" />
   <languages>
-    <use id="7a5dda62-9140-4668-ab76-d5ed1746f2b2" name="jetbrains.mps.lang.typesystem" version="4" />
+    <use id="7a5dda62-9140-4668-ab76-d5ed1746f2b2" name="jetbrains.mps.lang.typesystem" version="5" />
     <use id="f3061a53-9226-4cc5-a443-f952ceaf5816" name="jetbrains.mps.baseLanguage" version="9" />
     <devkit ref="00000000-0000-4000-0000-1de82b3a4936(jetbrains.mps.devkit.aspect.typesystem)" />
   </languages>
@@ -213,9 +213,6 @@
       <concept id="1175517767210" name="jetbrains.mps.lang.typesystem.structure.ReportErrorStatement" flags="nn" index="2MkqsV">
         <child id="1175517851849" name="errorString" index="2MkJ7o" />
       </concept>
-      <concept id="1227096774658" name="jetbrains.mps.lang.typesystem.structure.MessageStatement" flags="ng" index="2OEH$v">
-        <child id="1227096802790" name="nodeToReport" index="2OEOjV" />
-      </concept>
       <concept id="1205762105978" name="jetbrains.mps.lang.typesystem.structure.WhenConcreteVariableDeclaration" flags="ng" index="2X1qdy" />
       <concept id="1205762656241" name="jetbrains.mps.lang.typesystem.structure.WhenConcreteVariableReference" flags="nn" index="2X3wrD">
         <reference id="1205762683928" name="whenConcreteVar" index="2X3Bk0" />
@@ -225,6 +222,9 @@
       </concept>
       <concept id="1195214364922" name="jetbrains.mps.lang.typesystem.structure.NonTypesystemRule" flags="ig" index="18kY7G">
         <child id="2329696648448631592" name="overridenRules" index="dp_RE" />
+      </concept>
+      <concept id="3937244445246642777" name="jetbrains.mps.lang.typesystem.structure.AbstractReportStatement" flags="ng" index="1urrMJ">
+        <child id="3937244445246642781" name="nodeToReport" index="1urrMF" />
       </concept>
       <concept id="1178870617262" name="jetbrains.mps.lang.typesystem.structure.CoerceExpression" flags="nn" index="1UaxmW">
         <child id="1178870894644" name="pattern" index="1Ub_4A" />
@@ -520,7 +520,7 @@
                     <property role="Xl_RC" value="rule name not unique " />
                   </node>
                 </node>
-                <node concept="1YBJjd" id="2TGnmG1_aR4" role="2OEOjV">
+                <node concept="1YBJjd" id="2TGnmG1_aR4" role="1urrMF">
                   <ref role="1YBMHb" node="2TGnmG1_6H0" resolve="rule" />
                 </node>
               </node>
@@ -925,7 +925,7 @@
         <node concept="Xl_RD" id="h6Mq9Va" role="2MkJ7o">
           <property role="Xl_RC" value="unexpected in left part or assignment" />
         </node>
-        <node concept="37vLTw" id="3qVwZ8t2Wty" role="2OEOjV">
+        <node concept="37vLTw" id="3qVwZ8t2Wty" role="1urrMF">
           <ref role="3cqZAo" node="3qVwZ8t2Wtq" resolve="lv" />
         </node>
       </node>
@@ -1161,7 +1161,7 @@
             </node>
           </node>
         </node>
-        <node concept="1YBJjd" id="hPRwPWx" role="2OEOjV">
+        <node concept="1YBJjd" id="hPRwPWx" role="1urrMF">
           <ref role="1YBMHb" node="29R9$zZ99Zn" resolve="op" />
         </node>
       </node>
@@ -1349,7 +1349,7 @@
                     <property role="Xl_RC" value="Attribute name not unique " />
                   </node>
                 </node>
-                <node concept="1YBJjd" id="6HWpSUECLO6" role="2OEOjV">
+                <node concept="1YBJjd" id="6HWpSUECLO6" role="1urrMF">
                   <ref role="1YBMHb" node="6HWpSUECLO7" resolve="attribute" />
                 </node>
               </node>
@@ -1561,7 +1561,7 @@
                 <node concept="34oBXx" id="7J3S7H7PVYl" role="2OqNvi" />
               </node>
             </node>
-            <node concept="1YBJjd" id="7J3S7H7PVYm" role="2OEOjV">
+            <node concept="1YBJjd" id="7J3S7H7PVYm" role="1urrMF">
               <ref role="1YBMHb" node="7J3S7H7PUst" resolve="classRuleSetInstance" />
             </node>
           </node>
@@ -1683,7 +1683,7 @@
                 <node concept="Xl_RD" id="67uyCwCTtAL" role="2MkJ7o">
                   <property role="Xl_RC" value="Identifying attributes may only be defined in a Struct RuleSet" />
                 </node>
-                <node concept="1YBJjd" id="67uyCwCTtE8" role="2OEOjV">
+                <node concept="1YBJjd" id="67uyCwCTtE8" role="1urrMF">
                   <ref role="1YBMHb" node="67uyCwCTrnv" resolve="attribute" />
                 </node>
               </node>
@@ -1710,7 +1710,7 @@
                 <node concept="Xl_RD" id="67uyCwCTuZe" role="2MkJ7o">
                   <property role="Xl_RC" value="Identifying attributes may not have a value" />
                 </node>
-                <node concept="1YBJjd" id="67uyCwCTuZf" role="2OEOjV">
+                <node concept="1YBJjd" id="67uyCwCTuZf" role="1urrMF">
                   <ref role="1YBMHb" node="67uyCwCTrnv" resolve="attribute" />
                 </node>
               </node>
@@ -1733,7 +1733,7 @@
                 <node concept="Xl_RD" id="4k6r071pLgu" role="2MkJ7o">
                   <property role="Xl_RC" value="Identifying attributes may not be optional" />
                 </node>
-                <node concept="1YBJjd" id="4k6r071pLgv" role="2OEOjV">
+                <node concept="1YBJjd" id="4k6r071pLgv" role="1urrMF">
                   <ref role="1YBMHb" node="67uyCwCTrnv" resolve="attribute" />
                 </node>
               </node>
@@ -1753,7 +1753,7 @@
                 <node concept="Xl_RD" id="4k6r071pMma" role="2MkJ7o">
                   <property role="Xl_RC" value="Identifying attributes are implicitly constant" />
                 </node>
-                <node concept="1YBJjd" id="4k6r071pMmb" role="2OEOjV">
+                <node concept="1YBJjd" id="4k6r071pMmb" role="1urrMF">
                   <ref role="1YBMHb" node="67uyCwCTrnv" resolve="attribute" />
                 </node>
               </node>
@@ -1886,7 +1886,7 @@
                 <node concept="Xl_RD" id="67uyCwCTHs7" role="2MkJ7o">
                   <property role="Xl_RC" value="The type of an composite attribute must be a struct or node or a collection of structs or nodes" />
                 </node>
-                <node concept="1YBJjd" id="67uyCwCTHv_" role="2OEOjV">
+                <node concept="1YBJjd" id="67uyCwCTHv_" role="1urrMF">
                   <ref role="1YBMHb" node="67uyCwCTvaD" resolve="attribute" />
                 </node>
               </node>
@@ -2159,7 +2159,7 @@
             <node concept="Xl_RD" id="hAODsxm" role="2MkJ7o">
               <property role="Xl_RC" value="a variable must not be of a void type" />
             </node>
-            <node concept="2OqwBi" id="hAODzvU" role="2OEOjV">
+            <node concept="2OqwBi" id="hAODzvU" role="1urrMF">
               <node concept="1YBJjd" id="jf2AAjrjII" role="2Oq$k0">
                 <ref role="1YBMHb" node="18IIFqCaaW0" resolve="attribute" />
               </node>
@@ -2777,7 +2777,7 @@
                 <node concept="Xl_RD" id="3vqpjybSQoH" role="2MkJ7o">
                   <property role="Xl_RC" value="A constant attribute must have a value equation" />
                 </node>
-                <node concept="1YBJjd" id="3vqpjybSQoI" role="2OEOjV">
+                <node concept="1YBJjd" id="3vqpjybSQoI" role="1urrMF">
                   <ref role="1YBMHb" node="3vqpjybSQoM" resolve="attribute" />
                 </node>
               </node>
@@ -2800,7 +2800,7 @@
                 <node concept="Xl_RD" id="4k6r071pL3Q" role="2MkJ7o">
                   <property role="Xl_RC" value="A constant may not be optional" />
                 </node>
-                <node concept="1YBJjd" id="4k6r071pL5z" role="2OEOjV">
+                <node concept="1YBJjd" id="4k6r071pL5z" role="1urrMF">
                   <ref role="1YBMHb" node="3vqpjybSQoM" resolve="attribute" />
                 </node>
               </node>
