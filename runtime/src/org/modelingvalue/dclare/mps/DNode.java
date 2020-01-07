@@ -59,7 +59,7 @@ public class DNode extends DIdentifiedObject implements SNode {
     private static final Constant<Triple<Set<SLanguage>, SConcept, String>, DType> NODE_TYPE              = Constant.of("NODE_TYPE", t -> new DNodeType(t));
 
     public static final Observed<DNode, DModel>                                    MODEL                  = NonCheckingObserved.of("$MODEL", null, (tx, o, pre, post) -> {
-                                                                                                              Set<IssueKindReportItem> items = MPS_ISSUES.get(o);
+                                                                                                              Set<Pair<DObject, IssueKindReportItem>> items = MPS_ISSUES.get(o);
                                                                                                               if (pre != null) {
                                                                                                                   DModel.ALL_MPS_ISSUES.set(pre, Set::removeAll, items);
                                                                                                               }

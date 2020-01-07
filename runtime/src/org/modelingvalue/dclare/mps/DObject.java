@@ -36,63 +36,63 @@ import jetbrains.mps.errors.item.IssueKindReportItem;
 @SuppressWarnings("rawtypes")
 public abstract class DObject implements Mutable {
 
-    public static final Observed<DObject, DType>                     TYPE                      = NonCheckingObserved.of("TYPE", new DType("<DUMMY_TYPE>") {
-                                                                                                   @Override
-                                                                                                   public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
-                                                                                                       return Set.of();
-                                                                                                   }
+    public static final Observed<DObject, DType>                                    TYPE                      = NonCheckingObserved.of("TYPE", new DType("<DUMMY_TYPE>") {
+                                                                                                                  @Override
+                                                                                                                  public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
+                                                                                                                      return Set.of();
+                                                                                                                  }
 
-                                                                                                   @Override
-                                                                                                   public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
-                                                                                                       return Set.of();
-                                                                                                   }
+                                                                                                                  @Override
+                                                                                                                  public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
+                                                                                                                      return Set.of();
+                                                                                                                  }
 
-                                                                                                   @Override
-                                                                                                   public Set<SLanguage> getLanguages() {
-                                                                                                       return Set.of();
-                                                                                                   }
-                                                                                               });
+                                                                                                                  @Override
+                                                                                                                  public Set<SLanguage> getLanguages() {
+                                                                                                                      return Set.of();
+                                                                                                                  }
+                                                                                                              });
 
-    protected static final Observer<DObject>                         TYPE_RULE                 = observer(TYPE, o -> {
-                                                                                                   TYPE.set(o, o.getType());
-                                                                                               }, Priority.preDepth);
+    protected static final Observer<DObject>                                        TYPE_RULE                 = observer(TYPE, o -> {
+                                                                                                                  TYPE.set(o, o.getType());
+                                                                                                              }, Priority.preDepth);
 
-    public static final Observed<DObject, DAttribute>                CONTAINING_ATTRIBUTE      = NonCheckingObserved.of("$CONTAINING_ATTRIBUTE", null);
+    public static final Observed<DObject, DAttribute>                               CONTAINING_ATTRIBUTE      = NonCheckingObserved.of("$CONTAINING_ATTRIBUTE", null);
 
-    protected static final Observer<DObject>                         CONTAINING_ATTRIBUTE_RULE = observer(CONTAINING_ATTRIBUTE, o -> {
-                                                                                                   Pair<Mutable, Setable<Mutable, ?>> pc = Mutable.D_PARENT_CONTAINING.get(o);
-                                                                                                   CONTAINING_ATTRIBUTE.set(o, pc == null || pc.a() instanceof DClareMPS ? null :                        //
-                                                                                                   pc.b() instanceof DAttribute ? (DAttribute) pc.b() : CONTAINING_ATTRIBUTE.get((DObject) pc.a()));
-                                                                                               }, Priority.preDepth);
+    protected static final Observer<DObject>                                        CONTAINING_ATTRIBUTE_RULE = observer(CONTAINING_ATTRIBUTE, o -> {
+                                                                                                                  Pair<Mutable, Setable<Mutable, ?>> pc = Mutable.D_PARENT_CONTAINING.get(o);
+                                                                                                                  CONTAINING_ATTRIBUTE.set(o, pc == null || pc.a() instanceof DClareMPS ? null :                              //
+                                                                                                                  pc.b() instanceof DAttribute ? (DAttribute) pc.b() : CONTAINING_ATTRIBUTE.get((DObject) pc.a()));
+                                                                                                              }, Priority.preDepth);
 
-    protected static final Action<DObject>                           REFRESH_CHILDREN          = Action.of("$REFRESH_CHILDREN", o -> {
-                                                                                                   for (DObject c : o.getAllChildren()) {
-                                                                                                       DObject.REFRESH.trigger(c);
-                                                                                                   }
-                                                                                               }, Direction.forward, Priority.preDepth);
+    protected static final Action<DObject>                                          REFRESH_CHILDREN          = Action.of("$REFRESH_CHILDREN", o -> {
+                                                                                                                  for (DObject c : o.getAllChildren()) {
+                                                                                                                      DObject.REFRESH.trigger(c);
+                                                                                                                  }
+                                                                                                              }, Direction.forward, Priority.preDepth);
 
-    protected static final Action<DObject>                           REFRESH                   = Action.of("$REFRESH", o -> {
-                                                                                                   o.read(dClareMPS());
-                                                                                                   DObject.REFRESH_CHILDREN.trigger(o);
-                                                                                               }, Direction.forward, Priority.preDepth);
+    protected static final Action<DObject>                                          REFRESH                   = Action.of("$REFRESH", o -> {
+                                                                                                                  o.read(dClareMPS());
+                                                                                                                  DObject.REFRESH_CHILDREN.trigger(o);
+                                                                                                              }, Direction.forward, Priority.preDepth);
 
-    public static final DObserved<DObject, Set<IssueKindReportItem>> MPS_ISSUES                = DObserved.of("$MPS_ISSUES", Set.of(), false, false, null, false, null, (tx, o, pre, post) -> {
-                                                                                                   DModel dModel = o instanceof DModel ? (DModel) o : o instanceof DNode ? ((DNode) o).getModel() : null;
-                                                                                                   if (dModel != null) {
-                                                                                                       Setable.<Set<IssueKindReportItem>, IssueKindReportItem> diff(pre, post,                           //
-                                                                                                               a -> DModel.ALL_MPS_ISSUES.set(dModel, Set::add, a),                                      //
-                                                                                                               r -> DModel.ALL_MPS_ISSUES.set(dModel, Set::remove, r));
-                                                                                                   }
-                                                                                               }, null);
+    public static final DObserved<DObject, Set<Pair<DObject, IssueKindReportItem>>> MPS_ISSUES                = DObserved.of("$MPS_ISSUES", Set.of(), false, false, null, false, null, (tx, o, pre, post) -> {
+                                                                                                                  DModel dModel = o instanceof DModel ? (DModel) o : o instanceof DNode ? ((DNode) o).getModel() : null;
+                                                                                                                  if (dModel != null) {
+                                                                                                                      Setable.<Set<Pair<DObject, IssueKindReportItem>>, Pair<DObject, IssueKindReportItem>> diff(pre, post,   //
+                                                                                                                              a -> DModel.ALL_MPS_ISSUES.set(dModel, Set::add, a),                                            //
+                                                                                                                              r -> DModel.ALL_MPS_ISSUES.set(dModel, Set::remove, r));
+                                                                                                                  }
+                                                                                                              }, null);
 
-    public static final Setable<DObject, Set<DIssue>>                DRULE_ISSUES              = Setable.of("$DRULE_ISSUES", Set.of(), true);
+    public static final Setable<DObject, Set<DIssue>>                               DRULE_ISSUES              = Setable.of("$DRULE_ISSUES", Set.of(), true);
 
-    public static final DObserved<DObject, Set<DIssue>>              DCLARE_ISSUES             = DObserved.of("$DCLARE_ISSUES", Set.of(), false, false, null, false, (dObject, pre, post) -> {
-                                                                                               }, null);
+    public static final DObserved<DObject, Set<DIssue>>                             DCLARE_ISSUES             = DObserved.of("$DCLARE_ISSUES", Set.of(), false, false, null, false, (dObject, pre, post) -> {
+                                                                                                              }, null);
 
-    protected static final Set<Observer>                             OBSERVERS                 = Set.of(TYPE_RULE, CONTAINING_ATTRIBUTE_RULE);
+    protected static final Set<Observer>                                            OBSERVERS                 = Set.of(TYPE_RULE, CONTAINING_ATTRIBUTE_RULE);
 
-    protected static final Set<Setable>                              SETABLES                  = Set.of(TYPE, MPS_ISSUES, DRULE_ISSUES, DCLARE_ISSUES, CONTAINING_ATTRIBUTE);
+    protected static final Set<Setable>                                             SETABLES                  = Set.of(TYPE, MPS_ISSUES, DRULE_ISSUES, DCLARE_ISSUES, CONTAINING_ATTRIBUTE);
 
     public static DClareMPS dClareMPS() {
         return DClareMPS.instance();
@@ -109,7 +109,7 @@ public abstract class DObject implements Mutable {
     }
 
     public java.util.Set<? extends IssueKindReportItem> getIssues() {
-        return MPS_ISSUES.get(this).collect(Collectors.toSet());
+        return MPS_ISSUES.get(this).map(Pair::b).collect(Collectors.toSet());
     }
 
     public java.util.List<DAttribute> getNonSyntheticAttributes() {
