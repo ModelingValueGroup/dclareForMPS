@@ -623,10 +623,12 @@
     <property role="TrG5h" value="Issue" />
     <property role="R5$K7" value="true" />
     <ref role="1TJDcQ" to="tpee:fzclF8l" resolve="Statement" />
-    <node concept="1TJgyi" id="41CotWWs4Oi" role="1TKVEl">
-      <property role="IQ2nx" value="4641067027424890130" />
-      <property role="TrG5h" value="severity" />
-      <ref role="AX2Wp" node="41CotWWs4Oo" resolve="MessageType" />
+    <node concept="1TJgyj" id="7cCgEMkno8n" role="1TKVEi">
+      <property role="IQ2ns" value="8297955622421103127" />
+      <property role="20lmBu" value="fLJjDmT/aggregation" />
+      <property role="20kJfa" value="severity" />
+      <property role="20lbJX" value="fLJekj4/_1" />
+      <ref role="20lvS9" node="7cCgEMkno8i" resolve="SeverityDeclaration" />
     </node>
     <node concept="1TJgyj" id="41CotWWs4Oc" role="1TKVEi">
       <property role="IQ2ns" value="4641067027424890124" />
@@ -646,7 +648,7 @@
   <node concept="25R3W" id="41CotWWs4Oo">
     <property role="3F6X1D" value="4641067027424890136" />
     <property role="3GE5qa" value="issues" />
-    <property role="TrG5h" value="MessageType" />
+    <property role="TrG5h" value="MessageSeverity" />
     <ref role="1H5jkz" node="41CotWWs4Op" resolve="error" />
     <node concept="25R33" id="41CotWWs4Op" role="25R1y">
       <property role="3tVfz5" value="4641067027424890137" />
@@ -670,11 +672,6 @@
     <property role="TrG5h" value="NodeIssue" />
     <property role="34LRSv" value="&lt;node issue&gt;" />
     <ref role="1TJDcQ" node="41CotWWrJg$" resolve="Issue" />
-    <node concept="1TJgyj" id="6NZFdbTNCZw" role="1TKVEi">
-      <property role="IQ2ns" value="7854186297291608032" />
-      <property role="20kJfa" value="feature" />
-      <ref role="20lvS9" to="tpce:1ob16QT2yIl" resolve="INamedStructureElement" />
-    </node>
     <node concept="1irR5M" id="rktk3X5CfR" role="rwd14">
       <property role="2$rrk2" value="1" />
       <node concept="1irPie" id="rktk3X5CfV" role="1irR9h">
@@ -683,6 +680,12 @@
           <property role="3PKj8l" value="ff7777" />
         </node>
       </node>
+    </node>
+    <node concept="1TJgyj" id="wH5jBlQug8" role="1TKVEi">
+      <property role="IQ2ns" value="589150464400548872" />
+      <property role="20lmBu" value="fLJjDmT/aggregation" />
+      <property role="20kJfa" value="feature" />
+      <ref role="20lvS9" node="wH5jBlQuf1" resolve="FeatureDeclaration" />
     </node>
   </node>
   <node concept="1TIwiD" id="2iL65LTVkL0">
@@ -715,6 +718,101 @@
           <property role="3PKj8l" value="ff7777" />
         </node>
       </node>
+    </node>
+  </node>
+  <node concept="1TIwiD" id="6NLrHVVfXXx">
+    <property role="EcuMT" value="7850177529460547425" />
+    <property role="3GE5qa" value="issues" />
+    <property role="TrG5h" value="MessageOperation" />
+    <property role="34LRSv" value="message" />
+    <ref role="1TJDcQ" to="tpck:gw2VY9q" resolve="BaseConcept" />
+    <node concept="PrWs8" id="6NLrHVVfXXy" role="PzmwI">
+      <ref role="PrY4T" to="tpee:hqOqG0K" resolve="IOperation" />
+    </node>
+  </node>
+  <node concept="1TIwiD" id="6NLrHVVggIG">
+    <property role="EcuMT" value="7850177529460624300" />
+    <property role="3GE5qa" value="issues.severity" />
+    <property role="TrG5h" value="SeverityOperation" />
+    <property role="34LRSv" value="severity" />
+    <ref role="1TJDcQ" to="tpck:gw2VY9q" resolve="BaseConcept" />
+    <node concept="PrWs8" id="6NLrHVVggIH" role="PzmwI">
+      <ref role="PrY4T" to="tpee:hqOqG0K" resolve="IOperation" />
+    </node>
+  </node>
+  <node concept="1TIwiD" id="6NLrHVVgBIb">
+    <property role="EcuMT" value="7850177529460718475" />
+    <property role="3GE5qa" value="issues.feature" />
+    <property role="TrG5h" value="FeatureOperation" />
+    <property role="34LRSv" value="feature" />
+    <ref role="1TJDcQ" to="tpck:gw2VY9q" resolve="BaseConcept" />
+    <node concept="PrWs8" id="6NLrHVVgBIc" role="PzmwI">
+      <ref role="PrY4T" to="tpee:hqOqG0K" resolve="IOperation" />
+    </node>
+  </node>
+  <node concept="1TIwiD" id="7cCgEMkno8i">
+    <property role="EcuMT" value="8297955622421103122" />
+    <property role="3GE5qa" value="issues.severity" />
+    <property role="TrG5h" value="SeverityDeclaration" />
+    <property role="R5$K7" value="true" />
+    <ref role="1TJDcQ" to="tpck:gw2VY9q" resolve="BaseConcept" />
+  </node>
+  <node concept="1TIwiD" id="7cCgEMkno8j">
+    <property role="EcuMT" value="8297955622421103123" />
+    <property role="3GE5qa" value="issues.severity" />
+    <property role="TrG5h" value="SeverityReference" />
+    <ref role="1TJDcQ" node="7cCgEMkno8i" resolve="SeverityDeclaration" />
+    <node concept="1TJgyi" id="7cCgEMkno8k" role="1TKVEl">
+      <property role="IQ2nx" value="8297955622421103124" />
+      <property role="TrG5h" value="severity" />
+      <ref role="AX2Wp" node="41CotWWs4Oo" resolve="MessageSeverity" />
+    </node>
+  </node>
+  <node concept="1TIwiD" id="7cCgEMkno8m">
+    <property role="EcuMT" value="8297955622421103126" />
+    <property role="3GE5qa" value="issues.severity" />
+    <property role="TrG5h" value="SeverityExpression" />
+    <ref role="1TJDcQ" node="7cCgEMkno8i" resolve="SeverityDeclaration" />
+    <node concept="1TJgyj" id="7cCgEMkno8r" role="1TKVEi">
+      <property role="IQ2ns" value="8297955622421103131" />
+      <property role="20lmBu" value="fLJjDmT/aggregation" />
+      <property role="20kJfa" value="expression" />
+      <property role="20lbJX" value="fLJekj4/_1" />
+      <ref role="20lvS9" to="tpee:fz3vP1J" resolve="Expression" />
+    </node>
+  </node>
+  <node concept="1TIwiD" id="wH5jBlQuf1">
+    <property role="EcuMT" value="589150464400548801" />
+    <property role="3GE5qa" value="issues.feature" />
+    <property role="TrG5h" value="FeatureDeclaration" />
+    <property role="R5$K7" value="true" />
+    <ref role="1TJDcQ" to="tpck:gw2VY9q" resolve="BaseConcept" />
+  </node>
+  <node concept="1TIwiD" id="wH5jBlQuf2">
+    <property role="EcuMT" value="589150464400548802" />
+    <property role="3GE5qa" value="issues.feature" />
+    <property role="TrG5h" value="FeatureExpression" />
+    <property role="34LRSv" value="#" />
+    <property role="R4oN_" value="feature expression" />
+    <ref role="1TJDcQ" node="wH5jBlQuf1" resolve="FeatureDeclaration" />
+    <node concept="1TJgyj" id="wH5jBlQuf3" role="1TKVEi">
+      <property role="IQ2ns" value="589150464400548803" />
+      <property role="20lmBu" value="fLJjDmT/aggregation" />
+      <property role="20kJfa" value="expression" />
+      <property role="20lbJX" value="fLJekj4/_1" />
+      <ref role="20lvS9" to="tpee:fz3vP1J" resolve="Expression" />
+    </node>
+  </node>
+  <node concept="1TIwiD" id="wH5jBlQug7">
+    <property role="EcuMT" value="589150464400548871" />
+    <property role="3GE5qa" value="issues.feature" />
+    <property role="TrG5h" value="FeatureReference" />
+    <ref role="1TJDcQ" node="wH5jBlQuf1" resolve="FeatureDeclaration" />
+    <node concept="1TJgyj" id="6NZFdbTNCZw" role="1TKVEi">
+      <property role="IQ2ns" value="7854186297291608032" />
+      <property role="20kJfa" value="feature" />
+      <property role="20lbJX" value="fLJekj4/_1" />
+      <ref role="20lvS9" to="tpce:1ob16QT2yIl" resolve="INamedStructureElement" />
     </node>
   </node>
 </model>
