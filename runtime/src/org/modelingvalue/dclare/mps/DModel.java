@@ -152,9 +152,12 @@ public class DModel extends DFromOriginalObject<SModel> implements SModel {
 
     protected static final Setable<DModel, Set<IssueKindReportItem>> ALL_MPS_ISSUES      = Setable.of("$ALL_MPS_ISSUES", Set.of(), (tx, o, pre, post) -> {
                                                                                              DClareMPS dClareMPS = dClareMPS();
-                                                                                             Setable.<Set<IssueKindReportItem>, IssueKindReportItem> diff(pre, post,                                              //
-                                                                                                     a -> DObject.MPS_ISSUES.set(dClareMPS.context(a), Set::add, a),                                              //
-                                                                                                     r -> DObject.MPS_ISSUES.set(dClareMPS.context(r), Set::remove, r));
+                                                                                             dClareMPS.read(                                                                                                      //
+                                                                                                     () -> {
+                                                                                                         Setable.<Set<IssueKindReportItem>, IssueKindReportItem> diff(pre, post,                                  //
+                                                                                                                 a -> DObject.MPS_ISSUES.set(dClareMPS.context(a), Set::add, a),                                  //
+                                                                                                                 r -> DObject.MPS_ISSUES.set(dClareMPS.context(r), Set::remove, r));
+                                                                                                     });
                                                                                          });
 
     @SuppressWarnings("rawtypes")
