@@ -52,6 +52,7 @@ import org.modelingvalue.dclare.Priority;
 import org.modelingvalue.dclare.Setable;
 
 import jetbrains.mps.errors.item.IssueKindReportItem;
+import jetbrains.mps.errors.item.ModelReportItem;
 import jetbrains.mps.extapi.model.SModelBase;
 
 public class DModel extends DFromOriginalObject<SModel> implements SModel {
@@ -464,6 +465,12 @@ public class DModel extends DFromOriginalObject<SModel> implements SModel {
     @Override
     public String toString() {
         return getName().getSimpleName();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public java.util.Set<ModelReportItem> getIssues() {
+        return (java.util.Set<ModelReportItem>) super.getIssues();
     }
 
 }

@@ -39,6 +39,7 @@ import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.Priority;
 import org.modelingvalue.dclare.Setable;
 
+import jetbrains.mps.errors.item.ModuleReportItem;
 import jetbrains.mps.extapi.model.SModelBase;
 import jetbrains.mps.extapi.module.SModuleBase;
 import jetbrains.mps.smodel.Language;
@@ -366,6 +367,12 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
     @Override
     public String toString() {
         return getModuleName();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public java.util.Set<ModuleReportItem> getIssues() {
+        return (java.util.Set<ModuleReportItem>) super.getIssues();
     }
 
 }

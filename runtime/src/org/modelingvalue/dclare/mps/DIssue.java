@@ -78,23 +78,31 @@ public class DIssue extends DIdentifiedObject {
 
     private static final Observer<DIssue>                DOBJECT_RULE     = DObject.<DIssue> observer(DOBJECT, o -> DOBJECT.set(o, o.dObject.get()));
 
-    @SuppressWarnings("rawtypes")
-    protected static final Set<Observer>                 OBSERVERS        = DObject.OBSERVERS.addAll(Set.of(MESSAGE_RULE, DOBJECT_RULE));
+    public static final Setable<DIssue, MessageStatus>   SEVERITY         = Setable.of("$SEVERITY", null, () -> DObject.DCLARE_ISSUES);
+
+    private static final Observer<DIssue>                SEVERITY_RULE    = DObject.<DIssue> observer(SEVERITY, o -> SEVERITY.set(o, o.severity.get()));
+
+    public static final Setable<DIssue, MessageTarget>   FEATURE          = Setable.of("$FEATURE", null, () -> DObject.DCLARE_ISSUES);
+
+    private static final Observer<DIssue>                FEATURE_RULE     = DObject.<DIssue> observer(FEATURE, o -> FEATURE.set(o, o.feature.get()));
 
     @SuppressWarnings("rawtypes")
-    protected static final Set<Setable>                  SETABLES         = DObject.SETABLES.addAll(Set.of(MESSAGE, DOBJECT));
+    protected static final Set<Observer>                 OBSERVERS        = DObject.OBSERVERS.addAll(Set.of(MESSAGE_RULE, DOBJECT_RULE, SEVERITY_RULE, FEATURE_RULE));
 
-    public static DIssue of(Supplier<DObject> object, MessageStatus severity, MessageTarget feature, Supplier<String> message, Object[] identity) {
+    @SuppressWarnings("rawtypes")
+    protected static final Set<Setable>                  SETABLES         = DObject.SETABLES.addAll(Set.of(MESSAGE, DOBJECT, SEVERITY, FEATURE));
+
+    public static DIssue of(Supplier<DObject> object, Supplier<MessageStatus> severity, Supplier<MessageTarget> feature, Supplier<String> message, Object[] identity) {
         return new DIssue(((DObserver<?>) LeafTransaction.getCurrent().cls()).rule(), object, severity, feature, message, identity);
     }
 
-    private final Supplier<String>  message;
-    private final Supplier<DObject> dObject;
-    private final DRule<?>          rule;
-    private final MessageStatus     severity;
-    private final MessageTarget     feature;
+    private final Supplier<String>        message;
+    private final Supplier<DObject>       dObject;
+    private final DRule<?>                rule;
+    private final Supplier<MessageStatus> severity;
+    private final Supplier<MessageTarget> feature;
 
-    private DIssue(DRule<?> rule, Supplier<DObject> dObject, MessageStatus severity, MessageTarget feature, Supplier<String> message, Object[] identity) {
+    private DIssue(DRule<?> rule, Supplier<DObject> dObject, Supplier<MessageStatus> severity, Supplier<MessageTarget> feature, Supplier<String> message, Object[] identity) {
         super(identity);
         this.rule = rule;
         this.message = message;
@@ -105,11 +113,11 @@ public class DIssue extends DIdentifiedObject {
     }
 
     public MessageTarget getFeature() {
-        return feature;
+        return FEATURE.get(this);
     }
 
     public MessageStatus getSeverity() {
-        return severity;
+        return SEVERITY.get(this);
     }
 
     public DRule<?> getRule() {

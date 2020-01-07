@@ -108,7 +108,7 @@ public abstract class DObject implements Mutable {
         return TYPE.get(this).getAttributes().collect(Collectors.toList());
     }
 
-    public java.util.Set<IssueKindReportItem> getIssues() {
+    public java.util.Set<? extends IssueKindReportItem> getIssues() {
         return MPS_ISSUES.get(this).collect(Collectors.toSet());
     }
 

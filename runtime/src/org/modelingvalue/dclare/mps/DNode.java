@@ -51,6 +51,7 @@ import org.modelingvalue.dclare.Priority;
 import org.modelingvalue.dclare.Setable;
 
 import jetbrains.mps.errors.item.IssueKindReportItem;
+import jetbrains.mps.errors.item.NodeReportItem;
 import jetbrains.mps.smodel.SNodeUtil;
 
 public class DNode extends DIdentifiedObject implements SNode {
@@ -844,6 +845,12 @@ public class DNode extends DIdentifiedObject implements SNode {
 
     public Object[] getIdentity() {
         return identity;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public java.util.Set<NodeReportItem> getIssues() {
+        return (java.util.Set<NodeReportItem>) super.getIssues();
     }
 
 }
