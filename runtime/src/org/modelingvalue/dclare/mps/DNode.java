@@ -99,7 +99,7 @@ public class DNode extends DIdentifiedObject implements SNode {
                                                                                                                                   }, r -> sNode.removeChild(r));
                                                                                                                           ist = children(sNode, sc);
                                                                                                                           DObserved.map(ist, soll,                                                                                             //
-                                                                                                                                  (n, a) -> sNode.addChild(sc, a), r -> {
+                                                                                                                                  (n, a) -> sNode.addChild(sc, n), r -> {
                                                                                                                                                                                                                                         });
                                                                                                                       }, () -> sc.getDeclarationNode());
                                                                                                           });
