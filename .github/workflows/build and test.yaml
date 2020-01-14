@@ -66,5 +66,5 @@ jobs:
         run:  |
           cd runtime
           . <(java -jar buildTools.jar)
-          git diff
+          git status
           #pushBackToGithub "${{ secrets.GITHUB_TOKEN }}" "automation@modelingvalue.com" "adjusted files [by github actions]"
