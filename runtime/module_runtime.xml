@@ -1,34 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="module_runtime" default="compile.module.runtime">
   <dirname property="module.runtime.basedir" file="${ant.file.module_runtime}"/>
-  
   <property name="module.jdk.home.runtime" value="${project.jdk.home}"/>
   <property name="module.jdk.bin.runtime" value="${project.jdk.bin}"/>
   <property name="module.jdk.classpath.runtime" value="${project.jdk.classpath}"/>
-  
   <property name="compiler.args.runtime" value="-encoding UTF-8 -source 11 -target 11 ${compiler.args}"/>
-  
   <property name="runtime.output.dir" value="${module.runtime.basedir}/out/production/runtime"/>
   <property name="runtime.testoutput.dir" value="${module.runtime.basedir}/out/test/runtime"/>
-  
   <path id="runtime.module.bootclasspath">
     <!-- Paths to be included in compilation bootclasspath -->
   </path>
-  
   <path id="runtime.module.production.classpath">
     <path refid="${module.jdk.classpath.runtime}"/>
     <path refid="library.gen:_immutable-collections.classpath"/>
     <path refid="library.gen:_dclare.classpath"/>
     <path refid="library.gen:_mps.classpath"/>
   </path>
-  
   <path id="runtime.runtime.production.module.classpath">
     <pathelement location="${runtime.output.dir}"/>
     <path refid="library.gen:_immutable-collections.classpath"/>
     <path refid="library.gen:_dclare.classpath"/>
     <path refid="library.gen:_mps.classpath"/>
   </path>
-  
   <path id="runtime.module.classpath">
     <path refid="${module.jdk.classpath.runtime}"/>
     <pathelement location="${runtime.output.dir}"/>
@@ -36,7 +29,6 @@
     <path refid="library.gen:_dclare.classpath"/>
     <path refid="library.gen:_mps.classpath"/>
   </path>
-  
   <path id="runtime.runtime.module.classpath">
     <pathelement location="${runtime.testoutput.dir}"/>
     <pathelement location="${runtime.output.dir}"/>
@@ -44,35 +36,27 @@
     <path refid="library.gen:_dclare.classpath"/>
     <path refid="library.gen:_mps.classpath"/>
   </path>
-  
-  
   <patternset id="excluded.from.module.runtime">
     <patternset refid="ignored.files"/>
   </patternset>
-  
   <patternset id="excluded.from.compilation.runtime">
     <patternset refid="excluded.from.module.runtime"/>
   </patternset>
-  
   <path id="runtime.module.sourcepath">
     <dirset dir="${module.runtime.basedir}">
       <include name="src"/>
     </dirset>
   </path>
-  
-  
   <target name="compile.module.runtime" depends="compile.module.runtime.production,compile.module.runtime.tests" description="Compile module runtime"/>
-  
   <target name="compile.module.runtime.production" description="Compile module runtime; production classes">
     <mkdir dir="${runtime.output.dir}"/>
-    <javac destdir="${runtime.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.runtime}/javac">
+    <javac includeantruntime="false" destdir="${runtime.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.runtime}/javac">
       <compilerarg line="${compiler.args.runtime}"/>
       <bootclasspath refid="runtime.module.bootclasspath"/>
       <classpath refid="runtime.module.production.classpath"/>
       <src refid="runtime.module.sourcepath"/>
       <patternset refid="excluded.from.compilation.runtime"/>
     </javac>
-    
     <copy todir="${runtime.output.dir}">
       <fileset dir="${module.runtime.basedir}/src">
         <patternset refid="compiler.resources"/>
@@ -80,11 +64,19 @@
       </fileset>
     </copy>
   </target>
-  
   <target name="compile.module.runtime.tests" depends="compile.module.runtime.production" description="compile module runtime; test classes" unless="skip.tests"/>
-  
   <target name="clean.module.runtime" description="cleanup module">
     <delete dir="${runtime.output.dir}"/>
     <delete dir="${runtime.testoutput.dir}"/>
+  </target>
+  <target name="javadoc.module.runtime">
+    <property name="runtime.javadoc.dir" value="${basedir}/out/artifacts"/>
+    <property name="runtime.javadoc.tmp" value="${runtime.javadoc.dir}/tmp"/>
+    <property name="runtime.javadoc.jar" value="${runtime.javadoc.dir}/runtime-javadoc.jar"/>
+    <javadoc sourcepathref="runtime.module.sourcepath" destdir="${runtime.javadoc.tmp}" classpathref="runtime.module.classpath"/>
+    <jar destfile="${runtime.javadoc.jar}" filesetmanifest="skip">
+      <zipfileset dir="${runtime.javadoc.tmp}"/>
+    </jar>
+    <delete dir="${runtime.javadoc.tmp}"/>
   </target>
 </project>
