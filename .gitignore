@@ -6,6 +6,7 @@ workspace.xml
 artifacts
 .DS_Store
 
+/build
 /out
 /buildTools.jar
 /build.properties
