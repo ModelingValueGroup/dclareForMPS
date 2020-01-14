@@ -50,13 +50,23 @@ import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.Priority;
 import org.modelingvalue.dclare.Setable;
 
+import jetbrains.mps.errors.item.IssueKindReportItem;
+import jetbrains.mps.errors.item.NodeReportItem;
 import jetbrains.mps.smodel.SNodeUtil;
 
 public class DNode extends DIdentifiedObject implements SNode {
 
     private static final Constant<Triple<Set<SLanguage>, SConcept, String>, DType> NODE_TYPE              = Constant.of("NODE_TYPE", t -> new DNodeType(t));
 
-    public static final Observed<DNode, DModel>                                    MODEL                  = NonCheckingObserved.of("$MODEL", null);
+    public static final Observed<DNode, DModel>                                    MODEL                  = NonCheckingObserved.of("$MODEL", null, (tx, o, pre, post) -> {
+                                                                                                              Set<Pair<DObject, IssueKindReportItem>> items = MPS_ISSUES.get(o);
+                                                                                                              if (pre != null) {
+                                                                                                                  DModel.ALL_MPS_ISSUES.set(pre, Set::removeAll, items);
+                                                                                                              }
+                                                                                                              if (post != null) {
+                                                                                                                  DModel.ALL_MPS_ISSUES.set(post, Set::addAll, items);
+                                                                                                              }
+                                                                                                          });
 
     public static final Observed<DNode, Map<Object, Object>>                       USER_OBJECTS           = DObserved.of("USER_OBJECTS", Map.of(), false, false, null, false, null, null);
 
@@ -66,11 +76,11 @@ public class DNode extends DIdentifiedObject implements SNode {
                                                                                                                       (dNode, pre, post) -> {
                                                                                                                           SNode sNode = dNode.sNode(true);
                                                                                                                           List<SNode> soll = post.map(c -> c.reParent(sNode, mc, c.sNode(true))).toList();
-                                                                                                                          List<SNode> ist = DNode.children(sNode, mc);
+                                                                                                                          List<SNode> ist = children(sNode, mc);
                                                                                                                           DObserved.map(ist, soll,                                                                                             //
                                                                                                                                   (n, a) -> {
                                                                                                                                   }, r -> sNode.removeChild(r));
-                                                                                                                          ist = DNode.children(sNode, mc);
+                                                                                                                          ist = children(sNode, mc);
                                                                                                                           DObserved.map(ist, soll,                                                                                             //
                                                                                                                                   (n, a) -> sNode.insertChildAfter(mc, n, a), r -> {
                                                                                                                                                                                                                                         });
@@ -82,14 +92,15 @@ public class DNode extends DIdentifiedObject implements SNode {
                                                                                                               return DObserved.<DNode, DNode> of(sc, null, !sc.isOptional(), true, null, false,                                                //
                                                                                                                       (dNode, pre, post) -> {
                                                                                                                           SNode sNode = dNode.sNode(true);
-                                                                                                                          SNode soll = post != null ? post.reParent(sNode, sc, post.sNode(true)) : null;
-                                                                                                                          SNode ist = children(sNode, sc).first();
-                                                                                                                          if (ist != null && !ist.equals(soll)) {
-                                                                                                                              sNode.removeChild(ist);
-                                                                                                                          }
-                                                                                                                          if (post != null && !soll.equals(ist)) {
-                                                                                                                              sNode.addChild(sc, soll);
-                                                                                                                          }
+                                                                                                                          List<SNode> soll = post != null ? List.of(post.reParent(sNode, sc, post.sNode(true))) : List.of();
+                                                                                                                          List<SNode> ist = children(sNode, sc);
+                                                                                                                          DObserved.map(ist, soll,                                                                                             //
+                                                                                                                                  (n, a) -> {
+                                                                                                                                  }, r -> sNode.removeChild(r));
+                                                                                                                          ist = children(sNode, sc);
+                                                                                                                          DObserved.map(ist, soll,                                                                                             //
+                                                                                                                                  (n, a) -> sNode.addChild(sc, n), r -> {
+                                                                                                                                                                                                                                        });
                                                                                                                       }, () -> sc.getDeclarationNode());
                                                                                                           });
 
@@ -123,7 +134,7 @@ public class DNode extends DIdentifiedObject implements SNode {
                                                                                                           });
     @SuppressWarnings("deprecation")
     public static final Constant<SProperty, DObserved<DNode, String>>              PROPERTY               = Constant.of("PROPERTY", sp -> {
-                                                                                                              return DObserved.<DNode, String> of(sp, null, true, false, null, false,                                                          //
+                                                                                                              return DObserved.<DNode, String> of(sp, null, false, false, null, false,                                                         //
                                                                                                                       (dNode, pre, post) -> {
                                                                                                                           SNode sNode = dNode.sNode(true);
                                                                                                                           String ist = sNode.getProperty(sp);
@@ -159,12 +170,6 @@ public class DNode extends DIdentifiedObject implements SNode {
                                                                                                                           return dm;
                                                                                                                       }).toSet()));
                                                                                                           }, Priority.preDepth);
-
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    protected static final Constant<SConcept, Set<DObserved<DNode, ?>>>            CONTAINERS             = Constant.of("", c -> (Set) Collection.of(c.getContainmentLinks()).map(DNode::container).toSet());
-
-    @SuppressWarnings("rawtypes")
-    protected static final Set<Observer>                                           RULES                  = DObject.RULES.addAll(Set.of(MODEL_RULE, USED_LANGUAGES_RULE, USED_MODELS_RULE));
 
     protected static final Setable<DNode, String>                                  NAME_OBSERVED          = PROPERTY.get(SNodeUtil.property_INamedConcept_name);
 
@@ -217,6 +222,21 @@ public class DNode extends DIdentifiedObject implements SNode {
     private static final Observed<DNode, SNodeReference>                           NODE_REF               = NonCheckingObserved.of("$NODE_REF", null, () -> D_NODE);
 
     protected static final Setable<DNode, SNode>                                   DETACHED               = Setable.of("$DETACHED", null);
+
+    @SuppressWarnings("rawtypes")
+    protected static final Constant<SConcept, Set<? extends Setable>>              CONCEPT_SETABLES       = Constant.of("$CONCEPT_SETABLES", c -> Collection.concat(                                                                           //
+            Collection.of(c.getProperties()),                                                                                                                                                                                                  //
+            Collection.of(c.getContainmentLinks()),                                                                                                                                                                                            //
+            Collection.of(c.getReferenceLinks())).map(DNode::setable).toSet());
+
+    @SuppressWarnings("rawtypes")
+    protected static final Constant<SConcept, Set<? extends Observer>>             CONCEPT_OBSERVERS      = Constant.of("$CONCEPT_OBSERVERS", c -> Collection.of(c.getContainmentLinks()).map(cl -> READ_MATCHER.get(cl)).toSet());
+
+    @SuppressWarnings("rawtypes")
+    protected static final Set<Observer>                                           OBSERVERS              = DObject.OBSERVERS.addAll(Set.of(MODEL_RULE, USED_LANGUAGES_RULE, USED_MODELS_RULE));
+
+    @SuppressWarnings("rawtypes")
+    protected static final Set<Setable>                                            SETABLES               = DObject.SETABLES.addAll(Set.of(NODE_REF, DETACHED, NAME_OBSERVED, MODEL, USER_OBJECTS, USED_MODELS, USED_LANGUAGES));
 
     public static DNode of(SConcept concept, String anonymousType, Object[] identity) {
         identity = Arrays.copyOf(identity, identity.length + (anonymousType != null ? 2 : 1));
@@ -584,8 +604,16 @@ public class DNode extends DIdentifiedObject implements SNode {
         return role.isMultiple() ? MANY_CONTAINMENT.get(role).get(this) : (List) SINGLE_CONTAINMENT.get(role).getCollection(this).toList();
     }
 
-    private static DObserved<DNode, ?> container(SContainmentLink role) {
-        return role.isMultiple() ? MANY_CONTAINMENT.get(role) : SINGLE_CONTAINMENT.get(role);
+    @SuppressWarnings("rawtypes")
+    private static Setable setable(SConceptFeature feature) {
+        if (feature instanceof SProperty) {
+            return PROPERTY.get((SProperty) feature);
+        } else if (feature instanceof SContainmentLink) {
+            SContainmentLink cl = (SContainmentLink) feature;
+            return cl.isMultiple() ? MANY_CONTAINMENT.get(cl) : SINGLE_CONTAINMENT.get(cl);
+        } else {
+            return REFERENCE.get((SReferenceLink) feature);
+        }
     }
 
     @Override
@@ -656,7 +684,7 @@ public class DNode extends DIdentifiedObject implements SNode {
         } else if (feature instanceof SContainmentLink) {
             SContainmentLink cl = (SContainmentLink) feature;
             if (cl.isMultiple()) {
-                List<DNode> element = value != null ? Collection.of((Iterable<DNode>) value).toList() : null;
+                List<DNode> element = value != null ? Collection.of((Iterable<DNode>) value).distinct().toList() : null;
                 MANY_CONTAINMENT.get(cl).set(this, (i, s) -> s == null || Objects.equals(s, i) ? i : s, element);
             } else {
                 SINGLE_CONTAINMENT.get(cl).set(this, (DNode) value);
@@ -817,6 +845,12 @@ public class DNode extends DIdentifiedObject implements SNode {
 
     public Object[] getIdentity() {
         return identity;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public java.util.Set<NodeReportItem> getIssues() {
+        return (java.util.Set<NodeReportItem>) super.getIssues();
     }
 
 }

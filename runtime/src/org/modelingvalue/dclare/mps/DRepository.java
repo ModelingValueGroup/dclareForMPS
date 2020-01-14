@@ -27,7 +27,6 @@ import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.dclare.Action;
 import org.modelingvalue.dclare.Constant;
 import org.modelingvalue.dclare.Direction;
-import org.modelingvalue.dclare.Mutable;
 import org.modelingvalue.dclare.Priority;
 import org.modelingvalue.dclare.Setable;
 
@@ -52,9 +51,10 @@ public class DRepository extends DFromOriginalObject<SRepository> implements SRe
                                                                                      return ls;
                                                                                  }
 
+                                                                                 @SuppressWarnings("rawtypes")
                                                                                  @Override
-                                                                                 public Collection<? extends Setable<? extends Mutable, ?>> dContainers() {
-                                                                                     return Collection.concat(Set.of(MODULES), super.dContainers());
+                                                                                 public Collection<Setable> setables() {
+                                                                                     return SETABLES;
                                                                                  }
 
                                                                              });
@@ -66,6 +66,9 @@ public class DRepository extends DFromOriginalObject<SRepository> implements SRe
     private static final Action<DRepository>                 READ_MODULES    = Action.of("$READ_MODULES", r -> {
                                                                                  MODULES.set(r, dClareMPS().read(() -> modules()).map(m -> DModule.of(m)).toSet());
                                                                              }, Direction.forward, Priority.preDepth);
+
+    @SuppressWarnings("rawtypes")
+    protected static final Set<Setable>                      SETABLES        = DObject.SETABLES.add(MODULES);
 
     protected DRepository(SRepository original) {
         super(original);

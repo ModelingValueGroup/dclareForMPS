@@ -13,14 +13,22 @@
 
 package org.modelingvalue.dclare.mps;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 import javax.swing.SwingUtilities;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
-import org.jetbrains.mps.openapi.project.Project;
+import org.jetbrains.mps.openapi.model.SModel;
+import org.jetbrains.mps.openapi.model.SNode;
+import org.jetbrains.mps.openapi.module.SModule;
+import org.jetbrains.mps.openapi.module.SRepository;
+import org.jetbrains.mps.openapi.util.Consumer;
+import org.jetbrains.mps.openapi.util.ProgressMonitor;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.DefaultMap;
 import org.modelingvalue.collections.Entry;
@@ -61,6 +69,24 @@ import org.modelingvalue.dclare.UniverseTransaction;
 import org.modelingvalue.dclare.mps.DRule.DObserver;
 import org.modelingvalue.dclare.mps.DRule.DObserverTransaction;
 
+import jetbrains.mps.checkers.AbstractNodeCheckerInEditor;
+import jetbrains.mps.checkers.IAbstractChecker;
+import jetbrains.mps.checkers.IChecker;
+import jetbrains.mps.checkers.ICheckingPostprocessor;
+import jetbrains.mps.checkers.LanguageErrorsCollector;
+import jetbrains.mps.checkers.ModelCheckerBuilder;
+import jetbrains.mps.checkers.ModelCheckerBuilder.ItemsToCheck;
+import jetbrains.mps.editor.runtime.LanguageEditorChecker;
+import jetbrains.mps.errors.CheckerRegistry;
+import jetbrains.mps.errors.item.IssueKindReportItem;
+import jetbrains.mps.errors.item.IssueKindReportItem.CheckerCategory;
+import jetbrains.mps.errors.item.ModelReportItem;
+import jetbrains.mps.errors.item.ModuleReportItem;
+import jetbrains.mps.errors.item.NodeReportItem;
+import jetbrains.mps.errors.item.ReportItem;
+import jetbrains.mps.nodeEditor.Highlighter;
+import jetbrains.mps.progress.EmptyProgressMonitor;
+import jetbrains.mps.project.ProjectBase;
 import jetbrains.mps.smodel.language.LanguageRegistry;
 import jetbrains.mps.smodel.language.LanguageRuntime;
 
@@ -79,18 +105,8 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
                                                                                                                                     }
 
                                                                                                                                     @Override
-                                                                                                                                    public Collection<? extends Setable<? extends Mutable, ?>> dContainers() {
-                                                                                                                                        return Collection.of(REPOSITORY_CONTAINER);
-                                                                                                                                    }
-
-                                                                                                                                    @Override
-                                                                                                                                    public Collection<? extends Constant<? extends Mutable, ?>> dConstants() {
-                                                                                                                                        return Collection.of();
-                                                                                                                                    }
-
-                                                                                                                                    @Override
                                                                                                                                     public Collection<? extends Setable<? extends Mutable, ?>> dSetables() {
-                                                                                                                                        return Collection.of();
+                                                                                                                                        return SETABLES;
                                                                                                                                     }
                                                                                                                                 };
 
@@ -116,10 +132,12 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
 
     private final static Setable<DClareMPS, DRepository>                                                   REPOSITORY_CONTAINER = Setable.of("REPOSITORY_CONTAINER", null, true);
 
+    protected static final Set<? extends Setable<? extends Mutable, ?>>                                    SETABLES             = Set.of(REPOSITORY_CONTAINER);
+
     private final ContextPool                                                                              thePool              = ContextThread.createPool();
     protected final Thread                                                                                 waitForEndThread;
     private final UniverseTransaction                                                                      universeTransaction;
-    protected final Project                                                                                project;
+    protected final ProjectBase                                                                            project;
     private final StartStopHandler                                                                         startStopHandler;
     private ImperativeTransaction                                                                          imperativeTransaction;
     private boolean                                                                                        running;
@@ -127,12 +145,32 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     protected Map<DMessageType, QualifiedSet<Triple<DObject, DFeature<?>, String>, DMessage>>              messages             = MESSAGE_QSET_MAP;
     protected final DclareForMPSEngine                                                                     engine;
     private final DRepository                                                                              dRepository;
+    private final ModuleChecker                                                                            moduleChecker;
+    private final ModelChecker                                                                             modelChecker;
+    private final NodeChecker                                                                              nodeChecker;
+    private final NodeCheckerInEditor                                                                      nodeCheckerInEditor;
+    private final LanguageEditorChecker                                                                    languageEditorChecker;
+    private final IAbstractChecker<ItemsToCheck, IssueKindReportItem>                                      mpsChecker;
+    private final Concurrent<Set<SModel>>                                                                  changedModels        = Concurrent.of(Set.of());
+    private final Concurrent<Set<SModule>>                                                                 changedModules       = Concurrent.of(Set.of());
 
-    protected DClareMPS(DclareForMPSEngine engine, Project project, State prevState, int maxTotalNrOfChanges, int maxNrOfChanges, int maxNrOfObserved, int maxNrOfObservers, StartStopHandler startStopHandler) {
+    protected DClareMPS(DclareForMPSEngine engine, ProjectBase project, State prevState, int maxTotalNrOfChanges, int maxNrOfChanges, int maxNrOfObserved, int maxNrOfObservers, StartStopHandler startStopHandler) {
         this.project = project;
         this.engine = engine;
         this.startStopHandler = startStopHandler;
         this.dRepository = new DRepository(project.getRepository());
+        this.moduleChecker = new ModuleChecker();
+        this.modelChecker = new ModelChecker();
+        this.nodeChecker = new NodeChecker();
+        this.nodeCheckerInEditor = new NodeCheckerInEditor();
+        this.languageEditorChecker = new LanguageEditorChecker(project.getRepository(), Collections.singletonList(nodeCheckerInEditor));
+        CheckerRegistry checkerRegistry = project.getPlatform().findComponent(CheckerRegistry.class);
+        checkerRegistry.registerChecker(moduleChecker);
+        checkerRegistry.registerChecker(modelChecker);
+        checkerRegistry.registerChecker(nodeChecker);
+        mpsChecker = new ModelCheckerBuilder(new ModelCheckerBuilder.ModelsExtractorImpl().excludeGenerators()).createChecker(checkerRegistry.getCheckers());
+        Highlighter highlighter = project.getComponent(Highlighter.class);
+        highlighter.addChecker(languageEditorChecker);
         project.getModelAccess().executeCommandInEDT(() -> startStopHandler.on(project));
         if (TRACE) {
             System.err.println(DCLARE + "START " + this);
@@ -390,15 +428,15 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
 
     public void handleMPSChange(Runnable action) {
         if (imperativeTransaction != null) {
-            imperativeTransaction.schedule(action);
-        } else {
-            universeTransaction.put(action, () -> {
-                if (imperativeTransaction != null) {
-                    imperativeTransaction.schedule(action);
-                } else {
-                    read(action);
+            if (LeafTransaction.getCurrent() == imperativeTransaction) {
+                try {
+                    action.run();
+                } catch (Throwable t) {
+                    addMessage(t);
                 }
-            }, Priority.preDepth);
+            } else {
+                imperativeTransaction.schedule(action);
+            }
         }
     }
 
@@ -479,6 +517,13 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
             try {
                 pre.diff(post, o -> o instanceof DObject && !((DObject) o).isDclareOnly(), p -> p instanceof DObserved && !((DObserved) p).isDclareOnly()).forEach(e0 -> {
                     DObject dObject = (DObject) e0.getKey();
+                    if (dObject instanceof DModel) {
+                        changedModels.change(s -> s.add(((DModel) dObject).original()));
+                    } else if (dObject instanceof DNode) {
+                        changedModels.change(s -> s.add(((DNode) dObject).getModel().original()));
+                    } else if (dObject instanceof DModule) {
+                        changedModules.change(s -> s.add(((DModule) dObject).original()));
+                    }
                     e0.getValue().forEach(e1 -> {
                         DObserved mpsObserved = (DObserved) e1.getKey();
                         mpsObserved.toMPS(post, dObject, e1.getValue().a(), e1.getValue().b());
@@ -486,6 +531,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
                 });
                 if (last) {
                     running = false;
+                    runModelCheck();
                     startStopHandler.stop(project, new Getter() {
                         @Override
                         public <R> R get(Supplier<R> supplier) {
@@ -511,6 +557,12 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
                     return state.get(supplier);
                 }
             }, this));
+            CheckerRegistry checkerRegistry = project.getPlatform().findComponent(CheckerRegistry.class);
+            checkerRegistry.unregisterChecker(moduleChecker);
+            checkerRegistry.unregisterChecker(modelChecker);
+            checkerRegistry.unregisterChecker(nodeChecker);
+            Highlighter highlighter = project.getComponent(Highlighter.class);
+            project.getModelAccess().runReadInEDT(() -> highlighter.removeChecker(languageEditorChecker));
             ImperativeTransaction it = imperativeTransaction;
             invokeLater(() -> it.stop());
             imperativeTransaction = null;
@@ -545,9 +597,141 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
         return UNIVERSE_CLASS;
     }
 
-    @Override
-    public Collection<? extends Observer<?>> dMutableObservers() {
-        return Set.of();
+    private class ModuleChecker extends IChecker.AbstractModuleChecker<ModuleReportItem> {
+        @Override
+        public void check(SModule sModule, SRepository repository, Consumer<? super ModuleReportItem> consumer, ProgressMonitor monitor) {
+            universeTransaction.preState().run(() -> {
+                DModule dModule = DModule.of(sModule);
+                for (DIssue issue : DObject.DCLARE_ISSUES.get(dModule)) {
+                    consumer.consume((ModuleReportItem) issue.getItem());
+                }
+            });
+        }
+
+        @Override
+        public CheckerCategory getCategory() {
+            return DIssue.CHECKER_CATEGORY;
+        }
+    }
+
+    private class ModelChecker extends IChecker.AbstractModelChecker<ModelReportItem> {
+        @Override
+        public void check(SModel sModel, SRepository repository, Consumer<? super ModelReportItem> consumer, ProgressMonitor monitor) {
+            universeTransaction.preState().run(() -> {
+                DModel dModel = DModel.of(sModel);
+                for (DIssue issue : DObject.DCLARE_ISSUES.get(dModel)) {
+                    consumer.consume((ModelReportItem) issue.getItem());
+                }
+            });
+        }
+
+        @Override
+        public CheckerCategory getCategory() {
+            return DIssue.CHECKER_CATEGORY;
+        }
+    }
+
+    private class NodeChecker extends IChecker.AbstractNodeChecker<NodeReportItem> {
+        @Override
+        public AbstractRootChecker<NodeReportItem> asRootChecker() {
+            AbstractRootChecker<NodeReportItem> rootChecker = super.asRootChecker();
+            return new AbstractRootChecker<NodeReportItem>() {
+                @Override
+                public IssueKindReportItem.CheckerCategory getCategory() {
+                    return rootChecker.getCategory();
+                }
+
+                @Override
+                public ICheckingPostprocessor<NodeReportItem> getPostprocessor() {
+                    return rootChecker.getPostprocessor();
+                }
+
+                @Override
+                public String toString() {
+                    return rootChecker.toString();
+                }
+
+                @Override
+                public void check(SNode root, SRepository repository, Consumer<? super NodeReportItem> errorCollector, ProgressMonitor monitor) {
+                    universeTransaction.preState().run(() -> {
+                        rootChecker.check(root, repository, errorCollector, monitor);
+                    });
+                }
+            };
+        }
+
+        @Override
+        public void check(SNode sNode, SRepository repository, Consumer<? super NodeReportItem> consumer, ProgressMonitor monitor) {
+            DNode dNode = DNode.of(sNode.getConcept(), sNode.getReference());
+            for (DIssue issue : DObject.DCLARE_ISSUES.get(dNode)) {
+                consumer.consume((NodeReportItem) issue.getItem());
+            }
+        }
+
+        @Override
+        public CheckerCategory getCategory() {
+            return DIssue.CHECKER_CATEGORY;
+        }
+    }
+
+    private class NodeCheckerInEditor extends AbstractNodeCheckerInEditor {
+
+        @Override
+        protected void checkNodeInEditor(SNode sNode, LanguageErrorsCollector errorsCollector, SRepository repository) {
+            universeTransaction.preState().run(() -> {
+                DNode dNode = DNode.of(sNode.getConcept(), sNode.getReference());
+                for (DIssue issue : DObject.DCLARE_ISSUES.get(dNode)) {
+                    errorsCollector.addError((NodeReportItem) issue.getItem());
+                }
+            });
+        }
+
+        @Override
+        public CheckerCategory getCategory() {
+            return DIssue.CHECKER_CATEGORY;
+        }
+    }
+
+    private void runModelCheck() {
+        Set<SModel> models = changedModels.result();
+        Set<SModule> modules = changedModules.result();
+        changedModels.init(Set.of());
+        changedModules.init(Set.of());
+        if (!models.isEmpty() || !modules.isEmpty()) {
+            thePool.execute(() -> {
+                read(() -> {
+                    ModelCheckerBuilder.ItemsToCheck itemsToCheck = new ModelCheckerBuilder.ItemsToCheck();
+                    itemsToCheck.models = models.collect(Collectors.toList());
+                    itemsToCheck.modules = modules.collect(Collectors.toList());
+                    java.util.List<IssueKindReportItem> reportItems = new ArrayList<>();
+                    SRepository repos = getRepository().original();
+                    mpsChecker.check(itemsToCheck, repos, reportItems::add, new EmptyProgressMonitor());
+                    universeTransaction.put(new Object(), () -> read(() -> {
+                        for (SModel sModel : models) {
+                            DModel.ALL_MPS_ISSUES.setDefault(DModel.of(sModel));
+                        }
+                        for (SModule sModule : modules) {
+                            DObject.MPS_ISSUES.setDefault(DModule.of(sModule));
+                        }
+                        for (IssueKindReportItem item : reportItems) {
+                            DObject context = context(item);
+                            DObject.MPS_ISSUES.set(context, Set::add, Pair.of(context, item));
+                        }
+                    }));
+                });
+            });
+        }
+    }
+
+    private DObject context(ReportItem item) {
+        SRepository repos = getRepository().original();
+        if (item instanceof NodeReportItem) {
+            return DNode.of(((NodeReportItem) item).getNode().resolve(repos));
+        } else if (item instanceof ModelReportItem) {
+            return DModel.of(((ModelReportItem) item).getModel().resolve(repos));
+        } else {
+            return DModule.of(((ModuleReportItem) item).getModule().resolve(repos));
+        }
     }
 
 }

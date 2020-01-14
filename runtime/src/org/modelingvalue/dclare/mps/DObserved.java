@@ -28,7 +28,6 @@ import org.modelingvalue.collections.Map;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.QuadConsumer;
 import org.modelingvalue.collections.util.TriConsumer;
-import org.modelingvalue.dclare.EmptyMandatoryException;
 import org.modelingvalue.dclare.LeafTransaction;
 import org.modelingvalue.dclare.Mutable;
 import org.modelingvalue.dclare.Observed;
@@ -159,7 +158,7 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
                 if (LeafTransaction.getCurrent() instanceof DRule.DObserverTransaction) {
                     DRule.EMPTY_ATTRIBUTE.set(true);
                 }
-            } else if (result instanceof java.util.Collection || result instanceof ContainingCollection) {
+            } else if (result instanceof ContainingCollection) {
                 if (LeafTransaction.getCurrent() instanceof DRule.DObserverTransaction) {
                     DRule.COLLECTION_ATTRIBUTE.set(true);
                 }
@@ -175,16 +174,13 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
 
     @Override
     public boolean checkConsistency() {
-        return super.checkConsistency() || mandatory;
+        return checkConsistency && (super.checkConsistency() || mandatory);
     }
 
     @Override
     public void checkConsistency(State state, O object, T post) {
         if (super.checkConsistency()) {
             super.checkConsistency(state, object, post);
-        }
-        if (mandatory && post == null) {
-            throw new EmptyMandatoryException(object, this);
         }
     }
 
