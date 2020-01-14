@@ -13,82 +13,38 @@
 
 package org.modelingvalue.dclare.mps;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-
-import javax.swing.SwingUtilities;
-
-import org.jetbrains.mps.openapi.language.SLanguage;
-import org.jetbrains.mps.openapi.model.SModel;
-import org.jetbrains.mps.openapi.model.SNode;
-import org.jetbrains.mps.openapi.module.SModule;
-import org.jetbrains.mps.openapi.module.SRepository;
+import jetbrains.mps.checkers.*;
+import jetbrains.mps.checkers.ModelCheckerBuilder.*;
+import jetbrains.mps.editor.runtime.*;
+import jetbrains.mps.errors.*;
+import jetbrains.mps.errors.item.*;
+import jetbrains.mps.errors.item.IssueKindReportItem.*;
+import jetbrains.mps.nodeEditor.*;
+import jetbrains.mps.progress.*;
+import jetbrains.mps.project.*;
+import jetbrains.mps.smodel.language.*;
+import org.jetbrains.mps.openapi.language.*;
+import org.jetbrains.mps.openapi.model.*;
+import org.jetbrains.mps.openapi.module.*;
 import org.jetbrains.mps.openapi.util.Consumer;
 import org.jetbrains.mps.openapi.util.ProgressMonitor;
 import org.modelingvalue.collections.Collection;
-import org.modelingvalue.collections.DefaultMap;
-import org.modelingvalue.collections.Entry;
 import org.modelingvalue.collections.Map;
-import org.modelingvalue.collections.QualifiedSet;
 import org.modelingvalue.collections.Set;
-import org.modelingvalue.collections.util.Concurrent;
-import org.modelingvalue.collections.util.ContextThread;
-import org.modelingvalue.collections.util.ContextThread.ContextPool;
-import org.modelingvalue.collections.util.Pair;
-import org.modelingvalue.collections.util.TriConsumer;
-import org.modelingvalue.collections.util.Triple;
+import org.modelingvalue.collections.*;
+import org.modelingvalue.collections.util.*;
+import org.modelingvalue.collections.util.ContextThread.*;
 import org.modelingvalue.dclare.Action;
-import org.modelingvalue.dclare.ConsistencyError;
-import org.modelingvalue.dclare.Constant;
-import org.modelingvalue.dclare.EmptyMandatoryException;
-import org.modelingvalue.dclare.ImperativeTransaction;
-import org.modelingvalue.dclare.LeafTransaction;
-import org.modelingvalue.dclare.Mutable;
-import org.modelingvalue.dclare.MutableClass;
-import org.modelingvalue.dclare.NonCheckingObserved;
-import org.modelingvalue.dclare.NonDeterministicException;
-import org.modelingvalue.dclare.Observed;
 import org.modelingvalue.dclare.Observer;
-import org.modelingvalue.dclare.OutOfScopeException;
-import org.modelingvalue.dclare.Priority;
-import org.modelingvalue.dclare.ReferencedOrphanException;
-import org.modelingvalue.dclare.ReusableTransaction;
-import org.modelingvalue.dclare.Setable;
-import org.modelingvalue.dclare.State;
-import org.modelingvalue.dclare.ThrowableError;
-import org.modelingvalue.dclare.TooManyChangesException;
-import org.modelingvalue.dclare.TooManyObservedException;
-import org.modelingvalue.dclare.TooManyObserversException;
-import org.modelingvalue.dclare.TransactionException;
-import org.modelingvalue.dclare.Universe;
-import org.modelingvalue.dclare.UniverseTransaction;
-import org.modelingvalue.dclare.mps.DRule.DObserver;
-import org.modelingvalue.dclare.mps.DRule.DObserverTransaction;
+import org.modelingvalue.dclare.*;
+import org.modelingvalue.dclare.mps.DRule.*;
 
-import jetbrains.mps.checkers.AbstractNodeCheckerInEditor;
-import jetbrains.mps.checkers.IAbstractChecker;
-import jetbrains.mps.checkers.IChecker;
-import jetbrains.mps.checkers.ICheckingPostprocessor;
-import jetbrains.mps.checkers.LanguageErrorsCollector;
-import jetbrains.mps.checkers.ModelCheckerBuilder;
-import jetbrains.mps.checkers.ModelCheckerBuilder.ItemsToCheck;
-import jetbrains.mps.editor.runtime.LanguageEditorChecker;
-import jetbrains.mps.errors.CheckerRegistry;
-import jetbrains.mps.errors.item.IssueKindReportItem;
-import jetbrains.mps.errors.item.IssueKindReportItem.CheckerCategory;
-import jetbrains.mps.errors.item.ModelReportItem;
-import jetbrains.mps.errors.item.ModuleReportItem;
-import jetbrains.mps.errors.item.NodeReportItem;
-import jetbrains.mps.errors.item.ReportItem;
-import jetbrains.mps.nodeEditor.Highlighter;
-import jetbrains.mps.progress.EmptyProgressMonitor;
-import jetbrains.mps.project.ProjectBase;
-import jetbrains.mps.smodel.language.LanguageRegistry;
-import jetbrains.mps.smodel.language.LanguageRuntime;
+import javax.swing.*;
+import java.util.List;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.function.*;
+import java.util.stream.*;
 
 public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
 
@@ -114,13 +70,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
 
     protected static final String                                                                          DCLARE               = "---------> DCLARE ";
 
-    private final ThreadLocal<Boolean>                                                                     COMMITTING           = new ThreadLocal<Boolean>() {
-                                                                                                                                    @Override
-                                                                                                                                    protected Boolean initialValue() {
-                                                                                                                                        return false;
-                                                                                                                                    }
-
-                                                                                                                                };
+    private final ThreadLocal<Boolean>                                                                     COMMITTING           = ThreadLocal.withInitial(() -> false);
 
     public final static Observed<DClareMPS, Set<SLanguage>>                                                ALL_LANGUAGES        = NonCheckingObserved.of("ALL_LANGAUGES", Set.of());
 
@@ -165,10 +115,15 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
         this.nodeCheckerInEditor = new NodeCheckerInEditor();
         this.languageEditorChecker = new LanguageEditorChecker(project.getRepository(), Collections.singletonList(nodeCheckerInEditor));
         CheckerRegistry checkerRegistry = project.getPlatform().findComponent(CheckerRegistry.class);
+        if (checkerRegistry==null) {
+            throw new Error("CheckerRegistry not found in platform");
+        }
         checkerRegistry.registerChecker(moduleChecker);
         checkerRegistry.registerChecker(modelChecker);
         checkerRegistry.registerChecker(nodeChecker);
-        mpsChecker = new ModelCheckerBuilder(new ModelCheckerBuilder.ModelsExtractorImpl().excludeGenerators()).createChecker(checkerRegistry.getCheckers());
+        @SuppressWarnings("RedundantCast") // cast is needed! javac will fail otherwise
+        List <? extends IChecker <?, ? extends IssueKindReportItem>> checkers = (List < ? extends IChecker <?, ? extends IssueKindReportItem>>) checkerRegistry.getCheckers();
+        mpsChecker = new ModelCheckerBuilder(new ModelCheckerBuilder.ModelsExtractorImpl().excludeGenerators()).createChecker(checkers);
         Highlighter highlighter = project.getComponent(Highlighter.class);
         highlighter.addChecker(languageEditorChecker);
         project.getModelAccess().executeCommandInEDT(() -> startStopHandler.on(project));
@@ -532,12 +487,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
                 if (last) {
                     running = false;
                     runModelCheck();
-                    startStopHandler.stop(project, new Getter() {
-                        @Override
-                        public <R> R get(Supplier<R> supplier) {
-                            return post.get(supplier);
-                        }
-                    }, this);
+                    startStopHandler.stop(project, post::get, this);
                 }
             } finally {
                 COMMITTING.set(false);
@@ -558,13 +508,16 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
                 }
             }, this));
             CheckerRegistry checkerRegistry = project.getPlatform().findComponent(CheckerRegistry.class);
+            if (checkerRegistry==null) {
+                throw new Error("CheckerRegistry not found in platform");
+            }
             checkerRegistry.unregisterChecker(moduleChecker);
             checkerRegistry.unregisterChecker(modelChecker);
             checkerRegistry.unregisterChecker(nodeChecker);
             Highlighter highlighter = project.getComponent(Highlighter.class);
             project.getModelAccess().runReadInEDT(() -> highlighter.removeChecker(languageEditorChecker));
             ImperativeTransaction it = imperativeTransaction;
-            invokeLater(() -> it.stop());
+            invokeLater(it::stop);
             imperativeTransaction = null;
             universeTransaction.kill();
             state.run(() -> getRepository().stop(this));
@@ -635,14 +588,14 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
         @Override
         public AbstractRootChecker<NodeReportItem> asRootChecker() {
             AbstractRootChecker<NodeReportItem> rootChecker = super.asRootChecker();
-            return new AbstractRootChecker<NodeReportItem>() {
+            return new AbstractRootChecker <>() {
                 @Override
                 public IssueKindReportItem.CheckerCategory getCategory() {
                     return rootChecker.getCategory();
                 }
 
                 @Override
-                public ICheckingPostprocessor<NodeReportItem> getPostprocessor() {
+                public ICheckingPostprocessor <NodeReportItem> getPostprocessor() {
                     return rootChecker.getPostprocessor();
                 }
 
@@ -652,10 +605,8 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
                 }
 
                 @Override
-                public void check(SNode root, SRepository repository, Consumer<? super NodeReportItem> errorCollector, ProgressMonitor monitor) {
-                    universeTransaction.preState().run(() -> {
-                        rootChecker.check(root, repository, errorCollector, monitor);
-                    });
+                public void check(SNode root, SRepository repository, Consumer <? super NodeReportItem> errorCollector, ProgressMonitor monitor) {
+                    universeTransaction.preState().run(() -> rootChecker.check(root, repository, errorCollector, monitor));
                 }
             };
         }
@@ -698,28 +649,26 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
         changedModels.init(Set.of());
         changedModules.init(Set.of());
         if (!models.isEmpty() || !modules.isEmpty()) {
-            thePool.execute(() -> {
-                read(() -> {
-                    ModelCheckerBuilder.ItemsToCheck itemsToCheck = new ModelCheckerBuilder.ItemsToCheck();
-                    itemsToCheck.models = models.collect(Collectors.toList());
-                    itemsToCheck.modules = modules.collect(Collectors.toList());
-                    java.util.List<IssueKindReportItem> reportItems = new ArrayList<>();
-                    SRepository repos = getRepository().original();
-                    mpsChecker.check(itemsToCheck, repos, reportItems::add, new EmptyProgressMonitor());
-                    universeTransaction.put(new Object(), () -> read(() -> {
-                        for (SModel sModel : models) {
-                            DModel.ALL_MPS_ISSUES.setDefault(DModel.of(sModel));
-                        }
-                        for (SModule sModule : modules) {
-                            DObject.MPS_ISSUES.setDefault(DModule.of(sModule));
-                        }
-                        for (IssueKindReportItem item : reportItems) {
-                            DObject context = context(item);
-                            DObject.MPS_ISSUES.set(context, Set::add, Pair.of(context, item));
-                        }
-                    }));
-                });
-            });
+            thePool.execute(() -> read(() -> {
+                ItemsToCheck itemsToCheck = new ItemsToCheck();
+                itemsToCheck.models = models.collect(Collectors.toList());
+                itemsToCheck.modules = modules.collect(Collectors.toList());
+                List<IssueKindReportItem> reportItems = new ArrayList<>();
+                SRepository repos = getRepository().original();
+                mpsChecker.check(itemsToCheck, repos, reportItems::add, new EmptyProgressMonitor());
+                universeTransaction.put(new Object(), () -> read(() -> {
+                    for (SModel sModel : models) {
+                        DModel.ALL_MPS_ISSUES.setDefault(DModel.of(sModel));
+                    }
+                    for (SModule sModule : modules) {
+                        DObject.MPS_ISSUES.setDefault(DModule.of(sModule));
+                    }
+                    for (IssueKindReportItem item : reportItems) {
+                        DObject context = context(item);
+                        DObject.MPS_ISSUES.set(context, Set::add, Pair.of(context, item));
+                    }
+                }));
+            }));
         }
     }
 

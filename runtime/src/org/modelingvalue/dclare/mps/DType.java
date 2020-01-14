@@ -84,19 +84,21 @@ public abstract class DType implements MutableClass {
         return getClass().getSimpleName() + ":" + identity;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public final Collection<? extends Observer<?>> dObservers() {
-        return this == DObject.TYPE.getDefault() ? Set.of(DObject.TYPE_RULE) : //
-                (Collection<? extends Observer<?>>) Collection.concat(observers(), getObservers());
+        return this == DObject.TYPE.getDefault() //
+                ? Set.of(DObject.TYPE_RULE) //
+                : Collection.concat(observers(), getObservers()) //
+                .map(o->(Observer<?>)o);
     }
 
     @SuppressWarnings("unchecked")
     @Override
     public final Collection<? extends Setable<? extends Mutable, ?>> dSetables() {
-        return this == DObject.TYPE.getDefault() ? Set.of(DObject.TYPE) : //
-                Collection.concat((Collection<? extends Setable<? extends Mutable, ?>>) getAttributes().filter(a -> a instanceof Setable), //
-                        (Collection<? extends Setable<? extends Mutable, ?>>) setables());
+        return this == DObject.TYPE.getDefault() //
+                ? Set.of(DObject.TYPE) //
+                : Collection.concat(getAttributes().filter(a -> a instanceof Setable), setables()) //
+                .map(o -> (Setable <? extends Mutable, ?>) o);
     }
 
     protected Collection<Observer> observers() {

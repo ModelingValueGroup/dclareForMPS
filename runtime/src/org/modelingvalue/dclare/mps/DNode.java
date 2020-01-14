@@ -13,46 +13,28 @@
 
 package org.modelingvalue.dclare.mps;
 
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
-import org.jetbrains.mps.openapi.language.SAbstractConcept;
-import org.jetbrains.mps.openapi.language.SConcept;
-import org.jetbrains.mps.openapi.language.SConceptFeature;
-import org.jetbrains.mps.openapi.language.SContainmentLink;
-import org.jetbrains.mps.openapi.language.SLanguage;
-import org.jetbrains.mps.openapi.language.SProperty;
-import org.jetbrains.mps.openapi.language.SReferenceLink;
+import jetbrains.mps.errors.item.*;
+import jetbrains.mps.smodel.SNodeUtil;
+import org.jetbrains.mps.openapi.language.*;
 import org.jetbrains.mps.openapi.model.SModel;
 import org.jetbrains.mps.openapi.model.SModelReference;
 import org.jetbrains.mps.openapi.model.SNode;
 import org.jetbrains.mps.openapi.model.SNodeId;
-import org.jetbrains.mps.openapi.model.SNodeReference;
 import org.jetbrains.mps.openapi.model.SReference;
-import org.jetbrains.mps.openapi.module.SModule;
-import org.jetbrains.mps.openapi.module.SRepository;
+import org.jetbrains.mps.openapi.model.*;
+import org.jetbrains.mps.openapi.module.*;
 import org.modelingvalue.collections.Collection;
-import org.modelingvalue.collections.ContainingCollection;
 import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.Map;
 import org.modelingvalue.collections.Set;
-import org.modelingvalue.collections.util.Pair;
-import org.modelingvalue.collections.util.Triple;
-import org.modelingvalue.dclare.Action;
-import org.modelingvalue.dclare.Constant;
-import org.modelingvalue.dclare.Direction;
-import org.modelingvalue.dclare.Mutable;
-import org.modelingvalue.dclare.NonCheckingObserved;
-import org.modelingvalue.dclare.Observed;
+import org.modelingvalue.collections.*;
+import org.modelingvalue.collections.util.*;
 import org.modelingvalue.dclare.Observer;
-import org.modelingvalue.dclare.Priority;
-import org.modelingvalue.dclare.Setable;
+import org.modelingvalue.dclare.*;
 
-import jetbrains.mps.errors.item.IssueKindReportItem;
-import jetbrains.mps.errors.item.NodeReportItem;
-import jetbrains.mps.smodel.SNodeUtil;
+import java.util.*;
+import java.util.function.*;
+import java.util.stream.*;
 
 public class DNode extends DIdentifiedObject implements SNode {
 
@@ -636,6 +618,7 @@ public class DNode extends DIdentifiedObject implements SNode {
         return target != null ? new SReference() {
 
             @Override
+            @Deprecated
             public String getRole() {
                 return role.getName();
             }
@@ -757,66 +740,79 @@ public class DNode extends DIdentifiedObject implements SNode {
     }
 
     @Override
+    @Deprecated
     public SNodeReference getReference() {
         throw new UnsupportedOperationException();
     }
 
     @Override
+    @Deprecated
     public String getRoleInParent() {
         throw new UnsupportedOperationException();
     }
 
     @Override
+    @Deprecated
     public boolean hasProperty(String propertyName) {
         throw new UnsupportedOperationException();
     }
 
     @Override
+    @Deprecated
     public String getProperty(String propertyName) {
         throw new UnsupportedOperationException();
     }
 
     @Override
+    @Deprecated
     public void setProperty(String propertyName, String propertyValue) {
         throw new UnsupportedOperationException();
     }
 
     @Override
+    @Deprecated
     public Iterable<String> getPropertyNames() {
         throw new UnsupportedOperationException();
     }
 
     @Override
+    @Deprecated
     public void setReferenceTarget(String role, SNode target) {
         throw new UnsupportedOperationException();
     }
 
     @Override
+    @Deprecated
     public SNode getReferenceTarget(String role) {
         throw new UnsupportedOperationException();
     }
 
     @Override
+    @Deprecated
     public SReference getReference(String role) {
         throw new UnsupportedOperationException();
     }
 
     @Override
+    @Deprecated
     public void setReference(String role, SReference reference) {
         throw new UnsupportedOperationException();
     }
 
     @Override
+    @Deprecated
     public void insertChildBefore(String role, SNode child, SNode anchor) {
         throw new UnsupportedOperationException();
     }
 
     @Override
+    @Deprecated
     public void addChild(String role, SNode child) {
         throw new UnsupportedOperationException();
     }
 
     @Override
+    @Deprecated
     public Iterable<? extends SNode> getChildren(String role) {
         throw new UnsupportedOperationException();
     }

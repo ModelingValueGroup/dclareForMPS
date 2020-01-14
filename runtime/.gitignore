@@ -1,1 +1,5 @@
-/bin/
+/out
+/buildTools.jar
+/build.properties
+/MPS
+/lib

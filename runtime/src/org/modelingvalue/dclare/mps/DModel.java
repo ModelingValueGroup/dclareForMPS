@@ -13,47 +13,19 @@
 
 package org.modelingvalue.dclare.mps;
 
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import jetbrains.mps.errors.item.*;
+import jetbrains.mps.extapi.model.*;
+import org.jetbrains.mps.openapi.event.*;
+import org.jetbrains.mps.openapi.language.*;
+import org.jetbrains.mps.openapi.model.*;
+import org.jetbrains.mps.openapi.module.*;
+import org.jetbrains.mps.openapi.persistence.*;
+import org.modelingvalue.collections.*;
+import org.modelingvalue.collections.util.*;
+import org.modelingvalue.dclare.*;
 
-import org.jetbrains.mps.openapi.event.SNodeAddEvent;
-import org.jetbrains.mps.openapi.event.SNodeRemoveEvent;
-import org.jetbrains.mps.openapi.event.SPropertyChangeEvent;
-import org.jetbrains.mps.openapi.event.SReferenceChangeEvent;
-import org.jetbrains.mps.openapi.language.SAbstractConcept;
-import org.jetbrains.mps.openapi.language.SConcept;
-import org.jetbrains.mps.openapi.language.SContainmentLink;
-import org.jetbrains.mps.openapi.language.SLanguage;
-import org.jetbrains.mps.openapi.model.SModel;
-import org.jetbrains.mps.openapi.model.SModelId;
-import org.jetbrains.mps.openapi.model.SModelListener;
-import org.jetbrains.mps.openapi.model.SModelName;
-import org.jetbrains.mps.openapi.model.SModelReference;
-import org.jetbrains.mps.openapi.model.SNode;
-import org.jetbrains.mps.openapi.model.SNodeAccessListener;
-import org.jetbrains.mps.openapi.model.SNodeChangeListener;
-import org.jetbrains.mps.openapi.model.SNodeId;
-import org.jetbrains.mps.openapi.model.SNodeReference;
-import org.jetbrains.mps.openapi.model.SReference;
-import org.jetbrains.mps.openapi.module.SModule;
-import org.jetbrains.mps.openapi.module.SRepository;
-import org.jetbrains.mps.openapi.persistence.DataSource;
-import org.jetbrains.mps.openapi.persistence.ModelRoot;
-import org.modelingvalue.collections.Collection;
-import org.modelingvalue.collections.Set;
-import org.modelingvalue.collections.util.Pair;
-import org.modelingvalue.dclare.Action;
-import org.modelingvalue.dclare.Constant;
-import org.modelingvalue.dclare.Direction;
-import org.modelingvalue.dclare.NonCheckingObserved;
-import org.modelingvalue.dclare.Observed;
-import org.modelingvalue.dclare.Observer;
-import org.modelingvalue.dclare.Priority;
-import org.modelingvalue.dclare.Setable;
-
-import jetbrains.mps.errors.item.IssueKindReportItem;
-import jetbrains.mps.errors.item.ModelReportItem;
-import jetbrains.mps.extapi.model.SModelBase;
+import java.util.function.*;
+import java.util.stream.*;
 
 public class DModel extends DFromOriginalObject<SModel> implements SModel {
 
@@ -327,6 +299,7 @@ public class DModel extends DFromOriginalObject<SModel> implements SModel {
     }
 
     @Override
+    @Deprecated
     public String getModelName() {
         return getModelId().getModelName();
     }
