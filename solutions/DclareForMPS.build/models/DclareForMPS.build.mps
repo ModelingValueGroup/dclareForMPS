@@ -44,6 +44,7 @@
       </concept>
       <concept id="5617550519002745364" name="jetbrains.mps.build.structure.BuildLayout" flags="ng" index="1l3spV" />
       <concept id="5617550519002745363" name="jetbrains.mps.build.structure.BuildProject" flags="ng" index="1l3spW">
+        <property id="4915877860348071612" name="fileName" index="turDy" />
         <property id="5204048710541015587" name="internalBaseDirectory" index="2DA0ip" />
         <child id="6647099934206700656" name="plugins" index="10PD9s" />
         <child id="7389400916848080626" name="parts" index="3989C9" />
@@ -136,6 +137,7 @@
   <node concept="1l3spW" id="5TmHY1kYraH">
     <property role="TrG5h" value="DclareForMPS" />
     <property role="2DA0ip" value="../../" />
+    <property role="turDy" value="mps_build.xml" />
     <node concept="10PD9b" id="5TmHY1kYraI" role="10PD9s" />
     <node concept="3b7kt6" id="5TmHY1kYraJ" role="10PD9s" />
     <node concept="398rNT" id="5TmHY1kYraK" role="1l3spd">
