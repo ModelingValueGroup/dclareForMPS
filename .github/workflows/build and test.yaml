@@ -33,7 +33,6 @@ jobs:
           cp buildTools.jar runtime
           cd runtime
           . <(java -jar buildTools.jar)
-          installMps "MPS" "2019.3"
           cat <<EOF >build.properties
           jdk.home.11=$JAVA_HOME
           path.variable.maven_repository=$HOME/.m2/repository
@@ -47,11 +46,12 @@ jobs:
           correctEols
           correctHeaders header
 
-      - name: "runtime: download dependencies (as mentioned in pom)"
+      - name: "runtime: download dependencies (as mentioned in pom) and MPS"
         run:  |
           cd runtime
           . <(java -jar buildTools.jar)
           getAllDependencies ${{ secrets.GITHUB_TOKEN }}
+          installMps "MPS" "2019.3"
 
       - name: "runtime: build"
         run:  cd runtime; ant
@@ -64,7 +64,6 @@ jobs:
 
       - name: "runtime: push changes back to github"
         run:  |
-          cd runtime
           . <(java -jar buildTools.jar)
           git status
           #pushBackToGithub "${{ secrets.GITHUB_TOKEN }}" "automation@modelingvalue.com" "adjusted files [by github actions]"
