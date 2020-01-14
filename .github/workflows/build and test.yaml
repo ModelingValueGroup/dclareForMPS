@@ -57,7 +57,9 @@ jobs:
         run:  ant javadoc
 
       - name: "mps-plugin: build"
-        run:  ant -debug -Dmps_home="$PWD/$mpsDir" -f mps_build.xml
+        run:  |
+          . project.sh
+          ant -debug -Dmps_home="$mpsDir" -f mps_build.xml
 
       - name: "publish action-artifact zip"
         uses: actions/upload-artifact@v1
