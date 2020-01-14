@@ -39,7 +39,7 @@ jobs:
           path.variable.maven_repository=$HOME/.m2/repository
           EOF
 
-    - name: "runtime: (re)generate some files"
+      - name: "runtime: (re)generate some files"
         run:  |
           cd runtime
           . <(java -jar buildTools.jar)
