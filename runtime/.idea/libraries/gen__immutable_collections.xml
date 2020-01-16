@@ -1,0 +1,17 @@
+<!--==============================================================-->
+<!-- WARNING: this file will be overwritten by the build scripts! -->
+<!--          change  project.sh  instead                         -->
+<!--==============================================================-->
+<component name="libraryTable">
+  <library name="gen: immutable-collections">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/immutable-collections.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/lib/immutable-collections-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/lib/immutable-collections-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

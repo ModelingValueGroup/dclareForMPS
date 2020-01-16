@@ -1,0 +1,69 @@
+name: build and test
+
+on: [push]
+
+jobs:
+  build-and-test:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "checkout"
+        uses: actions/checkout@v1
+
+      - name: "attach git head"
+        run: git checkout "${GITHUB_REF#refs/heads/}"
+
+      - name: "setup JDK"
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+
+      - name: "get generic mvg-info"
+        uses: ModelingValueGroup/generic-info@master
+
+      - name: "get buildTools"
+        uses: ModelingValueGroup/buildTools@master
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: "runtime: prepare"
+        run:  |
+          cp header         runtime
+          cp buildTools.jar runtime
+          cd runtime
+          . <(java -jar buildTools.jar)
+          cat <<EOF >build.properties
+          jdk.home.11=$JAVA_HOME
+          path.variable.maven_repository=$HOME/.m2/repository
+          EOF
+
+      - name: "runtime: (re)generate some files"
+        run:  |
+          cd runtime
+          . <(java -jar buildTools.jar)
+          generateAll
+          correctEols
+          correctHeaders header
+
+      - name: "runtime: download dependencies (as mentioned in pom) and MPS"
+        run:  |
+          cd runtime
+          . <(java -jar buildTools.jar)
+          getAllDependencies ${{ secrets.GITHUB_TOKEN }}
+          installMps "MPS" "2019.3"
+
+      - name: "runtime: build"
+        run:  cd runtime; ant
+
+      - name: "runtime: test"
+        run:  cd runtime; ant test
+
+      - name: "runtime: generate javadoc"
+        run:  cd runtime; ant javadoc
+
+      - name: "runtime: push changes back to github"
+        run:  |
+          . <(java -jar buildTools.jar)
+          git status
+          pushBackToGithub "${{ secrets.GITHUB_TOKEN }}" "automation@modelingvalue.com" "adjusted files [by github actions]"
