@@ -15,28 +15,46 @@
 
 package org.modelingvalue.dclare.mps;
 
-import jetbrains.mps.errors.item.*;
-import jetbrains.mps.smodel.SNodeUtil;
-import org.jetbrains.mps.openapi.language.*;
+import java.util.Arrays;
+import java.util.Objects;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+import org.jetbrains.mps.openapi.language.SAbstractConcept;
+import org.jetbrains.mps.openapi.language.SConcept;
+import org.jetbrains.mps.openapi.language.SConceptFeature;
+import org.jetbrains.mps.openapi.language.SContainmentLink;
+import org.jetbrains.mps.openapi.language.SLanguage;
+import org.jetbrains.mps.openapi.language.SProperty;
+import org.jetbrains.mps.openapi.language.SReferenceLink;
 import org.jetbrains.mps.openapi.model.SModel;
 import org.jetbrains.mps.openapi.model.SModelReference;
 import org.jetbrains.mps.openapi.model.SNode;
 import org.jetbrains.mps.openapi.model.SNodeId;
+import org.jetbrains.mps.openapi.model.SNodeReference;
 import org.jetbrains.mps.openapi.model.SReference;
-import org.jetbrains.mps.openapi.model.*;
-import org.jetbrains.mps.openapi.module.*;
+import org.jetbrains.mps.openapi.module.SModule;
+import org.jetbrains.mps.openapi.module.SRepository;
 import org.modelingvalue.collections.Collection;
+import org.modelingvalue.collections.ContainingCollection;
 import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.Map;
 import org.modelingvalue.collections.Set;
-import org.modelingvalue.collections.*;
-import org.modelingvalue.collections.util.*;
+import org.modelingvalue.collections.util.Pair;
+import org.modelingvalue.collections.util.Triple;
+import org.modelingvalue.dclare.Action;
+import org.modelingvalue.dclare.Constant;
+import org.modelingvalue.dclare.Direction;
+import org.modelingvalue.dclare.Mutable;
+import org.modelingvalue.dclare.NonCheckingObserved;
+import org.modelingvalue.dclare.Observed;
 import org.modelingvalue.dclare.Observer;
-import org.modelingvalue.dclare.*;
+import org.modelingvalue.dclare.Priority;
+import org.modelingvalue.dclare.Setable;
 
-import java.util.*;
-import java.util.function.*;
-import java.util.stream.*;
+import jetbrains.mps.errors.item.IssueKindReportItem;
+import jetbrains.mps.errors.item.NodeReportItem;
+import jetbrains.mps.smodel.SNodeUtil;
 
 public class DNode extends DIdentifiedObject implements SNode {
 
@@ -393,6 +411,10 @@ public class DNode extends DIdentifiedObject implements SNode {
         }
     }
 
+    public SNode sNode() {
+        return sNode(false);
+    }
+
     protected SNode sNode(boolean create) {
         SNode sNode = null;
         SNodeReference ref = reference(create);
@@ -742,9 +764,8 @@ public class DNode extends DIdentifiedObject implements SNode {
     }
 
     @Override
-    @Deprecated
     public SNodeReference getReference() {
-        throw new UnsupportedOperationException();
+        return reference(false);
     }
 
     @Override
