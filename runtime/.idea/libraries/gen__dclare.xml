@@ -1,0 +1,17 @@
+<!--==============================================================-->
+<!-- WARNING: this file will be overwritten by the build scripts! -->
+<!--          change  project.sh  instead                         -->
+<!--==============================================================-->
+<component name="libraryTable">
+  <library name="gen: dclare">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/dclare.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/lib/dclare-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/lib/dclare-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/runtime.iml" filepath="$PROJECT_DIR$/.idea/runtime.iml" />
+      <module fileurl="file://$PROJECT_DIR$/runtime.iml" filepath="$PROJECT_DIR$/runtime.iml" />
     </modules>
   </component>
 </project>
