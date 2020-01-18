@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="dclareformps" default="all">
+  
+  
   <property file="build.properties"/>
   <!-- Uncomment the following property if no tests compilation is needed -->
   <!-- 
   <property name="skip.tests" value="true"/>
    -->
+  
   <!-- Compiler options -->
+  
   <property name="compiler.debug" value="on"/>
   <property name="compiler.generate.no.warnings" value="off"/>
   <property name="compiler.args" value=""/>
@@ -50,7 +54,9 @@
     <include name="**/?*.tld"/>
     <include name="**/?*.ftl"/>
   </patternset>
+  
   <!-- JDK definitions -->
+  
   <property name="jdk.bin.11" value="${jdk.home.11}/bin"/>
   <path id="jdk.classpath.11">
     <fileset dir="${jdk.home.11}">
@@ -126,16 +132,22 @@
       <include name="../Home!/jdk.zipfs"/>
     </fileset>
   </path>
+  
   <property name="project.jdk.home" value="${jdk.home.11}"/>
   <property name="project.jdk.bin" value="${jdk.bin.11}"/>
   <property name="project.jdk.classpath" value="jdk.classpath.11"/>
+  
+  
   <!-- Project Libraries -->
+  
   <path id="library.gen:_dclare.classpath">
     <pathelement location="${basedir}/lib/dclare.jar"/>
   </path>
+  
   <path id="library.gen:_immutable-collections.classpath">
     <pathelement location="${basedir}/lib/immutable-collections.jar"/>
   </path>
+  
   <path id="library.gen:_mps.classpath">
     <pathelement location="${basedir}/MPS/lib/extensions.jar"/>
     <pathelement location="${basedir}/MPS/lib/mps-core.jar"/>
@@ -146,20 +158,27 @@
     <pathelement location="${basedir}/MPS/lib/platform-api.jar"/>
     <pathelement location="${basedir}/MPS/lib/util.jar"/>
   </path>
+  
   <!-- Modules -->
+  
   <import file="${basedir}/runtime/module_runtime.xml"/>
+  
   <target name="init" description="Build initialization">
     <!-- Perform any build initialization in this target -->
   </target>
+  
   <target name="clean" depends="clean.module.runtime" description="cleanup all"/>
+  
   <target name="build.modules" depends="init, clean, compile.module.runtime" description="build all modules"/>
+  
   <target name="init.artifacts">
     <property name="artifacts.temp.dir" value="${basedir}/__artifacts_temp"/>
     <property name="artifact.output.dclaremps" value="${basedir}/solutions/DclareMPSRuntime/lib"/>
     <mkdir dir="${artifacts.temp.dir}"/>
     <property name="temp.jar.path.DclareMPS.jar" value="${artifacts.temp.dir}/DclareMPS.jar"/>
   </target>
-  <target name="artifact.dclaremps" depends="init.artifacts, compile.module.runtime" description="Build 'DclareMPS' artifact">
+  
+  <target name="artifact.dclaremps" depends="init.artifacts, compile.module.runtime" description="Build &#39;DclareMPS&#39; artifact">
     <property name="artifact.temp.output.dclaremps" value="${artifacts.temp.dir}/DclareMPS"/>
     <mkdir dir="${artifact.temp.output.dclaremps}"/>
     <jar destfile="${temp.jar.path.DclareMPS.jar}" duplicate="preserve" filesetmanifest="mergewithoutmain">
@@ -169,19 +188,16 @@
     </jar>
     <copy file="${temp.jar.path.DclareMPS.jar}" tofile="${artifact.temp.output.dclaremps}/DclareMPS.jar"/>
   </target>
+  
   <target name="build.all.artifacts" depends="artifact.dclaremps" description="Build all artifacts">
     <mkdir dir="${artifact.output.dclaremps}"/>
     <copy todir="${artifact.output.dclaremps}">
       <fileset dir="${artifact.temp.output.dclaremps}"/>
     </copy>
+    
     <!-- Delete temporary files -->
     <delete dir="${artifacts.temp.dir}"/>
   </target>
+  
   <target name="all" depends="build.modules, build.all.artifacts" description="build all"/>
-  <target name="test" depends="">
-    <echo>all done for test</echo>
-  </target>
-  <target name="javadoc" depends="javadoc.module.runtime">
-    <echo>all done for javadoc</echo>
-  </target>
 </project>
