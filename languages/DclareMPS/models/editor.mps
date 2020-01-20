@@ -2454,5 +2454,44 @@
       <ref role="2ZyFGn" to="tpee:fz3vP1J" resolve="Expression" />
     </node>
   </node>
+  <node concept="24kQdi" id="2icq$nJCmZx">
+    <property role="3GE5qa" value="attributes" />
+    <ref role="1XX52x" to="7ggn:2icq$nJCmZ2" resolve="DclareAttributeOperation" />
+    <node concept="1iCGBv" id="oVVxO7wotv" role="2wV5jI">
+      <ref role="1NtTu8" to="7ggn:oVVxO7wotu" resolve="attribute" />
+      <node concept="1sVBvm" id="oVVxO7wotw" role="1sWHZn">
+        <node concept="3F0A7n" id="oVVxO7wotx" role="2wV5jI">
+          <property role="1Intyy" value="true" />
+          <ref role="1NtTu8" to="tpck:h0TrG11" resolve="name" />
+        </node>
+      </node>
+    </node>
+  </node>
+  <node concept="IW6AY" id="2icq$nJCn4w">
+    <property role="3GE5qa" value="attributes" />
+    <ref role="aqKnT" to="7ggn:2icq$nJCmZ2" resolve="DclareAttributeOperation" />
+    <node concept="1Qtc8_" id="oVVxO7woty" role="IW6Ez">
+      <node concept="3cWJ9i" id="oVVxO7wotz" role="1Qtc8$">
+        <node concept="CtIbL" id="oVVxO7wot$" role="CtIbM">
+          <property role="CtIbK" value="30NnNOohrQL/RIGHT" />
+        </node>
+        <node concept="CtIbL" id="oVVxO7wot_" role="CtIbM">
+          <property role="CtIbK" value="1A4kJjlVmVt/LEFT" />
+        </node>
+      </node>
+      <node concept="mvV$s" id="oVVxO7wotA" role="1Qtc8A">
+        <node concept="mvVNg" id="oVVxO7wotB" role="mvV$0">
+          <node concept="3clFbS" id="oVVxO7wotC" role="2VODD2">
+            <node concept="3clFbF" id="oVVxO7wotD" role="3cqZAp">
+              <node concept="2OqwBi" id="oVVxO7wotE" role="3clFbG">
+                <node concept="7Obwk" id="oVVxO7wotF" role="2Oq$k0" />
+                <node concept="1mfA1w" id="oVVxO7wotG" role="2OqNvi" />
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+  </node>
 </model>
 

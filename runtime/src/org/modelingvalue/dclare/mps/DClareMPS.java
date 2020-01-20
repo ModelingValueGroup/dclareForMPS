@@ -278,10 +278,24 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
         REPOSITORY_CONTAINER.set(this, getRepository());
     }
 
+    public static <T> T get(Supplier<T> supplier) {
+        LeafTransaction tx = LeafTransaction.getCurrent();
+        if (tx instanceof ImperativeTransaction) {
+            try {
+                return supplier.get();
+            } catch (Throwable t) {
+                ((DClareMPS) tx.universeTransaction().mutable()).addMessage(t);
+                return null;
+            }
+        } else {
+            throw new Error("Get Dclare state outside the EDT Thread or with Dclare Engine off");
+        }
+    }
+
     @SuppressWarnings("rawtypes")
     protected void addMessage(Throwable throwable) {
         if (!universeTransaction.isKilled()) {
-            universeTransaction().currentState().run(() -> {
+            universeTransaction.currentState().run(() -> {
                 DObject object = getRepository();
                 DFeature feature = DRepository.EXCEPTIONS;
                 Throwable t = throwable;
