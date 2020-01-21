@@ -15,6 +15,7 @@ package org.modelingvalue.dclare.mps;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.Supplier;
@@ -29,6 +30,7 @@ import org.jetbrains.mps.openapi.module.SModule;
 import org.jetbrains.mps.openapi.module.SRepository;
 import org.jetbrains.mps.openapi.util.Consumer;
 import org.jetbrains.mps.openapi.util.ProgressMonitor;
+import org.jetbrains.mps.openapi.util.SubProgressKind;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.DefaultMap;
 import org.modelingvalue.collections.Entry;
@@ -69,6 +71,8 @@ import org.modelingvalue.dclare.UniverseTransaction;
 import org.modelingvalue.dclare.mps.DRule.DObserver;
 import org.modelingvalue.dclare.mps.DRule.DObserverTransaction;
 
+import jetbrains.mps.baseLanguage.closures.runtime._FunctionTypes;
+import jetbrains.mps.baseLanguage.closures.runtime._FunctionTypes._return_P1_E0;
 import jetbrains.mps.checkers.AbstractNodeCheckerInEditor;
 import jetbrains.mps.checkers.IAbstractChecker;
 import jetbrains.mps.checkers.IChecker;
@@ -76,6 +80,7 @@ import jetbrains.mps.checkers.ICheckingPostprocessor;
 import jetbrains.mps.checkers.LanguageErrorsCollector;
 import jetbrains.mps.checkers.ModelCheckerBuilder;
 import jetbrains.mps.checkers.ModelCheckerBuilder.ItemsToCheck;
+import jetbrains.mps.checkers.ModelCheckerBuilder.ModelsExtractorImpl;
 import jetbrains.mps.editor.runtime.LanguageEditorChecker;
 import jetbrains.mps.errors.CheckerRegistry;
 import jetbrains.mps.errors.item.IssueKindReportItem;
@@ -153,6 +158,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     private final IAbstractChecker<ItemsToCheck, IssueKindReportItem>                                      mpsChecker;
     private final Concurrent<Set<SModel>>                                                                  changedModels        = Concurrent.of(Set.of());
     private final Concurrent<Set<SModule>>                                                                 changedModules       = Concurrent.of(Set.of());
+    private final Concurrent<Set<SNode>>                                                                   changedRoots         = Concurrent.of(Set.of());
 
     protected DClareMPS(DclareForMPSEngine engine, ProjectBase project, State prevState, int maxTotalNrOfChanges, int maxNrOfChanges, int maxNrOfObserved, int maxNrOfObservers, StartStopHandler startStopHandler) {
         this.project = project;
@@ -168,7 +174,87 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
         checkerRegistry.registerChecker(moduleChecker);
         checkerRegistry.registerChecker(modelChecker);
         checkerRegistry.registerChecker(nodeChecker);
-        mpsChecker = new ModelCheckerBuilder(new ModelCheckerBuilder.ModelsExtractorImpl().excludeGenerators()).createChecker(checkerRegistry.getCheckers());
+        ModelsExtractorImpl modelExtractor = new ModelCheckerBuilder.ModelsExtractorImpl().excludeGenerators();
+		mpsChecker = new ModelCheckerBuilder(modelExtractor) {
+
+			@Override
+			public IAbstractChecker<ItemsToCheck, IssueKindReportItem> createChecker(List<? extends IChecker<?, ? extends IssueKindReportItem>> checkers) {
+				return new IAbstractChecker<ItemsToCheck, IssueKindReportItem>() {
+
+					@Override
+					public void check(ItemsToCheck items, SRepository repository, Consumer<? super IssueKindReportItem> errorCollector, ProgressMonitor monitor) {
+						RootItemsToCheck r = (RootItemsToCheck) items;
+						int work = r.roots.size();
+					    monitor.start("Checking", work);
+					    
+					    List<IChecker<SModule, ? extends IssueKindReportItem>> moduleCheckers = new ArrayList<IChecker<SModule, ? extends IssueKindReportItem>>();
+					    List<IChecker<SModel, ? extends IssueKindReportItem>> modelCheckers = new ArrayList<IChecker<SModel, ? extends IssueKindReportItem>>();
+					    List<IChecker<SNode, ? extends IssueKindReportItem>> rootCheckers = new ArrayList<IChecker<SNode, ? extends IssueKindReportItem>>();
+						   
+					    for (IChecker<?, ? extends IssueKindReportItem> it : checkers) {
+					      IChecker<?, ? extends IssueKindReportItem> checker = it;
+					      if (checker instanceof IChecker.AbstractModuleChecker) {
+					    	  moduleCheckers.add((IChecker<SModule, ? extends IssueKindReportItem>) checker);					  
+					      } else if (checker instanceof IChecker.AbstractModelChecker) {
+					        modelCheckers.add((IChecker<SModel, ? extends IssueKindReportItem>)checker);
+					      } else if (checker instanceof IChecker.AbstractRootChecker) {
+					    	  rootCheckers.add((IChecker<SNode, ? extends IssueKindReportItem>) checker);					      
+					      } else if (checker instanceof IChecker.AbstractNodeChecker) {
+					    	  rootCheckers.add((IChecker<SNode, ? extends IssueKindReportItem>) checker);					        
+					      } 
+					    }
+					    
+					    IAbstractChecker<SModule, ? extends IssueKindReportItem> generalModuleChecker = aggreagateSpecificCheckers(moduleCheckers, new _FunctionTypes._return_P1_E0<String, SModule>() {
+				            public String invoke(SModule m) {
+				              return m.getModuleName();
+				            }
+				          });
+				          IAbstractChecker<SModel, ? extends IssueKindReportItem> generalModelChecker = skipNullModules(aggreagateSpecificCheckers(modelCheckers, new _FunctionTypes._return_P1_E0<String, SModel>() {
+				            public String invoke(SModel m) {
+				              return m.getName().getLongName();
+				            }
+				          }));
+					    
+					    IAbstractChecker<SNode, ? extends IssueKindReportItem> generalNodeChecker = aggreagateSpecificCheckers(rootCheckers, new _FunctionTypes._return_P1_E0<String, SNode>() {
+				            public String invoke(SNode n) {
+				              return n.getName();
+				            }
+				          }); 
+					    
+					    for (SModel model : items.models) {
+				            generalModelChecker.check(model, repository, errorCollector, monitor.subTask(1, SubProgressKind.REPLACING));
+				            if (monitor.isCanceled()) {
+				              break;
+				            }
+				          }
+
+				        for (SModule module : items.modules) {
+				            generalModuleChecker.check(module, repository, errorCollector, monitor.subTask(1, SubProgressKind.REPLACING));
+				            if (monitor.isCanceled()) {
+				              break;
+				            }
+				            
+				            for (SModel model : modelExtractor.getModels(module)) {
+				                generalModelChecker.check(model, repository, errorCollector, monitor.subTask(1, SubProgressKind.REPLACING));
+				                if (monitor.isCanceled()) {
+				                  break;
+				                }
+				            }
+				        }
+					    
+					    for (SNode roots : r.roots) {
+				            generalNodeChecker.check(roots, null, null, monitor.subTask(1, SubProgressKind.REPLACING));
+				            if (monitor.isCanceled()) {
+				              break;
+				            }
+					    }
+					}
+					
+				};
+			}
+        	
+        }.createChecker(checkerRegistry.getCheckers());
+        
         Highlighter highlighter = project.getComponent(Highlighter.class);
         highlighter.addChecker(languageEditorChecker);
         project.getModelAccess().executeCommandInEDT(() -> startStopHandler.on(project));
@@ -520,10 +606,13 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
                     if (dObject instanceof DModel) {
                         changedModels.change(s -> s.add(((DModel) dObject).original()));
                     } else if (dObject instanceof DNode) {
-                        changedModels.change(s -> s.add(((DNode) dObject).getModel().original()));
+                    	SNode root = ((DNode)dObject).sNode(false) !=null ? ((DNode)dObject).sNode(false).getContainingRoot() : null;
+                    	if (root!=null) {
+                    	   changedRoots.change(s-> s.add(root));
+                    	}                   
                     } else if (dObject instanceof DModule) {
                         changedModules.change(s -> s.add(((DModule) dObject).original()));
-                    }
+                    }  
                     e0.getValue().forEach(e1 -> {
                         DObserved mpsObserved = (DObserved) e1.getKey();
                         mpsObserved.toMPS(post, dObject, e1.getValue().a(), e1.getValue().b());
@@ -691,25 +780,36 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
             return DIssue.CHECKER_CATEGORY;
         }
     }
+    
+    private static class RootItemsToCheck extends ModelCheckerBuilder.ItemsToCheck {
+    	
+    	public List<SNode> roots = new ArrayList<SNode>();
+    }
 
     private void runModelCheck() {
         Set<SModel> models = changedModels.result();
         Set<SModule> modules = changedModules.result();
+        Set<SNode>	 roots = changedRoots.result();
         changedModels.init(Set.of());
         changedModules.init(Set.of());
+        changedRoots.init(Set.of());
         if (!models.isEmpty() || !modules.isEmpty()) {
             thePool.execute(() -> {
                 read(() -> {
-                    ModelCheckerBuilder.ItemsToCheck itemsToCheck = new ModelCheckerBuilder.ItemsToCheck();
+                	RootItemsToCheck itemsToCheck = new RootItemsToCheck();
                     itemsToCheck.models = models.collect(Collectors.toList());
                     itemsToCheck.modules = modules.collect(Collectors.toList());
+                    itemsToCheck.roots = roots.collect(Collectors.toList());
                     java.util.List<IssueKindReportItem> reportItems = new ArrayList<>();
                     SRepository repos = getRepository().original();
                     mpsChecker.check(itemsToCheck, repos, reportItems::add, new EmptyProgressMonitor());
                     universeTransaction.put(new Object(), () -> read(() -> {
                         for (SModel sModel : models) {
-                            DModel.ALL_MPS_ISSUES.setDefault(DModel.of(sModel));
+                        	Set<IssueKindReportItem> issues = DModel.ALL_MPS_ISSUES.get(DModel.of(sModel));
+                        	issues.;
+                            DModel.ALL_MPS_ISSUES.set(DModel.of(sModel), issues);
                         }
+                        
                         for (IssueKindReportItem item : reportItems) {
                             DObject.MPS_ISSUES.set(context(item), Set::add, item);
                         }
