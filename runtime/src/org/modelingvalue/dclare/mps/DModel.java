@@ -1,170 +1,141 @@
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// (C) Copyright 2018 Modeling Value Group B.V. (http://modelingvalue.org)                                             ~
+// (C) Copyright 2018-2019 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
 //                                                                                                                     ~
-// Licensed under the GNU Lesser General Public License v3.0 (the "License"). You may not use this file except in      ~
+// Licensed under the GNU Lesser General Public License v3.0 (the 'License'). You may not use this file except in      ~
 // compliance with the License. You may obtain a copy of the License at: https://choosealicense.com/licenses/lgpl-3.0  ~
 // Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on ~
-// an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the  ~
+// an 'AS IS' BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the  ~
 // specific language governing permissions and limitations under the License.                                          ~
 //                                                                                                                     ~
+// Maintainers:                                                                                                        ~
+//     Wim Bast, Tom Brus, Ronald Krijgsheld                                                                           ~
 // Contributors:                                                                                                       ~
-//     Wim Bast, Carel Bast, Tom Brus, Arjan Kok, Ronald Krijgsheld                                                    ~
+//     Arjan Kok, Carel Bast                                                                                           ~
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 package org.modelingvalue.dclare.mps;
 
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import jetbrains.mps.errors.item.*;
+import jetbrains.mps.extapi.model.*;
+import org.jetbrains.mps.openapi.event.*;
+import org.jetbrains.mps.openapi.language.*;
+import org.jetbrains.mps.openapi.model.*;
+import org.jetbrains.mps.openapi.module.*;
+import org.jetbrains.mps.openapi.persistence.*;
+import org.modelingvalue.collections.*;
+import org.modelingvalue.collections.util.*;
+import org.modelingvalue.dclare.*;
 
-import org.jetbrains.mps.openapi.event.SNodeAddEvent;
-import org.jetbrains.mps.openapi.event.SNodeRemoveEvent;
-import org.jetbrains.mps.openapi.event.SPropertyChangeEvent;
-import org.jetbrains.mps.openapi.event.SReferenceChangeEvent;
-import org.jetbrains.mps.openapi.language.SAbstractConcept;
-import org.jetbrains.mps.openapi.language.SConcept;
-import org.jetbrains.mps.openapi.language.SContainmentLink;
-import org.jetbrains.mps.openapi.language.SLanguage;
-import org.jetbrains.mps.openapi.model.SModel;
-import org.jetbrains.mps.openapi.model.SModelId;
-import org.jetbrains.mps.openapi.model.SModelListener;
-import org.jetbrains.mps.openapi.model.SModelName;
-import org.jetbrains.mps.openapi.model.SModelReference;
-import org.jetbrains.mps.openapi.model.SNode;
-import org.jetbrains.mps.openapi.model.SNodeAccessListener;
-import org.jetbrains.mps.openapi.model.SNodeChangeListener;
-import org.jetbrains.mps.openapi.model.SNodeId;
-import org.jetbrains.mps.openapi.model.SNodeReference;
-import org.jetbrains.mps.openapi.model.SReference;
-import org.jetbrains.mps.openapi.module.SModule;
-import org.jetbrains.mps.openapi.module.SRepository;
-import org.jetbrains.mps.openapi.persistence.DataSource;
-import org.jetbrains.mps.openapi.persistence.ModelRoot;
-import org.modelingvalue.collections.Collection;
-import org.modelingvalue.collections.Set;
-import org.modelingvalue.collections.util.Pair;
-import org.modelingvalue.dclare.Action;
-import org.modelingvalue.dclare.Constant;
-import org.modelingvalue.dclare.Direction;
-import org.modelingvalue.dclare.NonCheckingObserved;
-import org.modelingvalue.dclare.Observed;
-import org.modelingvalue.dclare.Observer;
-import org.modelingvalue.dclare.Priority;
-import org.modelingvalue.dclare.Setable;
-
-import jetbrains.mps.errors.item.IssueKindReportItem;
-import jetbrains.mps.errors.item.ModelReportItem;
-import jetbrains.mps.extapi.model.SModelBase;
+import java.util.function.*;
+import java.util.stream.*;
 
 public class DModel extends DFromOriginalObject<SModel> implements SModel {
 
-    private static final Constant<SModel, DModel>                    DMODEL              = Constant.of("DMODEL", m -> new DModel(m));
+    private static final Constant<SModel, DModel>                                   DMODEL              = Constant.of("DMODEL", m -> new DModel(m));
 
-    private static final Constant<Set<SLanguage>, DType>             MODEL_TYPE          = Constant.of("MODEL_TYPE", ls -> new DType(ls) {
-                                                                                             @SuppressWarnings({"unchecked", "rawtypes"})
-                                                                                             @Override
-                                                                                             public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
-                                                                                                 return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getModelRules())).toSet();
-                                                                                             }
+    private static final Constant<Set<SLanguage>, DType>                            MODEL_TYPE          = Constant.of("MODEL_TYPE", ls -> new DType(ls) {
+                                                                                                            @SuppressWarnings({"unchecked", "rawtypes"})
+                                                                                                            @Override
+                                                                                                            public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
+                                                                                                                return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getModelRules())).toSet();
+                                                                                                            }
 
-                                                                                             @SuppressWarnings({"rawtypes", "unchecked"})
-                                                                                             @Override
-                                                                                             public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
-                                                                                                 return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getModelAttributes())).toSet();
-                                                                                             }
+                                                                                                            @SuppressWarnings({"rawtypes", "unchecked"})
+                                                                                                            @Override
+                                                                                                            public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
+                                                                                                                return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getModelAttributes())).toSet();
+                                                                                                            }
 
-                                                                                             @Override
-                                                                                             public Set<SLanguage> getLanguages() {
-                                                                                                 return ls;
-                                                                                             }
+                                                                                                            @Override
+                                                                                                            public Set<SLanguage> getLanguages() {
+                                                                                                                return ls;
+                                                                                                            }
 
-                                                                                             @SuppressWarnings("rawtypes")
-                                                                                             @Override
-                                                                                             public Collection<Setable> setables() {
-                                                                                                 return SETABLES;
-                                                                                             }
+                                                                                                            @SuppressWarnings("rawtypes")
+                                                                                                            @Override
+                                                                                                            public Collection<Setable> setables() {
+                                                                                                                return SETABLES;
+                                                                                                            }
 
-                                                                                             @SuppressWarnings("rawtypes")
-                                                                                             @Override
-                                                                                             protected Collection<Observer> observers() {
-                                                                                                 return OBSERVERS;
-                                                                                             }
+                                                                                                            @SuppressWarnings("rawtypes")
+                                                                                                            @Override
+                                                                                                            protected Collection<Observer> observers() {
+                                                                                                                return OBSERVERS;
+                                                                                                            }
 
-                                                                                         });
+                                                                                                        });
 
-    public static final Observed<DModel, Set<DNode>>                 ROOTS               = DObserved.of("ROOTS", Set.of(), false, true, null, false, (dModel, pre, post) -> {
-                                                                                             SModel sModel = dModel.original();
-                                                                                             Set<SNode> soll = post.map(r -> r.reParent(sModel, null, r.sNode(true))).toSet();
-                                                                                             Set<SNode> ist = DModel.roots(sModel);
-                                                                                             DObserved.map(ist, soll,                                                                                             //
-                                                                                                     a -> sModel.addRootNode(a),                                                                                  //
-                                                                                                     r -> sModel.removeRootNode(r));
-                                                                                         }, null);
+    public static final Observed<DModel, Set<DNode>>                                ROOTS               = DObserved.of("ROOTS", Set.of(), false, true, null, false, (dModel, pre, post) -> {
+                                                                                                            SModel sModel = dModel.original();
+                                                                                                            Set<SNode> soll = post.map(r -> r.reParent(sModel, null, r.sNode(true))).toSet();
+                                                                                                            Set<SNode> ist = DModel.roots(sModel);
+                                                                                                            DObserved.map(ist, soll,                                                                                             //
+                                                                                                                    a -> sModel.addRootNode(a),                                                                                  //
+                                                                                                                    r -> sModel.removeRootNode(r));
+                                                                                                        }, null);
 
-    private static final Function<DModel, Set<SNode>>                READ_ROOTS_FUNCTION = m -> dClareMPS().read(() -> Collection.of(m.original().getRootNodes()).toSet());
+    private static final Function<DModel, Set<SNode>>                               READ_ROOTS_FUNCTION = m -> dClareMPS().read(() -> Collection.of(m.original().getRootNodes()).toSet());
 
-    protected static final Observer<DModel>                          ROOTS_READ_MATCHER  = DObject.<DModel> observer("$ROOTS_READ_MATCHER", m -> {
-                                                                                             DNode.reuse(m, READ_ROOTS_FUNCTION, ROOTS.get(m));
-                                                                                         }, Priority.preDepth);
+    protected static final Observer<DModel>                                         ROOTS_READ_MATCHER  = DObject.<DModel> observer("$ROOTS_READ_MATCHER", m -> {
+                                                                                                            DNode.reuse(m, READ_ROOTS_FUNCTION, ROOTS.get(m));
+                                                                                                        }, Priority.preDepth);
 
-    public static final Observed<DModel, Set<SLanguage>>             USED_LANGUAGES      = DObserved.of("USED_LANGUAGES", Set.of(), false, false, null, false, (dModel, pre, post) -> {
-                                                                                             SModelBase sModel = (SModelBase) dModel.original();
-                                                                                             java.util.Collection<SLanguage> ls = sModel.importedLanguageIds();
-                                                                                             for (SLanguage l : post) {
-                                                                                                 if (!ls.contains(l)) {
-                                                                                                     sModel.addLanguage(l);
-                                                                                                 }
-                                                                                             }
-                                                                                         }, null);
+    public static final Observed<DModel, Set<SLanguage>>                            USED_LANGUAGES      = DObserved.of("USED_LANGUAGES", Set.of(), false, false, null, false, (dModel, pre, post) -> {
+                                                                                                            SModelBase sModel = (SModelBase) dModel.original();
+                                                                                                            java.util.Collection<SLanguage> ls = sModel.importedLanguageIds();
+                                                                                                            for (SLanguage l : post) {
+                                                                                                                if (!ls.contains(l)) {
+                                                                                                                    sModel.addLanguage(l);
+                                                                                                                }
+                                                                                                            }
+                                                                                                        }, null);
 
-    public static final Observed<DModel, Set<DModel>>                USED_MODELS         = DObserved.of("USED_MODELS", Set.of(), false, false, null, false, (dModel, pre, post) -> {
-                                                                                             SModelBase sModel = (SModelBase) dModel.original();
-                                                                                             java.util.Collection<SModelReference> ls = sModel.getModelImports();
-                                                                                             for (DModel dm : post) {
-                                                                                                 SModel sm = dm.original();
-                                                                                                 if (!ls.stream().anyMatch(r -> r.getModelId().equals(sm.getModelId()))) {
-                                                                                                     sModel.addModelImport(sm.getReference());
-                                                                                                 }
-                                                                                             }
-                                                                                         }, null);
+    public static final Observed<DModel, Set<DModel>>                               USED_MODELS         = DObserved.of("USED_MODELS", Set.of(), false, false, null, false, (dModel, pre, post) -> {
+                                                                                                            SModelBase sModel = (SModelBase) dModel.original();
+                                                                                                            java.util.Collection<SModelReference> ls = sModel.getModelImports();
+                                                                                                            for (DModel dm : post) {
+                                                                                                                SModel sm = dm.original();
+                                                                                                                if (!ls.stream().anyMatch(r -> r.getModelId().equals(sm.getModelId()))) {
+                                                                                                                    sModel.addModelImport(sm.getReference());
+                                                                                                                }
+                                                                                                            }
+                                                                                                        }, null);
 
-    public static final Observed<DModel, ModelRoot>                  MODEL_ROOT          = NonCheckingObserved.of("MODEL_ROOT", null);
+    public static final Observed<DModel, ModelRoot>                                 MODEL_ROOT          = NonCheckingObserved.of("MODEL_ROOT", null);
 
-    private static final Observer<DModel>                            USED_LANGUAGES_RULE = DObject.<DModel> observer(USED_LANGUAGES, o -> {
-                                                                                             Set<SLanguage> ls = dClareMPS().read(() -> Collection.of(((SModelBase) o.original()).importedLanguageIds()).toSet());
-                                                                                             USED_LANGUAGES.set(o, ls.addAll(ROOTS.get(o).flatMap(r -> DNode.USED_LANGUAGES.get(r))));
-                                                                                         }, Priority.preDepth);
+    private static final Observer<DModel>                                           USED_LANGUAGES_RULE = DObject.<DModel> observer(USED_LANGUAGES, o -> {
+                                                                                                            Set<SLanguage> ls = dClareMPS().read(() -> Collection.of(((SModelBase) o.original()).importedLanguageIds()).toSet());
+                                                                                                            USED_LANGUAGES.set(o, ls.addAll(ROOTS.get(o).flatMap(r -> DNode.USED_LANGUAGES.get(r))));
+                                                                                                        }, Priority.preDepth);
 
-    private static final Observer<DModel>                            USED_MODELS_RULE    = DObject.<DModel> observer(USED_MODELS, o -> {
-                                                                                             DClareMPS dClareMPS = dClareMPS();
-                                                                                             Set<DModel> ls = dClareMPS.read(() -> Collection.of(((SModelBase) o.original()).getModelImports()).                  //
-                                                                                             map(r -> r.resolve(null)).notNull().map(r -> DModel.of(r)).toSet());
-                                                                                             USED_MODELS.set(o, ls.addAll(ROOTS.get(o).flatMap(r -> DNode.USED_MODELS.get(r))).remove(o));
-                                                                                         }, Priority.preDepth);
+    private static final Observer<DModel>                                           USED_MODELS_RULE    = DObject.<DModel> observer(USED_MODELS, o -> {
+                                                                                                            DClareMPS dClareMPS = dClareMPS();
+                                                                                                            Set<DModel> ls = dClareMPS.read(() -> Collection.of(((SModelBase) o.original()).getModelImports()).                  //
+                                                                                                            map(r -> r.resolve(null)).notNull().map(r -> DModel.of(r)).toSet());
+                                                                                                            USED_MODELS.set(o, ls.addAll(ROOTS.get(o).flatMap(r -> DNode.USED_MODELS.get(r))).remove(o));
+                                                                                                        }, Priority.preDepth);
 
-    private static final Observer<DModel>                            REFERENCED_RULE     = DObject.<DModel> observer(DModule.REFERENCED, o -> {
-                                                                                             USED_MODELS.get(o).forEach(m -> DModule.REFERENCED.set(DModule.of(m.original().getModule()), Set::add, m));
-                                                                                         });
+    private static final Observer<DModel>                                           REFERENCED_RULE     = DObject.<DModel> observer(DModule.REFERENCED, o -> {
+                                                                                                            USED_MODELS.get(o).forEach(m -> DModule.REFERENCED.set(DModule.of(m.original().getModule()), Set::add, m));
+                                                                                                        });
 
-    private static final Action<DModel>                              READ_ROOTS          = Action.of("$READ_ROOTS", m -> {
-                                                                                             MODEL_ROOT.set(m, dClareMPS().read(() -> m.original().getModelRoot()));
-                                                                                             ROOTS.set(m, dClareMPS().read(() -> Collection.of(m.original().getRootNodes()).map(n -> DNode.of(n)).toSet()));
-                                                                                         }, Direction.forward, Priority.preDepth);
+    private static final Action<DModel>                                             READ_ROOTS          = Action.of("$READ_ROOTS", m -> {
+                                                                                                            MODEL_ROOT.set(m, dClareMPS().read(() -> m.original().getModelRoot()));
+                                                                                                            ROOTS.set(m, dClareMPS().read(() -> Collection.of(m.original().getRootNodes()).map(n -> DNode.of(n)).toSet()));
+                                                                                                        }, Direction.forward, Priority.preDepth);
 
-    protected static final Setable<DModel, Set<IssueKindReportItem>> ALL_MPS_ISSUES      = Setable.of("$ALL_MPS_ISSUES", Set.of(), (tx, o, pre, post) -> {
-                                                                                             DClareMPS dClareMPS = dClareMPS();
-                                                                                             dClareMPS.read(                                                                                                      //
-                                                                                                     () -> {
-                                                                                                         Setable.<Set<IssueKindReportItem>, IssueKindReportItem> diff(pre, post,                                  //
-                                                                                                                 a -> DObject.MPS_ISSUES.set(dClareMPS.context(a), Set::add, a),                                  //
-                                                                                                                 r -> DObject.MPS_ISSUES.set(dClareMPS.context(r), Set::remove, r));
-                                                                                                     });
-                                                                                         });
+    protected static final Setable<DModel, Set<Pair<DObject, IssueKindReportItem>>> ALL_MPS_ISSUES      = Setable.of("$ALL_MPS_ISSUES", Set.of(), (tx, o, pre, post) -> {
+                                                                                                            Setable.<Set<Pair<DObject, IssueKindReportItem>>, Pair<DObject, IssueKindReportItem>> diff(pre, post,                //
+                                                                                                                    a -> DObject.MPS_ISSUES.set(a.a(), Set::add, a),                                                             //
+                                                                                                                    r -> DObject.MPS_ISSUES.set(r.a(), Set::remove, r));
+
+                                                                                                        });
 
     @SuppressWarnings("rawtypes")
-    protected static final Set<Observer>                             OBSERVERS           = DObject.OBSERVERS.addAll(Set.of(ROOTS_READ_MATCHER, USED_LANGUAGES_RULE, USED_MODELS_RULE, REFERENCED_RULE));
+    protected static final Set<Observer>                                            OBSERVERS           = DObject.OBSERVERS.addAll(Set.of(ROOTS_READ_MATCHER, USED_LANGUAGES_RULE, USED_MODELS_RULE, REFERENCED_RULE));
 
     @SuppressWarnings("rawtypes")
-    protected static final Set<Setable>                              SETABLES            = DObject.SETABLES.addAll(Set.of(ROOTS, MODEL_ROOT, USED_MODELS, USED_LANGUAGES, ALL_MPS_ISSUES));
+    protected static final Set<Setable>                                             SETABLES            = DObject.SETABLES.addAll(Set.of(ROOTS, MODEL_ROOT, USED_MODELS, USED_LANGUAGES, ALL_MPS_ISSUES));
 
     public static DModel of(SModel original) {
         return original instanceof DModel ? (DModel) original : DMODEL.get(original);
@@ -330,6 +301,7 @@ public class DModel extends DFromOriginalObject<SModel> implements SModel {
     }
 
     @Override
+    @Deprecated
     public String getModelName() {
         return getModelId().getModelName();
     }

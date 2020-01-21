@@ -1,14 +1,16 @@
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// (C) Copyright 2018 Modeling Value Group B.V. (http://modelingvalue.org)                                             ~
+// (C) Copyright 2018-2019 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
 //                                                                                                                     ~
-// Licensed under the GNU Lesser General Public License v3.0 (the "License"). You may not use this file except in      ~
+// Licensed under the GNU Lesser General Public License v3.0 (the 'License'). You may not use this file except in      ~
 // compliance with the License. You may obtain a copy of the License at: https://choosealicense.com/licenses/lgpl-3.0  ~
 // Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on ~
-// an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the  ~
+// an 'AS IS' BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the  ~
 // specific language governing permissions and limitations under the License.                                          ~
 //                                                                                                                     ~
+// Maintainers:                                                                                                        ~
+//     Wim Bast, Tom Brus, Ronald Krijgsheld                                                                           ~
 // Contributors:                                                                                                       ~
-//     Wim Bast, Carel Bast, Tom Brus, Arjan Kok, Ronald Krijgsheld                                                    ~
+//     Arjan Kok, Carel Bast                                                                                           ~
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 package org.modelingvalue.dclare.mps;
@@ -59,7 +61,7 @@ public class DNode extends DIdentifiedObject implements SNode {
     private static final Constant<Triple<Set<SLanguage>, SConcept, String>, DType> NODE_TYPE              = Constant.of("NODE_TYPE", t -> new DNodeType(t));
 
     public static final Observed<DNode, DModel>                                    MODEL                  = NonCheckingObserved.of("$MODEL", null, (tx, o, pre, post) -> {
-                                                                                                              Set<IssueKindReportItem> items = MPS_ISSUES.get(o);
+                                                                                                              Set<Pair<DObject, IssueKindReportItem>> items = MPS_ISSUES.get(o);
                                                                                                               if (pre != null) {
                                                                                                                   DModel.ALL_MPS_ISSUES.set(pre, Set::removeAll, items);
                                                                                                               }
@@ -99,7 +101,7 @@ public class DNode extends DIdentifiedObject implements SNode {
                                                                                                                                   }, r -> sNode.removeChild(r));
                                                                                                                           ist = children(sNode, sc);
                                                                                                                           DObserved.map(ist, soll,                                                                                             //
-                                                                                                                                  (n, a) -> sNode.addChild(sc, a), r -> {
+                                                                                                                                  (n, a) -> sNode.addChild(sc, n), r -> {
                                                                                                                                                                                                                                         });
                                                                                                                       }, () -> sc.getDeclarationNode());
                                                                                                           });
@@ -409,6 +411,10 @@ public class DNode extends DIdentifiedObject implements SNode {
         }
     }
 
+    public SNode sNode() {
+        return sNode(false);
+    }
+
     protected SNode sNode(boolean create) {
         SNode sNode = null;
         SNodeReference ref = reference(create);
@@ -636,6 +642,7 @@ public class DNode extends DIdentifiedObject implements SNode {
         return target != null ? new SReference() {
 
             @Override
+            @Deprecated
             public String getRole() {
                 return role.getName();
             }
@@ -758,65 +765,77 @@ public class DNode extends DIdentifiedObject implements SNode {
 
     @Override
     public SNodeReference getReference() {
-        throw new UnsupportedOperationException();
+        return reference(false);
     }
 
     @Override
+    @Deprecated
     public String getRoleInParent() {
         throw new UnsupportedOperationException();
     }
 
     @Override
+    @Deprecated
     public boolean hasProperty(String propertyName) {
         throw new UnsupportedOperationException();
     }
 
     @Override
+    @Deprecated
     public String getProperty(String propertyName) {
         throw new UnsupportedOperationException();
     }
 
     @Override
+    @Deprecated
     public void setProperty(String propertyName, String propertyValue) {
         throw new UnsupportedOperationException();
     }
 
     @Override
+    @Deprecated
     public Iterable<String> getPropertyNames() {
         throw new UnsupportedOperationException();
     }
 
     @Override
+    @Deprecated
     public void setReferenceTarget(String role, SNode target) {
         throw new UnsupportedOperationException();
     }
 
     @Override
+    @Deprecated
     public SNode getReferenceTarget(String role) {
         throw new UnsupportedOperationException();
     }
 
     @Override
+    @Deprecated
     public SReference getReference(String role) {
         throw new UnsupportedOperationException();
     }
 
     @Override
+    @Deprecated
     public void setReference(String role, SReference reference) {
         throw new UnsupportedOperationException();
     }
 
     @Override
+    @Deprecated
     public void insertChildBefore(String role, SNode child, SNode anchor) {
         throw new UnsupportedOperationException();
     }
 
     @Override
+    @Deprecated
     public void addChild(String role, SNode child) {
         throw new UnsupportedOperationException();
     }
 
     @Override
+    @Deprecated
     public Iterable<? extends SNode> getChildren(String role) {
         throw new UnsupportedOperationException();
     }

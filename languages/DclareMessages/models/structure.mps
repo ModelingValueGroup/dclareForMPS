@@ -19,9 +19,6 @@
         <reference id="1075010451642646892" name="defaultMember" index="1H5jkz" />
         <child id="3348158742936976577" name="members" index="25R1y" />
       </concept>
-      <concept id="6491077959632463275" name="jetbrains.mps.lang.structure.structure.EnumPropertyMigrationInfo" flags="ng" index="3l_iC">
-        <child id="6491077959632463286" name="oldProperty" index="3l_iP" />
-      </concept>
       <concept id="1082978164218" name="jetbrains.mps.lang.structure.structure.DataTypeDeclaration" flags="ng" index="AxPO6">
         <property id="7791109065626895363" name="datatypeId" index="3F6X1D" />
       </concept>
@@ -77,22 +74,15 @@
       <property role="TrG5h" value="type" />
       <property role="IQ2nx" value="6544396621488234094" />
       <ref role="AX2Wp" node="7$u7SPmR_wI" resolve="MessageType" />
-      <node concept="3l_iC" id="7$u7SPmR_x4" role="lGtFl">
-        <node concept="1TJgyi" id="5FinwQP4DTI" role="3l_iP">
-          <property role="IQ2nx" value="6544396621488234094" />
-          <property role="TrG5h" value="type" />
-          <ref role="AX2Wp" node="5FinwQP4DTw" resolve="MessageType" />
-        </node>
-      </node>
+    </node>
+    <node concept="1TJgyi" id="24xnmkF8lZy" role="1TKVEl">
+      <property role="IQ2nx" value="2387291966579761122" />
+      <property role="TrG5h" value="context" />
+      <ref role="AX2Wp" to="tpck:fKAOsGN" resolve="string" />
     </node>
     <node concept="1TJgyi" id="IcHFOtrcMv" role="1TKVEl">
       <property role="IQ2nx" value="832240954515442847" />
       <property role="TrG5h" value="id" />
-      <ref role="AX2Wp" to="tpck:fKAOsGN" resolve="string" />
-    </node>
-    <node concept="1TJgyi" id="4hagRHmzsU3" role="1TKVEl">
-      <property role="IQ2nx" value="4920819739867860611" />
-      <property role="TrG5h" value="context" />
       <ref role="AX2Wp" to="tpck:fKAOsGN" resolve="string" />
     </node>
     <node concept="1TJgyi" id="IcHFOtrcNa" role="1TKVEl">
@@ -109,6 +99,11 @@
       <property role="IQ2ns" value="8333301305615644776" />
       <property role="20kJfa" value="source" />
       <property role="20lbJX" value="fLJekj4/_1" />
+      <ref role="20lvS9" to="tpck:gw2VY9q" resolve="BaseConcept" />
+    </node>
+    <node concept="1TJgyj" id="24xnmkFe4UT" role="1TKVEi">
+      <property role="IQ2ns" value="2387291966581264057" />
+      <property role="20kJfa" value="node" />
       <ref role="20lvS9" to="tpck:gw2VY9q" resolve="BaseConcept" />
     </node>
     <node concept="1TJgyj" id="7e_PmaZxfxA" role="1TKVEi">
