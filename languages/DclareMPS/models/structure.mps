@@ -11,7 +11,6 @@
     <import index="tp25" ref="r:00000000-0000-4000-0000-011c89590301(jetbrains.mps.lang.smodel.structure)" />
     <import index="tp3r" ref="r:00000000-0000-4000-0000-011c8959034b(jetbrains.mps.lang.quotation.structure)" />
     <import index="tp2q" ref="r:00000000-0000-4000-0000-011c8959032e(jetbrains.mps.baseLanguage.collections.structure)" />
-    <import index="tpd4" ref="r:00000000-0000-4000-0000-011c895902b4(jetbrains.mps.lang.typesystem.structure)" />
     <import index="tpck" ref="r:00000000-0000-4000-0000-011c89590288(jetbrains.mps.lang.core.structure)" implicit="true" />
   </imports>
   <registry>
@@ -813,22 +812,6 @@
       <property role="20kJfa" value="feature" />
       <property role="20lbJX" value="fLJekj4/_1" />
       <ref role="20lvS9" to="tpce:1ob16QT2yIl" resolve="INamedStructureElement" />
-    </node>
-  </node>
-  <node concept="1TIwiD" id="2icq$nJCmZ2">
-    <property role="EcuMT" value="2633596730710519746" />
-    <property role="TrG5h" value="DclareAttributeOperation" />
-    <property role="3GE5qa" value="attributes" />
-    <ref role="1TJDcQ" to="tpee:fz7vLUo" resolve="VariableReference" />
-    <node concept="1TJgyj" id="oVVxO7wotu" role="1TKVEi">
-      <property role="IQ2ns" value="449214396300887902" />
-      <property role="20kJfa" value="attribute" />
-      <property role="20lbJX" value="fLJekj4/_1" />
-      <ref role="20lvS9" node="4$MeK2bmw9s" resolve="Attribute" />
-      <ref role="20ksaX" to="tpee:fzcqZ_w" resolve="variableDeclaration" />
-    </node>
-    <node concept="PrWs8" id="2icq$nJCmZ3" role="PzmwI">
-      <ref role="PrY4T" to="tpee:hqOqG0K" resolve="IOperation" />
     </node>
   </node>
 </model>

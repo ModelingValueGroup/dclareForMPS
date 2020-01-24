@@ -141,6 +141,7 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
     @Override
     protected void init(DClareMPS dClareMPS) {
         super.init(dClareMPS);
+        DClareMPS.DCLARE_MPS.put(original().getRepository(), dClareMPS);
         original().addModuleListener(new Listener(this, dClareMPS));
     }
 
@@ -148,6 +149,7 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
     protected void exit(DClareMPS dClareMPS) {
         super.exit(dClareMPS);
         original().removeModuleListener(new Listener(this, dClareMPS));
+        DClareMPS.DCLARE_MPS.remove(original().getRepository());
     }
 
     @Override

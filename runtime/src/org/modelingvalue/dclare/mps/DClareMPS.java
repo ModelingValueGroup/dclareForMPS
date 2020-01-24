@@ -95,6 +95,8 @@ import jetbrains.mps.smodel.language.LanguageRuntime;
 
 public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
 
+    protected static final java.util.Map<SRepository, DClareMPS>                                           DCLARE_MPS           = new java.util.concurrent.ConcurrentHashMap<>();
+
     private static final Set<DMessageType>                                                                 MESSAGE_TYPES        = Collection.of(DMessageType.values()).toSet();
 
     private static final QualifiedSet<Triple<DObject, DFeature<?>, String>, DMessage>                      MESSAGE_QSET         = QualifiedSet.of(m -> Triple.of(m.context(), m.feature(), m.id()));
@@ -155,12 +157,13 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
         this.project = project;
         this.engine = engine;
         this.startStopHandler = startStopHandler;
-        this.dRepository = new DRepository(project.getRepository());
+        SRepository projectRepository = project.getRepository();
+        this.dRepository = new DRepository(projectRepository);
         this.moduleChecker = new ModuleChecker();
         this.modelChecker = new ModelChecker();
         this.nodeChecker = new NodeChecker();
         this.nodeCheckerInEditor = new NodeCheckerInEditor();
-        this.languageEditorChecker = new LanguageEditorChecker(project.getRepository(), Collections.singletonList(nodeCheckerInEditor));
+        this.languageEditorChecker = new LanguageEditorChecker(projectRepository, Collections.singletonList(nodeCheckerInEditor));
         CheckerRegistry checkerRegistry = project.getPlatform().findComponent(CheckerRegistry.class);
         if (checkerRegistry == null) {
             throw new Error("CheckerRegistry not found in platform");
@@ -278,7 +281,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
         REPOSITORY_CONTAINER.set(this, getRepository());
     }
 
-    public static <T> T get(Supplier<T> supplier) {
+    public static <T> T get(SRepository sRepository, Supplier<T> supplier) {
         LeafTransaction tx = LeafTransaction.getCurrent();
         if (tx instanceof ImperativeTransaction) {
             try {
@@ -288,7 +291,15 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
                 return null;
             }
         } else {
-            throw new Error("Get Dclare state outside the EDT Thread or with Dclare Engine off");
+            DClareMPS dClareMPS = sRepository != null ? DCLARE_MPS.get(sRepository) : null;
+            return dClareMPS != null ? dClareMPS.imperativeTransaction.state().get(() -> {
+                try {
+                    return supplier.get();
+                } catch (Throwable t) {
+                    ((DClareMPS) tx.universeTransaction().mutable()).addMessage(t);
+                    return null;
+                }
+            }) : null;
         }
     }
 

@@ -29,10 +29,19 @@ import org.modelingvalue.dclare.State;
 @SuppressWarnings("rawtypes")
 public interface DAttribute<O, T> extends DFeature<O> {
 
+    Constant<Object, DAttribute> DATTRIBUTE = Constant.of("DATTRIBUTE", new NullAttribute());
+
     @SuppressWarnings("unchecked")
     public static <C, V> DAttribute<C, V> of(Object id, String name, boolean synthetic, boolean optional, boolean composite, int identifyingNr, V def, Class<?> cls, Supplier<SNode> source, Function<C, V> deriver) {
-        return identifyingNr >= 0 ? new DIdentifyingAttribute(id, name, synthetic, composite, identifyingNr, cls, source) : deriver != null ? //
+        DAttribute<C, V> dAttribute = identifyingNr >= 0 ? new DIdentifyingAttribute(id, name, synthetic, composite, identifyingNr, cls, source) : deriver != null ? //
                 new DConstant(id, name, synthetic, composite, cls, source, deriver) : new DObservedAttribute(id, name, synthetic, optional, composite, def, cls, source);
+        DATTRIBUTE.force(id, dAttribute);
+        return dAttribute;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <C, V> DAttribute<C, V> of(Object id) {
+        return DATTRIBUTE.get(id);
     }
 
     T pre(O object);
@@ -290,4 +299,67 @@ public interface DAttribute<O, T> extends DFeature<O> {
         }
 
     }
+
+    static final class NullAttribute implements DAttribute {
+        @Override
+        public SNode getSource() {
+            return null;
+        }
+
+        @Override
+        public boolean isSynthetic() {
+            return true;
+        }
+
+        @Override
+        public Object pre(Object object) {
+            return null;
+        }
+
+        @Override
+        public Object get(Object object) {
+            return null;
+        }
+
+        @Override
+        public Object set(Object object, Object value) {
+            return null;
+        }
+
+        @Override
+        public Object set(Object object, BiFunction function, Object element) {
+            return null;
+        }
+
+        @Override
+        public boolean isComposite() {
+            return false;
+        }
+
+        @Override
+        public boolean isConstant() {
+            return false;
+        }
+
+        @Override
+        public boolean isIndetifying() {
+            return false;
+        }
+
+        @Override
+        public boolean isMandatory() {
+            return false;
+        }
+
+        @Override
+        public Class cls() {
+            return Object.class;
+        }
+
+        @Override
+        public String toString() {
+            return "nullAttribute";
+        }
+    }
+
 }

@@ -137,6 +137,7 @@ public class DRepository extends DFromOriginalObject<SRepository> implements SRe
     }
 
     @Override
+    @Deprecated
     public RepositoryAccess getRepositoryAccess() {
         return original().getRepositoryAccess();
     }
@@ -201,18 +202,22 @@ public class DRepository extends DFromOriginalObject<SRepository> implements SRe
         }
 
         @Override
+        @Deprecated
         public void updateStarted(SRepository repository) {
         }
 
         @Override
+        @Deprecated
         public void updateFinished(SRepository repository) {
         }
 
         @Override
+        @Deprecated
         public void repositoryCommandStarted(SRepository repository) {
         }
 
         @Override
+        @Deprecated
         public void repositoryCommandFinished(SRepository repository) {
         }
     }
