@@ -1,4 +1,3 @@
-#!/usr/bin/env bash
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ## (C) Copyright 2018-2019 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
 ##                                                                                                                     ~
@@ -14,21 +13,24 @@
 ##     Arjan Kok, Carel Bast                                                                                           ~
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-if [[ ! -d ../../buildTools ]]; then
-    echo "ERROR: no buildTools project in parent dir"
-    exit 88
-fi
-if [[ ! -f ../../buildTools/out/artifacts/buildTools.jar ]]; then
-    echo "ERROR: build buildTools first"
-    exit 88
-fi
+mpsVersion="2019.3"
+    mpsDir="MPS"
 
-cp ../../buildTools/out/artifacts/buildTools.jar .
-. <(java -jar buildTools.jar)
-generateAll
-if [[ ! -d MPS ]]; then
-    installMps "MPS" "2019.3"
-fi
-mvn dependency:copy-dependencies -Dmdep.stripVersion=true -DoutputDirectory=lib
-mvn dependency:copy-dependencies -Dmdep.stripVersion=true -DoutputDirectory=lib -Dclassifier=javadoc
-mvn dependency:copy-dependencies -Dmdep.stripVersion=true -DoutputDirectory=lib -Dclassifier=sources
+artifacts=(
+    "org.modelingvalue   dclareForMPSRuntime     0.0.1       jar jds" # TODO: should not be needed
+)
+dependencies=(
+    "org.modelingvalue   immutable-collections   1.0.20      jar jds"
+    "org.modelingvalue   dclare                  0.0.13      jar jds"
+    "jars@mps"
+)
+mps=(
+    "$mpsDir/lib/extensions.jar"
+    "$mpsDir/lib/mps-core.jar"
+    "$mpsDir/lib/mps-editor.jar"
+    "$mpsDir/lib/mps-openapi.jar"
+    "$mpsDir/lib/mps-platform.jar"
+    "$mpsDir/lib/mps-project-check.jar"
+    "$mpsDir/lib/platform-api.jar"
+    "$mpsDir/lib/util.jar"
+)

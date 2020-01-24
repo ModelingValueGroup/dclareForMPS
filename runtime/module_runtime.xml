@@ -1,39 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="module_runtime" default="compile.module.runtime">
   <dirname property="module.runtime.basedir" file="${ant.file.module_runtime}"/>
-  <property name="module.jdk.home.runtime" value="${project.jdk.home}"/>
-  <property name="module.jdk.bin.runtime" value="${project.jdk.bin}"/>
-  <property name="module.jdk.classpath.runtime" value="${project.jdk.classpath}"/>
+  <property name="module.jdk.home.runtime" value="${jdk.home.11}"/>
+  <property name="module.jdk.bin.runtime" value="${jdk.bin.11}"/>
+  <property name="module.jdk.classpath.runtime" value="jdk.classpath.11"/>
   <property name="compiler.args.runtime" value="-encoding UTF-8 -source 11 -target 11 ${compiler.args}"/>
-  <property name="runtime.output.dir" value="${module.runtime.basedir}/out/production/runtime"/>
-  <property name="runtime.testoutput.dir" value="${module.runtime.basedir}/out/test/runtime"/>
+  <property name="runtime.output.dir" value="${module.runtime.basedir}/../out/production/runtime"/>
+  <property name="runtime.testoutput.dir" value="${module.runtime.basedir}/../out/test/runtime"/>
   <path id="runtime.module.bootclasspath">
     <!-- Paths to be included in compilation bootclasspath -->
   </path>
   <path id="runtime.module.production.classpath">
     <path refid="${module.jdk.classpath.runtime}"/>
-    <path refid="library.gen:_immutable-collections.classpath"/>
     <path refid="library.gen:_dclare.classpath"/>
+    <path refid="library.gen:_immutable-collections.classpath"/>
     <path refid="library.gen:_mps.classpath"/>
   </path>
   <path id="runtime.runtime.production.module.classpath">
     <pathelement location="${runtime.output.dir}"/>
-    <path refid="library.gen:_immutable-collections.classpath"/>
     <path refid="library.gen:_dclare.classpath"/>
+    <path refid="library.gen:_immutable-collections.classpath"/>
     <path refid="library.gen:_mps.classpath"/>
   </path>
   <path id="runtime.module.classpath">
     <path refid="${module.jdk.classpath.runtime}"/>
     <pathelement location="${runtime.output.dir}"/>
-    <path refid="library.gen:_immutable-collections.classpath"/>
     <path refid="library.gen:_dclare.classpath"/>
+    <path refid="library.gen:_immutable-collections.classpath"/>
     <path refid="library.gen:_mps.classpath"/>
   </path>
   <path id="runtime.runtime.module.classpath">
     <pathelement location="${runtime.testoutput.dir}"/>
     <pathelement location="${runtime.output.dir}"/>
-    <path refid="library.gen:_immutable-collections.classpath"/>
     <path refid="library.gen:_dclare.classpath"/>
+    <path refid="library.gen:_immutable-collections.classpath"/>
     <path refid="library.gen:_mps.classpath"/>
   </path>
   <patternset id="excluded.from.module.runtime">
