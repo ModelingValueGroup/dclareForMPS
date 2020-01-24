@@ -636,25 +636,6 @@
             <ref role="3bR37D" to="ffeo:7Kfy9QB6Lc2" resolve="jetbrains.mps.lang.typesystem" />
           </node>
         </node>
-        <node concept="1SiIV0" id="5sdXpkPSiXl" role="3bR37C">
-          <node concept="1BurEX" id="5sdXpkPSiXm" role="1SiIV1">
-            <node concept="398BVA" id="5sdXpkPSiXb" role="1BurEY">
-              <ref role="398BVh" node="3Lt_N8a$ptU" resolve="dclare_home" />
-              <node concept="2Ry0Ak" id="5sdXpkPSiXc" role="iGT6I">
-                <property role="2Ry0Am" value="solutions" />
-                <node concept="2Ry0Ak" id="5sdXpkPSiXd" role="2Ry0An">
-                  <property role="2Ry0Am" value="DclareMPSRuntime" />
-                  <node concept="2Ry0Ak" id="5sdXpkPSiXe" role="2Ry0An">
-                    <property role="2Ry0Am" value="lib" />
-                    <node concept="2Ry0Ak" id="5sdXpkPSiXf" role="2Ry0An">
-                      <property role="2Ry0Am" value="DclareMPS.jar" />
-                    </node>
-                  </node>
-                </node>
-              </node>
-            </node>
-          </node>
-        </node>
         <node concept="1BupzO" id="5sdXpkPSiXv" role="3bR31x">
           <property role="3ZfqAx" value="models" />
           <property role="1Hdu6h" value="true" />
@@ -674,6 +655,25 @@
             </node>
             <node concept="3qWCbU" id="5sdXpkPSiXx" role="3LXTna">
               <property role="3qWCbO" value="**/*.mps, **/*.mpsr, **/.model" />
+            </node>
+          </node>
+        </node>
+        <node concept="1SiIV0" id="1NBcxBM$qYQ" role="3bR37C">
+          <node concept="1BurEX" id="1NBcxBM$qYR" role="1SiIV1">
+            <node concept="398BVA" id="1NBcxBM$qYG" role="1BurEY">
+              <ref role="398BVh" node="3Lt_N8a$ptU" resolve="dclare_home" />
+              <node concept="2Ry0Ak" id="1NBcxBM$qYH" role="iGT6I">
+                <property role="2Ry0Am" value="solutions" />
+                <node concept="2Ry0Ak" id="1NBcxBM$qYI" role="2Ry0An">
+                  <property role="2Ry0Am" value="DclareMPSRuntime" />
+                  <node concept="2Ry0Ak" id="1NBcxBM$qYJ" role="2Ry0An">
+                    <property role="2Ry0Am" value="lib" />
+                    <node concept="2Ry0Ak" id="1NBcxBM$qYK" role="2Ry0An">
+                      <property role="2Ry0Am" value="DclareMps.jar" />
+                    </node>
+                  </node>
+                </node>
+              </node>
             </node>
           </node>
         </node>
