@@ -31,6 +31,7 @@ jobs:
         run:  |
           cat <<EOF >build.properties
           jdk.home.11=$JAVA_HOME
+          path.variable.mps_home=./MPS
           EOF
 
       - name: "(re)generate some files"
