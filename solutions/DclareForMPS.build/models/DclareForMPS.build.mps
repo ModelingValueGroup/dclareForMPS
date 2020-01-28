@@ -83,6 +83,7 @@
         <child id="6592112598314499028" name="dependencies" index="m$_yJ" />
         <child id="6592112598314499021" name="name" index="m$_yQ" />
         <child id="6592112598314855574" name="containerName" index="m_cZH" />
+        <child id="2172791612906637490" name="description" index="3s6cr7" />
       </concept>
       <concept id="6592112598314498926" name="jetbrains.mps.build.mps.structure.BuildMpsLayout_Plugin" flags="ng" index="m$_wl">
         <reference id="6592112598314801433" name="plugin" index="m_rDy" />
@@ -231,6 +232,11 @@
       </node>
       <node concept="m$f5U" id="6dxB28$ZXRA" role="m$_yh">
         <ref role="m$f5T" node="5TmHY1kYrb5" resolve="DclareForMPS" />
+      </node>
+      <node concept="3_J27D" id="55DSsnTM$bO" role="3s6cr7">
+        <node concept="3Mxwew" id="55DSsnTM$bQ" role="3MwsjC">
+          <property role="3MwjfP" value="dclare for MPS - rule based programming for MPS" />
+        </node>
       </node>
     </node>
     <node concept="2G$12M" id="5TmHY1kYrb5" role="3989C9">
