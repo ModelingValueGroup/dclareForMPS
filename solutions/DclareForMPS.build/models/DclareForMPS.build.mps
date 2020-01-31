@@ -44,6 +44,7 @@
       </concept>
       <concept id="5617550519002745364" name="jetbrains.mps.build.structure.BuildLayout" flags="ng" index="1l3spV" />
       <concept id="5617550519002745363" name="jetbrains.mps.build.structure.BuildProject" flags="ng" index="1l3spW">
+        <property id="4915877860348071612" name="fileName" index="turDy" />
         <property id="5204048710541015587" name="internalBaseDirectory" index="2DA0ip" />
         <child id="6647099934206700656" name="plugins" index="10PD9s" />
         <child id="7389400916848080626" name="parts" index="3989C9" />
@@ -82,6 +83,7 @@
         <child id="6592112598314499028" name="dependencies" index="m$_yJ" />
         <child id="6592112598314499021" name="name" index="m$_yQ" />
         <child id="6592112598314855574" name="containerName" index="m_cZH" />
+        <child id="2172791612906637490" name="description" index="3s6cr7" />
       </concept>
       <concept id="6592112598314498926" name="jetbrains.mps.build.mps.structure.BuildMpsLayout_Plugin" flags="ng" index="m$_wl">
         <reference id="6592112598314801433" name="plugin" index="m_rDy" />
@@ -145,6 +147,7 @@
   <node concept="1l3spW" id="5TmHY1kYraH">
     <property role="TrG5h" value="DclareForMPS" />
     <property role="2DA0ip" value="../../" />
+    <property role="turDy" value="mps_build.xml" />
     <node concept="10PD9b" id="5TmHY1kYraI" role="10PD9s" />
     <node concept="3b7kt6" id="5TmHY1kYraJ" role="10PD9s" />
     <node concept="398rNT" id="5TmHY1kYraK" role="1l3spd">
@@ -232,6 +235,11 @@
       </node>
       <node concept="m$f5U" id="6dxB28$ZXRA" role="m$_yh">
         <ref role="m$f5T" node="5TmHY1kYrb5" resolve="DclareForMPS" />
+      </node>
+      <node concept="3_J27D" id="55DSsnTM$bO" role="3s6cr7">
+        <node concept="3Mxwew" id="55DSsnTM$bQ" role="3MwsjC">
+          <property role="3MwjfP" value="dclare for MPS - rule based programming for MPS" />
+        </node>
       </node>
       <node concept="m$_yB" id="5Eq6vdsMAr9" role="m$_yh">
         <ref role="m$_yA" node="5Eq6vdsMqEg" resolve="DclareBaseLanguageExt" />

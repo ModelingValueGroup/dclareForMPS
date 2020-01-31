@@ -4,10 +4,15 @@ source_gen.caches
 test_gen.caches
 workspace.xml
 artifacts
-tmp
-/build/tmp
-/build/artifacts
 .DS_Store
+
+/build
+/out
 /buildTools.jar
+/build.properties
+/MPS
+/lib
 /header
+/.idea/shelf
+/solutions/DclareMPSRuntime/lib/*
 
