@@ -12,6 +12,7 @@ artifacts
 /build.properties
 /MPS
 /lib
+/runtime/bin
 /header
 /.idea/shelf
 /solutions/DclareMPSRuntime/lib/*
