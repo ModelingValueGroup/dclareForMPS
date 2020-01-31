@@ -296,7 +296,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
                 try {
                     return supplier.get();
                 } catch (Throwable t) {
-                    ((DClareMPS) tx.universeTransaction().mutable()).addMessage(t);
+                    dClareMPS.addMessage(t);
                     return null;
                 }
             }) : null;

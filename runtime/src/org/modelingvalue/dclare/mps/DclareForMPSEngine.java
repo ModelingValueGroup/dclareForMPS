@@ -134,4 +134,7 @@ public class DclareForMPSEngine implements DeployListener {
         }
     }
 
+    public static final void breakpoint() {
+        System.err.println("breakpoint");
+    }
 }

@@ -96,7 +96,7 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
                                                                                        }, Priority.preDepth);
 
     private static final Observer<DModule>                              MODELS_RULE    = DObject.<DModule> observer(MODELS, o -> {
-                                                                                           if (o.isAllwaysActive() && o.hasRuleSets(LANGUAGES.get(o))) {
+                                                                                           if (!o.isReadOnly() && o.hasRuleSets(LANGUAGES.get(o))) {
                                                                                                MODELS.set(o, dClareMPS().read(() -> models(o.original())).map(m -> DModel.of(m)).toSet());
                                                                                            } else {
                                                                                                MODELS.set(o, REFERENCED.get(o));
@@ -106,7 +106,7 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
     private static final Action<DModule>                                READ_MODELS    = Action.of("$READ_MODELS", m -> {
                                                                                            Set<SLanguage> languages = dClareMPS().read(() -> languages(m.original()));
                                                                                            LANGUAGES.set(m, languages);
-                                                                                           if (m.isAllwaysActive() && m.hasRuleSets(languages)) {
+                                                                                           if (!m.isReadOnly() && m.hasRuleSets(languages)) {
                                                                                                MODELS.set(m, dClareMPS().read(() -> models(m.original())).map(mo -> DModel.of(mo)).toSet());
                                                                                            }
                                                                                        }, Direction.forward, Priority.preDepth);
@@ -131,11 +131,7 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
 
     @Override
     protected DType getType() {
-        return MODULE_TYPE.get(Pair.of(isAllwaysActive(), LANGUAGES.get(this).filter(l -> !DClareMPS.RULE_SETS.get(l).isEmpty()).toSet()));
-    }
-
-    private boolean isAllwaysActive() {
-        return !(original() instanceof Language) && !original().isReadOnly();
+        return MODULE_TYPE.get(Pair.of(!isReadOnly(), LANGUAGES.get(this).filter(l -> !DClareMPS.RULE_SETS.get(l).isEmpty()).toSet()));
     }
 
     @Override
@@ -277,9 +273,11 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
         @Override
         public void modelAdded(SModule module, SModel sModel) {
             b().handleMPSChange(() -> {
-                if (isAllwaysActive() && hasRuleSets(LANGUAGES.get(DModule.this))) {
-                    DModel dModel = DModel.of(sModel);
-                    MODELS.set(DModule.this, Set::add, dModel);
+                if (!isReadOnly() && hasRuleSets(LANGUAGES.get(DModule.this))) {
+                    if (module instanceof Language ? ((Language) module).isAccessoryModel(sModel.getReference()) : true) {
+                        DModel dModel = DModel.of(sModel);
+                        MODELS.set(DModule.this, Set::add, dModel);
+                    }
                 }
             });
         }
@@ -287,9 +285,11 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
         @Override
         public void beforeModelRemoved(SModule module, SModel sModel) {
             b().handleMPSChange(() -> {
-                if (isAllwaysActive() && hasRuleSets(LANGUAGES.get(DModule.this))) {
-                    DModel dModel = DModel.of(sModel);
-                    MODELS.set(DModule.this, Set::remove, dModel);
+                if (!isReadOnly() && hasRuleSets(LANGUAGES.get(DModule.this))) {
+                    if (module instanceof Language ? ((Language) module).isAccessoryModel(sModel.getReference()) : true) {
+                        DModel dModel = DModel.of(sModel);
+                        MODELS.set(DModule.this, Set::remove, dModel);
+                    }
                 }
             });
         }
@@ -337,7 +337,7 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
 
     protected static Set<SModel> models(SModule module) {
         Set<SModel> ist = Set.of();
-        for (SModel child : module.getModels()) {
+        for (SModel child : module instanceof Language ? ((Language) module).getAccessoryModels() : module.getModels()) {
             ist = ist.add(child);
         }
         return ist;

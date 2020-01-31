@@ -29,19 +29,19 @@ import org.modelingvalue.dclare.State;
 @SuppressWarnings("rawtypes")
 public interface DAttribute<O, T> extends DFeature<O> {
 
-    Constant<Object, DAttribute> DATTRIBUTE = Constant.of("DATTRIBUTE", new NullAttribute());
+    Constant<Object, DAttribute> DATTRIBUTE = Constant.of("DATTRIBUTE", null);
 
     @SuppressWarnings("unchecked")
     public static <C, V> DAttribute<C, V> of(Object id, String name, boolean synthetic, boolean optional, boolean composite, int identifyingNr, V def, Class<?> cls, Supplier<SNode> source, Function<C, V> deriver) {
         DAttribute<C, V> dAttribute = identifyingNr >= 0 ? new DIdentifyingAttribute(id, name, synthetic, composite, identifyingNr, cls, source) : deriver != null ? //
                 new DConstant(id, name, synthetic, composite, cls, source, deriver) : new DObservedAttribute(id, name, synthetic, optional, composite, def, cls, source);
-        DATTRIBUTE.force(id, dAttribute);
+        DATTRIBUTE.set(id, dAttribute);
         return dAttribute;
     }
 
     @SuppressWarnings("unchecked")
     public static <C, V> DAttribute<C, V> of(Object id) {
-        return DATTRIBUTE.get(id);
+        return DATTRIBUTE.isSet(id) ? DATTRIBUTE.get(id) : null;
     }
 
     T pre(O object);

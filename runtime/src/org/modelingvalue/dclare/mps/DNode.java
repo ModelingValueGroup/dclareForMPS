@@ -291,7 +291,7 @@ public class DNode extends DIdentifiedObject implements SNode {
     }
 
     protected SModel getOriginalModel() {
-        return isReadNode() ? ((SNodeReference) identity[0]).getModelReference().resolve(null) : null;
+        return isReadNode() ? dClareMPS().read(() -> ((SNodeReference) identity[0]).getModelReference().resolve(null)) : null;
     }
 
     @Override
