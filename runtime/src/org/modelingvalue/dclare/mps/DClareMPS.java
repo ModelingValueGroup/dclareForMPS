@@ -627,7 +627,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     private class ModuleChecker extends IChecker.AbstractModuleChecker<ModuleReportItem> {
         @Override
         public void check(SModule sModule, SRepository repository, Consumer<? super ModuleReportItem> consumer, ProgressMonitor monitor) {
-            universeTransaction.preState().run(() -> {
+            imperativeTransaction.state().run(() -> {
                 DModule dModule = DModule.of(sModule);
                 for (DIssue issue : DObject.DCLARE_ISSUES.get(dModule)) {
                     consumer.consume((ModuleReportItem) issue.getItem());
@@ -644,7 +644,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     private class ModelChecker extends IChecker.AbstractModelChecker<ModelReportItem> {
         @Override
         public void check(SModel sModel, SRepository repository, Consumer<? super ModelReportItem> consumer, ProgressMonitor monitor) {
-            universeTransaction.preState().run(() -> {
+            imperativeTransaction.state().run(() -> {
                 DModel dModel = DModel.of(sModel);
                 for (DIssue issue : DObject.DCLARE_ISSUES.get(dModel)) {
                     consumer.consume((ModelReportItem) issue.getItem());
@@ -680,7 +680,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
 
                 @Override
                 public void check(SNode root, SRepository repository, Consumer<? super NodeReportItem> errorCollector, ProgressMonitor monitor) {
-                    universeTransaction.preState().run(() -> rootChecker.check(root, repository, errorCollector, monitor));
+                    imperativeTransaction.state().run(() -> rootChecker.check(root, repository, errorCollector, monitor));
                 }
             };
         }
@@ -703,7 +703,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
 
         @Override
         protected void checkNodeInEditor(SNode sNode, LanguageErrorsCollector errorsCollector, SRepository repository) {
-            universeTransaction.preState().run(() -> {
+            imperativeTransaction.state().run(() -> {
                 DNode dNode = DNode.of(sNode.getConcept(), sNode.getReference());
                 for (DIssue issue : DObject.DCLARE_ISSUES.get(dNode)) {
                     errorsCollector.addError((NodeReportItem) issue.getItem());
