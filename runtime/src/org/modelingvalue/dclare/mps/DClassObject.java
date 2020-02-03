@@ -15,15 +15,16 @@
 
 package org.modelingvalue.dclare.mps;
 
-import java.util.Arrays;
-
-import org.jetbrains.mps.openapi.language.SLanguage;
-import org.jetbrains.mps.openapi.module.SRepository;
+import org.jetbrains.mps.openapi.language.*;
+import org.jetbrains.mps.openapi.module.*;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
-import org.modelingvalue.collections.util.Pair;
-import org.modelingvalue.dclare.Constant;
+import org.modelingvalue.collections.util.*;
+import org.modelingvalue.dclare.*;
 
+import java.util.*;
+
+@SuppressWarnings("unused")
 public class DClassObject extends DIdentifiedObject implements SClassObject {
 
     private static final Constant<Pair<Set<SLanguage>, SClass>, DType> CLASS_OBJECT_TYPE = Constant.of("CLASS_OBJECT_TYPE", p -> new DType(p) {

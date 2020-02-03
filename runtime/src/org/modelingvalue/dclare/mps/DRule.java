@@ -18,7 +18,7 @@ package org.modelingvalue.dclare.mps;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Context;
 import org.modelingvalue.dclare.Constant;
-import org.modelingvalue.dclare.DeferException;
+import org.modelingvalue.dclare.ex.DeferException;
 import org.modelingvalue.dclare.Direction;
 import org.modelingvalue.dclare.LeafTransaction;
 import org.modelingvalue.dclare.Mutable;
@@ -41,7 +41,7 @@ public interface DRule<O> extends DFeature<O> {
 
     Context<Set<DIssue>>       DISUES               = Context.of(Set.of());
 
-    public class DObserver<O extends Mutable> extends Observer<O> {
+    class DObserver<O extends Mutable> extends Observer<O> {
 
         public static <M extends Mutable> DObserver of(DRule rule, Direction initDirection, Priority priority) {
             return new DObserver<M>(rule, initDirection, priority);

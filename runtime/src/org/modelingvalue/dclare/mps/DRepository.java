@@ -65,9 +65,9 @@ public class DRepository extends DFromOriginalObject<SRepository> implements SRe
 
     protected static final DObserved<DRepository, Set<?>>    EXCEPTIONS      = DObserved.of("EXCEPTIONS", Set.of(), false, false, null, false, null, null);
 
-    private static final Action<DRepository>                 READ_MODULES    = Action.of("$READ_MODULES", r -> {
-                                                                                 MODULES.set(r, dClareMPS().read(() -> modules()).map(m -> DModule.of(m)).toSet());
-                                                                             }, Direction.forward, Priority.preDepth);
+    private static final Action<DRepository>                 READ_MODULES    = Action.of("$READ_MODULES",
+                                                                                    r -> MODULES.set(r, dClareMPS().read(DRepository::modules).map(DModule::of).toSet()),
+                                                                                    Direction.forward, Priority.preDepth);
 
     @SuppressWarnings("rawtypes")
     protected static final Set<Setable>                      SETABLES        = DObject.SETABLES.add(MODULES);
@@ -115,7 +115,7 @@ public class DRepository extends DFromOriginalObject<SRepository> implements SRe
     @Override
     protected void stop(DClareMPS dClareMPS) {
         super.stop(dClareMPS);
-        for (DModule child : modules().map(m -> DModule.of(m))) {
+        for (DModule child : modules().map(DModule::of)) {
             child.stop(dClareMPS);
         }
     }

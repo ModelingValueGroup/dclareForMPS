@@ -19,5 +19,5 @@ public enum DMessageType {
     error,
     warning,
     info,
-    debug;
+    debug
 }

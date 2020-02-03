@@ -17,6 +17,7 @@ package org.modelingvalue.dclare.mps;
 
 import org.modelingvalue.collections.Set;
 
+@SuppressWarnings("unused")
 public class SClass {
 
     public static SClass of(Object id, String name, SClass... supers) {
@@ -54,7 +55,7 @@ public class SClass {
     }
 
     public boolean isAssignableFrom(SClass sub) {
-        return equals(sub) || sub.supers.anyMatch(s -> isAssignableFrom(s));
+        return equals(sub) || sub.supers.anyMatch(this::isAssignableFrom);
     }
 
     @Override

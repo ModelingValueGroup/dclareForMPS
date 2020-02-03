@@ -17,6 +17,7 @@ package org.modelingvalue.dclare.mps;
 
 import org.jetbrains.mps.openapi.model.SNode;
 
+//REVIEW: O never used
 public interface DFeature<O> {
 
     SNode getSource();
