@@ -155,7 +155,7 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
 
     @Override
     public T set(O object, T value) {
-        if (mandatory) {
+        if (mandatory && LeafTransaction.getCurrent() instanceof DRule.DObserverTransaction) {
             Objects.requireNonNull(value);
         }
         return super.set(object, value);
