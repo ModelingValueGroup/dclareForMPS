@@ -18,6 +18,7 @@ package org.modelingvalue.dclare.mps;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -150,6 +151,14 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
                 return v;
             }
         }, e);
+    }
+
+    @Override
+    public T set(O object, T value) {
+        if (mandatory) {
+            Objects.requireNonNull(value);
+        }
+        return super.set(object, value);
     }
 
     @Override
