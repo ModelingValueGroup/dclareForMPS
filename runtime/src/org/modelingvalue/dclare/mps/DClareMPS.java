@@ -95,6 +95,8 @@ import jetbrains.mps.smodel.language.LanguageRuntime;
 
 public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
 
+    protected static final java.util.Map<SRepository, DClareMPS>                                           DCLARE_MPS           = new java.util.concurrent.ConcurrentHashMap<>();
+
     private static final Set<DMessageType>                                                                 MESSAGE_TYPES        = Collection.of(DMessageType.values()).toSet();
 
     private static final QualifiedSet<Triple<DObject, DFeature<?>, String>, DMessage>                      MESSAGE_QSET         = QualifiedSet.of(m -> Triple.of(m.context(), m.feature(), m.id()));
@@ -155,12 +157,13 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
         this.project = project;
         this.engine = engine;
         this.startStopHandler = startStopHandler;
-        this.dRepository = new DRepository(project.getRepository());
+        SRepository projectRepository = project.getRepository();
+        this.dRepository = new DRepository(projectRepository);
         this.moduleChecker = new ModuleChecker();
         this.modelChecker = new ModelChecker();
         this.nodeChecker = new NodeChecker();
         this.nodeCheckerInEditor = new NodeCheckerInEditor();
-        this.languageEditorChecker = new LanguageEditorChecker(project.getRepository(), Collections.singletonList(nodeCheckerInEditor));
+        this.languageEditorChecker = new LanguageEditorChecker(projectRepository, Collections.singletonList(nodeCheckerInEditor));
         CheckerRegistry checkerRegistry = project.getPlatform().findComponent(CheckerRegistry.class);
         if (checkerRegistry == null) {
             throw new Error("CheckerRegistry not found in platform");
@@ -278,10 +281,32 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
         REPOSITORY_CONTAINER.set(this, getRepository());
     }
 
+    public static <T> T get(SRepository sRepository, Supplier<T> supplier) {
+        LeafTransaction tx = LeafTransaction.getCurrent();
+        if (tx instanceof ImperativeTransaction) {
+            try {
+                return supplier.get();
+            } catch (Throwable t) {
+                ((DClareMPS) tx.universeTransaction().mutable()).addMessage(t);
+                return null;
+            }
+        } else {
+            DClareMPS dClareMPS = sRepository != null ? DCLARE_MPS.get(sRepository) : null;
+            return dClareMPS != null ? dClareMPS.imperativeTransaction.state().get(() -> {
+                try {
+                    return supplier.get();
+                } catch (Throwable t) {
+                    dClareMPS.addMessage(t);
+                    return null;
+                }
+            }) : null;
+        }
+    }
+
     @SuppressWarnings("rawtypes")
     protected void addMessage(Throwable throwable) {
         if (!universeTransaction.isKilled()) {
-            universeTransaction().currentState().run(() -> {
+            universeTransaction.currentState().run(() -> {
                 DObject object = getRepository();
                 DFeature feature = DRepository.EXCEPTIONS;
                 Throwable t = throwable;
@@ -602,7 +627,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     private class ModuleChecker extends IChecker.AbstractModuleChecker<ModuleReportItem> {
         @Override
         public void check(SModule sModule, SRepository repository, Consumer<? super ModuleReportItem> consumer, ProgressMonitor monitor) {
-            universeTransaction.preState().run(() -> {
+            imperativeTransaction.state().run(() -> {
                 DModule dModule = DModule.of(sModule);
                 for (DIssue issue : DObject.DCLARE_ISSUES.get(dModule)) {
                     consumer.consume((ModuleReportItem) issue.getItem());
@@ -619,7 +644,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     private class ModelChecker extends IChecker.AbstractModelChecker<ModelReportItem> {
         @Override
         public void check(SModel sModel, SRepository repository, Consumer<? super ModelReportItem> consumer, ProgressMonitor monitor) {
-            universeTransaction.preState().run(() -> {
+            imperativeTransaction.state().run(() -> {
                 DModel dModel = DModel.of(sModel);
                 for (DIssue issue : DObject.DCLARE_ISSUES.get(dModel)) {
                     consumer.consume((ModelReportItem) issue.getItem());
@@ -655,7 +680,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
 
                 @Override
                 public void check(SNode root, SRepository repository, Consumer<? super NodeReportItem> errorCollector, ProgressMonitor monitor) {
-                    universeTransaction.preState().run(() -> rootChecker.check(root, repository, errorCollector, monitor));
+                    imperativeTransaction.state().run(() -> rootChecker.check(root, repository, errorCollector, monitor));
                 }
             };
         }
@@ -678,7 +703,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
 
         @Override
         protected void checkNodeInEditor(SNode sNode, LanguageErrorsCollector errorsCollector, SRepository repository) {
-            universeTransaction.preState().run(() -> {
+            imperativeTransaction.state().run(() -> {
                 DNode dNode = DNode.of(sNode.getConcept(), sNode.getReference());
                 for (DIssue issue : DObject.DCLARE_ISSUES.get(dNode)) {
                     errorsCollector.addError((NodeReportItem) issue.getItem());

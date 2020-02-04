@@ -27,43 +27,48 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: "runtime: prepare"
+      - name: "prepare"
         run:  |
-          cp header         runtime
-          cp buildTools.jar runtime
-          cd runtime
-          . <(java -jar buildTools.jar)
           cat <<EOF >build.properties
           jdk.home.11=$JAVA_HOME
-          path.variable.maven_repository=$HOME/.m2/repository
+          path.variable.mps_home=./MPS
           EOF
 
-      - name: "runtime: (re)generate some files"
+      - name: "(re)generate some files"
         run:  |
-          cd runtime
           . <(java -jar buildTools.jar)
           generateAll
           correctEols
           correctHeaders header
 
-      - name: "runtime: download dependencies (as mentioned in pom) and MPS"
+      - name: "download dependencies (MPS and from pom)"
         run:  |
-          cd runtime
           . <(java -jar buildTools.jar)
+          . project.sh
           getAllDependencies ${{ secrets.GITHUB_TOKEN }}
-          installMps "MPS" "2019.3"
+          installMps "$mpsDir" "$mpsVersion"
 
       - name: "runtime: build"
-        run:  cd runtime; ant
+        run:  ant
 
       - name: "runtime: test"
-        run:  cd runtime; ant test
+        run:  ant test
 
       - name: "runtime: generate javadoc"
-        run:  cd runtime; ant javadoc
+        run:  ant javadoc
 
-      - name: "runtime: push changes back to github"
+      - name: "mps-plugin: build"
+        run:  |
+          . project.sh
+          ant -debug -Dmps_home="$mpsDir" -f mps_build.xml
+
+      - name: "publish action-artifact zip"
+        uses: actions/upload-artifact@v1
+        with:
+          name: DclareForMPS.zip
+          path: build/artifacts/DclareForMPS/DclareForMPS.zip
+
+      - name: "push changes back to github"
         run:  |
           . <(java -jar buildTools.jar)
-          git status
           pushBackToGithub "${{ secrets.GITHUB_TOKEN }}" "automation@modelingvalue.com" "adjusted files [by github actions]"

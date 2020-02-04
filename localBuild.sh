@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ## (C) Copyright 2018-2019 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
 ##                                                                                                                     ~
@@ -13,33 +14,32 @@
 ##     Arjan Kok, Carel Bast                                                                                           ~
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-#===================================================================
-# general syntax:
-#  group               artifact                version     ext flags
-#===================================================================
-# flags:
-#       j = jar
-#       d = javadoc
-#       s = sources
-#       t = test
-#===================================================================
-artifacts=(
-    "org.modelingvalue   dclareForMPSRuntime     0.0.1       jar jds"
-)
-dependencies=(
-    "org.modelingvalue   immutable-collections   1.0.20      jar jds"
-    "org.modelingvalue   dclare                  0.0.13      jar jds"
-    "jars@mps"
-)
-repositories=(
-)
-mps=(
-    "MPS/lib/extensions.jar"
-    "MPS/lib/mps-core.jar"
-    "MPS/lib/mps-editor.jar"
-    "MPS/lib/mps-openapi.jar"
-    "MPS/lib/mps-platform.jar"
-    "MPS/lib/mps-project-check.jar"
-    "MPS/lib/platform-api.jar"
-    "MPS/lib/util.jar"
-)
+if [[ "$1" == clean ]]; then
+    echo "cleaning..."
+    . project.sh
+    rm -rf "buildTools.jar" "$mpsDir" "lib" "out"
+fi
+
+if [[ ! -d ../buildTools ]]; then
+    echo "ERROR: no buildTools project in parent dir"
+    exit 88
+fi
+if [[ ! -f ../buildTools/out/artifacts/buildTools.jar ]]; then
+    echo "ERROR: build buildTools first"
+    exit 88
+fi
+
+cp ../buildTools/out/artifacts/buildTools.jar .
+. <(java -jar buildTools.jar)
+generateAll
+. project.sh
+if [[ ! -d "$mpsDir" ]]; then
+    echo "downloading MPS..."
+    installMps "$mpsDir" "$mpsVersion"
+fi
+mvn dependency:copy-dependencies -Dmdep.stripVersion=true -DoutputDirectory=lib
+mvn dependency:copy-dependencies -Dmdep.stripVersion=true -DoutputDirectory=lib -Dclassifier=javadoc
+mvn dependency:copy-dependencies -Dmdep.stripVersion=true -DoutputDirectory=lib -Dclassifier=sources
+
+ant
+ant -Dmps_home="$mpsDir" -f mps_build.xml

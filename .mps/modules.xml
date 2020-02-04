@@ -2,6 +2,7 @@
 <project version="4">
   <component name="MPSProject">
     <projectModules>
+      <modulePath path="$PROJECT_DIR$/languages/DclareBaseLanguageExt/DclareBaseLanguageExt.mpl" folder="" />
       <modulePath path="$PROJECT_DIR$/languages/DclareMPS/DclareMPS.mpl" folder="" />
       <modulePath path="$PROJECT_DIR$/languages/DclareMessages/DclareMessages.mpl" folder="" />
       <modulePath path="$PROJECT_DIR$/solutions/DclareForMPS.build/DclareForMPS.build.msd" folder="" />

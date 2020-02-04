@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/org.modelingvalue.collections"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/org.modelingvalue.dclare"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
 		<attributes>
 			<attribute name="module" value="true"/>
@@ -10,11 +8,13 @@
 	</classpathentry>
 	<classpathentry kind="var" path="MPS_HOME/lib/mps-openapi.jar" sourcepath="/MPS_HOME/lib/MPS-src.zip"/>
 	<classpathentry kind="var" path="MPS_HOME/lib/mps-platform.jar" sourcepath="/MPS_SRC"/>
-	<classpathentry kind="var" path="MPS_HOME/lib/platform-api.jar"/>
+	<classpathentry kind="var" path="MPS_HOME/lib/platform-api.jar" sourcepath="/MPS_SRC"/>
 	<classpathentry kind="var" path="MPS_HOME/lib/mps-core.jar" sourcepath="/MPS_SRC"/>
 	<classpathentry kind="var" path="MPS_HOME/lib/extensions.jar"/>
 	<classpathentry kind="var" path="MPS_HOME/lib/mps-project-check.jar" sourcepath="/MPS_SRC"/>
 	<classpathentry kind="var" path="MPS_HOME/lib/mps-closures.jar"/>
 	<classpathentry kind="var" path="MPS_HOME/lib/mps-editor.jar" sourcepath=""/>
+	<classpathentry combineaccessrules="false" kind="src" path="/immutable-collections"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/dclare"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
