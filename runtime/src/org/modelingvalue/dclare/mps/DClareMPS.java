@@ -806,7 +806,10 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
                     universeTransaction.put(new Object(), () -> read(() -> {
                         for (SModel sModel : models) {
                         	Set<IssueKindReportItem> issues = DModel.ALL_MPS_ISSUES.get(DModel.of(sModel));
-                        	issues.;
+                        	issues = issues.filter(i -> {
+                        		DObject ctx = context(item);
+                        		return !itemsToCheck.models.contains(ctx) && !itemsToCheck.contains(ctx);
+                        	});
                             DModel.ALL_MPS_ISSUES.set(DModel.of(sModel), issues);
                         }
                         
