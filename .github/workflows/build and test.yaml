@@ -41,7 +41,7 @@ jobs:
           correctEols
           correctHeaders header
 
-      - name: "download dependencies (MPS and from pom)"
+      - name: "download dependencies (MPS and jars from pom)"
         run:  |
           . <(java -jar buildTools.jar)
           . project.sh
@@ -57,7 +57,7 @@ jobs:
       - name: "runtime: generate javadoc"
         run:  ant javadoc
 
-      - name: "mps-plugin: build"
+      - name: "dclare-plugin: build"
         run:  |
           . project.sh
           ant -debug -Dmps_home="$mpsDir" -f mps_build.xml generate build
