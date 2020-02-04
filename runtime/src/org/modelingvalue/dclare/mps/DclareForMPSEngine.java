@@ -113,8 +113,7 @@ public class DclareForMPSEngine implements DeployListener {
     @Override
     public void onUnloaded(Set<ReloadableModule> unloadedModules, ProgressMonitor monitor) {
         for (SModule m : project.getProjectModules()) {
-            //REVIEW: how can there be SModule's in a Set of ReloadableModule's?
-            // ReloadableModule extends SModule
+            //noinspection SuspiciousMethodCalls
             if (unloadedModules.contains(m)) {
                 stopEngine();
                 break;
@@ -125,8 +124,7 @@ public class DclareForMPSEngine implements DeployListener {
     @Override
     public void onLoaded(Set<ReloadableModule> loadedModules, ProgressMonitor monitor) {
         for (SModule m : project.getProjectModules()) {
-            //REVIEW: how can there be SModule's in a Set of ReloadableModule's?
-            // ReloadableModule extends SModule
+            //noinspection SuspiciousMethodCalls
             if (loadedModules.contains(m)) {
                 if (on) {
                     startEngine();
