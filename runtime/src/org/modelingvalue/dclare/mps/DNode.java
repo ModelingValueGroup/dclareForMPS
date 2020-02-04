@@ -59,7 +59,7 @@ public class DNode extends DIdentifiedObject implements SNode {
     public static final Constant<SContainmentLink, DObserved<DNode, List<DNode>>>  MANY_CONTAINMENT       = Constant.of("MANY_CONTAINMENT",
                                                                                                                 mc -> DObserved.of(mc, List.of(), !mc.isOptional(), true, null, false,                                     //
                                                                                                                       (dNode, pre, post) -> {
-                                                                                                                          SNode sNode = dNode.sNode(true);
+                                                                                                                          SNode sNode = dNode.reParent();
                                                                                                                           List<SNode> soll = post.map(c -> c.reParent(sNode, mc, c.sNode(true))).toList();
                                                                                                                           List<SNode> ist = children(sNode, mc);
                                                                                                                           DObserved.map(ist, soll,                                                                                             //
@@ -76,7 +76,7 @@ public class DNode extends DIdentifiedObject implements SNode {
     public static final Constant<SContainmentLink, DObserved<DNode, DNode>>        SINGLE_CONTAINMENT     = Constant.of("SINGLE_CONTAINMENT",
                                                                                                                 sc ->  DObserved.of(sc, null, !sc.isOptional(), true, null, false,                                                //
                                                                                                                       (dNode, pre, post) -> {
-                                                                                                                          SNode sNode = dNode.sNode(true);
+                                                                                                                          SNode sNode = dNode.reParent();
                                                                                                                           List<SNode> soll = post != null ? List.of(post.reParent(sNode, sc, post.sNode(true))) : List.of();
                                                                                                                           List<SNode> ist = children(sNode, sc);
                                                                                                                           DObserved.map(ist, soll,                                                                                             //
@@ -429,6 +429,16 @@ public class DNode extends DIdentifiedObject implements SNode {
             //REVIEW: getContainmentLink() may return null -> NPE
             //noinspection ConstantConditions
             sParent.addChild(getContainmentLink(), sNode);
+        }
+    }
+
+    protected SNode reParent() {
+        SNode sNode = sNode(true);
+        Mutable dParent = dParent();
+        if (dParent instanceof DNode) {
+            return reParent(((DNode) dParent).reParent(), getContainmentLink(), sNode);
+        } else {
+            return reParent(((DModel) dParent).original(), null, sNode);
         }
     }
 

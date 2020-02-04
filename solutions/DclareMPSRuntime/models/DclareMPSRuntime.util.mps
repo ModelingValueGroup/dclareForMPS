@@ -2842,12 +2842,37 @@
         </node>
       </node>
       <node concept="3clFbS" id="6di_o0Bppm$" role="3clF47">
-        <node concept="3clFbJ" id="6di_o0BpuTX" role="3cqZAp">
-          <node concept="3y3z36" id="6di_o0Bpv9W" role="3clFbw">
-            <node concept="10Nm6u" id="6di_o0BpvhZ" role="3uHU7w" />
-            <node concept="2YIFZM" id="6di_o0BpuYn" role="3uHU7B">
+        <node concept="3cpWs8" id="u5SXqxKU6l" role="3cqZAp">
+          <node concept="3cpWsn" id="u5SXqxKU6m" role="3cpWs9">
+            <property role="TrG5h" value="current" />
+            <node concept="3uibUv" id="u5SXqxKLrT" role="1tU5fm">
+              <ref role="3uigEE" to="kag7:~LeafTransaction" resolve="LeafTransaction" />
+            </node>
+            <node concept="2YIFZM" id="u5SXqxKU6n" role="33vP2m">
               <ref role="37wK5l" to="kag7:~LeafTransaction.getCurrent()" resolve="getCurrent" />
               <ref role="1Pybhc" to="kag7:~LeafTransaction" resolve="LeafTransaction" />
+            </node>
+          </node>
+        </node>
+        <node concept="3clFbJ" id="6di_o0BpuTX" role="3cqZAp">
+          <node concept="1Wc70l" id="u5SXqxKUs0" role="3clFbw">
+            <node concept="3fqX7Q" id="u5SXqxKUIB" role="3uHU7w">
+              <node concept="1eOMI4" id="u5SXqxKUID" role="3fr31v">
+                <node concept="2ZW3vV" id="u5SXqxKUUI" role="1eOMHV">
+                  <node concept="3uibUv" id="u5SXqxO7Kk" role="2ZW6by">
+                    <ref role="3uigEE" to="kag7:~ImperativeTransaction" resolve="ImperativeTransaction" />
+                  </node>
+                  <node concept="37vLTw" id="u5SXqxKUKg" role="2ZW6bz">
+                    <ref role="3cqZAo" node="u5SXqxKU6m" resolve="current" />
+                  </node>
+                </node>
+              </node>
+            </node>
+            <node concept="3y3z36" id="6di_o0Bpv9W" role="3uHU7B">
+              <node concept="37vLTw" id="u5SXqxKU6o" role="3uHU7B">
+                <ref role="3cqZAo" node="u5SXqxKU6m" resolve="current" />
+              </node>
+              <node concept="10Nm6u" id="6di_o0BpvhZ" role="3uHU7w" />
             </node>
           </node>
           <node concept="3clFbS" id="6di_o0BpuTZ" role="3clFbx">

@@ -32,8 +32,8 @@ import org.modelingvalue.dclare.UniverseTransaction;
 @SuppressWarnings("rawtypes")
 public interface DRule<O> extends DFeature<O> {
 
-    Constant<DRule, DObserver> OBSERVER             = Constant.of("OBSERVER",   //
-            r -> DObserver.of(r, Direction.forward, Priority.postDepth));
+    Constant<DRule, DObserver> OBSERVER             = Constant.of("OBSERVER",                                          //
+            r -> DObserver.of(r, r.initialLowPriority() ? Direction.backward : Direction.forward, Priority.postDepth));
 
     Context<Boolean>           EMPTY_ATTRIBUTE      = Context.of(false);
 
@@ -116,5 +116,7 @@ public interface DRule<O> extends DFeature<O> {
     }
 
     void run(O object);
+
+    boolean initialLowPriority();
 
 }

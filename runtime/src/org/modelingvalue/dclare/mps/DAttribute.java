@@ -20,11 +20,15 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import org.jetbrains.mps.openapi.language.SProperty;
 import org.jetbrains.mps.openapi.model.SNode;
 import org.modelingvalue.dclare.Constant;
-import org.modelingvalue.dclare.ex.EmptyMandatoryException;
+import org.modelingvalue.dclare.EmptyMandatoryException;
+import org.modelingvalue.dclare.LeafTransaction;
 import org.modelingvalue.dclare.Mutable;
 import org.modelingvalue.dclare.State;
+
+import jetbrains.mps.smodel.adapter.structure.property.InvalidProperty;
 
 @SuppressWarnings({"rawtypes", "unused"})
 public interface DAttribute<O, T> extends DFeature<O> {
@@ -33,8 +37,9 @@ public interface DAttribute<O, T> extends DFeature<O> {
 
     @SuppressWarnings("unchecked")
     static <C, V> DAttribute<C, V> of(Object id, String name, boolean synthetic, boolean optional, boolean composite, int identifyingNr, V def, Class<?> cls, Supplier<SNode> source, Function<C, V> deriver) {
-        DAttribute<C, V> dAttribute = identifyingNr >= 0 ? new DIdentifyingAttribute(id, name, synthetic, composite, identifyingNr, cls, source) : deriver != null ? //
-                new DConstant(id, name, synthetic, composite, cls, source, deriver) : new DObservedAttribute(id, name, synthetic, optional, composite, def, cls, source);
+        DAttribute<C, V> dAttribute = identifyingNr >= 0 ? new DIdentifyingAttribute(id, name, synthetic, composite, identifyingNr, cls, source) : //
+                deriver != null ? new DConstant(id, name, synthetic, composite, cls, source, deriver) : //
+                        new DObservedAttribute(id, name, synthetic, optional, composite, def, cls, source, new InvalidProperty(id.toString(), name));
         DATTRIBUTE.set(id, dAttribute);
         return dAttribute;
     }
@@ -75,14 +80,23 @@ public interface DAttribute<O, T> extends DFeature<O> {
 
     final class DObservedAttribute<C extends DObject, V> extends DObserved<C, V> implements DAttribute<C, V> {
 
-        private final String   name;
-        private final Class<?> cls;
+        private final String    name;
+        private final Class<?>  cls;
+        private final SProperty sProperty;
 
-        public DObservedAttribute(Object id, String name, boolean synthetic, boolean optional, boolean composite, V def, Class<?> cls, Supplier<SNode> source) {
+        public DObservedAttribute(Object id, String name, boolean synthetic, boolean optional, boolean composite, V def, Class<?> cls, Supplier<SNode> source, SProperty sProperty) {
             super(id, def, !optional, composite, null, synthetic, (o, b, a) -> {
+                if (o instanceof DNode) {
+                    SNode sNode = ((DNode) o).sNode(false);
+                    if (sNode != null) {
+                        sNode.setProperty(sProperty, "");
+                        sNode.setProperty(sProperty, null);
+                    }
+                }
             }, null, source);
             this.name = name;
             this.cls = cls;
+            this.sProperty = sProperty;
         }
 
         @Override
@@ -106,8 +120,11 @@ public interface DAttribute<O, T> extends DFeature<O> {
         }
 
         @Override
-        public boolean isDclareOnly() {
-            return true;
+        public V get(C object) {
+            if (object instanceof DNode && !(LeafTransaction.getCurrent() instanceof DRule.DObserverTransaction)) {
+                ((DNode) object).sNode().getProperty(sProperty);
+            }
+            return super.get(object);
         }
 
         @Override

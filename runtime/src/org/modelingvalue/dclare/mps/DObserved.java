@@ -15,17 +15,28 @@
 
 package org.modelingvalue.dclare.mps;
 
-import org.jetbrains.mps.openapi.model.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
+import org.jetbrains.mps.openapi.model.SNode;
+import org.modelingvalue.collections.ContainingCollection;
+import org.modelingvalue.collections.Entry;
 import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.Map;
 import org.modelingvalue.collections.Set;
-import org.modelingvalue.collections.*;
-import org.modelingvalue.collections.util.*;
-import org.modelingvalue.dclare.*;
-import org.modelingvalue.dclare.ex.*;
-
-import java.util.*;
-import java.util.function.*;
+import org.modelingvalue.collections.util.QuadConsumer;
+import org.modelingvalue.collections.util.TriConsumer;
+import org.modelingvalue.dclare.LeafTransaction;
+import org.modelingvalue.dclare.Mutable;
+import org.modelingvalue.dclare.Observed;
+import org.modelingvalue.dclare.Setable;
+import org.modelingvalue.dclare.State;
+import org.modelingvalue.dclare.ThrowableError;
 
 @SuppressWarnings({"rawtypes", "unused"})
 public class DObserved<O extends DObject, T> extends Observed<O, T> implements DFeature<O> {
@@ -142,6 +153,14 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
                 return v;
             }
         }, e);
+    }
+
+    @Override
+    public T set(O object, T value) {
+        if (mandatory && LeafTransaction.getCurrent() instanceof DRule.DObserverTransaction) {
+            Objects.requireNonNull(value);
+        }
+        return super.set(object, value);
     }
 
     @Override
