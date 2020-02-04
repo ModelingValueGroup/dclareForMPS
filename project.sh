@@ -17,11 +17,11 @@ mpsVersion="2019.3"
     mpsDir="MPS"
 
 artifacts=(
-    "org.modelingvalue   dclareForMPSRuntime     0.0.1       jar jds" # TODO: should not be needed
+    "org.modelingvalue   dclareForMPSRuntime     1.1.0       jar jds" # TODO: should not be needed
 )
 dependencies=(
-    "org.modelingvalue   immutable-collections   1.0.20      jar jds"
-    "org.modelingvalue   dclare                  0.0.13      jar jds"
+    "org.modelingvalue   immutable-collections   1.1.0       jar jds"
+    "org.modelingvalue   dclare                  1.1.0       jar jds"
     "jars@mps"
 )
 mps=(
