@@ -12,6 +12,7 @@ artifacts
 /build.properties
 /MPS
 /lib
+/runtime/bin
 /header
 /runtime/bin
 /.idea/shelf

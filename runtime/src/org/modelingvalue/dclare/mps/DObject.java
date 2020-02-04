@@ -89,7 +89,7 @@ public abstract class DObject implements Mutable {
 
     public static final Setable<DObject, Set<DIssue>>                               DRULE_ISSUES              = Setable.of("$DRULE_ISSUES", Set.of(), true);
 
-    public static final DObserved<DObject, Set<DIssue>>                             DCLARE_ISSUES             = DObserved.of("$DCLARE_ISSUES", Set.of(), false, false, null, false, (dObject, pre, post) -> {
+    public static final DObserved<DObject, Set<DIssue>>                             DCLARE_ISSUES             = DObserved.of("$DCLARE_ISSUES", Set.of(), false, false, () -> DIssue.DOBJECT, false, (dObject, pre, post) -> {
                                                                                                               }, null);
 
     protected static final Set<Observer>                                            OBSERVERS                 = Set.of(TYPE_RULE, CONTAINING_ATTRIBUTE_RULE);
