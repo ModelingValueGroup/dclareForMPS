@@ -13,6 +13,7 @@ artifacts
 /MPS
 /lib
 /header
+/runtime/bin
 /.idea/shelf
 /solutions/DclareMPSRuntime/lib/*
 
