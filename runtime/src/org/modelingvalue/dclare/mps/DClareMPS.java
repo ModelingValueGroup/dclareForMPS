@@ -839,8 +839,8 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
                         }
                         
                         for (IssueKindReportItem item : reportItems) {
-                            DObject dObj = context(item);
-							DObject.MPS_ISSUES.set(context(item), Set::add, Pair.of(dObj, item));
+                            DObject d = context(item);
+							DObject.MPS_ISSUES.set(d, Set::add, Pair.of(d, item));
                         }
                     }));
                 });
