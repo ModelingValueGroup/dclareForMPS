@@ -45,7 +45,7 @@ jobs:
         run:  |
           . <(java -jar buildTools.jar)
           . project.sh
-          getAllDependencies ${{ secrets.GITHUB_TOKEN }}
+          getAllDependencies ${{ secrets.GITHUB_TOKEN }} "${{ secrets.SCALEWAY_ACCESS_KEY }}" "${{ secrets.SCALEWAY_SECRET_KEY }}"
           installMps "$mpsDir" "$mpsVersion"
 
       - name: "runtime: build"
