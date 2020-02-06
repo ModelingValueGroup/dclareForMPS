@@ -60,7 +60,7 @@ jobs:
       - name: "dclare-plugin: build"
         run:  |
           . project.sh
-          ant -debug -Dmps_home="$mpsDir" -f mps_build.xml generate build
+          ant -Dmps_home="$mpsDir" -f mps_build.xml generate build
 
       - name: "publish action-artifact zip"
         uses: actions/upload-artifact@v1
