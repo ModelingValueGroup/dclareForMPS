@@ -30,7 +30,7 @@ import org.modelingvalue.dclare.Transaction;
 import org.modelingvalue.dclare.UniverseTransaction;
 
 @SuppressWarnings("rawtypes")
-public interface DRule<O> extends DFeature<O> {
+public interface DRule<O> extends DFeature {
 
     Constant<DRule, DObserver> OBSERVER             = Constant.of("OBSERVER",                                          //
             r -> DObserver.of(r, r.initialLowPriority() ? Direction.backward : Direction.forward, Priority.postDepth));

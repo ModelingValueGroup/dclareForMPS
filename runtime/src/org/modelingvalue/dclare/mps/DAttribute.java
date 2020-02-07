@@ -31,7 +31,7 @@ import org.modelingvalue.dclare.State;
 import jetbrains.mps.smodel.adapter.structure.property.InvalidProperty;
 
 @SuppressWarnings({"rawtypes", "unused"})
-public interface DAttribute<O, T> extends DFeature<O> {
+public interface DAttribute<O, T> extends DFeature {
 
     Constant<Object, DAttribute> DATTRIBUTE = Constant.of("DATTRIBUTE", null);
 

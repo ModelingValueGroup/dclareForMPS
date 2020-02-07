@@ -15,13 +15,10 @@
 
 package org.modelingvalue.dclare.mps;
 
-import org.jetbrains.mps.openapi.model.SNode;
+import org.jetbrains.mps.openapi.model.*;
 
-//REVIEW: O never used
-public interface DFeature<O> {
-
+public interface DFeature {
     SNode getSource();
 
     boolean isSynthetic();
-
 }

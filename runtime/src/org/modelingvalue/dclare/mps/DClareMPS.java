@@ -56,9 +56,9 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
 
     private static final Set<DMessageType>                                                                 MESSAGE_TYPES        = Collection.of(DMessageType.values()).toSet();
 
-    private static final QualifiedSet<Triple<DObject, DFeature<?>, String>, DMessage>                      MESSAGE_QSET         = QualifiedSet.of(m -> Triple.of(m.context(), m.feature(), m.id()));
+    private static final QualifiedSet<Triple<DObject, DFeature, String>, DMessage> MESSAGE_QSET = QualifiedSet.of(m -> Triple.of(m.context(), m.feature(), m.id()));
 
-    protected static final Map<DMessageType, QualifiedSet<Triple<DObject, DFeature<?>, String>, DMessage>> MESSAGE_QSET_MAP     = MESSAGE_TYPES.sequential().toMap(t -> Entry.of(t, MESSAGE_QSET));
+    protected static final Map<DMessageType, QualifiedSet<Triple<DObject, DFeature, String>, DMessage>> MESSAGE_QSET_MAP = MESSAGE_TYPES.sequential().toMap(t -> Entry.of(t, MESSAGE_QSET));
 
     private static final MutableClass                                                                      UNIVERSE_CLASS       = new MutableClass() {
                                                                                                                                     @Override
@@ -97,9 +97,9 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     private final StartStopHandler                                                                         startStopHandler;
     private ImperativeTransaction                                                                          imperativeTransaction;
     private boolean                                                                                        running;
-    protected final Concurrent<ReusableTransaction<DRule.DObserver<?>, DObserverTransaction>>              dObserverTransactions;
-    protected Map<DMessageType, QualifiedSet<Triple<DObject, DFeature<?>, String>, DMessage>>              messages             = MESSAGE_QSET_MAP;
-    protected final DclareForMPSEngine                                                                     engine;
+    protected final Concurrent<ReusableTransaction<DRule.DObserver<?>, DObserverTransaction>> dObserverTransactions;
+    protected Map<DMessageType, QualifiedSet<Triple<DObject, DFeature, String>, DMessage>>    messages = MESSAGE_QSET_MAP;
+    protected final DclareForMPSEngine                                                        engine;
     private final DRepository                                                                              dRepository;
     private final ModuleChecker                                                                            moduleChecker;
     private final ModelChecker                                                                             modelChecker;
@@ -396,7 +396,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
         messages = messages.put(message.type(), messages.get(message.type()).add(message));
     }
 
-    public QualifiedSet<Triple<DObject, DFeature<?>, String>, DMessage> getMessages(DMessageType type) {
+    public QualifiedSet<Triple<DObject, DFeature, String>, DMessage> getMessages(DMessageType type) {
         return messages.get(type);
     }
 
@@ -506,14 +506,14 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
                     if (dObject instanceof DModel) {
                         changedModels.change(s -> s.add(((DModel) dObject).original()));
                     } else if (dObject instanceof DNode) {
-                        //REVIEW: getModel() can return null => NPE
+                        //noinspection ConstantConditions
                         changedModels.change(s -> s.add(((DNode) dObject).getModel().original()));
                     } else if (dObject instanceof DModule) {
                         changedModules.change(s -> s.add(((DModule) dObject).original()));
                     }
                     e0.getValue().forEach(e1 -> {
                         DObserved mpsObserved = (DObserved) e1.getKey();
-                        mpsObserved.toMPS(post, dObject, e1.getValue().a(), e1.getValue().b());
+                        mpsObserved.toMPS(dObject, e1.getValue().a(), e1.getValue().b());
                     });
                 });
                 if (last) {

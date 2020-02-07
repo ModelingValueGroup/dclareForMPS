@@ -221,10 +221,10 @@ public class DModel extends DFromOriginalObject<SModel> implements SModel {
                     DModel.ROOTS.set(dModel, Set::add, dNode);
                 } else {
                     SContainmentLink al = event.getAggregationLink();
-                    //REVIEW: al may be null here
+                    //noinspection ConstantConditions
                     if (!al.getName().equals("smodelAttribute")) {
                         if (al.isMultiple()) {
-                            //REVIEW: event.getParent() may be null here giving an NPE in children()
+                            //noinspection ConstantConditions
                             int index = DNode.children(event.getParent(), al).firstIndexOf(sNode);
                             DNode.MANY_CONTAINMENT.get(al).set(DNode.of(event.getParent()), (l, e) -> l.remove(e).insert(index, e), dNode);
                         } else {
@@ -246,7 +246,7 @@ public class DModel extends DFromOriginalObject<SModel> implements SModel {
                     DModel.ROOTS.set(DModel.of(event.getModel()), Set::remove, dNode);
                 } else {
                     SContainmentLink al = event.getAggregationLink();
-                    //REVIEW: al may be null here
+                    //noinspection ConstantConditions
                     if (!al.getName().equals("smodelAttribute")) {
                         if (al.isMultiple()) {
                             DNode.MANY_CONTAINMENT.get(al).set(DNode.of(event.getParent()), List::remove, dNode);

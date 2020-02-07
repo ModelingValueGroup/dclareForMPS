@@ -28,7 +28,7 @@ import java.util.*;
 import java.util.function.*;
 
 @SuppressWarnings({"rawtypes", "unused"})
-public class DObserved<O extends DObject, T> extends Observed<O, T> implements DFeature<O> {
+public class DObserved<O extends DObject, T> extends Observed<O, T> implements DFeature {
 
     public static <C extends DObject, V> DObserved<C, V> of(Object id, V def, boolean mandatory, boolean composite, Supplier<Setable<?, ?>> opposite, boolean synthetic, TriConsumer<C, V, V> toMPS, Supplier<SNode> source) {
         return new DObserved<>(id, def, mandatory, composite, opposite, synthetic, toMPS, null, source);
@@ -60,9 +60,7 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
         return source != null ? source.get() : null;
     }
 
-    //REVIEW: arg 'state' is not used
-    @SuppressWarnings("unused")
-    public void toMPS(State state, O object, T pre, T post) {
+    public void toMPS(O object, T pre, T post) {
         try {
             toMPS.accept(object, pre, post);
         } catch (Throwable t) {
