@@ -72,3 +72,4 @@ jobs:
         run:  |
           . <(java -jar buildTools.jar)
           pushBackToGithub "${{ secrets.GITHUB_TOKEN }}" "automation@modelingvalue.com" "adjusted files [by github actions]"
+
