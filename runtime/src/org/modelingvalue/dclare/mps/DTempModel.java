@@ -28,6 +28,7 @@ import jetbrains.mps.smodel.SModelId;
 import jetbrains.mps.smodel.SNodeUndoableAction;
 import jetbrains.mps.smodel.loading.ModelLoadingState;
 
+@SuppressWarnings("unused")
 public class DTempModel extends EditableModelDescriptor implements EditableSModel {
 
     public DTempModel(String name, SModuleBase module) {
@@ -56,7 +57,7 @@ public class DTempModel extends EditableModelDescriptor implements EditableSMode
                 super.performUndoableAction(action);
             }
         };
-        return new ModelLoadResult<jetbrains.mps.smodel.SModel>(smodel, ModelLoadingState.FULLY_LOADED);
+        return new ModelLoadResult<>(smodel, ModelLoadingState.FULLY_LOADED);
     }
 
     @Override

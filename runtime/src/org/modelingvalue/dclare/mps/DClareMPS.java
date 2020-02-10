@@ -15,93 +15,50 @@
 
 package org.modelingvalue.dclare.mps;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-
-import javax.swing.SwingUtilities;
-
-import org.jetbrains.mps.openapi.language.SLanguage;
-import org.jetbrains.mps.openapi.model.SModel;
-import org.jetbrains.mps.openapi.model.SNode;
-import org.jetbrains.mps.openapi.module.SModule;
-import org.jetbrains.mps.openapi.module.SRepository;
+import jetbrains.mps.checkers.*;
+import jetbrains.mps.checkers.ModelCheckerBuilder.*;
+import jetbrains.mps.editor.runtime.*;
+import jetbrains.mps.errors.*;
+import jetbrains.mps.errors.item.*;
+import jetbrains.mps.errors.item.IssueKindReportItem.*;
+import jetbrains.mps.nodeEditor.*;
+import jetbrains.mps.progress.*;
+import jetbrains.mps.project.*;
+import jetbrains.mps.smodel.language.*;
+import org.jetbrains.mps.openapi.language.*;
+import org.jetbrains.mps.openapi.model.*;
+import org.jetbrains.mps.openapi.module.*;
 import org.jetbrains.mps.openapi.util.Consumer;
 import org.jetbrains.mps.openapi.util.ProgressMonitor;
 import org.modelingvalue.collections.Collection;
-import org.modelingvalue.collections.DefaultMap;
-import org.modelingvalue.collections.Entry;
 import org.modelingvalue.collections.Map;
-import org.modelingvalue.collections.QualifiedSet;
 import org.modelingvalue.collections.Set;
-import org.modelingvalue.collections.util.Concurrent;
-import org.modelingvalue.collections.util.ContextThread;
-import org.modelingvalue.collections.util.ContextThread.ContextPool;
-import org.modelingvalue.collections.util.Pair;
-import org.modelingvalue.collections.util.TriConsumer;
-import org.modelingvalue.collections.util.Triple;
+import org.modelingvalue.collections.*;
+import org.modelingvalue.collections.util.*;
+import org.modelingvalue.collections.util.ContextThread.*;
 import org.modelingvalue.dclare.Action;
-import org.modelingvalue.dclare.ConsistencyError;
-import org.modelingvalue.dclare.Constant;
-import org.modelingvalue.dclare.EmptyMandatoryException;
-import org.modelingvalue.dclare.ImperativeTransaction;
-import org.modelingvalue.dclare.LeafTransaction;
-import org.modelingvalue.dclare.Mutable;
-import org.modelingvalue.dclare.MutableClass;
-import org.modelingvalue.dclare.NonCheckingObserved;
-import org.modelingvalue.dclare.NonDeterministicException;
-import org.modelingvalue.dclare.Observed;
 import org.modelingvalue.dclare.Observer;
-import org.modelingvalue.dclare.OutOfScopeException;
-import org.modelingvalue.dclare.Priority;
-import org.modelingvalue.dclare.ReferencedOrphanException;
-import org.modelingvalue.dclare.ReusableTransaction;
-import org.modelingvalue.dclare.Setable;
-import org.modelingvalue.dclare.State;
-import org.modelingvalue.dclare.ThrowableError;
-import org.modelingvalue.dclare.TooManyChangesException;
-import org.modelingvalue.dclare.TooManyObservedException;
-import org.modelingvalue.dclare.TooManyObserversException;
-import org.modelingvalue.dclare.TransactionException;
-import org.modelingvalue.dclare.Universe;
-import org.modelingvalue.dclare.UniverseTransaction;
-import org.modelingvalue.dclare.mps.DRule.DObserver;
-import org.modelingvalue.dclare.mps.DRule.DObserverTransaction;
+import org.modelingvalue.dclare.*;
+import org.modelingvalue.dclare.ex.*;
+import org.modelingvalue.dclare.mps.DRule.*;
 
-import jetbrains.mps.checkers.AbstractNodeCheckerInEditor;
-import jetbrains.mps.checkers.IAbstractChecker;
-import jetbrains.mps.checkers.IChecker;
-import jetbrains.mps.checkers.ICheckingPostprocessor;
-import jetbrains.mps.checkers.LanguageErrorsCollector;
-import jetbrains.mps.checkers.ModelCheckerBuilder;
-import jetbrains.mps.checkers.ModelCheckerBuilder.ItemsToCheck;
-import jetbrains.mps.editor.runtime.LanguageEditorChecker;
-import jetbrains.mps.errors.CheckerRegistry;
-import jetbrains.mps.errors.item.IssueKindReportItem;
-import jetbrains.mps.errors.item.IssueKindReportItem.CheckerCategory;
-import jetbrains.mps.errors.item.ModelReportItem;
-import jetbrains.mps.errors.item.ModuleReportItem;
-import jetbrains.mps.errors.item.NodeReportItem;
-import jetbrains.mps.errors.item.ReportItem;
-import jetbrains.mps.nodeEditor.Highlighter;
-import jetbrains.mps.progress.EmptyProgressMonitor;
-import jetbrains.mps.project.ProjectBase;
-import jetbrains.mps.smodel.language.LanguageRegistry;
-import jetbrains.mps.smodel.language.LanguageRuntime;
+import javax.swing.*;
+import java.util.List;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.function.*;
+import java.util.stream.*;
 
+@SuppressWarnings("unused")
 public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
 
     protected static final java.util.Map<SRepository, DClareMPS>                                           DCLARE_MPS           = new java.util.concurrent.ConcurrentHashMap<>();
 
     private static final Set<DMessageType>                                                                 MESSAGE_TYPES        = Collection.of(DMessageType.values()).toSet();
 
-    private static final QualifiedSet<Triple<DObject, DFeature<?>, String>, DMessage>                      MESSAGE_QSET         = QualifiedSet.of(m -> Triple.of(m.context(), m.feature(), m.id()));
+    private static final QualifiedSet<Triple<DObject, DFeature, String>, DMessage> MESSAGE_QSET = QualifiedSet.of(m -> Triple.of(m.context(), m.feature(), m.id()));
 
-    protected static final Map<DMessageType, QualifiedSet<Triple<DObject, DFeature<?>, String>, DMessage>> MESSAGE_QSET_MAP     = MESSAGE_TYPES.sequential().toMap(t -> Entry.of(t, MESSAGE_QSET));
+    protected static final Map<DMessageType, QualifiedSet<Triple<DObject, DFeature, String>, DMessage>> MESSAGE_QSET_MAP = MESSAGE_TYPES.sequential().toMap(t -> Entry.of(t, MESSAGE_QSET));
 
     private static final MutableClass                                                                      UNIVERSE_CLASS       = new MutableClass() {
                                                                                                                                     @Override
@@ -140,9 +97,9 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     private final StartStopHandler                                                                         startStopHandler;
     private ImperativeTransaction                                                                          imperativeTransaction;
     private boolean                                                                                        running;
-    protected final Concurrent<ReusableTransaction<DRule.DObserver<?>, DObserverTransaction>>              dObserverTransactions;
-    protected Map<DMessageType, QualifiedSet<Triple<DObject, DFeature<?>, String>, DMessage>>              messages             = MESSAGE_QSET_MAP;
-    protected final DclareForMPSEngine                                                                     engine;
+    protected final Concurrent<ReusableTransaction<DRule.DObserver<?>, DObserverTransaction>> dObserverTransactions;
+    protected Map<DMessageType, QualifiedSet<Triple<DObject, DFeature, String>, DMessage>>    messages = MESSAGE_QSET_MAP;
+    protected final DclareForMPSEngine                                                        engine;
     private final DRepository                                                                              dRepository;
     private final ModuleChecker                                                                            moduleChecker;
     private final ModelChecker                                                                             modelChecker;
@@ -171,7 +128,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
         checkerRegistry.registerChecker(moduleChecker);
         checkerRegistry.registerChecker(modelChecker);
         checkerRegistry.registerChecker(nodeChecker);
-        // cast is needed! javac will fail otherwise
+        //noinspection RedundantCast (cast is needed! javac will fail otherwise)
         List<? extends IChecker<?, ? extends IssueKindReportItem>> checkers = (List<? extends IChecker<?, ? extends IssueKindReportItem>>) checkerRegistry.getCheckers();
         mpsChecker = new ModelCheckerBuilder(new ModelCheckerBuilder.ModelsExtractorImpl().excludeGenerators()).createChecker(checkers);
         Highlighter highlighter = project.getComponent(Highlighter.class);
@@ -358,16 +315,16 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     @SuppressWarnings("rawtypes")
     private void addTooManyChangesExceptionMessage(DObject context, DFeature feature, TooManyChangesException tmce) {
         DMessage message = new DMessage(context, feature, DMessageType.error, "TOO_MANY_CHANGES", "Too many changes, running " + feature + " changes=" + tmce.getNrOfChanges());
-        tmce.getLast().trace(message, (m, r) -> {
+        tmce.getLast().trace(message, (m, r) ->
             m.addSubMessage(new DMessage((DObject) r.mutable(), ((DRule.DObserver) r.observer()).rule(), DMessageType.error, " ", //
-                    "run: " + r.mutable() + "." + ((DRule.DObserver) r.observer()).rule() + " nr: " + r.nrOfChanges()));
-        }, (m, r, s) -> {
+                    "run: " + r.mutable() + "." + ((DRule.DObserver) r.observer()).rule() + " nr: " + r.nrOfChanges())),
+        (m, r, s) ->
             m.addSubMessage(new DMessage((DObject) s.mutable(), (DObserved) s.observed(), DMessageType.error, " ", //
-                    "read: " + s.mutable() + "." + s.observed() + "=" + r.read().get(s)));
-        }, (m, w, s) -> {
+                    "read: " + s.mutable() + "." + s.observed() + "=" + r.read().get(s))),
+        (m, w, s) ->
             m.subMessages().last().addSubMessage(new DMessage((DObject) s.mutable(), (DObserved) s.observed(), DMessageType.error, " ", //
-                    "write: " + s.mutable() + "." + s.observed() + "=" + w.written().get(s)));
-        }, m -> m.subMessages().last(), tmce.getState().universeTransaction().maxNrOfChanges());
+                    "write: " + s.mutable() + "." + s.observed() + "=" + w.written().get(s))),
+        m -> m.subMessages().last(), tmce.getState().universeTransaction().stats().maxNrOfChanges());
         addMessage(message);
     }
 
@@ -439,7 +396,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
         messages = messages.put(message.type(), messages.get(message.type()).add(message));
     }
 
-    public QualifiedSet<Triple<DObject, DFeature<?>, String>, DMessage> getMessages(DMessageType type) {
+    public QualifiedSet<Triple<DObject, DFeature, String>, DMessage> getMessages(DMessageType type) {
         return messages.get(type);
     }
 
@@ -549,13 +506,14 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
                     if (dObject instanceof DModel) {
                         changedModels.change(s -> s.add(((DModel) dObject).original()));
                     } else if (dObject instanceof DNode) {
+                        //noinspection ConstantConditions
                         changedModels.change(s -> s.add(((DNode) dObject).getModel().original()));
                     } else if (dObject instanceof DModule) {
                         changedModules.change(s -> s.add(((DModule) dObject).original()));
                     }
                     e0.getValue().forEach(e1 -> {
                         DObserved mpsObserved = (DObserved) e1.getKey();
-                        mpsObserved.toMPS(post, dObject, e1.getValue().a(), e1.getValue().b());
+                        mpsObserved.toMPS(dObject, e1.getValue().a(), e1.getValue().b());
                     });
                 });
                 if (last) {
@@ -575,12 +533,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     protected void stop() {
         if (imperativeTransaction != null) {
             State state = universeTransaction.preState();
-            project.getModelAccess().executeCommandInEDT(() -> startStopHandler.off(project, new Getter() {
-                @Override
-                public <R> R get(Supplier<R> supplier) {
-                    return state.get(supplier);
-                }
-            }, this));
+            project.getModelAccess().executeCommandInEDT(() -> startStopHandler.off(project, state::get, this));
             CheckerRegistry checkerRegistry = project.getPlatform().findComponent(CheckerRegistry.class);
             if (checkerRegistry == null) {
                 throw new Error("CheckerRegistry not found in platform");

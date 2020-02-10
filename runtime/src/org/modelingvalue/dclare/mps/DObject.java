@@ -15,27 +15,17 @@
 
 package org.modelingvalue.dclare.mps;
 
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
+import jetbrains.mps.errors.item.*;
+import org.jetbrains.mps.openapi.language.*;
+import org.jetbrains.mps.openapi.module.*;
+import org.modelingvalue.collections.*;
+import org.modelingvalue.collections.util.*;
+import org.modelingvalue.dclare.*;
 
-import org.jetbrains.mps.openapi.language.SLanguage;
-import org.jetbrains.mps.openapi.module.SRepository;
-import org.modelingvalue.collections.Collection;
-import org.modelingvalue.collections.Set;
-import org.modelingvalue.collections.util.Pair;
-import org.modelingvalue.dclare.Action;
-import org.modelingvalue.dclare.Direction;
-import org.modelingvalue.dclare.Mutable;
-import org.modelingvalue.dclare.NonCheckingObserved;
-import org.modelingvalue.dclare.NonCheckingObserver;
-import org.modelingvalue.dclare.Observed;
-import org.modelingvalue.dclare.Observer;
-import org.modelingvalue.dclare.Priority;
-import org.modelingvalue.dclare.Setable;
+import java.util.function.*;
+import java.util.stream.*;
 
-import jetbrains.mps.errors.item.IssueKindReportItem;
-
-@SuppressWarnings("rawtypes")
+@SuppressWarnings({"rawtypes", "unused"})
 public abstract class DObject implements Mutable {
 
     public static final Observed<DObject, DType>                                    TYPE                      = NonCheckingObserved.of("TYPE", new DType("<DUMMY_TYPE>") {
@@ -55,9 +45,9 @@ public abstract class DObject implements Mutable {
                                                                                                                   }
                                                                                                               });
 
-    protected static final Observer<DObject>                                        TYPE_RULE                 = observer(TYPE, o -> {
-                                                                                                                  TYPE.set(o, o.getType());
-                                                                                                              }, Priority.preDepth);
+    protected static final Observer<DObject>                                        TYPE_RULE                 = observer(TYPE,
+                                                                                                                    o -> TYPE.set(o, o.getType()),
+                                                                                                                    Priority.preDepth);
 
     public static final Observed<DObject, DAttribute>                               CONTAINING_ATTRIBUTE      = NonCheckingObserved.of("$CONTAINING_ATTRIBUTE", null);
 
@@ -197,6 +187,7 @@ public abstract class DObject implements Mutable {
         return Mutable.D_PARENT_CONTAINING.get(this) == null || CONTAINING_ATTRIBUTE.get(this) != null;
     }
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     protected boolean isExternal() {
         return isReadOnly() || !dClareMPS().getRepository().original().equals(getOriginalRepository());
     }

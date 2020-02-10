@@ -23,6 +23,7 @@ import org.modelingvalue.collections.util.Triple;
 import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.Setable;
 
+@SuppressWarnings("unused")
 public class DNodeType extends DType {
 
     protected final Set<SLanguage> languages;

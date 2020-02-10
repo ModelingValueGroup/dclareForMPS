@@ -41,11 +41,11 @@ jobs:
           correctEols
           correctHeaders header
 
-      - name: "download dependencies (MPS and from pom)"
+      - name: "download dependencies (MPS and jars from pom)"
         run:  |
           . <(java -jar buildTools.jar)
           . project.sh
-          getAllDependencies ${{ secrets.GITHUB_TOKEN }}
+          getAllDependencies ${{ secrets.GITHUB_TOKEN }} "${{ secrets.SCALEWAY_ACCESS_KEY }}" "${{ secrets.SCALEWAY_SECRET_KEY }}"
           installMps "$mpsDir" "$mpsVersion"
 
       - name: "runtime: build"
@@ -57,10 +57,10 @@ jobs:
       - name: "runtime: generate javadoc"
         run:  ant javadoc
 
-      - name: "mps-plugin: build"
+      - name: "dclare-plugin: build"
         run:  |
           . project.sh
-          ant -debug -Dmps_home="$mpsDir" -f mps_build.xml generate build
+          ant -Dmps_home="$mpsDir" -f mps_build.xml generate build
 
       - name: "publish action-artifact zip"
         uses: actions/upload-artifact@v1
