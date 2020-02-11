@@ -23,10 +23,11 @@ import java.util.function.Supplier;
 import org.jetbrains.mps.openapi.language.SProperty;
 import org.jetbrains.mps.openapi.model.SNode;
 import org.modelingvalue.dclare.Constant;
-import org.modelingvalue.dclare.ex.EmptyMandatoryException;
+import org.modelingvalue.dclare.ImperativeTransaction;
 import org.modelingvalue.dclare.LeafTransaction;
 import org.modelingvalue.dclare.Mutable;
 import org.modelingvalue.dclare.State;
+import org.modelingvalue.dclare.ex.EmptyMandatoryException;
 
 import jetbrains.mps.smodel.adapter.structure.property.InvalidProperty;
 
@@ -121,8 +122,11 @@ public interface DAttribute<O, T> extends DFeature {
 
         @Override
         public V get(C object) {
-            if (object instanceof DNode && !(LeafTransaction.getCurrent() instanceof DRule.DObserverTransaction)) {
-                ((DNode) object).sNode().getProperty(sProperty);
+            if (object instanceof DNode) {
+                LeafTransaction current = LeafTransaction.getCurrent();
+                if (current == null || current instanceof ImperativeTransaction) {
+                    ((DNode) object).sNode().getProperty(sProperty);
+                }
             }
             return super.get(object);
         }

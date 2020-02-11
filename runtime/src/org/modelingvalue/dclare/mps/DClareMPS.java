@@ -292,7 +292,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
             }
         } else {
             DClareMPS dClareMPS = sRepository != null ? DCLARE_MPS.get(sRepository) : null;
-            return dClareMPS != null ? dClareMPS.imperativeTransaction.state().get(() -> {
+            return dClareMPS != null && dClareMPS.isRunning() ? dClareMPS.imperativeTransaction.state().get(() -> {
                 try {
                     return supplier.get();
                 } catch (Throwable t) {
@@ -613,12 +613,14 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     private class ModuleChecker extends IChecker.AbstractModuleChecker<ModuleReportItem> {
         @Override
         public void check(SModule sModule, SRepository repository, Consumer<? super ModuleReportItem> consumer, ProgressMonitor monitor) {
-            imperativeTransaction.state().run(() -> {
-                DModule dModule = DModule.of(sModule);
-                for (DIssue issue : DObject.DCLARE_ISSUES.get(dModule)) {
-                    consumer.consume((ModuleReportItem) issue.getItem());
-                }
-            });
+            if (isRunning()) {
+                imperativeTransaction.state().run(() -> {
+                    DModule dModule = DModule.of(sModule);
+                    for (DIssue issue : DObject.DCLARE_ISSUES.get(dModule)) {
+                        consumer.consume((ModuleReportItem) issue.getItem());
+                    }
+                });
+            }
         }
 
         @Override
@@ -630,12 +632,14 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     private class ModelChecker extends IChecker.AbstractModelChecker<ModelReportItem> {
         @Override
         public void check(SModel sModel, SRepository repository, Consumer<? super ModelReportItem> consumer, ProgressMonitor monitor) {
-            imperativeTransaction.state().run(() -> {
-                DModel dModel = DModel.of(sModel);
-                for (DIssue issue : DObject.DCLARE_ISSUES.get(dModel)) {
-                    consumer.consume((ModelReportItem) issue.getItem());
-                }
-            });
+            if (isRunning()) {
+                imperativeTransaction.state().run(() -> {
+                    DModel dModel = DModel.of(sModel);
+                    for (DIssue issue : DObject.DCLARE_ISSUES.get(dModel)) {
+                        consumer.consume((ModelReportItem) issue.getItem());
+                    }
+                });
+            }
         }
 
         @Override
@@ -666,7 +670,9 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
 
                 @Override
                 public void check(SNode root, SRepository repository, Consumer<? super NodeReportItem> errorCollector, ProgressMonitor monitor) {
-                    imperativeTransaction.state().run(() -> rootChecker.check(root, repository, errorCollector, monitor));
+                    if (isRunning()) {
+                        imperativeTransaction.state().run(() -> rootChecker.check(root, repository, errorCollector, monitor));
+                    }
                 }
             };
         }
@@ -689,12 +695,14 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
 
         @Override
         protected void checkNodeInEditor(SNode sNode, LanguageErrorsCollector errorsCollector, SRepository repository) {
-            imperativeTransaction.state().run(() -> {
-                DNode dNode = DNode.of(sNode.getConcept(), sNode.getReference());
-                for (DIssue issue : DObject.DCLARE_ISSUES.get(dNode)) {
-                    errorsCollector.addError((NodeReportItem) issue.getItem());
-                }
-            });
+            if (isRunning()) {
+                imperativeTransaction.state().run(() -> {
+                    DNode dNode = DNode.of(sNode.getConcept(), sNode.getReference());
+                    for (DIssue issue : DObject.DCLARE_ISSUES.get(dNode)) {
+                        errorsCollector.addError((NodeReportItem) issue.getItem());
+                    }
+                });
+            }
         }
 
         @Override
