@@ -36,14 +36,14 @@ jobs:
 
       - name: "(re)generate some files"
         run:  |
-          . <(java -jar buildTools.jar)
+          . <(java -jar ~/buildTools.jar)
           generateAll
           correctEols
           correctHeaders header
 
       - name: "download dependencies (MPS and jars from pom)"
         run:  |
-          . <(java -jar buildTools.jar)
+          . <(java -jar ~/buildTools.jar)
           . project.sh
           getAllDependencies ${{ secrets.GITHUB_TOKEN }} "${{ secrets.SCALEWAY_ACCESS_KEY }}" "${{ secrets.SCALEWAY_SECRET_KEY }}"
           installMps "$mpsDir" "$mpsVersion"
@@ -61,15 +61,16 @@ jobs:
         run:  |
           . project.sh
           ant -Dmps_home="$mpsDir" -f mps_build.xml generate build
+          (cd build/artifacts/DclareForMPS; unzip DclareForMPS.zip) # the subsequent actions/upload-artifact step would re-zip the zip
 
       - name: "publish action-artifact zip"
         uses: actions/upload-artifact@v1
         with:
-          name: DclareForMPS.zip
-          path: build/artifacts/DclareForMPS/DclareForMPS.zip
+          name: DclareForMPS
+          path: build/artifacts/DclareForMPS/DclareForMPS
 
       - name: "push changes back to github"
         run:  |
-          . <(java -jar buildTools.jar)
+          . <(java -jar ~/buildTools.jar)
           pushBackToGithub "${{ secrets.GITHUB_TOKEN }}" "automation@modelingvalue.com" "adjusted files [by github actions]"
 
