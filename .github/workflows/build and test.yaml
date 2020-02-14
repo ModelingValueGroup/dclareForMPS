@@ -72,6 +72,7 @@ jobs:
         run:  |
           . project.sh
           ant -Dmps_home="$mpsDir" -DversionExtra=$VERSION_EXTRA -f mps_build.xml generate build
+          ant -Dmps_home="$mpsDir" -DversionExtra=$VERSION_EXTRA -f mps_build.xml generate build
 
       - name: "unzip for actions/upload-artifact"
         run:  |
