@@ -76,6 +76,13 @@ jobs:
           name: DclareForMPS
           path: build/artifacts/DclareForMPS/DclareForMPS
 
+      - name: "Upload to JetBrains"
+          uses: ModelingValueGroup/upload-jetbrains-plugin-action@master
+          with:
+            file    : "mbuild/artifacts/DclareForMPS/DclareForMPS.zip"
+            hubToken: "${{ secrets.JETBRAINS_PUBLISH_TOKEN }}"
+            pluginId: "13797"
+
       - name: "push changes back to github"
         run:  |
           . <(java -jar ~/buildTools.jar)
