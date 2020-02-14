@@ -280,7 +280,7 @@
       </node>
       <node concept="3_J27D" id="55DSsnTM$bO" role="3s6cr7">
         <node concept="3Mxwew" id="55DSsnTM$bQ" role="3MwsjC">
-          <property role="3MwjfP" value="dclare for MPS - rule based programming for MPS" />
+          <property role="3MwjfP" value="dclare for MPS - rule based programming for MPS " />
         </node>
       </node>
       <node concept="m$_yB" id="5Eq6vdsMAr9" role="m$_yh">
