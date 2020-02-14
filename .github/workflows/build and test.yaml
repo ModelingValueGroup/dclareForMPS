@@ -34,18 +34,21 @@ jobs:
           path.variable.mps_home=./MPS
           EOF
 
-      - name: "determine VERSION_EXTRA"
+      - name: "determine versionExtra and versionStamp"
         run:  |
           branch="${GITHUB_REF#refs/heads/}"
           if [[ "$branch" == master ]]; then
-            VERSION_EXTRA=
+            versionExtraArg="-DversionExtra="
+            versionStampArg="-DversionStamp="
           elif [[ "$branch" == develop ]]; then
-            VERSION_EXTRA="beta$(date +%y%m%d%H%M)"
+            versionExtraArg="-DversionExtra=beta"
+            versionStampArg=
           else
-            VERSION_EXTRA="alpha$(date +%y%m%d%H%M)"
+            versionExtraArg="-DversionExtra=alpha"
+            versionStampArg=
           fi
-          echo "::set-env name=VERSION_EXTRA::$VERSION_EXTRA"
-          echo "::info::appending '$VERSION_EXTRA' to version"
+          echo "::set-env name=versionExtraArg::$versionExtraArg"
+          echo "::set-env name=versionStampArg::$versionStampArg"
 
       - name: "(re)generate some files"
         run:  |
@@ -72,24 +75,12 @@ jobs:
 
       - name: "dclare-plugin: build"
         run:  |
+          . <(java -jar ~/buildTools.jar)
           . project.sh
-          cp mps_build.xml /tmp/pre
-          ant -Dmps_home="$mpsDir" -DversionExtra=$VERSION_EXTRA -f mps_build.xml generate build
-          cp mps_build.xml /tmp/pst
-
-          if ! diff -q <(sed -e '$a\' /tmp/pre) <(sed -e '$a\' /tmp/pst) >/dev/null; then
-            diff /tmp/pre /tmp/pst | sed 's/^/   DIFF|/' || :
-            echo "::info::building changed the ant file: clean sources and build again..."
-            ant -Dmps_home="$mpsDir" -DversionExtra=$VERSION_EXTRA -f mps_build.xml cleanSources clean
-            ant -Dmps_home="$mpsDir" -DversionExtra=$VERSION_EXTRA -f mps_build.xml generate build
-            cp mps_build.xml /tmp/pst2
-
-            if ! diff -q <(sed -e '$a\' /tmp/pst) <(sed -e '$a\' /tmp/pst2) >/dev/null; then
-              diff /tmp/pst /tmp/pst2 | sed 's/^/   DIFF|/' || :
-              echo "::error::after rebuild the ant file changed again!"
-              exit 25
-            fi
-          fi
+          action() {
+            ant -Dmps_home="$mpsDir" $versionExtraArg $versionStampArg -f mps_build.xml cleanSources clean generate build
+          }
+          doubleBuild action mps_build.xml
 
       - name: "unzip for actions/upload-artifact"
         run:  |

@@ -31,6 +31,9 @@
       <concept id="2755237150521975431" name="jetbrains.mps.build.structure.BuildVariableMacroInitWithString" flags="ng" index="aVJcg">
         <child id="2755237150521975437" name="value" index="aVJcq" />
       </concept>
+      <concept id="244868996532454372" name="jetbrains.mps.build.structure.BuildVariableMacroInitWithDate" flags="ng" index="hHN3E">
+        <property id="244868996532454384" name="pattern" index="hHN3Y" />
+      </concept>
       <concept id="7321017245476976379" name="jetbrains.mps.build.structure.BuildRelativePath" flags="ng" index="iG8Mu">
         <child id="7321017245477039051" name="compositePart" index="iGT6I" />
       </concept>
@@ -177,12 +180,44 @@
     <property role="TrG5h" value="DclareForMPS" />
     <property role="2DA0ip" value="../../" />
     <property role="turDy" value="mps_build.xml" />
+    <node concept="2kB4xC" id="ffBaz0wevf" role="1l3spd">
+      <property role="TrG5h" value="version" />
+      <node concept="aVJcg" id="ffBaz0wevJ" role="aVJcv">
+        <node concept="NbPM2" id="ffBaz0wevI" role="aVJcq">
+          <node concept="3Mxwew" id="ffBaz0wevH" role="3MwsjC">
+            <property role="3MwjfP" value="1.1.1" />
+          </node>
+        </node>
+      </node>
+    </node>
     <node concept="2kB4xC" id="ffBaz0vcUu" role="1l3spd">
       <property role="TrG5h" value="versionExtra" />
       <node concept="aVJcg" id="ffBaz0vpZ4" role="aVJcv">
         <node concept="NbPM2" id="ffBaz0vpZ3" role="aVJcq">
           <node concept="3Mxwew" id="ffBaz0vpZ2" role="3MwsjC">
-            <property role="3MwjfP" value="dev" />
+            <property role="3MwjfP" value="devlocal" />
+          </node>
+        </node>
+      </node>
+    </node>
+    <node concept="2kB4xC" id="ffBaz0wex2" role="1l3spd">
+      <property role="TrG5h" value="versionStamp" />
+      <node concept="hHN3E" id="ffBaz0wCFe" role="aVJcv">
+        <property role="hHN3Y" value="yyMMddHHmm" />
+      </node>
+    </node>
+    <node concept="2kB4xC" id="ffBaz0wCCV" role="1l3spd">
+      <property role="TrG5h" value="fullVersion" />
+      <node concept="aVJcg" id="ffBaz0wCDR" role="aVJcv">
+        <node concept="NbPM2" id="ffBaz0wCDQ" role="aVJcq">
+          <node concept="3Mxwey" id="ffBaz0wCDP" role="3MwsjC">
+            <ref role="3Mxwex" node="ffBaz0wevf" resolve="version" />
+          </node>
+          <node concept="3Mxwey" id="ffBaz0wCE7" role="3MwsjC">
+            <ref role="3Mxwex" node="ffBaz0vcUu" resolve="versionExtra" />
+          </node>
+          <node concept="3Mxwey" id="ffBaz0wCEm" role="3MwsjC">
+            <ref role="3Mxwex" node="ffBaz0wex2" resolve="versionStamp" />
           </node>
         </node>
       </node>
@@ -254,11 +289,8 @@
         </node>
       </node>
       <node concept="3_J27D" id="5TmHY1kYrb9" role="m$_w8">
-        <node concept="3Mxwew" id="ffBaz0vcVm" role="3MwsjC">
-          <property role="3MwjfP" value="1.1.1" />
-        </node>
-        <node concept="3Mxwey" id="ffBaz0vcVy" role="3MwsjC">
-          <ref role="3Mxwex" node="ffBaz0vcUu" resolve="versionExtra" />
+        <node concept="3Mxwey" id="ffBaz0wPJz" role="3MwsjC">
+          <ref role="3Mxwex" node="ffBaz0wCCV" resolve="fullVersion" />
         </node>
       </node>
       <node concept="m$_yC" id="5TmHY1kYrbc" role="m$_yJ">
