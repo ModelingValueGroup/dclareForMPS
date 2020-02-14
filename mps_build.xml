@@ -35,7 +35,7 @@
       <idea-plugin xmlns:xi="http://www.w3.org/2001/XInclude">
         <id>DclareForMPS</id>
         <name>DclareForMPS</name>
-        <description>dclare for MPS - rule based programming for MPS</description>
+        <description>dclare for MPS - rule based programming for MPS </description>
         <version>1.1.1${versionExtra}</version>
         <vendor url="https://www.modelingvalue.nl">Modeling Value Group</vendor>
         <depends>jetbrains.mps.core</depends>
