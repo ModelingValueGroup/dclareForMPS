@@ -78,14 +78,17 @@ jobs:
           cp mps_build.xml /tmp/pst
 
           if ! diff -q /tmp/pre /tmp/pst >/dev/null; then
-            diff /tmp/pre /tmp/pst
+            echo "::info::building changed the ant file: clean sources and build again..."
+            diff /tmp/pre /tmp/pst || :
+            hexdump -C /tmp/pre | tail | sed 's/^/   PRE /'
+            hexdump -C /tmp/pst | tail | sed 's/^/   PST /'
             echo "::info::building changed the ant file: clean sources and build again..."
             ant -Dmps_home="$mpsDir" -DversionExtra=$VERSION_EXTRA -f mps_build.xml cleanSources clean
             ant -Dmps_home="$mpsDir" -DversionExtra=$VERSION_EXTRA -f mps_build.xml generate build
             cp mps_build.xml /tmp/pst2
 
             if ! diff -q /tmp/pre /tmp/pst2 >/dev/null; then
-              diff /tmp/pst /tmp/pst2
+              diff /tmp/pst /tmp/pst2 || :
               echo "::info::after rebuild the ant file changed again!"
             fi
           fi
