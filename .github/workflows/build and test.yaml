@@ -61,7 +61,13 @@ jobs:
         run:  |
           . project.sh
           ant -Dmps_home="$mpsDir" -f mps_build.xml generate build
-          (cd build/artifacts/DclareForMPS; unzip DclareForMPS.zip) # the subsequent actions/upload-artifact step would re-zip the zip
+
+      - name: "unzip for actions/upload-artifact"
+        run:  |
+          # the subsequent actions/upload-artifact step would re-zip the zip, so we unzip and the action below will rezip...
+          mkdir build/artifacts/DclareForMPS/DclareForMPS
+          cd build/artifacts/DclareForMPS/DclareForMPS
+          unzip ../DclareForMPS.zip
 
       - name: "publish action-artifact zip"
         uses: actions/upload-artifact@v1
