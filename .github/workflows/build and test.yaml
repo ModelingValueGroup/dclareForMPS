@@ -57,10 +57,21 @@ jobs:
       - name: "runtime: generate javadoc"
         run:  ant javadoc
 
+      - name: "determine VERSION_EXTRA"
+        run:  |
+          branch="${GITHUB_REF#refs/heads/}"
+          if [[ "$branch" == master ]]; then
+            echo "::set-env name=VERSION_EXTRA::"
+          elif [[ "$branch" == develop ]]; then
+            echo "::set-env name=VERSION_EXTRA::beta$(date +%y%m%d%H%M)"
+          else
+            echo "::set-env name=VERSION_EXTRA::alpha$(date +%y%m%d%H%M)"
+          fi
+
       - name: "dclare-plugin: build"
         run:  |
           . project.sh
-          ant -Dmps_home="$mpsDir" -f mps_build.xml generate build
+          ant -Dmps_home="$mpsDir" -DversionExtra=$VERSION_EXTRA -f mps_build.xml generate build
 
       - name: "unzip for actions/upload-artifact"
         run:  |
