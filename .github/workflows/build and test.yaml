@@ -73,14 +73,21 @@ jobs:
       - name: "dclare-plugin: build"
         run:  |
           . project.sh
-          preSum="$(md5sum mps_build.xml)"
+          cp mps_build.xml /tmp/pre
           ant -Dmps_home="$mpsDir" -DversionExtra=$VERSION_EXTRA -f mps_build.xml generate build
-          pstSum="$(md5sum mps_build.xml)"
-          if [[ "$preSum" != "$pstSum" ]]; then
-            echo "::info::building changed the ant file ($preSum!=$pstSum): clean sources and build again..."
+          cp mps_build.xml /tmp/pst
+
+          if ! diff -q /tmp/pre /tmp/pst >/dev/null; then
+            diff /tmp/pre /tmp/pst
+            echo "::info::building changed the ant file: clean sources and build again..."
             ant -Dmps_home="$mpsDir" -DversionExtra=$VERSION_EXTRA -f mps_build.xml cleanSources clean
             ant -Dmps_home="$mpsDir" -DversionExtra=$VERSION_EXTRA -f mps_build.xml generate build
-            echo "::info::after rebuild the md5sum of the ant file is $(md5sum mps_build.xml)"
+            cp mps_build.xml /tmp/pst2
+
+            if ! diff -q /tmp/pre /tmp/pst2 >/dev/null; then
+              diff /tmp/pst /tmp/pst2
+              echo "::info::after rebuild the ant file changed again!"
+            fi
           fi
 
       - name: "unzip for actions/upload-artifact"
