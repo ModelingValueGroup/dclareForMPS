@@ -34,6 +34,19 @@ jobs:
           path.variable.mps_home=./MPS
           EOF
 
+      - name: "determine VERSION_EXTRA"
+        run:  |
+          branch="${GITHUB_REF#refs/heads/}"
+          if [[ "$branch" == master ]]; then
+            VERSION_EXTRA=
+          elif [[ "$branch" == develop ]]; then
+            VERSION_EXTRA="beta$(date +%y%m%d%H%M)"
+          else
+            VERSION_EXTRA="alpha$(date +%y%m%d%H%M)"
+          fi
+          echo "::set-env name=VERSION_EXTRA::$VERSION_EXTRA"
+          echo "::info::appending '$VERSION_EXTRA' to version"
+
       - name: "(re)generate some files"
         run:  |
           . <(java -jar ~/buildTools.jar)
@@ -57,22 +70,18 @@ jobs:
       - name: "runtime: generate javadoc"
         run:  ant javadoc
 
-      - name: "determine VERSION_EXTRA"
-        run:  |
-          branch="${GITHUB_REF#refs/heads/}"
-          if [[ "$branch" == master ]]; then
-            echo "::set-env name=VERSION_EXTRA::"
-          elif [[ "$branch" == develop ]]; then
-            echo "::set-env name=VERSION_EXTRA::beta$(date +%y%m%d%H%M)"
-          else
-            echo "::set-env name=VERSION_EXTRA::alpha$(date +%y%m%d%H%M)"
-          fi
-
       - name: "dclare-plugin: build"
         run:  |
           . project.sh
+          preSum="$(md5sum mps_build.xml)"
           ant -Dmps_home="$mpsDir" -DversionExtra=$VERSION_EXTRA -f mps_build.xml generate build
-          ant -Dmps_home="$mpsDir" -DversionExtra=$VERSION_EXTRA -f mps_build.xml generate build
+          pstSum="$(md5sum mps_build.xml)"
+          if [[ "$preSum" != "$pstSum" ]]; then
+            echo "::info::building changed the ant file ($preSum!=$pstSum): clean sources and build again..."
+            ant -Dmps_home="$mpsDir" -DversionExtra=$VERSION_EXTRA -f mps_build.xml cleanSources clean
+            ant -Dmps_home="$mpsDir" -DversionExtra=$VERSION_EXTRA -f mps_build.xml generate build
+            echo "::info::after rebuild the md5sum of the ant file is $(md5sum mps_build.xml)"
+          fi
 
       - name: "unzip for actions/upload-artifact"
         run:  |
