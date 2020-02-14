@@ -77,19 +77,17 @@ jobs:
           ant -Dmps_home="$mpsDir" -DversionExtra=$VERSION_EXTRA -f mps_build.xml generate build
           cp mps_build.xml /tmp/pst
 
-          if ! diff -q /tmp/pre /tmp/pst >/dev/null; then
-            echo "::info::building changed the ant file: clean sources and build again..."
-            diff /tmp/pre /tmp/pst || :
-            hexdump -C /tmp/pre | tail | sed 's/^/   PRE /'
-            hexdump -C /tmp/pst | tail | sed 's/^/   PST /'
+          if ! diff -q <(sed -e '$a\' /tmp/pre) <(sed -e '$a\' /tmp/pst) >/dev/null; then
+            diff /tmp/pre /tmp/pst | sed 's/^/   DIFF|/' || :
             echo "::info::building changed the ant file: clean sources and build again..."
             ant -Dmps_home="$mpsDir" -DversionExtra=$VERSION_EXTRA -f mps_build.xml cleanSources clean
             ant -Dmps_home="$mpsDir" -DversionExtra=$VERSION_EXTRA -f mps_build.xml generate build
             cp mps_build.xml /tmp/pst2
 
-            if ! diff -q /tmp/pre /tmp/pst2 >/dev/null; then
-              diff /tmp/pst /tmp/pst2 || :
-              echo "::info::after rebuild the ant file changed again!"
+            if ! diff -q <(sed -e '$a\' /tmp/pst) <(sed -e '$a\' /tmp/pst2) >/dev/null; then
+              diff /tmp/pst /tmp/pst2 | sed 's/^/   DIFF|/' || :
+              echo "::error::after rebuild the ant file changed again!"
+              exit 25
             fi
           fi
 
