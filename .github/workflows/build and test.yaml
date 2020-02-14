@@ -78,7 +78,7 @@ jobs:
       - name: "Upload to JetBrains"
         uses: ModelingValueGroup/upload-jetbrains-plugin-action@master
         with:
-          file    : "mbuild/artifacts/DclareForMPS/DclareForMPS.zip"
+          file    : "build/artifacts/DclareForMPS/DclareForMPS.zip"
           hubToken: "${{ secrets.JETBRAINS_PUBLISH_TOKEN }}"
           pluginId: "13797"
           trace   : true
