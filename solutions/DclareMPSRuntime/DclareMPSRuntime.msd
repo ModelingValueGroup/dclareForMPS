@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <solution name="DclareMPSRuntime" uuid="55d6b6f5-8095-4cd0-a39b-779da8d12940" moduleVersion="0" compileInMPS="true">
   <models>
-    <modelRoot contentPath="${module}/lib" type="java_classes">
-      <sourceRoot location="DclareMps.jar" />
-    </modelRoot>
     <modelRoot contentPath="${module}/models" type="default">
       <sourceRoot location="." />
+    </modelRoot>
+    <modelRoot contentPath="${module}/lib" type="java_classes">
+      <sourceRoot location="DclareMps.jar" />
     </modelRoot>
   </models>
   <facets>

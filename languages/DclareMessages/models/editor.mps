@@ -38,6 +38,7 @@
       <concept id="1186414536763" name="jetbrains.mps.lang.editor.structure.BooleanStyleSheetItem" flags="ln" index="VOi$J">
         <property id="1186414551515" name="flag" index="VOm3f" />
       </concept>
+      <concept id="1186414928363" name="jetbrains.mps.lang.editor.structure.SelectableStyleSheetItem" flags="ln" index="VPM3Z" />
       <concept id="1139535219966" name="jetbrains.mps.lang.editor.structure.CellActionMapDeclaration" flags="ig" index="1h_SRR">
         <reference id="1139535219968" name="applicableConcept" index="1h_SK9" />
         <child id="1139535219969" name="item" index="1h_SK8" />
@@ -180,6 +181,16 @@
             <property role="3F0ifm" value="OFF" />
           </node>
         </node>
+      </node>
+      <node concept="3EZMnI" id="2TyoUkhlX_M" role="3EZMnx">
+        <node concept="VPM3Z" id="2TyoUkhlX_O" role="3F10Kt" />
+        <node concept="3F0ifn" id="2TyoUkhlX_Q" role="3EZMnx">
+          <property role="3F0ifm" value="changes  " />
+        </node>
+        <node concept="3F0A7n" id="57dWhtn7TYW" role="3EZMnx">
+          <ref role="1NtTu8" to="wknp:2TyoUkhlXBM" resolve="changes" />
+        </node>
+        <node concept="2iRfu4" id="2TyoUkhlX_R" role="2iSdaV" />
       </node>
       <node concept="2iRkQZ" id="1DUQ$OwrN4k" role="2iSdaV" />
       <node concept="3EZMnI" id="1KqhpdG7b8B" role="3EZMnx">
