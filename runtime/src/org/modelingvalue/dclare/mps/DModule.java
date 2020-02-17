@@ -353,12 +353,13 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
                 found = dModel;
             }
         }
-        if (found == null && original() instanceof Language) {
+        if (found == null && (original() instanceof Language || !hasRuleSets(LANGUAGES.get(this)))) {
             for (SModel sModel : dClareMPS().read(() -> original().getModels())) {
                 if (sModel.getName().getSimpleName().equals(name)) {
                     found = DModel.of(sModel);
                     REFERENCED.set(this, Set::add, found);
                     MODELS.set(this, Set::add, found);
+                    DModel.USED_LANGUAGES.set(found, Set::addAll, DClareMPS.ALL_LANGUAGES.get(dClareMPS()));
                 }
             }
         }
@@ -367,7 +368,8 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
             SModelBase sModel = dClareMPS().command(temporal ? () -> new DTempModel(name, sModule) : () -> (SModelBase) sModule.getModelRoots().iterator().next().createModel(name));
             found = DModel.of(sModel);
             MODELS.set(this, Set::add, found);
-            if (original() instanceof Language) {
+            if (original() instanceof Language || !hasRuleSets(LANGUAGES.get(this))) {
+                DModel.USED_LANGUAGES.set(found, Set::addAll, DClareMPS.ALL_LANGUAGES.get(dClareMPS()));
                 REFERENCED.set(this, Set::add, found);
             }
         }

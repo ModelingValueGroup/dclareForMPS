@@ -230,6 +230,13 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
             }
 
             @Override
+            protected void clear(LeafTransaction tx, Mutable orphan) {
+                if (!(orphan instanceof DNode && ((DNode) orphan).isReadOnly())) {
+                    super.clear(tx, orphan);
+                }
+            };
+
+            @Override
             protected void checkConsistency(State pre, State post) {
                 if (imperativeTransaction != null) {
                     super.checkConsistency(pre, post);
