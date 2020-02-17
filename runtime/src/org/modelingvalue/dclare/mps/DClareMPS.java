@@ -77,6 +77,7 @@ import org.modelingvalue.dclare.ReusableTransaction;
 import org.modelingvalue.dclare.Setable;
 import org.modelingvalue.dclare.State;
 import org.modelingvalue.dclare.Universe;
+import org.modelingvalue.dclare.UniverseStatistics;
 import org.modelingvalue.dclare.UniverseTransaction;
 import org.modelingvalue.dclare.ex.ConsistencyError;
 import org.modelingvalue.dclare.ex.EmptyMandatoryException;
@@ -263,22 +264,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
         }, "dclare-waitForEnd");
         waitForEndThread.setDaemon(true);
         waitForEndThread.start();
-        statsThread = new Thread(() -> {
-            try {
-                for (; ; ) {
-                    Thread.sleep(300);
-                    if (thePool.isShutdown()) {
-                        break;
-                    }
-                    universeTransaction.stats().bumpAndGetTotalChanges();
-                    project.getModelAccess().executeCommandInEDT(() -> startStopHandler.stats(universeTransaction.stats()));
-                }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }, "dclare-stats");
-        statsThread.setDaemon(true);
-        statsThread.start();
+        statsThread = new StatsUpdater();
     }
 
     @Override
@@ -766,4 +752,32 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
         }
     }
 
+    private class StatsUpdater extends Thread {
+        private UniverseStatistics prevStats;
+
+        public StatsUpdater() {
+            super("dclare-stats");
+            setDaemon(true);
+            start();
+        }
+
+        @Override
+        public void run() {
+            try {
+                for (; ; ) {
+                    Thread.sleep(300);
+                    if (DClareMPS.this.thePool.isShutdown()) {
+                        break;
+                    }
+                    UniverseStatistics stats = DClareMPS.this.universeTransaction.stats();
+                    if (prevStats == null || !prevStats.equals(stats)) {
+                        prevStats = new UniverseStatistics(stats);
+                        project.getModelAccess().executeCommandInEDT(() -> startStopHandler.stats(stats));
+                    }
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
