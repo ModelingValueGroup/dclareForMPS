@@ -147,7 +147,7 @@ public class DNode extends DIdentifiedObject implements SNode {
 
     private static final Observer<DNode>                                           USED_LANGUAGES_RULE    = DObject.observer(USED_LANGUAGES, o -> USED_LANGUAGES.set(o, o.getChildren().flatMap(DNode.USED_LANGUAGES::get).toSet().add(o.getConcept().getLanguage())), Priority.preDepth);
 
-    private static final Observer<DNode>                                           USED_MODELS_RULE       = DObject.observer(USED_MODELS, o -> USED_MODELS.set(o, o.getChildren().flatMap(DNode.USED_MODELS::get).toSet().addAll(o.getReferenced().map(                                   //
+    private static final Observer<DNode>                                           USED_MODELS_RULE       = DObject.observer(USED_MODELS, o -> USED_MODELS.set(o, o.getChildren().flatMap(DNode.USED_MODELS::get).toSet().addAll(o.getReferenced().filter(n -> !n.isDclareOnly()).map(    //
             r -> {
                 DModel dm = MODEL.get(r);
                 if (dm == null) {
