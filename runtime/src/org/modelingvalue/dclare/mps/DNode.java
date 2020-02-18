@@ -61,13 +61,15 @@ public class DNode extends DIdentifiedObject implements SNode {
 
     private static final Constant<Triple<Set<SLanguage>, SConcept, String>, DType> NODE_TYPE              = Constant.of("NODE_TYPE", DNodeType::new);
 
-    public static final Observed<DNode, DModel>                                    MODEL                  = NonCheckingObserved.of("$MODEL", null, (tx, o, pre, post) -> {
+    public static final Observed<DNode, DModel>                                    MODEL                  = NonCheckingObserved.of("$MODEL", null);
+
+    public static final Observed<DNode, DNode>                                     ROOT                   = NonCheckingObserved.of("$ROOT", null, (tx, o, pre, post) -> {
                                                                                                               Set<Pair<DObject, IssueKindReportItem>> items = MPS_ISSUES.get(o);
                                                                                                               if (pre != null) {
-                                                                                                                  DModel.ALL_MPS_ISSUES.set(pre, Set::removeAll, items);
+                                                                                                                  DNode.ALL_MPS_ISSUES.set(pre, Set::removeAll, items);
                                                                                                               }
                                                                                                               if (post != null) {
-                                                                                                                  DModel.ALL_MPS_ISSUES.set(post, Set::addAll, items);
+                                                                                                                  DNode.ALL_MPS_ISSUES.set(post, Set::addAll, items);
                                                                                                               }
                                                                                                           });
 
@@ -145,6 +147,11 @@ public class DNode extends DIdentifiedObject implements SNode {
                                                                                                               MODEL.set(o, p != null ? MODEL.get(p) : o.getAncestor(DModel.class));
                                                                                                           }, Priority.preDepth);
 
+    private static final Observer<DNode>                                           ROOT_RULE              = DObject.observer(ROOT, o -> {
+                                                                                                              DNode p = o.getParent();
+                                                                                                              ROOT.set(o, p != null ? ROOT.get(p) : o);
+                                                                                                          }, Priority.preDepth);
+
     private static final Observer<DNode>                                           USED_LANGUAGES_RULE    = DObject.observer(USED_LANGUAGES, o -> USED_LANGUAGES.set(o, o.getChildren().flatMap(DNode.USED_LANGUAGES::get).toSet().add(o.getConcept().getLanguage())), Priority.preDepth);
 
     private static final Observer<DNode>                                           USED_MODELS_RULE       = DObject.observer(USED_MODELS, o -> USED_MODELS.set(o, o.getChildren().flatMap(DNode.USED_MODELS::get).toSet().addAll(o.getReferenced().filter(n -> !n.isDclareOnly()).map(    //
@@ -214,11 +221,17 @@ public class DNode extends DIdentifiedObject implements SNode {
     @SuppressWarnings("rawtypes")
     protected static final Constant<SConcept, Set<? extends Observer>>             CONCEPT_OBSERVERS      = Constant.of("$CONCEPT_OBSERVERS", c -> Collection.of(c.getContainmentLinks()).map(READ_MATCHER::get).toSet());
 
-    @SuppressWarnings("rawtypes")
-    protected static final Set<Observer>                                           OBSERVERS              = DObject.OBSERVERS.addAll(Set.of(MODEL_RULE, USED_LANGUAGES_RULE, USED_MODELS_RULE));
+    protected static final Setable<DNode, Set<Pair<DObject, IssueKindReportItem>>> ALL_MPS_ISSUES         = Setable.of("$ALL_MPS_ISSUES", Set.of(), (tx, o, pre, post) -> Setable.<Set<Pair<DObject, IssueKindReportItem>>, Pair<DObject, IssueKindReportItem>> diff(pre, post,           //
+            a -> DObject.MPS_ISSUES.set(a.a(), Set::add, a),                                                                                                                                                                                                                              //
+            r -> DObject.MPS_ISSUES.set(r.a(), Set::remove, r))
+
+    );
 
     @SuppressWarnings("rawtypes")
-    protected static final Set<Setable>                                            SETABLES               = DObject.SETABLES.addAll(Set.of(NODE_REF, DETACHED, NAME_OBSERVED, MODEL, USER_OBJECTS, USED_MODELS, USED_LANGUAGES));
+    protected static final Set<Observer>                                           OBSERVERS              = DObject.OBSERVERS.addAll(Set.of(ROOT_RULE, MODEL_RULE, USED_LANGUAGES_RULE, USED_MODELS_RULE));
+
+    @SuppressWarnings("rawtypes")
+    protected static final Set<Setable>                                            SETABLES               = DObject.SETABLES.addAll(Set.of(NODE_REF, DETACHED, NAME_OBSERVED, ROOT, MODEL, USER_OBJECTS, USED_MODELS, USED_LANGUAGES, ALL_MPS_ISSUES));
 
     public static DNode of(SConcept concept, String anonymousType, Object[] identity) {
         identity = Arrays.copyOf(identity, identity.length + (anonymousType != null ? 2 : 1));
@@ -553,8 +566,7 @@ public class DNode extends DIdentifiedObject implements SNode {
 
     @Override
     public DNode getContainingRoot() {
-        DNode p = getParent();
-        return p != null ? p.getContainingRoot() : this;
+        return ROOT.get(this);
     }
 
     @Override

@@ -15,15 +15,18 @@
 
 package org.modelingvalue.dclare.mps;
 
-import com.intellij.openapi.application.*;
-import jetbrains.mps.classloading.*;
-import jetbrains.mps.ide.*;
-import jetbrains.mps.module.*;
-import jetbrains.mps.project.*;
-import org.jetbrains.mps.openapi.module.*;
-import org.jetbrains.mps.openapi.util.*;
+import java.util.Set;
 
-import java.util.*;
+import org.jetbrains.mps.openapi.module.SModule;
+import org.jetbrains.mps.openapi.util.ProgressMonitor;
+
+import com.intellij.openapi.application.ApplicationManager;
+
+import jetbrains.mps.classloading.ClassLoaderManager;
+import jetbrains.mps.classloading.DeployListener;
+import jetbrains.mps.ide.MPSCoreComponents;
+import jetbrains.mps.module.ReloadableModule;
+import jetbrains.mps.project.ProjectBase;
 
 @SuppressWarnings("unused")
 public class DclareForMPSEngine implements DeployListener {

@@ -1,0 +1,153 @@
+package org.modelingvalue.dclare.mps;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import org.jetbrains.mps.openapi.model.SModel;
+import org.jetbrains.mps.openapi.model.SNode;
+import org.jetbrains.mps.openapi.module.SModule;
+import org.jetbrains.mps.openapi.module.SRepository;
+import org.jetbrains.mps.openapi.util.Consumer;
+import org.jetbrains.mps.openapi.util.ProgressMonitor;
+import org.jetbrains.mps.openapi.util.SubProgressKind;
+
+import jetbrains.mps.baseLanguage.closures.runtime._FunctionTypes;
+import jetbrains.mps.checkers.IAbstractChecker;
+import jetbrains.mps.checkers.IChecker;
+import jetbrains.mps.checkers.IChecker.AbstractRootChecker;
+import jetbrains.mps.checkers.ICheckingPostprocessor;
+import jetbrains.mps.checkers.ModelCheckerBuilder;
+import jetbrains.mps.errors.item.IssueKindReportItem;
+import jetbrains.mps.errors.item.NodeReportItem;
+
+public class DclareModelCheckerBuilder extends ModelCheckerBuilder {
+
+    private final DClareMPS dClareMPS;
+
+    DclareModelCheckerBuilder(DClareMPS dClareMPS, ModelExtractor modelExtractor) {
+        super(modelExtractor);
+        this.dClareMPS = dClareMPS;
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    @Override
+    public IAbstractChecker<ItemsToCheck, IssueKindReportItem> createChecker(List<? extends IChecker<?, ? extends IssueKindReportItem>> checkers) {
+
+        List<IChecker<SModule, ? extends IssueKindReportItem>> moduleCheckers = new ArrayList<IChecker<SModule, ? extends IssueKindReportItem>>();
+        List<IChecker<SModel, ? extends IssueKindReportItem>> modelCheckers = new ArrayList<IChecker<SModel, ? extends IssueKindReportItem>>();
+        List<IChecker<SNode, ? extends IssueKindReportItem>> rootCheckers = new ArrayList<IChecker<SNode, ? extends IssueKindReportItem>>();
+
+        for (IChecker<?, ? extends IssueKindReportItem> it : checkers) {
+            IChecker<?, ? extends IssueKindReportItem> checker = it;
+            if (checker instanceof IChecker.AbstractModuleChecker) {
+                moduleCheckers.add((IChecker<SModule, ? extends IssueKindReportItem>) checker);
+            } else if (checker instanceof IChecker.AbstractModelChecker) {
+                modelCheckers.add((IChecker<SModel, ? extends IssueKindReportItem>) checker);
+            } else if (checker instanceof IChecker.AbstractRootChecker) {
+                AbstractRootChecker rootChecker = (IChecker.AbstractRootChecker) checker;
+                rootCheckers.add((IChecker<SNode, ? extends IssueKindReportItem>) new AbstractRootChecker<>() {
+                    @Override
+                    public IssueKindReportItem.CheckerCategory getCategory() {
+                        return rootChecker.getCategory();
+                    }
+
+                    @Override
+                    public ICheckingPostprocessor<NodeReportItem> getPostprocessor() {
+                        return rootChecker.getPostprocessor();
+                    }
+
+                    @Override
+                    public String toString() {
+                        return rootChecker.toString();
+                    }
+
+                    @Override
+                    public void check(SNode root, SRepository repository, Consumer<? super NodeReportItem> errorCollector, ProgressMonitor monitor) {
+                        dClareMPS.read(() -> rootChecker.check(root, repository, errorCollector, monitor));
+                    }
+                });
+            } else if (checker instanceof IChecker.AbstractNodeChecker) {
+                AbstractRootChecker rootChecker = ((IChecker.AbstractNodeChecker) checker).asRootChecker();
+                rootCheckers.add((IChecker<SNode, ? extends IssueKindReportItem>) new AbstractRootChecker<>() {
+                    @Override
+                    public IssueKindReportItem.CheckerCategory getCategory() {
+                        return rootChecker.getCategory();
+                    }
+
+                    @Override
+                    public ICheckingPostprocessor<NodeReportItem> getPostprocessor() {
+                        return rootChecker.getPostprocessor();
+                    }
+
+                    @Override
+                    public String toString() {
+                        return rootChecker.toString();
+                    }
+
+                    @Override
+                    public void check(SNode root, SRepository repository, Consumer<? super NodeReportItem> errorCollector, ProgressMonitor monitor) {
+                        dClareMPS.read(() -> rootChecker.check(root, repository, errorCollector, monitor));
+                    }
+                });
+            }
+        }
+
+        IAbstractChecker<SModule, ? extends IssueKindReportItem> generalModuleChecker = aggreagateSpecificCheckers(moduleCheckers, new _FunctionTypes._return_P1_E0<String, SModule>() {
+            @Override
+            public String invoke(SModule m) {
+                return dClareMPS.read(() -> m.getModuleName());
+            }
+        });
+
+        IAbstractChecker<SModel, ? extends IssueKindReportItem> generalModelChecker = skipNullModules(aggreagateSpecificCheckers(modelCheckers, new _FunctionTypes._return_P1_E0<String, SModel>() {
+            @Override
+            public String invoke(SModel m) {
+                return dClareMPS.read(() -> m.getName().getLongName());
+            }
+        }));
+
+        IAbstractChecker<SNode, ? extends IssueKindReportItem> generalNodeChecker = aggreagateSpecificCheckers(rootCheckers, new _FunctionTypes._return_P1_E0<String, SNode>() {
+            @Override
+            public String invoke(SNode n) {
+                return dClareMPS.read(() -> n.getName());
+            }
+        });
+
+        return new IAbstractChecker<ItemsToCheck, IssueKindReportItem>() {
+
+            @Override
+            public void check(ItemsToCheck items, SRepository repository, Consumer<? super IssueKindReportItem> errorCollector, ProgressMonitor monitor) {
+                RootItemsToCheck r = (RootItemsToCheck) items;
+                int work = r.roots.size() + r.models.size() + r.modules.size();
+                monitor.start("Checking", work);
+
+                for (SModule module : items.modules) {
+                    dClareMPS.read(() -> generalModuleChecker.check(module, repository, errorCollector, monitor.subTask(1, SubProgressKind.REPLACING)));
+                    if (monitor.isCanceled()) {
+                        break;
+                    }
+                }
+
+                for (SModel model : items.models) {
+                    dClareMPS.read(() -> generalModelChecker.check(model, repository, errorCollector, monitor.subTask(1, SubProgressKind.REPLACING)));
+                    if (monitor.isCanceled()) {
+                        break;
+                    }
+                }
+
+                for (SNode roots : r.roots) {
+                    generalNodeChecker.check(roots, repository, errorCollector, monitor.subTask(1, SubProgressKind.REPLACING));
+                    if (monitor.isCanceled()) {
+                        break;
+                    }
+                }
+            }
+
+        };
+    }
+
+    public static class RootItemsToCheck extends ModelCheckerBuilder.ItemsToCheck {
+        public List<SNode> roots = new ArrayList<SNode>();
+    }
+
+}

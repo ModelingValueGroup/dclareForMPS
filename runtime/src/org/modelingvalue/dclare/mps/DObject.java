@@ -77,11 +77,11 @@ public abstract class DObject implements Mutable {
                                                                                                               }, Direction.forward, Priority.preDepth);
 
     public static final DObserved<DObject, Set<Pair<DObject, IssueKindReportItem>>> MPS_ISSUES                = DObserved.of("$MPS_ISSUES", Set.of(), false, false, null, false, null, (tx, o, pre, post) -> {
-                                                                                                                  DModel dModel = o instanceof DModel ? (DModel) o : o instanceof DNode ? ((DNode) o).getModel() : null;
-                                                                                                                  if (dModel != null) {
+                                                                                                                  DNode root = o instanceof DNode ? ((DNode) o).getContainingRoot() : null;
+                                                                                                                  if (root != null) {
                                                                                                                       Setable.<Set<Pair<DObject, IssueKindReportItem>>, Pair<DObject, IssueKindReportItem>> diff(pre, post,   //
-                                                                                                                              a -> DModel.ALL_MPS_ISSUES.set(dModel, Set::add, a),                                            //
-                                                                                                                              r -> DModel.ALL_MPS_ISSUES.set(dModel, Set::remove, r));
+                                                                                                                              a -> DNode.ALL_MPS_ISSUES.set(root, Set::add, a),                                               //
+                                                                                                                              r -> DNode.ALL_MPS_ISSUES.set(root, Set::remove, r));
                                                                                                                   }
                                                                                                               }, null);
 

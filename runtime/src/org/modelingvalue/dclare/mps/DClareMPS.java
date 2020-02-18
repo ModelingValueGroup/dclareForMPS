@@ -1,23 +1,20 @@
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// (C) Copyright 2018-2019 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
+// (C) Copyright 2018 Modeling Value Group B.V. (http://modelingvalue.org)                                             ~
 //                                                                                                                     ~
-// Licensed under the GNU Lesser General Public License v3.0 (the 'License'). You may not use this file except in      ~
+// Licensed under the GNU Lesser General Public License v3.0 (the "License"). You may not use this file except in      ~
 // compliance with the License. You may obtain a copy of the License at: https://choosealicense.com/licenses/lgpl-3.0  ~
 // Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on ~
-// an 'AS IS' BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the  ~
+// an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the  ~
 // specific language governing permissions and limitations under the License.                                          ~
 //                                                                                                                     ~
-// Maintainers:                                                                                                        ~
-//     Wim Bast, Tom Brus, Ronald Krijgsheld                                                                           ~
 // Contributors:                                                                                                       ~
-//     Arjan Kok, Carel Bast                                                                                           ~
+//     Wim Bast, Carel Bast, Tom Brus, Arjan Kok, Ronald Krijgsheld                                                    ~
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 package org.modelingvalue.dclare.mps;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.Supplier;
@@ -72,6 +69,7 @@ import org.modelingvalue.dclare.ex.TooManyObserversException;
 import org.modelingvalue.dclare.ex.TransactionException;
 import org.modelingvalue.dclare.mps.DRule.DObserver;
 import org.modelingvalue.dclare.mps.DRule.DObserverTransaction;
+import org.modelingvalue.dclare.mps.DclareModelCheckerBuilder.RootItemsToCheck;
 
 import jetbrains.mps.checkers.AbstractNodeCheckerInEditor;
 import jetbrains.mps.checkers.IAbstractChecker;
@@ -80,6 +78,7 @@ import jetbrains.mps.checkers.ICheckingPostprocessor;
 import jetbrains.mps.checkers.LanguageErrorsCollector;
 import jetbrains.mps.checkers.ModelCheckerBuilder;
 import jetbrains.mps.checkers.ModelCheckerBuilder.ItemsToCheck;
+import jetbrains.mps.checkers.ModelCheckerBuilder.ModelsExtractorImpl;
 import jetbrains.mps.editor.runtime.LanguageEditorChecker;
 import jetbrains.mps.errors.CheckerRegistry;
 import jetbrains.mps.errors.item.IssueKindReportItem;
@@ -155,6 +154,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     private final IAbstractChecker<ItemsToCheck, IssueKindReportItem>                                   mpsChecker;
     private final Concurrent<Set<SModel>>                                                               changedModels        = Concurrent.of(Set.of());
     private final Concurrent<Set<SModule>>                                                              changedModules       = Concurrent.of(Set.of());
+    private final Concurrent<Set<SNode>>                                                                changedRoots         = Concurrent.of(Set.of());
 
     protected DClareMPS(DclareForMPSEngine engine, ProjectBase project, State prevState, int maxTotalNrOfChanges, int maxNrOfChanges, int maxNrOfObserved, int maxNrOfObservers, StartStopHandler startStopHandler) {
         this.project = project;
@@ -168,15 +168,11 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
         this.nodeCheckerInEditor = new NodeCheckerInEditor();
         this.languageEditorChecker = new LanguageEditorChecker(projectRepository, Collections.singletonList(nodeCheckerInEditor));
         CheckerRegistry checkerRegistry = project.getPlatform().findComponent(CheckerRegistry.class);
-        if (checkerRegistry == null) {
-            throw new Error("CheckerRegistry not found in platform");
-        }
         checkerRegistry.registerChecker(moduleChecker);
         checkerRegistry.registerChecker(modelChecker);
         checkerRegistry.registerChecker(nodeChecker);
-        //noinspection RedundantCast (cast is needed! javac will fail otherwise)
-        List<? extends IChecker<?, ? extends IssueKindReportItem>> checkers = (List<? extends IChecker<?, ? extends IssueKindReportItem>>) checkerRegistry.getCheckers();
-        mpsChecker = new ModelCheckerBuilder(new ModelCheckerBuilder.ModelsExtractorImpl().excludeGenerators()).createChecker(checkers);
+        ModelsExtractorImpl modelExtractor = new ModelCheckerBuilder.ModelsExtractorImpl().excludeGenerators();
+        mpsChecker = new DclareModelCheckerBuilder(this, modelExtractor).createChecker(checkerRegistry.getCheckers());
         Highlighter highlighter = project.getComponent(Highlighter.class);
         highlighter.addChecker(languageEditorChecker);
         project.getModelAccess().executeCommandInEDT(() -> startStopHandler.on(project));
@@ -550,8 +546,10 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
                     if (dObject instanceof DModel) {
                         changedModels.change(s -> s.add(((DModel) dObject).original()));
                     } else if (dObject instanceof DNode) {
-                        //noinspection ConstantConditions
-                        changedModels.change(s -> s.add(((DNode) dObject).getModel().original()));
+                        SNode root = ((DNode) dObject).sNode(false) != null ? ((DNode) dObject).sNode(false).getContainingRoot() : null;
+                        if (root != null) {
+                            changedRoots.change(s -> s.add(root));
+                        }
                     } else if (dObject instanceof DModule) {
                         changedModules.change(s -> s.add(((DModule) dObject).original()));
                     }
@@ -725,33 +723,39 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     private void runModelCheck() {
         Set<SModel> models = changedModels.result();
         Set<SModule> modules = changedModules.result();
+        Set<SNode> roots = changedRoots.result();
         changedModels.init(Set.of());
         changedModules.init(Set.of());
-        if (!models.isEmpty() || !modules.isEmpty()) {
+        changedRoots.init(Set.of());
+        if (!models.isEmpty() || !modules.isEmpty() || !roots.isEmpty()) {
             thePool.execute(() -> {
-                ItemsToCheck itemsToCheck = new ItemsToCheck();
+                RootItemsToCheck itemsToCheck = new RootItemsToCheck();
                 itemsToCheck.models = models.collect(Collectors.toList());
                 itemsToCheck.modules = modules.collect(Collectors.toList());
-                List<IssueKindReportItem> reportItems = new ArrayList<>();
+                itemsToCheck.roots = roots.collect(Collectors.toList());
+                java.util.List<IssueKindReportItem> reportItems = new ArrayList<>();
                 SRepository repos = getRepository().original();
-                read(() -> mpsChecker.check(itemsToCheck, repos, reportItems::add, new EmptyProgressMonitor()));
+                mpsChecker.check(itemsToCheck, repos, reportItems::add, new EmptyProgressMonitor());
                 universeTransaction.put(new Object(), () -> {
-                    for (SModel sModel : models) {
-                        DModel.ALL_MPS_ISSUES.setDefault(DModel.of(sModel));
-                    }
                     for (SModule sModule : modules) {
-                        DObject.MPS_ISSUES.setDefault(DModule.of(sModule));
+                        DObject.MPS_ISSUES.set(DModule.of(sModule), DObject.MPS_ISSUES.getDefault());
+                    }
+                    for (SModel sModel : models) {
+                        DObject.MPS_ISSUES.set(DModel.of(sModel), DObject.MPS_ISSUES.getDefault());
+                    }
+                    for (SNode root : roots) {
+                        DNode.ALL_MPS_ISSUES.set(DNode.of(root), DNode.ALL_MPS_ISSUES.getDefault());
                     }
                     for (IssueKindReportItem item : reportItems) {
-                        DObject context = read(() -> context(item));
-                        DObject.MPS_ISSUES.set(context, Set::add, Pair.of(context, item));
+                        DObject d = read(() -> context(item));
+                        DObject.MPS_ISSUES.set(d, Set::add, Pair.of(d, item));
                     }
                 });
             });
         }
     }
 
-    private DObject context(ReportItem item) {
+    protected DObject context(ReportItem item) {
         SRepository repos = getRepository().original();
         if (item instanceof NodeReportItem) {
             return DNode.of(((NodeReportItem) item).getNode().resolve(repos));
