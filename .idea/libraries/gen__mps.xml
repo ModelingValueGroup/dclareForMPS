@@ -1,7 +1,12 @@
+<!--==============================================================-->
+<!-- WARNING: this file will be overwritten by the build scripts! -->
+<!--          change  project.sh  instead                         -->
+<!--==============================================================-->
 <component name="libraryTable">
   <library name="gen: mps">
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/MPS/lib/extensions.jar!/" />
+      <root url="jar://$PROJECT_DIR$/MPS/lib/mps-closures.jar!/" />
       <root url="jar://$PROJECT_DIR$/MPS/lib/mps-core.jar!/" />
       <root url="jar://$PROJECT_DIR$/MPS/lib/mps-editor.jar!/" />
       <root url="jar://$PROJECT_DIR$/MPS/lib/mps-openapi.jar!/" />
@@ -9,7 +14,6 @@
       <root url="jar://$PROJECT_DIR$/MPS/lib/mps-project-check.jar!/" />
       <root url="jar://$PROJECT_DIR$/MPS/lib/platform-api.jar!/" />
       <root url="jar://$PROJECT_DIR$/MPS/lib/util.jar!/" />
-      <root url="jar://$PROJECT_DIR$/MPS/lib/mps-closures.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
