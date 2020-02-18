@@ -3,6 +3,12 @@
   <property name="build.dir" location="build" />
   <property name="build.tmp" location="${build.dir}/tmp/DclareForMPS" />
   <property name="build.layout" location="${build.dir}/artifacts/DclareForMPS" />
+  <property name="version" value="1.1.1" />
+  <property name="versionExtra" value="devlocal" />
+  <tstamp>
+    <format property="versionStamp" pattern="yyMMddHHmm" />
+  </tstamp>
+  <property name="fullVersion" value="${version}${versionExtra}${versionStamp}" />
   <property name="mps_home" location="" />
   <property name="dclare_home" location="${basedir}" />
   <property name="artifacts.mps" location="${mps_home}" />
@@ -34,11 +40,13 @@
       <idea-plugin xmlns:xi="http://www.w3.org/2001/XInclude">
         <id>DclareForMPS</id>
         <name>DclareForMPS</name>
-        <description>dclare for MPS - rule based programming for MPS</description>
-        <version>1.0 alpha 6</version>
+        <description>dclare for MPS - rule based programming for MPS </description>
+        <version>${fullVersion}</version>
+        <vendor url="https://www.modelingvalue.nl">Modeling Value Group</vendor>
         <depends>jetbrains.mps.core</depends>
         <depends>jetbrains.mps.ide.devkit</depends>
         <depends>jetbrains.mps.build</depends>
+        <idea-version since-build="193.1223" until-build="193.1270" />
         
         <extensions defaultExtensionNs="com.intellij">
           <mps.LanguageLibrary dir="/languages" />
@@ -886,7 +894,7 @@
       <zipfileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/DclareMps.jar" prefix="DclareForMPS" />
       <fileset dir="${build.tmp}/default/DclareForMPS.zip" />
     </zip>
-    <echo file="${build.layout}/build.properties">mps.build.number=${mps.build.number}${line.separator}mps.date=${mps.date}${line.separator}mps.build.vcs.number=${mps.build.vcs.number}${line.separator}mps.teamcity.buildConfName=${mps.teamcity.buildConfName}${line.separator}mps.idea.platform.build.number=${mps.idea.platform.build.number}${line.separator}mps.mps.build.counter=${mps.mps.build.counter}${line.separator}mpsBootstrapCore.version=${mpsBootstrapCore.version}</echo>
+    <echo file="${build.layout}/build.properties">DclareForMPS.version=${version}${line.separator}DclareForMPS.versionExtra=${versionExtra}${line.separator}DclareForMPS.versionStamp=${versionStamp}${line.separator}DclareForMPS.fullVersion=${fullVersion}${line.separator}mps.build.number=${mps.build.number}${line.separator}mps.date=${mps.date}${line.separator}mps.build.vcs.number=${mps.build.vcs.number}${line.separator}mps.teamcity.buildConfName=${mps.teamcity.buildConfName}${line.separator}mps.idea.platform.build.number=${mps.idea.platform.build.number}${line.separator}mps.mps.build.counter=${mps.mps.build.counter}${line.separator}mpsBootstrapCore.version=${mpsBootstrapCore.version}</echo>
   </target>
   
   <target name="buildDependents" />

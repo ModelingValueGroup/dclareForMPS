@@ -15,25 +15,18 @@
 
 package org.modelingvalue.dclare.mps;
 
-import java.util.function.Supplier;
+import jetbrains.mps.errors.*;
+import jetbrains.mps.errors.item.*;
+import jetbrains.mps.errors.item.IssueKindReportItem.*;
+import jetbrains.mps.errors.item.RuleIdFlavouredItem.*;
+import jetbrains.mps.errors.messageTargets.*;
+import org.jetbrains.mps.openapi.language.*;
+import org.jetbrains.mps.openapi.module.*;
+import org.modelingvalue.collections.*;
+import org.modelingvalue.dclare.*;
+import org.modelingvalue.dclare.mps.DRule.*;
 
-import org.jetbrains.mps.openapi.language.SLanguage;
-import org.jetbrains.mps.openapi.module.SRepository;
-import org.modelingvalue.collections.Collection;
-import org.modelingvalue.collections.Set;
-import org.modelingvalue.dclare.Constant;
-import org.modelingvalue.dclare.LeafTransaction;
-import org.modelingvalue.dclare.Observer;
-import org.modelingvalue.dclare.Setable;
-import org.modelingvalue.dclare.mps.DRule.DObserver;
-
-import jetbrains.mps.errors.MessageStatus;
-import jetbrains.mps.errors.item.IssueKindReportItem;
-import jetbrains.mps.errors.item.IssueKindReportItem.CheckerCategory;
-import jetbrains.mps.errors.item.IssueKindReportItem.ItemKind;
-import jetbrains.mps.errors.item.IssueKindReportItem.KindLevel;
-import jetbrains.mps.errors.item.RuleIdFlavouredItem.TypesystemRuleId;
-import jetbrains.mps.errors.messageTargets.MessageTarget;
+import java.util.function.*;
 
 public class DIssue extends DIdentifiedObject {
 
@@ -74,19 +67,19 @@ public class DIssue extends DIdentifiedObject {
 
     private static final Setable<DIssue, String>         MESSAGE          = Setable.of("$MESSAGE", null);
 
-    private static final Observer<DIssue>                MESSAGE_RULE     = DObject.<DIssue> observer(MESSAGE, o -> MESSAGE.set(o, o.message.get()));
+    private static final Observer<DIssue>                MESSAGE_RULE     = DObject.observer(MESSAGE, o -> MESSAGE.set(o, o.message.get()));
 
     public static final Setable<DIssue, DObject>         DOBJECT          = Setable.of("$DOBJECT", null, () -> DObject.DCLARE_ISSUES);
 
-    private static final Observer<DIssue>                DOBJECT_RULE     = DObject.<DIssue> observer(DOBJECT, o -> DOBJECT.set(o, o.dObject.get()));
+    private static final Observer<DIssue>                DOBJECT_RULE     = DObject.observer(DOBJECT, o -> DOBJECT.set(o, o.dObject.get()));
 
     public static final Setable<DIssue, MessageStatus>   SEVERITY         = Setable.of("$SEVERITY", null);
 
-    private static final Observer<DIssue>                SEVERITY_RULE    = DObject.<DIssue> observer(SEVERITY, o -> SEVERITY.set(o, o.severity.get()));
+    private static final Observer<DIssue>                SEVERITY_RULE    = DObject.observer(SEVERITY, o -> SEVERITY.set(o, o.severity.get()));
 
     public static final Setable<DIssue, MessageTarget>   FEATURE          = Setable.of("$FEATURE", null);
 
-    private static final Observer<DIssue>                FEATURE_RULE     = DObject.<DIssue> observer(FEATURE, o -> FEATURE.set(o, o.feature.get()));
+    private static final Observer<DIssue>                FEATURE_RULE     = DObject.observer(FEATURE, o -> FEATURE.set(o, o.feature.get()));
 
     @SuppressWarnings("rawtypes")
     protected static final Set<Observer>                 OBSERVERS        = DObject.OBSERVERS.addAll(Set.of(MESSAGE_RULE, DOBJECT_RULE, SEVERITY_RULE, FEATURE_RULE));

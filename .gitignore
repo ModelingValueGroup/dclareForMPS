@@ -14,7 +14,10 @@ artifacts
 /lib
 /runtime/bin
 /header
-/runtime/bin
-/.idea/shelf
+/.idea/**/workspace.xml
+/.idea/**/tasks.xml
+/.idea/**/dictionaries
+/.idea/**/shelf
+/.idea/**/xtextAutoBuilderState.xml
 /solutions/DclareMPSRuntime/lib/*
 

@@ -35,7 +35,7 @@ import org.modelingvalue.dclare.Setable;
 
 import jetbrains.mps.errors.item.IssueKindReportItem;
 
-@SuppressWarnings("rawtypes")
+@SuppressWarnings({"rawtypes", "unused"})
 public abstract class DObject implements Mutable {
 
     public static final Observed<DObject, DType>                                    TYPE                      = NonCheckingObserved.of("TYPE", new DType("<DUMMY_TYPE>") {
@@ -55,9 +55,7 @@ public abstract class DObject implements Mutable {
                                                                                                                   }
                                                                                                               });
 
-    protected static final Observer<DObject>                                        TYPE_RULE                 = observer(TYPE, o -> {
-                                                                                                                  TYPE.set(o, o.getType());
-                                                                                                              }, Priority.preDepth);
+    protected static final Observer<DObject>                                        TYPE_RULE                 = observer(TYPE, o -> TYPE.set(o, o.getType()), Priority.preDepth);
 
     public static final Observed<DObject, DAttribute>                               CONTAINING_ATTRIBUTE      = NonCheckingObserved.of("$CONTAINING_ATTRIBUTE", null);
 

@@ -23,20 +23,21 @@ import java.util.function.Supplier;
 import org.jetbrains.mps.openapi.language.SProperty;
 import org.jetbrains.mps.openapi.model.SNode;
 import org.modelingvalue.dclare.Constant;
-import org.modelingvalue.dclare.EmptyMandatoryException;
+import org.modelingvalue.dclare.ImperativeTransaction;
 import org.modelingvalue.dclare.LeafTransaction;
 import org.modelingvalue.dclare.Mutable;
 import org.modelingvalue.dclare.State;
+import org.modelingvalue.dclare.ex.EmptyMandatoryException;
 
 import jetbrains.mps.smodel.adapter.structure.property.InvalidProperty;
 
-@SuppressWarnings("rawtypes")
-public interface DAttribute<O, T> extends DFeature<O> {
+@SuppressWarnings({"rawtypes", "unused"})
+public interface DAttribute<O, T> extends DFeature {
 
     Constant<Object, DAttribute> DATTRIBUTE = Constant.of("DATTRIBUTE", null);
 
     @SuppressWarnings("unchecked")
-    public static <C, V> DAttribute<C, V> of(Object id, String name, boolean synthetic, boolean optional, boolean composite, int identifyingNr, V def, Class<?> cls, Supplier<SNode> source, Function<C, V> deriver) {
+    static <C, V> DAttribute<C, V> of(Object id, String name, boolean synthetic, boolean optional, boolean composite, int identifyingNr, V def, Class<?> cls, Supplier<SNode> source, Function<C, V> deriver) {
         DAttribute<C, V> dAttribute = identifyingNr >= 0 ? new DIdentifyingAttribute(id, name, synthetic, composite, identifyingNr, cls, source) : //
                 deriver != null ? new DConstant(id, name, synthetic, composite, cls, source, deriver) : //
                         new DObservedAttribute(id, name, synthetic, optional, composite, def, cls, source, new InvalidProperty(id.toString(), name));
@@ -45,7 +46,7 @@ public interface DAttribute<O, T> extends DFeature<O> {
     }
 
     @SuppressWarnings("unchecked")
-    public static <C, V> DAttribute<C, V> of(Object id) {
+    static <C, V> DAttribute<C, V> of(Object id) {
         return DATTRIBUTE.isSet(id) ? DATTRIBUTE.get(id) : null;
     }
 
@@ -78,7 +79,7 @@ public interface DAttribute<O, T> extends DFeature<O> {
 
     Class<?> cls();
 
-    final static class DObservedAttribute<C extends DObject, V> extends DObserved<C, V> implements DAttribute<C, V> {
+    final class DObservedAttribute<C extends DObject, V> extends DObserved<C, V> implements DAttribute<C, V> {
 
         private final String    name;
         private final Class<?>  cls;
@@ -121,8 +122,11 @@ public interface DAttribute<O, T> extends DFeature<O> {
 
         @Override
         public V get(C object) {
-            if (object instanceof DNode && !(LeafTransaction.getCurrent() instanceof DRule.DObserverTransaction)) {
-                ((DNode) object).sNode().getProperty(sProperty);
+            if (object instanceof DNode) {
+                LeafTransaction current = LeafTransaction.getCurrent();
+                if (current == null || current instanceof ImperativeTransaction) {
+                    ((DNode) object).sNode().getProperty(sProperty);
+                }
             }
             return super.get(object);
         }
@@ -142,7 +146,7 @@ public interface DAttribute<O, T> extends DFeature<O> {
 
     }
 
-    final static class DIdentifyingAttribute<C extends DObject, V> implements DAttribute<C, V> {
+    final class DIdentifyingAttribute<C extends DObject, V> implements DAttribute<C, V> {
         private final Object          id;
         private final String          name;
         private final boolean         composite;
@@ -245,7 +249,7 @@ public interface DAttribute<O, T> extends DFeature<O> {
 
     }
 
-    static class DConstant<C extends DObject, V> extends Constant<C, V> implements DAttribute<C, V> {
+    class DConstant<C extends DObject, V> extends Constant<C, V> implements DAttribute<C, V> {
 
         private final String          name;
         private final boolean         synthetic;
@@ -317,7 +321,7 @@ public interface DAttribute<O, T> extends DFeature<O> {
 
     }
 
-    static final class NullAttribute implements DAttribute {
+    final class NullAttribute implements DAttribute {
         @Override
         public SNode getSource() {
             return null;

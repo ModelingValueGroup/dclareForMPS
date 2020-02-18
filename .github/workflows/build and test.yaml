@@ -34,18 +34,34 @@ jobs:
           path.variable.mps_home=./MPS
           EOF
 
+      - name: "determine versionExtra and versionStamp"
+        run:  |
+          branch="${GITHUB_REF#refs/heads/}"
+          if [[ "$branch" == master ]]; then
+            versionExtraArg="-DversionExtra="
+            versionStampArg="-DversionStamp="
+          elif [[ "$branch" == develop ]]; then
+            versionExtraArg="-DversionExtra=beta"
+            versionStampArg=
+          else
+            versionExtraArg="-DversionExtra=alpha"
+            versionStampArg=
+          fi
+          echo "::set-env name=versionExtraArg::$versionExtraArg"
+          echo "::set-env name=versionStampArg::$versionStampArg"
+
       - name: "(re)generate some files"
         run:  |
-          . <(java -jar buildTools.jar)
+          . <(java -jar ~/buildTools.jar)
           generateAll
           correctEols
           correctHeaders header
 
-      - name: "download dependencies (MPS and from pom)"
+      - name: "download dependencies (MPS and jars from pom)"
         run:  |
-          . <(java -jar buildTools.jar)
+          . <(java -jar ~/buildTools.jar)
           . project.sh
-          getAllDependencies ${{ secrets.GITHUB_TOKEN }}
+          getAllDependencies ${{ secrets.GITHUB_TOKEN }} "${{ secrets.SCALEWAY_ACCESS_KEY }}" "${{ secrets.SCALEWAY_SECRET_KEY }}"
           installMps "$mpsDir" "$mpsVersion"
 
       - name: "runtime: build"
@@ -57,18 +73,38 @@ jobs:
       - name: "runtime: generate javadoc"
         run:  ant javadoc
 
-      - name: "mps-plugin: build"
+      - name: "dclare-plugin: build"
         run:  |
+          . <(java -jar ~/buildTools.jar)
           . project.sh
-          ant -debug -Dmps_home="$mpsDir" -f mps_build.xml
+          action() {
+            ant -Dmps_home="$mpsDir" $versionExtraArg $versionStampArg -f mps_build.xml cleanSources clean generate build
+          }
+          doubleBuild action mps_build.xml
+
+      - name: "unzip for actions/upload-artifact"
+        run:  |
+          # the subsequent actions/upload-artifact step would re-zip the zip, so we unzip and the action below will rezip...
+          mkdir build/artifacts/DclareForMPS/DclareForMPS
+          cd build/artifacts/DclareForMPS/DclareForMPS
+          unzip ../DclareForMPS.zip
 
       - name: "publish action-artifact zip"
         uses: actions/upload-artifact@v1
         with:
-          name: DclareForMPS.zip
-          path: build/artifacts/DclareForMPS/DclareForMPS.zip
+          name: DclareForMPS
+          path: build/artifacts/DclareForMPS/DclareForMPS
+
+      - name: "Upload to JetBrains"
+        uses: ModelingValueGroup/upload-jetbrains-plugin-action@master
+        with:
+          file    : "build/artifacts/DclareForMPS/DclareForMPS.zip"
+          hubToken: "${{ secrets.JETBRAINS_PUBLISH_TOKEN }}"
+          pluginId: "13797"
+          trace   : true
 
       - name: "push changes back to github"
         run:  |
-          . <(java -jar buildTools.jar)
+          . <(java -jar ~/buildTools.jar)
           pushBackToGithub "${{ secrets.GITHUB_TOKEN }}" "automation@modelingvalue.com" "adjusted files [by github actions]"
+

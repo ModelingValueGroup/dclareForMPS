@@ -15,19 +15,17 @@
 
 package org.modelingvalue.dclare.mps;
 
-import java.util.Set;
+import com.intellij.openapi.application.*;
+import jetbrains.mps.classloading.*;
+import jetbrains.mps.ide.*;
+import jetbrains.mps.module.*;
+import jetbrains.mps.project.*;
+import org.jetbrains.mps.openapi.module.*;
+import org.jetbrains.mps.openapi.util.*;
 
-import org.jetbrains.mps.openapi.module.SModule;
-import org.jetbrains.mps.openapi.util.ProgressMonitor;
+import java.util.*;
 
-import com.intellij.openapi.application.ApplicationManager;
-
-import jetbrains.mps.classloading.ClassLoaderManager;
-import jetbrains.mps.classloading.DeployListener;
-import jetbrains.mps.ide.MPSCoreComponents;
-import jetbrains.mps.module.ReloadableModule;
-import jetbrains.mps.project.ProjectBase;
-
+@SuppressWarnings("unused")
 public class DclareForMPSEngine implements DeployListener {
 
     private final ProjectBase          project;
@@ -115,6 +113,7 @@ public class DclareForMPSEngine implements DeployListener {
     @Override
     public void onUnloaded(Set<ReloadableModule> unloadedModules, ProgressMonitor monitor) {
         for (SModule m : project.getProjectModules()) {
+            //noinspection SuspiciousMethodCalls
             if (unloadedModules.contains(m)) {
                 stopEngine();
                 break;
@@ -125,6 +124,7 @@ public class DclareForMPSEngine implements DeployListener {
     @Override
     public void onLoaded(Set<ReloadableModule> loadedModules, ProgressMonitor monitor) {
         for (SModule m : project.getProjectModules()) {
+            //noinspection SuspiciousMethodCalls
             if (loadedModules.contains(m)) {
                 if (on) {
                     startEngine();
@@ -134,7 +134,7 @@ public class DclareForMPSEngine implements DeployListener {
         }
     }
 
-    public static final void breakpoint() {
+    public static void breakpoint() {
         System.err.println("breakpoint");
     }
 }

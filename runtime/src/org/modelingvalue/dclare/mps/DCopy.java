@@ -15,22 +15,18 @@
 
 package org.modelingvalue.dclare.mps;
 
-import java.util.Objects;
-
-import org.jetbrains.mps.openapi.language.SConcept;
-import org.jetbrains.mps.openapi.language.SContainmentLink;
-import org.jetbrains.mps.openapi.language.SLanguage;
-import org.jetbrains.mps.openapi.language.SProperty;
-import org.jetbrains.mps.openapi.language.SReferenceLink;
+import org.jetbrains.mps.openapi.language.*;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.Set;
-import org.modelingvalue.collections.util.Triple;
-import org.modelingvalue.dclare.Constant;
-import org.modelingvalue.dclare.Observed;
+import org.modelingvalue.collections.util.*;
 import org.modelingvalue.dclare.Observer;
-import org.modelingvalue.dclare.mps.DRule.DObserver;
+import org.modelingvalue.dclare.*;
+import org.modelingvalue.dclare.mps.DRule.*;
 
+import java.util.*;
+
+@SuppressWarnings("unused")
 public class DCopy extends DNode {
 
     private static final Constant<Triple<Set<SLanguage>, SConcept, String>, DType> COPY_TYPE         = Constant.of("COPY_TYPE", t -> new DNodeType(t) {

@@ -9,13 +9,36 @@
     <import index="ffeo" ref="r:874d959d-e3b4-4d04-b931-ca849af130dd(jetbrains.mps.ide.build)" />
   </imports>
   <registry>
+    <language id="479c7a8c-02f9-43b5-9139-d910cb22f298" name="jetbrains.mps.core.xml">
+      <concept id="6666499814681541919" name="jetbrains.mps.core.xml.structure.XmlTextValue" flags="ng" index="2pMdtt">
+        <property id="6666499814681541920" name="text" index="2pMdty" />
+      </concept>
+      <concept id="6666499814681415858" name="jetbrains.mps.core.xml.structure.XmlElement" flags="ng" index="2pNNFK">
+        <property id="6666499814681415862" name="tagName" index="2pNNFO" />
+        <property id="6999033275467544021" name="shortEmptyNotation" index="qg3DV" />
+        <child id="6666499814681415861" name="attributes" index="2pNNFR" />
+      </concept>
+      <concept id="6666499814681447923" name="jetbrains.mps.core.xml.structure.XmlAttribute" flags="ng" index="2pNUuL">
+        <property id="6666499814681447926" name="attrName" index="2pNUuO" />
+        <child id="6666499814681541918" name="value" index="2pMdts" />
+      </concept>
+    </language>
     <language id="798100da-4f0a-421a-b991-71f8c50ce5d2" name="jetbrains.mps.build">
       <concept id="5481553824944787378" name="jetbrains.mps.build.structure.BuildSourceProjectRelativePath" flags="ng" index="55IIr" />
       <concept id="9126048691955220717" name="jetbrains.mps.build.structure.BuildLayout_File" flags="ng" index="28jJK3">
         <child id="9126048691955220762" name="path" index="28jJRO" />
       </concept>
+      <concept id="2755237150521975431" name="jetbrains.mps.build.structure.BuildVariableMacroInitWithString" flags="ng" index="aVJcg">
+        <child id="2755237150521975437" name="value" index="aVJcq" />
+      </concept>
+      <concept id="244868996532454372" name="jetbrains.mps.build.structure.BuildVariableMacroInitWithDate" flags="ng" index="hHN3E">
+        <property id="244868996532454384" name="pattern" index="hHN3Y" />
+      </concept>
       <concept id="7321017245476976379" name="jetbrains.mps.build.structure.BuildRelativePath" flags="ng" index="iG8Mu">
         <child id="7321017245477039051" name="compositePart" index="iGT6I" />
+      </concept>
+      <concept id="3767587139141066978" name="jetbrains.mps.build.structure.BuildVariableMacro" flags="ng" index="2kB4xC">
+        <child id="2755237150521975432" name="initialValue" index="aVJcv" />
       </concept>
       <concept id="4993211115183325728" name="jetbrains.mps.build.structure.BuildProjectDependency" flags="ng" index="2sgV4H">
         <reference id="5617550519002745380" name="script" index="1l3spb" />
@@ -66,6 +89,9 @@
       <concept id="4903714810883702019" name="jetbrains.mps.build.structure.BuildTextStringPart" flags="ng" index="3Mxwew">
         <property id="4903714810883755350" name="text" index="3MwjfP" />
       </concept>
+      <concept id="4903714810883702017" name="jetbrains.mps.build.structure.BuildVarRefStringPart" flags="ng" index="3Mxwey">
+        <reference id="4903714810883702018" name="macro" index="3Mxwex" />
+      </concept>
     </language>
     <language id="ceab5195-25ea-4f22-9b92-103b95ca8c0c" name="jetbrains.mps.lang.core">
       <concept id="1169194658468" name="jetbrains.mps.lang.core.structure.INamedConcept" flags="ng" index="TrEIO">
@@ -73,11 +99,17 @@
       </concept>
     </language>
     <language id="0cf935df-4699-4e9c-a132-fa109541cba3" name="jetbrains.mps.build.mps">
+      <concept id="7832771629084799699" name="jetbrains.mps.build.mps.structure.BuildMps_IdeaPluginVendor" flags="ng" index="2iUeEo">
+        <property id="7832771629084799702" name="name" index="2iUeEt" />
+        <property id="7832771629084799701" name="url" index="2iUeEu" />
+      </concept>
       <concept id="6592112598314586625" name="jetbrains.mps.build.mps.structure.BuildMps_IdeaPluginGroup" flags="ng" index="m$f5U">
         <reference id="6592112598314586626" name="group" index="m$f5T" />
       </concept>
       <concept id="6592112598314498932" name="jetbrains.mps.build.mps.structure.BuildMps_IdeaPlugin" flags="ng" index="m$_wf">
         <property id="6592112598314498927" name="id" index="m$_wk" />
+        <child id="1359186315025500371" name="xml" index="20twgj" />
+        <child id="7832771629084912518" name="vendor" index="2iVFfd" />
         <child id="6592112598314498931" name="version" index="m$_w8" />
         <child id="6592112598314499050" name="content" index="m$_yh" />
         <child id="6592112598314499028" name="dependencies" index="m$_yJ" />
@@ -148,6 +180,48 @@
     <property role="TrG5h" value="DclareForMPS" />
     <property role="2DA0ip" value="../../" />
     <property role="turDy" value="mps_build.xml" />
+    <node concept="2kB4xC" id="ffBaz0wevf" role="1l3spd">
+      <property role="TrG5h" value="version" />
+      <node concept="aVJcg" id="ffBaz0wevJ" role="aVJcv">
+        <node concept="NbPM2" id="ffBaz0wevI" role="aVJcq">
+          <node concept="3Mxwew" id="ffBaz0wevH" role="3MwsjC">
+            <property role="3MwjfP" value="1.1.1" />
+          </node>
+        </node>
+      </node>
+    </node>
+    <node concept="2kB4xC" id="ffBaz0vcUu" role="1l3spd">
+      <property role="TrG5h" value="versionExtra" />
+      <node concept="aVJcg" id="ffBaz0vpZ4" role="aVJcv">
+        <node concept="NbPM2" id="ffBaz0vpZ3" role="aVJcq">
+          <node concept="3Mxwew" id="ffBaz0vpZ2" role="3MwsjC">
+            <property role="3MwjfP" value="devlocal" />
+          </node>
+        </node>
+      </node>
+    </node>
+    <node concept="2kB4xC" id="ffBaz0wex2" role="1l3spd">
+      <property role="TrG5h" value="versionStamp" />
+      <node concept="hHN3E" id="ffBaz0wCFe" role="aVJcv">
+        <property role="hHN3Y" value="yyMMddHHmm" />
+      </node>
+    </node>
+    <node concept="2kB4xC" id="ffBaz0wCCV" role="1l3spd">
+      <property role="TrG5h" value="fullVersion" />
+      <node concept="aVJcg" id="ffBaz0wCDR" role="aVJcv">
+        <node concept="NbPM2" id="ffBaz0wCDQ" role="aVJcq">
+          <node concept="3Mxwey" id="ffBaz0wCDP" role="3MwsjC">
+            <ref role="3Mxwex" node="ffBaz0wevf" resolve="version" />
+          </node>
+          <node concept="3Mxwey" id="ffBaz0wCE7" role="3MwsjC">
+            <ref role="3Mxwex" node="ffBaz0vcUu" resolve="versionExtra" />
+          </node>
+          <node concept="3Mxwey" id="ffBaz0wCEm" role="3MwsjC">
+            <ref role="3Mxwex" node="ffBaz0wex2" resolve="versionStamp" />
+          </node>
+        </node>
+      </node>
+    </node>
     <node concept="10PD9b" id="5TmHY1kYraI" role="10PD9s" />
     <node concept="3b7kt6" id="5TmHY1kYraJ" role="10PD9s" />
     <node concept="398rNT" id="5TmHY1kYraK" role="1l3spd">
@@ -215,8 +289,8 @@
         </node>
       </node>
       <node concept="3_J27D" id="5TmHY1kYrb9" role="m$_w8">
-        <node concept="3Mxwew" id="5TmHY1kYrba" role="3MwsjC">
-          <property role="3MwjfP" value="1.0 alpha 6" />
+        <node concept="3Mxwey" id="ffBaz0wPJz" role="3MwsjC">
+          <ref role="3Mxwex" node="ffBaz0wCCV" resolve="fullVersion" />
         </node>
       </node>
       <node concept="m$_yC" id="5TmHY1kYrbc" role="m$_yJ">
@@ -238,11 +312,31 @@
       </node>
       <node concept="3_J27D" id="55DSsnTM$bO" role="3s6cr7">
         <node concept="3Mxwew" id="55DSsnTM$bQ" role="3MwsjC">
-          <property role="3MwjfP" value="dclare for MPS - rule based programming for MPS" />
+          <property role="3MwjfP" value="dclare for MPS - rule based programming for MPS " />
         </node>
       </node>
       <node concept="m$_yB" id="5Eq6vdsMAr9" role="m$_yh">
         <ref role="m$_yA" node="5Eq6vdsMqEg" resolve="DclareBaseLanguageExt" />
+      </node>
+      <node concept="2iUeEo" id="ffBaz0uBpx" role="2iVFfd">
+        <property role="2iUeEt" value="Modeling Value Group" />
+        <property role="2iUeEu" value="https://www.modelingvalue.nl" />
+      </node>
+      <node concept="2pNNFK" id="ffBaz0uMNX" role="20twgj">
+        <property role="2pNNFO" value="idea-version" />
+        <property role="qg3DV" value="true" />
+        <node concept="2pNUuL" id="ffBaz0uMOz" role="2pNNFR">
+          <property role="2pNUuO" value="since-build" />
+          <node concept="2pMdtt" id="ffBaz0uMO$" role="2pMdts">
+            <property role="2pMdty" value="193.1223" />
+          </node>
+        </node>
+        <node concept="2pNUuL" id="ffBaz0uMP9" role="2pNNFR">
+          <property role="2pNUuO" value="until-build" />
+          <node concept="2pMdtt" id="ffBaz0uMPa" role="2pMdts">
+            <property role="2pMdty" value="193.1270" />
+          </node>
+        </node>
       </node>
     </node>
     <node concept="2G$12M" id="5TmHY1kYrb5" role="3989C9">
