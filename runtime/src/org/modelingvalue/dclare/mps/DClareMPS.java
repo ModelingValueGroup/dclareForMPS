@@ -44,28 +44,28 @@ import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.collections.util.TriConsumer;
 import org.modelingvalue.collections.util.Triple;
 import org.modelingvalue.dclare.Action;
-import org.modelingvalue.dclare.ConsistencyError;
+import org.modelingvalue.dclare.ex.ConsistencyError;
 import org.modelingvalue.dclare.Constant;
-import org.modelingvalue.dclare.EmptyMandatoryException;
+import org.modelingvalue.dclare.ex.EmptyMandatoryException;
 import org.modelingvalue.dclare.ImperativeTransaction;
 import org.modelingvalue.dclare.LeafTransaction;
 import org.modelingvalue.dclare.Mutable;
 import org.modelingvalue.dclare.MutableClass;
 import org.modelingvalue.dclare.NonCheckingObserved;
-import org.modelingvalue.dclare.NonDeterministicException;
+import org.modelingvalue.dclare.ex.NonDeterministicException;
 import org.modelingvalue.dclare.Observed;
 import org.modelingvalue.dclare.Observer;
-import org.modelingvalue.dclare.OutOfScopeException;
+import org.modelingvalue.dclare.ex.OutOfScopeException;
 import org.modelingvalue.dclare.Priority;
-import org.modelingvalue.dclare.ReferencedOrphanException;
+import org.modelingvalue.dclare.ex.ReferencedOrphanException;
 import org.modelingvalue.dclare.ReusableTransaction;
 import org.modelingvalue.dclare.Setable;
 import org.modelingvalue.dclare.State;
-import org.modelingvalue.dclare.ThrowableError;
-import org.modelingvalue.dclare.TooManyChangesException;
-import org.modelingvalue.dclare.TooManyObservedException;
-import org.modelingvalue.dclare.TooManyObserversException;
-import org.modelingvalue.dclare.TransactionException;
+import org.modelingvalue.dclare.ex.ThrowableError;
+import org.modelingvalue.dclare.ex.TooManyChangesException;
+import org.modelingvalue.dclare.ex.TooManyObservedException;
+import org.modelingvalue.dclare.ex.TooManyObserversException;
+import org.modelingvalue.dclare.ex.TransactionException;
 import org.modelingvalue.dclare.Universe;
 import org.modelingvalue.dclare.UniverseTransaction;
 import org.modelingvalue.dclare.mps.DRule.DObserver;
@@ -101,9 +101,9 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
 
     private static final Set<DMessageType>                                                                 MESSAGE_TYPES        = Collection.of(DMessageType.values()).toSet();
 
-    private static final QualifiedSet<Triple<DObject, DFeature<?>, String>, DMessage>                      MESSAGE_QSET         = QualifiedSet.of(m -> Triple.of(m.context(), m.feature(), m.id()));
+    private static final QualifiedSet<Triple<DObject, DFeature, String>, DMessage>                         MESSAGE_QSET         = QualifiedSet.of(m -> Triple.of(m.context(), m.feature(), m.id()));
 
-    protected static final Map<DMessageType, QualifiedSet<Triple<DObject, DFeature<?>, String>, DMessage>> MESSAGE_QSET_MAP     = MESSAGE_TYPES.sequential().toMap(t -> Entry.of(t, MESSAGE_QSET));
+    protected static final Map<DMessageType, QualifiedSet<Triple<DObject, DFeature, String>, DMessage>>    MESSAGE_QSET_MAP     = MESSAGE_TYPES.sequential().toMap(t -> Entry.of(t, MESSAGE_QSET));
 
     private static final MutableClass                                                                      UNIVERSE_CLASS       = new MutableClass() {
                                                                                                                                     @Override
@@ -143,7 +143,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     private ImperativeTransaction                                                                          imperativeTransaction;
     private boolean                                                                                        running;
     protected final Concurrent<ReusableTransaction<DRule.DObserver<?>, DObserverTransaction>>              dObserverTransactions;
-    protected Map<DMessageType, QualifiedSet<Triple<DObject, DFeature<?>, String>, DMessage>>              messages             = MESSAGE_QSET_MAP;
+    protected Map<DMessageType, QualifiedSet<Triple<DObject, DFeature, String>, DMessage>>                 messages             = MESSAGE_QSET_MAP;
     protected final DclareForMPSEngine                                                                     engine;
     private final DRepository                                                                              dRepository;
     private final ModuleChecker                                                                            moduleChecker;
