@@ -219,20 +219,20 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
 				          }); 
 					    
 					    for (SModel model : items.models) {
-				            generalModelChecker.check(model, repository, errorCollector, monitor.subTask(1, SubProgressKind.REPLACING));
+					    	read(()-> generalModelChecker.check(model, repository, errorCollector, monitor.subTask(1, SubProgressKind.REPLACING)));
 				            if (monitor.isCanceled()) {
 				              break;
 				            }
 				          }
 
 				        for (SModule module : items.modules) {
-				            generalModuleChecker.check(module, repository, errorCollector, monitor.subTask(1, SubProgressKind.REPLACING));
+				            read(()->generalModuleChecker.check(module, repository, errorCollector, monitor.subTask(1, SubProgressKind.REPLACING)));
 				            if (monitor.isCanceled()) {
 				              break;
 				            }
 				            
 				            for (SModel model : modelExtractor.getModels(module)) {
-				                generalModelChecker.check(model, repository, errorCollector, monitor.subTask(1, SubProgressKind.REPLACING));
+				                read(()->generalModelChecker.check(model, repository, errorCollector, monitor.subTask(1, SubProgressKind.REPLACING)));
 				                if (monitor.isCanceled()) {
 				                  break;
 				                }
@@ -240,7 +240,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
 				        }
 					    
 					    for (SNode roots : r.roots) {
-				            generalNodeChecker.check(roots, null, null, monitor.subTask(1, SubProgressKind.REPLACING));
+				            read(()->generalNodeChecker.check(roots, null, null, monitor.subTask(1, SubProgressKind.REPLACING)));
 				            if (monitor.isCanceled()) {
 				              break;
 				            }
@@ -811,31 +811,29 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
         changedModules.init(Set.of());
         changedRoots.init(Set.of());
         if (!models.isEmpty() || !modules.isEmpty()) {
-            thePool.execute(() -> {
-                read(() -> {
-                	RootItemsToCheck itemsToCheck = new RootItemsToCheck();
-                    itemsToCheck.models = models.collect(Collectors.toList());
-                    itemsToCheck.modules = modules.collect(Collectors.toList());
-                    itemsToCheck.roots = roots.collect(Collectors.toList());
-                    java.util.List<IssueKindReportItem> reportItems = new ArrayList<>();
-                    SRepository repos = getRepository().original();
-                    mpsChecker.check(itemsToCheck, repos, reportItems::add, new EmptyProgressMonitor());
-                    universeTransaction.put(new Object(), () -> read(() -> {
-                        for (SModel sModel : models) {
-                        	Set<Pair<DObject, IssueKindReportItem>> issues = DModel.ALL_MPS_ISSUES.get(DModel.of(sModel));
-                        	issues = issues.filter(i -> {
-                        		DObject ctx = context(i.b());
-                        		return !itemsToCheck.models.contains(ctx) && !itemsToCheck.roots.contains(ctx);
-                        	}).toSet();
-                            DModel.ALL_MPS_ISSUES.set(DModel.of(sModel), issues);
-                        }
-                        
-                        for (IssueKindReportItem item : reportItems) {
-                            DObject d = context(item);
-							DObject.MPS_ISSUES.set(d, Set::add, Pair.of(d, item));
-                        }
-                    }));
-                });
+            thePool.execute(() -> {                
+            	RootItemsToCheck itemsToCheck = new RootItemsToCheck();
+                itemsToCheck.models = models.collect(Collectors.toList());
+                itemsToCheck.modules = modules.collect(Collectors.toList());
+                itemsToCheck.roots = roots.collect(Collectors.toList());
+                java.util.List<IssueKindReportItem> reportItems = new ArrayList<>();
+                SRepository repos = getRepository().original();
+                mpsChecker.check(itemsToCheck, repos, reportItems::add, new EmptyProgressMonitor());
+                universeTransaction.put(new Object(), () -> read(() -> {
+                    for (SModel sModel : models) {
+                    	Set<Pair<DObject, IssueKindReportItem>> issues = DModel.ALL_MPS_ISSUES.get(DModel.of(sModel));
+                    	issues = issues.filter(i -> {
+                    		DObject ctx = context(i.b());
+                    		return !itemsToCheck.models.contains(ctx) && !itemsToCheck.roots.contains(ctx);
+                    	}).toSet();
+                        DModel.ALL_MPS_ISSUES.set(DModel.of(sModel), issues);
+                    }
+                    
+                    for (IssueKindReportItem item : reportItems) {
+                        DObject d = context(item);
+						DObject.MPS_ISSUES.set(d, Set::add, Pair.of(d, item));
+                    }
+                }));               
             });
         }
     }
