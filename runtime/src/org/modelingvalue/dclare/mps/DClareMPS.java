@@ -728,14 +728,14 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
         changedModels.init(Set.of());
         changedModules.init(Set.of());
         if (!models.isEmpty() || !modules.isEmpty()) {
-            thePool.execute(() -> read(() -> {
+            thePool.execute(() -> {
                 ItemsToCheck itemsToCheck = new ItemsToCheck();
                 itemsToCheck.models = models.collect(Collectors.toList());
                 itemsToCheck.modules = modules.collect(Collectors.toList());
                 List<IssueKindReportItem> reportItems = new ArrayList<>();
                 SRepository repos = getRepository().original();
-                mpsChecker.check(itemsToCheck, repos, reportItems::add, new EmptyProgressMonitor());
-                universeTransaction.put(new Object(), () -> read(() -> {
+                read(() -> mpsChecker.check(itemsToCheck, repos, reportItems::add, new EmptyProgressMonitor()));
+                universeTransaction.put(new Object(), () -> {
                     for (SModel sModel : models) {
                         DModel.ALL_MPS_ISSUES.setDefault(DModel.of(sModel));
                     }
@@ -743,11 +743,11 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
                         DObject.MPS_ISSUES.setDefault(DModule.of(sModule));
                     }
                     for (IssueKindReportItem item : reportItems) {
-                        DObject context = context(item);
+                        DObject context = read(() -> context(item));
                         DObject.MPS_ISSUES.set(context, Set::add, Pair.of(context, item));
                     }
-                }));
-            }));
+                });
+            });
         }
     }
 
