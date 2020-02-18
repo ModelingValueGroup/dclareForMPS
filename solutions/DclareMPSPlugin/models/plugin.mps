@@ -4765,9 +4765,30 @@
             </node>
           </node>
         </node>
+        <node concept="3clFbF" id="1FrOyhdWYl5" role="3cqZAp">
+          <node concept="37vLTI" id="1FrOyhdX14p" role="3clFbG">
+            <node concept="2OqwBi" id="1FrOyhdX3oV" role="37vLTx">
+              <node concept="37vLTw" id="1FrOyhdX2Dd" role="2Oq$k0">
+                <ref role="3cqZAo" node="57dWhtn9W3f" resolve="stats" />
+              </node>
+              <node concept="liA8E" id="1FrOyhdX3LW" role="2OqNvi">
+                <ref role="37wK5l" to="kag7:~UniverseStatistics.totalChanges()" resolve="totalChanges" />
+              </node>
+            </node>
+            <node concept="2OqwBi" id="1FrOyhdWZsO" role="37vLTJ">
+              <node concept="37vLTw" id="1FrOyhdWYl3" role="2Oq$k0">
+                <ref role="3cqZAo" node="1ajo$O32MNd" resolve="root" />
+              </node>
+              <node concept="3TrcHB" id="1FrOyhdX0ln" role="2OqNvi">
+                <ref role="3TsBF5" to="wknp:1FrOyhdWCsR" resolve="changes" />
+              </node>
+            </node>
+          </node>
+        </node>
         <node concept="3clFbF" id="3YQqo46XLOY" role="3cqZAp">
           <node concept="37vLTI" id="3YQqo46XLOZ" role="3clFbG">
             <node concept="10QFUN" id="3YQqo46YDql" role="37vLTx">
+              <node concept="10Oyi0" id="3YQqo46YDqm" role="10QFUM" />
               <node concept="2OqwBi" id="3YQqo46XLP0" role="10QFUP">
                 <node concept="37vLTw" id="3YQqo46XLP1" role="2Oq$k0">
                   <ref role="3cqZAo" node="57dWhtn9W3f" resolve="stats" />
@@ -4776,7 +4797,6 @@
                   <ref role="37wK5l" to="kag7:~UniverseStatistics.totalChangesEver()" resolve="totalChangesEver" />
                 </node>
               </node>
-              <node concept="10Oyi0" id="3YQqo46YDqm" role="10QFUM" />
             </node>
             <node concept="2OqwBi" id="3YQqo46XLP3" role="37vLTJ">
               <node concept="37vLTw" id="3YQqo46XLP4" role="2Oq$k0">
