@@ -27,6 +27,7 @@ import org.jetbrains.mps.openapi.util.ProgressMonitor;
 import org.jetbrains.mps.openapi.util.SubProgressKind;
 
 import jetbrains.mps.baseLanguage.closures.runtime._FunctionTypes;
+import jetbrains.mps.checkers.CheckingSession;
 import jetbrains.mps.checkers.IAbstractChecker;
 import jetbrains.mps.checkers.IChecker;
 import jetbrains.mps.checkers.IChecker.AbstractRootChecker;
@@ -68,7 +69,13 @@ public class DclareModelCheckerBuilder extends ModelCheckerBuilder {
 
                     @Override
                     public ICheckingPostprocessor<NodeReportItem> getPostprocessor() {
-                        return rootChecker.getPostprocessor();
+                        ICheckingPostprocessor pp = rootChecker.getPostprocessor();
+                        return new ICheckingPostprocessor() {
+                            @Override
+                            public void postProcess(SRepository repository, ProgressMonitor monitor, CheckingSession checkingSession) {
+                                dClareMPS.read(() -> pp.postProcess(repository, monitor, checkingSession));
+                            }
+                        };
                     }
 
                     @Override
@@ -91,7 +98,13 @@ public class DclareModelCheckerBuilder extends ModelCheckerBuilder {
 
                     @Override
                     public ICheckingPostprocessor<NodeReportItem> getPostprocessor() {
-                        return rootChecker.getPostprocessor();
+                        ICheckingPostprocessor pp = rootChecker.getPostprocessor();
+                        return new ICheckingPostprocessor() {
+                            @Override
+                            public void postProcess(SRepository repository, ProgressMonitor monitor, CheckingSession checkingSession) {
+                                dClareMPS.read(() -> pp.postProcess(repository, monitor, checkingSession));
+                            }
+                        };
                     }
 
                     @Override
