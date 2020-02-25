@@ -70,12 +70,12 @@ public class DclareModelCheckerBuilder extends ModelCheckerBuilder {
                     @Override
                     public ICheckingPostprocessor<NodeReportItem> getPostprocessor() {
                         ICheckingPostprocessor pp = rootChecker.getPostprocessor();
-                        return new ICheckingPostprocessor() {
+                        return pp != null ? new ICheckingPostprocessor() {
                             @Override
                             public void postProcess(SRepository repository, ProgressMonitor monitor, CheckingSession checkingSession) {
                                 dClareMPS.read(() -> pp.postProcess(repository, monitor, checkingSession));
                             }
-                        };
+                        } : null;
                     }
 
                     @Override
@@ -99,12 +99,12 @@ public class DclareModelCheckerBuilder extends ModelCheckerBuilder {
                     @Override
                     public ICheckingPostprocessor<NodeReportItem> getPostprocessor() {
                         ICheckingPostprocessor pp = rootChecker.getPostprocessor();
-                        return new ICheckingPostprocessor() {
+                        return pp != null ? new ICheckingPostprocessor() {
                             @Override
                             public void postProcess(SRepository repository, ProgressMonitor monitor, CheckingSession checkingSession) {
                                 dClareMPS.read(() -> pp.postProcess(repository, monitor, checkingSession));
                             }
-                        };
+                        } : null;
                     }
 
                     @Override
