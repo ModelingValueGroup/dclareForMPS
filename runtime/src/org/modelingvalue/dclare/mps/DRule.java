@@ -18,7 +18,6 @@ package org.modelingvalue.dclare.mps;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Context;
 import org.modelingvalue.dclare.Constant;
-import org.modelingvalue.dclare.ex.DeferException;
 import org.modelingvalue.dclare.Direction;
 import org.modelingvalue.dclare.LeafTransaction;
 import org.modelingvalue.dclare.Mutable;
@@ -28,6 +27,7 @@ import org.modelingvalue.dclare.ObserverTransaction;
 import org.modelingvalue.dclare.Priority;
 import org.modelingvalue.dclare.Transaction;
 import org.modelingvalue.dclare.UniverseTransaction;
+import org.modelingvalue.dclare.ex.DeferException;
 
 @SuppressWarnings("rawtypes")
 public interface DRule<O> extends DFeature {
@@ -105,11 +105,11 @@ public interface DRule<O> extends DFeature {
             }
         }
 
-        private DObject object() {
+        public DObject object() {
             return (DObject) parent().mutable();
         }
 
-        private DRule rule() {
+        public DRule rule() {
             return ((DObserver) observer()).rule();
         }
 
