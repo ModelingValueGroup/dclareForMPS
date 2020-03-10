@@ -41,7 +41,6 @@ import org.modelingvalue.dclare.LeafTransaction;
 import org.modelingvalue.dclare.NonCheckingObserved;
 import org.modelingvalue.dclare.Observed;
 import org.modelingvalue.dclare.Observer;
-import org.modelingvalue.dclare.Priority;
 import org.modelingvalue.dclare.Setable;
 
 import jetbrains.mps.errors.item.ModuleReportItem;
@@ -99,7 +98,7 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
                                                                                                  LANGUAGES.set(o, dClareMPS().read(() -> languages(o.original()))                                              //
                                                                                                          .addAll(MODELS.get(o).flatMap(DModel::getUsedLanguages))                                              //
                                                                                                          .addAll(REFERENCED.get(o).toValues().flatMap(Function.identity())));
-                                                                                             }, Priority.preDepth);
+                                                                                             });
 
     private static final Observer<DModule>                                    MODELS_RULE    = DObject.observer(MODELS, o -> {
                                                                                                  Set<DModel> referenced = REFERENCED.get(o).toKeys().toSet();
@@ -108,7 +107,7 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
                                                                                                  } else {
                                                                                                      MODELS.set(o, referenced);
                                                                                                  }
-                                                                                             }, Priority.preDepth);
+                                                                                             });
 
     private static final Action<DModule>                                      READ_MODELS    = Action.of("$READ_MODELS", m -> {
                                                                                                  Set<SLanguage> languages = dClareMPS().read(() -> languages(m.original()));
@@ -116,7 +115,7 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
                                                                                                  if (!m.isReadOnly() && m.hasRuleSets(languages)) {
                                                                                                      MODELS.set(m, dClareMPS().read(() -> models(m.original())).map(DModel::of).toSet());
                                                                                                  }
-                                                                                             }, Direction.forward, Priority.preDepth);
+                                                                                             }, Direction.forward);
     @SuppressWarnings("rawtypes")
     protected static final Set<Observer>                                      OBSERVERS      = DObject.OBSERVERS.addAll(Set.of(LANGUAGES_RULE, MODELS_RULE));
 

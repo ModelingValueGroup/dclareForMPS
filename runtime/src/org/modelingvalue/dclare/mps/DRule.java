@@ -24,7 +24,6 @@ import org.modelingvalue.dclare.Mutable;
 import org.modelingvalue.dclare.MutableTransaction;
 import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.ObserverTransaction;
-import org.modelingvalue.dclare.Priority;
 import org.modelingvalue.dclare.Transaction;
 import org.modelingvalue.dclare.UniverseTransaction;
 import org.modelingvalue.dclare.ex.DeferException;
@@ -32,8 +31,8 @@ import org.modelingvalue.dclare.ex.DeferException;
 @SuppressWarnings("rawtypes")
 public interface DRule<O> extends DFeature {
 
-    Constant<DRule, DObserver> OBSERVER             = Constant.of("OBSERVER",                                          //
-            r -> DObserver.of(r, r.initialLowPriority() ? Direction.backward : Direction.forward, Priority.postDepth));
+    Constant<DRule, DObserver> OBSERVER             = Constant.of("OBSERVER",                      //
+            r -> DObserver.of(r, r.initialLowPriority() ? Direction.backward : Direction.forward));
 
     Context<Boolean>           EMPTY_ATTRIBUTE      = Context.of(false);
 
@@ -43,13 +42,13 @@ public interface DRule<O> extends DFeature {
 
     class DObserver<O extends Mutable> extends Observer<O> {
 
-        public static <M extends Mutable> DObserver of(DRule rule, Direction initDirection, Priority priority) {
-            return new DObserver<M>(rule, initDirection, priority);
+        public static <M extends Mutable> DObserver of(DRule rule, Direction initDirection) {
+            return new DObserver<M>(rule, initDirection);
         }
 
         @SuppressWarnings("unchecked")
-        private DObserver(DRule rule, Direction initDirection, Priority priority) {
-            super(rule, o -> ((DRule.DObserverTransaction) LeafTransaction.getCurrent()).run(() -> rule.run(o)), initDirection, priority);
+        private DObserver(DRule rule, Direction initDirection) {
+            super(rule, o -> ((DRule.DObserverTransaction) LeafTransaction.getCurrent()).run(() -> rule.run(o)), initDirection);
         }
 
         public DRule rule() {
@@ -106,7 +105,7 @@ public interface DRule<O> extends DFeature {
         }
 
         public DObject object() {
-            return (DObject) parent().mutable();
+            return (DObject) mutable();
         }
 
         public DRule rule() {

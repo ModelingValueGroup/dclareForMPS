@@ -30,7 +30,6 @@ import org.modelingvalue.dclare.NonCheckingObserved;
 import org.modelingvalue.dclare.NonCheckingObserver;
 import org.modelingvalue.dclare.Observed;
 import org.modelingvalue.dclare.Observer;
-import org.modelingvalue.dclare.Priority;
 import org.modelingvalue.dclare.Setable;
 
 import jetbrains.mps.errors.item.IssueKindReportItem;
@@ -55,7 +54,7 @@ public abstract class DObject implements Mutable {
                                                                                                                   }
                                                                                                               });
 
-    protected static final Observer<DObject>                                        TYPE_RULE                 = observer(TYPE, o -> TYPE.set(o, o.getType()), Priority.preDepth);
+    protected static final Observer<DObject>                                        TYPE_RULE                 = observer(TYPE, o -> TYPE.set(o, o.getType()));
 
     public static final Observed<DObject, DAttribute>                               CONTAINING_ATTRIBUTE      = NonCheckingObserved.of("$CONTAINING_ATTRIBUTE", null);
 
@@ -63,18 +62,18 @@ public abstract class DObject implements Mutable {
                                                                                                                   Pair<Mutable, Setable<Mutable, ?>> pc = Mutable.D_PARENT_CONTAINING.get(o);
                                                                                                                   CONTAINING_ATTRIBUTE.set(o, pc == null || pc.a() instanceof DClareMPS ? null :                              //
                                                                                                                   pc.b() instanceof DAttribute ? (DAttribute) pc.b() : CONTAINING_ATTRIBUTE.get((DObject) pc.a()));
-                                                                                                              }, Priority.preDepth);
+                                                                                                              });
 
     protected static final Action<DObject>                                          REFRESH_CHILDREN          = Action.of("$REFRESH_CHILDREN", o -> {
                                                                                                                   for (DObject c : o.getAllChildren()) {
                                                                                                                       DObject.REFRESH.trigger(c);
                                                                                                                   }
-                                                                                                              }, Direction.forward, Priority.preDepth);
+                                                                                                              }, Direction.forward);
 
     protected static final Action<DObject>                                          REFRESH                   = Action.of("$REFRESH", o -> {
                                                                                                                   o.read(dClareMPS());
                                                                                                                   DObject.REFRESH_CHILDREN.trigger(o);
-                                                                                                              }, Direction.forward, Priority.preDepth);
+                                                                                                              }, Direction.forward);
 
     public static final DObserved<DObject, Set<Pair<DObject, IssueKindReportItem>>> MPS_ISSUES                = DObserved.of("$MPS_ISSUES", Set.of(), false, false, null, false, null, (tx, o, pre, post) -> {
                                                                                                                   DNode root = o instanceof DNode ? ((DNode) o).getContainingRoot() : null;
@@ -176,19 +175,15 @@ public abstract class DObject implements Mutable {
     protected abstract DType getType();
 
     public static <O extends DObject> NonCheckingObserver<O> observer(Object id, Consumer<O> action) {
-        return observer(id, action, Priority.postDepth);
+        return observer(id, action, Direction.forward);
     }
 
-    public static <O extends DObject> NonCheckingObserver<O> observer(Object id, Consumer<O> action, Priority prio) {
-        return observer(id, action, Direction.forward, prio);
-    }
-
-    public static <O extends DObject> NonCheckingObserver<O> observer(Object id, Consumer<O> action, Direction dir, Priority prio) {
+    public static <O extends DObject> NonCheckingObserver<O> observer(Object id, Consumer<O> action, Direction dir) {
         return NonCheckingObserver.of(id, o -> {
             if (o.isOwned()) {
                 action.accept(o);
             }
-        }, dir, prio);
+        }, dir);
     }
 
     public boolean isDclareOnly() {

@@ -51,7 +51,6 @@ import org.modelingvalue.dclare.Direction;
 import org.modelingvalue.dclare.NonCheckingObserved;
 import org.modelingvalue.dclare.Observed;
 import org.modelingvalue.dclare.Observer;
-import org.modelingvalue.dclare.Priority;
 import org.modelingvalue.dclare.Setable;
 
 import jetbrains.mps.errors.item.ModelReportItem;
@@ -105,7 +104,7 @@ public class DModel extends DFromOriginalObject<SModel> implements SModel {
 
     private static final Function<DModel, Set<SNode>>    READ_ROOTS_FUNCTION = m -> dClareMPS().read(() -> Collection.of(m.original().getRootNodes()).toSet());
 
-    protected static final Observer<DModel>              ROOTS_READ_MATCHER  = DObject.observer("$ROOTS_READ_MATCHER", m -> DNode.reuse(m, READ_ROOTS_FUNCTION, ROOTS.get(m)), Priority.preDepth);
+    protected static final Observer<DModel>              ROOTS_READ_MATCHER  = DObject.observer("$ROOTS_READ_MATCHER", m -> DNode.reuse(m, READ_ROOTS_FUNCTION, ROOTS.get(m)));
 
     public static final Observed<DModel, Set<SLanguage>> USED_LANGUAGES      = DObserved.of("USED_LANGUAGES", Set.of(), false, false, null, false, (dModel, pre, post) -> {
                                                                                  SModelBase sModel = (SModelBase) dModel.original();
@@ -133,14 +132,14 @@ public class DModel extends DFromOriginalObject<SModel> implements SModel {
     private static final Observer<DModel>                USED_LANGUAGES_RULE = DObject.observer(USED_LANGUAGES, o -> {
                                                                                  Set<SLanguage> ls = dClareMPS().read(() -> Collection.of(((SModelBase) o.original()).importedLanguageIds()).toSet());
                                                                                  USED_LANGUAGES.set(o, Set::addAll, ls.addAll(ROOTS.get(o).flatMap(DNode.USED_LANGUAGES::get)));
-                                                                             }, Priority.preDepth);
+                                                                             });
 
     private static final Observer<DModel>                USED_MODELS_RULE    = DObject.observer(USED_MODELS, o -> {
                                                                                  DClareMPS dClareMPS = dClareMPS();
                                                                                  Set<DModel> ls = dClareMPS.read(() -> Collection.of(((SModelBase) o.original()).getModelImports()).                  //
                                                                                  map(r -> dClareMPS.read(() -> r.resolve(null))).notNull().map(DModel::of).toSet());
                                                                                  USED_MODELS.set(o, ls.addAll(ROOTS.get(o).flatMap(DNode.USED_MODELS::get)).remove(o));
-                                                                             }, Priority.preDepth);
+                                                                             });
 
     private static final Observer<DModel>                REFERENCED_RULE     = DObject.observer(DModule.REFERENCED, o -> USED_MODELS.get(o).forEach(mo -> {
                                                                                  DModule.REFERENCED.set(DModule.of(mo.original().getModule()),                                                        //
@@ -150,7 +149,7 @@ public class DModel extends DFromOriginalObject<SModel> implements SModel {
     private static final Action<DModel>                  READ_ROOTS          = Action.of("$READ_ROOTS", m -> {
                                                                                  MODEL_ROOT.set(m, dClareMPS().read(() -> m.original().getModelRoot()));
                                                                                  ROOTS.set(m, dClareMPS().read(() -> Collection.of(m.original().getRootNodes()).map(DNode::of).toSet()));
-                                                                             }, Direction.forward, Priority.preDepth);
+                                                                             }, Direction.forward);
 
     @SuppressWarnings("rawtypes")
     protected static final Set<Observer>                 OBSERVERS           = DObject.OBSERVERS.addAll(Set.of(ROOTS_READ_MATCHER, USED_LANGUAGES_RULE, USED_MODELS_RULE, REFERENCED_RULE));

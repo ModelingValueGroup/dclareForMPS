@@ -29,7 +29,6 @@ import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.dclare.Action;
 import org.modelingvalue.dclare.Constant;
 import org.modelingvalue.dclare.Direction;
-import org.modelingvalue.dclare.Priority;
 import org.modelingvalue.dclare.Setable;
 
 @SuppressWarnings("deprecation")
@@ -65,9 +64,7 @@ public class DRepository extends DFromOriginalObject<SRepository> implements SRe
 
     protected static final DObserved<DRepository, Set<?>>    EXCEPTIONS      = DObserved.of("EXCEPTIONS", Set.of(), false, false, null, false, null, null);
 
-    private static final Action<DRepository>                 READ_MODULES    = Action.of("$READ_MODULES",
-                                                                                    r -> MODULES.set(r, dClareMPS().read(DRepository::modules).map(DModule::of).toSet()),
-                                                                                    Direction.forward, Priority.preDepth);
+    private static final Action<DRepository>                 READ_MODULES    = Action.of("$READ_MODULES", r -> MODULES.set(r, dClareMPS().read(DRepository::modules).map(DModule::of).toSet()), Direction.forward);
 
     @SuppressWarnings("rawtypes")
     protected static final Set<Setable>                      SETABLES        = DObject.SETABLES.add(MODULES);
