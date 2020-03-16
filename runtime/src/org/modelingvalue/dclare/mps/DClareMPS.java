@@ -187,27 +187,6 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
         universeTransaction = new UniverseTransaction(this, thePool, prevState, 100, maxTotalNrOfChanges, maxNrOfChanges, maxNrOfObserved, maxNrOfObservers, 4, null) {
 
             @Override
-            public void startOpposite() {
-                if (TRACE) {
-                    System.err.println(DCLARE + "    START OPPOSITE " + this);
-                }
-            }
-
-            @Override
-            public void startPriority(boolean depth) {
-                if (TRACE) {
-                    System.err.println(DCLARE + "    START DEPTH " + depth + "  " + this);
-                }
-            }
-
-            @Override
-            public void endPriority(boolean depth) {
-                if (TRACE) {
-                    System.err.println(DCLARE + "    END DEPTH   " + depth + "  " + this);
-                }
-            }
-
-            @Override
             public void start(Action<Universe> action) {
                 if (TRACE) {
                     System.err.println(DCLARE + "START ACTION " + action + "  " + this);
