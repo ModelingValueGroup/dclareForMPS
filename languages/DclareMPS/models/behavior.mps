@@ -439,14 +439,6 @@
       <concept id="1160666733551" name="jetbrains.mps.baseLanguage.collections.structure.AddAllElementsOperation" flags="nn" index="X8dFx" />
       <concept id="1162935959151" name="jetbrains.mps.baseLanguage.collections.structure.GetSizeOperation" flags="nn" index="34oBXx" />
       <concept id="1178286324487" name="jetbrains.mps.baseLanguage.collections.structure.SortDirection" flags="nn" index="1nlBCl" />
-      <concept id="1197683403723" name="jetbrains.mps.baseLanguage.collections.structure.MapType" flags="in" index="3rvAFt">
-        <child id="1197683466920" name="keyType" index="3rvQeY" />
-        <child id="1197683475734" name="valueType" index="3rvSg0" />
-      </concept>
-      <concept id="1197686869805" name="jetbrains.mps.baseLanguage.collections.structure.HashMapCreator" flags="nn" index="3rGOSV">
-        <child id="1197687026896" name="keyType" index="3rHrn6" />
-        <child id="1197687035757" name="valueType" index="3rHtpV" />
-      </concept>
       <concept id="1165525191778" name="jetbrains.mps.baseLanguage.collections.structure.GetFirstOperation" flags="nn" index="1uHKPH" />
       <concept id="1165530316231" name="jetbrains.mps.baseLanguage.collections.structure.IsEmptyOperation" flags="nn" index="1v1jN8" />
       <concept id="7125221305512719026" name="jetbrains.mps.baseLanguage.collections.structure.CollectionType" flags="in" index="3vKaQO" />
@@ -7178,29 +7170,6 @@
           </node>
         </node>
         <node concept="3clFbH" id="70MyLM40vmv" role="3cqZAp" />
-        <node concept="3cpWs8" id="5oUXqOrljJi" role="3cqZAp">
-          <node concept="3cpWsn" id="5oUXqOrljJj" role="3cpWs9">
-            <property role="TrG5h" value="map" />
-            <node concept="3rvAFt" id="5oUXqOrljJk" role="1tU5fm">
-              <node concept="3Tqbb2" id="5oUXqOrljJn" role="3rvQeY">
-                <ref role="ehGHo" to="tpce:f_TJgxE" resolve="LinkDeclaration" />
-              </node>
-              <node concept="3Tqbb2" id="5oUXqOrljLs" role="3rvSg0">
-                <ref role="ehGHo" to="tp3r:4IP40Bi38Sq" resolve="NodeBuilderInitLink" />
-              </node>
-            </node>
-            <node concept="2ShNRf" id="5oUXqOrljLu" role="33vP2m">
-              <node concept="3rGOSV" id="5oUXqOrljLw" role="2ShVmc">
-                <node concept="3Tqbb2" id="5oUXqOrljLz" role="3rHrn6">
-                  <ref role="ehGHo" to="tpce:f_TJgxE" resolve="LinkDeclaration" />
-                </node>
-                <node concept="3Tqbb2" id="5oUXqOrljL$" role="3rHtpV">
-                  <ref role="ehGHo" to="tp3r:4IP40Bi38Sq" resolve="NodeBuilderInitLink" />
-                </node>
-              </node>
-            </node>
-          </node>
-        </node>
         <node concept="3cpWs8" id="6hex_vHr97v" role="3cqZAp">
           <node concept="3cpWsn" id="6hex_vHr97w" role="3cpWs9">
             <property role="TrG5h" value="conceptContainmentLinks" />
