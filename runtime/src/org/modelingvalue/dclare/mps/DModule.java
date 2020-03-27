@@ -19,6 +19,7 @@ import java.util.HashSet;
 import java.util.function.Function;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
+import org.jetbrains.mps.openapi.model.EditableSModel;
 import org.jetbrains.mps.openapi.model.SModel;
 import org.jetbrains.mps.openapi.model.SModelId;
 import org.jetbrains.mps.openapi.model.SModelReference;
@@ -344,7 +345,9 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
     protected static Set<SModel> models(SModule module) {
         Set<SModel> ist = Set.of();
         for (SModel child : module instanceof Language ? ((Language) module).getAccessoryModels() : module.getModels()) {
-            ist = ist.add(child);
+            if (child instanceof EditableSModel) {
+                ist = ist.add(child);
+            }
         }
         return ist;
     }
@@ -362,7 +365,7 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
         }
         if (found == null && (original() instanceof Language || !hasRuleSets(LANGUAGES.get(this)))) {
             for (SModel sModel : dClareMPS().read(() -> original().getModels())) {
-                if (sModel.getName().getSimpleName().equals(name)) {
+                if (sModel instanceof EditableSModel && sModel.getName().getSimpleName().equals(name)) {
                     found = DModel.of(sModel);
                     setReferenced(found);
                     MODELS.set(this, Set::add, found);
