@@ -47,7 +47,11 @@ public interface DAttribute<O, T> extends DFeature {
 
     @SuppressWarnings("unchecked")
     static <C, V> DAttribute<C, V> of(Object id) {
-        return DATTRIBUTE.isSet(id) ? DATTRIBUTE.get(id) : null;
+        if (LeafTransaction.getCurrent() != null) {
+            return DATTRIBUTE.isSet(id) ? DATTRIBUTE.get(id) : null;
+        } else {
+            return null;
+        }
     }
 
     T pre(O object);
@@ -122,11 +126,8 @@ public interface DAttribute<O, T> extends DFeature {
 
         @Override
         public V get(C object) {
-            if (object instanceof DNode) {
-                LeafTransaction current = LeafTransaction.getCurrent();
-                if (current == null || current instanceof ImperativeTransaction) {
-                    ((DNode) object).sNode().getProperty(sProperty);
-                }
+            if (object instanceof DNode && LeafTransaction.getCurrent() instanceof ImperativeTransaction) {
+                ((DNode) object).sNode().getProperty(sProperty);
             }
             return super.get(object);
         }

@@ -118,4 +118,6 @@ public interface DRule<O> extends DFeature {
 
     boolean initialLowPriority();
 
+    boolean onlyTemporal();
+
 }

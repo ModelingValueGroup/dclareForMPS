@@ -19,7 +19,6 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
-import org.jetbrains.mps.openapi.module.SRepository;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
@@ -37,7 +36,7 @@ import jetbrains.mps.errors.item.IssueKindReportItem;
 @SuppressWarnings({"rawtypes", "unused"})
 public abstract class DObject implements Mutable {
 
-    public static final Observed<DObject, DType>                                    TYPE                      = NonCheckingObserved.of("TYPE", new DType("<DUMMY_TYPE>") {
+    public static final Observed<DObject, DType<?>>                                 TYPE                      = NonCheckingObserved.of("TYPE", new DType<String>("<DUMMY_TYPE>") {
                                                                                                                   @Override
                                                                                                                   public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
                                                                                                                       return Set.of();
@@ -51,6 +50,11 @@ public abstract class DObject implements Mutable {
                                                                                                                   @Override
                                                                                                                   public Set<SLanguage> getLanguages() {
                                                                                                                       return Set.of();
+                                                                                                                  }
+
+                                                                                                                  @Override
+                                                                                                                  public boolean external() {
+                                                                                                                      return false;
                                                                                                                   }
                                                                                                               });
 
@@ -97,8 +101,6 @@ public abstract class DObject implements Mutable {
         return DClareMPS.instance();
     }
 
-    public abstract boolean isReadOnly();
-
     public boolean isOwned() {
         return dParent() != null;
     }
@@ -116,7 +118,7 @@ public abstract class DObject implements Mutable {
     }
 
     @Override
-    public DType dClass() {
+    public DType<?> dClass() {
         return TYPE.get(this);
     }
 
@@ -165,14 +167,12 @@ public abstract class DObject implements Mutable {
         exit(dClareMPS);
     }
 
-    protected abstract SRepository getOriginalRepository();
-
     public DObject dObjectParent() {
         Object parent = dParent();
         return parent instanceof DObject ? (DObject) parent : null;
     }
 
-    protected abstract DType getType();
+    protected abstract DType<?> getType();
 
     public static <O extends DObject> NonCheckingObserver<O> observer(Object id, Consumer<O> action) {
         return observer(id, action, Direction.forward);
@@ -190,8 +190,6 @@ public abstract class DObject implements Mutable {
         return Mutable.D_PARENT_CONTAINING.get(this) == null || CONTAINING_ATTRIBUTE.get(this) != null;
     }
 
-    protected boolean isExternal() {
-        return isReadOnly() || !dClareMPS().getRepository().original().equals(getOriginalRepository());
-    }
+    public abstract boolean isExternal();
 
 }

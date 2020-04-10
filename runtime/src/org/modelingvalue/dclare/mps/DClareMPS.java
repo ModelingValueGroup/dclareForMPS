@@ -28,8 +28,12 @@ import javax.swing.SwingUtilities;
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.jetbrains.mps.openapi.model.SModel;
 import org.jetbrains.mps.openapi.model.SNode;
+import org.jetbrains.mps.openapi.module.ModelAccess;
 import org.jetbrains.mps.openapi.module.SModule;
 import org.jetbrains.mps.openapi.module.SRepository;
+import org.jetbrains.mps.openapi.repository.CommandListener;
+import org.jetbrains.mps.openapi.repository.ReadActionListener;
+import org.jetbrains.mps.openapi.repository.WriteActionListener;
 import org.jetbrains.mps.openapi.util.Consumer;
 import org.jetbrains.mps.openapi.util.ProgressMonitor;
 import org.modelingvalue.collections.Collection;
@@ -97,7 +101,7 @@ import jetbrains.mps.smodel.language.LanguageRuntime;
 
 public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
 
-    protected static final java.util.Map<SRepository, DClareMPS>                                        DCLARE_MPS           = new java.util.concurrent.ConcurrentHashMap<>();
+    private final static ThreadLocal<Integer>                                                           ACTION_ACTIVE        = ThreadLocal.<Integer> withInitial(() -> 0);
 
     private static final Set<DMessageType>                                                              MESSAGE_TYPES        = Collection.of(DMessageType.values()).toSet();
 
@@ -146,7 +150,9 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     private boolean                                                                                     running;
     protected final Concurrent<ReusableTransaction<DRule.DObserver<?>, DObserverTransaction>>           dObserverTransactions;
     protected Map<DMessageType, QualifiedSet<Triple<DObject, DFeature, String>, DMessage>>              messages             = MESSAGE_QSET_MAP;
+    private Thread                                                                                      commandThread;
     protected final DclareForMPSEngine                                                                  engine;
+    private final ActionStartStopHandler                                                                actionHandler;
     private final DRepository                                                                           dRepository;
     private final ModuleChecker                                                                         moduleChecker;
     private final ModelChecker                                                                          modelChecker;
@@ -163,6 +169,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
         this.engine = engine;
         this.startStopHandler = startStopHandler;
         SRepository projectRepository = project.getRepository();
+        this.actionHandler = new ActionStartStopHandler();
         this.dRepository = new DRepository(projectRepository);
         this.moduleChecker = new ModuleChecker();
         this.modelChecker = new ModelChecker();
@@ -180,7 +187,14 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
         mpsChecker = new DclareModelCheckerBuilder(this, modelExtractor).createChecker(checkers);
         Highlighter highlighter = project.getComponent(Highlighter.class);
         highlighter.addChecker(languageEditorChecker);
-        project.getModelAccess().executeCommandInEDT(() -> startStopHandler.on(project));
+        ModelAccess modelAccess = project.getModelAccess();
+        modelAccess.executeCommandInEDT(() -> {
+            commandThread = Thread.currentThread();
+            startStopHandler.on(project);
+        });
+        modelAccess.addCommandListener(actionHandler);
+        modelAccess.addReadActionListener(actionHandler);
+        modelAccess.addWriteActionListener(actionHandler);
         if (TRACE) {
             System.err.println(DCLARE + "START " + this);
         }
@@ -207,21 +221,21 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
 
             @Override
             protected void clearOrphans(Universe universe) {
-                if (imperativeTransaction != null) {
+                if (isRunning()) {
                     super.clearOrphans(universe);
                 }
             }
 
             @Override
             protected void clear(LeafTransaction tx, Mutable orphan) {
-                if (!(orphan instanceof DNode && ((DNode) orphan).isReadOnly())) {
+                if (!(orphan instanceof DObject && ((DObject) orphan).isExternal())) {
                     super.clear(tx, orphan);
                 }
             }
 
             @Override
             protected void checkConsistency(State pre, State post) {
-                if (imperativeTransaction != null) {
+                if (isRunning()) {
                     super.checkConsistency(pre, post);
                 }
             }
@@ -261,7 +275,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     public void init() {
         Universe.super.init();
         imperativeTransaction = universeTransaction.addImperative("$MPS_NATIVE", this, r -> {
-            if (imperativeTransaction != null && !COMMITTING.get()) {
+            if (isRunning() && !COMMITTING.get()) {
                 if (!running) {
                     running = true;
                     command(() -> this.startStopHandler.start(project));
@@ -270,28 +284,6 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
             }
         });
         REPOSITORY_CONTAINER.set(this, getRepository());
-    }
-
-    public static <T> T get(SRepository sRepository, Supplier<T> supplier) {
-        LeafTransaction tx = LeafTransaction.getCurrent();
-        if (tx instanceof ImperativeTransaction) {
-            try {
-                return supplier.get();
-            } catch (Throwable t) {
-                ((DClareMPS) tx.universeTransaction().mutable()).addMessage(t);
-                return null;
-            }
-        } else {
-            DClareMPS dClareMPS = sRepository != null ? DCLARE_MPS.get(sRepository) : null;
-            return dClareMPS != null && dClareMPS.isRunning() ? dClareMPS.imperativeTransaction.state().get(() -> {
-                try {
-                    return supplier.get();
-                } catch (Throwable t) {
-                    dClareMPS.addMessage(t);
-                    return null;
-                }
-            }) : null;
-        }
     }
 
     @SuppressWarnings("rawtypes")
@@ -435,11 +427,11 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     }
 
     public void handleMPSChange(Runnable action) {
-        if (imperativeTransaction != null) {
-            if (LeafTransaction.getCurrent() == imperativeTransaction) {
+        if (isRunning()) {
+            if (isRunningCommand()) {
                 if (!COMMITTING.get()) {
                     try {
-                        action.run();
+                        LeafTransaction.getContext().run(imperativeTransaction, action);
                     } catch (Throwable t) {
                         addMessage(t);
                     }
@@ -448,6 +440,10 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
                 imperativeTransaction.schedule(action);
             }
         }
+    }
+
+    protected boolean isRunningCommand() {
+        return Thread.currentThread() == commandThread;
     }
 
     public void invokeLater(Runnable runnable) {
@@ -519,7 +515,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     public void accept(State pre, State post, Boolean last) {
-        if (imperativeTransaction != null && !universeTransaction.isKilled()) {
+        if (isRunning() && !universeTransaction.isKilled()) {
             if (TRACE) {
                 System.err.println(DCLARE + "    START COMMIT " + this);
             }
@@ -557,9 +553,16 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     }
 
     protected void stop() {
-        if (imperativeTransaction != null) {
+        if (isRunning()) {
             State state = universeTransaction.preState();
-            project.getModelAccess().executeCommandInEDT(() -> startStopHandler.off(project, state::get, this));
+            ModelAccess modelAccess = project.getModelAccess();
+            modelAccess.executeCommandInEDT(() -> {
+                startStopHandler.off(project, state::get, this);
+                commandThread = null;
+            });
+            modelAccess.removeCommandListener(actionHandler);
+            modelAccess.removeReadActionListener(actionHandler);
+            modelAccess.removeWriteActionListener(actionHandler);
             CheckerRegistry checkerRegistry = project.getPlatform().findComponent(CheckerRegistry.class);
             if (checkerRegistry == null) {
                 throw new Error("CheckerRegistry not found in platform");
@@ -568,7 +571,9 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
             checkerRegistry.unregisterChecker(modelChecker);
             checkerRegistry.unregisterChecker(nodeChecker);
             Highlighter highlighter = project.getComponent(Highlighter.class);
-            project.getModelAccess().runReadInEDT(() -> highlighter.removeChecker(languageEditorChecker));
+            modelAccess.runReadInEDT(() -> {
+                highlighter.removeChecker(languageEditorChecker);
+            });
             ImperativeTransaction it = imperativeTransaction;
             invokeLater(it::stop);
             imperativeTransaction = null;
@@ -777,5 +782,56 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
                 e.printStackTrace();
             }
         }
+    }
+
+    private class ActionStartStopHandler implements CommandListener, ReadActionListener, WriteActionListener {
+
+        private void start(int kind) {
+            if (LeafTransaction.getCurrent() == null) {
+                ImperativeTransaction it = imperativeTransaction;
+                if (it != null) {
+                    ACTION_ACTIVE.set(kind);
+                    LeafTransaction.getContext().set(it);
+                }
+            }
+        }
+
+        private void stop(int kind) {
+            if (ACTION_ACTIVE.get() == kind) {
+                ACTION_ACTIVE.set(0);
+                LeafTransaction.getContext().set(null);
+            }
+        }
+
+        @Override
+        public void actionStarted() {
+            start(1);
+        }
+
+        @Override
+        public void actionFinished() {
+            stop(1);
+        }
+
+        @Override
+        public void readStarted() {
+            start(2);
+        }
+
+        @Override
+        public void readFinished() {
+            stop(2);
+        }
+
+        @Override
+        public void commandStarted() {
+            start(3);
+        }
+
+        @Override
+        public void commandFinished() {
+            stop(3);
+        }
+
     }
 }

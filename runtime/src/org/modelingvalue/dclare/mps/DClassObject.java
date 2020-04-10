@@ -15,34 +15,38 @@
 
 package org.modelingvalue.dclare.mps;
 
-import org.jetbrains.mps.openapi.language.*;
-import org.jetbrains.mps.openapi.module.*;
+import java.util.Arrays;
+
+import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
-import org.modelingvalue.collections.util.*;
-import org.modelingvalue.dclare.*;
-
-import java.util.*;
+import org.modelingvalue.collections.util.Triple;
+import org.modelingvalue.dclare.Constant;
 
 @SuppressWarnings("unused")
 public class DClassObject extends DIdentifiedObject implements SClassObject {
 
-    private static final Constant<Pair<Set<SLanguage>, SClass>, DType> CLASS_OBJECT_TYPE = Constant.of("CLASS_OBJECT_TYPE", p -> new DType(p) {
+    private static final Constant<Triple<Set<SLanguage>, SClass, Boolean>, DType<?>> CLASS_OBJECT_TYPE = Constant.of("CLASS_OBJECT_TYPE", p -> new DType<Triple<Set<SLanguage>, SClass, Boolean>>(p) {
         @SuppressWarnings({"rawtypes", "unchecked"})
         @Override
         public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
-            return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getClassRules(p.b()))).toSet();
+            return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getClassRules(id().b()))).toSet();
         }
 
         @SuppressWarnings({"rawtypes", "unchecked"})
         @Override
         public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
-            return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getClassAttributes(p.b()))).toSet();
+            return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getClassAttributes(id().b()))).toSet();
         }
 
         @Override
         public Set<SLanguage> getLanguages() {
-            return p.a();
+            return id().a();
+        }
+
+        @Override
+        public boolean external() {
+            return id().c();
         }
     });
 
@@ -57,23 +61,19 @@ public class DClassObject extends DIdentifiedObject implements SClassObject {
     }
 
     @Override
+    public boolean isExternal() {
+        return false;
+    }
+
+    @Override
     public String toString() {
         return getSClass() + super.toString();
     }
 
     @Override
-    public boolean isReadOnly() {
-        return false;
-    }
-
-    @Override
-    protected SRepository getOriginalRepository() {
-        return dClareMPS().getRepository().original();
-    }
-
-    @Override
-    protected DType getType() {
-        return CLASS_OBJECT_TYPE.get(Pair.of(TYPE.get(dObjectParent()).getLanguages(), getSClass()));
+    protected DType<?> getType() {
+        DType<?> dType = TYPE.get(dObjectParent());
+        return CLASS_OBJECT_TYPE.get(Triple.of(dType.getLanguages(), getSClass(), dType.external()));
     }
 
     @Override
