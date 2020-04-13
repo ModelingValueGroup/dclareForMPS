@@ -34,25 +34,19 @@ import jetbrains.mps.smodel.adapter.structure.property.InvalidProperty;
 @SuppressWarnings({"rawtypes", "unused"})
 public interface DAttribute<O, T> extends DFeature {
 
-    Constant<Object, DAttribute> DATTRIBUTE = Constant.of("DATTRIBUTE", null);
-
     @SuppressWarnings("unchecked")
-    static <C, V> DAttribute<C, V> of(Object id, String name, boolean synthetic, boolean optional, boolean composite, int identifyingNr, V def, Class<?> cls, Supplier<SNode> source, Function<C, V> deriver) {
-        DAttribute<C, V> dAttribute = identifyingNr >= 0 ? new DIdentifyingAttribute(id, name, synthetic, composite, identifyingNr, cls, source) : //
+    static <C, V> DAttribute<C, V> of(String id, String name, boolean synthetic, boolean optional, boolean composite, int identifyingNr, V def, Class<?> cls, Supplier<SNode> source, Function<C, V> deriver) {
+        return identifyingNr >= 0 ? new DIdentifyingAttribute(id, name, synthetic, composite, identifyingNr, cls, source) : //
                 deriver != null ? new DConstant(id, name, synthetic, composite, cls, source, deriver) : //
                         new DObservedAttribute(id, name, synthetic, optional, composite, def, cls, source, new InvalidProperty(id.toString(), name));
-        DATTRIBUTE.set(id, dAttribute);
-        return dAttribute;
     }
 
     @SuppressWarnings("unchecked")
-    static <C, V> DAttribute<C, V> of(Object id) {
-        if (LeafTransaction.getCurrent() != null) {
-            return DATTRIBUTE.isSet(id) ? DATTRIBUTE.get(id) : null;
-        } else {
-            return null;
-        }
+    static <C, V> DAttribute<C, V> of(String id) {
+        return (DAttribute<C, V>) DClareMPS.ATTRIBUTE_MAP.get(DClareMPS.instance()).get(id);
     }
+
+    String id();
 
     T pre(O object);
 
@@ -105,6 +99,11 @@ public interface DAttribute<O, T> extends DFeature {
         }
 
         @Override
+        public String id() {
+            return (String) super.id();
+        }
+
+        @Override
         public String toString() {
             return name;
         }
@@ -148,7 +147,7 @@ public interface DAttribute<O, T> extends DFeature {
     }
 
     final class DIdentifyingAttribute<C extends DObject, V> implements DAttribute<C, V> {
-        private final Object          id;
+        private final String          id;
         private final String          name;
         private final boolean         composite;
         private final int             index;
@@ -156,7 +155,7 @@ public interface DAttribute<O, T> extends DFeature {
         private final Supplier<SNode> source;
         private final Class<?>        cls;
 
-        public DIdentifyingAttribute(Object id, String name, boolean synthetic, boolean composite, int index, Class<?> cls, Supplier<SNode> source) {
+        public DIdentifyingAttribute(String id, String name, boolean synthetic, boolean composite, int index, Class<?> cls, Supplier<SNode> source) {
             this.id = id;
             this.name = name;
             this.composite = composite;
@@ -169,6 +168,11 @@ public interface DAttribute<O, T> extends DFeature {
         @Override
         public int hashCode() {
             return id.hashCode();
+        }
+
+        @Override
+        public String id() {
+            return id;
         }
 
         @Override
@@ -281,6 +285,11 @@ public interface DAttribute<O, T> extends DFeature {
         }
 
         @Override
+        public String id() {
+            return (String) super.id();
+        }
+
+        @Override
         public String toString() {
             return name;
         }
@@ -320,68 +329,6 @@ public interface DAttribute<O, T> extends DFeature {
             return cls;
         }
 
-    }
-
-    final class NullAttribute implements DAttribute {
-        @Override
-        public SNode getSource() {
-            return null;
-        }
-
-        @Override
-        public boolean isSynthetic() {
-            return true;
-        }
-
-        @Override
-        public Object pre(Object object) {
-            return null;
-        }
-
-        @Override
-        public Object get(Object object) {
-            return null;
-        }
-
-        @Override
-        public Object set(Object object, Object value) {
-            return null;
-        }
-
-        @Override
-        public Object set(Object object, BiFunction function, Object element) {
-            return null;
-        }
-
-        @Override
-        public boolean isComposite() {
-            return false;
-        }
-
-        @Override
-        public boolean isConstant() {
-            return false;
-        }
-
-        @Override
-        public boolean isIndetifying() {
-            return false;
-        }
-
-        @Override
-        public boolean isMandatory() {
-            return false;
-        }
-
-        @Override
-        public Class cls() {
-            return Object.class;
-        }
-
-        @Override
-        public String toString() {
-            return "nullAttribute";
-        }
     }
 
 }

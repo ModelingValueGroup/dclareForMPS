@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -31,9 +32,6 @@ import org.jetbrains.mps.openapi.model.SNode;
 import org.jetbrains.mps.openapi.module.ModelAccess;
 import org.jetbrains.mps.openapi.module.SModule;
 import org.jetbrains.mps.openapi.module.SRepository;
-import org.jetbrains.mps.openapi.repository.CommandListener;
-import org.jetbrains.mps.openapi.repository.ReadActionListener;
-import org.jetbrains.mps.openapi.repository.WriteActionListener;
 import org.jetbrains.mps.openapi.util.Consumer;
 import org.jetbrains.mps.openapi.util.ProgressMonitor;
 import org.modelingvalue.collections.Collection;
@@ -101,7 +99,9 @@ import jetbrains.mps.smodel.language.LanguageRuntime;
 
 public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
 
-    private final static ThreadLocal<Integer>                                                           ACTION_ACTIVE        = ThreadLocal.<Integer> withInitial(() -> 0);
+    protected static Setable<DClareMPS, Map<String, DAttribute<?, ?>>>                                  ATTRIBUTE_MAP        = Setable.of("ATTRIBUTE_MAP", Map.of());
+
+    private static AtomicReference<Set<DClareMPS>>                                                      ALL                  = new AtomicReference<>(Set.of());
 
     private static final Set<DMessageType>                                                              MESSAGE_TYPES        = Collection.of(DMessageType.values()).toSet();
 
@@ -127,7 +127,12 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
 
     private final ThreadLocal<Boolean>                                                                  COMMITTING           = ThreadLocal.withInitial(() -> false);
 
-    public final static Observed<DClareMPS, Set<SLanguage>>                                             ALL_LANGUAGES        = NonCheckingObserved.of("ALL_LANGAUGES", Set.of());
+    public final static Observed<DClareMPS, Set<SLanguage>>                                             ALL_LANGUAGES        = NonCheckingObserved.of("ALL_LANGAUGES", Set.of(), (tx, d, o, n) -> {
+                                                                                                                                 Setable.<Set<SLanguage>, SLanguage> diff(o, n, a -> DClareMPS.RULE_SETS.get(a).forEach(rs ->                                    //
+                                                                                                                                 rs.getAllAttributes().forEach(attr -> ATTRIBUTE_MAP.set(d, Map::put, Entry.<String, DAttribute<?, ?>> of(attr.id(), attr)))),   //
+                                                                                                                                         r -> {
+                                                                                                                                         });
+                                                                                                                             });
 
     public final static Constant<SLanguage, Set<IRuleSet>>                                              RULE_SETS            = Constant.of("RULE_SETS", Set.of(), language -> {
                                                                                                                                  LanguageRuntime rtLang = registry().getLanguage(language);
@@ -152,7 +157,6 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     protected Map<DMessageType, QualifiedSet<Triple<DObject, DFeature, String>, DMessage>>              messages             = MESSAGE_QSET_MAP;
     private Thread                                                                                      commandThread;
     protected final DclareForMPSEngine                                                                  engine;
-    private final ActionStartStopHandler                                                                actionHandler;
     private final DRepository                                                                           dRepository;
     private final ModuleChecker                                                                         moduleChecker;
     private final ModelChecker                                                                          modelChecker;
@@ -169,7 +173,6 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
         this.engine = engine;
         this.startStopHandler = startStopHandler;
         SRepository projectRepository = project.getRepository();
-        this.actionHandler = new ActionStartStopHandler();
         this.dRepository = new DRepository(projectRepository);
         this.moduleChecker = new ModuleChecker();
         this.modelChecker = new ModelChecker();
@@ -192,9 +195,6 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
             commandThread = Thread.currentThread();
             startStopHandler.on(project);
         });
-        modelAccess.addCommandListener(actionHandler);
-        modelAccess.addReadActionListener(actionHandler);
-        modelAccess.addWriteActionListener(actionHandler);
         if (TRACE) {
             System.err.println(DCLARE + "START " + this);
         }
@@ -283,6 +283,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
                 command(r);
             }
         });
+        ALL.accumulateAndGet(Set.of(this), Set::addAll);
         REPOSITORY_CONTAINER.set(this, getRepository());
     }
 
@@ -555,14 +556,12 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     protected void stop() {
         if (isRunning()) {
             State state = universeTransaction.preState();
+            ALL.accumulateAndGet(Set.of(this), Set::removeAll);
             ModelAccess modelAccess = project.getModelAccess();
             modelAccess.executeCommandInEDT(() -> {
                 startStopHandler.off(project, state::get, this);
                 commandThread = null;
             });
-            modelAccess.removeCommandListener(actionHandler);
-            modelAccess.removeReadActionListener(actionHandler);
-            modelAccess.removeWriteActionListener(actionHandler);
             CheckerRegistry checkerRegistry = project.getPlatform().findComponent(CheckerRegistry.class);
             if (checkerRegistry == null) {
                 throw new Error("CheckerRegistry not found in platform");
@@ -606,6 +605,17 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     @Override
     public MutableClass dClass() {
         return UNIVERSE_CLASS;
+    }
+
+    public static <T> T tryGetOnAll(Supplier<T> supplier) {
+        T result = null;
+        for (DClareMPS dClareMPS : ALL.get()) {
+            result = dClareMPS.imperativeTransaction.state().get(supplier);
+            if (result != null) {
+                break;
+            }
+        }
+        return result;
     }
 
     private class ModuleChecker extends IChecker.AbstractModuleChecker<ModuleReportItem> {
@@ -784,54 +794,4 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
         }
     }
 
-    private class ActionStartStopHandler implements CommandListener, ReadActionListener, WriteActionListener {
-
-        private void start(int kind) {
-            if (LeafTransaction.getCurrent() == null) {
-                ImperativeTransaction it = imperativeTransaction;
-                if (it != null) {
-                    ACTION_ACTIVE.set(kind);
-                    LeafTransaction.getContext().set(it);
-                }
-            }
-        }
-
-        private void stop(int kind) {
-            if (ACTION_ACTIVE.get() == kind) {
-                ACTION_ACTIVE.set(0);
-                LeafTransaction.getContext().set(null);
-            }
-        }
-
-        @Override
-        public void actionStarted() {
-            start(1);
-        }
-
-        @Override
-        public void actionFinished() {
-            stop(1);
-        }
-
-        @Override
-        public void readStarted() {
-            start(2);
-        }
-
-        @Override
-        public void readFinished() {
-            stop(2);
-        }
-
-        @Override
-        public void commandStarted() {
-            start(3);
-        }
-
-        @Override
-        public void commandFinished() {
-            stop(3);
-        }
-
-    }
 }

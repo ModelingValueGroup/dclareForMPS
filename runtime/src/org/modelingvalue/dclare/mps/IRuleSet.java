@@ -43,4 +43,6 @@ public interface IRuleSet {
 
     List<DRule<SClassObject>> getClassRules(SClass cls);
 
+    List<DAttribute<?, ?>> getAllAttributes();
+
 }
