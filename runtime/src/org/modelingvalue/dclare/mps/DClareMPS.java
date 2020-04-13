@@ -19,8 +19,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -101,7 +101,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
 
     protected static Setable<DClareMPS, Map<String, DAttribute<?, ?>>>                                  ATTRIBUTE_MAP        = Setable.of("ATTRIBUTE_MAP", Map.of());
 
-    private static AtomicReference<Set<DClareMPS>>                                                      ALL                  = new AtomicReference<>(Set.of());
+    private static CopyOnWriteArrayList<DClareMPS>                                                      ALL                  = new CopyOnWriteArrayList<>();
 
     private static final Set<DMessageType>                                                              MESSAGE_TYPES        = Collection.of(DMessageType.values()).toSet();
 
@@ -283,7 +283,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
                 command(r);
             }
         });
-        ALL.accumulateAndGet(Set.of(this), Set::addAll);
+        ALL.add(this);
         REPOSITORY_CONTAINER.set(this, getRepository());
     }
 
@@ -556,7 +556,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     protected void stop() {
         if (isRunning()) {
             State state = universeTransaction.preState();
-            ALL.accumulateAndGet(Set.of(this), Set::removeAll);
+            ALL.remove(this);
             ModelAccess modelAccess = project.getModelAccess();
             modelAccess.executeCommandInEDT(() -> {
                 startStopHandler.off(project, state::get, this);
@@ -609,7 +609,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
 
     public static <T> T tryGetOnAll(Supplier<T> supplier) {
         T result = null;
-        for (DClareMPS dClareMPS : ALL.get()) {
+        for (DClareMPS dClareMPS : ALL) {
             result = dClareMPS.imperativeTransaction.state().get(supplier);
             if (result != null) {
                 break;
