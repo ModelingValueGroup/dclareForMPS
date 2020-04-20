@@ -127,14 +127,14 @@ public class DNode extends DIdentifiedObject implements SNode {
     public static final Constant<SReferenceLink, Observed<DNode, Set<DNode>>>                     OPPOSITE               = Constant.of("OPPOSITE", sr -> DObserved.of(Pair.of(sr, "OPPOSITE"), Set.of(), false, false, () -> DNode.REFERENCE.get(sr), false,                                     //
             null, sr::getDeclarationNode));
     @SuppressWarnings("deprecation")
-    public static final Constant<SProperty, DObserved<DNode, String>>                             PROPERTY               = Constant.of("PROPERTY", sp -> DObserved.of(sp, null, false, false, null, false,                                                                                       //
+    public static final Constant<SProperty, DObserved<DNode, String>>                             PROPERTY               = Constant.of("PROPERTY", sp -> DObserved.of(sp, null, true, false, null, false,                                                                                        //
             (dNode, pre, post) -> {
                 SNode sNode = dNode.sNode(true);
                 String ist = sNode.getProperty(sp);
                 if (!Objects.equals(ist, post)) {
                     sNode.setProperty(sp, post);
                 }
-            }, sp::getDeclarationNode));
+            }, sp::getDeclarationNode, false));
 
     public static final Observed<DNode, Set<SLanguage>>                                           USED_LANGUAGES         = NonCheckingObserved.of("USED_LANGUAGES", Set.of());
 

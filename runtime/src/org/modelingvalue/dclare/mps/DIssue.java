@@ -113,7 +113,13 @@ public class DIssue extends DIdentifiedObject {
         this.rule = rule;
         this.message = message;
         this.severity = severity;
-        this.feature = feature;
+        this.feature = () -> {
+            try {
+                return feature.get();
+            } catch (NullPointerException npe) {
+                return null;
+            }
+        };
         this.dObject = dObject;
         DRule.DISUES.set(Set::add, this);
     }

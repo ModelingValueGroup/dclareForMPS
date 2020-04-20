@@ -15,27 +15,42 @@
 
 package org.modelingvalue.dclare.mps;
 
-import org.jetbrains.mps.openapi.model.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
+import org.jetbrains.mps.openapi.model.SNode;
+import org.modelingvalue.collections.ContainingCollection;
+import org.modelingvalue.collections.Entry;
 import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.Map;
 import org.modelingvalue.collections.Set;
-import org.modelingvalue.collections.*;
-import org.modelingvalue.collections.util.*;
-import org.modelingvalue.dclare.*;
-import org.modelingvalue.dclare.ex.*;
-
-import java.util.*;
-import java.util.function.*;
+import org.modelingvalue.collections.util.QuadConsumer;
+import org.modelingvalue.collections.util.TriConsumer;
+import org.modelingvalue.dclare.LeafTransaction;
+import org.modelingvalue.dclare.Mutable;
+import org.modelingvalue.dclare.Observed;
+import org.modelingvalue.dclare.Setable;
+import org.modelingvalue.dclare.State;
+import org.modelingvalue.dclare.ex.ThrowableError;
 
 @SuppressWarnings({"rawtypes", "unused"})
 public class DObserved<O extends DObject, T> extends Observed<O, T> implements DFeature {
 
     public static <C extends DObject, V> DObserved<C, V> of(Object id, V def, boolean mandatory, boolean composite, Supplier<Setable<?, ?>> opposite, boolean synthetic, TriConsumer<C, V, V> toMPS, Supplier<SNode> source) {
-        return new DObserved<>(id, def, mandatory, composite, opposite, synthetic, toMPS, null, source);
+        return new DObserved<>(id, def, mandatory, composite, opposite, synthetic, toMPS, null, source, true);
+    }
+
+    public static <C extends DObject, V> DObserved<C, V> of(Object id, V def, boolean mandatory, boolean composite, Supplier<Setable<?, ?>> opposite, boolean synthetic, TriConsumer<C, V, V> toMPS, Supplier<SNode> source, boolean checkConsistency) {
+        return new DObserved<>(id, def, mandatory, composite, opposite, synthetic, toMPS, null, source, checkConsistency);
     }
 
     public static <C extends DObject, V> DObserved<C, V> of(Object id, V def, boolean mandatory, boolean composite, Supplier<Setable<?, ?>> opposite, boolean synthetic, TriConsumer<C, V, V> toMPS, QuadConsumer<LeafTransaction, C, V, V> changed, Supplier<SNode> source) {
-        return new DObserved<>(id, def, mandatory, composite, opposite, synthetic, toMPS, changed, source);
+        return new DObserved<>(id, def, mandatory, composite, opposite, synthetic, toMPS, changed, source, true);
     }
 
     private final TriConsumer<O, T, T> toMPS;
@@ -43,8 +58,8 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
     private final Supplier<SNode>      source;
     private final boolean              synthetic;
 
-    protected DObserved(Object id, T def, boolean mandatory, boolean composite, Supplier<Setable<?, ?>> opposite, boolean synthetic, TriConsumer<O, T, T> toMPS, QuadConsumer<LeafTransaction, O, T, T> changed, Supplier<SNode> source) {
-        super(id, def, composite, opposite, null, changed, true);
+    protected DObserved(Object id, T def, boolean mandatory, boolean composite, Supplier<Setable<?, ?>> opposite, boolean synthetic, TriConsumer<O, T, T> toMPS, QuadConsumer<LeafTransaction, O, T, T> changed, Supplier<SNode> source, boolean checkConsistency) {
+        super(id, def, composite, opposite, null, changed, checkConsistency);
         this.toMPS = toMPS;
         this.mandatory = mandatory;
         this.source = source;
