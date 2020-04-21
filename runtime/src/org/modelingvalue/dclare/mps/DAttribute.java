@@ -35,9 +35,9 @@ import jetbrains.mps.smodel.adapter.structure.property.InvalidProperty;
 public interface DAttribute<O, T> extends DFeature {
 
     @SuppressWarnings("unchecked")
-    static <C, V> DAttribute<C, V> of(String id, String name, boolean synthetic, boolean optional, boolean composite, int identifyingNr, V def, Class<?> cls, Supplier<SNode> source, Function<C, V> deriver) {
+    static <C, V> DAttribute<C, V> of(String id, String name, boolean synthetic, boolean optional, boolean composite, int identifyingNr, V def, Class<?> cls, Supplier<SNode> source, Function<C, V> deriver, boolean onlyTemporal) {
         return identifyingNr >= 0 ? new DIdentifyingAttribute(id, name, synthetic, composite, identifyingNr, cls, source) : //
-                deriver != null ? new DConstant(id, name, synthetic, composite, cls, source, deriver) : //
+                deriver != null ? new DConstant(id, name, synthetic, composite, cls, source, deriver, onlyTemporal) : //
                         new DObservedAttribute(id, name, synthetic, optional, composite, def, cls, source, new InvalidProperty(id.toString(), name));
     }
 
@@ -171,6 +171,11 @@ public interface DAttribute<O, T> extends DFeature {
         }
 
         @Override
+        public boolean onlyTemporal() {
+            return false;
+        }
+
+        @Override
         public String id() {
             return id;
         }
@@ -260,13 +265,20 @@ public interface DAttribute<O, T> extends DFeature {
         private final boolean         synthetic;
         private final Supplier<SNode> source;
         private final Class<?>        cls;
+        private final boolean         onlyTemporal;
 
-        public DConstant(Object id, String name, boolean synthetic, boolean composite, Class<?> cls, Supplier<SNode> source, Function<C, V> deriver) {
+        public DConstant(Object id, String name, boolean synthetic, boolean composite, Class<?> cls, Supplier<SNode> source, Function<C, V> deriver, boolean onlyTemporal) {
             super(id, null, composite, null, null, deriver, null, true);
             this.name = name;
             this.synthetic = synthetic;
             this.source = source;
             this.cls = cls;
+            this.onlyTemporal = onlyTemporal;
+        }
+
+        @Override
+        public boolean onlyTemporal() {
+            return onlyTemporal;
         }
 
         @Override

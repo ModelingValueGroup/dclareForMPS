@@ -16,6 +16,7 @@
 package org.modelingvalue.dclare.mps;
 
 import java.util.Arrays;
+import java.util.Objects;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.Collection;
@@ -51,6 +52,9 @@ public class DClassObject extends DIdentifiedObject implements SClassObject {
     });
 
     public static DClassObject of(SClass cls, Object[] identity) {
+        for (int i = 0; i < identity.length; i++) {
+            Objects.requireNonNull(identity[i]);
+        }
         identity = Arrays.copyOf(identity, identity.length + 1);
         identity[identity.length - 1] = cls;
         return new DClassObject(identity);

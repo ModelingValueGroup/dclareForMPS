@@ -76,6 +76,7 @@ public class DCopy extends DNode {
                                                                                                                             Observed<DNode, DNode> observed = REFERENCE.get(reference);
                                                                                                                             observers = observers.add(DObject.<DCopy> observer(observed, o -> observed.set(o, o.map(observed.get(o.getCopied())))));
                                                                                                                         }
+                                                                                                                        observers = observers.addAll(DNode.CONCEPT_OBSERVERS.get(c));
                                                                                                                         return observers;
                                                                                                                     });
 

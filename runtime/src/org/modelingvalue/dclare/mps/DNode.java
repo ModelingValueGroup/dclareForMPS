@@ -103,10 +103,10 @@ public class DNode extends DIdentifiedObject implements SNode {
                         });
             }, sc::getDeclarationNode));
 
-    private static final Constant<SContainmentLink, Function<DNode, List<SNode>>>                 READ_CHILDREN_FUNCTION = Constant.of("READ_CHILDREN_FUNCTION",                                                                                                                                 //
+    protected static final Constant<SContainmentLink, Function<DNode, List<SNode>>>               READ_CHILDREN_FUNCTION = Constant.of("READ_CHILDREN_FUNCTION",                                                                                                                                 //
             cl -> n -> dClareMPS().read(() -> Collection.of(n.sNode(false).getChildren(cl)).map(c -> (SNode) c).toList()));
 
-    protected static final Constant<SContainmentLink, Observer<DNode>>                            READ_MATCHER           = Constant.of("READ_MATCHER", cl -> DObject.observer(Pair.of("MATCHER", cl), n -> DNode.reuse(n, READ_CHILDREN_FUNCTION.get(cl), cl.isMultiple() ?                      //
+    private static final Constant<SContainmentLink, Observer<DNode>>                              READ_MATCHER           = Constant.of("READ_MATCHER", cl -> DObject.observer(Pair.of("MATCHER", cl), n -> DNode.reuse(n, READ_CHILDREN_FUNCTION.get(cl), cl.isMultiple() ?                      //
             MANY_CONTAINMENT.get(cl).get(n) :                                                                                                                                                                                                                                                    //
             SINGLE_CONTAINMENT.get(cl).<DNode> getCollection(n).toList())));
 

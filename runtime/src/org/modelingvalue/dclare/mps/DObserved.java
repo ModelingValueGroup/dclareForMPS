@@ -71,6 +71,11 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
     }
 
     @Override
+    public boolean onlyTemporal() {
+        return false;
+    }
+
+    @Override
     public SNode getSource() {
         return source != null ? source.get() : null;
     }
