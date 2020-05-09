@@ -25,7 +25,7 @@ public interface IRuleSet {
 
     List<DAttribute<SNode, ?>> getNodeAttributes(SAbstractConcept concept, String anonymousType);
 
-    List<DAttribute<SModel, ?>> getModelAttributes();
+    List<DAttribute<SModel, ?>> getModelAttributes(String anonymousType);
 
     List<DAttribute<DModule, ?>> getModuleAttributes();
 
@@ -35,7 +35,7 @@ public interface IRuleSet {
 
     List<DRule<SNode>> getNodeRules(SAbstractConcept concept, String anonymousType);
 
-    List<DRule<SModel>> getModelRules();
+    List<DRule<SModel>> getModelRules(String anonymousType);
 
     List<DRule<DModule>> getModuleRules();
 

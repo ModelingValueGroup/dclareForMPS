@@ -23,11 +23,10 @@ import java.util.function.Supplier;
 import org.jetbrains.mps.openapi.language.SProperty;
 import org.jetbrains.mps.openapi.model.SNode;
 import org.modelingvalue.dclare.Constant;
-import org.modelingvalue.dclare.ImperativeTransaction;
 import org.modelingvalue.dclare.LeafTransaction;
 import org.modelingvalue.dclare.Mutable;
+import org.modelingvalue.dclare.ReadOnlyTransaction;
 import org.modelingvalue.dclare.State;
-import org.modelingvalue.dclare.ex.EmptyMandatoryException;
 
 import jetbrains.mps.smodel.adapter.structure.property.InvalidProperty;
 
@@ -84,9 +83,9 @@ public interface DAttribute<O, T> extends DFeature {
         private final SProperty sProperty;
 
         public DObservedAttribute(Object id, String name, boolean synthetic, boolean optional, boolean composite, V def, Class<?> cls, Supplier<SNode> source, SProperty sProperty) {
-            super(id, def, !optional, composite, null, synthetic, (o, b, a) -> {
+            super(id, !optional, def, composite, null, synthetic, (o, b, a) -> {
                 if (o instanceof DNode) {
-                    SNode sNode = ((DNode) o).sNode(false);
+                    SNode sNode = ((DNode) o).original();
                     if (sNode != null) {
                         sNode.setProperty(sProperty, "");
                         sNode.setProperty(sProperty, null);
@@ -120,13 +119,13 @@ public interface DAttribute<O, T> extends DFeature {
 
         @Override
         public boolean isMandatory() {
-            return mandatory;
+            return mandatory();
         }
 
         @Override
         public V get(C object) {
-            if (object instanceof DNode && LeafTransaction.getCurrent() instanceof ImperativeTransaction) {
-                ((DNode) object).sNode().getProperty(sProperty);
+            if (object instanceof DNode && LeafTransaction.getCurrent() instanceof ReadOnlyTransaction) {
+                ((DNode) object).original().getProperty(sProperty);
             }
             return super.get(object);
         }
@@ -136,17 +135,9 @@ public interface DAttribute<O, T> extends DFeature {
             return cls;
         }
 
-        @Override
-        public void checkConsistency(State state, C object, V post) {
-            super.checkConsistency(state, object, post);
-            if (mandatory && post == null) {
-                throw new EmptyMandatoryException(object, this);
-            }
-        }
-
     }
 
-    final class DIdentifyingAttribute<C extends DObject, V> implements DAttribute<C, V> {
+    final class DIdentifyingAttribute<C extends DIdentifiedObject, V> implements DAttribute<C, V> {
         private final String          id;
         private final String          name;
         private final boolean         composite;
@@ -195,11 +186,7 @@ public interface DAttribute<O, T> extends DFeature {
         @SuppressWarnings("unchecked")
         @Override
         public V get(C object) {
-            if (object instanceof SClassObject) {
-                return (V) ((SClassObject) object).getIdentity()[index];
-            } else {
-                return (V) ((DNode) object).getIdentity()[index];
-            }
+            return (V) object.getIdentity()[index];
         }
 
         @Override

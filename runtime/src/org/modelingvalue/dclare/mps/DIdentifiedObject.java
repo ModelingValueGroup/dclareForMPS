@@ -62,4 +62,8 @@ public abstract class DIdentifiedObject extends DObject {
         return Arrays.toString(identity);
     }
 
+    public Object[] getIdentity() {
+        return identity;
+    }
+
 }

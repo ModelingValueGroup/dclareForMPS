@@ -36,32 +36,31 @@ import org.modelingvalue.dclare.Mutable;
 import org.modelingvalue.dclare.Observed;
 import org.modelingvalue.dclare.Setable;
 import org.modelingvalue.dclare.State;
+import org.modelingvalue.dclare.ex.EmptyMandatoryException;
 import org.modelingvalue.dclare.ex.ThrowableError;
 
 @SuppressWarnings({"rawtypes", "unused"})
 public class DObserved<O extends DObject, T> extends Observed<O, T> implements DFeature {
 
     public static <C extends DObject, V> DObserved<C, V> of(Object id, V def, boolean mandatory, boolean composite, Supplier<Setable<?, ?>> opposite, boolean synthetic, TriConsumer<C, V, V> toMPS, Supplier<SNode> source) {
-        return new DObserved<>(id, def, mandatory, composite, opposite, synthetic, toMPS, null, source, true);
+        return new DObserved<>(id, mandatory, def, composite, opposite, synthetic, toMPS, null, source, true);
     }
 
     public static <C extends DObject, V> DObserved<C, V> of(Object id, V def, boolean mandatory, boolean composite, Supplier<Setable<?, ?>> opposite, boolean synthetic, TriConsumer<C, V, V> toMPS, Supplier<SNode> source, boolean checkConsistency) {
-        return new DObserved<>(id, def, mandatory, composite, opposite, synthetic, toMPS, null, source, checkConsistency);
+        return new DObserved<>(id, mandatory, def, composite, opposite, synthetic, toMPS, null, source, checkConsistency);
     }
 
     public static <C extends DObject, V> DObserved<C, V> of(Object id, V def, boolean mandatory, boolean composite, Supplier<Setable<?, ?>> opposite, boolean synthetic, TriConsumer<C, V, V> toMPS, QuadConsumer<LeafTransaction, C, V, V> changed, Supplier<SNode> source) {
-        return new DObserved<>(id, def, mandatory, composite, opposite, synthetic, toMPS, changed, source, true);
+        return new DObserved<>(id, mandatory, def, composite, opposite, synthetic, toMPS, changed, source, true);
     }
 
     private final TriConsumer<O, T, T> toMPS;
-    protected final boolean            mandatory;
     private final Supplier<SNode>      source;
     private final boolean              synthetic;
 
-    protected DObserved(Object id, T def, boolean mandatory, boolean composite, Supplier<Setable<?, ?>> opposite, boolean synthetic, TriConsumer<O, T, T> toMPS, QuadConsumer<LeafTransaction, O, T, T> changed, Supplier<SNode> source, boolean checkConsistency) {
-        super(id, def, composite, opposite, null, changed, checkConsistency);
+    protected DObserved(Object id, boolean mandatory, T def, boolean composite, Supplier<Setable<?, ?>> opposite, boolean synthetic, TriConsumer<O, T, T> toMPS, QuadConsumer<LeafTransaction, O, T, T> changed, Supplier<SNode> source, boolean checkConsistency) {
+        super(id, mandatory, def, composite, opposite, null, changed, checkConsistency);
         this.toMPS = toMPS;
-        this.mandatory = mandatory;
         this.source = source;
         this.synthetic = synthetic;
     }
@@ -163,28 +162,16 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
     }
 
     @Override
-    public T set(O object, T value) {
-        if (mandatory && checkConsistency && LeafTransaction.getCurrent() instanceof DRule.DObserverTransaction) {
-            Objects.requireNonNull(value);
-        }
-        return super.set(object, value);
+    public T get(O object) {
+        return object != null ? super.get(object) : null;
     }
 
     @Override
-    public T get(O object) {
-        T result = object != null ? super.get(object) : null;
-        if (object != null) {
-            if (result == null && mandatory) {
-                if (LeafTransaction.getCurrent() instanceof DRule.DObserverTransaction) {
-                    DRule.EMPTY_ATTRIBUTE.set(true);
-                }
-            } else if (result instanceof ContainingCollection) {
-                if (LeafTransaction.getCurrent() instanceof DRule.DObserverTransaction) {
-                    DRule.COLLECTION_ATTRIBUTE.set(true);
-                }
-            }
+    public T set(O object, T value) {
+        if (mandatory() && LeafTransaction.getCurrent() instanceof DRule.DObserverTransaction) {
+            Objects.requireNonNull(value);
         }
-        return result;
+        return super.set(object, value);
     }
 
     @Override
@@ -193,14 +180,28 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
     }
 
     @Override
-    public boolean checkConsistency() {
-        return checkConsistency && (super.checkConsistency() || mandatory);
+    protected boolean isEmpty(T result) {
+        return (result == null && mandatory()) || result instanceof ContainingCollection;
     }
 
     @Override
-    public void checkConsistency(State state, O object, T post) {
-        if (super.checkConsistency()) {
-            super.checkConsistency(state, object, post);
+    protected T handleEmptyGet(T result) {
+        if (result == null) {
+            if (LeafTransaction.getCurrent() instanceof DRule.DObserverTransaction) {
+                DRule.EMPTY_ATTRIBUTE.set(true);
+            }
+        } else if (result instanceof ContainingCollection) {
+            if (LeafTransaction.getCurrent() instanceof DRule.DObserverTransaction) {
+                DRule.COLLECTION_ATTRIBUTE.set(true);
+            }
+        }
+        return result;
+    }
+
+    @Override
+    protected void handleEmptyCheck(O object, T result) {
+        if (result == null) {
+            throw new EmptyMandatoryException(object, this);
         }
     }
 

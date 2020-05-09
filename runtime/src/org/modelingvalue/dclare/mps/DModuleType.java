@@ -15,61 +15,53 @@
 
 package org.modelingvalue.dclare.mps;
 
-import org.jetbrains.mps.openapi.language.SConcept;
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
-import org.modelingvalue.collections.util.Quadruple;
+import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.Setable;
 
-@SuppressWarnings("unused")
-public class DNodeType extends DObjectType<Quadruple<Set<SLanguage>, SConcept, String, Boolean>> {
+public class DModuleType extends DObjectType<Pair<Boolean, Set<SLanguage>>> {
 
-    public DNodeType(Quadruple<Set<SLanguage>, SConcept, String, Boolean> q) {
-        super(q);
+    public DModuleType(Pair<Boolean, Set<SLanguage>> identity) {
+        super(identity);
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
-        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getNodeRules(getConcept(), getAnonymousType()))).toSet();
+        //noinspection RedundantCast
+        return !external() ? (Set) ruleSets.flatMap(rs -> Collection.of(rs.getModuleRules())).toSet() : Set.of();
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
+    @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
     public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
-        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getNodeAttributes(getConcept(), getAnonymousType()))).toSet();
+        //noinspection RedundantCast
+        return !external() ? (Set) ruleSets.flatMap(rs -> Collection.of(rs.getModuleAttributes())).toSet() : Set.of();
     }
 
     @Override
     public Set<SLanguage> getLanguages() {
-        return id().a();
-    }
-
-    public SConcept getConcept() {
         return id().b();
     }
 
     @Override
     public boolean external() {
-        return id().d();
-    }
-
-    public String getAnonymousType() {
-        return id().c();
-    }
-
-    @SuppressWarnings("rawtypes")
-    @Override
-    public Collection<Setable> setables() {
-        return Collection.concat(DNode.SETABLES, DNode.CONCEPT_SETABLES.get(getConcept()));
+        return id().a();
     }
 
     @SuppressWarnings("rawtypes")
     @Override
     protected Collection<Observer> observers() {
-        return Collection.concat(DNode.OBSERVERS, DNode.CONCEPT_OBSERVERS.get(getConcept()));
+        return DModule.OBSERVERS;
+    }
+
+    @SuppressWarnings("rawtypes")
+    @Override
+    public Collection<Setable> setables() {
+        return DModule.SETABLES;
     }
 
 }

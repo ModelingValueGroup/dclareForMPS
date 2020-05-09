@@ -829,5 +829,67 @@
       <ref role="20lvS9" to="tpce:1ob16QT2yIl" resolve="INamedStructureElement" />
     </node>
   </node>
+  <node concept="1TIwiD" id="7x27w4ybBDN">
+    <property role="EcuMT" value="8665521623231527539" />
+    <property role="3GE5qa" value="models.builder" />
+    <property role="TrG5h" value="ModelBuilder" />
+    <property role="34LRSv" value="&lt;model&gt;" />
+    <ref role="1TJDcQ" to="tpee:fz3vP1J" resolve="Expression" />
+    <node concept="1TJgyj" id="7x27w4ybBDU" role="1TKVEi">
+      <property role="IQ2ns" value="8665521623231527546" />
+      <property role="20lmBu" value="fLJjDmT/aggregation" />
+      <property role="20kJfa" value="parts" />
+      <property role="20lbJX" value="fLJekj5/_0__n" />
+      <ref role="20lvS9" node="lSgC6t_tvD" resolve="ModelBuilderPart" />
+    </node>
+    <node concept="1TJgyi" id="7x27w4yh6fK" role="1TKVEl">
+      <property role="IQ2nx" value="8665521623232963568" />
+      <property role="TrG5h" value="transient" />
+      <ref role="AX2Wp" to="tpck:fKAQMTB" resolve="boolean" />
+    </node>
+  </node>
+  <node concept="1TIwiD" id="lSgC6t_tvC">
+    <property role="EcuMT" value="394138091856975848" />
+    <property role="3GE5qa" value="models.builder" />
+    <property role="TrG5h" value="ModelBuilderName" />
+    <property role="34LRSv" value="name" />
+    <ref role="1TJDcQ" node="lSgC6t_tvD" resolve="ModelBuilderPart" />
+  </node>
+  <node concept="1TIwiD" id="lSgC6t_tvD">
+    <property role="EcuMT" value="394138091856975849" />
+    <property role="3GE5qa" value="models.builder" />
+    <property role="TrG5h" value="ModelBuilderPart" />
+    <property role="R5$K7" value="true" />
+    <ref role="1TJDcQ" to="tpck:gw2VY9q" resolve="BaseConcept" />
+    <node concept="1TJgyj" id="lSgC6t_ZNe" role="1TKVEi">
+      <property role="IQ2ns" value="394138091857116366" />
+      <property role="20lmBu" value="fLJjDmT/aggregation" />
+      <property role="20kJfa" value="expression" />
+      <property role="20lbJX" value="fLJekj4/_1" />
+      <ref role="20lvS9" to="tpee:fz3vP1J" resolve="Expression" />
+    </node>
+  </node>
+  <node concept="1TIwiD" id="lSgC6t_tvE">
+    <property role="EcuMT" value="394138091856975850" />
+    <property role="3GE5qa" value="models.builder" />
+    <property role="TrG5h" value="ModelBuilderRoots" />
+    <property role="34LRSv" value="roots" />
+    <ref role="1TJDcQ" node="lSgC6t_tvD" resolve="ModelBuilderPart" />
+    <node concept="1TJgyj" id="h2RRcAX" role="1TKVEi">
+      <property role="20kJfa" value="concept" />
+      <property role="IQ2ns" value="1171315804605" />
+      <ref role="20lvS9" to="tpce:h0PkWnZ" resolve="AbstractConceptDeclaration" />
+    </node>
+  </node>
+  <node concept="1TIwiD" id="3jHaWB7tTnF">
+    <property role="EcuMT" value="3813752605087602155" />
+    <property role="3GE5qa" value="models" />
+    <property role="TrG5h" value="UsedLanguages" />
+    <property role="34LRSv" value="languages" />
+    <ref role="1TJDcQ" to="tpck:gw2VY9q" resolve="BaseConcept" />
+    <node concept="PrWs8" id="3jHaWB7tTnG" role="PzmwI">
+      <ref role="PrY4T" to="tpee:hqOqG0K" resolve="IOperation" />
+    </node>
+  </node>
 </model>
 

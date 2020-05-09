@@ -19,7 +19,6 @@ import java.util.Arrays;
 import java.util.Objects;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
-import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Triple;
 import org.modelingvalue.dclare.Constant;
@@ -27,29 +26,7 @@ import org.modelingvalue.dclare.Constant;
 @SuppressWarnings("unused")
 public class DClassObject extends DIdentifiedObject implements SClassObject {
 
-    private static final Constant<Triple<Set<SLanguage>, SClass, Boolean>, DType<?>> CLASS_OBJECT_TYPE = Constant.of("CLASS_OBJECT_TYPE", p -> new DType<Triple<Set<SLanguage>, SClass, Boolean>>(p) {
-        @SuppressWarnings({"rawtypes", "unchecked"})
-        @Override
-        public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
-            return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getClassRules(id().b()))).toSet();
-        }
-
-        @SuppressWarnings({"rawtypes", "unchecked"})
-        @Override
-        public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
-            return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getClassAttributes(id().b()))).toSet();
-        }
-
-        @Override
-        public Set<SLanguage> getLanguages() {
-            return id().a();
-        }
-
-        @Override
-        public boolean external() {
-            return id().c();
-        }
-    });
+    private static final Constant<Triple<Set<SLanguage>, SClass, Boolean>, DClassObjectType> CLASS_OBJECT_TYPE = Constant.of("CLASS_OBJECT_TYPE", p -> new DClassObjectType(p));
 
     public static DClassObject of(SClass cls, Object[] identity) {
         for (int i = 0; i < identity.length; i++) {
@@ -75,8 +52,8 @@ public class DClassObject extends DIdentifiedObject implements SClassObject {
     }
 
     @Override
-    protected DType<?> getType() {
-        DType<?> dType = TYPE.get(dObjectParent());
+    protected DClassObjectType getType() {
+        DObjectType<?> dType = TYPE.get(dObjectParent());
         return CLASS_OBJECT_TYPE.get(Triple.of(dType.getLanguages(), getSClass(), dType.external()));
     }
 
@@ -97,6 +74,16 @@ public class DClassObject extends DIdentifiedObject implements SClassObject {
     @Override
     public boolean isDclareOnly() {
         return true;
+    }
+
+    @Override
+    protected boolean isRead() {
+        return false;
+    }
+
+    @Override
+    protected boolean isMatched() {
+        return false;
     }
 
 }

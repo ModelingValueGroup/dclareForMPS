@@ -49,4 +49,14 @@ public abstract class DFromOriginalObject<O> extends DObject {
         return original.toString();
     }
 
+    @Override
+    protected boolean isRead() {
+        return true;
+    }
+
+    @Override
+    protected boolean isMatched() {
+        return true;
+    }
+
 }

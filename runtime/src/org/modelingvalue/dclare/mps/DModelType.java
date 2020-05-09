@@ -15,31 +15,29 @@
 
 package org.modelingvalue.dclare.mps;
 
-import org.jetbrains.mps.openapi.language.SConcept;
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
-import org.modelingvalue.collections.util.Quadruple;
+import org.modelingvalue.collections.util.Triple;
 import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.Setable;
 
-@SuppressWarnings("unused")
-public class DNodeType extends DObjectType<Quadruple<Set<SLanguage>, SConcept, String, Boolean>> {
+public class DModelType extends DObjectType<Triple<Set<SLanguage>, Boolean, String>> {
 
-    public DNodeType(Quadruple<Set<SLanguage>, SConcept, String, Boolean> q) {
-        super(q);
+    public DModelType(Triple<Set<SLanguage>, Boolean, String> identity) {
+        super(identity);
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
-        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getNodeRules(getConcept(), getAnonymousType()))).toSet();
+        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getModelRules(getAnonymousType()))).toSet();
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
+    @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
     public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
-        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getNodeAttributes(getConcept(), getAnonymousType()))).toSet();
+        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getModelAttributes(getAnonymousType()))).toSet();
     }
 
     @Override
@@ -47,13 +45,9 @@ public class DNodeType extends DObjectType<Quadruple<Set<SLanguage>, SConcept, S
         return id().a();
     }
 
-    public SConcept getConcept() {
-        return id().b();
-    }
-
     @Override
     public boolean external() {
-        return id().d();
+        return id().b();
     }
 
     public String getAnonymousType() {
@@ -63,13 +57,12 @@ public class DNodeType extends DObjectType<Quadruple<Set<SLanguage>, SConcept, S
     @SuppressWarnings("rawtypes")
     @Override
     public Collection<Setable> setables() {
-        return Collection.concat(DNode.SETABLES, DNode.CONCEPT_SETABLES.get(getConcept()));
+        return DModel.SETABLES;
     }
 
     @SuppressWarnings("rawtypes")
     @Override
     protected Collection<Observer> observers() {
-        return Collection.concat(DNode.OBSERVERS, DNode.CONCEPT_OBSERVERS.get(getConcept()));
+        return DModel.OBSERVERS;
     }
-
 }

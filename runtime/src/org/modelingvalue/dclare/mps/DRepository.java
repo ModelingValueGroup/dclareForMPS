@@ -20,12 +20,10 @@ import org.jetbrains.mps.openapi.module.ModelAccess;
 import org.jetbrains.mps.openapi.module.RepositoryAccess;
 import org.jetbrains.mps.openapi.module.SModule;
 import org.jetbrains.mps.openapi.module.SModuleId;
-import org.jetbrains.mps.openapi.module.SModuleReference;
 import org.jetbrains.mps.openapi.module.SRepository;
 import org.jetbrains.mps.openapi.module.SRepositoryListener;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
-import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.dclare.Action;
 import org.modelingvalue.dclare.Constant;
 import org.modelingvalue.dclare.Direction;
@@ -34,71 +32,38 @@ import org.modelingvalue.dclare.Observed;
 import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.Setable;
 
+import jetbrains.mps.project.ProjectRepository;
+
 @SuppressWarnings("deprecation")
-public class DRepository extends DFromOriginalObject<SRepository> implements SRepository {
+public class DRepository extends DFromOriginalObject<ProjectRepository> implements SRepository {
 
-    private static final Constant<Set<SLanguage>, DType<?>>  REPOSITORY_TYPE = Constant.of("REPOSITORY_TYPE", ls -> new DType<Set<SLanguage>>(ls) {
-                                                                                 @SuppressWarnings({"rawtypes", "unchecked"})
-                                                                                 @Override
-                                                                                 public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
-                                                                                     return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getRepositoryRules())).toSet();
-                                                                                 }
+    private static final Constant<Set<SLanguage>, DRepositoryType> REPOSITORY_TYPE = Constant.of("REPOSITORY_TYPE", ls -> new DRepositoryType(ls));
 
-                                                                                 @SuppressWarnings({"rawtypes", "unchecked"})
-                                                                                 @Override
-                                                                                 public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
-                                                                                     return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getRepositoryAttributes())).toSet();
-                                                                                 }
+    protected static final Observed<DRepository, Set<DModule>>     REFERENCED      = NonCheckingObserved.of("REFERENCED", Set.of());
 
-                                                                                 @Override
-                                                                                 public Set<SLanguage> getLanguages() {
-                                                                                     return id();
-                                                                                 }
+    protected static final DObserved<DRepository, Set<DModule>>    MODULES         = DObserved.of("MODULES", Set.of(), false, true, null, false, null, null);
 
-                                                                                 @Override
-                                                                                 public boolean external() {
-                                                                                     return false;
-                                                                                 }
+    protected static final DObserved<DRepository, Set<?>>          EXCEPTIONS      = DObserved.of("EXCEPTIONS", Set.of(), false, false, null, false, null, null);
 
-                                                                                 @SuppressWarnings("rawtypes")
-                                                                                 @Override
-                                                                                 protected Collection<Observer> observers() {
-                                                                                     return OBSERVERS;
-                                                                                 }
+    private static final Observer<DRepository>                     MODULES_RULE    = DObject.observer(MODULES, o -> {
+                                                                                       Set<DModule> referenced = REFERENCED.get(o);
+                                                                                       MODULES.set(o, Set::addAll, referenced);
+                                                                                   });
 
-                                                                                 @SuppressWarnings("rawtypes")
-                                                                                 @Override
-                                                                                 public Collection<Setable> setables() {
-                                                                                     return SETABLES;
-                                                                                 }
-
-                                                                             });
-
-    public static final Observed<DRepository, Set<DModule>>  REFERENCED      = NonCheckingObserved.of("REFERENCED", Set.of());
-
-    public static final DObserved<DRepository, Set<DModule>> MODULES         = DObserved.of("MODULES", Set.of(), false, true, null, false, null, null);
-
-    protected static final DObserved<DRepository, Set<?>>    EXCEPTIONS      = DObserved.of("EXCEPTIONS", Set.of(), false, false, null, false, null, null);
-
-    private static final Observer<DRepository>               MODULES_RULE    = DObject.observer(MODULES, o -> {
-                                                                                 Set<DModule> referenced = REFERENCED.get(o);
-                                                                                 MODULES.set(o, Set::addAll, referenced);
-                                                                             });
-
-    private static final Action<DRepository>                 READ_MODULES    = Action.of("$READ_MODULES", r -> MODULES.set(r, dClareMPS().read(DRepository::modules).map(DModule::of).toSet()), Direction.forward);
+    private static final Action<DRepository>                       READ_MODULES    = Action.of("$READ_MODULES", r -> MODULES.set(r, dClareMPS().read(DRepository::modules).map(DModule::of).toSet()), Direction.forward);
 
     @SuppressWarnings("rawtypes")
-    protected static final Set<Observer>                     OBSERVERS       = DObject.OBSERVERS.add(MODULES_RULE);
+    protected static final Set<Observer>                           OBSERVERS       = DObject.OBSERVERS.add(MODULES_RULE);
 
     @SuppressWarnings("rawtypes")
-    protected static final Set<Setable>                      SETABLES        = DObject.SETABLES.addAll(Set.of(MODULES, REFERENCED));
+    protected static final Set<Setable>                            SETABLES        = DObject.SETABLES.addAll(Set.of(MODULES, REFERENCED));
 
-    protected DRepository(SRepository original) {
+    protected DRepository(ProjectRepository original) {
         super(original);
     }
 
     @Override
-    protected DType<?> getType() {
+    protected DRepositoryType getType() {
         return REPOSITORY_TYPE.get(DClareMPS.ALL_LANGUAGES.get(dClareMPS()).filter(l -> !DClareMPS.RULE_SETS.get(l).isEmpty()).toSet());
     }
 
@@ -114,13 +79,13 @@ public class DRepository extends DFromOriginalObject<SRepository> implements SRe
     @Override
     protected void init(DClareMPS dClareMPS) {
         super.init(dClareMPS);
-        addRepositoryListener(new Listener(this, dClareMPS));
+        addRepositoryListener(new DRepositoryListener(this, dClareMPS));
     }
 
     @Override
     protected void exit(DClareMPS dClareMPS) {
         super.exit(dClareMPS);
-        removeRepositoryListener(new Listener(this, dClareMPS));
+        removeRepositoryListener(new DRepositoryListener(this, dClareMPS));
     }
 
     @Override
@@ -173,69 +138,14 @@ public class DRepository extends DFromOriginalObject<SRepository> implements SRe
         return null;
     }
 
-    private static class Listener extends Pair<DRepository, DClareMPS> implements SRepositoryListener {
-        private static final long serialVersionUID = -8833673849931733478L;
-
-        private Listener(DRepository dRepository, DClareMPS dClareMPS) {
-            super(dRepository, dClareMPS);
-        }
-
-        @Override
-        public void moduleAdded(SModule sModule) {
-            b().handleMPSChange(() -> {
-                if (b().project.getPath(sModule) != null) {
-                    DModule dModule = DModule.of(sModule);
-                    MODULES.set(a(), Set::add, dModule);
-                }
-            });
-        }
-
-        @Override
-        public void beforeModuleRemoved(SModule sModule) {
-            b().handleMPSChange(() -> {
-                if (b().project.getPath(sModule) != null) {
-                    DModule dModule = DModule.of(sModule);
-                    MODULES.set(a(), Set::remove, dModule);
-                }
-            });
-        }
-
-        @Override
-        public void moduleRemoved(SModuleReference module) {
-        }
-
-        @Override
-        public void commandStarted(SRepository repository) {
-        }
-
-        @Override
-        public void commandFinished(SRepository repository) {
-        }
-
-        @Override
-        @Deprecated
-        public void updateStarted(SRepository repository) {
-        }
-
-        @Override
-        @Deprecated
-        public void updateFinished(SRepository repository) {
-        }
-
-        @Override
-        @Deprecated
-        public void repositoryCommandStarted(SRepository repository) {
-        }
-
-        @Override
-        @Deprecated
-        public void repositoryCommandFinished(SRepository repository) {
-        }
-    }
-
     @Override
     public boolean isExternal() {
         return false;
+    }
+
+    @Override
+    public String toString() {
+        return original().getProject().getName();
     }
 
 }

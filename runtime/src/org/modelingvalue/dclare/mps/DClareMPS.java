@@ -18,9 +18,7 @@ package org.modelingvalue.dclare.mps;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -94,6 +92,7 @@ import jetbrains.mps.errors.item.ReportItem;
 import jetbrains.mps.nodeEditor.Highlighter;
 import jetbrains.mps.progress.EmptyProgressMonitor;
 import jetbrains.mps.project.ProjectBase;
+import jetbrains.mps.project.ProjectRepository;
 import jetbrains.mps.smodel.language.LanguageRegistry;
 import jetbrains.mps.smodel.language.LanguageRuntime;
 
@@ -172,7 +171,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
         this.project = project;
         this.engine = engine;
         this.startStopHandler = startStopHandler;
-        SRepository projectRepository = project.getRepository();
+        ProjectRepository projectRepository = (ProjectRepository) project.getRepository();
         this.dRepository = new DRepository(projectRepository);
         this.moduleChecker = new ModuleChecker();
         this.modelChecker = new ModelChecker();
@@ -427,6 +426,11 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
         return obj instanceof DClareMPS && project.equals(((DClareMPS) obj).project);
     }
 
+    @Override
+    public String toString() {
+        return "Universe[" + project.getName() + "]";
+    }
+
     public void handleMPSChange(Runnable action) {
         if (isRunning()) {
             if (isRunningCommand()) {
@@ -472,35 +476,6 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     }
 
     @SuppressWarnings("unchecked")
-    public <R> R command(Supplier<R> supplier) {
-        BlockingQueue<Object> queue = new LinkedBlockingQueue<>(1);
-        command(() -> {
-            try {
-                try {
-                    queue.put(supplier.get());
-                } catch (InterruptedException e) {
-                    throw e;
-                } catch (Throwable t) {
-                    queue.put(t);
-                }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        });
-        try {
-            Object result = queue.take();
-            if (result instanceof Throwable) {
-                throw new Error((Throwable) result);
-            } else {
-                return (R) result;
-            }
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    @SuppressWarnings("unchecked")
     public <R> R read(Supplier<R> supplier) {
         R[] result = (R[]) new Object[1];
         read(() -> {
@@ -525,9 +500,13 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
                 pre.diff(post, o -> o instanceof DObject && !((DObject) o).isDclareOnly(), p -> p instanceof DObserved && !((DObserved) p).isDclareOnly()).forEach(e0 -> {
                     DObject dObject = (DObject) e0.getKey();
                     if (dObject instanceof DModel) {
-                        changedModels.change(s -> s.add(((DModel) dObject).original()));
+                        SModel sModel = ((DModel) dObject).original();
+                        if (sModel != null) {
+                            changedModels.change(s -> s.add(sModel));
+                        }
                     } else if (dObject instanceof DNode) {
-                        SNode root = ((DNode) dObject).sNode(false) != null ? ((DNode) dObject).sNode(false).getContainingRoot() : null;
+                        SNode original = ((DNode) dObject).original();
+                        SNode root = original != null ? original.getContainingRoot() : null;
                         if (root != null) {
                             changedRoots.change(s -> s.add(root));
                         }
