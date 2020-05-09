@@ -85,7 +85,7 @@ public class DNode extends DMatchedObject<SNodeReference, SNode> implements SNod
                 DObserved.map(ist, soll,                                                                                                                                                                                                                                                          //
                         (n, a) -> sNode.insertChildAfter(mc, n, a), r -> {
                         });
-            }, mc::getDeclarationNode));
+            }, mc::getDeclarationNode, false));
 
     @SuppressWarnings("deprecation")
     public static final Constant<SContainmentLink, DObserved<DNode, DNode>>                        SINGLE_CONTAINMENT     = Constant.of("SINGLE_CONTAINMENT", sc -> DObserved.of(sc, null, !sc.isOptional(), true, null, false,                                                                   //
@@ -100,7 +100,7 @@ public class DNode extends DMatchedObject<SNodeReference, SNode> implements SNod
                 DObserved.map(ist, soll,                                                                                                                                                                                                                                                          //
                         (n, a) -> sNode.addChild(sc, n), r -> {
                         });
-            }, sc::getDeclarationNode));
+            }, sc::getDeclarationNode, false));
 
     protected static final Constant<SContainmentLink, Function<DNode, List<SNode>>>                READ_CHILDREN_FUNCTION = Constant.of("READ_CHILDREN_FUNCTION",                                                                                                                                 //
             cl -> n -> dClareMPS().read(() -> Collection.of(n.original().getChildren(cl)).map(c -> (SNode) c).toList()));
@@ -118,7 +118,7 @@ public class DNode extends DMatchedObject<SNodeReference, SNode> implements SNod
                 if (!Objects.equals(ist, soll)) {
                     sNode.setReferenceTarget(sr, soll);
                 }
-            }, sr::getDeclarationNode)
+            }, sr::getDeclarationNode, false)
 
     );
 
