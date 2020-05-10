@@ -121,7 +121,6 @@
         <reference id="1068499141037" name="baseMethodDeclaration" index="37wK5l" />
         <child id="1068499141038" name="actualArgument" index="37wK5m" />
       </concept>
-      <concept id="1171903607971" name="jetbrains.mps.baseLanguage.structure.WildCardType" flags="in" index="3qTvmN" />
       <concept id="1107535904670" name="jetbrains.mps.baseLanguage.structure.ClassifierType" flags="in" index="3uibUv">
         <reference id="1107535924139" name="classifier" index="3uigEE" />
       </concept>
@@ -2656,21 +2655,6 @@
       </node>
       <node concept="nvevp" id="4jp8R7CJnQy" role="3cqZAp">
         <node concept="3clFbS" id="4jp8R7CJnQ$" role="nvhr_">
-          <node concept="1ZobV4" id="4p0aLLDDO1F" role="3cqZAp">
-            <property role="3wDh2S" value="true" />
-            <node concept="mw_s8" id="4p0aLLDDO3s" role="1ZfhK$">
-              <node concept="2X3wrD" id="4p0aLLDDO3q" role="mwGJk">
-                <ref role="2X3Bk0" node="4jp8R7CJnQC" resolve="tt" />
-              </node>
-            </node>
-            <node concept="mw_s8" id="4p0aLLDDO3D" role="1ZfhKB">
-              <node concept="2c44tf" id="4p0aLLDDO3_" role="mwGJk">
-                <node concept="A3Dl8" id="4p0aLLDDO4E" role="2c44tc">
-                  <node concept="3qTvmN" id="1MVOzzUQb_F" role="A3Ik2" />
-                </node>
-              </node>
-            </node>
-          </node>
           <node concept="3cpWs8" id="4jp8R7CJsdD" role="3cqZAp">
             <node concept="3cpWsn" id="4jp8R7CJsdG" role="3cpWs9">
               <property role="TrG5h" value="tet" />
