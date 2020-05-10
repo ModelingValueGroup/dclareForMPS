@@ -415,6 +415,9 @@
         <child id="1144104376918" name="parameter" index="1xVPHs" />
       </concept>
       <concept id="1179409122411" name="jetbrains.mps.lang.smodel.structure.Node_ConceptMethodCall" flags="nn" index="2qgKlT" />
+      <concept id="4693937538533521280" name="jetbrains.mps.lang.smodel.structure.OfConceptOperation" flags="ng" index="v3k3i">
+        <child id="4693937538533538124" name="requestedConcept" index="v3oSu" />
+      </concept>
       <concept id="2396822768958367367" name="jetbrains.mps.lang.smodel.structure.AbstractTypeCastExpression" flags="nn" index="$5XWr">
         <child id="6733348108486823193" name="leftExpression" index="1m5AlR" />
         <child id="3906496115198199033" name="conceptArgument" index="3oSUPX" />
@@ -5951,10 +5954,17 @@
         <node concept="2jfdEK" id="4Y8BM43d3e$" role="1ps_xN">
           <node concept="3clFbS" id="4Y8BM43d3e_" role="2VODD2">
             <node concept="3clFbF" id="4Y8BM43d6Ug" role="3cqZAp">
-              <node concept="2OqwBi" id="4Y8BM43d75Z" role="3clFbG">
-                <node concept="30H73N" id="4Y8BM43d6Uf" role="2Oq$k0" />
-                <node concept="3Tsc0h" id="6HWpSUEOT2C" role="2OqNvi">
-                  <ref role="3TtcxE" to="7ggn:6HWpSUEu3U8" resolve="attributes" />
+              <node concept="2OqwBi" id="6_R8J$2OLv3" role="3clFbG">
+                <node concept="2OqwBi" id="4Y8BM43d75Z" role="2Oq$k0">
+                  <node concept="30H73N" id="4Y8BM43d6Uf" role="2Oq$k0" />
+                  <node concept="3Tsc0h" id="6_R8J$2OKjJ" role="2OqNvi">
+                    <ref role="3TtcxE" to="7ggn:6_R8J$2ChSl" resolve="members" />
+                  </node>
+                </node>
+                <node concept="v3k3i" id="6_R8J$2OMXc" role="2OqNvi">
+                  <node concept="chp4Y" id="6_R8J$2OO1E" role="v3oSu">
+                    <ref role="cht4Q" to="7ggn:4$MeK2bmw9s" resolve="Attribute" />
+                  </node>
                 </node>
               </node>
             </node>
@@ -5973,10 +5983,17 @@
         <node concept="2jfdEK" id="1$veQIxo0UA" role="1ps_xN">
           <node concept="3clFbS" id="1$veQIxo0UB" role="2VODD2">
             <node concept="3clFbF" id="1$veQIxo4mb" role="3cqZAp">
-              <node concept="2OqwBi" id="1$veQIxo5zT" role="3clFbG">
-                <node concept="30H73N" id="1$veQIxo4ma" role="2Oq$k0" />
-                <node concept="3Tsc0h" id="6HWpSUEOTA4" role="2OqNvi">
-                  <ref role="3TtcxE" to="7ggn:6HWpSUEu3U6" resolve="rules" />
+              <node concept="2OqwBi" id="6_R8J$2OPsw" role="3clFbG">
+                <node concept="2OqwBi" id="1$veQIxo5zT" role="2Oq$k0">
+                  <node concept="30H73N" id="1$veQIxo4ma" role="2Oq$k0" />
+                  <node concept="3Tsc0h" id="6_R8J$2OOhn" role="2OqNvi">
+                    <ref role="3TtcxE" to="7ggn:6_R8J$2ChSl" resolve="members" />
+                  </node>
+                </node>
+                <node concept="v3k3i" id="6_R8J$2OQyJ" role="2OqNvi">
+                  <node concept="chp4Y" id="6_R8J$2OQzU" role="v3oSu">
+                    <ref role="cht4Q" to="7ggn:29R9$zZUovC" resolve="Rule" />
+                  </node>
                 </node>
               </node>
             </node>

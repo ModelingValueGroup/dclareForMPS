@@ -361,7 +361,7 @@
                 <ref role="3cqZAo" node="18IIFqBwHGY" resolve="ruleSet" />
               </node>
               <node concept="3Tsc0h" id="18IIFqBwJWU" role="2OqNvi">
-                <ref role="3TtcxE" to="7ggn:6HWpSUEu3U8" resolve="attributes" />
+                <ref role="3TtcxE" to="7ggn:6HWpSUEu3U8" resolve="old_attributes" />
               </node>
             </node>
             <node concept="TSZUe" id="18IIFqBwQMm" role="2OqNvi">
