@@ -133,6 +133,9 @@
       <concept id="8998492695583125082" name="jetbrains.mps.lang.editor.structure.SubstituteFeature_MatchingText" flags="ng" index="16NfWO">
         <child id="8998492695583129244" name="query" index="16NeZM" />
       </concept>
+      <concept id="8998492695583129971" name="jetbrains.mps.lang.editor.structure.SubstituteFeature_DescriptionText" flags="ng" index="16NL0t">
+        <child id="8998492695583129972" name="query" index="16NL0q" />
+      </concept>
       <concept id="1838685759388685703" name="jetbrains.mps.lang.editor.structure.TransformationFeature_DescriptionText" flags="ng" index="3cqGtN">
         <child id="1838685759388685704" name="query" index="3cqGtW" />
       </concept>
@@ -2894,6 +2897,11 @@
           <property role="2h4Kg1" value="rule" />
         </node>
       </node>
+      <node concept="16NL0t" id="3cfqRNbvvRm" role="upBLP">
+        <node concept="2h3Zct" id="3cfqRNbvvRZ" role="16NL0q">
+          <property role="2h4Kg1" value="rule" />
+        </node>
+      </node>
     </node>
     <node concept="3eGOop" id="6_R8J$2IpvZ" role="3ft7WO">
       <ref role="3EoQqy" to="7ggn:4$MeK2bmw9s" resolve="Attribute" />
@@ -2919,6 +2927,11 @@
           <property role="2h4Kg1" value="attr" />
         </node>
       </node>
+      <node concept="16NL0t" id="3cfqRNbvvNU" role="upBLP">
+        <node concept="2h3Zct" id="3cfqRNbvvOz" role="16NL0q">
+          <property role="2h4Kg1" value="attribute" />
+        </node>
+      </node>
     </node>
     <node concept="3eGOop" id="6_R8J$2K76M" role="3ft7WO">
       <ref role="3EoQqy" to="7ggn:6_R8J$2K4_6" resolve="RuleSetComment" />
@@ -2942,6 +2955,11 @@
               </node>
             </node>
           </node>
+        </node>
+      </node>
+      <node concept="16NL0t" id="3cfqRNbvvJm" role="upBLP">
+        <node concept="2h3Zct" id="3cfqRNbvvK5" role="16NL0q">
+          <property role="2h4Kg1" value="comment" />
         </node>
       </node>
     </node>
