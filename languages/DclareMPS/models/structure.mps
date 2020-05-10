@@ -563,6 +563,7 @@
     <property role="34LRSv" value="[list]" />
     <property role="EcuMT" value="8182547171709738802" />
     <property role="3GE5qa" value="expressions" />
+    <property role="R4oN_" value="list builder of sequences and/or elements" />
     <ref role="1TJDcQ" to="tpee:fz3vP1J" resolve="Expression" />
     <node concept="1TJgyj" id="4jp8R7C$k_N" role="1TKVEi">
       <property role="IQ2ns" value="4961035436665424243" />
