@@ -121,6 +121,7 @@
         <reference id="1068499141037" name="baseMethodDeclaration" index="37wK5l" />
         <child id="1068499141038" name="actualArgument" index="37wK5m" />
       </concept>
+      <concept id="1171903607971" name="jetbrains.mps.baseLanguage.structure.WildCardType" flags="in" index="3qTvmN" />
       <concept id="1107535904670" name="jetbrains.mps.baseLanguage.structure.ClassifierType" flags="in" index="3uibUv">
         <reference id="1107535924139" name="classifier" index="3uigEE" />
       </concept>
@@ -2664,7 +2665,9 @@
             </node>
             <node concept="mw_s8" id="4p0aLLDDO3D" role="1ZfhKB">
               <node concept="2c44tf" id="4p0aLLDDO3_" role="mwGJk">
-                <node concept="A3Dl8" id="4p0aLLDDO4E" role="2c44tc" />
+                <node concept="A3Dl8" id="4p0aLLDDO4E" role="2c44tc">
+                  <node concept="3qTvmN" id="1MVOzzUQb_F" role="A3Ik2" />
+                </node>
               </node>
             </node>
           </node>
