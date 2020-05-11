@@ -35,7 +35,6 @@ import org.jetbrains.mps.openapi.model.SNodeAccessListener;
 import org.jetbrains.mps.openapi.model.SNodeChangeListener;
 import org.jetbrains.mps.openapi.model.SNodeId;
 import org.jetbrains.mps.openapi.module.SModule;
-import org.jetbrains.mps.openapi.module.SModuleReference;
 import org.jetbrains.mps.openapi.persistence.DataSource;
 import org.jetbrains.mps.openapi.persistence.ModelRoot;
 import org.modelingvalue.collections.Collection;
@@ -208,8 +207,8 @@ public class DModel extends DMatchedObject<SModelReference, SModel> implements S
     @Override
     public boolean isExternal() {
         if (isRead()) {
-            SModuleReference sModuleRef = ((SModelReference) identity[0]).getModuleReference();
-            return sModuleRef != null && dClareMPS().project.getPath(new DummySModule(sModuleRef)) == null;
+            SModel sModel = ((SModelReference) identity[0]).resolve(null);
+            return sModel != null && dClareMPS().project.getPath(sModel.getModule()) == null;
         } else {
             return false;
         }

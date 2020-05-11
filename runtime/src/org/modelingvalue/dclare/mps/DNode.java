@@ -33,7 +33,6 @@ import org.jetbrains.mps.openapi.model.SNode;
 import org.jetbrains.mps.openapi.model.SNodeId;
 import org.jetbrains.mps.openapi.model.SNodeReference;
 import org.jetbrains.mps.openapi.model.SReference;
-import org.jetbrains.mps.openapi.module.SModuleReference;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.Map;
@@ -273,9 +272,8 @@ public class DNode extends DMatchedObject<SNodeReference, SNode> implements SNod
     @Override
     public boolean isExternal() {
         if (isRead()) {
-            SModelReference sModelRef = ((SNodeReference) identity[0]).getModelReference();
-            SModuleReference sModuleRef = sModelRef != null ? sModelRef.getModuleReference() : null;
-            return sModuleRef != null && dClareMPS().project.getPath(new DummySModule(sModuleRef)) == null;
+            SModel sModel = ((SNodeReference) identity[0]).getModelReference().resolve(null);
+            return sModel != null && dClareMPS().project.getPath(sModel.getModule()) == null;
         } else {
             return false;
         }
