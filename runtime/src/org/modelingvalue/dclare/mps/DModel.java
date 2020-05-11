@@ -207,7 +207,7 @@ public class DModel extends DMatchedObject<SModelReference, SModel> implements S
     @Override
     public boolean isExternal() {
         if (isRead()) {
-            SModel sModel = ((SModelReference) identity[0]).resolve(null);
+            SModel sModel = dClareMPS().read(() -> ((SModelReference) identity[0]).resolve(null));
             return sModel != null && dClareMPS().project.getPath(sModel.getModule()) == null;
         } else {
             return false;

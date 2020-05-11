@@ -272,7 +272,7 @@ public class DNode extends DMatchedObject<SNodeReference, SNode> implements SNod
     @Override
     public boolean isExternal() {
         if (isRead()) {
-            SModel sModel = ((SNodeReference) identity[0]).getModelReference().resolve(null);
+            SModel sModel = dClareMPS().read(() -> ((SNodeReference) identity[0]).getModelReference().resolve(null));
             return sModel != null && dClareMPS().project.getPath(sModel.getModule()) == null;
         } else {
             return false;
