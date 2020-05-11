@@ -85,7 +85,17 @@ public class DCopy extends DNode {
     }
 
     @Override
+    public boolean hasAnonymousType() {
+        return false;
+    }
+
+    @Override
     public String getAnonymousType() {
+        return null;
+    }
+
+    @Override
+    public SLanguage getAnonymousLanguage() {
         return null;
     }
 

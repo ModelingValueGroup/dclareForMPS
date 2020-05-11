@@ -26,6 +26,7 @@ import jetbrains.mps.smodel.EditableModelDescriptor;
 import jetbrains.mps.smodel.ModelLoadResult;
 import jetbrains.mps.smodel.SModelId;
 import jetbrains.mps.smodel.SNodeUndoableAction;
+import jetbrains.mps.smodel.event.SModelRenamedEvent;
 import jetbrains.mps.smodel.loading.ModelLoadingState;
 
 @SuppressWarnings("unused")
@@ -69,9 +70,18 @@ public class DTempModel extends EditableModelDescriptor implements EditableSMode
     public void save() {
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void rename(String newModelName, boolean changeFile) {
-        throw new UnsupportedOperationException();
+        assertCanChange();
+        SModelReference oldName = getReference();
+        fireBeforeModelRenamed(new SModelRenamedEvent(this, oldName.getModelName(), newModelName));
+        SModelReference newModelReference = PersistenceFacade.getInstance().createModelReference(getReference().getModuleReference(), getReference().getModelId(), newModelName);
+        fireBeforeModelRenamed(newModelReference);
+        changeModelReference(newModelReference);
+        setChanged(true);
+        fireModelRenamed(new SModelRenamedEvent(this, oldName.getModelName(), newModelName));
+        fireModelRenamed(oldName);
     }
 
     @Override

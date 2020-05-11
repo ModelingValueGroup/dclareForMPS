@@ -274,6 +274,9 @@
       <concept id="1140725362528" name="jetbrains.mps.lang.smodel.structure.Link_SetTargetOperation" flags="nn" index="2oxUTD">
         <child id="1140725362529" name="linkTarget" index="2oxUTC" />
       </concept>
+      <concept id="4497478346159780083" name="jetbrains.mps.lang.smodel.structure.LanguageRefExpression" flags="ng" index="pHN19">
+        <child id="3542851458883491298" name="languageId" index="2V$M_3" />
+      </concept>
       <concept id="1179409122411" name="jetbrains.mps.lang.smodel.structure.Node_ConceptMethodCall" flags="nn" index="2qgKlT" />
       <concept id="4693937538533521280" name="jetbrains.mps.lang.smodel.structure.OfConceptOperation" flags="ng" index="v3k3i">
         <child id="4693937538533538124" name="requestedConcept" index="v3oSu" />
@@ -335,6 +338,7 @@
         <child id="1180636770616" name="createdType" index="3zrR0E" />
       </concept>
       <concept id="1144146199828" name="jetbrains.mps.lang.smodel.structure.Node_CopyOperation" flags="nn" index="1$rogu" />
+      <concept id="5769081855527239153" name="jetbrains.mps.lang.smodel.structure.AbstractLanguageIdentity" flags="ng" index="3APtyg" />
       <concept id="1144195091934" name="jetbrains.mps.lang.smodel.structure.Node_IsRoleOperation" flags="nn" index="1BlSNk">
         <reference id="1144195362400" name="conceptOfParent" index="1BmUXE" />
         <reference id="1144195396777" name="linkInParent" index="1Bn3mz" />
@@ -1113,6 +1117,12 @@
           <node concept="3Tqbb2" id="4trO_9OccZn" role="1ajl9A" />
         </node>
       </node>
+      <node concept="37vLTG" id="wexHjsE0D" role="3clF46">
+        <property role="TrG5h" value="langId" />
+        <node concept="3Tqbb2" id="wexHjsFwF" role="1tU5fm">
+          <ref role="ehGHo" to="tp25:34EJa6aIcz0" resolve="LanguageId" />
+        </node>
+      </node>
       <node concept="3Tm1VV" id="4trO_9Oc7cp" role="1B3o_S" />
       <node concept="3cqZAl" id="4trO_9OccYx" role="3clF45" />
       <node concept="3clFbS" id="4trO_9Oc7cr" role="3clF47">
@@ -1622,6 +1632,18 @@
                           </node>
                           <node concept="3uibUv" id="7x27w4yh0HO" role="3g7fb8">
                             <ref role="3uigEE" to="wyt6:~Object" resolve="Object" />
+                          </node>
+                        </node>
+                      </node>
+                      <node concept="pHN19" id="wexHjvDme" role="37wK5m">
+                        <node concept="3APtyg" id="wexHjvDmf" role="2V$M_3">
+                          <node concept="2c44te" id="wexHjvDmg" role="lGtFl">
+                            <node concept="2OqwBi" id="wexHjvDmh" role="2c44t1">
+                              <node concept="37vLTw" id="wexHjvDmi" role="2Oq$k0">
+                                <ref role="3cqZAo" node="wexHjsE0D" resolve="langId" />
+                              </node>
+                              <node concept="1$rogu" id="wexHjvDmj" role="2OqNvi" />
+                            </node>
                           </node>
                         </node>
                       </node>
@@ -2184,6 +2206,18 @@
                             </node>
                             <node concept="3TrEf2" id="GYgDz1CDFz" role="2OqNvi">
                               <ref role="3Tt5mk" to="tp3r:4IP40Bi2KaL" resolve="concept" />
+                            </node>
+                          </node>
+                        </node>
+                      </node>
+                      <node concept="pHN19" id="wexHjvCLC" role="37wK5m">
+                        <node concept="3APtyg" id="wexHjvCLE" role="2V$M_3">
+                          <node concept="2c44te" id="wexHjvCZs" role="lGtFl">
+                            <node concept="2OqwBi" id="wexHjvDa4" role="2c44t1">
+                              <node concept="37vLTw" id="wexHjvCZA" role="2Oq$k0">
+                                <ref role="3cqZAo" node="wexHjsE0D" resolve="langId" />
+                              </node>
+                              <node concept="1$rogu" id="wexHjvDjN" role="2OqNvi" />
                             </node>
                           </node>
                         </node>

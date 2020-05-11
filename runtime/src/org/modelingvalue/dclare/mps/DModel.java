@@ -59,8 +59,10 @@ public class DModel extends DMatchedObject<SModelReference, SModel> implements S
     private static final Constant<Triple<Set<SLanguage>, Boolean, String>, DModelType> MODEL_TYPE          = Constant.of("MODEL_TYPE", t -> new DModelType(t));
 
     protected static final Observed<DModel, String>                                    NAME                = DObserved.of("NAME", null, false, false, null, false, (dModel, pre, post) -> {
-                                                                                                               SModel sModel = dModel.original(true);
-                                                                                                               ((EditableSModel) sModel).rename(post, false);
+                                                                                                               if (post != null) {
+                                                                                                                   SModel sModel = dModel.original(true);
+                                                                                                                   ((EditableSModel) sModel).rename(post, false);
+                                                                                                               }
                                                                                                            }, null);
 
     protected static final Observed<DModel, Set<DNode>>                                ROOTS               = DObserved.of("ROOTS", Set.of(), false, true, null, false, (dModel, pre, post) -> {
@@ -128,7 +130,7 @@ public class DModel extends DMatchedObject<SModelReference, SModel> implements S
                                                                                                                    if (dModule.isExternal()) {
                                                                                                                        DRepository.REFERENCED.set(dClareMPS().getRepository(), Set::add, dModule);
                                                                                                                    }
-                                                                                                                   DModule.REFERENCED.set(dModule, (dm, m) -> dm.put(m, dm.get(m).addAll(o.dClass().getLanguages())), mo);
+                                                                                                                   DModule.REFERENCED.set(dModule, Set::add, mo);
                                                                                                                }
                                                                                                            }));
 
@@ -153,10 +155,11 @@ public class DModel extends DMatchedObject<SModelReference, SModel> implements S
     @SuppressWarnings("rawtypes")
     protected static final Set<Setable>                                                SETABLES            = DMatchedObject.SETABLES.addAll(Set.of(NAME, ROOTS, MODEL_ROOT, USED_MODELS, USED_LANGUAGES));
 
-    public static DModel of(String anonymousType, Object[] identity, boolean temporal) {
-        identity = Arrays.copyOf(identity, identity.length + (anonymousType != null ? 2 : 1));
+    public static DModel of(SLanguage anonymousLanguage, String anonymousType, Object[] identity, boolean temporal) {
+        identity = Arrays.copyOf(identity, identity.length + (anonymousType != null ? 3 : 1));
         if (anonymousType != null) {
-            identity[identity.length - 2] = temporal;
+            identity[identity.length - 3] = temporal;
+            identity[identity.length - 2] = anonymousLanguage;
             identity[identity.length - 1] = anonymousType;
         } else {
             identity[identity.length - 1] = temporal;
@@ -193,8 +196,7 @@ public class DModel extends DMatchedObject<SModelReference, SModel> implements S
         if (isRead()) {
             return false;
         } else {
-            Object last = identity[identity.length - 1];
-            return last instanceof String ? (Boolean) identity[identity.length - 2] : (Boolean) last;
+            return hasAnonymousType() ? (Boolean) identity[identity.length - 3] : (Boolean) identity[identity.length - 1];
         }
     }
 
@@ -231,9 +233,10 @@ public class DModel extends DMatchedObject<SModelReference, SModel> implements S
     @Override
     protected SModel create() {
         SModule sModule = getModule().original();
+        String name = "_" + hashCode();
         return isTemporal() ? //
-                new DTempModel(NAME.get(this), (SModuleBase) sModule) : //
-                sModule.getModelRoots().iterator().next().createModel(NAME.get(this));
+                new DTempModel(name, (SModuleBase) sModule) : //
+                sModule.getModelRoots().iterator().next().createModel(name);
     }
 
     @Override
@@ -243,14 +246,16 @@ public class DModel extends DMatchedObject<SModelReference, SModel> implements S
 
     @Override
     protected DModelType getType() {
-        DObjectType<?> dType = TYPE.get(dObjectParent());
-        return MODEL_TYPE.get(Triple.of(dType.getLanguages(), dType.external(), getAnonymousType()));
+        boolean external = isExternal();
+        SLanguage al = getAnonymousLanguage();
+        Set<SLanguage> languages = external ? Set.of() : USED_LANGUAGES.get(this).filter(l -> !DClareMPS.RULE_SETS.get(l).isEmpty()).toSet();
+        languages = al != null ? languages.add(al) : languages;
+        return MODEL_TYPE.get(Triple.of(languages, external, getAnonymousType()));
     }
 
     @Override
-    public String getAnonymousType() {
-        Object last = identity[identity.length - 1];
-        return last instanceof String ? (String) last : null;
+    public boolean hasAnonymousType() {
+        return !isRead() && !(identity[identity.length - 1] instanceof Boolean);
     }
 
     public java.util.Set<SLanguage> getUsedLanguages() {
@@ -463,7 +468,7 @@ public class DModel extends DMatchedObject<SModelReference, SModel> implements S
     public String toString() {
         String name = NAME.get(this);
         return name != null ? name : "Model" + (isRead() ? ("#" + getModelId()) : //
-                Arrays.toString(Arrays.copyOf(identity, identity.length - (getAnonymousType() != null ? 2 : 1))));
+                Arrays.toString(Arrays.copyOf(identity, identity.length - (getAnonymousType() != null ? 3 : 1))));
     }
 
     @SuppressWarnings("unchecked")

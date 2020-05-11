@@ -15,6 +15,8 @@
 
 package org.modelingvalue.dclare.mps;
 
+import java.util.stream.Collectors;
+
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.jetbrains.mps.openapi.module.ModelAccess;
 import org.jetbrains.mps.openapi.module.RepositoryAccess;
@@ -101,10 +103,9 @@ public class DRepository extends DFromOriginalObject<ProjectRepository> implemen
         return MODULES.get(this).filter(m -> m.getModuleId().equals(moduleId)).findAny().orElse(null);
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
     public Iterable<SModule> getModules() {
-        return (Set) MODULES.get(this);
+        return MODULES.get(this).filter(m -> !m.isExternal()).collect(Collectors.toSet());
     }
 
     @Override

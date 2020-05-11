@@ -15,23 +15,26 @@
 
 package org.modelingvalue.dclare.mps;
 
+import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.Set;
 
 @SuppressWarnings("unused")
 public class SClass {
 
-    public static SClass of(Object id, String name, SClass... supers) {
-        return new SClass(id, name, Set.of(supers));
+    public static SClass of(Object id, String name, SLanguage language, SClass... supers) {
+        return new SClass(id, name, language, Set.of(supers));
     }
 
     private final Object      id;
     private final String      name;
     private final Set<SClass> supers;
+    private final SLanguage   language;
 
-    private SClass(Object id, String name, Set<SClass> supers) {
+    private SClass(Object id, String name, SLanguage language, Set<SClass> supers) {
         super();
         this.id = id;
         this.name = name;
+        this.language = language;
         this.supers = supers;
     }
 
@@ -61,6 +64,10 @@ public class SClass {
     @Override
     public String toString() {
         return name;
+    }
+
+    public SLanguage getLanguage() {
+        return language;
     }
 
 }

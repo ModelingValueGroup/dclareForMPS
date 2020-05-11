@@ -17,6 +17,7 @@ package org.modelingvalue.dclare.mps;
 
 import java.util.function.Function;
 
+import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.ContainingCollection;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.dclare.NonCheckingObserved;
@@ -164,6 +165,14 @@ public abstract class DMatchedObject<R, S> extends DIdentifiedObject {
 
     protected abstract S create();
 
-    public abstract String getAnonymousType();
+    public abstract boolean hasAnonymousType();
+
+    public String getAnonymousType() {
+        return hasAnonymousType() ? (String) identity[identity.length - 1] : null;
+    }
+
+    public SLanguage getAnonymousLanguage() {
+        return hasAnonymousType() ? (SLanguage) identity[identity.length - 2] : null;
+    }
 
 }

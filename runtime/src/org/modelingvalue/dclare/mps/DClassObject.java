@@ -54,7 +54,7 @@ public class DClassObject extends DIdentifiedObject implements SClassObject {
     @Override
     protected DClassObjectType getType() {
         DObjectType<?> dType = TYPE.get(dObjectParent());
-        return CLASS_OBJECT_TYPE.get(Triple.of(dType.getLanguages(), getSClass(), dType.external()));
+        return CLASS_OBJECT_TYPE.get(Triple.of(Set.of(getSClass().getLanguage()), getSClass(), dType.external()));
     }
 
     @Override

@@ -222,10 +222,11 @@ public class DNode extends DMatchedObject<SNodeReference, SNode> implements SNod
     @SuppressWarnings("rawtypes")
     protected static final Set<Setable>                                                            SETABLES               = DMatchedObject.SETABLES.addAll(Set.of(NAME_OBSERVED, ROOT, MODEL, USER_OBJECTS, USED_MODELS, USED_LANGUAGES, ALL_MPS_ISSUES));
 
-    public static DNode of(SConcept concept, String anonymousType, Object[] identity) {
-        identity = Arrays.copyOf(identity, identity.length + (anonymousType != null ? 2 : 1));
+    public static DNode of(SConcept concept, SLanguage anonymousLanguage, String anonymousType, Object[] identity) {
+        identity = Arrays.copyOf(identity, identity.length + (anonymousType != null ? 3 : 1));
         if (anonymousType != null) {
-            identity[identity.length - 2] = concept;
+            identity[identity.length - 3] = concept;
+            identity[identity.length - 2] = anonymousLanguage;
             identity[identity.length - 1] = anonymousType;
         } else {
             identity[identity.length - 1] = concept;
@@ -290,7 +291,7 @@ public class DNode extends DMatchedObject<SNodeReference, SNode> implements SNod
         SConcept concept = getConcept();
         String name = concept.isSubConceptOf(SNodeUtil.concept_INamedConcept) ? getName() : null;
         return name != null ? name : concept.getName() + (isRead() ? ("#" + getIdString()) : //
-                Arrays.toString(Arrays.copyOf(identity, identity.length - (getAnonymousType() != null ? 2 : 1))));
+                Arrays.toString(Arrays.copyOf(identity, identity.length - (getAnonymousType() != null ? 3 : 1))));
     }
 
     private String getIdString() {
@@ -305,8 +306,13 @@ public class DNode extends DMatchedObject<SNodeReference, SNode> implements SNod
 
     @Override
     protected DNodeType getType() {
-        DObjectType<?> dType = TYPE.get(dObjectParent());
-        return NODE_TYPE.get(Quadruple.of(dType.getLanguages(), getConcept(), getAnonymousType(), dType.external()));
+        SLanguage al = getAnonymousLanguage();
+        SLanguage cl = getConcept().getLanguage();
+        if (DClareMPS.RULE_SETS.get(cl).isEmpty()) {
+            cl = null;
+        }
+        Set<SLanguage> ls = (al != null && cl != null) ? Set.of(al, cl) : al != null ? Set.of(al) : cl != null ? Set.of(cl) : Set.of();
+        return NODE_TYPE.get(Quadruple.of(ls, getConcept(), getAnonymousType(), isExternal()));
     }
 
     @Override
@@ -425,14 +431,12 @@ public class DNode extends DMatchedObject<SNodeReference, SNode> implements SNod
 
     @Override
     public SConcept getConcept() {
-        Object last = identity[identity.length - 1];
-        return last instanceof String ? (SConcept) identity[identity.length - 2] : (SConcept) last;
+        return hasAnonymousType() ? (SConcept) identity[identity.length - 3] : (SConcept) identity[identity.length - 1];
     }
 
     @Override
-    public String getAnonymousType() {
-        Object last = identity[identity.length - 1];
-        return last instanceof String ? (String) last : null;
+    public boolean hasAnonymousType() {
+        return !(identity[identity.length - 1] instanceof SConcept);
     }
 
     @Override
