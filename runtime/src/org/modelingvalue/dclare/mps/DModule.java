@@ -111,9 +111,8 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
 
     @Override
     protected DModuleType getType() {
-        boolean external = isExternal();
-        Set<SLanguage> languages = external ? Set.of() : LANGUAGES.get(this).filter(l -> !DClareMPS.RULE_SETS.get(l).isEmpty()).toSet();
-        return MODULE_TYPE.get(Pair.of(external, languages));
+        Set<SLanguage> languages = LANGUAGES.get(this).filter(l -> !DClareMPS.RULE_SETS.get(l).isEmpty()).toSet();
+        return MODULE_TYPE.get(Pair.of(isExternal(), languages));
     }
 
     @Override
@@ -295,6 +294,11 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
 
     public boolean isSolution() {
         return original() instanceof Solution;
+    }
+
+    @Override
+    public boolean isDclareOnly() {
+        return isExternal() || super.isDclareOnly();
     }
 
 }

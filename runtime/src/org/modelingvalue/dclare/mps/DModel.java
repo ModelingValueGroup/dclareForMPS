@@ -69,8 +69,8 @@ public class DModel extends DMatchedObject<SModelReference, SModel> implements S
                                                                                                                SModel sModel = dModel.original(true);
                                                                                                                Set<SNode> soll = post.map(r -> r.reParent(sModel, null, r.original(true))).toSet();
                                                                                                                Set<SNode> ist = DModel.roots(sModel);
-                                                                                                               DObserved.map(ist, soll,                                                                                          //
-                                                                                                                       sModel::addRootNode,                                                                                      //
+                                                                                                               DObserved.map(ist, soll,                                                                                           //
+                                                                                                                       sModel::addRootNode,                                                                                       //
                                                                                                                        sModel::removeRootNode);
                                                                                                            }, null);
 
@@ -105,18 +105,18 @@ public class DModel extends DMatchedObject<SModelReference, SModel> implements S
     protected static final Observed<DModel, ModelRoot>                                 MODEL_ROOT          = NonCheckingObserved.of("MODEL_ROOT", null);
 
     private static final Observer<DModel>                                              USED_LANGUAGES_RULE = DObject.observer(USED_LANGUAGES, o -> {
-                                                                                                               SModelBase sModel = (SModelBase) o.original();
-                                                                                                               if (sModel != null) {
-                                                                                                                   Set<SLanguage> ls = dClareMPS().read(() -> Collection.of(sModel.importedLanguageIds()).toSet());
+                                                                                                               SModel sModel = o.original();
+                                                                                                               if (sModel instanceof SModelBase) {
+                                                                                                                   Set<SLanguage> ls = dClareMPS().read(() -> Collection.of(((SModelBase) sModel).importedLanguageIds()).toSet());
                                                                                                                    USED_LANGUAGES.set(o, Set::addAll, ls.addAll(ROOTS.get(o).flatMap(DNode.USED_LANGUAGES::get)));
                                                                                                                }
                                                                                                            });
 
     private static final Observer<DModel>                                              USED_MODELS_RULE    = DObject.observer(USED_MODELS, o -> {
                                                                                                                DClareMPS dClareMPS = dClareMPS();
-                                                                                                               SModelBase sModel = (SModelBase) o.original();
-                                                                                                               if (sModel != null) {
-                                                                                                                   Set<DModel> ls = dClareMPS.read(() -> Collection.of(sModel.getModelImports()).                                //
+                                                                                                               SModel sModel = o.original();
+                                                                                                               if (sModel instanceof SModelBase) {
+                                                                                                                   Set<DModel> ls = dClareMPS.read(() -> Collection.of(((SModelBase) sModel).getModelImports()).                  //
                                                                                                                    map(r -> dClareMPS.read(() -> r.resolve(null))).notNull().map(DModel::of).toSet());
                                                                                                                    USED_MODELS.set(o, ls.addAll(ROOTS.get(o).flatMap(DNode.USED_MODELS::get)).remove(o));
                                                                                                                }
@@ -124,10 +124,10 @@ public class DModel extends DMatchedObject<SModelReference, SModel> implements S
 
     private static final Observer<DModel>                                              REFERENCED_RULE     = DObject.observer(DModule.REFERENCED, o -> USED_MODELS.get(o).forEach(mo -> {
                                                                                                                SModel sModel = mo.original();
-                                                                                                               if (sModel != null) {
+                                                                                                               if (sModel instanceof SModelBase) {
                                                                                                                    SModule sModule = sModel.getModule();
                                                                                                                    DModule dModule = DModule.of(sModule);
-                                                                                                                   if (dModule.isExternal()) {
+                                                                                                                   if (dModule.isExternal() && dClareMPS().read(() -> DModule.hasRuleSets(DModule.languages(sModule)))) {
                                                                                                                        DRepository.REFERENCED.set(dClareMPS().getRepository(), Set::add, dModule);
                                                                                                                    }
                                                                                                                    DModule.REFERENCED.set(dModule, Set::add, mo);
@@ -246,11 +246,10 @@ public class DModel extends DMatchedObject<SModelReference, SModel> implements S
 
     @Override
     protected DModelType getType() {
-        boolean external = isExternal();
         SLanguage al = getAnonymousLanguage();
-        Set<SLanguage> languages = external ? Set.of() : USED_LANGUAGES.get(this).filter(l -> !DClareMPS.RULE_SETS.get(l).isEmpty()).toSet();
+        Set<SLanguage> languages = USED_LANGUAGES.get(this).filter(l -> !DClareMPS.RULE_SETS.get(l).isEmpty()).toSet();
         languages = al != null ? languages.add(al) : languages;
-        return MODEL_TYPE.get(Triple.of(languages, external, getAnonymousType()));
+        return MODEL_TYPE.get(Triple.of(languages, isExternal(), getAnonymousType()));
     }
 
     @Override
@@ -481,6 +480,11 @@ public class DModel extends DMatchedObject<SModelReference, SModel> implements S
     @Deprecated
     public String getModelName() {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean isDclareOnly() {
+        return isExternal() || super.isDclareOnly();
     }
 
 }
