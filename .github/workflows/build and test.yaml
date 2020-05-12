@@ -78,7 +78,7 @@ jobs:
           . <(java -jar ~/buildTools.jar)
           . project.sh
           action() {
-            ant -Dmps_home="$mpsDir" $versionExtraArg $versionStampArg -f mps_build.xml cleanSources clean generate build
+            ant -Dmps_home="$mpsDir" "-Dversion=$version" "$versionExtraArg" "$versionStampArg" -f mps_build.xml cleanSources clean generate build
           }
           doubleBuild action mps_build.xml
 
