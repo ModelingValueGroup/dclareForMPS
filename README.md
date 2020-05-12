@@ -19,7 +19,7 @@ DclareForMPS uses the transactions framework and the collections library that ar
 The JDclare project can be found here: [JDclare on GitHub](https://github.com/ModelingValueGroup/jdclare)
 
 ## Installation
-In an installation of JetBrains MPS (2019.2 or higher) ...  
+In an installation of JetBrains MPS (2019.3.4 or higher) ...  
 1. install the DclareForMPS.zip plugin  
 2. open one of the example MPS-Projects (see below)  
 3. switch on the Dclare engine (Settings... > Dclare)  
