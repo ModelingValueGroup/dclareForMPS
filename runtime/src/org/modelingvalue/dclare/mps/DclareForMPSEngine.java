@@ -28,6 +28,7 @@ import jetbrains.mps.ide.MPSCoreComponents;
 import jetbrains.mps.module.ReloadableModule;
 import jetbrains.mps.project.ProjectBase;
 
+@SuppressWarnings("unused")
 public class DclareForMPSEngine implements DeployListener {
 
     private final ProjectBase          project;
@@ -115,6 +116,7 @@ public class DclareForMPSEngine implements DeployListener {
     @Override
     public void onUnloaded(Set<ReloadableModule> unloadedModules, ProgressMonitor monitor) {
         for (SModule m : project.getProjectModules()) {
+            //noinspection SuspiciousMethodCalls
             if (unloadedModules.contains(m)) {
                 stopEngine();
                 break;
@@ -125,6 +127,7 @@ public class DclareForMPSEngine implements DeployListener {
     @Override
     public void onLoaded(Set<ReloadableModule> loadedModules, ProgressMonitor monitor) {
         for (SModule m : project.getProjectModules()) {
+            //noinspection SuspiciousMethodCalls
             if (loadedModules.contains(m)) {
                 if (on) {
                     startEngine();
@@ -134,7 +137,7 @@ public class DclareForMPSEngine implements DeployListener {
         }
     }
 
-    public static final void breakpoint() {
+    public static void breakpoint() {
         System.err.println("breakpoint");
     }
 }

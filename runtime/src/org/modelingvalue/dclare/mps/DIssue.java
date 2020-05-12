@@ -17,9 +17,6 @@ package org.modelingvalue.dclare.mps;
 
 import java.util.function.Supplier;
 
-import org.jetbrains.mps.openapi.language.SLanguage;
-import org.jetbrains.mps.openapi.module.SRepository;
-import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.dclare.Constant;
 import org.modelingvalue.dclare.LeafTransaction;
@@ -37,62 +34,33 @@ import jetbrains.mps.errors.messageTargets.MessageTarget;
 
 public class DIssue extends DIdentifiedObject {
 
-    public static final CheckerCategory                  CHECKER_CATEGORY = new IssueKindReportItem.CheckerCategory(KindLevel.MANUAL, "Dclare");
+    protected static final CheckerCategory                CHECKER_CATEGORY = new IssueKindReportItem.CheckerCategory(KindLevel.MANUAL, "Dclare");
 
-    public static final ItemKind                         ITEM_KIND        = CHECKER_CATEGORY.deriveItemKind();
+    protected static final ItemKind                       ITEM_KIND        = CHECKER_CATEGORY.deriveItemKind();
 
-    private static final Constant<Set<SLanguage>, DType> ISSUE_TYPE       = Constant.of("ISSUE_TYPE", p -> new DType(p) {
-                                                                              @SuppressWarnings("rawtypes")
-                                                                              @Override
-                                                                              public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
-                                                                                  return Set.of();
-                                                                              }
+    private static final Constant<Boolean, DIsssueType>   ISSUE_TYPE       = Constant.of("ISSUE_TYPE", p -> new DIsssueType(p));
 
-                                                                              @SuppressWarnings("rawtypes")
-                                                                              @Override
-                                                                              public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
-                                                                                  return Set.of();
-                                                                              }
+    private static final Setable<DIssue, String>          MESSAGE          = Setable.of("$MESSAGE", null);
 
-                                                                              @Override
-                                                                              public Set<SLanguage> getLanguages() {
-                                                                                  return Set.of();
-                                                                              }
+    private static final Observer<DIssue>                 MESSAGE_RULE     = DObject.observer(MESSAGE, o -> MESSAGE.set(o, o.message.get()));
 
-                                                                              @SuppressWarnings("rawtypes")
-                                                                              @Override
-                                                                              protected Collection<Observer> observers() {
-                                                                                  return OBSERVERS;
-                                                                              }
+    public static final Setable<DIssue, DObject>          DOBJECT          = Setable.of("$DOBJECT", null, () -> DObject.DCLARE_ISSUES);
 
-                                                                              @SuppressWarnings("rawtypes")
-                                                                              @Override
-                                                                              protected Collection<Setable> setables() {
-                                                                                  return SETABLES;
-                                                                              }
-                                                                          });
+    private static final Observer<DIssue>                 DOBJECT_RULE     = DObject.observer(DOBJECT, o -> DOBJECT.set(o, o.dObject.get()));
 
-    private static final Setable<DIssue, String>         MESSAGE          = Setable.of("$MESSAGE", null);
+    protected static final Setable<DIssue, MessageStatus> SEVERITY         = Setable.of("$SEVERITY", null);
 
-    private static final Observer<DIssue>                MESSAGE_RULE     = DObject.<DIssue> observer(MESSAGE, o -> MESSAGE.set(o, o.message.get()));
+    private static final Observer<DIssue>                 SEVERITY_RULE    = DObject.observer(SEVERITY, o -> SEVERITY.set(o, o.severity.get()));
 
-    public static final Setable<DIssue, DObject>         DOBJECT          = Setable.of("$DOBJECT", null, () -> DObject.DCLARE_ISSUES);
+    protected static final Setable<DIssue, MessageTarget> FEATURE          = Setable.of("$FEATURE", null);
 
-    private static final Observer<DIssue>                DOBJECT_RULE     = DObject.<DIssue> observer(DOBJECT, o -> DOBJECT.set(o, o.dObject.get()));
-
-    public static final Setable<DIssue, MessageStatus>   SEVERITY         = Setable.of("$SEVERITY", null);
-
-    private static final Observer<DIssue>                SEVERITY_RULE    = DObject.<DIssue> observer(SEVERITY, o -> SEVERITY.set(o, o.severity.get()));
-
-    public static final Setable<DIssue, MessageTarget>   FEATURE          = Setable.of("$FEATURE", null);
-
-    private static final Observer<DIssue>                FEATURE_RULE     = DObject.<DIssue> observer(FEATURE, o -> FEATURE.set(o, o.feature.get()));
+    private static final Observer<DIssue>                 FEATURE_RULE     = DObject.observer(FEATURE, o -> FEATURE.set(o, o.feature.get()));
 
     @SuppressWarnings("rawtypes")
-    protected static final Set<Observer>                 OBSERVERS        = DObject.OBSERVERS.addAll(Set.of(MESSAGE_RULE, DOBJECT_RULE, SEVERITY_RULE, FEATURE_RULE));
+    protected static final Set<Observer>                  OBSERVERS        = DObject.OBSERVERS.addAll(Set.of(MESSAGE_RULE, DOBJECT_RULE, SEVERITY_RULE, FEATURE_RULE));
 
     @SuppressWarnings("rawtypes")
-    protected static final Set<Setable>                  SETABLES         = DObject.SETABLES.addAll(Set.of(MESSAGE, DOBJECT, SEVERITY, FEATURE));
+    protected static final Set<Setable>                   SETABLES         = DObject.SETABLES.addAll(Set.of(MESSAGE, DOBJECT, SEVERITY, FEATURE));
 
     public static DIssue of(Supplier<DObject> object, Supplier<MessageStatus> severity, Supplier<MessageTarget> feature, Supplier<String> message, Object[] identity) {
         return new DIssue(((DObserver<?>) LeafTransaction.getCurrent().cls()).rule(), object, severity, feature, message, identity);
@@ -109,7 +77,13 @@ public class DIssue extends DIdentifiedObject {
         this.rule = rule;
         this.message = message;
         this.severity = severity;
-        this.feature = feature;
+        this.feature = () -> {
+            try {
+                return feature.get();
+            } catch (NullPointerException npe) {
+                return null;
+            }
+        };
         this.dObject = dObject;
         DRule.DISUES.set(Set::add, this);
     }
@@ -139,9 +113,9 @@ public class DIssue extends DIdentifiedObject {
         if (o instanceof DModule) {
             return new DIssueModuleReportItem(getSeverity(), ((DModule) o).original(), getMessage(), ruleId());
         } else if (o instanceof DModel) {
-            return new DIssueModelReportItem(getSeverity(), ((DModel) o).original(), getMessage(), ruleId());
+            return new DIssueModelReportItem(getSeverity(), ((DModel) o).original(true), getMessage(), ruleId());
         } else {
-            return new DIssueNodeReportItem(getSeverity(), ((DNode) o).sNode(true), getFeature(), getMessage(), ruleId());
+            return new DIssueNodeReportItem(getSeverity(), ((DNode) o).original(true), getFeature(), getMessage(), ruleId());
         }
     }
 
@@ -150,18 +124,8 @@ public class DIssue extends DIdentifiedObject {
     }
 
     @Override
-    public boolean isReadOnly() {
-        return false;
-    }
-
-    @Override
-    protected SRepository getOriginalRepository() {
-        return dClareMPS().getRepository().original();
-    }
-
-    @Override
-    protected DType getType() {
-        return ISSUE_TYPE.get(TYPE.get(dObjectParent()).getLanguages());
+    protected DIsssueType getType() {
+        return ISSUE_TYPE.get(isExternal());
     }
 
     @Override
@@ -172,4 +136,20 @@ public class DIssue extends DIdentifiedObject {
     public boolean isDclareOnly() {
         return true;
     }
+
+    @Override
+    public boolean isExternal() {
+        return false;
+    }
+
+    @Override
+    protected boolean isRead() {
+        return false;
+    }
+
+    @Override
+    protected boolean isMatched() {
+        return false;
+    }
+
 }

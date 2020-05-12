@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="dclareformps-runtime" default="all">
+<project name="dclareformps" default="all">
   <property file="build.properties"/>
   <!-- Uncomment the following property if no tests compilation is needed -->
   <!-- 
@@ -32,11 +32,10 @@
     <include name="*.swc"/>
     <include name="*.apk"/>
     <include name="*.zip"/>
-    <include name="*.ane"/>
     <include name="*.egg"/>
+    <include name="*.ane"/>
     <include name="*.jar"/>
     <include name="*.ear"/>
-    <include name="*.klib"/>
   </patternset>
   <patternset id="compiler.resources">
     <include name="**/?*.properties"/>
@@ -138,6 +137,7 @@
   </path>
   <path id="library.gen:_mps.classpath">
     <pathelement location="${path.variable.mps_home}/lib/extensions.jar"/>
+    <pathelement location="${path.variable.mps_home}/lib/mps-closures.jar"/>
     <pathelement location="${path.variable.mps_home}/lib/mps-core.jar"/>
     <pathelement location="${path.variable.mps_home}/lib/mps-editor.jar"/>
     <pathelement location="${path.variable.mps_home}/lib/mps-openapi.jar"/>

@@ -7,13 +7,13 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="var" path="MPS_HOME/lib/mps-openapi.jar" sourcepath="/MPS_HOME/lib/MPS-src.zip"/>
-	<classpathentry kind="var" path="MPS_HOME/lib/mps-platform.jar" sourcepath="/MPS_SRC"/>
+	<classpathentry kind="var" path="MPS_HOME/lib/mps-platform.jar" sourcepath="/MPS_HOME/lib/MPS-src.zip"/>
 	<classpathentry kind="var" path="MPS_HOME/lib/platform-api.jar" sourcepath="/MPS_SRC"/>
-	<classpathentry kind="var" path="MPS_HOME/lib/mps-core.jar" sourcepath="/MPS_SRC"/>
+	<classpathentry kind="var" path="MPS_HOME/lib/mps-core.jar" sourcepath="/MPS_HOME/lib/MPS-src.zip"/>
 	<classpathentry kind="var" path="MPS_HOME/lib/extensions.jar"/>
 	<classpathentry kind="var" path="MPS_HOME/lib/mps-project-check.jar" sourcepath="/MPS_SRC"/>
 	<classpathentry kind="var" path="MPS_HOME/lib/mps-closures.jar"/>
-	<classpathentry kind="var" path="MPS_HOME/lib/mps-editor.jar" sourcepath=""/>
+	<classpathentry kind="var" path="MPS_HOME/lib/mps-editor.jar" sourcepath="/MPS_HOME/lib/MPS-src.zip"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/immutable-collections"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/dclare"/>
 	<classpathentry kind="output" path="bin"/>

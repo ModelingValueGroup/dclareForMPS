@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<language namespace="DclareMPS" uuid="c32b788d-8e4b-4023-97f5-3e90d04ed77b" languageVersion="1" moduleVersion="0">
+<language namespace="DclareMPS" uuid="c32b788d-8e4b-4023-97f5-3e90d04ed77b" languageVersion="2" moduleVersion="0">
   <models>
     <modelRoot contentPath="${module}" type="default">
       <sourceRoot location="models" />

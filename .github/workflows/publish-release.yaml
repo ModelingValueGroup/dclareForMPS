@@ -1,0 +1,31 @@
+on:
+  push:
+    tags:
+      - v[0-9]+.[0-9]+.[0-9]+
+
+name: Create Release
+
+jobs:
+  build:
+    name: publish
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@master
+
+      - name: make release notes
+        run: |
+          tag="${GITHUB_REF#refs/tags/}"
+          releaseNotes="$(awk '/^# '"$tag"'$/ {on=1;next;} /^#/{on=0} on==1{gsub("%", "%25");printf "%s\\n", $0}' release-notes.md)"
+          echo "::set-env name=releaseNotes::$releaseNotes"
+
+      - name: create release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name    : ${{ github.ref }}
+          release_name: release ${{ github.ref }}
+          draft       : false
+          prerelease  : false
+          body        : ${{ env.releaseNotes }}

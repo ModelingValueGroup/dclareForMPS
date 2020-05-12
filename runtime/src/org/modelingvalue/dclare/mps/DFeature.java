@@ -17,10 +17,10 @@ package org.modelingvalue.dclare.mps;
 
 import org.jetbrains.mps.openapi.model.SNode;
 
-public interface DFeature<O> {
-
+public interface DFeature {
     SNode getSource();
 
     boolean isSynthetic();
 
+    boolean onlyTemporal();
 }

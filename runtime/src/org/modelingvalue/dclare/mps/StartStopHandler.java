@@ -16,9 +16,9 @@
 package org.modelingvalue.dclare.mps;
 
 import org.jetbrains.mps.openapi.project.Project;
+import org.modelingvalue.dclare.UniverseStatistics;
 
 public interface StartStopHandler {
-
     void on(Project project);
 
     void off(Project project, Getter getter, DClareMPS engine);
@@ -27,4 +27,5 @@ public interface StartStopHandler {
 
     void stop(Project project, Getter getter, DClareMPS engine);
 
+    void stats(UniverseStatistics stats);
 }

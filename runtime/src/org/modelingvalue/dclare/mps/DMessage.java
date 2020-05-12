@@ -19,7 +19,6 @@ import org.jetbrains.mps.openapi.model.SNode;
 import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.util.Triple;
 
-@SuppressWarnings("rawtypes")
 public class DMessage extends Triple<DObject, DFeature, String> {
     private static final long  serialVersionUID = -303368640776089669L;
 
@@ -61,8 +60,8 @@ public class DMessage extends Triple<DObject, DFeature, String> {
         return subMessages;
     }
 
-    public List<DMessage> addSubMessage(DMessage subMessage) {
-        return subMessages = subMessages.add(subMessage);
+    public void addSubMessage(DMessage subMessage) {
+        subMessages = subMessages.add(subMessage);
     }
 
 }

@@ -19,54 +19,57 @@ import org.jetbrains.mps.openapi.language.SConcept;
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
-import org.modelingvalue.collections.util.Triple;
+import org.modelingvalue.collections.util.Quadruple;
 import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.Setable;
 
-public class DNodeType extends DType {
+@SuppressWarnings("unused")
+public class DNodeType extends DObjectType<Quadruple<Set<SLanguage>, SConcept, String, Boolean>> {
 
-    protected final Set<SLanguage> languages;
-    protected final SConcept       concept;
-    protected final String         anonymousType;
-
-    public DNodeType(Triple<Set<SLanguage>, SConcept, String> triple) {
-        super(triple);
-        languages = triple.a();
-        concept = triple.b();
-        anonymousType = triple.c();
+    public DNodeType(Quadruple<Set<SLanguage>, SConcept, String, Boolean> q) {
+        super(q);
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
-        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getNodeRules(concept, anonymousType))).toSet();
+        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getNodeRules(getConcept(), getAnonymousType()))).toSet();
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
-        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getNodeAttributes(concept, anonymousType))).toSet();
+        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getNodeAttributes(getConcept(), getAnonymousType()))).toSet();
     }
 
     @Override
     public Set<SLanguage> getLanguages() {
-        return languages;
+        return id().a();
     }
 
     public SConcept getConcept() {
-        return concept;
+        return id().b();
+    }
+
+    @Override
+    public boolean external() {
+        return id().d();
+    }
+
+    public String getAnonymousType() {
+        return id().c();
     }
 
     @SuppressWarnings("rawtypes")
     @Override
     public Collection<Setable> setables() {
-        return Collection.concat(DNode.SETABLES, DNode.CONCEPT_SETABLES.get(concept));
+        return Collection.concat(DNode.SETABLES, DNode.CONCEPT_SETABLES.get(getConcept()));
     }
 
     @SuppressWarnings("rawtypes")
     @Override
     protected Collection<Observer> observers() {
-        return Collection.concat(DNode.OBSERVERS, DNode.CONCEPT_OBSERVERS.get(concept));
+        return Collection.concat(DNode.OBSERVERS, DNode.CONCEPT_OBSERVERS.get(getConcept()));
     }
 
 }

@@ -23,31 +23,29 @@ import java.util.function.Supplier;
 import org.jetbrains.mps.openapi.language.SProperty;
 import org.jetbrains.mps.openapi.model.SNode;
 import org.modelingvalue.dclare.Constant;
-import org.modelingvalue.dclare.EmptyMandatoryException;
 import org.modelingvalue.dclare.LeafTransaction;
 import org.modelingvalue.dclare.Mutable;
+import org.modelingvalue.dclare.ReadOnlyTransaction;
 import org.modelingvalue.dclare.State;
 
 import jetbrains.mps.smodel.adapter.structure.property.InvalidProperty;
 
-@SuppressWarnings("rawtypes")
-public interface DAttribute<O, T> extends DFeature<O> {
-
-    Constant<Object, DAttribute> DATTRIBUTE = Constant.of("DATTRIBUTE", null);
+@SuppressWarnings({"rawtypes", "unused"})
+public interface DAttribute<O, T> extends DFeature {
 
     @SuppressWarnings("unchecked")
-    public static <C, V> DAttribute<C, V> of(Object id, String name, boolean synthetic, boolean optional, boolean composite, int identifyingNr, V def, Class<?> cls, Supplier<SNode> source, Function<C, V> deriver) {
-        DAttribute<C, V> dAttribute = identifyingNr >= 0 ? new DIdentifyingAttribute(id, name, synthetic, composite, identifyingNr, cls, source) : //
-                deriver != null ? new DConstant(id, name, synthetic, composite, cls, source, deriver) : //
+    static <C, V> DAttribute<C, V> of(String id, String name, boolean synthetic, boolean optional, boolean composite, int identifyingNr, V def, Class<?> cls, Supplier<SNode> source, Function<C, V> deriver, boolean onlyTemporal) {
+        return identifyingNr >= 0 ? new DIdentifyingAttribute(id, name, synthetic, composite, identifyingNr, cls, source) : //
+                deriver != null ? new DConstant(id, name, synthetic, composite, cls, source, deriver, onlyTemporal) : //
                         new DObservedAttribute(id, name, synthetic, optional, composite, def, cls, source, new InvalidProperty(id.toString(), name));
-        DATTRIBUTE.set(id, dAttribute);
-        return dAttribute;
     }
 
     @SuppressWarnings("unchecked")
-    public static <C, V> DAttribute<C, V> of(Object id) {
-        return DATTRIBUTE.isSet(id) ? DATTRIBUTE.get(id) : null;
+    static <C, V> DAttribute<C, V> of(String id) {
+        return (DAttribute<C, V>) DClareMPS.ATTRIBUTE_MAP.get(DClareMPS.instance()).get(id);
     }
+
+    String id();
 
     T pre(O object);
 
@@ -78,25 +76,30 @@ public interface DAttribute<O, T> extends DFeature<O> {
 
     Class<?> cls();
 
-    final static class DObservedAttribute<C extends DObject, V> extends DObserved<C, V> implements DAttribute<C, V> {
+    final class DObservedAttribute<C extends DObject, V> extends DObserved<C, V> implements DAttribute<C, V> {
 
         private final String    name;
         private final Class<?>  cls;
         private final SProperty sProperty;
 
         public DObservedAttribute(Object id, String name, boolean synthetic, boolean optional, boolean composite, V def, Class<?> cls, Supplier<SNode> source, SProperty sProperty) {
-            super(id, def, !optional, composite, null, synthetic, (o, b, a) -> {
+            super(id, !optional, def, composite, null, synthetic, (o, b, a) -> {
                 if (o instanceof DNode) {
-                    SNode sNode = ((DNode) o).sNode(false);
+                    SNode sNode = ((DNode) o).original();
                     if (sNode != null) {
                         sNode.setProperty(sProperty, "");
                         sNode.setProperty(sProperty, null);
                     }
                 }
-            }, null, source);
+            }, null, source, true);
             this.name = name;
             this.cls = cls;
             this.sProperty = sProperty;
+        }
+
+        @Override
+        public String id() {
+            return (String) super.id();
         }
 
         @Override
@@ -116,13 +119,13 @@ public interface DAttribute<O, T> extends DFeature<O> {
 
         @Override
         public boolean isMandatory() {
-            return mandatory;
+            return mandatory();
         }
 
         @Override
         public V get(C object) {
-            if (object instanceof DNode && !(LeafTransaction.getCurrent() instanceof DRule.DObserverTransaction)) {
-                ((DNode) object).sNode().getProperty(sProperty);
+            if (object instanceof DNode && LeafTransaction.getCurrent() instanceof ReadOnlyTransaction) {
+                ((DNode) object).original().getProperty(sProperty);
             }
             return super.get(object);
         }
@@ -132,18 +135,10 @@ public interface DAttribute<O, T> extends DFeature<O> {
             return cls;
         }
 
-        @Override
-        public void checkConsistency(State state, C object, V post) {
-            super.checkConsistency(state, object, post);
-            if (mandatory && post == null) {
-                throw new EmptyMandatoryException(object, this);
-            }
-        }
-
     }
 
-    final static class DIdentifyingAttribute<C extends DObject, V> implements DAttribute<C, V> {
-        private final Object          id;
+    final class DIdentifyingAttribute<C extends DIdentifiedObject, V> implements DAttribute<C, V> {
+        private final String          id;
         private final String          name;
         private final boolean         composite;
         private final int             index;
@@ -151,7 +146,7 @@ public interface DAttribute<O, T> extends DFeature<O> {
         private final Supplier<SNode> source;
         private final Class<?>        cls;
 
-        public DIdentifyingAttribute(Object id, String name, boolean synthetic, boolean composite, int index, Class<?> cls, Supplier<SNode> source) {
+        public DIdentifyingAttribute(String id, String name, boolean synthetic, boolean composite, int index, Class<?> cls, Supplier<SNode> source) {
             this.id = id;
             this.name = name;
             this.composite = composite;
@@ -164,6 +159,16 @@ public interface DAttribute<O, T> extends DFeature<O> {
         @Override
         public int hashCode() {
             return id.hashCode();
+        }
+
+        @Override
+        public boolean onlyTemporal() {
+            return false;
+        }
+
+        @Override
+        public String id() {
+            return id;
         }
 
         @Override
@@ -181,11 +186,7 @@ public interface DAttribute<O, T> extends DFeature<O> {
         @SuppressWarnings("unchecked")
         @Override
         public V get(C object) {
-            if (object instanceof SClassObject) {
-                return (V) ((SClassObject) object).getIdentity()[index];
-            } else {
-                return (V) ((DNode) object).getIdentity()[index];
-            }
+            return (V) object.getIdentity()[index];
         }
 
         @Override
@@ -245,19 +246,26 @@ public interface DAttribute<O, T> extends DFeature<O> {
 
     }
 
-    static class DConstant<C extends DObject, V> extends Constant<C, V> implements DAttribute<C, V> {
+    class DConstant<C extends DObject, V> extends Constant<C, V> implements DAttribute<C, V> {
 
         private final String          name;
         private final boolean         synthetic;
         private final Supplier<SNode> source;
         private final Class<?>        cls;
+        private final boolean         onlyTemporal;
 
-        public DConstant(Object id, String name, boolean synthetic, boolean composite, Class<?> cls, Supplier<SNode> source, Function<C, V> deriver) {
+        public DConstant(Object id, String name, boolean synthetic, boolean composite, Class<?> cls, Supplier<SNode> source, Function<C, V> deriver, boolean onlyTemporal) {
             super(id, null, composite, null, null, deriver, null, true);
             this.name = name;
             this.synthetic = synthetic;
             this.source = source;
             this.cls = cls;
+            this.onlyTemporal = onlyTemporal;
+        }
+
+        @Override
+        public boolean onlyTemporal() {
+            return onlyTemporal;
         }
 
         @Override
@@ -273,6 +281,11 @@ public interface DAttribute<O, T> extends DFeature<O> {
         @Override
         public boolean isComposite() {
             return containment();
+        }
+
+        @Override
+        public String id() {
+            return (String) super.id();
         }
 
         @Override
@@ -315,68 +328,6 @@ public interface DAttribute<O, T> extends DFeature<O> {
             return cls;
         }
 
-    }
-
-    static final class NullAttribute implements DAttribute {
-        @Override
-        public SNode getSource() {
-            return null;
-        }
-
-        @Override
-        public boolean isSynthetic() {
-            return true;
-        }
-
-        @Override
-        public Object pre(Object object) {
-            return null;
-        }
-
-        @Override
-        public Object get(Object object) {
-            return null;
-        }
-
-        @Override
-        public Object set(Object object, Object value) {
-            return null;
-        }
-
-        @Override
-        public Object set(Object object, BiFunction function, Object element) {
-            return null;
-        }
-
-        @Override
-        public boolean isComposite() {
-            return false;
-        }
-
-        @Override
-        public boolean isConstant() {
-            return false;
-        }
-
-        @Override
-        public boolean isIndetifying() {
-            return false;
-        }
-
-        @Override
-        public boolean isMandatory() {
-            return false;
-        }
-
-        @Override
-        public Class cls() {
-            return Object.class;
-        }
-
-        @Override
-        public String toString() {
-            return "nullAttribute";
-        }
     }
 
 }

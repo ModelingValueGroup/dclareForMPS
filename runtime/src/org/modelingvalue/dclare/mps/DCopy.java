@@ -22,61 +22,41 @@ import org.jetbrains.mps.openapi.language.SContainmentLink;
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.jetbrains.mps.openapi.language.SProperty;
 import org.jetbrains.mps.openapi.language.SReferenceLink;
-import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.Set;
-import org.modelingvalue.collections.util.Triple;
+import org.modelingvalue.collections.util.Quadruple;
 import org.modelingvalue.dclare.Constant;
 import org.modelingvalue.dclare.Observed;
 import org.modelingvalue.dclare.Observer;
-import org.modelingvalue.dclare.mps.DRule.DObserver;
 
+@SuppressWarnings("unused")
 public class DCopy extends DNode {
 
-    private static final Constant<Triple<Set<SLanguage>, SConcept, String>, DType> COPY_TYPE         = Constant.of("COPY_TYPE", t -> new DNodeType(t) {
-
-                                                                                                         @SuppressWarnings("rawtypes")
-                                                                                                         @Override
-                                                                                                         public Set<DObserver> getObservers() {
-                                                                                                             return Set.of();
-                                                                                                         }
-
-                                                                                                         @SuppressWarnings("rawtypes")
-                                                                                                         @Override
-                                                                                                         public Set<DAttribute> getAttributes() {
-                                                                                                             return Set.of();
-                                                                                                         }
-
-                                                                                                         @SuppressWarnings("rawtypes")
-                                                                                                         @Override
-                                                                                                         protected Collection<Observer> observers() {
-                                                                                                             return Collection.concat(DNode.OBSERVERS, DCopy.CONCEPT_OBSERVERS.get(concept));
-                                                                                                         }
-
-                                                                                                     });
+    private static final Constant<Quadruple<Set<SLanguage>, SConcept, String, Boolean>, DCopyType> COPY_TYPE         = Constant.of("COPY_TYPE", q -> new DCopyType(q));
 
     @SuppressWarnings("rawtypes")
-    private static final Constant<SConcept, Set<Observer>>                         CONCEPT_OBSERVERS = Constant.of("RULES", c -> {
-                                                                                                         Set<Observer> observers = Set.of();
-                                                                                                         for (SProperty property : c.getProperties()) {
-                                                                                                             Observed<DNode, String> observed = PROPERTY.get(property);
-                                                                                                             observers = observers.add(DObject.<DCopy> observer(observed, o -> observed.set(o, observed.get(o.getCopied()))));
-                                                                                                         }
-                                                                                                         for (SContainmentLink containment : c.getContainmentLinks()) {
-                                                                                                             if (containment.isMultiple()) {
-                                                                                                                 Observed<DNode, List<DNode>> observed = MANY_CONTAINMENT.get(containment);
-                                                                                                                 observers = observers.add(DObject.<DCopy> observer(observed, o -> observed.set(o, o.copy(observed.get(o.getCopied())))));
-                                                                                                             } else {
-                                                                                                                 Observed<DNode, DNode> observed = SINGLE_CONTAINMENT.get(containment);
-                                                                                                                 observers = observers.add(DObject.<DCopy> observer(observed, o -> observed.set(o, o.copy(observed.get(o.getCopied())))));
-                                                                                                             }
-                                                                                                         }
-                                                                                                         for (SReferenceLink reference : c.getReferenceLinks()) {
-                                                                                                             Observed<DNode, DNode> observed = REFERENCE.get(reference);
-                                                                                                             observers = observers.add(DObject.<DCopy> observer(observed, o -> observed.set(o, o.map(observed.get(o.getCopied())))));
-                                                                                                         }
-                                                                                                         return observers;
-                                                                                                     });
+    protected static final Constant<SConcept, Set<Observer>>                                       CONCEPT_OBSERVERS = Constant.of("RULES", c -> {
+                                                                                                                         Set<Observer> observers = Set.of();
+                                                                                                                         for (SProperty property : c.getProperties()) {
+                                                                                                                             Observed<DNode, String> observed = PROPERTY.get(property);
+                                                                                                                             observers = observers.add(DObject.<DCopy> observer(observed, o -> observed.set(o, observed.get(o.getCopied()))));
+                                                                                                                         }
+                                                                                                                         for (SContainmentLink containment : c.getContainmentLinks()) {
+                                                                                                                             if (containment.isMultiple()) {
+                                                                                                                                 Observed<DNode, List<DNode>> observed = MANY_CONTAINMENT.get(containment);
+                                                                                                                                 observers = observers.add(DObject.<DCopy> observer(observed, o -> observed.set(o, o.copy(observed.get(o.getCopied())))));
+                                                                                                                             } else {
+                                                                                                                                 Observed<DNode, DNode> observed = SINGLE_CONTAINMENT.get(containment);
+                                                                                                                                 observers = observers.add(DObject.<DCopy> observer(observed, o -> observed.set(o, o.copy(observed.get(o.getCopied())))));
+                                                                                                                             }
+                                                                                                                         }
+                                                                                                                         for (SReferenceLink reference : c.getReferenceLinks()) {
+                                                                                                                             Observed<DNode, DNode> observed = REFERENCE.get(reference);
+                                                                                                                             observers = observers.add(DObject.<DCopy> observer(observed, o -> observed.set(o, o.map(observed.get(o.getCopied())))));
+                                                                                                                         }
+                                                                                                                         observers = observers.addAll(DNode.CONCEPT_OBSERVERS.get(c));
+                                                                                                                         return observers;
+                                                                                                                     });
 
     public static DCopy of(DNode copied, Object ctx, Object id) {
         Objects.requireNonNull(copied);
@@ -105,13 +85,28 @@ public class DCopy extends DNode {
     }
 
     @Override
+    public boolean hasAnonymousType() {
+        return false;
+    }
+
+    @Override
     public String getAnonymousType() {
         return null;
     }
 
     @Override
-    protected DType getType() {
-        return COPY_TYPE.get(Triple.of(Set.of(), getConcept(), null));
+    public SLanguage getAnonymousLanguage() {
+        return null;
+    }
+
+    @Override
+    protected DCopyType getType() {
+        return COPY_TYPE.get(Quadruple.of(Set.of(), getConcept(), null, false));
+    }
+
+    @Override
+    public boolean isExternal() {
+        return false;
     }
 
     private List<DNode> copy(List<DNode> children) {
