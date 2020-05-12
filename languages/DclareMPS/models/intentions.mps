@@ -445,10 +445,10 @@
               </node>
             </node>
             <node concept="Xl_RD" id="u5SXqxneGk" role="3K4GZi">
-              <property role="Xl_RC" value="make deferred" />
+              <property role="Xl_RC" value="Make Deferred" />
             </node>
             <node concept="Xl_RD" id="u5SXqxnfqS" role="3K4E3e">
-              <property role="Xl_RC" value="make non-deferred" />
+              <property role="Xl_RC" value="Make Non Deferred" />
             </node>
           </node>
         </node>
@@ -486,10 +486,10 @@
         <node concept="3clFbF" id="3myfcgXiBPT" role="3cqZAp">
           <node concept="3K4zz7" id="3myfcgXiCFd" role="3clFbG">
             <node concept="Xl_RD" id="3myfcgXiCG3" role="3K4E3e">
-              <property role="Xl_RC" value="make persistent" />
+              <property role="Xl_RC" value="Make Persistent" />
             </node>
             <node concept="Xl_RD" id="3myfcgXiCOz" role="3K4GZi">
-              <property role="Xl_RC" value="make transient" />
+              <property role="Xl_RC" value="Make Transient" />
             </node>
             <node concept="2OqwBi" id="3myfcgXiC2f" role="3K4Cdx">
               <node concept="2Sf5sV" id="3myfcgXiBPS" role="2Oq$k0" />
