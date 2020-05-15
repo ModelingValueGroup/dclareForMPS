@@ -15,38 +15,42 @@
 
 package org.modelingvalue.dclare.mps;
 
+import java.util.Arrays;
 import java.util.function.Function;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.ContainingCollection;
+import org.modelingvalue.collections.Map;
 import org.modelingvalue.collections.Set;
+import org.modelingvalue.dclare.LeafTransaction;
 import org.modelingvalue.dclare.NonCheckingObserved;
 import org.modelingvalue.dclare.Observed;
 import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.Setable;
+import org.modelingvalue.dclare.mps.DRule.DObserverTransaction;
 
 public abstract class DMatchedObject<R, S> extends DIdentifiedObject {
 
     @SuppressWarnings("rawtypes")
-    private static final Setable<Object, DMatchedObject>  D_MATCHED   = Setable.of("$D_MATCHED", null);
+    private static final Setable<Object, DMatchedObject>  D_READ_MATCHED = Setable.of("$D_READ_MATCHED", null);
 
     @SuppressWarnings("rawtypes")
-    private static final Observed<DMatchedObject, Object> MATCHED_REF = NonCheckingObserved.of("$MATCHED_REF", null, () -> D_MATCHED);
+    private static final Observed<DMatchedObject, Object> MATCHED_REF    = NonCheckingObserved.of("$MATCHED_REF", null, () -> D_READ_MATCHED);
 
     @SuppressWarnings("rawtypes")
-    private static final Setable<DMatchedObject, Object>  DETACHED    = Setable.of("$DETACHED", null);
+    private static final Setable<DMatchedObject, Object>  DETACHED       = Setable.of("$DETACHED", null);
 
     @SuppressWarnings("rawtypes")
-    protected static final Set<Observer>                  OBSERVERS   = DObject.OBSERVERS.addAll(Set.of());
+    protected static final Set<Observer>                  OBSERVERS      = DObject.OBSERVERS.addAll(Set.of());
 
     @SuppressWarnings("rawtypes")
-    protected static final Set<Setable>                   SETABLES    = DObject.SETABLES.addAll(Set.of(MATCHED_REF, DETACHED));
+    protected static final Set<Setable>                   SETABLES       = DObject.SETABLES.addAll(Set.of(MATCHED_REF, DETACHED));
 
     protected DMatchedObject(Object[] identity) {
         super(identity);
     }
 
-    protected static <P extends DObject, I, M, C extends DMatchedObject<I, M>> void match(P parent, Function<P, ? extends ContainingCollection<M>> readFunction, ContainingCollection<C> posts) {
+    protected static <P extends DObject, I, M, C extends DMatchedObject<I, M>> void matchRead(P parent, Function<P, ? extends ContainingCollection<M>> readFunction, ContainingCollection<C> posts) {
         if (parent.isRead() || parent.isMatched()) {
             ContainingCollection<M> readSet = null;
             DClareMPS dClare = null;
@@ -73,7 +77,23 @@ public abstract class DMatchedObject<R, S> extends DIdentifiedObject {
 
     @SuppressWarnings("unchecked")
     protected static final <I, M extends DMatchedObject<I, ?>> M getMatchedObject(I ref) {
-        return (M) D_MATCHED.get(ref);
+        return (M) D_READ_MATCHED.get(ref);
+    }
+
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    protected static <D extends DMatchedObject, A> D construct(DObject dObject, SLanguage anonymousLanguage, String anonymousType, Object[] ctx, A argument, Function<Object[], D> constructor) {
+        Object[] identity = Arrays.copyOf(ctx, ctx.length + 3);
+        identity[identity.length - 3] = argument;
+        identity[identity.length - 2] = anonymousLanguage;
+        identity[identity.length - 1] = anonymousType;
+        DObserverTransaction tx = (DObserverTransaction) LeafTransaction.getCurrent();
+        DIdentity id = DIdentity.of(identity);
+        D d = (D) tx.get(dObject, tx.observer().constructed).get(id);
+        if (d == null) {
+            d = constructor.apply(new Object[]{dObject, new Id(), argument, anonymousLanguage, anonymousType});
+        }
+        DRule.DCONSTRUCTED.set(Map::put, id, d);
+        return d;
     }
 
     @Override
@@ -173,6 +193,13 @@ public abstract class DMatchedObject<R, S> extends DIdentifiedObject {
 
     public SLanguage getAnonymousLanguage() {
         return hasAnonymousType() ? (SLanguage) identity[identity.length - 2] : null;
+    }
+
+    public static final class Id {
+        @Override
+        public String toString() {
+            return Integer.toHexString(hashCode());
+        }
     }
 
 }

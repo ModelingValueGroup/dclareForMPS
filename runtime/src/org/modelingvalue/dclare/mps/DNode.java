@@ -104,7 +104,7 @@ public class DNode extends DMatchedObject<SNodeReference, SNode> implements SNod
     protected static final Constant<SContainmentLink, Function<DNode, List<SNode>>>                READ_CHILDREN_FUNCTION = Constant.of("READ_CHILDREN_FUNCTION",                                                                                                                                 //
             cl -> n -> dClareMPS().read(() -> Collection.of(n.original().getChildren(cl)).map(c -> (SNode) c).toList()));
 
-    private static final Constant<SContainmentLink, Observer<DNode>>                               READ_MATCHER           = Constant.of("READ_MATCHER", cl -> DObject.observer(Pair.of("MATCHER", cl), n -> DNode.match(n, READ_CHILDREN_FUNCTION.get(cl), cl.isMultiple() ?                      //
+    private static final Constant<SContainmentLink, Observer<DNode>>                               READ_MATCHER           = Constant.of("READ_MATCHER", cl -> DObject.observer(Pair.of("MATCHER", cl), n -> DNode.matchRead(n, READ_CHILDREN_FUNCTION.get(cl), cl.isMultiple() ?                  //
             MANY_CONTAINMENT.get(cl).get(n) :                                                                                                                                                                                                                                                     //
             SINGLE_CONTAINMENT.get(cl).<DNode> getCollection(n).toList())));
 
@@ -221,16 +221,8 @@ public class DNode extends DMatchedObject<SNodeReference, SNode> implements SNod
     @SuppressWarnings("rawtypes")
     protected static final Set<Setable>                                                            SETABLES               = DMatchedObject.SETABLES.addAll(Set.of(NAME_OBSERVED, ROOT, MODEL, USER_OBJECTS, USED_MODELS, USED_LANGUAGES, ALL_MPS_ISSUES));
 
-    public static DNode of(SConcept concept, SLanguage anonymousLanguage, String anonymousType, Object[] identity) {
-        identity = Arrays.copyOf(identity, identity.length + (anonymousType != null ? 3 : 1));
-        if (anonymousType != null) {
-            identity[identity.length - 3] = concept;
-            identity[identity.length - 2] = anonymousLanguage;
-            identity[identity.length - 1] = anonymousType;
-        } else {
-            identity[identity.length - 1] = concept;
-        }
-        return new DNode(identity);
+    public static DNode of(DObject context, SLanguage anonymousLanguage, String anonymousType, Object[] identity, SConcept concept) {
+        return construct(context, anonymousLanguage, anonymousType, identity, concept, id -> new DNode(id));
     }
 
     protected static DNode read(SNode original) {

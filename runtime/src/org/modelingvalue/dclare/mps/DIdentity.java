@@ -15,13 +15,55 @@
 
 package org.modelingvalue.dclare.mps;
 
-import org.jetbrains.mps.openapi.model.SNode;
-import org.modelingvalue.collections.util.Internable;
+import java.util.Arrays;
 
-public interface DFeature extends Internable {
-    SNode getSource();
+import org.modelingvalue.collections.util.Age;
 
-    boolean isSynthetic();
+public class DIdentity {
 
-    boolean onlyTemporal();
+    public static DIdentity of(Object[] id) {
+        return new DIdentity(id);
+    }
+
+    private Object[] identity;
+
+    protected DIdentity(Object[] identity) {
+        this.identity = identity;
+    }
+
+    @Override
+    public int hashCode() {
+        return Arrays.deepHashCode(identity);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        } else if (obj == null) {
+            return false;
+        } else if (getClass() != obj.getClass()) {
+            return false;
+        } else {
+            DIdentity other = (DIdentity) obj;
+            if (other.identity == identity) {
+                return true;
+            } else if (!Arrays.deepEquals(identity, other.identity)) {
+                return false;
+            } else {
+                if (Age.age(identity) > Age.age(other.identity)) {
+                    other.identity = identity;
+                } else {
+                    identity = other.identity;
+                }
+                return true;
+            }
+        }
+    }
+
+    @Override
+    public String toString() {
+        return Arrays.toString(identity);
+    }
+
 }

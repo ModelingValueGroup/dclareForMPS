@@ -78,7 +78,7 @@ public class DModel extends DMatchedObject<SModelReference, SModel> implements S
                                                                                                                return dClareMPS().read(() -> Collection.of(sModel.getRootNodes()).toSet());
                                                                                                            };
 
-    protected static final Observer<DModel>                                            ROOTS_READ_MATCHER  = DObject.observer("$ROOTS_READ_MATCHER", m -> DNode.match(m, READ_ROOTS_FUNCTION, ROOTS.get(m)));
+    protected static final Observer<DModel>                                            ROOTS_READ_MATCHER  = DObject.observer("$ROOTS_READ_MATCHER", m -> DNode.matchRead(m, READ_ROOTS_FUNCTION, ROOTS.get(m)));
 
     protected static final Observed<DModel, Set<SLanguage>>                            USED_LANGUAGES      = DObserved.of("USED_LANGUAGES", Set.of(), false, false, null, false, (dModel, pre, post) -> {
                                                                                                                SModelBase sModel = (SModelBase) dModel.original(true);
@@ -154,16 +154,8 @@ public class DModel extends DMatchedObject<SModelReference, SModel> implements S
     @SuppressWarnings("rawtypes")
     protected static final Set<Setable>                                                SETABLES            = DMatchedObject.SETABLES.addAll(Set.of(NAME, ROOTS, MODEL_ROOT, USED_MODELS, USED_LANGUAGES));
 
-    public static DModel of(SLanguage anonymousLanguage, String anonymousType, Object[] identity, boolean temporal) {
-        identity = Arrays.copyOf(identity, identity.length + (anonymousType != null ? 3 : 1));
-        if (anonymousType != null) {
-            identity[identity.length - 3] = temporal;
-            identity[identity.length - 2] = anonymousLanguage;
-            identity[identity.length - 1] = anonymousType;
-        } else {
-            identity[identity.length - 1] = temporal;
-        }
-        return new DModel(identity);
+    public static DModel of(DObject context, SLanguage anonymousLanguage, String anonymousType, Object[] identity, boolean temporal) {
+        return construct(context, anonymousLanguage, anonymousType, identity, temporal, id -> new DModel(id));
     }
 
     protected static DModel read(SModel original) {

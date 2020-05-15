@@ -36,7 +36,7 @@ import jetbrains.mps.errors.item.IssueKindReportItem;
 @SuppressWarnings({"rawtypes", "unused"})
 public abstract class DObject implements Mutable {
 
-    public static final Observed<DObject, DObjectType<?>>                              TYPE                      = NonCheckingObserved.of("TYPE", new DObjectType<String>("<DUMMY_TYPE>") {
+    public static final Observed<DObject, DObjectType<?>>                              TYPE                      = NonCheckingObserved.of("$TYPE", new DObjectType<String>("<DUMMY_TYPE>") {
                                                                                                                      @Override
                                                                                                                      public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
                                                                                                                          return Set.of();
