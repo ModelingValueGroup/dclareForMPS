@@ -21,6 +21,7 @@
     <import index="d6hs" ref="6ed54515-acc8-4d1e-a16c-9fd6cfe951ea/java:jetbrains.mps.errors.item(MPS.Core/)" />
     <import index="2gg1" ref="6ed54515-acc8-4d1e-a16c-9fd6cfe951ea/java:jetbrains.mps.errors(MPS.Core/)" />
     <import index="zavc" ref="6ed54515-acc8-4d1e-a16c-9fd6cfe951ea/java:jetbrains.mps.errors.messageTargets(MPS.Core/)" />
+    <import index="4nm9" ref="498d89d2-c2e9-11e2-ad49-6cf049e62fe5/java:com.intellij.openapi.project(MPS.IDEA/)" />
   </imports>
   <registry>
     <language id="f3061a53-9226-4cc5-a443-f952ceaf5816" name="jetbrains.mps.baseLanguage">
@@ -57,7 +58,10 @@
       <concept id="1145552977093" name="jetbrains.mps.baseLanguage.structure.GenericNewExpression" flags="nn" index="2ShNRf">
         <child id="1145553007750" name="creator" index="2ShVmc" />
       </concept>
-      <concept id="1070462154015" name="jetbrains.mps.baseLanguage.structure.StaticFieldDeclaration" flags="ig" index="Wx3nA" />
+      <concept id="1070462154015" name="jetbrains.mps.baseLanguage.structure.StaticFieldDeclaration" flags="ig" index="Wx3nA">
+        <property id="6468716278899126575" name="isVolatile" index="2dlcS1" />
+        <property id="6468716278899125786" name="isTransient" index="2dld4O" />
+      </concept>
       <concept id="1182160077978" name="jetbrains.mps.baseLanguage.structure.AnonymousClassCreator" flags="nn" index="YeOm9">
         <child id="1182160096073" name="cls" index="YeSDq" />
       </concept>
@@ -264,14 +268,32 @@
   <node concept="312cEu" id="30fQumnG8Au">
     <property role="TrG5h" value="DclareUtil" />
     <node concept="2tJIrI" id="29R9$zZo$v9" role="jymVt" />
-    <node concept="Wx3nA" id="by_B4PBlOT" role="jymVt">
-      <property role="TrG5h" value="ATTR" />
+    <node concept="Wx3nA" id="4o9njCw5asw" role="jymVt">
+      <property role="2dlcS1" value="false" />
+      <property role="2dld4O" value="false" />
+      <property role="TrG5h" value="ENGINES" />
       <property role="3TUv4t" value="true" />
-      <node concept="3uibUv" id="by_B4PBlOW" role="1tU5fm">
-        <ref role="3uigEE" to="t4tl:~DAttribute" resolve="DAttribute" />
+      <node concept="3Tm1VV" id="4o9njCw5abN" role="1B3o_S" />
+      <node concept="3uibUv" id="4o9njCw5gJO" role="1tU5fm">
+        <ref role="3uigEE" to="33ny:~Map" resolve="Map" />
+        <node concept="3uibUv" id="4o9njCw5CO3" role="11_B2D">
+          <ref role="3uigEE" to="4nm9:~Project" resolve="Project" />
+        </node>
+        <node concept="3uibUv" id="MKle5XG9su" role="11_B2D">
+          <ref role="3uigEE" to="t4tl:~DclareForMPSEngine" resolve="DclareForMPSEngine" />
+        </node>
       </node>
-      <node concept="3Tm1VV" id="by_B4PBlOV" role="1B3o_S" />
-      <node concept="10Nm6u" id="by_B4PBpe4" role="33vP2m" />
+      <node concept="2ShNRf" id="4o9njCw5irz" role="33vP2m">
+        <node concept="1pGfFk" id="4o9njCw5mpg" role="2ShVmc">
+          <ref role="37wK5l" to="33ny:~WeakHashMap.&lt;init&gt;()" resolve="WeakHashMap" />
+          <node concept="3uibUv" id="4o9njCw5CYn" role="1pMfVU">
+            <ref role="3uigEE" to="4nm9:~Project" resolve="Project" />
+          </node>
+          <node concept="3uibUv" id="MKle5XG9Hk" role="1pMfVU">
+            <ref role="3uigEE" to="t4tl:~DclareForMPSEngine" resolve="DclareForMPSEngine" />
+          </node>
+        </node>
+      </node>
     </node>
     <node concept="2tJIrI" id="by_B4PBcEN" role="jymVt" />
     <node concept="2YIFZL" id="4Y8BM43o88y" role="jymVt">
