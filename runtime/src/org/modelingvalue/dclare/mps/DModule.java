@@ -58,20 +58,20 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
     protected static final Observed<DModule, Set<DModel>>                     REFERENCED           = NonCheckingObserved.of("REFERENCED", Set.of());
 
     protected static final Observed<DModule, Set<DModel>>                     MODELS               = DObserved.of("MODELS", Set.of(), false, true, null, false, (dModule, pre, post) -> {
-                                                                                                       Setable.<Set<DModel>, DModel> diff(models(dModule.original()).map(DModel::of).toSet(), post,      //
-                                                                                                               a -> a.original(true),                                                                    //
+                                                                                                       Setable.<Set<DModel>, DModel> diff(models(dModule.original()).map(DModel::of).toSet(), post,           //
+                                                                                                               a -> a.original(true),                                                                         //
                                                                                                                r -> new ModelDeleteHelper(r.original()).delete());
                                                                                                    }, null);
 
     protected static final Observed<DModule, Set<SLanguage>>                  LANGUAGES            = NonCheckingObserved.of("LANGUAGES", Set.of(), (tx, o, pre, post) -> {
-                                                                                                       Setable.<Set<SLanguage>, SLanguage> diff(pre, post,                                               //
-                                                                                                               a -> DClareMPS.ALL_LANGUAGES.set(dClareMPS(), Set::add, a),                               //
+                                                                                                       Setable.<Set<SLanguage>, SLanguage> diff(pre, post,                                                    //
+                                                                                                               a -> DClareMPS.ALL_LANGUAGES.set(dClareMPS(), Set::add, a),                                    //
                                                                                                                r -> {
                                                                                                                });
                                                                                                    });
 
     private static final Observer<DModule>                                    LANGUAGES_RULE       = DObject.observer(LANGUAGES, o -> {
-                                                                                                       LANGUAGES.set(o, dClareMPS().read(() -> languages(o.original()))                                  //
+                                                                                                       LANGUAGES.set(o, dClareMPS().read(() -> languages(o.original()))                                       //
                                                                                                                .addAll(MODELS.get(o).flatMap(m -> DModel.USED_LANGUAGES.get(m))));
                                                                                                    });
 
@@ -87,7 +87,7 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
                                                                                                        Set<SLanguage> languages = dClareMPS().read(() -> languages(m.original()));
                                                                                                        LANGUAGES.set(m, languages);
                                                                                                        if (!m.isExternal() && hasRuleSets(languages)) {
-                                                                                                           MODELS.set(m, dClareMPS().read(() -> models(m.original()).map(DModel::read).toSet()));
+                                                                                                           MODELS.set(m, dClareMPS().read(() -> models(m.original()).sequential().map(DModel::read).toSet()));
                                                                                                        }
                                                                                                    }, Direction.forward);
     @SuppressWarnings("rawtypes")
