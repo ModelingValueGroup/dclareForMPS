@@ -79,7 +79,7 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
                                                                                                        MODELS.set(o, Set::addAll, REFERENCED.get(o));
                                                                                                    });
 
-    private static final Function<DModule, Set<SModel>>                       READ_MODELS_FUNCTION = m -> dClareMPS().read(() -> Collection.of(m.original().getModels()).toSet());
+    private static final Function<DModule, Set<SModel>>                       READ_MODELS_FUNCTION = m -> dClareMPS().read(() -> models(m.original()).toSet());
 
     protected static final Observer<DModule>                                  MODELS_READ_MATCHER  = DObject.observer("$MODELS_READ_MATCHER", m -> DModel.match(m, READ_MODELS_FUNCTION, MODELS.get(m)));
 

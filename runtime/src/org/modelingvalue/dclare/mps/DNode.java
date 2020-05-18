@@ -390,8 +390,9 @@ public class DNode extends DMatchedObject<SNodeReference, SNode> implements SNod
     protected void addSObject(SNode sNode) {
         DObject parent = dObjectParent();
         if (parent instanceof DModel) {
+            SModel sParent = ((DModel) parent).original(true);
             //noinspection ConstantConditions
-            getModel().original(true).addRootNode(sNode);
+            sParent.addRootNode(sNode);
         } else {
             SNode sParent = ((DNode) parent).original(true);
             //noinspection ConstantConditions
