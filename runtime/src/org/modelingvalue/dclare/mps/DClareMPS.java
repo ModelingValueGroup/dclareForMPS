@@ -272,18 +272,23 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
 
     @Override
     public void init() {
+        start();
         Universe.super.init();
         imperativeTransaction = universeTransaction.addImperative("$MPS_NATIVE", this, r -> {
             if (isRunning() && !COMMITTING.get()) {
-                if (!running) {
-                    running = true;
-                    command(() -> this.startStopHandler.start(project));
-                }
+                start();
                 command(r);
             }
         });
         ALL.add(this);
         REPOSITORY_CONTAINER.set(this, getRepository());
+    }
+
+    private void start() {
+        if (!running) {
+            running = true;
+            command(() -> startStopHandler.start(project));
+        }
     }
 
     @SuppressWarnings("rawtypes")
@@ -435,6 +440,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
         if (isRunning()) {
             if (isRunningCommand()) {
                 if (!COMMITTING.get()) {
+                    start();
                     try {
                         LeafTransaction.getContext().run(imperativeTransaction, action);
                     } catch (Throwable t) {
