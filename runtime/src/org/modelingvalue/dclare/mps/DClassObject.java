@@ -48,7 +48,7 @@ public class DClassObject extends DIdentifiedObject implements SClassObject {
 
     @Override
     public String toString() {
-        return getSClass() + super.toString();
+        return getSClass() + Arrays.toString(Arrays.copyOf(identity, identity.length - 1));
     }
 
     @Override

@@ -261,7 +261,7 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
 
     protected static Set<SModel> models(SModule module) {
         Set<SModel> ist = Set.of();
-        for (SModel child : module instanceof Language ? ((Language) module).getAccessoryModels() : module.getModels()) {
+        for (SModel child : module instanceof Language ? ((Language) module).getAccessoryModels() : module instanceof Solution ? module.getModels() : Set.<SModel> of()) {
             if (child instanceof EditableSModel) {
                 ist = ist.add(child);
             }
