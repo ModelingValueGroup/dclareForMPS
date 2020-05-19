@@ -102,7 +102,7 @@ public class DNode extends DMatchedObject<SNodeReference, SNode> implements SNod
             }, sc::getDeclarationNode, false));
 
     protected static final Constant<SContainmentLink, Function<DNode, List<SNode>>>                READ_CHILDREN_FUNCTION = Constant.of("READ_CHILDREN_FUNCTION",                                                                                                                                 //
-            cl -> n -> dClareMPS().read(() -> Collection.of(n.original().getChildren(cl)).map(c -> (SNode) c).toList()));
+            cl -> n -> dClareMPS().read(() -> Collection.of(n.original().getChildren(cl)).sequential().map(c -> (SNode) c).toList()));
 
     private static final Constant<SContainmentLink, Observer<DNode>>                               READ_MATCHER           = Constant.of("READ_MATCHER", cl -> DObject.observer(Pair.of("MATCHER", cl), n -> DNode.match(n, READ_CHILDREN_FUNCTION.get(cl), cl.isMultiple() ?                      //
             MANY_CONTAINMENT.get(cl).get(n) :                                                                                                                                                                                                                                                     //
