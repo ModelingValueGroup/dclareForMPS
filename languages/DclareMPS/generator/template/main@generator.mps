@@ -3,11 +3,11 @@
   <persistence version="9" />
   <languages>
     <use id="69b8a993-9b87-4d96-bf0c-3559f4bb0c63" name="jetbrains.mps.lang.slanguage" version="0" />
-    <use id="f3061a53-9226-4cc5-a443-f952ceaf5816" name="jetbrains.mps.baseLanguage" version="9" />
+    <use id="f3061a53-9226-4cc5-a443-f952ceaf5816" name="jetbrains.mps.baseLanguage" version="11" />
     <use id="83888646-71ce-4f1c-9c53-c54016f6ad4f" name="jetbrains.mps.baseLanguage.collections" version="1" />
     <use id="fd392034-7849-419d-9071-12563d152375" name="jetbrains.mps.baseLanguage.closures" version="0" />
     <use id="7866978e-a0f0-4cc7-81bc-4d213d9375e1" name="jetbrains.mps.lang.smodel" version="17" />
-    <use id="3a13115c-633c-4c5c-bbcc-75c4219e9555" name="jetbrains.mps.lang.quotation" version="4" />
+    <use id="3a13115c-633c-4c5c-bbcc-75c4219e9555" name="jetbrains.mps.lang.quotation" version="5" />
     <use id="d4615e3b-d671-4ba9-af01-2b78369b0ba7" name="jetbrains.mps.lang.pattern" version="2" />
     <use id="7a5dda62-9140-4668-ab76-d5ed1746f2b2" name="jetbrains.mps.lang.typesystem" version="5" />
     <devkit ref="a2eb3a43-fcc2-4200-80dc-c60110c4862d(jetbrains.mps.devkit.templates)" />
@@ -411,6 +411,9 @@
       <concept id="5455284157993863840" name="jetbrains.mps.lang.quotation.structure.NodeBuilderNode" flags="nn" index="2pJPED">
         <reference id="5455284157993910961" name="concept" index="2pJxaS" />
         <child id="5455284157993911099" name="values" index="2pJxcM" />
+      </concept>
+      <concept id="6985522012210254362" name="jetbrains.mps.lang.quotation.structure.NodeBuilderPropertyExpression" flags="nn" index="WxPPo">
+        <child id="6985522012210254363" name="expression" index="WxPPp" />
       </concept>
     </language>
     <language id="7a5dda62-9140-4668-ab76-d5ed1746f2b2" name="jetbrains.mps.lang.typesystem">
@@ -7490,23 +7493,27 @@
                   <ref role="2pJxaS" to="tp25:34EJa6aIcz0" resolve="LanguageId" />
                   <node concept="2pJxcG" id="wexHjsu5u" role="2pJxcM">
                     <ref role="2pJxcJ" to="tp25:34EJa6aIcNo" resolve="languageId" />
-                    <node concept="2OqwBi" id="wexHjssaS" role="28ntcv">
-                      <node concept="37vLTw" id="wexHjssJy" role="2Oq$k0">
-                        <ref role="3cqZAo" node="wexHjssJs" resolve="lang" />
-                      </node>
-                      <node concept="3TrcHB" id="wexHjsslF" role="2OqNvi">
-                        <ref role="3TsBF5" to="hypd:5xDtKQA7vSy" resolve="uuid" />
+                    <node concept="WxPPo" id="3$9XYwYvYH9" role="28ntcv">
+                      <node concept="2OqwBi" id="wexHjssaS" role="WxPPp">
+                        <node concept="37vLTw" id="wexHjssJy" role="2Oq$k0">
+                          <ref role="3cqZAo" node="wexHjssJs" resolve="lang" />
+                        </node>
+                        <node concept="3TrcHB" id="wexHjsslF" role="2OqNvi">
+                          <ref role="3TsBF5" to="hypd:5xDtKQA7vSy" resolve="uuid" />
+                        </node>
                       </node>
                     </node>
                   </node>
                   <node concept="2pJxcG" id="wexHjsu69" role="2pJxcM">
                     <ref role="2pJxcJ" to="tp25:34EJa6aIcNn" resolve="namespace" />
-                    <node concept="2OqwBi" id="wexHjst8y" role="28ntcv">
-                      <node concept="37vLTw" id="wexHjssZZ" role="2Oq$k0">
-                        <ref role="3cqZAo" node="wexHjssJs" resolve="lang" />
-                      </node>
-                      <node concept="3TrcHB" id="wexHjsti_" role="2OqNvi">
-                        <ref role="3TsBF5" to="hypd:5xDtKQA7vSz" resolve="namespace" />
+                    <node concept="WxPPo" id="3$9XYwYvYHa" role="28ntcv">
+                      <node concept="2OqwBi" id="wexHjst8y" role="WxPPp">
+                        <node concept="37vLTw" id="wexHjssZZ" role="2Oq$k0">
+                          <ref role="3cqZAo" node="wexHjssJs" resolve="lang" />
+                        </node>
+                        <node concept="3TrcHB" id="wexHjsti_" role="2OqNvi">
+                          <ref role="3TsBF5" to="hypd:5xDtKQA7vSz" resolve="namespace" />
+                        </node>
                       </node>
                     </node>
                   </node>
