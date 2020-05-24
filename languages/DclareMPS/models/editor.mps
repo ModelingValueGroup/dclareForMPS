@@ -109,8 +109,10 @@
       <concept id="1078939183254" name="jetbrains.mps.lang.editor.structure.CellModel_Component" flags="sg" stub="3162947552742194261" index="PMmxH">
         <reference id="1078939183255" name="editorComponent" index="PMmxG" />
       </concept>
+      <concept id="1149850725784" name="jetbrains.mps.lang.editor.structure.CellModel_AttributedNodeCell" flags="ng" index="2SsqMj" />
       <concept id="1186403694788" name="jetbrains.mps.lang.editor.structure.ColorStyleClassItem" flags="ln" index="VaVBg">
         <property id="1186403713874" name="color" index="Vb096" />
+        <child id="1186403803051" name="query" index="VblUZ" />
       </concept>
       <concept id="1186403751766" name="jetbrains.mps.lang.editor.structure.FontStyleStyleClassItem" flags="ln" index="Vb9p2">
         <property id="1186403771423" name="style" index="Vbekb" />
@@ -144,6 +146,7 @@
         <child id="1136930944870" name="item" index="2QnnpI" />
       </concept>
       <concept id="1240253180846" name="jetbrains.mps.lang.editor.structure.IndentLayoutNoWrapClassItem" flags="ln" index="34QqEe" />
+      <concept id="1233823429331" name="jetbrains.mps.lang.editor.structure.HorizontalGapStyleClassItem" flags="ln" index="15ARfc" />
       <concept id="8998492695583125082" name="jetbrains.mps.lang.editor.structure.SubstituteFeature_MatchingText" flags="ng" index="16NfWO">
         <child id="8998492695583129244" name="query" index="16NeZM" />
       </concept>
@@ -164,6 +167,9 @@
       <concept id="5692353713941573329" name="jetbrains.mps.lang.editor.structure.QueryFunction_TransformationMenu_ActionLabelText" flags="ig" index="1hCUdq" />
       <concept id="1088013125922" name="jetbrains.mps.lang.editor.structure.CellModel_RefCell" flags="sg" stub="730538219795941030" index="1iCGBv">
         <child id="1088186146602" name="editorComponent" index="1sWHZn" />
+      </concept>
+      <concept id="1225456267680" name="jetbrains.mps.lang.editor.structure.RGBColor" flags="ng" index="1iSF2X">
+        <property id="1225456424731" name="value" index="1iTho6" />
       </concept>
       <concept id="7291101478617127464" name="jetbrains.mps.lang.editor.structure.IExtensibleTransformationMenuPart" flags="ng" index="1joUw2">
         <child id="8954657570916349207" name="features" index="2jZA2a" />
@@ -3020,6 +3026,7 @@
   </node>
   <node concept="325Ffw" id="7EeKZioUq_d">
     <property role="TrG5h" value="ToggleTraced" />
+    <property role="3GE5qa" value="tracing" />
     <ref role="1chiOs" to="tpee:fz3vP1J" resolve="Expression" />
     <node concept="2PxR9H" id="7EeKZioUq_e" role="2QnnpI">
       <node concept="2Py5lD" id="7EeKZioUq_f" role="2PyaAO">
@@ -3035,7 +3042,7 @@
                 <node concept="0GJ7k" id="7EeKZioUq_U" role="2Oq$k0" />
                 <node concept="3CFZ6_" id="7EeKZioUqRz" role="2OqNvi">
                   <node concept="3CFYIy" id="7EeKZioUqVr" role="3CFYIz">
-                    <ref role="3CFYIx" to="7ggn:7EeKZioUq_6" resolve="Traced" />
+                    <ref role="3CFYIx" to="7ggn:7EeKZioUq_6" resolve="TracingMarker" />
                   </node>
                 </node>
               </node>
@@ -3047,7 +3054,7 @@
                     <node concept="0GJ7k" id="7EeKZioUreK" role="2Oq$k0" />
                     <node concept="3CFZ6_" id="7EeKZioUruH" role="2OqNvi">
                       <node concept="3CFYIy" id="7EeKZioUry$" role="3CFYIz">
-                        <ref role="3CFYIx" to="7ggn:7EeKZioUq_6" resolve="Traced" />
+                        <ref role="3CFYIx" to="7ggn:7EeKZioUq_6" resolve="TracingMarker" />
                       </node>
                     </node>
                   </node>
@@ -3064,7 +3071,7 @@
                       <node concept="0GJ7k" id="7EeKZioUs2x" role="2Oq$k0" />
                       <node concept="3CFZ6_" id="7EeKZioUsiw" role="2OqNvi">
                         <node concept="3CFYIy" id="7EeKZioUsmn" role="3CFYIz">
-                          <ref role="3CFYIx" to="7ggn:7EeKZioUq_6" resolve="Traced" />
+                          <ref role="3CFYIx" to="7ggn:7EeKZioUq_6" resolve="TracingMarker" />
                         </node>
                       </node>
                     </node>
@@ -3074,6 +3081,52 @@
             </node>
           </node>
         </node>
+      </node>
+    </node>
+  </node>
+  <node concept="24kQdi" id="2$O6I000yu1">
+    <property role="3GE5qa" value="tracing" />
+    <ref role="1XX52x" to="7ggn:7EeKZioUq_6" resolve="TracingMarker" />
+    <node concept="3EZMnI" id="2$O6I000yu6" role="2wV5jI">
+      <node concept="2iRfu4" id="2$O6I000yu7" role="2iSdaV" />
+      <node concept="3F0ifn" id="2$O6I000yuf" role="3EZMnx">
+        <property role="3F0ifm" value=" { " />
+        <node concept="30gYXW" id="2$O6I003PWB" role="3F10Kt">
+          <node concept="1iSF2X" id="2$O6I003PWD" role="VblUZ">
+            <property role="1iTho6" value="880088" />
+          </node>
+        </node>
+        <node concept="VechU" id="2$O6I003PWJ" role="3F10Kt">
+          <node concept="1iSF2X" id="2$O6I003PWO" role="VblUZ">
+            <property role="1iTho6" value="ffffff" />
+          </node>
+        </node>
+      </node>
+      <node concept="2SsqMj" id="2$O6I0035IT" role="3EZMnx" />
+      <node concept="3F0ifn" id="2$O6I004F5m" role="3EZMnx">
+        <property role="3F0ifm" value=" } " />
+        <node concept="30gYXW" id="2$O6I004F5n" role="3F10Kt">
+          <node concept="1iSF2X" id="2$O6I004F5o" role="VblUZ">
+            <property role="1iTho6" value="880088" />
+          </node>
+        </node>
+        <node concept="VechU" id="2$O6I004F5p" role="3F10Kt">
+          <node concept="1iSF2X" id="2$O6I004F5q" role="VblUZ">
+            <property role="1iTho6" value="ffffff" />
+          </node>
+        </node>
+      </node>
+      <node concept="15ARfc" id="2$O6I009dtx" role="3F10Kt">
+        <property role="3$6WeP" value="0" />
+      </node>
+    </node>
+    <node concept="3EZMnI" id="2$O6I003PWo" role="6VMZX">
+      <node concept="2iRfu4" id="2$O6I003PWp" role="2iSdaV" />
+      <node concept="3F0ifn" id="2$O6I003PWx" role="3EZMnx">
+        <property role="3F0ifm" value="message:" />
+      </node>
+      <node concept="3F0A7n" id="2$O6I003PWl" role="3EZMnx">
+        <ref role="1NtTu8" to="7ggn:7EeKZioUq_b" resolve="message" />
       </node>
     </node>
   </node>

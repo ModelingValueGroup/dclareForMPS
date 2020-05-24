@@ -7,9 +7,13 @@
   </languages>
   <imports>
     <import index="7ggn" ref="r:38c3b7db-3776-47fb-ba27-a4f002c4edc7(DclareMPS.structure)" implicit="true" />
+    <import index="tpee" ref="r:00000000-0000-4000-0000-011c895902ca(jetbrains.mps.baseLanguage.structure)" implicit="true" />
   </imports>
   <registry>
     <language id="f3061a53-9226-4cc5-a443-f952ceaf5816" name="jetbrains.mps.baseLanguage">
+      <concept id="1082485599095" name="jetbrains.mps.baseLanguage.structure.BlockStatement" flags="nn" index="9aQIb">
+        <child id="1082485599096" name="statements" index="9aQI4" />
+      </concept>
       <concept id="1215693861676" name="jetbrains.mps.baseLanguage.structure.BaseAssignmentExpression" flags="nn" index="d038R">
         <child id="1068498886297" name="rValue" index="37vLTx" />
         <child id="1068498886295" name="lValue" index="37vLTJ" />
@@ -24,9 +28,16 @@
       <concept id="1070475926800" name="jetbrains.mps.baseLanguage.structure.StringLiteral" flags="nn" index="Xl_RD">
         <property id="1070475926801" name="value" index="Xl_RC" />
       </concept>
+      <concept id="1070534058343" name="jetbrains.mps.baseLanguage.structure.NullLiteral" flags="nn" index="10Nm6u" />
       <concept id="1068498886294" name="jetbrains.mps.baseLanguage.structure.AssignmentExpression" flags="nn" index="37vLTI" />
+      <concept id="1068580123152" name="jetbrains.mps.baseLanguage.structure.EqualsExpression" flags="nn" index="3clFbC" />
       <concept id="1068580123155" name="jetbrains.mps.baseLanguage.structure.ExpressionStatement" flags="nn" index="3clFbF">
         <child id="1068580123156" name="expression" index="3clFbG" />
+      </concept>
+      <concept id="1068580123159" name="jetbrains.mps.baseLanguage.structure.IfStatement" flags="nn" index="3clFbJ">
+        <child id="1082485599094" name="ifFalseStatement" index="9aQIa" />
+        <child id="1068580123160" name="condition" index="3clFbw" />
+        <child id="1068580123161" name="ifTrue" index="3clFbx" />
       </concept>
       <concept id="1068580123136" name="jetbrains.mps.baseLanguage.structure.StatementList" flags="sn" stub="5293379017992965193" index="3clFbS">
         <child id="1068581517665" name="statement" index="3cqZAp" />
@@ -34,8 +45,15 @@
       <concept id="1068580123137" name="jetbrains.mps.baseLanguage.structure.BooleanConstant" flags="nn" index="3clFbT">
         <property id="1068580123138" name="value" index="3clFbU" />
       </concept>
+      <concept id="1068581242878" name="jetbrains.mps.baseLanguage.structure.ReturnStatement" flags="nn" index="3cpWs6">
+        <child id="1068581517676" name="expression" index="3cqZAk" />
+      </concept>
       <concept id="1081516740877" name="jetbrains.mps.baseLanguage.structure.NotExpression" flags="nn" index="3fqX7Q">
         <child id="1081516765348" name="expression" index="3fr31v" />
+      </concept>
+      <concept id="1081773326031" name="jetbrains.mps.baseLanguage.structure.BinaryOperation" flags="nn" index="3uHJSO">
+        <child id="1081773367579" name="rightExpression" index="3uHU7w" />
+        <child id="1081773367580" name="leftExpression" index="3uHU7B" />
       </concept>
       <concept id="1163668896201" name="jetbrains.mps.baseLanguage.structure.TernaryOperatorExpression" flags="nn" index="3K4zz7">
         <child id="1163668914799" name="condition" index="3K4Cdx" />
@@ -58,6 +76,16 @@
       </concept>
     </language>
     <language id="7866978e-a0f0-4cc7-81bc-4d213d9375e1" name="jetbrains.mps.lang.smodel">
+      <concept id="1138757581985" name="jetbrains.mps.lang.smodel.structure.Link_SetNewChildOperation" flags="nn" index="zfrQC" />
+      <concept id="6407023681583036853" name="jetbrains.mps.lang.smodel.structure.NodeAttributeQualifier" flags="ng" index="3CFYIy">
+        <reference id="6407023681583036854" name="attributeConcept" index="3CFYIx" />
+      </concept>
+      <concept id="6407023681583031218" name="jetbrains.mps.lang.smodel.structure.AttributeAccess" flags="nn" index="3CFZ6_">
+        <child id="6407023681583036852" name="qualifier" index="3CFYIz" />
+      </concept>
+      <concept id="1140131837776" name="jetbrains.mps.lang.smodel.structure.Node_ReplaceWithAnotherOperation" flags="nn" index="1P9Npp">
+        <child id="1140131861877" name="replacementNode" index="1P9ThW" />
+      </concept>
       <concept id="1138056022639" name="jetbrains.mps.lang.smodel.structure.SPropertyAccess" flags="nn" index="3TrcHB">
         <reference id="1138056395725" name="property" index="3TsBF5" />
       </concept>
@@ -518,6 +546,137 @@
               <node concept="3TrcHB" id="3myfcgXiDe2" role="2OqNvi">
                 <ref role="3TsBF5" to="7ggn:7x27w4yh6fK" resolve="transient" />
               </node>
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+  </node>
+  <node concept="2S6QgY" id="2$O6HZZZDEe">
+    <property role="TrG5h" value="ToggleTracingMarker" />
+    <property role="3GE5qa" value="tracing" />
+    <ref role="2ZfgGC" to="tpee:fz3vP1J" resolve="Expression" />
+    <node concept="2S6ZIM" id="2$O6HZZZDEf" role="2ZfVej">
+      <node concept="3clFbS" id="2$O6HZZZDEg" role="2VODD2">
+        <node concept="3clFbJ" id="2$O6I04bxe1" role="3cqZAp">
+          <node concept="3clFbS" id="2$O6I04bxe3" role="3clFbx">
+            <node concept="3cpWs6" id="2$O6I04bxRU" role="3cqZAp">
+              <node concept="Xl_RD" id="2$O6I04bxRV" role="3cqZAk">
+                <property role="Xl_RC" value="Add Tracing Marker" />
+              </node>
+            </node>
+          </node>
+          <node concept="3clFbC" id="2$O6I04bxeO" role="3clFbw">
+            <node concept="10Nm6u" id="2$O6I04bxeP" role="3uHU7w" />
+            <node concept="2OqwBi" id="2$O6I04bxeQ" role="3uHU7B">
+              <node concept="2Sf5sV" id="2$O6I04bxeR" role="2Oq$k0" />
+              <node concept="3CFZ6_" id="2$O6I04bxeS" role="2OqNvi">
+                <node concept="3CFYIy" id="2$O6I04bxeT" role="3CFYIz">
+                  <ref role="3CFYIx" to="7ggn:7EeKZioUq_6" resolve="TracingMarker" />
+                </node>
+              </node>
+            </node>
+          </node>
+          <node concept="9aQIb" id="2$O6I04bxD9" role="9aQIa">
+            <node concept="3clFbS" id="2$O6I04bxDa" role="9aQI4">
+              <node concept="3cpWs6" id="2$O6I04bxYY" role="3cqZAp">
+                <node concept="Xl_RD" id="2$O6I04bxYZ" role="3cqZAk">
+                  <property role="Xl_RC" value="Remove Tracing Marker" />
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+    <node concept="2Sbjvc" id="2$O6HZZZDEh" role="2ZfgGD">
+      <node concept="3clFbS" id="2$O6HZZZDEi" role="2VODD2">
+        <node concept="3clFbJ" id="2$O6I000oz8" role="3cqZAp">
+          <node concept="3clFbC" id="2$O6I000p2F" role="3clFbw">
+            <node concept="10Nm6u" id="2$O6I000p9d" role="3uHU7w" />
+            <node concept="2OqwBi" id="2$O6I000oGJ" role="3uHU7B">
+              <node concept="2Sf5sV" id="2$O6I000ozz" role="2Oq$k0" />
+              <node concept="3CFZ6_" id="2$O6I000oNW" role="2OqNvi">
+                <node concept="3CFYIy" id="2$O6I000oRV" role="3CFYIz">
+                  <ref role="3CFYIx" to="7ggn:7EeKZioUq_6" resolve="TracingMarker" />
+                </node>
+              </node>
+            </node>
+          </node>
+          <node concept="3clFbS" id="2$O6I000oza" role="3clFbx">
+            <node concept="3clFbF" id="2$O6I000pa4" role="3cqZAp">
+              <node concept="2OqwBi" id="2$O6I000prM" role="3clFbG">
+                <node concept="2OqwBi" id="2$O6I000pc0" role="2Oq$k0">
+                  <node concept="2Sf5sV" id="2$O6I000pa2" role="2Oq$k0" />
+                  <node concept="3CFZ6_" id="2$O6I000pcW" role="2OqNvi">
+                    <node concept="3CFYIy" id="2$O6I000pf8" role="3CFYIz">
+                      <ref role="3CFYIx" to="7ggn:7EeKZioUq_6" resolve="TracingMarker" />
+                    </node>
+                  </node>
+                </node>
+                <node concept="zfrQC" id="2$O6I000pCx" role="2OqNvi" />
+              </node>
+            </node>
+            <node concept="3clFbF" id="2$O6I001hkC" role="3cqZAp">
+              <node concept="37vLTI" id="2$O6I001iya" role="3clFbG">
+                <node concept="Xl_RD" id="2$O6I001iBj" role="37vLTx" />
+                <node concept="2OqwBi" id="2$O6I001hJa" role="37vLTJ">
+                  <node concept="2OqwBi" id="2$O6I001hsI" role="2Oq$k0">
+                    <node concept="2Sf5sV" id="2$O6I001hkA" role="2Oq$k0" />
+                    <node concept="3CFZ6_" id="2$O6I001h$4" role="2OqNvi">
+                      <node concept="3CFYIy" id="2$O6I001hAg" role="3CFYIz">
+                        <ref role="3CFYIx" to="7ggn:7EeKZioUq_6" resolve="TracingMarker" />
+                      </node>
+                    </node>
+                  </node>
+                  <node concept="3TrcHB" id="2$O6I001i7u" role="2OqNvi">
+                    <ref role="3TsBF5" to="7ggn:7EeKZioUq_b" resolve="message" />
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+          <node concept="9aQIb" id="2$O6I000pHC" role="9aQIa">
+            <node concept="3clFbS" id="2$O6I000pHD" role="9aQI4">
+              <node concept="3clFbF" id="2$O6I000pIH" role="3cqZAp">
+                <node concept="37vLTI" id="2$O6I000qeC" role="3clFbG">
+                  <node concept="10Nm6u" id="2$O6I000qhn" role="37vLTx" />
+                  <node concept="2OqwBi" id="2$O6I000pPZ" role="37vLTJ">
+                    <node concept="2Sf5sV" id="2$O6I000pIG" role="2Oq$k0" />
+                    <node concept="3CFZ6_" id="2$O6I000pXN" role="2OqNvi">
+                      <node concept="3CFYIy" id="2$O6I000q1M" role="3CFYIz">
+                        <ref role="3CFYIx" to="7ggn:7EeKZioUq_6" resolve="TracingMarker" />
+                      </node>
+                    </node>
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+  </node>
+  <node concept="2S6QgY" id="2$O6I04bEne">
+    <property role="TrG5h" value="RemoveTracingMarker" />
+    <property role="3GE5qa" value="tracing" />
+    <ref role="2ZfgGC" to="7ggn:7EeKZioUq_6" resolve="TracingMarker" />
+    <node concept="2S6ZIM" id="2$O6I04bEnf" role="2ZfVej">
+      <node concept="3clFbS" id="2$O6I04bEng" role="2VODD2">
+        <node concept="3clFbF" id="2$O6I04bEsr" role="3cqZAp">
+          <node concept="Xl_RD" id="2$O6I04bEst" role="3clFbG">
+            <property role="Xl_RC" value="Remove Tracing Marker" />
+          </node>
+        </node>
+      </node>
+    </node>
+    <node concept="2Sbjvc" id="2$O6I04bEnh" role="2ZfgGD">
+      <node concept="3clFbS" id="2$O6I04bEni" role="2VODD2">
+        <node concept="3clFbF" id="2$O6I04bEFS" role="3cqZAp">
+          <node concept="2OqwBi" id="2$O6I04bF18" role="3clFbG">
+            <node concept="2Sf5sV" id="2$O6I04bEFW" role="2Oq$k0" />
+            <node concept="1P9Npp" id="2$O6I04bFbm" role="2OqNvi">
+              <node concept="10Nm6u" id="2$O6I04bFdI" role="1P9ThW" />
             </node>
           </node>
         </node>
