@@ -238,12 +238,6 @@
         <ref role="398BVh" node="5TmHY1kYraK" resolve="mps_home" />
       </node>
     </node>
-    <node concept="13uUGR" id="13bz6S$OL7x" role="1l3spa">
-      <ref role="13uUGO" to="ffeo:6eCuTcwOnJO" resolve="IDEA" />
-      <node concept="398BVA" id="13bz6S$OTRM" role="13uUGP">
-        <ref role="398BVh" node="5TmHY1kYraK" resolve="mps_home" />
-      </node>
-    </node>
     <node concept="1l3spV" id="5TmHY1kYrbf" role="1l3spN">
       <node concept="3981dG" id="5TmHY1kYrbg" role="39821P">
         <node concept="3_J27D" id="5TmHY1kYrbh" role="Nbhlr">
@@ -309,9 +303,6 @@
       <node concept="m$_yC" id="6dxB28$ZXTI" role="m$_yJ">
         <ref role="m$_y1" to="ffeo:5HVSRHdVm9a" resolve="jetbrains.mps.build" />
       </node>
-      <node concept="m$_yC" id="13bz6S$OL82" role="m$_yJ">
-        <ref role="m$_y1" to="ffeo:4k71ibbLe59" resolve="com.intellij.modules.mps" />
-      </node>
       <node concept="3_J27D" id="5TmHY1kYrbd" role="m_cZH">
         <node concept="3Mxwew" id="5TmHY1kYrbe" role="3MwsjC">
           <property role="3MwjfP" value="DclareForMPS" />
@@ -341,9 +332,12 @@
         <node concept="2pNUuL" id="ffBaz0uMP9" role="2pNNFR">
           <property role="2pNUuO" value="until-build" />
           <node concept="2pMdtt" id="ffBaz0uMPa" role="2pMdts">
-            <property role="2pMdty" value="193.1500" />
+            <property role="2pMdty" value="193.1569" />
           </node>
         </node>
+      </node>
+      <node concept="m$_yC" id="13bz6S$OL82" role="m$_yJ">
+        <ref role="m$_y1" to="ffeo:4k71ibbLe59" resolve="com.intellij.modules.mps" />
       </node>
     </node>
     <node concept="2G$12M" id="5TmHY1kYrb5" role="3989C9">
@@ -926,6 +920,12 @@
             </node>
           </node>
         </node>
+      </node>
+    </node>
+    <node concept="13uUGR" id="13bz6S$OL7x" role="1l3spa">
+      <ref role="13uUGO" to="ffeo:6eCuTcwOnJO" resolve="IDEA" />
+      <node concept="398BVA" id="13bz6S$OTRM" role="13uUGP">
+        <ref role="398BVh" node="5TmHY1kYraK" resolve="mps_home" />
       </node>
     </node>
   </node>
