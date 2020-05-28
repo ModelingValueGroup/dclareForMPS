@@ -100,6 +100,8 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
 
     protected static Setable<DClareMPS, Map<String, DAttribute<?, ?>>>                                  ATTRIBUTE_MAP        = Setable.of("ATTRIBUTE_MAP", Map.of());
 
+    protected static Setable<DClareMPS, Map<String, SStructClass>>                                      STRUCT_CLASS_MAP     = Setable.of("STRUCT_CLASS_MAP", Map.of());
+
     private static CopyOnWriteArrayList<DClareMPS>                                                      ALL                  = new CopyOnWriteArrayList<>();
 
     private static final Set<DMessageType>                                                              MESSAGE_TYPES        = Collection.of(DMessageType.values()).toSet();
@@ -127,8 +129,12 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     private final ThreadLocal<Boolean>                                                                  COMMITTING           = ThreadLocal.withInitial(() -> false);
 
     public final static Observed<DClareMPS, Set<SLanguage>>                                             ALL_LANGUAGES        = NonCheckingObserved.of("ALL_LANGAUGES", Set.of(), (tx, d, o, n) -> {
-                                                                                                                                 Setable.<Set<SLanguage>, SLanguage> diff(o, n, a -> DClareMPS.RULE_SETS.get(a).forEach(rs ->                                    //
-                                                                                                                                 rs.getAllAttributes().forEach(attr -> ATTRIBUTE_MAP.set(d, Map::put, Entry.<String, DAttribute<?, ?>> of(attr.id(), attr)))),   //
+                                                                                                                                 Setable.<Set<SLanguage>, SLanguage> diff(o, n,                                                                                                    //
+                                                                                                                                         a -> DClareMPS.RULE_SETS.get(a).forEach(                                                                                                  //
+                                                                                                                                                 rs -> {
+                                                                                                                                                     rs.getAllAttributes().forEach(attr -> ATTRIBUTE_MAP.set(d, Map::put, Entry.<String, DAttribute<?, ?>> of(attr.id(), attr)));
+                                                                                                                                                     rs.getAllStructClasses().forEach(strc -> STRUCT_CLASS_MAP.set(d, Map::put, Entry.<String, SStructClass> of(strc.id(), strc)));
+                                                                                                                                                 }),                                                                                                                               //
                                                                                                                                          r -> {
                                                                                                                                          });
                                                                                                                              });
