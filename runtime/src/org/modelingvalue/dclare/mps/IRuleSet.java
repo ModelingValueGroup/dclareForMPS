@@ -31,7 +31,7 @@ public interface IRuleSet {
 
     List<DAttribute<DRepository, ?>> getRepositoryAttributes();
 
-    List<DAttribute<SClassObject, ?>> getClassAttributes(SClass cls);
+    List<DAttribute<SStructObject, ?>> getClassAttributes(SStructClass cls);
 
     List<DRule<SNode>> getNodeRules(SAbstractConcept concept, String anonymousType);
 
@@ -41,8 +41,10 @@ public interface IRuleSet {
 
     List<DRule<DRepository>> getRepositoryRules();
 
-    List<DRule<SClassObject>> getClassRules(SClass cls);
+    List<DRule<SStructObject>> getClassRules(SStructClass cls);
 
     List<DAttribute<?, ?>> getAllAttributes();
+
+    List<SStructClass> getAllStructClasses();
 
 }

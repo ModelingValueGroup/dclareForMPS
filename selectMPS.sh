@@ -13,26 +13,22 @@
 ##     Arjan Kok, Carel Bast                                                                                           ~
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-   version="1.2.1"
-mpsVersion="2019.3.5"
-    mpsDir="MPS"
+set -ue
 
-artifacts=(
-    "org.modelingvalue   dclareForMPSRuntime     $version    jar jds" # TODO: should not be needed
-)
-dependencies=(
-    "org.modelingvalue   immutable-collections   $version    jar jds"
-    "org.modelingvalue   dclare                  $version    jar jds"
-    "jars@mps"
-)
-mps=(
-    "$mpsDir/lib/extensions.jar"
-    "$mpsDir/lib/mps-closures.jar"
-    "$mpsDir/lib/mps-core.jar"
-    "$mpsDir/lib/mps-editor.jar"
-    "$mpsDir/lib/mps-openapi.jar"
-    "$mpsDir/lib/mps-platform.jar"
-    "$mpsDir/lib/mps-project-check.jar"
-    "$mpsDir/lib/platform-api.jar"
-    "$mpsDir/lib/util.jar"
-)
+echo
+echo "### this script will let you select the MPS version to use"
+echo "### to be used on MacOS machines with MPS installed through the toolbox"
+echo "### (a symlink called 'MPS' is created to the installed MPS version"
+echo
+
+readarray -t versions < <( ls -d /Users/tom/Library/Application\ Support/JetBrains/Toolbox/apps/MPS/ch-0/*/*.app/Contents)
+set "${versions[@]}"
+select d; do
+    if [[ "$d" != "" ]]; then
+        ln -fs "$d" MPS
+        echo
+        echo "### MPS linked to $d"
+        echo
+        break
+    fi
+done

@@ -75,7 +75,7 @@ public class DRepository extends DFromOriginalObject<ProjectRepository> implemen
     }
 
     protected static Set<SModule> modules() {
-        return Collection.of(dClareMPS().project.getProjectModules()).toSet();
+        return Collection.of(dClareMPS().project.getProjectModules()).sequential().toSet();
     }
 
     @Override

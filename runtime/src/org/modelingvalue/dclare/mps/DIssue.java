@@ -152,4 +152,9 @@ public class DIssue extends DIdentifiedObject {
         return false;
     }
 
+    @Override
+    public String toString() {
+        return "DIssue" + super.toString();
+    }
+
 }

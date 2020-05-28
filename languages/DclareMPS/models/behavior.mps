@@ -5218,19 +5218,6 @@
               <ref role="ehGHo" to="7ggn:29R9$zZUovC" resolve="Rule" />
             </node>
           </node>
-          <node concept="2OqwBi" id="6_R8J$2Q0LN" role="1DdaDG">
-            <node concept="2OqwBi" id="u5SXqxnvGM" role="2Oq$k0">
-              <node concept="13iPFW" id="u5SXqxnvnY" role="2Oq$k0" />
-              <node concept="3Tsc0h" id="6_R8J$2PYBa" role="2OqNvi">
-                <ref role="3TtcxE" to="7ggn:6_R8J$2ChSl" resolve="members" />
-              </node>
-            </node>
-            <node concept="v3k3i" id="6_R8J$2Q2ey" role="2OqNvi">
-              <node concept="chp4Y" id="6_R8J$2Q2qx" role="v3oSu">
-                <ref role="cht4Q" to="7ggn:29R9$zZUovC" resolve="Rule" />
-              </node>
-            </node>
-          </node>
           <node concept="3clFbS" id="u5SXqxnuY0" role="2LFqv$">
             <node concept="3clFbJ" id="u5SXqxnxo8" role="3cqZAp">
               <node concept="1Wc70l" id="u5SXqxnDIH" role="3clFbw">
@@ -5306,6 +5293,19 @@
                 <node concept="37vLTw" id="40wOn$5_orY" role="37wK5m">
                   <ref role="3cqZAo" node="u5SXqxnuXY" resolve="rule" />
                 </node>
+              </node>
+            </node>
+          </node>
+          <node concept="2OqwBi" id="6_R8J$2Q0LN" role="1DdaDG">
+            <node concept="2OqwBi" id="u5SXqxnvGM" role="2Oq$k0">
+              <node concept="13iPFW" id="u5SXqxnvnY" role="2Oq$k0" />
+              <node concept="3Tsc0h" id="6_R8J$2PYBa" role="2OqNvi">
+                <ref role="3TtcxE" to="7ggn:6_R8J$2ChSl" resolve="members" />
+              </node>
+            </node>
+            <node concept="v3k3i" id="6_R8J$2Q2ey" role="2OqNvi">
+              <node concept="chp4Y" id="6_R8J$2Q2qx" role="v3oSu">
+                <ref role="cht4Q" to="7ggn:29R9$zZUovC" resolve="Rule" />
               </node>
             </node>
           </node>
@@ -7002,8 +7002,8 @@
       <node concept="3clFbS" id="5KzMV0dY8Zd" role="3clF47">
         <node concept="3clFbF" id="5KzMV0dY8Zl" role="3cqZAp">
           <node concept="2c44tf" id="5KzMV0dY8Zm" role="3clFbG">
-            <node concept="3uibUv" id="5GTBd9DMX9P" role="2c44tc">
-              <ref role="3uigEE" to="t4tl:~SClassObject" resolve="SClassObject" />
+            <node concept="3uibUv" id="25AJqx1WIwV" role="2c44tc">
+              <ref role="3uigEE" to="t4tl:~SStructClass" resolve="SStructClass" />
             </node>
           </node>
         </node>
