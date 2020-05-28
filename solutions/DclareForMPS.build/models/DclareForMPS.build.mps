@@ -207,6 +207,8 @@
         <property role="hHN3Y" value="yyMMddHHmm" />
       </node>
     </node>
+    <node concept="10PD9b" id="5TmHY1kYraI" role="10PD9s" />
+    <node concept="3b7kt6" id="5TmHY1kYraJ" role="10PD9s" />
     <node concept="2kB4xC" id="ffBaz0wCCV" role="1l3spd">
       <property role="TrG5h" value="fullVersion" />
       <node concept="aVJcg" id="ffBaz0wCDR" role="aVJcv">
@@ -223,8 +225,6 @@
         </node>
       </node>
     </node>
-    <node concept="10PD9b" id="5TmHY1kYraI" role="10PD9s" />
-    <node concept="3b7kt6" id="5TmHY1kYraJ" role="10PD9s" />
     <node concept="398rNT" id="5TmHY1kYraK" role="1l3spd">
       <property role="TrG5h" value="mps_home" />
     </node>
@@ -341,7 +341,7 @@
         <node concept="2pNUuL" id="ffBaz0uMP9" role="2pNNFR">
           <property role="2pNUuO" value="until-build" />
           <node concept="2pMdtt" id="ffBaz0uMPa" role="2pMdts">
-            <property role="2pMdty" value="193.1500" />
+            <property role="2pMdty" value="193.1569" />
           </node>
         </node>
       </node>
