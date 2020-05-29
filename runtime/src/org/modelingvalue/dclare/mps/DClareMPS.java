@@ -722,7 +722,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
                 RootItemsToCheck itemsToCheck = new RootItemsToCheck();
                 itemsToCheck.models = models.collect(Collectors.toList());
                 itemsToCheck.modules = modules.collect(Collectors.toList());
-                itemsToCheck.roots = roots.collect(Collectors.toList());
+                itemsToCheck.roots = roots.filter(r -> r.getModel() != null).collect(Collectors.toList());
                 java.util.List<IssueKindReportItem> reportItems = new ArrayList<>();
                 SRepository repos = getRepository().original();
                 mpsChecker.check(itemsToCheck, repos, reportItems::add, new EmptyProgressMonitor());
