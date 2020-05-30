@@ -78,6 +78,7 @@ jobs:
       - name: "push changes back to github"
         run:  |
           . <(java -jar ~/buildTools.jar)
+          . project.sh
           pushBackToGithub "${{ secrets.GITHUB_TOKEN }}" "automation@modelingvalue.com" "adjusted files [by github actions]"
 
       - name: "build"
