@@ -48,7 +48,7 @@
         <depends>jetbrains.mps.ide.devkit</depends>
         <depends>jetbrains.mps.build</depends>
         <depends>com.intellij.modules.mps</depends>
-        <idea-version since-build="193.1223" until-build="193.1569" />
+        <idea-version since build="193.1223" until build="193.1569" />
         
         <extensions defaultExtensionNs="com.intellij">
           <mps.LanguageLibrary dir="/languages" />
