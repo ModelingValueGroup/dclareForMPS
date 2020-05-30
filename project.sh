@@ -15,6 +15,8 @@
 
    version="1.2.2"
 mpsVersion="2019.3.5"
+  mpsSince="193.1223"
+# mpsUntil="193.1569" # mpsUntil taken from the installed MPS if not specified
     mpsDir="MPS"
 
 artifacts=(

@@ -27,6 +27,11 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: "if master: fail if there is already a tag for this version"
+        run:  |
+          . <(java -jar ~/buildTools.jar)
+          errorIfMasterAndVersionTagExists
+
       - name: "prepare"
         run:  |
           cat <<EOF >build.properties
@@ -64,11 +69,27 @@ jobs:
           getAllDependencies ${{ secrets.GITHUB_TOKEN }} "${{ secrets.SCALEWAY_ACCESS_KEY }}" "${{ secrets.SCALEWAY_SECRET_KEY }}"
           installMps "$mpsDir" "$mpsVersion"
 
+          mpsUntilDefault="$(sed -q 's/^mps[.]build[.]number=MPS-//p' "$mpsDir/build.properties")"
+          sed 's/ since-build="[^"]*"/ since build="'"$mpsSince"'"/' *.xml
+          sed 's/ until-build="[^"]*"/ until build="'"${mpsUntil:-$mpsUntilDefault}"'"/' *.xml
+
+      - name: "push changes back to github"
+        run:  |
+          . <(java -jar ~/buildTools.jar)
+          pushBackToGithub "${{ secrets.GITHUB_TOKEN }}" "automation@modelingvalue.com" "adjusted files [by github actions]"
+
       - name: "runtime: build"
         run:  ant
 
       - name: "runtime: test"
-        run:  ant test
+        run:  |
+          if ! ant test; then
+            for i in TEST-*.xml; do
+              echo "=============== $i"
+              sed "s/^/>> /" $i
+            done
+            exit 42
+          fi
 
       - name: "runtime: generate javadoc"
         run:  ant javadoc
@@ -89,6 +110,11 @@ jobs:
           cd build/artifacts/DclareForMPS/DclareForMPS
           unzip ../DclareForMPS.zip
 
+      - name: "if master: tag with version"
+        run:  |
+          . <(java -jar ~/buildTools.jar)
+          setVersionTagIfMaster "${{ secrets.GITHUB_TOKEN }}" "automation@modelingvalue.com"
+
       - name: "publish action-artifact zip"
         uses: actions/upload-artifact@v1
         with:
@@ -102,9 +128,3 @@ jobs:
           hubToken: "${{ secrets.JETBRAINS_PUBLISH_TOKEN }}"
           pluginId: "13797"
           trace   : true
-
-      - name: "push changes back to github"
-        run:  |
-          . <(java -jar ~/buildTools.jar)
-          pushBackToGithub "${{ secrets.GITHUB_TOKEN }}" "automation@modelingvalue.com" "adjusted files [by github actions]"
-
