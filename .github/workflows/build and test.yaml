@@ -71,6 +71,8 @@ jobs:
 
       - name: "adjust MPS compat range in ant file"
         run:  |
+          . <(java -jar ~/buildTools.jar)
+          . project.sh
           mpsUntilDefault="$(sed -n 's/^mps[.]build[.]number=MPS-//p' "$mpsDir/build.properties")"
           sed -i 's/ since-build="[^"]*"/ since build="'"$mpsSince"'"/' *.xml
           sed -i 's/ until-build="[^"]*"/ until build="'"${mpsUntil:-$mpsUntilDefault}"'"/' *.xml
