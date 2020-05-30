@@ -62,17 +62,20 @@ jobs:
           correctEols
           correctHeaders header
 
+      - name: "download dependencies (MPS and jars from pom)"
+        run:  |
+          . <(java -jar ~/buildTools.jar)
+          . project.sh
+          getAllDependencies ${{ secrets.GITHUB_TOKEN }} "${{ secrets.SCALEWAY_ACCESS_KEY }}" "${{ secrets.SCALEWAY_SECRET_KEY }}"
+          installMps "$mpsDir" "$mpsVersion"
+          mpsUntilDefault="$(sed -q 's/^mps[.]build[.]number=MPS-//p' "$mpsDir/build.properties")"
+          sed 's/ since-build="[^"]*"/ since build="'"$mpsSince"'"/' *.xml
+          sed 's/ until-build="[^"]*"/ until build="'"${mpsUntil:-$mpsUntilDefault}"'"/' *.xml
+
       - name: "push changes back to github"
         run:  |
           . <(java -jar ~/buildTools.jar)
           pushBackToGithub "${{ secrets.GITHUB_TOKEN }}" "automation@modelingvalue.com" "adjusted files [by github actions]"
-
-      - name: "download dependencies (as mentioned in pom)"
-        run:  |
-          . <(java -jar ~/buildTools.jar)
-          getAllDependencies "${{ secrets.GITHUB_TOKEN }}" "${{ secrets.SCALEWAY_ACCESS_KEY }}" "${{ secrets.SCALEWAY_SECRET_KEY }}"
-          . project.sh
-          installMps "$mpsDir" "$mpsVersion"
 
       - name: "build"
         run:  ant
@@ -124,4 +127,3 @@ jobs:
           hubToken: "${{ secrets.JETBRAINS_PUBLISH_TOKEN }}"
           pluginId: "13797"
           trace   : true
-
