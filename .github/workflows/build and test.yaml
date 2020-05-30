@@ -68,7 +68,7 @@ jobs:
           . project.sh
           getAllDependencies ${{ secrets.GITHUB_TOKEN }} "${{ secrets.SCALEWAY_ACCESS_KEY }}" "${{ secrets.SCALEWAY_SECRET_KEY }}"
           installMps "$mpsDir" "$mpsVersion"
-          mpsUntilDefault="$(sed -q 's/^mps[.]build[.]number=MPS-//p' "$mpsDir/build.properties")"
+          mpsUntilDefault="$(sed -n 's/^mps[.]build[.]number=MPS-//p' "$mpsDir/build.properties")"
           sed 's/ since-build="[^"]*"/ since build="'"$mpsSince"'"/' *.xml
           sed 's/ until-build="[^"]*"/ until build="'"${mpsUntil:-$mpsUntilDefault}"'"/' *.xml
 
