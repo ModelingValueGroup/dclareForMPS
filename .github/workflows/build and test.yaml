@@ -74,8 +74,8 @@ jobs:
           . <(java -jar ~/buildTools.jar)
           . project.sh
           mpsUntilDefault="$(sed -n 's/^mps[.]build[.]number=MPS-//p' "$mpsDir/build.properties")"
-          sed -i 's/ since-build="[^"]*"/ since build="'"$mpsSince"'"/' *.xml
-          sed -i 's/ until-build="[^"]*"/ until build="'"${mpsUntil:-$mpsUntilDefault}"'"/' *.xml
+          sed -i 's/ since-build="[^"]*"/ since-build="'"$mpsSince"'"/' *.xml
+          sed -i 's/ until-build="[^"]*"/ until-build="'"${mpsUntil:-$mpsUntilDefault}"'"/' *.xml
 
       - name: "push changes back to github"
         run:  |
