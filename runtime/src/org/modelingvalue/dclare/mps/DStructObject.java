@@ -15,59 +15,75 @@
 
 package org.modelingvalue.dclare.mps;
 
+import java.util.Arrays;
+import java.util.Objects;
+
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.Set;
+import org.modelingvalue.collections.util.Triple;
+import org.modelingvalue.dclare.Constant;
 
 @SuppressWarnings("unused")
-public class SClass {
+public class DStructObject extends DIdentifiedObject implements SStructObject {
 
-    public static SClass of(Object id, String name, SLanguage language, SClass... supers) {
-        return new SClass(id, name, language, Set.of(supers));
-    }
+    private static final Constant<Triple<Set<SLanguage>, SStructClass, Boolean>, DStructClass> CLASS_OBJECT_TYPE = Constant.of("CLASS_OBJECT_TYPE", p -> new DStructClass(p));
 
-    private final Object      id;
-    private final String      name;
-    private final Set<SClass> supers;
-    private final SLanguage   language;
-
-    private SClass(Object id, String name, SLanguage language, Set<SClass> supers) {
-        super();
-        this.id = id;
-        this.name = name;
-        this.language = language;
-        this.supers = supers;
-    }
-
-    @Override
-    public int hashCode() {
-        return id.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        } else if (obj == null) {
-            return false;
-        } else if (getClass() != obj.getClass()) {
-            return false;
-        } else {
-            SClass other = (SClass) obj;
-            return id.equals(other.id);
+    public static DStructObject of(SStructClass cls, Object[] identity) {
+        for (int i = 0; i < identity.length; i++) {
+            Objects.requireNonNull(identity[i]);
         }
+        identity = Arrays.copyOf(identity, identity.length + 1);
+        identity[identity.length - 1] = cls;
+        return new DStructObject(identity);
     }
 
-    public boolean isAssignableFrom(SClass sub) {
-        return equals(sub) || sub.supers.anyMatch(this::isAssignableFrom);
+    private DStructObject(Object[] identity) {
+        super(identity);
+    }
+
+    @Override
+    public boolean isExternal() {
+        return false;
     }
 
     @Override
     public String toString() {
-        return name;
+        return getSClass() + Arrays.toString(Arrays.copyOf(identity, identity.length - 1));
     }
 
-    public SLanguage getLanguage() {
-        return language;
+    @Override
+    protected DStructClass getType() {
+        DObjectType<?> dType = TYPE.get(dObjectParent());
+        return CLASS_OBJECT_TYPE.get(Triple.of(Set.of(getSClass().getLanguage()), getSClass(), dType.external()));
+    }
+
+    @Override
+    public SStructClass getSClass() {
+        return (SStructClass) identity[identity.length - 1];
+    }
+
+    @Override
+    public Object[] getIdentity() {
+        return identity;
+    }
+
+    @Override
+    protected void read(DClareMPS dClareMPS) {
+    }
+
+    @Override
+    public boolean isDclareOnly() {
+        return true;
+    }
+
+    @Override
+    protected boolean isRead() {
+        return false;
+    }
+
+    @Override
+    protected boolean isMatched() {
+        return false;
     }
 
 }
