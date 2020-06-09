@@ -665,7 +665,7 @@
             </node>
           </node>
           <node concept="3F0ifn" id="1KqhpdG6mgU" role="1QoVPY">
-            <property role="3F0ifm" value="..." />
+            <property role="3F0ifm" value="……" />
             <ref role="1ERwB7" node="1KqhpdG5TiT" resolve="Expand" />
             <node concept="VechU" id="2seYxKlnZiV" role="3F10Kt">
               <property role="Vb096" value="g1_qRwE/darkGreen" />
