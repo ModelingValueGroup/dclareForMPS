@@ -239,9 +239,9 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
             }
 
             @Override
-            protected void checkConsistency(State pre, State post) {
+            protected void checkConsistency(Universe universe) {
                 if (isRunning()) {
-                    super.checkConsistency(pre, post);
+                    super.checkConsistency(universe);
                 }
             }
 
@@ -585,7 +585,6 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     }
 
     public static <T> T pre(Supplier<T> supplier) {
-        DRule.EMPTY_ATTRIBUTE.set(true);
         return LeafTransaction.getCurrent().universeTransaction().preState().get(supplier);
     }
 
