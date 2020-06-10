@@ -77,21 +77,21 @@ public class DModuleListener extends Pair<DModule, DClareMPS> implements SModule
 
     @Override
     public void modelRenamed(SModule module, SModel model, SModelReference oldRef) {
+        b().handleMPSChange(() -> DModel.NAME.set(DModel.of(model), model.getName().getLongName()));
     }
 
     @Override
     public void languageAdded(SModule module, SLanguage lang) {
-        DModule.dClareMPS().handleMPSChange(() -> DModule.LANGUAGES.set(a(), Set::add, lang));
+        b().handleMPSChange(() -> DModule.LANGUAGES.set(a(), Set::add, lang));
     }
 
     @Override
     public void languageRemoved(SModule module, SLanguage lang) {
-        DModule.dClareMPS().handleMPSChange(() -> DModule.LANGUAGES.set(a(), Set::remove, lang));
+        b().handleMPSChange(() -> DModule.LANGUAGES.set(a(), Set::remove, lang));
     }
 
     @Override
     public void moduleChanged(SModule module) {
-        System.err.println("moduleChanged");
     }
 
 }

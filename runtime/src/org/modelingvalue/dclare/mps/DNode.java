@@ -102,7 +102,7 @@ public class DNode extends DMatchedObject<SNodeReference, SNode> implements SNod
             }, sc::getDeclarationNode, false));
 
     protected static final Constant<SContainmentLink, Function<DNode, List<SNode>>>                READ_CHILDREN_FUNCTION = Constant.of("READ_CHILDREN_FUNCTION",                                                                                                                                 //
-            cl -> n -> dClareMPS().read(() -> Collection.of(n.original().getChildren(cl)).map(c -> (SNode) c).toList()));
+            cl -> n -> dClareMPS().read(() -> Collection.of(n.original().getChildren(cl)).sequential().map(c -> (SNode) c).toList()));
 
     private static final Constant<SContainmentLink, Observer<DNode>>                               READ_MATCHER           = Constant.of("READ_MATCHER", cl -> DObject.observer(Pair.of("MATCHER", cl), n -> DNode.matchRead(n, READ_CHILDREN_FUNCTION.get(cl), cl.isMultiple() ?                  //
             MANY_CONTAINMENT.get(cl).get(n) :                                                                                                                                                                                                                                                     //
@@ -164,43 +164,40 @@ public class DNode extends DMatchedObject<SNodeReference, SNode> implements SNod
 
     protected static final Setable<DNode, String>                                                  NAME_OBSERVED          = PROPERTY.get(SNodeUtil.property_INamedConcept_name);
 
-    private static final Action<DNode>                                                             READ_PROPERTIES        = Action.of("$READ_PROPERTIES", n -> dClareMPS().read(                                                                                                                  //
-            () -> {
-                SNode sNode = n.original();
-                if (sNode != null) {
-                    for (SProperty property : n.getConcept().getProperties()) {
-                        PROPERTY.get(property).set(n, sNode.getProperty(property));
-                    }
-                }
-            }), Direction.forward);
+    private static final Action<DNode>                                                             READ_PROPERTIES        = Action.of("$READ_PROPERTIES", n -> {
+                                                                                                                              SNode sNode = n.original();
+                                                                                                                              if (sNode != null) {
+                                                                                                                                  for (SProperty property : n.getConcept().getProperties()) {
+                                                                                                                                      PROPERTY.get(property).set(n, dClareMPS().read(() -> sNode.getProperty(property)));
+                                                                                                                                  }
+                                                                                                                              }
+                                                                                                                          }, Direction.forward);
 
-    private static final Action<DNode>                                                             READ_REFERENCES        = Action.of("$READ_REFERENCES", n -> dClareMPS().read(                                                                                                                  //
-            () -> {
-                SNode sNode = n.original();
-                if (sNode != null) {
-                    for (SReferenceLink link : n.getConcept().getReferenceLinks()) {
-                        SNode targetNode = sNode.getReferenceTarget(link);
-                        REFERENCE.get(link).set(n, targetNode != null ? of(targetNode) : null);
-                    }
-                }
-            }), Direction.backward);
+    private static final Action<DNode>                                                             READ_REFERENCES        = Action.of("$READ_REFERENCES", n -> {
+                                                                                                                              SNode sNode = n.original();
+                                                                                                                              if (sNode != null) {
+                                                                                                                                  for (SReferenceLink link : n.getConcept().getReferenceLinks()) {
+                                                                                                                                      SNode targetNode = dClareMPS().read(() -> sNode.getReferenceTarget(link));
+                                                                                                                                      REFERENCE.get(link).set(n, targetNode != null ? of(targetNode) : null);
+                                                                                                                                  }
+                                                                                                                              }
+                                                                                                                          }, Direction.backward);
 
-    private static final Action<DNode>                                                             READ_CHILDREN          = Action.of("$READ_CHILDREN", n -> dClareMPS().read(                                                                                                                    //
-            () -> {
-                SNode sNode = n.original();
-                if (sNode != null) {
-                    for (SContainmentLink link : n.getConcept().getContainmentLinks()) {
-                        if (!link.getName().equals("smodelAttribute")) {
-                            List<DNode> list = Collection.of(sNode.getChildren(link)).map(DNode::read).toList();
-                            if (link.isMultiple()) {
-                                MANY_CONTAINMENT.get(link).set(n, list);
-                            } else {
-                                SINGLE_CONTAINMENT.get(link).set(n, list.first());
-                            }
-                        }
-                    }
-                }
-            }), Direction.forward);
+    private static final Action<DNode>                                                             READ_CHILDREN          = Action.of("$READ_CHILDREN", n -> {
+                                                                                                                              SNode sNode = n.original();
+                                                                                                                              if (sNode != null) {
+                                                                                                                                  for (SContainmentLink link : n.getConcept().getContainmentLinks()) {
+                                                                                                                                      if (!link.getName().equals("smodelAttribute")) {
+                                                                                                                                          List<DNode> list = dClareMPS().read(() -> Collection.of(sNode.getChildren(link)).sequential().map(DNode::read).toList());
+                                                                                                                                          if (link.isMultiple()) {
+                                                                                                                                              MANY_CONTAINMENT.get(link).set(n, list);
+                                                                                                                                          } else {
+                                                                                                                                              SINGLE_CONTAINMENT.get(link).set(n, list.first());
+                                                                                                                                          }
+                                                                                                                                      }
+                                                                                                                                  }
+                                                                                                                              }
+                                                                                                                          }, Direction.forward);
 
     @SuppressWarnings("rawtypes")
     protected static final Constant<SConcept, Set<? extends Setable>>                              CONCEPT_SETABLES       = Constant.of("$CONCEPT_SETABLES", c -> Collection.concat(                                                                                                              //
@@ -229,7 +226,7 @@ public class DNode extends DMatchedObject<SNodeReference, SNode> implements SNod
         SConcept concept = original.getConcept();
         DNode dNode = of(concept, original.getReference());
         if (concept.isSubConceptOf(SNodeUtil.concept_INamedConcept)) {
-            NAME_OBSERVED.set(dNode, dClareMPS().read(() -> original.getName()));
+            NAME_OBSERVED.set(dNode, original.getName());
         }
         return dNode;
     }
@@ -385,8 +382,9 @@ public class DNode extends DMatchedObject<SNodeReference, SNode> implements SNod
     protected void addSObject(SNode sNode) {
         DObject parent = dObjectParent();
         if (parent instanceof DModel) {
+            SModel sParent = ((DModel) parent).original(true);
             //noinspection ConstantConditions
-            getModel().original(true).addRootNode(sNode);
+            sParent.addRootNode(sNode);
         } else {
             SNode sParent = ((DNode) parent).original(true);
             //noinspection ConstantConditions

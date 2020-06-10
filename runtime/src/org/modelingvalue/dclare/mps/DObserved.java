@@ -15,9 +15,6 @@
 
 package org.modelingvalue.dclare.mps;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -39,7 +36,7 @@ import org.modelingvalue.dclare.State;
 import org.modelingvalue.dclare.ex.EmptyMandatoryException;
 import org.modelingvalue.dclare.ex.ThrowableError;
 
-@SuppressWarnings({"rawtypes", "unused"})
+@SuppressWarnings("unused")
 public class DObserved<O extends DObject, T> extends Observed<O, T> implements DFeature {
 
     public static <C extends DObject, V> DObserved<C, V> of(Object id, V def, boolean mandatory, boolean composite, Supplier<Setable<?, ?>> opposite, boolean synthetic, TriConsumer<C, V, V> toMPS, Supplier<SNode> source) {
@@ -140,27 +137,6 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
         return synthetic;
     }
 
-    @SuppressWarnings("unchecked")
-    public void remove(O obj, Object e) {
-        set(obj, (v, r) -> {
-            if (r.equals(v)) {
-                return null;
-            } else if (v instanceof ContainingCollection && ((ContainingCollection) v).contains(r)) {
-                return (T) ((ContainingCollection) v).remove(r);
-            } else if (v instanceof java.util.List && ((java.util.List) v).contains(r)) {
-                java.util.List l = new ArrayList((java.util.List) v);
-                l.remove(r);
-                return (T) Collections.unmodifiableList(l);
-            } else if (v instanceof java.util.Set && ((java.util.Set) v).contains(r)) {
-                java.util.Set s = new HashSet((java.util.Set) v);
-                s.remove(r);
-                return (T) Collections.unmodifiableSet(s);
-            } else {
-                return v;
-            }
-        }, e);
-    }
-
     @Override
     public T get(O object) {
         return object != null ? super.get(object) : null;
@@ -182,20 +158,6 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
     @Override
     protected boolean isEmpty(T result) {
         return (result == null && mandatory()) || result instanceof ContainingCollection;
-    }
-
-    @Override
-    protected T handleEmptyGet(T result) {
-        if (result == null) {
-            if (LeafTransaction.getCurrent() instanceof DRule.DObserverTransaction) {
-                DRule.EMPTY_ATTRIBUTE.set(true);
-            }
-        } else if (result instanceof ContainingCollection) {
-            if (LeafTransaction.getCurrent() instanceof DRule.DObserverTransaction) {
-                DRule.COLLECTION_ATTRIBUTE.set(true);
-            }
-        }
-        return result;
     }
 
     @Override

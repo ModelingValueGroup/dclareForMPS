@@ -140,4 +140,9 @@ public class DclareForMPSEngine implements DeployListener {
     public static void breakpoint() {
         System.err.println("breakpoint");
     }
+
+    public static <T> T print(Object ctx, T val) {
+        System.err.println("!!!!!!!!!! " + ctx + " : " + val);
+        return val;
+    }
 }

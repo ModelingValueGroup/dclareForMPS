@@ -6980,8 +6980,8 @@
       <node concept="3clFbS" id="5KzMV0dY8Zd" role="3clF47">
         <node concept="3clFbF" id="5KzMV0dY8Zl" role="3cqZAp">
           <node concept="2c44tf" id="5KzMV0dY8Zm" role="3clFbG">
-            <node concept="3uibUv" id="5GTBd9DMX9P" role="2c44tc">
-              <ref role="3uigEE" to="t4tl:~SClassObject" resolve="SClassObject" />
+            <node concept="3uibUv" id="25AJqx1WIwV" role="2c44tc">
+              <ref role="3uigEE" to="t4tl:~SStructClass" resolve="SStructClass" />
             </node>
           </node>
         </node>
