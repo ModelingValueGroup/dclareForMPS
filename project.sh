@@ -23,7 +23,7 @@ artifacts=(
     "org.modelingvalue   dclareForMPSRuntime     $version    jar jds" # TODO: should not be needed
 )
 dependencies=(
-    "org.modelingvalue   immutable-collections   1.2.3       jar jds"
+    "org.modelingvalue   immutable-collections   1.3.0       jar jds"
     "org.modelingvalue   dclare                  1.3.0       jar jds"
     "jars@mps"
 )

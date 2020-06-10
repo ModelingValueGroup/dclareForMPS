@@ -130,7 +130,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
 
     public final static Observed<DClareMPS, Set<SLanguage>>                                             ALL_LANGUAGES        = NonCheckingObserved.of("ALL_LANGAUGES", Set.of(), (tx, d, o, n) -> {
                                                                                                                                  Setable.<Set<SLanguage>, SLanguage> diff(o, n,                                                                                                    //
-                                                                                                                                         a -> DClareMPS.RULE_SETS.get(a).forEach(                                                                                                  //
+                                                                                                                                         a -> DClareMPS.RULE_SETS.get(a).forEachOrdered(                                                                                           //
                                                                                                                                                  rs -> {
                                                                                                                                                      rs.getAllAttributes().forEach(attr -> ATTRIBUTE_MAP.set(d, Map::put, Entry.<String, DAttribute<?, ?>> of(attr.id(), attr)));
                                                                                                                                                      rs.getAllStructClasses().forEach(strc -> STRUCT_CLASS_MAP.set(d, Map::put, Entry.<String, SStructClass> of(strc.id(), strc)));
@@ -509,7 +509,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
             }
             COMMITTING.set(true);
             try {
-                pre.diff(post, o -> o instanceof DObject && !((DObject) o).isDclareOnly(), p -> p instanceof DObserved && !((DObserved) p).isDclareOnly()).forEach(e0 -> {
+                pre.diff(post, o -> o instanceof DObject && !((DObject) o).isDclareOnly(), p -> p instanceof DObserved && !((DObserved) p).isDclareOnly()).forEachOrdered(e0 -> {
                     DObject dObject = (DObject) e0.getKey();
                     if (dObject instanceof DModel) {
                         SModel sModel = ((DModel) dObject).original();
@@ -525,7 +525,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
                     } else if (dObject instanceof DModule) {
                         changedModules.change(s -> s.add(((DModule) dObject).original()));
                     }
-                    e0.getValue().forEach(e1 -> {
+                    e0.getValue().forEachOrdered(e1 -> {
                         DObserved mpsObserved = (DObserved) e1.getKey();
                         mpsObserved.toMPS(dObject, e1.getValue().a(), e1.getValue().b());
                     });
