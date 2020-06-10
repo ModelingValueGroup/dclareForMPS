@@ -161,20 +161,6 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
     }
 
     @Override
-    protected T handleEmptyGet(T result) {
-        if (result == null) {
-            if (LeafTransaction.getCurrent() instanceof DRule.DObserverTransaction) {
-                DRule.EMPTY_ATTRIBUTE.set(true);
-            }
-        } else if (result instanceof ContainingCollection) {
-            if (LeafTransaction.getCurrent() instanceof DRule.DObserverTransaction) {
-                DRule.COLLECTION_ATTRIBUTE.set(true);
-            }
-        }
-        return result;
-    }
-
-    @Override
     protected void handleEmptyCheck(O object, T result) {
         if (result == null) {
             throw new EmptyMandatoryException(object, this);

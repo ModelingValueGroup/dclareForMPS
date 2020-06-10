@@ -121,7 +121,7 @@ public class DModel extends DMatchedObject<SModelReference, SModel> implements S
                                                                                                                }
                                                                                                            });
 
-    private static final Observer<DModel>                                              REFERENCED_RULE     = DObject.observer(DModule.REFERENCED, o -> USED_MODELS.get(o).forEach(mo -> {
+    private static final Observer<DModel>                                              REFERENCED_RULE     = DObject.observer(DModule.REFERENCED, o -> USED_MODELS.get(o).forEachOrdered(mo -> {
                                                                                                                SModel sModel = mo.original();
                                                                                                                if (sModel instanceof SModelBase) {
                                                                                                                    SModule sModule = sModel.getModule();

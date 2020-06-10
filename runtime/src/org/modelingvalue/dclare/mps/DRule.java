@@ -26,19 +26,14 @@ import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.ObserverTransaction;
 import org.modelingvalue.dclare.Transaction;
 import org.modelingvalue.dclare.UniverseTransaction;
-import org.modelingvalue.dclare.ex.DeferException;
 
 @SuppressWarnings("rawtypes")
 public interface DRule<O> extends DFeature {
 
-    Constant<DRule, DObserver> OBSERVER             = Constant.of("OBSERVER",                      //
+    Constant<DRule, DObserver> OBSERVER = Constant.of("OBSERVER",                                  //
             r -> DObserver.of(r, r.initialLowPriority() ? Direction.backward : Direction.forward));
 
-    Context<Boolean>           EMPTY_ATTRIBUTE      = Context.of(false);
-
-    Context<Boolean>           COLLECTION_ATTRIBUTE = Context.of(false);
-
-    Context<Set<DIssue>>       DISUES               = Context.of(Set.of());
+    Context<Set<DIssue>>       DISUES   = Context.of(Set.of());
 
     class DObserver<O extends Mutable> extends Observer<O> {
 
@@ -83,23 +78,9 @@ public interface DRule<O> extends DFeature {
             if (dObject.isOwned()) {
                 try {
                     action.run();
-                } catch (NullPointerException e) {
-                    if (EMPTY_ATTRIBUTE.get()) {
-                        throw new DeferException();
-                    } else {
-                        throw e;
-                    }
-                } catch (IndexOutOfBoundsException e) {
-                    if (COLLECTION_ATTRIBUTE.get()) {
-                        throw new DeferException();
-                    } else {
-                        throw e;
-                    }
                 } finally {
                     DObject.DRULE_ISSUES.set(dObject, (b, a) -> a.addAll(b.filter(i -> !i.getRule().equals(rule()))), DISUES.get());
                     DISUES.set(Set.of());
-                    COLLECTION_ATTRIBUTE.set(false);
-                    EMPTY_ATTRIBUTE.set(false);
                 }
             }
         }
