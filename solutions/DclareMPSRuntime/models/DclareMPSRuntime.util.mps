@@ -881,13 +881,13 @@
             <ref role="1Pybhc" to="t4tl:~DAttribute" resolve="DAttribute" />
             <ref role="37wK5l" to="t4tl:~DAttribute.of(java.lang.String)" resolve="of" />
             <node concept="37vLTw" id="7djaqafQ3$J" role="37wK5m">
-              <ref role="3cqZAo" node="70rUIyyvljj" />
+              <ref role="3cqZAo" node="70rUIyyvljj" resolve="id" />
             </node>
             <node concept="16syzq" id="7djaqafQ4JS" role="3PaCim">
-              <ref role="16sUi3" node="70rUIyyvnT3" />
+              <ref role="16sUi3" node="70rUIyyvnT3" resolve="O" />
             </node>
             <node concept="16syzq" id="7djaqafQ4v6" role="3PaCim">
-              <ref role="16sUi3" node="70rUIyyvnVs" />
+              <ref role="16sUi3" node="70rUIyyvnVs" resolve="T" />
             </node>
           </node>
         </node>
@@ -895,7 +895,7 @@
       <node concept="3uibUv" id="70rUIyyvmX0" role="3clF45">
         <ref role="3uigEE" to="t4tl:~DAttribute" resolve="DAttribute" />
         <node concept="16syzq" id="70rUIyyvnXY" role="11_B2D">
-          <ref role="16sUi3" node="70rUIyyvnT3" />
+          <ref role="16sUi3" node="70rUIyyvnT3" resolve="O" />
         </node>
         <node concept="16syzq" id="70rUIyyvnYd" role="11_B2D">
           <ref role="16sUi3" node="70rUIyyvnVs" resolve="T" />
@@ -924,10 +924,10 @@
         <node concept="3uibUv" id="1GhXIFRY9YB" role="1tU5fm">
           <ref role="3uigEE" to="t4tl:~DAttribute" resolve="DAttribute" />
           <node concept="16syzq" id="1GhXIFRYbNN" role="11_B2D">
-            <ref role="16sUi3" node="1GhXIFRYbFD" />
+            <ref role="16sUi3" node="1GhXIFRYbFD" resolve="O" />
           </node>
           <node concept="16syzq" id="1GhXIFRYbVT" role="11_B2D">
-            <ref role="16sUi3" node="1lQ5DPQt_oo" />
+            <ref role="16sUi3" node="1lQ5DPQt_oo" resolve="T" />
           </node>
         </node>
       </node>
@@ -952,10 +952,10 @@
                 <ref role="3cqZAo" node="1lQ5DPQt_ob" resolve="object" />
               </node>
               <node concept="2YIFZM" id="3DB41z9GPiE" role="37wK5m">
-                <ref role="1Pybhc" node="30fQumnG8Au" />
-                <ref role="37wK5l" node="3DB41z9GPiA" />
+                <ref role="1Pybhc" node="30fQumnG8Au" resolve="DclareUtil" />
+                <ref role="37wK5l" node="3DB41z9GPiA" resolve="toNonMutable" />
                 <node concept="37vLTw" id="1GhXIFRYeno" role="37wK5m">
-                  <ref role="3cqZAo" node="1lQ5DPQt_o9" />
+                  <ref role="3cqZAo" node="1lQ5DPQt_o9" resolve="attr" />
                 </node>
                 <node concept="37vLTw" id="3DB41z9GPiD" role="37wK5m">
                   <ref role="3cqZAo" node="1lQ5DPQtAgA" resolve="value" />
@@ -963,7 +963,7 @@
               </node>
             </node>
             <node concept="37vLTw" id="1GhXIFRYdtw" role="2Oq$k0">
-              <ref role="3cqZAo" node="1lQ5DPQt_o9" />
+              <ref role="3cqZAo" node="1lQ5DPQt_o9" resolve="attr" />
             </node>
           </node>
         </node>
@@ -1535,7 +1535,7 @@
                 <ref role="3uigEE" to="mhbf:~SNode" resolve="SNode" />
               </node>
               <node concept="37vLTw" id="7cS5T_tZjvu" role="2ZW6bz">
-                <ref role="3cqZAo" node="7cS5T_tZj0C" />
+                <ref role="3cqZAo" node="7cS5T_tZj0C" resolve="sObject" />
               </node>
             </node>
           </node>
@@ -2589,41 +2589,31 @@
       <property role="DiZV1" value="false" />
       <property role="2aFKle" value="false" />
       <node concept="3clFbS" id="2v4o0zdF2xC" role="3clF47">
-        <node concept="3clFbJ" id="7cw6wiN1ne4" role="3cqZAp">
-          <node concept="3clFbS" id="7cw6wiN1ne6" role="3clFbx">
-            <node concept="3clFbF" id="2v4o0zdF645" role="3cqZAp">
-              <node concept="2OqwBi" id="2v4o0zdF6q$" role="3clFbG">
-                <node concept="1eOMI4" id="2v4o0zdF643" role="2Oq$k0">
-                  <node concept="10QFUN" id="2v4o0zdF640" role="1eOMHV">
-                    <node concept="3uibUv" id="2v4o0zdF64q" role="10QFUM">
-                      <ref role="3uigEE" to="t4tl:~DModel" resolve="DModel" />
-                    </node>
-                    <node concept="37vLTw" id="2v4o0zdF6by" role="10QFUP">
-                      <ref role="3cqZAo" node="2v4o0zdF5Y0" resolve="model" />
-                    </node>
-                  </node>
+        <node concept="3clFbF" id="2v4o0zdF645" role="3cqZAp">
+          <node concept="2OqwBi" id="2v4o0zdF6q$" role="3clFbG">
+            <node concept="1eOMI4" id="2v4o0zdF643" role="2Oq$k0">
+              <node concept="10QFUN" id="2v4o0zdF640" role="1eOMHV">
+                <node concept="3uibUv" id="2v4o0zdF64q" role="10QFUM">
+                  <ref role="3uigEE" to="t4tl:~DModel" resolve="DModel" />
                 </node>
-                <node concept="liA8E" id="2v4o0zdF6NA" role="2OqNvi">
-                  <ref role="37wK5l" to="t4tl:~DModel.setRootNodes(org.jetbrains.mps.openapi.language.SAbstractConcept,java.lang.Iterable)" resolve="setRootNodes" />
-                  <node concept="37vLTw" id="2v4o0zdGzaE" role="37wK5m">
-                    <ref role="3cqZAo" node="2v4o0zdGz0T" resolve="concept" />
-                  </node>
-                  <node concept="10QFUN" id="1cUpE408tx3" role="37wK5m">
-                    <node concept="37vLTw" id="2v4o0zdF6Ry" role="10QFUP">
-                      <ref role="3cqZAo" node="2v4o0zdF5ZA" resolve="roots" />
-                    </node>
-                    <node concept="3uibUv" id="1cUpE408wrl" role="10QFUM">
-                      <ref role="3uigEE" to="wyt6:~Iterable" resolve="Iterable" />
-                    </node>
-                  </node>
+                <node concept="37vLTw" id="2v4o0zdF6by" role="10QFUP">
+                  <ref role="3cqZAo" node="2v4o0zdF5Y0" resolve="model" />
                 </node>
               </node>
             </node>
-          </node>
-          <node concept="3y3z36" id="7cw6wiN1nud" role="3clFbw">
-            <node concept="10Nm6u" id="7cw6wiN1nxS" role="3uHU7w" />
-            <node concept="37vLTw" id="7cw6wiN1nhZ" role="3uHU7B">
-              <ref role="3cqZAo" node="2v4o0zdF5Y0" resolve="model" />
+            <node concept="liA8E" id="2v4o0zdF6NA" role="2OqNvi">
+              <ref role="37wK5l" to="t4tl:~DModel.setRootNodes(org.jetbrains.mps.openapi.language.SAbstractConcept,java.lang.Iterable)" resolve="setRootNodes" />
+              <node concept="37vLTw" id="2v4o0zdGzaE" role="37wK5m">
+                <ref role="3cqZAo" node="2v4o0zdGz0T" resolve="concept" />
+              </node>
+              <node concept="10QFUN" id="1cUpE408tx3" role="37wK5m">
+                <node concept="37vLTw" id="2v4o0zdF6Ry" role="10QFUP">
+                  <ref role="3cqZAo" node="2v4o0zdF5ZA" resolve="roots" />
+                </node>
+                <node concept="3uibUv" id="1cUpE408wrl" role="10QFUM">
+                  <ref role="3uigEE" to="wyt6:~Iterable" resolve="Iterable" />
+                </node>
+              </node>
             </node>
           </node>
         </node>
@@ -2661,38 +2651,28 @@
       <property role="DiZV1" value="false" />
       <property role="2aFKle" value="false" />
       <node concept="3clFbS" id="6agMp$f5NMO" role="3clF47">
-        <node concept="3clFbJ" id="6agMp$f5NMP" role="3cqZAp">
-          <node concept="3clFbS" id="6agMp$f5NMQ" role="3clFbx">
-            <node concept="3clFbF" id="6agMp$f5NMR" role="3cqZAp">
-              <node concept="2OqwBi" id="6agMp$f5NMS" role="3clFbG">
-                <node concept="1eOMI4" id="6agMp$f5NMT" role="2Oq$k0">
-                  <node concept="10QFUN" id="6agMp$f5NMU" role="1eOMHV">
-                    <node concept="3uibUv" id="6agMp$f5Z2E" role="10QFUM">
-                      <ref role="3uigEE" to="t4tl:~DModule" resolve="DModule" />
-                    </node>
-                    <node concept="37vLTw" id="6agMp$f5NMW" role="10QFUP">
-                      <ref role="3cqZAo" node="6agMp$f5NN7" resolve="module" />
-                    </node>
-                  </node>
+        <node concept="3clFbF" id="6agMp$f5NMR" role="3cqZAp">
+          <node concept="2OqwBi" id="6agMp$f5NMS" role="3clFbG">
+            <node concept="1eOMI4" id="6agMp$f5NMT" role="2Oq$k0">
+              <node concept="10QFUN" id="6agMp$f5NMU" role="1eOMHV">
+                <node concept="3uibUv" id="6agMp$f5Z2E" role="10QFUM">
+                  <ref role="3uigEE" to="t4tl:~DModule" resolve="DModule" />
                 </node>
-                <node concept="liA8E" id="6agMp$f5NMX" role="2OqNvi">
-                  <ref role="37wK5l" to="t4tl:~DModule.setModels(java.lang.Iterable)" resolve="setModels" />
-                  <node concept="10QFUN" id="6agMp$f5NMZ" role="37wK5m">
-                    <node concept="37vLTw" id="6agMp$f5NN0" role="10QFUP">
-                      <ref role="3cqZAo" node="6agMp$f5NNb" resolve="models" />
-                    </node>
-                    <node concept="3uibUv" id="6agMp$f5NN1" role="10QFUM">
-                      <ref role="3uigEE" to="wyt6:~Iterable" resolve="Iterable" />
-                    </node>
-                  </node>
+                <node concept="37vLTw" id="6agMp$f5NMW" role="10QFUP">
+                  <ref role="3cqZAo" node="6agMp$f5NN7" resolve="module" />
                 </node>
               </node>
             </node>
-          </node>
-          <node concept="3y3z36" id="6agMp$f5NN2" role="3clFbw">
-            <node concept="10Nm6u" id="6agMp$f5NN3" role="3uHU7w" />
-            <node concept="37vLTw" id="6agMp$f5NN4" role="3uHU7B">
-              <ref role="3cqZAo" node="6agMp$f5NN7" resolve="module" />
+            <node concept="liA8E" id="6agMp$f5NMX" role="2OqNvi">
+              <ref role="37wK5l" to="t4tl:~DModule.setModels(java.lang.Iterable)" resolve="setModels" />
+              <node concept="10QFUN" id="6agMp$f5NMZ" role="37wK5m">
+                <node concept="37vLTw" id="6agMp$f5NN0" role="10QFUP">
+                  <ref role="3cqZAo" node="6agMp$f5NNb" resolve="models" />
+                </node>
+                <node concept="3uibUv" id="6agMp$f5NN1" role="10QFUM">
+                  <ref role="3uigEE" to="wyt6:~Iterable" resolve="Iterable" />
+                </node>
+              </node>
             </node>
           </node>
         </node>
