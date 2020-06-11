@@ -138,7 +138,11 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
 
     @Override
     public T get(O object) {
-        return object != null ? super.get(object) : null;
+        T result = super.get(object);
+        if (result == null && !checkConsistency && mandatory() && LeafTransaction.getCurrent() instanceof DRule.DObserverTransaction) {
+            DRule.EMTPTY_MANDATORY.set(true);
+        }
+        return result;
     }
 
     @Override
