@@ -15,8 +15,8 @@
 
    version="1.3.0"
 mpsVersion="2020.1.1"
-  mpsSince="201.7223"
-# mpsUntil="201.7223" # mpsUntil taken from the installed MPS if not specified
+  mpsSince="201.6668"
+# mpsUntil="201.9999" # mpsUntil taken from the installed MPS if not specified
     mpsDir="MPS"
 
 artifacts=(
