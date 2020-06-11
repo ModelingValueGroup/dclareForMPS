@@ -16,6 +16,7 @@
 package org.modelingvalue.dclare.mps;
 
 import java.util.Collections;
+import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -120,6 +121,14 @@ public interface DAttribute<O, T> extends DFeature {
         @Override
         public boolean isMandatory() {
             return mandatory();
+        }
+
+        @Override
+        public V set(C object, V value) {
+            if (mandatory() && LeafTransaction.getCurrent() instanceof DRule.DObserverTransaction) {
+                Objects.requireNonNull(value);
+            }
+            return super.set(object, value);
         }
 
         @Override
