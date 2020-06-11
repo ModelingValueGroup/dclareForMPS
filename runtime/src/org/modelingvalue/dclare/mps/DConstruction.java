@@ -18,16 +18,17 @@ package org.modelingvalue.dclare.mps;
 import java.util.Arrays;
 
 import org.modelingvalue.collections.util.Age;
+import org.modelingvalue.dclare.mps.DRule.DObserver;
 
-public class DIdentity {
+public class DConstruction {
 
-    public static DIdentity of(Object[] id) {
-        return new DIdentity(id);
+    public static DConstruction of(Object[] id) {
+        return new DConstruction(id);
     }
 
     private Object[] identity;
 
-    protected DIdentity(Object[] identity) {
+    protected DConstruction(Object[] identity) {
         this.identity = identity;
     }
 
@@ -45,7 +46,7 @@ public class DIdentity {
         } else if (getClass() != obj.getClass()) {
             return false;
         } else {
-            DIdentity other = (DIdentity) obj;
+            DConstruction other = (DConstruction) obj;
             if (other.identity == identity) {
                 return true;
             } else if (!Arrays.deepEquals(identity, other.identity)) {
@@ -64,6 +65,14 @@ public class DIdentity {
     @Override
     public String toString() {
         return Arrays.toString(identity);
+    }
+
+    public DObserver<?> observer() {
+        return null;
+    }
+
+    public DObject object() {
+        return null;
     }
 
 }

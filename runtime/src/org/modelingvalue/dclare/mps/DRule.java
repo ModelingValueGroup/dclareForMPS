@@ -18,6 +18,7 @@ package org.modelingvalue.dclare.mps;
 import org.modelingvalue.collections.Map;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Context;
+import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.dclare.Constant;
 import org.modelingvalue.dclare.Direction;
 import org.modelingvalue.dclare.LeafTransaction;
@@ -32,16 +33,16 @@ import org.modelingvalue.dclare.UniverseTransaction;
 @SuppressWarnings("rawtypes")
 public interface DRule<O> extends DFeature {
 
-    Constant<DRule, DObserver> OBSERVER = Constant.of("OBSERVER",                                  //
+    Constant<DRule, DObserver>                  OBSERVER     = Constant.of("OBSERVER",             //
             r -> DObserver.of(r, r.initialLowPriority() ? Direction.backward : Direction.forward));
 
-    Context<Set<DIssue>>       DISUES   = Context.of(Set.of());
+    Context<Set<DIssue>>                        DISUES       = Context.of(Set.of());
 
-    Context<Map<DIdentity, DMatchedObject>> DCONSTRUCTED         = Context.of(Map.of());
+    Context<Map<DConstruction, DMatchedObject>> DCONSTRUCTED = Context.of(Map.of());
 
     class DObserver<O extends Mutable> extends Observer<O> {
 
-        protected final Observed<DObject, Map<DIdentity, DMatchedObject>> constructed;
+        protected final Observed<DObject, Map<DConstruction, DMatchedObject>> constructed;
 
         private static <M extends Mutable> DObserver of(DRule rule, Direction initDirection) {
             return new DObserver<M>(rule, initDirection);
@@ -50,7 +51,17 @@ public interface DRule<O> extends DFeature {
         @SuppressWarnings("unchecked")
         private DObserver(DRule rule, Direction initDirection) {
             super(rule, o -> ((DRule.DObserverTransaction) LeafTransaction.getCurrent()).run(() -> rule.run(o)), initDirection);
-            constructed = Observed.of(rule, Map.of());
+            constructed = Observed.of(rule, Map.of(), (tx, o, pre, post) -> {
+                pre.diff(post).forEachOrdered(e -> {
+                    Pair<DMatchedObject, DMatchedObject> d = e.getValue();
+                    if (d.a() != null) {
+                        DMatchedObject.CONSTRUCTIONS.set(d.a(), Set::remove, e.getKey());
+                    }
+                    if (d.b() != null) {
+                        DMatchedObject.CONSTRUCTIONS.set(d.b(), Set::add, e.getKey());
+                    }
+                });
+            });
         }
 
         public DRule rule() {
@@ -88,6 +99,8 @@ public interface DRule<O> extends DFeature {
                 } finally {
                     DObject.DRULE_ISSUES.set(dObject, (b, a) -> a.addAll(b.filter(i -> !i.getRule().equals(rule()))), DISUES.get());
                     DISUES.set(Set.of());
+                    observer().constructed.set(dObject, DCONSTRUCTED.get());
+                    DCONSTRUCTED.set(Map.of());
                 }
             }
         }
