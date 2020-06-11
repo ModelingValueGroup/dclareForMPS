@@ -15,75 +15,36 @@
 
 package org.modelingvalue.dclare.mps;
 
-import java.util.Arrays;
-import java.util.Objects;
-
 import org.jetbrains.mps.openapi.language.SLanguage;
+import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Triple;
-import org.modelingvalue.dclare.Constant;
 
-@SuppressWarnings("unused")
-public class DClassObject extends DIdentifiedObject implements SClassObject {
+public class DStructClass extends DObjectType<Triple<Set<SLanguage>, SStructClass, Boolean>> {
 
-    private static final Constant<Triple<Set<SLanguage>, SClass, Boolean>, DClassObjectType> CLASS_OBJECT_TYPE = Constant.of("CLASS_OBJECT_TYPE", p -> new DClassObjectType(p));
-
-    public static DClassObject of(SClass cls, Object[] identity) {
-        for (int i = 0; i < identity.length; i++) {
-            Objects.requireNonNull(identity[i]);
-        }
-        identity = Arrays.copyOf(identity, identity.length + 1);
-        identity[identity.length - 1] = cls;
-        return new DClassObject(identity);
-    }
-
-    private DClassObject(Object[] identity) {
+    public DStructClass(Triple<Set<SLanguage>, SStructClass, Boolean> identity) {
         super(identity);
     }
 
+    @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
-    public boolean isExternal() {
-        return false;
+    public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
+        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getClassRules(id().b()))).toSet();
+    }
+
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    @Override
+    public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
+        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getClassAttributes(id().b()))).toSet();
     }
 
     @Override
-    public String toString() {
-        return getSClass() + Arrays.toString(Arrays.copyOf(identity, identity.length - 1));
+    public Set<SLanguage> getLanguages() {
+        return id().a();
     }
 
     @Override
-    protected DClassObjectType getType() {
-        DObjectType<?> dType = TYPE.get(dObjectParent());
-        return CLASS_OBJECT_TYPE.get(Triple.of(Set.of(getSClass().getLanguage()), getSClass(), dType.external()));
+    public boolean external() {
+        return id().c();
     }
-
-    @Override
-    public SClass getSClass() {
-        return (SClass) identity[identity.length - 1];
-    }
-
-    @Override
-    public Object[] getIdentity() {
-        return identity;
-    }
-
-    @Override
-    protected void read(DClareMPS dClareMPS) {
-    }
-
-    @Override
-    public boolean isDclareOnly() {
-        return true;
-    }
-
-    @Override
-    protected boolean isRead() {
-        return false;
-    }
-
-    @Override
-    protected boolean isMatched() {
-        return false;
-    }
-
 }

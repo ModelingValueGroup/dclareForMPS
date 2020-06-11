@@ -13,16 +13,18 @@
 ##     Arjan Kok, Carel Bast                                                                                           ~
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-   version="1.3"
-mpsVersion="2020.1"
+   version="1.3.0"
+mpsVersion="2020.1.1"
+  mpsSince="201.7223"
+# mpsUntil="201.7223" # mpsUntil taken from the installed MPS if not specified
     mpsDir="MPS"
 
 artifacts=(
     "org.modelingvalue   dclareForMPSRuntime     $version    jar jds" # TODO: should not be needed
 )
 dependencies=(
-    "org.modelingvalue   immutable-collections   1.2.1       jar jds"
-    "org.modelingvalue   dclare                  1.2.1       jar jds"
+    "org.modelingvalue   immutable-collections   1.3.0       jar jds"
+    "org.modelingvalue   dclare                  1.3.0       jar jds"
     "jars@mps"
 )
 mps=(

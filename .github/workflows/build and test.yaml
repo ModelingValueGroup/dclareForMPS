@@ -27,6 +27,11 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: "if master: fail if there is already a tag for this version"
+        run:  |
+          . <(java -jar ~/buildTools.jar)
+          errorIfMasterAndVersionTagExists
+
       - name: "prepare"
         run:  |
           cat <<EOF >build.properties
@@ -64,13 +69,34 @@ jobs:
           getAllDependencies ${{ secrets.GITHUB_TOKEN }} "${{ secrets.SCALEWAY_ACCESS_KEY }}" "${{ secrets.SCALEWAY_SECRET_KEY }}"
           installMps "$mpsDir" "$mpsVersion"
 
-      - name: "runtime: build"
+      - name: "adjust MPS compat range in ant file"
+        run:  |
+          . <(java -jar ~/buildTools.jar)
+          . project.sh
+          mpsUntilDefault="$(sed -n 's/^mps[.]build[.]number=MPS-//p' "$mpsDir/build.properties")"
+          sed -i 's/ since-build="[^"]*"/ since-build="'"$mpsSince"'"/' *.xml
+          sed -i 's/ until-build="[^"]*"/ until-build="'"${mpsUntil:-$mpsUntilDefault}"'"/' *.xml
+
+      - name: "push changes back to github"
+        run:  |
+          . <(java -jar ~/buildTools.jar)
+          . project.sh
+          pushBackToGithub "${{ secrets.GITHUB_TOKEN }}" "automation@modelingvalue.com" "adjusted files [by github actions]"
+
+      - name: "build"
         run:  ant
 
-      - name: "runtime: test"
-        run:  ant test
+      - name: "test"
+        run:  |
+          if ! ant test; then
+            for i in TEST-*.xml; do
+              echo "=============== $i"
+              sed "s/^/>> /" $i
+            done
+            exit 42
+          fi
 
-      - name: "runtime: generate javadoc"
+      - name: "generate javadoc"
         run:  ant javadoc
 
       - name: "dclare-plugin: build"
@@ -81,6 +107,11 @@ jobs:
             ant -Dmps_home="$mpsDir" "-Dversion=$version" "$versionExtraArg" "$versionStampArg" -f mps_build.xml cleanSources clean generate build
           }
           doubleBuild action mps_build.xml
+
+      - name: "if master: tag with version"
+        run:  |
+          . <(java -jar ~/buildTools.jar)
+          setVersionTagIfMaster "${{ secrets.GITHUB_TOKEN }}" "automation@modelingvalue.com"
 
       - name: "unzip for actions/upload-artifact"
         run:  |
@@ -102,9 +133,3 @@ jobs:
           hubToken: "${{ secrets.JETBRAINS_PUBLISH_TOKEN }}"
           pluginId: "13797"
           trace   : true
-
-      - name: "push changes back to github"
-        run:  |
-          . <(java -jar ~/buildTools.jar)
-          pushBackToGithub "${{ secrets.GITHUB_TOKEN }}" "automation@modelingvalue.com" "adjusted files [by github actions]"
-
