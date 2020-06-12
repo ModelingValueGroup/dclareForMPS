@@ -301,12 +301,11 @@ public class DNode extends DMatchedObject<SNodeReference, SNode> implements SNod
 
     @Override
     protected DNodeType getType() {
-        SLanguage al = getAnonymousLanguage();
-        SLanguage cl = getConcept().getLanguage();
-        if (DClareMPS.RULE_SETS.get(cl).isEmpty()) {
-            cl = null;
+        Set<SLanguage> ls = dClareMPS().getRepository().getType().getLanguages();
+        SLanguage      al = getAnonymousLanguage();
+        if (al != null) {
+            ls = ls.add(al);
         }
-        Set<SLanguage> ls = (al != null && cl != null) ? Set.of(al, cl) : al != null ? Set.of(al) : cl != null ? Set.of(cl) : Set.of();
         return NODE_TYPE.get(Quadruple.of(ls, getConcept(), getAnonymousType(), isExternal()));
     }
 
