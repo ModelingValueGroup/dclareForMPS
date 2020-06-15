@@ -22,7 +22,6 @@
     <import index="2gg1" ref="6ed54515-acc8-4d1e-a16c-9fd6cfe951ea/java:jetbrains.mps.errors(MPS.Core/)" />
     <import index="zavc" ref="6ed54515-acc8-4d1e-a16c-9fd6cfe951ea/java:jetbrains.mps.errors.messageTargets(MPS.Core/)" />
     <import index="4nm9" ref="498d89d2-c2e9-11e2-ad49-6cf049e62fe5/java:com.intellij.openapi.project(MPS.IDEA/)" />
-    <import index="wwkb" ref="f:diff_old#r:1a96ceaa-2946-43e0-af3f-cd05d77ee6d1(DclareMPSRuntime.util@old)" implicit="true" />
   </imports>
   <registry>
     <language id="f3061a53-9226-4cc5-a443-f952ceaf5816" name="jetbrains.mps.baseLanguage">
@@ -2598,18 +2597,18 @@
                   <ref role="3uigEE" to="t4tl:~DModel" resolve="DModel" />
                 </node>
                 <node concept="37vLTw" id="2v4o0zdF6by" role="10QFUP">
-                  <ref role="3cqZAo" to="wwkb:2v4o0zdF5Y0" resolve="model" />
+                  <ref role="3cqZAo" node="2v4o0zdF5Y0" resolve="model" />
                 </node>
               </node>
             </node>
             <node concept="liA8E" id="2v4o0zdF6NA" role="2OqNvi">
               <ref role="37wK5l" to="t4tl:~DModel.setRootNodes(org.jetbrains.mps.openapi.language.SAbstractConcept,java.lang.Iterable)" resolve="setRootNodes" />
               <node concept="37vLTw" id="2v4o0zdGzaE" role="37wK5m">
-                <ref role="3cqZAo" to="wwkb:2v4o0zdGz0T" resolve="concept" />
+                <ref role="3cqZAo" node="2v4o0zdGz0T" resolve="concept" />
               </node>
               <node concept="10QFUN" id="1cUpE408tx3" role="37wK5m">
                 <node concept="37vLTw" id="2v4o0zdF6Ry" role="10QFUP">
-                  <ref role="3cqZAo" to="wwkb:2v4o0zdF5ZA" resolve="roots" />
+                  <ref role="3cqZAo" node="2v4o0zdF5ZA" resolve="roots" />
                 </node>
                 <node concept="3uibUv" id="1cUpE408wrl" role="10QFUM">
                   <ref role="3uigEE" to="wyt6:~Iterable" resolve="Iterable" />
@@ -2660,7 +2659,7 @@
                   <ref role="3uigEE" to="t4tl:~DModule" resolve="DModule" />
                 </node>
                 <node concept="37vLTw" id="6agMp$f5NMW" role="10QFUP">
-                  <ref role="3cqZAo" to="wwkb:6agMp$f5NN7" resolve="module" />
+                  <ref role="3cqZAo" node="6agMp$f5NN7" resolve="module" />
                 </node>
               </node>
             </node>
@@ -2668,7 +2667,7 @@
               <ref role="37wK5l" to="t4tl:~DModule.setModels(java.lang.Iterable)" resolve="setModels" />
               <node concept="10QFUN" id="6agMp$f5NMZ" role="37wK5m">
                 <node concept="37vLTw" id="6agMp$f5NN0" role="10QFUP">
-                  <ref role="3cqZAo" to="wwkb:6agMp$f5NNb" resolve="models" />
+                  <ref role="3cqZAo" node="6agMp$f5NNb" resolve="models" />
                 </node>
                 <node concept="3uibUv" id="6agMp$f5NN1" role="10QFUM">
                   <ref role="3uigEE" to="wyt6:~Iterable" resolve="Iterable" />
