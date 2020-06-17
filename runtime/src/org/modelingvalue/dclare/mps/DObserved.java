@@ -146,6 +146,14 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
     }
 
     @Override
+    public T set(O object, T value) {
+        if (value == null && checkConsistency && mandatory() && LeafTransaction.getCurrent() instanceof DRule.DObserverTransaction) {
+            throw new NullPointerException();
+        }
+        return super.set(object, value);
+    }
+
+    @Override
     protected boolean isOrphan(State state, Mutable m) {
         return m instanceof DObject && super.isOrphan(state, m) && !((DObject) m).isExternal();
     }
