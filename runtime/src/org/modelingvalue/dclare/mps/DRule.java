@@ -34,7 +34,6 @@ public interface DRule<O> extends DFeature {
             r -> DObserver.of(r, r.initialLowPriority() ? Direction.backward : Direction.forward));
 
     Context<Set<DIssue>>       DISUES           = Context.of(Set.of());
-    Context<Boolean>           EMTPTY_MANDATORY = Context.of(false);
 
     class DObserver<O extends Mutable> extends Observer<O> {
 
@@ -79,14 +78,9 @@ public interface DRule<O> extends DFeature {
             if (dObject.isOwned()) {
                 try {
                     action.run();
-                } catch (NullPointerException npe) {
-                    if (!EMTPTY_MANDATORY.get()) {
-                        throw npe;
-                    }
                 } finally {
                     DObject.DRULE_ISSUES.set(dObject, (b, a) -> a.addAll(b.filter(i -> !i.getRule().equals(rule()))), DISUES.get());
                     DISUES.set(Set.of());
-                    EMTPTY_MANDATORY.set(false);
                 }
             }
         }
