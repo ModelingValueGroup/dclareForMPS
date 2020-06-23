@@ -285,7 +285,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
                 start();
                 command(r);
             }
-        });
+        }, false);
         ALL.add(this);
         REPOSITORY_CONTAINER.set(this, getRepository());
     }
