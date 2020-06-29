@@ -253,7 +253,7 @@ public class DNode extends DMatchedObject<SNodeReference, SNode> implements SNod
     }
 
     public static SNode wrap(SNode original) {
-        return of(original);
+        return original instanceof DNode ? (DNode) original : readNode(original.getConcept(), original.getReference());
     }
 
     protected DNode(Object[] identity) {

@@ -4357,24 +4357,14 @@
                   <ref role="2Gs0qQ" node="5g4xL_r_BBW" resolve="ref" />
                 </node>
                 <node concept="1P9Npp" id="5g4xL_r_Zps" role="2OqNvi">
-                  <node concept="2c44tf" id="6xF_xD0Ypzm" role="1P9ThW">
-                    <node concept="2YIFZM" id="6xF_xD0Y_b$" role="2c44tc">
-                      <ref role="37wK5l" to="t4tl:~DNode.wrap(org.jetbrains.mps.openapi.model.SNode)" resolve="wrap" />
-                      <ref role="1Pybhc" to="t4tl:~DNode" resolve="DNode" />
-                      <node concept="10Nm6u" id="6xF_xD0Y_b_" role="37wK5m">
-                        <node concept="2c44te" id="6xF_xD0Y_bA" role="lGtFl">
-                          <node concept="2pJPEk" id="6xF_xD0Y_bB" role="2c44t1">
-                            <node concept="2pJPED" id="6xF_xD0Y_bC" role="2pJPEn">
-                              <ref role="2pJxaS" to="7ggn:4wbMdoKd7ev" resolve="AttributeReference" />
-                              <node concept="2pIpSj" id="6xF_xD0Y_bD" role="2pJxcM">
-                                <ref role="2pIpSl" to="7ggn:4wbMdoKd7ex" resolve="attribute" />
-                                <node concept="36biLy" id="6xF_xD0Y_bE" role="28nt2d">
-                                  <node concept="37vLTw" id="6xF_xD0Y_bF" role="36biLW">
-                                    <ref role="3cqZAo" node="eGWDudtcfM" resolve="attr" />
-                                  </node>
-                                </node>
-                              </node>
-                            </node>
+                  <node concept="2pJPEk" id="5wYzbqvNDLb" role="1P9ThW">
+                    <node concept="2pJPED" id="5wYzbqvNDNq" role="2pJPEn">
+                      <ref role="2pJxaS" to="7ggn:4wbMdoKd7ev" resolve="AttributeReference" />
+                      <node concept="2pIpSj" id="5wYzbqvNDOG" role="2pJxcM">
+                        <ref role="2pIpSl" to="7ggn:4wbMdoKd7ex" resolve="attribute" />
+                        <node concept="36biLy" id="5wYzbqvNDRQ" role="28nt2d">
+                          <node concept="37vLTw" id="5wYzbqvNDUE" role="36biLW">
+                            <ref role="3cqZAo" node="eGWDudtcfM" resolve="attr" />
                           </node>
                         </node>
                       </node>
