@@ -27,6 +27,7 @@ import org.jetbrains.mps.openapi.util.ProgressMonitor;
 import org.jetbrains.mps.openapi.util.SubProgressKind;
 
 import jetbrains.mps.baseLanguage.closures.runtime._FunctionTypes;
+import jetbrains.mps.checkers.AggregatingChecker;
 import jetbrains.mps.checkers.CheckingSession;
 import jetbrains.mps.checkers.IAbstractChecker;
 import jetbrains.mps.checkers.IChecker;
@@ -120,21 +121,21 @@ public class DclareModelCheckerBuilder extends ModelCheckerBuilder {
             }
         }
 
-        IAbstractChecker<SModule, ? extends IssueKindReportItem> generalModuleChecker = aggreagateSpecificCheckers(moduleCheckers, new _FunctionTypes._return_P1_E0<String, SModule>() {
+        IAbstractChecker<SModule, ? extends IssueKindReportItem> generalModuleChecker = new AggregatingChecker<SModule>(moduleCheckers, new _FunctionTypes._return_P1_E0<String, SModule>() {
             @Override
             public String invoke(SModule m) {
                 return dClareMPS.read(() -> m.getModuleName());
             }
         });
 
-        IAbstractChecker<SModel, ? extends IssueKindReportItem> generalModelChecker = skipNullModules(aggreagateSpecificCheckers(modelCheckers, new _FunctionTypes._return_P1_E0<String, SModel>() {
+        IAbstractChecker<SModel, ? extends IssueKindReportItem> generalModelChecker = skipNullModules(new AggregatingChecker<SModel>(modelCheckers, new _FunctionTypes._return_P1_E0<String, SModel>() {
             @Override
             public String invoke(SModel m) {
                 return dClareMPS.read(() -> m.getName().getLongName());
             }
         }));
 
-        IAbstractChecker<SNode, ? extends IssueKindReportItem> generalNodeChecker = aggreagateSpecificCheckers(rootCheckers, new _FunctionTypes._return_P1_E0<String, SNode>() {
+        IAbstractChecker<SNode, ? extends IssueKindReportItem> generalNodeChecker = new AggregatingChecker<SNode>(rootCheckers, new _FunctionTypes._return_P1_E0<String, SNode>() {
             @Override
             public String invoke(SNode n) {
                 return dClareMPS.read(() -> n.getName());

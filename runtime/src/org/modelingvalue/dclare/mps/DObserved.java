@@ -15,7 +15,7 @@
 
 package org.modelingvalue.dclare.mps;
 
-import java.util.Objects;
+import java.time.Instant;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -80,7 +80,7 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
         try {
             toMPS.accept(object, pre, post);
         } catch (Throwable t) {
-            DObject.dClareMPS().addMessage(new ThrowableError(object, this, t));
+            DObject.dClareMPS().addMessage(new ThrowableError(object, this, Instant.now(), t));
         }
     }
 
@@ -135,19 +135,6 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
     @Override
     public boolean isSynthetic() {
         return synthetic;
-    }
-
-    @Override
-    public T get(O object) {
-        return object != null ? super.get(object) : null;
-    }
-
-    @Override
-    public T set(O object, T value) {
-        if (mandatory() && LeafTransaction.getCurrent() instanceof DRule.DObserverTransaction) {
-            Objects.requireNonNull(value);
-        }
-        return super.set(object, value);
     }
 
     @Override
