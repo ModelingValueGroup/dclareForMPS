@@ -32,7 +32,7 @@ import org.modelingvalue.dclare.mps.DRule.DObserverTransaction;
 @SuppressWarnings("rawtypes")
 public abstract class DMatchedObject<R, S> extends DIdentifiedObject {
 
-    private static final Observed<Object, DMatchedObject>                D_READ_MATCHED = Observed.of("$D_READ_MATCHED", null);
+    private static final Observed<Object, DMatchedObject>               D_READ_MATCHED = Observed.of("$D_READ_MATCHED", null);
 
     private static final Observed<DMatchedObject, Object>               MATCHED_REF    = NonCheckingObserved.of("$MATCHED_REF", null, () -> D_READ_MATCHED);
 
