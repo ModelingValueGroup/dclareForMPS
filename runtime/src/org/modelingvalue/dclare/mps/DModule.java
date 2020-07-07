@@ -55,8 +55,6 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
 
     private static final Constant<Pair<Boolean, Set<SLanguage>>, DModuleType> MODULE_TYPE          = Constant.of("MODULE_TYPE", p -> new DModuleType(p));
 
-    protected static final Observed<DModule, Set<DModel>>                     REFERENCED           = NonCheckingObserved.of("REFERENCED", Set.of());
-
     protected static final Observed<DModule, Set<DModel>>                     MODELS               = DObserved.of("MODELS", Set.of(), false, true, null, false, (dModule, pre, post) -> {
                                                                                                        Setable.<Set<DModel>, DModel> diff(models(dModule.original()).sequential().map(DModel::of).toSet(), post,   //
                                                                                                                a -> a.original(true),                                                                              //
@@ -75,10 +73,6 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
                                                                                                                .addAll(MODELS.get(o).flatMap(m -> DModel.USED_LANGUAGES.get(m))));
                                                                                                    });
 
-    private static final Observer<DModule>                                    MODELS_RULE          = DObject.observer(MODELS, o -> {
-                                                                                                       MODELS.set(o, Set::addAll, REFERENCED.get(o));
-                                                                                                   });
-
     private static final Function<DModule, Set<SModel>>                       READ_MODELS_FUNCTION = m -> dClareMPS().read(() -> models(m.original()));
 
     protected static final Observer<DModule>                                  MODELS_READ_MATCHER  = DObject.observer("$MODELS_READ_MATCHER", m -> DModel.match(m, READ_MODELS_FUNCTION, MODELS.get(m)));
@@ -91,10 +85,10 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
                                                                                                        }
                                                                                                    }, Direction.forward);
     @SuppressWarnings("rawtypes")
-    protected static final Set<Observer>                                      OBSERVERS            = DObject.OBSERVERS.addAll(Set.of(LANGUAGES_RULE, MODELS_RULE, MODELS_READ_MATCHER));
+    protected static final Set<Observer>                                      OBSERVERS            = DObject.OBSERVERS.addAll(Set.of(LANGUAGES_RULE, MODELS_READ_MATCHER));
 
     @SuppressWarnings("rawtypes")
-    protected static final Set<Setable>                                       SETABLES             = DObject.SETABLES.addAll(Set.of(REFERENCED, MODELS, LANGUAGES));
+    protected static final Set<Setable>                                       SETABLES             = DObject.SETABLES.addAll(Set.of(MODELS, LANGUAGES));
 
     public static DModule of(SModule original) {
         return original instanceof DModule ? (DModule) original : DMODULE.get(original);
@@ -217,17 +211,7 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
     }
 
     public void setModels(Iterable<DModel> models) {
-        MODELS.set(this, (pre, it) -> {
-            if (it != null) {
-                Set<DModel> post = Collection.of(it).map(DModel::of).toSet();
-                Setable.<Set<DModel>, DModel> diff(pre, post, //
-                        a -> REFERENCED.set(this, Set::add, a), //
-                        r -> REFERENCED.set(this, Set::remove, r));
-                return post;
-            } else {
-                return null;
-            }
-        }, models);
+        MODELS.set(this, Collection.of(models).map(DModel::of).toSet());
     }
 
     @Override
