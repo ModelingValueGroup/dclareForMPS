@@ -152,14 +152,13 @@ public class DNode extends DMatchedObject<SNodeReference, SNode> implements SNod
 
     private static final Observer<DNode>                                                           USED_MODELS_RULE       = DObject.observer(USED_MODELS, o -> USED_MODELS.set(o, o.getChildren().flatMap(DNode.USED_MODELS::get).toSet().addAll(o.getReferenced().map(                           //
             r -> {
-                DModel dm = MODEL.get(r);
-                if (dm == null) {
+                if (r.isRead()) {
                     SModel sm = r.getOriginalModel();
                     if (sm != null) {
-                        dm = DModel.of(sm);
+                        return DModel.of(sm);
                     }
                 }
-                return dm;
+                return MODEL.get(r);
             }).toSet())));
 
     protected static final Setable<DNode, String>                                                  NAME_OBSERVED          = PROPERTY.get(SNodeUtil.property_INamedConcept_name);
@@ -254,7 +253,7 @@ public class DNode extends DMatchedObject<SNodeReference, SNode> implements SNod
     }
 
     public static SNode wrap(SNode original) {
-        return of(original);
+        return original instanceof DNode ? (DNode) original : readNode(original.getConcept(), original.getReference());
     }
 
     protected DNode(Object[] identity) {
@@ -301,8 +300,8 @@ public class DNode extends DMatchedObject<SNodeReference, SNode> implements SNod
 
     @Override
     protected DNodeType getType() {
-        Set<SLanguage> ls = dClareMPS().getRepository().getType().getLanguages();
-        SLanguage      al = getAnonymousLanguage();
+        Set<SLanguage> ls = dClareMPS().getRepository().getType().getLanguages().add(getConcept().getLanguage());
+        SLanguage al = getAnonymousLanguage();
         if (al != null) {
             ls = ls.add(al);
         }

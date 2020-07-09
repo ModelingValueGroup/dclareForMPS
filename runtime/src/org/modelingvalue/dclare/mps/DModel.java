@@ -121,15 +121,19 @@ public class DModel extends DMatchedObject<SModelReference, SModel> implements S
                                                                                                                }
                                                                                                            });
 
-    private static final Observer<DModel>                                              REFERENCED_RULE     = DObject.observer(DModule.REFERENCED, o -> USED_MODELS.get(o).forEachOrdered(mo -> {
+    private static final Observer<DModel>                                              REFERENCED_RULE     = DObject.observer(DModule.MODELS, o -> USED_MODELS.get(o).forEachOrdered(mo -> {
                                                                                                                SModel sModel = mo.original();
                                                                                                                if (sModel instanceof SModelBase) {
                                                                                                                    SModule sModule = sModel.getModule();
                                                                                                                    DModule dModule = DModule.of(sModule);
-                                                                                                                   if (dModule.isExternal() && dClareMPS().read(() -> DModule.hasRuleSets(DModule.languages(sModule)))) {
+                                                                                                                   boolean hasRules = dClareMPS().read(() -> DModule.hasRuleSets(DModule.languages(sModule)));
+                                                                                                                   boolean external = dModule.isExternal();
+                                                                                                                   if (external && hasRules) {
                                                                                                                        DRepository.REFERENCED.set(dClareMPS().getRepository(), Set::add, dModule);
+                                                                                                                       DModule.MODELS.set(dModule, Set::add, mo);
+                                                                                                                   } else if (external || !hasRules) {
+                                                                                                                       DModule.MODELS.set(dModule, Set::add, mo);
                                                                                                                    }
-                                                                                                                   DModule.REFERENCED.set(dModule, Set::add, mo);
                                                                                                                }
                                                                                                            }));
 

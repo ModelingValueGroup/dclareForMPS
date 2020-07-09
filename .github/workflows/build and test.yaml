@@ -28,9 +28,10 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: "if master: fail if there is already a tag for this version"
+        if: github.ref == 'refs/heads/master'
         run:  |
           . <(java -jar ~/buildTools.jar)
-          errorIfMasterAndVersionTagExists
+          errorIfVersionTagExists
 
       - name: "prepare"
         run:  |
@@ -109,9 +110,10 @@ jobs:
           doubleBuild action mps_build.xml
 
       - name: "if master: tag with version"
+        if: github.ref == 'refs/heads/master'
         run:  |
           . <(java -jar ~/buildTools.jar)
-          setVersionTagIfMaster "${{ secrets.GITHUB_TOKEN }}" "automation@modelingvalue.com"
+          setVersionTag "${{ secrets.GITHUB_TOKEN }}" "automation@modelingvalue.com"
 
       - name: "unzip for actions/upload-artifact"
         run:  |

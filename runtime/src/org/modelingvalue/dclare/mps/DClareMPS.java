@@ -406,6 +406,9 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
 
     private void addNonDeterministicExceptionMessage(DObject context, DFeature feature, NonDeterministicException nde) {
         DMessage message = new DMessage(context, feature, DMessageType.error, "NON_DETERMINISTIC", nde.getMessage());
+        for (StackTraceElement ste : nde.getStackTrace()) {
+            message.addSubMessage(new DMessage(context, feature, DMessageType.error, " ", ste));
+        }
         addMessage(message);
     }
 
