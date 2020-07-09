@@ -14,8 +14,8 @@
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
    version="1.3.0"
-mpsVersion="2019.3.5"
-  mpsSince="193.1223"
+mpsVersion="2020.1.2"
+  mpsSince="201.7846"
 # mpsUntil="193.1569" # mpsUntil taken from the installed MPS if not specified
     mpsDir="MPS"
 
