@@ -111,7 +111,7 @@ public interface DRule<O> extends DFeature {
 
         @Override
         public DObserver<?> observer() {
-            return (DObserver) observer();
+            return (DObserver) super.observer();
         }
 
         public DRule rule() {
