@@ -13,7 +13,7 @@
 ##     Arjan Kok, Carel Bast                                                                                           ~
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-   version="1.2.3"
+   version="1.2.4"
 mpsVersion="2019.3.5"
   mpsSince="193.1223"
 # mpsUntil="193.1569" # mpsUntil taken from the installed MPS if not specified
