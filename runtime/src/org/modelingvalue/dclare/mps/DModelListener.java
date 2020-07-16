@@ -69,7 +69,12 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
                     if (al.isMultiple()) {
                         //noinspection ConstantConditions
                         int index = DNode.children(event.getParent(), al).firstIndexOf(sNode);
-                        DNode.MANY_CONTAINMENT.get(al).set(DNode.of(event.getParent()), (l, e) -> l.remove(e).insert(index, e), dNode);
+                        if (index >= 0) {
+                            DNode.MANY_CONTAINMENT.get(al).set(DNode.of(event.getParent()), (l, e) -> {
+                                List<DNode> now = l.remove(e);
+                                return now.insert(Math.min(now.size(), index), e);
+                            }, dNode);
+                        }
                     } else {
                         DNode.SINGLE_CONTAINMENT.get(al).set(DNode.of(event.getParent()), dNode);
                     }
