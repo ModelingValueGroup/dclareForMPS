@@ -9,14 +9,14 @@ The regular MPS base-language can be used to specify the rules.
 Rules definitions typically use quotations (light or not) to define the derivations.  
 The rules are executed incrementally, meaning they perform a minimal amount of changes to derive the defined patterns (expressed in quotations).
 
-## Alpha phase
-DclareForMPS is in progress.
-We are working hard to publish the 1.0 version soon. It will then be available as a standard plugin in MPS, without the need to download it here.  
+## Standard MPS plugin
+DclareForMPS is in constant progress.
+It is available as a standard plugin in MPS, without the need to download it here.  
 All feedback, functional or technical, is appreciated.
 
-## JDclare
-DclareForMPS uses the transactions framework and the collections library that are part of the JDclare project.  
-The JDclare project can be found here: [JDclare on GitHub](https://github.com/ModelingValueGroup/jdclare)
+## dclareForJava
+DclareForMPS uses the dclare engine of the Modeling Value Group.  
+The dclare project can be found here: [dclare on GitHub](https://github.com/ModelingValueGroup/dclare)
 
 ## Installation
 In an installation of JetBrains MPS (2019.3.4 or higher) ...  
