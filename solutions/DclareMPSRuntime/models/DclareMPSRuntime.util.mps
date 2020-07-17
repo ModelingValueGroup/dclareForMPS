@@ -881,13 +881,13 @@
             <ref role="1Pybhc" to="t4tl:~DAttribute" resolve="DAttribute" />
             <ref role="37wK5l" to="t4tl:~DAttribute.of(java.lang.String)" resolve="of" />
             <node concept="37vLTw" id="7djaqafQ3$J" role="37wK5m">
-              <ref role="3cqZAo" node="70rUIyyvljj" />
+              <ref role="3cqZAo" node="70rUIyyvljj" resolve="id" />
             </node>
             <node concept="16syzq" id="7djaqafQ4JS" role="3PaCim">
-              <ref role="16sUi3" node="70rUIyyvnT3" />
+              <ref role="16sUi3" node="70rUIyyvnT3" resolve="O" />
             </node>
             <node concept="16syzq" id="7djaqafQ4v6" role="3PaCim">
-              <ref role="16sUi3" node="70rUIyyvnVs" />
+              <ref role="16sUi3" node="70rUIyyvnVs" resolve="T" />
             </node>
           </node>
         </node>
@@ -895,7 +895,7 @@
       <node concept="3uibUv" id="70rUIyyvmX0" role="3clF45">
         <ref role="3uigEE" to="t4tl:~DAttribute" resolve="DAttribute" />
         <node concept="16syzq" id="70rUIyyvnXY" role="11_B2D">
-          <ref role="16sUi3" node="70rUIyyvnT3" />
+          <ref role="16sUi3" node="70rUIyyvnT3" resolve="O" />
         </node>
         <node concept="16syzq" id="70rUIyyvnYd" role="11_B2D">
           <ref role="16sUi3" node="70rUIyyvnVs" resolve="T" />
@@ -924,10 +924,10 @@
         <node concept="3uibUv" id="1GhXIFRY9YB" role="1tU5fm">
           <ref role="3uigEE" to="t4tl:~DAttribute" resolve="DAttribute" />
           <node concept="16syzq" id="1GhXIFRYbNN" role="11_B2D">
-            <ref role="16sUi3" node="1GhXIFRYbFD" />
+            <ref role="16sUi3" node="1GhXIFRYbFD" resolve="O" />
           </node>
           <node concept="16syzq" id="1GhXIFRYbVT" role="11_B2D">
-            <ref role="16sUi3" node="1lQ5DPQt_oo" />
+            <ref role="16sUi3" node="1lQ5DPQt_oo" resolve="T" />
           </node>
         </node>
       </node>
@@ -952,10 +952,10 @@
                 <ref role="3cqZAo" node="1lQ5DPQt_ob" resolve="object" />
               </node>
               <node concept="2YIFZM" id="3DB41z9GPiE" role="37wK5m">
-                <ref role="1Pybhc" node="30fQumnG8Au" />
-                <ref role="37wK5l" node="3DB41z9GPiA" />
+                <ref role="1Pybhc" node="30fQumnG8Au" resolve="DclareUtil" />
+                <ref role="37wK5l" node="3DB41z9GPiA" resolve="toNonMutable" />
                 <node concept="37vLTw" id="1GhXIFRYeno" role="37wK5m">
-                  <ref role="3cqZAo" node="1lQ5DPQt_o9" />
+                  <ref role="3cqZAo" node="1lQ5DPQt_o9" resolve="attr" />
                 </node>
                 <node concept="37vLTw" id="3DB41z9GPiD" role="37wK5m">
                   <ref role="3cqZAo" node="1lQ5DPQtAgA" resolve="value" />
@@ -963,7 +963,7 @@
               </node>
             </node>
             <node concept="37vLTw" id="1GhXIFRYdtw" role="2Oq$k0">
-              <ref role="3cqZAo" node="1lQ5DPQt_o9" />
+              <ref role="3cqZAo" node="1lQ5DPQt_o9" resolve="attr" />
             </node>
           </node>
         </node>
@@ -1528,7 +1528,7 @@
                 <ref role="3uigEE" to="mhbf:~SNode" resolve="SNode" />
               </node>
               <node concept="37vLTw" id="7cS5T_tZjvu" role="2ZW6bz">
-                <ref role="3cqZAo" node="7cS5T_tZj0C" />
+                <ref role="3cqZAo" node="7cS5T_tZj0C" resolve="sObject" />
               </node>
             </node>
           </node>
@@ -3086,15 +3086,7 @@
         <node concept="3cpWs6" id="7x27w4ygFp$" role="3cqZAp">
           <node concept="2YIFZM" id="7x27w4ygFpB" role="3cqZAk">
             <ref role="1Pybhc" to="t4tl:~DModel" resolve="DModel" />
-            <ref role="37wK5l" to="t4tl:~DModel.of(org.modelingvalue.dclare.mps.DObject,org.jetbrains.mps.openapi.language.SLanguage,java.lang.String,java.lang.Object[],boolean)" resolve="of" />
-            <node concept="10QFUN" id="2KLn4uH4rlC" role="37wK5m">
-              <node concept="3uibUv" id="2KLn4uH4rlD" role="10QFUM">
-                <ref role="3uigEE" to="t4tl:~DObject" resolve="DObject" />
-              </node>
-              <node concept="37vLTw" id="2KLn4uH4rlE" role="10QFUP">
-                <ref role="3cqZAo" node="2KLn4uH4cz9" resolve="ctx" />
-              </node>
-            </node>
+            <ref role="37wK5l" to="t4tl:~DModel.of(org.jetbrains.mps.openapi.language.SLanguage,java.lang.String,java.lang.Object[],boolean)" resolve="of" />
             <node concept="37vLTw" id="23rj$OmToy9" role="37wK5m">
               <ref role="3cqZAo" node="23rj$OmTmGi" resolve="lang" />
             </node>
@@ -3111,12 +3103,6 @@
         </node>
       </node>
       <node concept="H_c77" id="7x27w4ygNYF" role="3clF45" />
-      <node concept="37vLTG" id="2KLn4uH4cz9" role="3clF46">
-        <property role="TrG5h" value="ctx" />
-        <node concept="3uibUv" id="2KLn4uH4cV9" role="1tU5fm">
-          <ref role="3uigEE" to="wyt6:~Object" resolve="Object" />
-        </node>
-      </node>
       <node concept="37vLTG" id="7x27w4ygFpI" role="3clF46">
         <property role="TrG5h" value="id" />
         <node concept="10Q1$e" id="7x27w4ygFpJ" role="1tU5fm">
@@ -3160,15 +3146,7 @@
             </node>
             <node concept="2YIFZM" id="70QPEjRB4Ny" role="10QFUP">
               <ref role="1Pybhc" to="t4tl:~DNode" resolve="DNode" />
-              <ref role="37wK5l" to="t4tl:~DNode.of(org.modelingvalue.dclare.mps.DObject,org.jetbrains.mps.openapi.language.SLanguage,java.lang.String,java.lang.Object[],org.jetbrains.mps.openapi.language.SConcept)" resolve="of" />
-              <node concept="10QFUN" id="2KLn4uH4507" role="37wK5m">
-                <node concept="3uibUv" id="2KLn4uH46tf" role="10QFUM">
-                  <ref role="3uigEE" to="t4tl:~DObject" resolve="DObject" />
-                </node>
-                <node concept="37vLTw" id="2KLn4uH47R_" role="10QFUP">
-                  <ref role="3cqZAo" node="2KLn4uH3YtG" resolve="ctx" />
-                </node>
-              </node>
+              <ref role="37wK5l" to="t4tl:~DNode.of(org.jetbrains.mps.openapi.language.SLanguage,java.lang.String,java.lang.Object[],org.jetbrains.mps.openapi.language.SConcept)" resolve="of" />
               <node concept="37vLTw" id="23rj$OmTfu1" role="37wK5m">
                 <ref role="3cqZAo" node="23rj$OmTdSc" resolve="lang" />
               </node>
@@ -3191,12 +3169,6 @@
       </node>
       <node concept="16syzq" id="MxZDaxdf4t" role="3clF45">
         <ref role="16sUi3" node="MxZDaxdeoH" resolve="T" />
-      </node>
-      <node concept="37vLTG" id="2KLn4uH3YtG" role="3clF46">
-        <property role="TrG5h" value="ctx" />
-        <node concept="3uibUv" id="2KLn4uH3YMK" role="1tU5fm">
-          <ref role="3uigEE" to="wyt6:~Object" resolve="Object" />
-        </node>
       </node>
       <node concept="37vLTG" id="2cgEAjOjnpM" role="3clF46">
         <property role="TrG5h" value="id" />

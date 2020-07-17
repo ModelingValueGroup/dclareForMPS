@@ -24,22 +24,22 @@ import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.Setable;
 
 @SuppressWarnings("unused")
-public class DNodeType extends DObjectType<Quadruple<Set<SLanguage>, SConcept, String, Boolean>> {
+public class DNodeType extends DObjectType<Quadruple<Set<SLanguage>, SConcept, Set<String>, Boolean>> {
 
-    public DNodeType(Quadruple<Set<SLanguage>, SConcept, String, Boolean> q) {
+    public DNodeType(Quadruple<Set<SLanguage>, SConcept, Set<String>, Boolean> q) {
         super(q);
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
-        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getNodeRules(getConcept(), getAnonymousType()))).toSet();
+        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getNodeRules(getConcept(), getAnonymousTypes()))).toSet();
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
-        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getNodeAttributes(getConcept(), getAnonymousType()))).toSet();
+        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getNodeAttributes(getConcept(), getAnonymousTypes()))).toSet();
     }
 
     @Override
@@ -56,7 +56,7 @@ public class DNodeType extends DObjectType<Quadruple<Set<SLanguage>, SConcept, S
         return id().d();
     }
 
-    public String getAnonymousType() {
+    public Set<String> getAnonymousTypes() {
         return id().c();
     }
 

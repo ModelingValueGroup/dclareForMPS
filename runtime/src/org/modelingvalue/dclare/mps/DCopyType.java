@@ -25,7 +25,7 @@ import org.modelingvalue.dclare.mps.DRule.DObserver;
 
 public class DCopyType extends DNodeType {
 
-    public DCopyType(Quadruple<Set<SLanguage>, SConcept, String, Boolean> q) {
+    public DCopyType(Quadruple<Set<SLanguage>, SConcept, Set<String>, Boolean> q) {
         super(q);
     }
 

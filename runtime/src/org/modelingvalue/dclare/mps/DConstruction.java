@@ -17,19 +17,26 @@ package org.modelingvalue.dclare.mps;
 
 import java.util.Arrays;
 
+import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.util.Age;
+import org.modelingvalue.dclare.LeafTransaction;
+import org.modelingvalue.dclare.mps.DAttribute.DIdentifyingAttribute;
 import org.modelingvalue.dclare.mps.DRule.DObserver;
+import org.modelingvalue.dclare.mps.DRule.DObserverTransaction;
 
 public class DConstruction {
 
-    public static DConstruction of(Object[] id) {
-        return new DConstruction(id);
+    public static DConstruction of(SLanguage anonymousLanguage, String anonymousType, Object[] ctx) {
+        return new DConstruction(anonymousLanguage, anonymousType, ctx);
     }
 
     private Object[] identity;
 
-    protected DConstruction(Object[] identity) {
-        this.identity = identity;
+    protected DConstruction(SLanguage anonymousLanguage, String anonymousType, Object[] ctx) {
+        this.identity = Arrays.copyOf(ctx, ctx.length + 4);
+        identity[identity.length - 3] = ((DObserverTransaction) LeafTransaction.getCurrent()).observer();
+        identity[identity.length - 2] = anonymousLanguage;
+        identity[identity.length - 1] = anonymousType;
     }
 
     @Override
@@ -62,17 +69,30 @@ public class DConstruction {
         }
     }
 
+    @SuppressWarnings("unchecked")
+    protected <V> V get(DIdentifyingAttribute<?, V> attr) {
+        return (V) identity[attr.index()];
+    }
+
     @Override
     public String toString() {
         return Arrays.toString(identity);
     }
 
     public DObserver<?> observer() {
-        return null;
+        return (DObserver<?>) identity[identity.length - 3];
     }
 
     public DObject object() {
-        return null;
+        return (DObject) identity[0];
+    }
+
+    public String getAnonymousType() {
+        return (String) identity[identity.length - 1];
+    }
+
+    public SLanguage getAnonymousLanguage() {
+        return (SLanguage) identity[identity.length - 2];
     }
 
 }
