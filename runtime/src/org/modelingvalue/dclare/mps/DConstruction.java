@@ -33,7 +33,7 @@ public class DConstruction {
     private Object[] identity;
 
     protected DConstruction(SLanguage anonymousLanguage, String anonymousType, Object[] ctx) {
-        this.identity = Arrays.copyOf(ctx, ctx.length + 4);
+        this.identity = Arrays.copyOf(ctx, ctx.length + 3);
         identity[identity.length - 3] = ((DObserverTransaction) LeafTransaction.getCurrent()).observer();
         identity[identity.length - 2] = anonymousLanguage;
         identity[identity.length - 1] = anonymousType;

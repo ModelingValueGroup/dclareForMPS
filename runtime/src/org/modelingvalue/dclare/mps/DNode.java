@@ -52,7 +52,7 @@ import jetbrains.mps.errors.item.NodeReportItem;
 import jetbrains.mps.smodel.SNodeUtil;
 
 @SuppressWarnings("unused")
-public class DNode extends DMatchedObject<SNodeReference, SNode> implements SNode {
+public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implements SNode {
 
     private static final Constant<Quadruple<Set<SLanguage>, SConcept, Set<String>, Boolean>, DNodeType> NODE_TYPE              = Constant.of("NODE_TYPE", DNodeType::new);
 
@@ -83,7 +83,7 @@ public class DNode extends DMatchedObject<SNodeReference, SNode> implements SNod
                 DObserved.map(ist, soll,                                                                                                                                                                                                                                                               //
                         (n, a) -> sNode.insertChildAfter(mc, n, a), r -> {
                         });
-            }, mc::getDeclarationNode, false));
+            }, (tx, p, b, a) -> DMatchedObject.matchChildren(p, b, a), mc::getDeclarationNode, false));
 
     @SuppressWarnings("deprecation")
     public static final Constant<SContainmentLink, DObserved<DNode, DNode>>                             SINGLE_CONTAINMENT     = Constant.of("SINGLE_CONTAINMENT", sc -> DObserved.of(sc, null, !sc.isOptional(), true, null, false,                                                                   //
@@ -98,7 +98,7 @@ public class DNode extends DMatchedObject<SNodeReference, SNode> implements SNod
                 DObserved.map(ist, soll,                                                                                                                                                                                                                                                               //
                         (n, a) -> sNode.addChild(sc, n), r -> {
                         });
-            }, sc::getDeclarationNode, false));
+            }, (tx, p, b, a) -> DMatchedObject.matchChildren(p, DMatchedObject.<DNode> collection(b), DMatchedObject.<DNode> collection(a)), sc::getDeclarationNode, false));
 
     protected static final Constant<SContainmentLink, Function<DNode, List<SNode>>>                     READ_CHILDREN_FUNCTION = Constant.of("READ_CHILDREN_FUNCTION",                                                                                                                                 //
             cl -> n -> dClareMPS().read(() -> Collection.of(n.original().getChildren(cl)).sequential().map(c -> (SNode) c).toList()));
@@ -351,7 +351,19 @@ public class DNode extends DMatchedObject<SNodeReference, SNode> implements SNod
     }
 
     @Override
-    protected boolean matches(DClareMPS dClare, SNode read) {
+    protected boolean matches(DNode other) {
+        SConcept concept = getConcept();
+        if (other.getConcept().equals(concept)) {
+            if (concept.isSubConceptOf(SNodeUtil.concept_INamedConcept)) {
+                return Objects.equals(NAME_OBSERVED.get(other), NAME_OBSERVED.get(this));
+            }
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    protected boolean matchesRead(DClareMPS dClare, SNode read) {
         SConcept concept = getConcept();
         if (read.getConcept().equals(concept)) {
             if (concept.isSubConceptOf(SNodeUtil.concept_INamedConcept)) {

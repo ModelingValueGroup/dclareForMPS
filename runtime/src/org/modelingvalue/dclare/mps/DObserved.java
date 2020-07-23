@@ -51,6 +51,10 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
         return new DObserved<>(id, mandatory, def, composite, opposite, synthetic, toMPS, changed, source, true);
     }
 
+    public static <C extends DObject, V> DObserved<C, V> of(Object id, V def, boolean mandatory, boolean composite, Supplier<Setable<?, ?>> opposite, boolean synthetic, TriConsumer<C, V, V> toMPS, QuadConsumer<LeafTransaction, C, V, V> changed, Supplier<SNode> source, boolean checkConsistency) {
+        return new DObserved<>(id, mandatory, def, composite, opposite, synthetic, toMPS, changed, source, checkConsistency);
+    }
+
     private final TriConsumer<O, T, T> toMPS;
     private final Supplier<SNode>      source;
     private final boolean              synthetic;

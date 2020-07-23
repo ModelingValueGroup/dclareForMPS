@@ -99,7 +99,7 @@ public interface DRule<O> extends DFeature {
                 } finally {
                     DObject.DRULE_ISSUES.set(dObject, (b, a) -> a.addAll(b.filter(i -> !i.getRule().equals(rule()))), DISUES.get());
                     DISUES.set(Set.of());
-                    observer().constructed.set(dObject, DCONSTRUCTED.get());
+                    runNonObserving(() -> observer().constructed.set(dObject, DCONSTRUCTED.get()));
                     DCONSTRUCTED.set(Map.of());
                 }
             }

@@ -29,7 +29,7 @@ import org.modelingvalue.dclare.Setable;
 import org.modelingvalue.dclare.mps.DAttribute.DIdentifyingAttribute;
 
 @SuppressWarnings("rawtypes")
-public abstract class DMatchedObject<R, S> extends DIdentifiedObject {
+public abstract class DMatchedObject<T, R, S> extends DIdentifiedObject {
 
     private static final Observed<Object, DMatchedObject>               D_READ_MATCHED = Observed.of("$D_READ_MATCHED", null);
 
@@ -48,7 +48,18 @@ public abstract class DMatchedObject<R, S> extends DIdentifiedObject {
                                                                                                    });
                                                                                        });
 
-    protected static <P extends DObject, I, M, C extends DMatchedObject<I, M>> void matchRead(P parent, Function<P, ? extends ContainingCollection<M>> readFunction, ContainingCollection<C> posts) {
+    protected static <P extends DObject, I, M, C extends DMatchedObject<C, I, M>> void matchChildren(P parent, ContainingCollection<C> pres, ContainingCollection<C> posts) {
+        ContainingCollection<C> addeds = posts.removeAll(pres);
+        for (C removed : pres.removeAll(posts)) {
+            for (C added : addeds) {
+                if (added.matches(removed)) {
+                    CONSTRUCTIONS.set(added, Set::addAll, CONSTRUCTIONS.set(removed, CONSTRUCTIONS.getDefault()));
+                }
+            }
+        }
+    }
+
+    protected static <P extends DObject, I, M, C extends DMatchedObject<C, I, M>> void matchRead(P parent, Function<P, ? extends ContainingCollection<M>> readFunction, ContainingCollection<C> posts) {
         if (parent.isRead() || parent.isMatched()) {
             ContainingCollection<M> readSet = null;
             DClareMPS dClare = null;
@@ -61,7 +72,7 @@ public abstract class DMatchedObject<R, S> extends DIdentifiedObject {
                 }
                 for (M read : readSet) {
                     I ref = post.reference(read);
-                    if (!refs.contains(ref) && post.matches(dClare, read)) {
+                    if (!refs.contains(ref) && post.matchesRead(dClare, read)) {
                         MATCHED_REF.set(post, ref);
                         post.read();
                         post.init(dClare, read);
@@ -74,7 +85,7 @@ public abstract class DMatchedObject<R, S> extends DIdentifiedObject {
     }
 
     @SuppressWarnings("unchecked")
-    protected static final <I, M extends DMatchedObject<I, ?>> M getMatchedObject(I ref) {
+    protected static final <I, M extends DMatchedObject<M, I, ?>> M getMatchedObject(I ref) {
         return (M) D_READ_MATCHED.get(ref);
     }
 
@@ -180,7 +191,9 @@ public abstract class DMatchedObject<R, S> extends DIdentifiedObject {
     protected void exit(DClareMPS dClareMPS, S original) {
     }
 
-    protected abstract boolean matches(DClareMPS dClare, S read);
+    protected abstract boolean matches(T other);
+
+    protected abstract boolean matchesRead(DClareMPS dClare, S read);
 
     protected abstract void read();
 
@@ -198,6 +211,17 @@ public abstract class DMatchedObject<R, S> extends DIdentifiedObject {
 
     public Set<SLanguage> getAnonymousLanguages() {
         return CONSTRUCTIONS.get(this).map(DConstruction::getAnonymousLanguage).toSet();
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <E> ContainingCollection<E> collection(Object value) {
+        if (value instanceof ContainingCollection) {
+            return ((ContainingCollection<E>) value);
+        } else if (value != null) {
+            return Set.of((E) value);
+        } else {
+            return Set.of();
+        }
     }
 
 }

@@ -52,7 +52,7 @@ import jetbrains.mps.extapi.model.SModelBase;
 import jetbrains.mps.extapi.module.SModuleBase;
 
 @SuppressWarnings("unused")
-public class DModel extends DMatchedObject<SModelReference, SModel> implements SModel {
+public class DModel extends DMatchedObject<DModel, SModelReference, SModel> implements SModel {
 
     private static final Constant<Triple<Set<SLanguage>, Boolean, Set<String>>, DModelType> MODEL_TYPE          = Constant.of("MODEL_TYPE", t -> new DModelType(t));
 
@@ -70,7 +70,7 @@ public class DModel extends DMatchedObject<SModelReference, SModel> implements S
                                                                                                                     DObserved.map(ist, soll,                                                                                                        //
                                                                                                                             sModel::addRootNode,                                                                                                    //
                                                                                                                             sModel::removeRootNode);
-                                                                                                                }, null);
+                                                                                                                }, (tx, p, b, a) -> DMatchedObject.matchChildren(p, b, a), null);
 
     private static final Function<DModel, Set<SNode>>                                       READ_ROOTS_FUNCTION = m -> {
                                                                                                                     SModel sModel = m.original();
@@ -211,8 +211,13 @@ public class DModel extends DMatchedObject<SModelReference, SModel> implements S
     }
 
     @Override
-    protected boolean matches(DClareMPS dClare, SModel read) {
+    protected boolean matchesRead(DClareMPS dClare, SModel read) {
         return Objects.equals(read.getName().getLongName(), NAME.get(this));
+    }
+
+    @Override
+    protected boolean matches(DModel other) {
+        return Objects.equals(NAME.get(other), NAME.get(this));
     }
 
     @Override
