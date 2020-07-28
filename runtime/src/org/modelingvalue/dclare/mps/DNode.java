@@ -83,7 +83,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
                 DObserved.map(ist, soll,                                                                                                                                                                                                                                                               //
                         (n, a) -> sNode.insertChildAfter(mc, n, a), r -> {
                         });
-            }, (tx, p, b, a) -> DMatchedObject.matchChildren(p, b, a), mc::getDeclarationNode, false));
+            }, (tx, p, b, a) -> DMatchedObject.matchChildren(tx, p, b, a), mc::getDeclarationNode, false));
 
     @SuppressWarnings("deprecation")
     public static final Constant<SContainmentLink, DObserved<DNode, DNode>>                             SINGLE_CONTAINMENT     = Constant.of("SINGLE_CONTAINMENT", sc -> DObserved.of(sc, null, !sc.isOptional(), true, null, false,                                                                   //
@@ -98,7 +98,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
                 DObserved.map(ist, soll,                                                                                                                                                                                                                                                               //
                         (n, a) -> sNode.addChild(sc, n), r -> {
                         });
-            }, (tx, p, b, a) -> DMatchedObject.matchChildren(p, DMatchedObject.<DNode> collection(b), DMatchedObject.<DNode> collection(a)), sc::getDeclarationNode, false));
+            }, (tx, p, b, a) -> DMatchedObject.matchChildren(tx, p, DMatchedObject.<DNode> collection(b), DMatchedObject.<DNode> collection(a)).findFirst().orElse(null), sc::getDeclarationNode, false));
 
     protected static final Constant<SContainmentLink, Function<DNode, List<SNode>>>                     READ_CHILDREN_FUNCTION = Constant.of("READ_CHILDREN_FUNCTION",                                                                                                                                 //
             cl -> n -> dClareMPS().read(() -> Collection.of(n.original().getChildren(cl)).sequential().map(c -> (SNode) c).toList()));
@@ -281,7 +281,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
     public String toString() {
         SConcept concept = getConcept();
         String name = concept.isSubConceptOf(SNodeUtil.concept_INamedConcept) ? getName() : null;
-        return name != null ? name : concept.getName() + "#" + getIdString();
+        return concept.getName() + "#" + (name != null ? name : getIdString());
     }
 
     private String getIdString() {
@@ -348,6 +348,11 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
         READ_PROPERTIES.trigger(this);
         READ_CHILDREN.trigger(this);
         READ_REFERENCES.trigger(this);
+    }
+
+    @Override
+    protected boolean canBeMatched() {
+        return getConcept().isSubConceptOf(SNodeUtil.concept_INamedConcept) ? NAME_OBSERVED.get(this) != null : true;
     }
 
     @Override

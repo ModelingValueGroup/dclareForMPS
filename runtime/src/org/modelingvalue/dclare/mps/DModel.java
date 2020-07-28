@@ -70,7 +70,7 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
                                                                                                                     DObserved.map(ist, soll,                                                                                                        //
                                                                                                                             sModel::addRootNode,                                                                                                    //
                                                                                                                             sModel::removeRootNode);
-                                                                                                                }, (tx, p, b, a) -> DMatchedObject.matchChildren(p, b, a), null);
+                                                                                                                }, (tx, p, b, a) -> DMatchedObject.matchChildren(tx, p, b, a), null, true);
 
     private static final Function<DModel, Set<SNode>>                                       READ_ROOTS_FUNCTION = m -> {
                                                                                                                     SModel sModel = m.original();
@@ -218,6 +218,11 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
     @Override
     protected boolean matches(DModel other) {
         return Objects.equals(NAME.get(other), NAME.get(this));
+    }
+
+    @Override
+    protected boolean canBeMatched() {
+        return NAME.get(this) != null;
     }
 
     @Override
