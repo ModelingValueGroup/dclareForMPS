@@ -83,7 +83,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
                 DObserved.map(ist, soll,                                                                                                                                                                                                                                                               //
                         (n, a) -> sNode.insertChildAfter(mc, n, a), r -> {
                         });
-            }, (tx, p, b, a) -> DMatchedObject.matchChildren(tx, p, b, a), mc::getDeclarationNode, false));
+            }, (p, b, a) -> DMatchedObject.matchChildren(p, b, a, TEMPORAL_CONTAINMENT.get(DNode.MANY_CONTAINMENT.get(mc))), mc::getDeclarationNode, false));
 
     @SuppressWarnings("deprecation")
     public static final Constant<SContainmentLink, DObserved<DNode, DNode>>                             SINGLE_CONTAINMENT     = Constant.of("SINGLE_CONTAINMENT", sc -> DObserved.of(sc, null, !sc.isOptional(), true, null, false,                                                                   //
@@ -98,7 +98,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
                 DObserved.map(ist, soll,                                                                                                                                                                                                                                                               //
                         (n, a) -> sNode.addChild(sc, n), r -> {
                         });
-            }, (tx, p, b, a) -> DMatchedObject.matchChildren(tx, p, DMatchedObject.<DNode> collection(b), DMatchedObject.<DNode> collection(a)).findFirst().orElse(null), sc::getDeclarationNode, false));
+            }, (p, b, a) -> DMatchedObject.matchChildren(p, DMatchedObject.<DNode> collection(b), DMatchedObject.<DNode> collection(a), TEMPORAL_CONTAINMENT.get(DNode.MANY_CONTAINMENT.get(sc))).findFirst().orElse(null), sc::getDeclarationNode, false));
 
     protected static final Constant<SContainmentLink, Function<DNode, List<SNode>>>                     READ_CHILDREN_FUNCTION = Constant.of("READ_CHILDREN_FUNCTION",                                                                                                                                 //
             cl -> n -> dClareMPS().read(() -> Collection.of(n.original().getChildren(cl)).sequential().map(c -> (SNode) c).toList()));
@@ -197,11 +197,12 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                    }
                                                                                                                                }, Direction.forward);
 
-    @SuppressWarnings("rawtypes")
-    protected static final Constant<SConcept, Set<? extends Setable>>                                   CONCEPT_SETABLES       = Constant.of("$CONCEPT_SETABLES", c -> Collection.concat(                                                                                                              //
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    protected static final Constant<SConcept, Set<? extends Setable>>                                   CONCEPT_SETABLES       = Constant.of("$CONCEPT_SETABLES", c -> Collection.concat(Collection.concat(                                                                                            //
             Collection.of(c.getProperties()),                                                                                                                                                                                                                                                          //
             Collection.of(c.getContainmentLinks()),                                                                                                                                                                                                                                                    //
-            Collection.of(c.getReferenceLinks())).map(DNode::setable).toSet());
+            Collection.of(c.getReferenceLinks())).map(DNode::setable),                                                                                                                                                                                                                                 //
+            Collection.of(c.getContainmentLinks()).map(DNode::setable).map(s -> TEMPORAL_CONTAINMENT.get((DObserved) s))).toSet());
 
     @SuppressWarnings("rawtypes")
     protected static final Constant<SConcept, Set<? extends Observer>>                                  CONCEPT_OBSERVERS      = Constant.of("$CONCEPT_OBSERVERS", c -> Collection.of(c.getContainmentLinks()).map(READ_MATCHER::get).toSet());
@@ -352,7 +353,16 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
 
     @Override
     protected boolean canBeMatched() {
-        return getConcept().isSubConceptOf(SNodeUtil.concept_INamedConcept) ? NAME_OBSERVED.get(this) != null : true;
+        if (getConcept().isSubConceptOf(SNodeUtil.concept_INamedConcept)) {
+            return NAME_OBSERVED.get(this) != null;
+        } else {
+            for (SReferenceLink rl : getConcept().getReferenceLinks()) {
+                if (REFERENCE.get(rl).get(this) == null) {
+                    return false;
+                }
+            }
+            return true;
+        }
     }
 
     @Override
@@ -361,8 +371,15 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
         if (other.getConcept().equals(concept)) {
             if (concept.isSubConceptOf(SNodeUtil.concept_INamedConcept)) {
                 return Objects.equals(NAME_OBSERVED.get(other), NAME_OBSERVED.get(this));
+            } else {
+                for (SReferenceLink rl : getConcept().getReferenceLinks()) {
+                    DObserved<DNode, DNode> ref = REFERENCE.get(rl);
+                    if (!Objects.equals(ref.get(other), ref.get(this))) {
+                        return false;
+                    }
+                }
+                return true;
             }
-            return true;
         }
         return false;
     }

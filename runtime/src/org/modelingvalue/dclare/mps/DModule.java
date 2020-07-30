@@ -55,11 +55,11 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
 
     private static final Constant<Pair<Boolean, Set<SLanguage>>, DModuleType> MODULE_TYPE          = Constant.of("MODULE_TYPE", p -> new DModuleType(p));
 
-    protected static final Observed<DModule, Set<DModel>>                     MODELS               = DObserved.of("MODELS", Set.of(), false, true, null, false, (dModule, pre, post) -> {
+    protected static final DObserved<DModule, Set<DModel>>                    MODELS               = DObserved.of("MODELS", Set.of(), false, true, null, false, (dModule, pre, post) -> {
                                                                                                        Setable.<Set<DModel>, DModel> diff(models(dModule.original()).sequential().map(DModel::of).toSet(), post,   //
                                                                                                                a -> a.original(true),                                                                              //
                                                                                                                r -> new ModelDeleteHelper(r.original()).delete());
-                                                                                                   }, (tx, p, b, a) -> DMatchedObject.matchChildren(tx, p, b, a), null, true);
+                                                                                                   }, (p, b, a) -> DMatchedObject.matchChildren(p, b, a, TEMPORAL_CONTAINMENT.get(DModule.MODELS)), null, true);
 
     protected static final Observed<DModule, Set<SLanguage>>                  LANGUAGES            = NonCheckingObserved.of("LANGUAGES", Set.of(), (tx, o, pre, post) -> {
                                                                                                        Setable.<Set<SLanguage>, SLanguage> diff(pre, post,                                                         //
@@ -88,7 +88,7 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
     protected static final Set<Observer>                                      OBSERVERS            = DObject.OBSERVERS.addAll(Set.of(LANGUAGES_RULE, MODELS_READ_MATCHER));
 
     @SuppressWarnings("rawtypes")
-    protected static final Set<Setable>                                       SETABLES             = DObject.SETABLES.addAll(Set.of(MODELS, LANGUAGES));
+    protected static final Set<Setable>                                       SETABLES             = DObject.SETABLES.addAll(Set.of(MODELS, TEMPORAL_CONTAINMENT.get(MODELS), LANGUAGES));
 
     public static DModule of(SModule original) {
         return original instanceof DModule ? (DModule) original : DMODULE.get(original);

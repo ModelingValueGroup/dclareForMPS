@@ -56,21 +56,21 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
 
     private static final Constant<Triple<Set<SLanguage>, Boolean, Set<String>>, DModelType> MODEL_TYPE          = Constant.of("MODEL_TYPE", t -> new DModelType(t));
 
-    protected static final Observed<DModel, String>                                         NAME                = DObserved.of("NAME", null, false, false, null, false, (dModel, pre, post) -> {
+    protected static final DObserved<DModel, String>                                        NAME                = DObserved.of("NAME", null, false, false, null, false, (dModel, pre, post) -> {
                                                                                                                     if (post != null) {
                                                                                                                         SModel sModel = dModel.original(true);
                                                                                                                         ((EditableSModel) sModel).rename(post, false);
                                                                                                                     }
                                                                                                                 }, null);
 
-    protected static final Observed<DModel, Set<DNode>>                                     ROOTS               = DObserved.of("ROOTS", Set.of(), false, true, null, false, (dModel, pre, post) -> {
+    protected static final DObserved<DModel, Set<DNode>>                                    ROOTS               = DObserved.of("ROOTS", Set.of(), false, true, null, false, (dModel, pre, post) -> {
                                                                                                                     SModel sModel = dModel.original(true);
                                                                                                                     Set<SNode> soll = post.map(r -> r.reParent(sModel, null, r.original(true))).toSet();
                                                                                                                     Set<SNode> ist = DModel.roots(sModel);
                                                                                                                     DObserved.map(ist, soll,                                                                                                        //
                                                                                                                             sModel::addRootNode,                                                                                                    //
                                                                                                                             sModel::removeRootNode);
-                                                                                                                }, (tx, p, b, a) -> DMatchedObject.matchChildren(tx, p, b, a), null, true);
+                                                                                                                }, (p, b, a) -> DMatchedObject.matchChildren(p, b, a, TEMPORAL_CONTAINMENT.get(DModel.ROOTS)), null, true);
 
     private static final Function<DModel, Set<SNode>>                                       READ_ROOTS_FUNCTION = m -> {
                                                                                                                     SModel sModel = m.original();
@@ -79,7 +79,7 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
 
     protected static final Observer<DModel>                                                 ROOTS_READ_MATCHER  = DObject.observer("$ROOTS_READ_MATCHER", m -> DNode.matchRead(m, READ_ROOTS_FUNCTION, ROOTS.get(m)));
 
-    protected static final Observed<DModel, Set<SLanguage>>                                 USED_LANGUAGES      = DObserved.of("USED_LANGUAGES", Set.of(), false, false, null, false, (dModel, pre, post) -> {
+    protected static final DObserved<DModel, Set<SLanguage>>                                USED_LANGUAGES      = DObserved.of("USED_LANGUAGES", Set.of(), false, false, null, false, (dModel, pre, post) -> {
                                                                                                                     SModelBase sModel = (SModelBase) dModel.original(true);
                                                                                                                     java.util.Collection<SLanguage> ls = sModel.importedLanguageIds();
                                                                                                                     for (SLanguage l : post) {
@@ -89,7 +89,7 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
                                                                                                                     }
                                                                                                                 }, null);
 
-    protected static final Observed<DModel, Set<DModel>>                                    USED_MODELS         = DObserved.of("USED_MODELS", Set.of(), false, false, null, false, (dModel, pre, post) -> {
+    protected static final DObserved<DModel, Set<DModel>>                                   USED_MODELS         = DObserved.of("USED_MODELS", Set.of(), false, false, null, false, (dModel, pre, post) -> {
                                                                                                                     SModelBase sModel = (SModelBase) dModel.original(true);
                                                                                                                     java.util.Collection<SModelReference> ls = sModel.getModelImports();
                                                                                                                     for (DModel dm : post) {
@@ -155,7 +155,7 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
     protected static final Set<Observer>                                                    OBSERVERS           = DMatchedObject.OBSERVERS.addAll(Set.of(ROOTS_READ_MATCHER, USED_LANGUAGES_RULE, USED_MODELS_RULE, REFERENCED_RULE));
 
     @SuppressWarnings("rawtypes")
-    protected static final Set<Setable>                                                     SETABLES            = DMatchedObject.SETABLES.addAll(Set.of(NAME, ROOTS, MODEL_ROOT, USED_MODELS, USED_LANGUAGES));
+    protected static final Set<Setable>                                                     SETABLES            = DMatchedObject.SETABLES.addAll(Set.of(NAME, ROOTS, TEMPORAL_CONTAINMENT.get(ROOTS), MODEL_ROOT, USED_MODELS, USED_LANGUAGES));
 
     public static DModel of(SLanguage anonymousLanguage, String anonymousType, Object[] identity, boolean temporal) {
         return construct(anonymousLanguage, anonymousType, identity, //

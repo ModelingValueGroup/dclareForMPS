@@ -20,17 +20,13 @@ import java.util.function.Supplier;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.ContainingCollection;
-import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.Map;
 import org.modelingvalue.collections.Set;
-import org.modelingvalue.dclare.LeafTransaction;
 import org.modelingvalue.dclare.NonCheckingObserved;
 import org.modelingvalue.dclare.Observed;
 import org.modelingvalue.dclare.Observer;
-import org.modelingvalue.dclare.ReadOnlyTransaction;
 import org.modelingvalue.dclare.Setable;
 import org.modelingvalue.dclare.mps.DAttribute.DIdentifyingAttribute;
-import org.modelingvalue.dclare.mps.DRule.DObserverTransaction;
 
 @SuppressWarnings("rawtypes")
 public abstract class DMatchedObject<T, R, S> extends DIdentifiedObject {
@@ -52,55 +48,9 @@ public abstract class DMatchedObject<T, R, S> extends DIdentifiedObject {
                                                                                                    });
                                                                                        });
 
-    @SuppressWarnings("unchecked")
-    protected static <P extends DObject, T extends ContainingCollection<C>, I, M, C extends DMatchedObject<C, I, M>> T matchChildren(LeafTransaction tx, P parent, T pres, T posts) {
-        if (tx instanceof ReadOnlyTransaction && tx instanceof DObserverTransaction) {
-            ContainingCollection<C> matchables = posts;
-            for (C rem : pres.removeAll(posts)) {
-                if (rem.canBeMatched() && rem.isRead()) {
-                    boolean ready = true;
-                    boolean matched = false;
-                    for (C matchable : matchables) {
-                        if (matchable != rem) {
-                            if (matchable.canBeMatched()) {
-                                if (matchable.matches(rem)) {
-                                    Set<DConstruction> constuctions = tx.getNonObserving(() -> CONSTRUCTIONS.set(matchable, CONSTRUCTIONS.getDefault()));
-                                    if (!constuctions.isEmpty()) {
-                                        matched = true;
-                                        matchables = matchables.remove(matchable);
-                                        tx.runNonObserving(() -> CONSTRUCTIONS.set(rem, Set::addAll, constuctions));
-                                        if (posts instanceof List) {
-                                            int i = ((List<C>) posts).firstIndexOf(matchable);
-                                            posts = (T) ((List<C>) posts).remove(i);
-                                            posts = (T) ((List<C>) posts).insert(i, rem);
-                                        } else {
-                                            posts = (T) posts.remove(matchable);
-                                            posts = (T) posts.add(rem);
-                                        }
-                                        break;
-                                    }
-                                }
-                            } else {
-                                ready = false;
-                            }
-                        }
-                    }
-                    if (!matched && !ready) {
-                        if (posts instanceof List) {
-                            int i = ((List<C>) pres).firstIndexOf(rem);
-                            posts = (T) ((List<C>) posts).insert(i, rem);
-                        } else {
-                            posts = (T) posts.add(rem);
-                        }
-                    }
-                } else if (posts instanceof List) {
-                    int i = ((List<C>) pres).firstIndexOf(rem);
-                    posts = (T) ((List<C>) posts).insert(i, rem);
-                } else {
-                    posts = (T) posts.add(rem);
-                }
-            }
-        }
+    protected static <P extends DObject, T extends ContainingCollection<C>, I, M, C extends DMatchedObject<C, I, M>> T matchChildren(P parent, T pres, T posts, Observed<DObject, Set<DMatchedObject>> temporal) {
+        // temporal.set(parent, (tmps, nms) -> tmps.addAll(nms).removeAll(posts), pres.filter(pre -> !pre.canBeMatched()));
+        System.err.println("!!!!!!!!!!!! " + parent + "   " + pres + " -> " + posts);
         return posts;
     }
 
