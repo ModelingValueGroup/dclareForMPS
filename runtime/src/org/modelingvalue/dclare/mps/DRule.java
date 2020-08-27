@@ -24,7 +24,7 @@ import org.modelingvalue.dclare.Direction;
 import org.modelingvalue.dclare.LeafTransaction;
 import org.modelingvalue.dclare.Mutable;
 import org.modelingvalue.dclare.MutableTransaction;
-import org.modelingvalue.dclare.Observed;
+import org.modelingvalue.dclare.NonCheckingObserved;
 import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.ObserverTransaction;
 import org.modelingvalue.dclare.Transaction;
@@ -42,7 +42,7 @@ public interface DRule<O> extends DFeature {
 
     class DObserver<O extends Mutable> extends Observer<O> {
 
-        protected final Observed<DObject, Map<DConstruction, DMatchedObject>> constructed;
+        protected final Constructed constructed;
 
         private static <M extends Mutable> DObserver of(DRule rule, Direction initDirection) {
             return new DObserver<M>(rule, initDirection);
@@ -51,17 +51,7 @@ public interface DRule<O> extends DFeature {
         @SuppressWarnings("unchecked")
         private DObserver(DRule rule, Direction initDirection) {
             super(rule, o -> ((DRule.DObserverTransaction) LeafTransaction.getCurrent()).run(() -> rule.run(o)), initDirection);
-            constructed = Observed.of(rule, Map.of(), (tx, o, pre, post) -> {
-                pre.diff(post).forEachOrdered(e -> {
-                    Pair<DMatchedObject, DMatchedObject> d = e.getValue();
-                    if (d.a() != null) {
-                        DMatchedObject.CONSTRUCTIONS.set(d.a(), Set::remove, e.getKey());
-                    }
-                    if (d.b() != null) {
-                        DMatchedObject.CONSTRUCTIONS.set(d.b(), Set::add, e.getKey());
-                    }
-                });
-            });
+            constructed = new Constructed(rule);
         }
 
         public DRule rule() {
@@ -123,5 +113,23 @@ public interface DRule<O> extends DFeature {
     void run(O object);
 
     boolean initialLowPriority();
+
+    class Constructed extends NonCheckingObserved<DObject, Map<DConstruction, DMatchedObject>> {
+
+        protected Constructed(DRule rule) {
+            super(rule, false, Map.of(), false, null, null, (tx, o, pre, post) -> {
+                pre.diff(post).forEachOrdered(e -> {
+                    Pair<DMatchedObject, DMatchedObject> d = e.getValue();
+                    if (d.a() != null) {
+                        DMatchedObject.CONSTRUCTIONS.set(d.a(), Set::remove, e.getKey());
+                    }
+                    if (d.b() != null) {
+                        DMatchedObject.CONSTRUCTIONS.set(d.b(), Set::add, e.getKey());
+                    }
+                });
+            });
+        }
+
+    }
 
 }

@@ -69,7 +69,7 @@ public class DNodeType extends DObjectType<Quadruple<Set<SLanguage>, SConcept, S
     @SuppressWarnings("rawtypes")
     @Override
     protected Collection<Observer> observers() {
-        return Collection.concat(DNode.OBSERVERS, DNode.CONCEPT_OBSERVERS.get(getConcept()));
+        return DNode.OBSERVERS;
     }
 
 }

@@ -15,78 +15,99 @@
 
 package org.modelingvalue.dclare.mps;
 
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.ContainingCollection;
+import org.modelingvalue.collections.Entry;
 import org.modelingvalue.collections.Map;
 import org.modelingvalue.collections.Set;
+import org.modelingvalue.collections.util.Pair;
+import org.modelingvalue.dclare.Constant;
+import org.modelingvalue.dclare.LeafTransaction;
+import org.modelingvalue.dclare.Mutable;
 import org.modelingvalue.dclare.NonCheckingObserved;
 import org.modelingvalue.dclare.Observed;
 import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.Setable;
+import org.modelingvalue.dclare.State;
 import org.modelingvalue.dclare.mps.DAttribute.DIdentifyingAttribute;
+import org.modelingvalue.dclare.mps.DRule.Constructed;
 
 @SuppressWarnings("rawtypes")
 public abstract class DMatchedObject<T, R, S> extends DIdentifiedObject {
 
-    private static final Observed<Object, DMatchedObject>               D_READ_MATCHED = Observed.of("$D_READ_MATCHED", null);
+    protected static final Observed<DConstruction, DMatchedObject>                  READ_MAPPING  = Observed.of("$READ_MAPPING", null, (tx, c, b, a) -> {
+                                                                                                      if (b != null) {
+                                                                                                          DMatchedObject.CONSTRUCTIONS.set(b, Set::remove, c);
+                                                                                                      }
+                                                                                                      if (a != null) {
+                                                                                                          DMatchedObject.CONSTRUCTIONS.set(a, Set::add, c);
+                                                                                                      }
+                                                                                                  });
 
-    private static final Observed<DMatchedObject, Object>               MATCHED_REF    = NonCheckingObserved.of("$MATCHED_REF", null, () -> D_READ_MATCHED);
+    protected static final Constant<Setable, Setable<Mutable, Set<DMatchedObject>>> REMOVED       = Constant.of("$REMOVED", s -> TemporalObserved.of(Pair.of(s, "$REMOVED"), Set.of()));
 
-    private static final Setable<DMatchedObject, Object>                DETACHED       = Setable.of("$DETACHED", null);
+    private static final Setable<DMatchedObject, Object>                            DETACHED      = Setable.of("$DETACHED", null);
 
-    protected static final Set<Observer>                                OBSERVERS      = DObject.OBSERVERS.addAll(Set.of());
+    protected static final Observer<DMatchedObject>                                 MATCHER       = DObject.observer("$MATCHER", DMatchedObject::replaceMatching);
 
-    protected static final Set<Setable>                                 SETABLES       = DObject.SETABLES.addAll(Set.of(MATCHED_REF, DETACHED));
+    protected static final Set<Observer>                                            OBSERVERS     = DObject.OBSERVERS.add(MATCHER);
 
-    protected static final Observed<DMatchedObject, Set<DConstruction>> CONSTRUCTIONS  = NonCheckingObserved.of("$CONSTRUCTIONS", Set.of(), (tx, o, pre, post) -> {
-                                                                                           Setable.<Set<DConstruction>, DConstruction> diff(pre, post,                        //
-                                                                                                   a -> a.observer().constructed.set(a.object(), (m, e) -> m.put(a, e), o),   //
-                                                                                                   r -> {
-                                                                                                   });
-                                                                                       });
+    protected static final Set<Setable>                                             SETABLES      = DObject.SETABLES.add(DETACHED);
 
-    protected static <P extends DObject, T extends ContainingCollection<C>, I, M, C extends DMatchedObject<C, I, M>> T matchChildren(P parent, T pres, T posts, Observed<DObject, Set<DMatchedObject>> temporal) {
-        // temporal.set(parent, (tmps, nms) -> tmps.addAll(nms).removeAll(posts), pres.filter(pre -> !pre.canBeMatched()));
-        System.err.println("!!!!!!!!!!!! " + parent + "   " + pres + " -> " + posts);
-        return posts;
+    protected static final Observed<DMatchedObject, Set<DConstruction>>             CONSTRUCTIONS = NonCheckingObserved.of("$CONSTRUCTIONS", Set.of());
+
+    protected static <P extends DObject, C extends DMatchedObject<C, ?, ?>, R extends ContainingCollection<C>> void keepManyRemoved(P parent, R pre, R post, Setable<Mutable, Set<DMatchedObject>> removed) {
+        removed.set(parent, Set::addAll, pre.removeAll(post).toSet());
     }
 
-    protected static <P extends DObject, I, M, C extends DMatchedObject<C, I, M>> void matchRead(P parent, Function<P, ? extends ContainingCollection<M>> readFunction, ContainingCollection<C> coll) {
-        if (parent.isRead() || parent.isMatched()) {
-            ContainingCollection<M> readSet = null;
-            DClareMPS dClare = null;
-            Set<I> refs = null;
-            for (C obj : coll.filter(p -> p.reference(false) == null)) {
-                if (readSet == null) {
-                    dClare = dClareMPS();
-                    readSet = readFunction.apply(parent);
-                    refs = coll.map(p -> p.reference(false)).notNull().toSet();
-                }
-                for (M read : readSet) {
-                    I ref = obj.reference(read);
-                    if (!refs.contains(ref) && obj.matchesRead(dClare, read)) {
-                        MATCHED_REF.set(obj, ref);
-                        obj.read();
-                        obj.init(dClare, read);
-                        readSet = readSet.remove(read);
-                        break;
-                    }
-                }
-            }
+    protected static <P extends DObject, C extends DMatchedObject<C, ?, ?>, R extends ContainingCollection<C>> void keepSingleRemoved(P parent, C pre, C post, Setable<Mutable, Set<DMatchedObject>> removed) {
+        if (pre != null) {
+            removed.set(parent, Set::add, pre);
         }
     }
 
     @SuppressWarnings("unchecked")
-    protected static final <I, M extends DMatchedObject<M, I, ?>> M getMatchedObject(I ref) {
-        return (M) D_READ_MATCHED.get(ref);
+    protected void replaceMatching() {
+        Pair<Mutable, Setable<Mutable, ?>> pc = D_PARENT_CONTAINING.get(this);
+        Setable<Mutable, Set<DMatchedObject>> removed = REMOVED.get(pc.b());
+        for (DMatchedObject rem : removed.get(pc.a())) {
+            if (matches((T) rem)) {
+                for (DConstruction<?> cons : CONSTRUCTIONS.get(rem)) {
+                    if (cons.isRead()) {
+                        rem.stop(dClareMPS());
+                        READ_MAPPING.set(cons, this);
+                        START_ACTION.trigger(this);
+                    } else {
+                        cons.observer().constructed.set(cons.object(), (map, e) -> map.put(cons, e), this);
+                    }
+                }
+                LeafTransaction.getCurrent().properties(rem, (k, v) -> {
+                    if (k instanceof Constructed) {
+                        Map<DConstruction, DMatchedObject> map = (Map<DConstruction, DMatchedObject>) v;
+                        ((Constructed) k).set(this, map.toMap(e -> Entry.of(e.getKey().moveTo(this), e.getValue())));
+                    }
+                });
+                removed.set(pc.a(), Set::remove, rem);
+                break;
+            }
+        }
+    }
+
+    @Override
+    protected int readDistance() {
+        return CONSTRUCTIONS.get(this).map(DConstruction::readDistance).sorted(Integer::compare).findFirst().orElse(-2) + 1;
+    }
+
+    @Override
+    protected boolean isExisting() {
+        return !CONSTRUCTIONS.get(this).isEmpty();
     }
 
     @SuppressWarnings("unchecked")
     protected static <D extends DMatchedObject, A> D construct(SLanguage anonymousLanguage, String anonymousType, Object[] ctx, Supplier<D> supplier) {
-        DConstruction id = DConstruction.of(anonymousLanguage, anonymousType, ctx);
+        DConstruction<?> id = DConstruction.of(anonymousLanguage, anonymousType, ctx);
         D d = (D) id.observer().constructed.get(id.object()).get(id);
         if (d == null) {
             d = supplier.get();
@@ -95,13 +116,29 @@ public abstract class DMatchedObject<T, R, S> extends DIdentifiedObject {
         return d;
     }
 
+    @SuppressWarnings("unchecked")
+    protected static <D extends DMatchedObject, I> D readConstruct(I ref, Supplier<D> supplier) {
+        DConstruction<I> id = DConstruction.of(ref);
+        D d = (D) READ_MAPPING.get(id);
+        if (d == null) {
+            d = supplier.get();
+        }
+        READ_MAPPING.set(id, d);
+        return d;
+    }
+
+    @SuppressWarnings("unchecked")
+    protected static <D extends DMatchedObject, I> D tryResolve(I ref) {
+        return (D) READ_MAPPING.get(DConstruction.of(ref));
+    }
+
     protected DMatchedObject(Object[] identity) {
         super(identity);
     }
 
     @Override
     protected <V> V get(DIdentifyingAttribute<?, V> attr) {
-        for (DConstruction c : CONSTRUCTIONS.get(this)) {
+        for (DConstruction<?> c : CONSTRUCTIONS.get(this)) {
             if (c.getAnonymousType() == attr.anonymousType()) {
                 return c.get(attr);
             }
@@ -111,7 +148,7 @@ public abstract class DMatchedObject<T, R, S> extends DIdentifiedObject {
 
     @Override
     protected final void read(DClareMPS dClareMPS) {
-        if (isRead() || isMatched()) {
+        if (reference(false) != null) {
             read();
         }
     }
@@ -120,25 +157,16 @@ public abstract class DMatchedObject<T, R, S> extends DIdentifiedObject {
         DETACHED.set(this, sObject);
     }
 
-    @Override
-    protected final boolean isMatched() {
-        return MATCHED_REF.get(this) != null;
-    }
-
     @SuppressWarnings("unchecked")
     protected final R reference(boolean create) {
-        if (isRead()) {
-            return (R) identity[0];
-        } else {
-            R ref = (R) MATCHED_REF.get(this);
-            if (create && ref == null) {
-                S sObject = create();
-                addSObject(sObject);
-                ref = reference(sObject);
-                MATCHED_REF.set(this, ref);
-            }
-            return ref;
+        R ref = (R) CONSTRUCTIONS.get(this).filter(DConstruction::isRead).map(DConstruction::reference).findFirst().orElse(null);
+        if (create && ref == null) {
+            S sObject = create();
+            addSObject(sObject);
+            ref = reference(sObject);
+            READ_MAPPING.set(DConstruction.of(ref), this);
         }
+        return ref;
     }
 
     public final S original() {
@@ -186,11 +214,9 @@ public abstract class DMatchedObject<T, R, S> extends DIdentifiedObject {
     protected void exit(DClareMPS dClareMPS, S original) {
     }
 
+    protected abstract boolean basicMatches(T other);
+
     protected abstract boolean matches(T other);
-
-    protected abstract boolean canBeMatched();
-
-    protected abstract boolean matchesRead(DClareMPS dClare, S read);
 
     protected abstract void read();
 
@@ -203,22 +229,33 @@ public abstract class DMatchedObject<T, R, S> extends DIdentifiedObject {
     protected abstract S create();
 
     public Set<String> getAnonymousTypes() {
-        return CONSTRUCTIONS.get(this).map(DConstruction::getAnonymousType).toSet();
+        return CONSTRUCTIONS.get(this).map(DConstruction::getAnonymousType).notNull().toSet();
     }
 
     public Set<SLanguage> getAnonymousLanguages() {
-        return CONSTRUCTIONS.get(this).map(DConstruction::getAnonymousLanguage).toSet();
+        return CONSTRUCTIONS.get(this).map(DConstruction::getAnonymousLanguage).notNull().toSet();
     }
 
-    @SuppressWarnings("unchecked")
-    public static <E> ContainingCollection<E> collection(Object value) {
-        if (value instanceof ContainingCollection) {
-            return ((ContainingCollection<E>) value);
-        } else if (value != null) {
-            return Set.of((E) value);
-        } else {
-            return Set.of();
+    protected static final class TemporalObserved<O, T> extends NonCheckingObserved<O, T> {
+
+        public static <M, V> TemporalObserved<M, V> of(Object id, V def) {
+            return new TemporalObserved<M, V>(id, def);
         }
+
+        private TemporalObserved(Object id, T def) {
+            super(id, false, def, false, null, null, null);
+        }
+
+        @Override
+        public boolean checkConsistency() {
+            return true;
+        }
+
+        @Override
+        public void checkConsistency(State state, O object, T post) {
+            set(object, getDefault());
+        }
+
     }
 
 }

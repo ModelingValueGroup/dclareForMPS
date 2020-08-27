@@ -143,16 +143,6 @@ public class DIssue extends DIdentifiedObject {
     }
 
     @Override
-    protected boolean isRead() {
-        return false;
-    }
-
-    @Override
-    protected boolean isMatched() {
-        return false;
-    }
-
-    @Override
     public String toString() {
         return "DIssue" + super.toString();
     }

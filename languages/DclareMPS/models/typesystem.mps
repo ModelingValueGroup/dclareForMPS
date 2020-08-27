@@ -3739,5 +3739,90 @@
       <ref role="1YaFvo" to="7ggn:3jHaWB7tTnF" resolve="UsedLanguages" />
     </node>
   </node>
+  <node concept="18kY7G" id="5Cu8Hhs6Tz0">
+    <property role="3GE5qa" value="attributes" />
+    <property role="TrG5h" value="oppositeChecker" />
+    <node concept="3clFbS" id="5Cu8Hhs6Tz1" role="18ibNy">
+      <node concept="3clFbJ" id="5Cu8Hhs6Tz2" role="3cqZAp">
+        <node concept="3clFbS" id="5Cu8Hhs6Tz3" role="3clFbx">
+          <node concept="3clFbJ" id="5Cu8Hhs6Tzg" role="3cqZAp">
+            <node concept="3clFbS" id="5Cu8Hhs6Tzh" role="3clFbx">
+              <node concept="2MkqsV" id="5Cu8Hhs6Tzi" role="3cqZAp">
+                <node concept="Xl_RD" id="5Cu8Hhs6Tzj" role="2MkJ7o">
+                  <property role="Xl_RC" value="Attributes with opposites may not be composite" />
+                </node>
+                <node concept="1YBJjd" id="5Cu8Hhs6Tzk" role="1urrMF">
+                  <ref role="1YBMHb" node="5Cu8Hhs6TzH" resolve="attribute" />
+                </node>
+              </node>
+            </node>
+            <node concept="2OqwBi" id="5Cu8Hhs6Tzn" role="3clFbw">
+              <node concept="1YBJjd" id="5Cu8Hhs6Tzo" role="2Oq$k0">
+                <ref role="1YBMHb" node="5Cu8Hhs6TzH" resolve="attribute" />
+              </node>
+              <node concept="3TrcHB" id="5Cu8Hhs6VdY" role="2OqNvi">
+                <ref role="3TsBF5" to="7ggn:3Qetf3dy0jT" resolve="composite" />
+              </node>
+            </node>
+          </node>
+          <node concept="3clFbJ" id="5Cu8Hhs6Tzq" role="3cqZAp">
+            <node concept="3clFbS" id="5Cu8Hhs6Tzr" role="3clFbx">
+              <node concept="2MkqsV" id="5Cu8Hhs6Tzs" role="3cqZAp">
+                <node concept="Xl_RD" id="5Cu8Hhs6Tzt" role="2MkJ7o">
+                  <property role="Xl_RC" value="Attributes with opposites may not be identifying" />
+                </node>
+                <node concept="1YBJjd" id="5Cu8Hhs6Tzu" role="1urrMF">
+                  <ref role="1YBMHb" node="5Cu8Hhs6TzH" resolve="attribute" />
+                </node>
+              </node>
+            </node>
+            <node concept="2OqwBi" id="5Cu8Hhs6Tzv" role="3clFbw">
+              <node concept="1YBJjd" id="5Cu8Hhs6Tzw" role="2Oq$k0">
+                <ref role="1YBMHb" node="5Cu8Hhs6TzH" resolve="attribute" />
+              </node>
+              <node concept="3TrcHB" id="5Cu8Hhs6VYG" role="2OqNvi">
+                <ref role="3TsBF5" to="7ggn:2UEyDf6lmL1" resolve="identifying" />
+              </node>
+            </node>
+          </node>
+          <node concept="3clFbJ" id="5Cu8Hhs6Tzy" role="3cqZAp">
+            <node concept="3clFbS" id="5Cu8Hhs6Tzz" role="3clFbx">
+              <node concept="2MkqsV" id="5Cu8Hhs6Tz$" role="3cqZAp">
+                <node concept="Xl_RD" id="5Cu8Hhs6Tz_" role="2MkJ7o">
+                  <property role="Xl_RC" value="Attributes with opposites may not be constant" />
+                </node>
+                <node concept="1YBJjd" id="5Cu8Hhs6TzA" role="1urrMF">
+                  <ref role="1YBMHb" node="5Cu8Hhs6TzH" resolve="attribute" />
+                </node>
+              </node>
+            </node>
+            <node concept="2OqwBi" id="5Cu8Hhs6TzB" role="3clFbw">
+              <node concept="1YBJjd" id="5Cu8Hhs6TzC" role="2Oq$k0">
+                <ref role="1YBMHb" node="5Cu8Hhs6TzH" resolve="attribute" />
+              </node>
+              <node concept="3TrcHB" id="5Cu8Hhs6TzD" role="2OqNvi">
+                <ref role="3TsBF5" to="7ggn:7byyZgEvBg3" resolve="constant" />
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="3y3z36" id="5Cu8Hhs6UuP" role="3clFbw">
+          <node concept="10Nm6u" id="5Cu8Hhs6UHM" role="3uHU7w" />
+          <node concept="2OqwBi" id="5Cu8Hhs6TzE" role="3uHU7B">
+            <node concept="1YBJjd" id="5Cu8Hhs6TzF" role="2Oq$k0">
+              <ref role="1YBMHb" node="5Cu8Hhs6TzH" resolve="attribute" />
+            </node>
+            <node concept="3TrEf2" id="5Cu8Hhs6U8F" role="2OqNvi">
+              <ref role="3Tt5mk" to="7ggn:5Cu8Hhs0NPL" resolve="opposite" />
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+    <node concept="1YaCAy" id="5Cu8Hhs6TzH" role="1YuTPh">
+      <property role="TrG5h" value="attribute" />
+      <ref role="1YaFvo" to="7ggn:4$MeK2bmw9s" resolve="Attribute" />
+    </node>
+  </node>
 </model>
 

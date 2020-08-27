@@ -2644,7 +2644,55 @@
         </node>
       </node>
     </node>
-    <node concept="2tJIrI" id="6agMp$f5MEM" role="jymVt" />
+    <node concept="2tJIrI" id="5cJeDifmj0l" role="jymVt" />
+    <node concept="2YIFZL" id="5cJeDifmojj" role="jymVt">
+      <property role="TrG5h" value="getRootNodes" />
+      <property role="od$2w" value="false" />
+      <property role="DiZV1" value="false" />
+      <property role="2aFKle" value="false" />
+      <node concept="3clFbS" id="5cJeDifmojk" role="3clF47">
+        <node concept="3clFbF" id="5cJeDifmojl" role="3cqZAp">
+          <node concept="2OqwBi" id="5cJeDifmojm" role="3clFbG">
+            <node concept="1eOMI4" id="5cJeDifmojn" role="2Oq$k0">
+              <node concept="10QFUN" id="5cJeDifmojo" role="1eOMHV">
+                <node concept="3uibUv" id="5cJeDifmojp" role="10QFUM">
+                  <ref role="3uigEE" to="t4tl:~DModel" resolve="DModel" />
+                </node>
+                <node concept="37vLTw" id="5cJeDifmojq" role="10QFUP">
+                  <ref role="3cqZAo" node="5cJeDifmojy" resolve="model" />
+                </node>
+              </node>
+            </node>
+            <node concept="liA8E" id="5cJeDifmojr" role="2OqNvi">
+              <ref role="37wK5l" to="t4tl:~DModel.getRootNodes(org.jetbrains.mps.openapi.language.SAbstractConcept)" resolve="getRootNodes" />
+              <node concept="37vLTw" id="5cJeDifmojs" role="37wK5m">
+                <ref role="3cqZAo" node="5cJeDifmoj$" resolve="concept" />
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+      <node concept="3Tm1VV" id="5cJeDifmojw" role="1B3o_S" />
+      <node concept="37vLTG" id="5cJeDifmojy" role="3clF46">
+        <property role="TrG5h" value="model" />
+        <node concept="3uibUv" id="5cJeDifmojz" role="1tU5fm">
+          <ref role="3uigEE" to="mhbf:~SModel" resolve="SModel" />
+        </node>
+      </node>
+      <node concept="37vLTG" id="5cJeDifmoj$" role="3clF46">
+        <property role="TrG5h" value="concept" />
+        <node concept="3uibUv" id="5cJeDifmoj_" role="1tU5fm">
+          <ref role="3uigEE" to="c17a:~SAbstractConcept" resolve="SAbstractConcept" />
+        </node>
+      </node>
+      <node concept="3uibUv" id="5cJeDiflluS" role="3clF45">
+        <ref role="3uigEE" to="33ny:~Collection" resolve="Collection" />
+        <node concept="3uibUv" id="5cJeDiflluT" role="11_B2D">
+          <ref role="3uigEE" to="t4tl:~DNode" resolve="DNode" />
+        </node>
+      </node>
+    </node>
+    <node concept="2tJIrI" id="5cJeDifmmJT" role="jymVt" />
     <node concept="2YIFZL" id="6agMp$f5NMN" role="jymVt">
       <property role="TrG5h" value="setModels" />
       <property role="od$2w" value="false" />

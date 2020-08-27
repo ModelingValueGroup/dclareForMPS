@@ -24,19 +24,31 @@ import org.modelingvalue.dclare.mps.DAttribute.DIdentifyingAttribute;
 import org.modelingvalue.dclare.mps.DRule.DObserver;
 import org.modelingvalue.dclare.mps.DRule.DObserverTransaction;
 
-public class DConstruction {
+public class DConstruction<R> {
 
-    public static DConstruction of(SLanguage anonymousLanguage, String anonymousType, Object[] ctx) {
-        return new DConstruction(anonymousLanguage, anonymousType, ctx);
+    public static <R> DConstruction<R> of(R ref) {
+        return new DConstruction<R>(ref);
+    }
+
+    public static <R> DConstruction<R> of(SLanguage anonymousLanguage, String anonymousType, Object[] ctx) {
+        return new DConstruction<R>(anonymousLanguage, anonymousType, ctx);
     }
 
     private Object[] identity;
 
-    protected DConstruction(SLanguage anonymousLanguage, String anonymousType, Object[] ctx) {
+    private DConstruction(R ref) {
+        this.identity = new Object[]{ref};
+    }
+
+    private DConstruction(SLanguage anonymousLanguage, String anonymousType, Object[] ctx) {
         this.identity = Arrays.copyOf(ctx, ctx.length + 3);
         identity[identity.length - 3] = ((DObserverTransaction) LeafTransaction.getCurrent()).observer();
         identity[identity.length - 2] = anonymousLanguage;
         identity[identity.length - 1] = anonymousType;
+    }
+
+    private DConstruction(Object[] identity) {
+        this.identity = identity;
     }
 
     @Override
@@ -53,7 +65,7 @@ public class DConstruction {
         } else if (getClass() != obj.getClass()) {
             return false;
         } else {
-            DConstruction other = (DConstruction) obj;
+            DConstruction<?> other = (DConstruction<?>) obj;
             if (other.identity == identity) {
                 return true;
             } else if (!Arrays.deepEquals(identity, other.identity)) {
@@ -79,20 +91,39 @@ public class DConstruction {
         return Arrays.toString(identity);
     }
 
+    public boolean isRead() {
+        return identity.length == 1;
+    }
+
+    @SuppressWarnings("unchecked")
+    public R reference() {
+        return isRead() ? (R) identity[0] : null;
+    }
+
     public DObserver<?> observer() {
-        return (DObserver<?>) identity[identity.length - 3];
+        return isRead() ? null : (DObserver<?>) identity[identity.length - 3];
     }
 
     public DObject object() {
-        return (DObject) identity[0];
+        return isRead() ? null : (DObject) identity[0];
     }
 
     public String getAnonymousType() {
-        return (String) identity[identity.length - 1];
+        return isRead() ? null : (String) identity[identity.length - 1];
     }
 
     public SLanguage getAnonymousLanguage() {
-        return (SLanguage) identity[identity.length - 2];
+        return isRead() ? null : (SLanguage) identity[identity.length - 2];
+    }
+
+    protected int readDistance() {
+        return isRead() ? 0 : object().readDistance() + 1;
+    }
+
+    protected DConstruction<R> moveTo(DObject object) {
+        Object[] id = identity.clone();
+        id[0] = object;
+        return new DConstruction<R>(id);
     }
 
 }

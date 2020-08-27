@@ -625,6 +625,25 @@
   <node concept="1M2fIO" id="4$MeK2bmADe">
     <property role="3GE5qa" value="attributes" />
     <ref role="1M2myG" to="7ggn:4$MeK2bmw9s" resolve="Attribute" />
+    <node concept="1N5Pfh" id="5Cu8Hhs14Ee" role="1Mr941">
+      <ref role="1N5Vy1" to="7ggn:5Cu8Hhs0NPL" resolve="opposite" />
+      <node concept="3dgokm" id="5Cu8Hhs5na_" role="1N6uqs">
+        <node concept="3clFbS" id="5Cu8Hhs5naB" role="2VODD2">
+          <node concept="3clFbF" id="5Cu8Hhs5nr2" role="3cqZAp">
+            <node concept="2YIFZM" id="5Cu8Hhs5nu1" role="3clFbG">
+              <ref role="37wK5l" to="o8zo:4IP40Bi3eAf" resolve="forNamedElements" />
+              <ref role="1Pybhc" to="o8zo:4IP40Bi3e_R" resolve="ListScope" />
+              <node concept="2OqwBi" id="5Cu8Hhs5Mdk" role="37wK5m">
+                <node concept="3kakTB" id="5Cu8Hhs5LT8" role="2Oq$k0" />
+                <node concept="2qgKlT" id="5Cu8Hhs5MEc" role="2OqNvi">
+                  <ref role="37wK5l" to="us1s:5Cu8Hhs5xC3" resolve="possibleOpposites" />
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
     <node concept="9SQb8" id="6HWpSUFysdu" role="9SGkC">
       <node concept="3clFbS" id="6HWpSUFysdv" role="2VODD2">
         <node concept="3clFbF" id="6HWpSUFyteA" role="3cqZAp">

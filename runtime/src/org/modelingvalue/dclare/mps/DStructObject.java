@@ -76,14 +76,4 @@ public class DStructObject extends DIdentifiedObject implements SStructObject {
         return true;
     }
 
-    @Override
-    protected boolean isRead() {
-        return false;
-    }
-
-    @Override
-    protected boolean isMatched() {
-        return false;
-    }
-
 }
