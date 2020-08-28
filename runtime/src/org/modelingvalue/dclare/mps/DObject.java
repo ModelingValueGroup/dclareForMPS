@@ -198,10 +198,6 @@ public abstract class DObject implements Mutable {
         return true;
     }
 
-    protected int readDistance() {
-        return 0;
-    }
-
     protected static <T extends DObject> T requireExisting(T obj) {
         if (!obj.isExisting()) {
             throw new NullPointerException();

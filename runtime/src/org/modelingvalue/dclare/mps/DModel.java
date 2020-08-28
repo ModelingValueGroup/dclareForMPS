@@ -17,6 +17,7 @@ package org.modelingvalue.dclare.mps;
 
 import java.util.Collections;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import org.jetbrains.mps.openapi.language.SAbstractConcept;
@@ -51,6 +52,7 @@ import org.modelingvalue.dclare.Setable;
 import jetbrains.mps.errors.item.ModelReportItem;
 import jetbrains.mps.extapi.model.SModelBase;
 import jetbrains.mps.extapi.module.SModuleBase;
+import jetbrains.mps.smodel.SModelId.IntegerSModelId;
 
 @SuppressWarnings("unused")
 public class DModel extends DMatchedObject<DModel, SModelReference, SModel> implements SModel {
@@ -182,9 +184,11 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
     @SuppressWarnings("rawtypes")
     protected static final Set<Setable>                                                     SETABLES            = DMatchedObject.SETABLES.addAll(Set.of(NAME, ROOTS, MODEL_ROOT, USED_MODELS, USED_LANGUAGES));
 
+    private static final AtomicInteger                                                      COUNTER             = new AtomicInteger(0);
+
     public static DModel of(SLanguage anonymousLanguage, String anonymousType, Object[] identity, boolean temporal) {
-        return construct(anonymousLanguage, anonymousType, identity, //
-                () -> new DModel(new Object[]{jetbrains.mps.smodel.SModelId.generate(), temporal}));
+        return deriveConstruct(anonymousLanguage, anonymousType, identity, //
+                () -> new DModel(new Object[]{COUNTER.getAndIncrement(), temporal}));
     }
 
     protected static DModel read(SModel original) {
@@ -200,7 +204,7 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
     }
 
     public static DModel of(SModelReference ref) {
-        return readConstruct(ref, () -> new DModel(new Object[]{jetbrains.mps.smodel.SModelId.generate(), false}));
+        return readConstruct(ref, () -> new DModel(new Object[]{COUNTER.getAndIncrement(), false}));
     }
 
     protected DModel(Object[] identity) {
@@ -220,11 +224,6 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
     @Override
     protected boolean matches(DModel other) {
         return isTemporal() == other.isTemporal() && Objects.equals(NAME.get(other), NAME.get(this));
-    }
-
-    @Override
-    protected boolean basicMatches(DModel other) {
-        return isTemporal() == other.isTemporal();
     }
 
     @Override
@@ -289,7 +288,7 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
 
     @Override
     public SModelId getModelId() {
-        return (SModelId) identity[0];
+        return new IntegerSModelId((int) identity[0]);
     }
 
     @Override
@@ -466,7 +465,7 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
     @Override
     public String toString() {
         String name = NAME.get(this);
-        return name != null ? name : "Model" + "#" + getModelId().toString();
+        return "model" + (name != null ? ":" + name : "#" + identity[0]);
     }
 
     @SuppressWarnings("unchecked")

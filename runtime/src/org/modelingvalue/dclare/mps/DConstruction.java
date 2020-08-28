@@ -116,10 +116,6 @@ public class DConstruction<R> {
         return isRead() ? null : (SLanguage) identity[identity.length - 2];
     }
 
-    protected int readDistance() {
-        return isRead() ? 0 : object().readDistance() + 1;
-    }
-
     protected DConstruction<R> moveTo(DObject object) {
         Object[] id = identity.clone();
         id[0] = object;

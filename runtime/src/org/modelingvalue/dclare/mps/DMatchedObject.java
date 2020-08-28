@@ -15,6 +15,7 @@
 
 package org.modelingvalue.dclare.mps;
 
+import java.util.Arrays;
 import java.util.function.Supplier;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
@@ -22,6 +23,8 @@ import org.modelingvalue.collections.ContainingCollection;
 import org.modelingvalue.collections.Entry;
 import org.modelingvalue.collections.Map;
 import org.modelingvalue.collections.Set;
+import org.modelingvalue.collections.util.Mergeable;
+import org.modelingvalue.collections.util.NotMergeableException;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.dclare.Constant;
 import org.modelingvalue.dclare.LeafTransaction;
@@ -35,7 +38,7 @@ import org.modelingvalue.dclare.mps.DAttribute.DIdentifyingAttribute;
 import org.modelingvalue.dclare.mps.DRule.Constructed;
 
 @SuppressWarnings("rawtypes")
-public abstract class DMatchedObject<T, R, S> extends DIdentifiedObject {
+public abstract class DMatchedObject<T, R, S> extends DIdentifiedObject implements Mergeable<DMatchedObject> {
 
     protected static final Observed<DConstruction, DMatchedObject>                  READ_MAPPING  = Observed.of("$READ_MAPPING", null, (tx, c, b, a) -> {
                                                                                                       if (b != null) {
@@ -96,17 +99,12 @@ public abstract class DMatchedObject<T, R, S> extends DIdentifiedObject {
     }
 
     @Override
-    protected int readDistance() {
-        return CONSTRUCTIONS.get(this).map(DConstruction::readDistance).sorted(Integer::compare).findFirst().orElse(-2) + 1;
-    }
-
-    @Override
     protected boolean isExisting() {
         return !CONSTRUCTIONS.get(this).isEmpty();
     }
 
     @SuppressWarnings("unchecked")
-    protected static <D extends DMatchedObject, A> D construct(SLanguage anonymousLanguage, String anonymousType, Object[] ctx, Supplier<D> supplier) {
+    protected static <D extends DMatchedObject, A> D deriveConstruct(SLanguage anonymousLanguage, String anonymousType, Object[] ctx, Supplier<D> supplier) {
         DConstruction<?> id = DConstruction.of(anonymousLanguage, anonymousType, ctx);
         D d = (D) id.observer().constructed.get(id.object()).get(id);
         if (d == null) {
@@ -214,8 +212,6 @@ public abstract class DMatchedObject<T, R, S> extends DIdentifiedObject {
     protected void exit(DClareMPS dClareMPS, S original) {
     }
 
-    protected abstract boolean basicMatches(T other);
-
     protected abstract boolean matches(T other);
 
     protected abstract void read();
@@ -257,5 +253,75 @@ public abstract class DMatchedObject<T, R, S> extends DIdentifiedObject {
         }
 
     }
+
+    @Override
+    public DMatchedObject getMerger() {
+        return MERGER;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public DMatchedObject merge(DMatchedObject[] branches, int length) {
+        DMatchedObject result = branches[0];
+        if (result == null) {
+            throw new NotMergeableException(this + " -> " + Arrays.toString(branches));
+        }
+        for (int i = 1; i < length; i++) {
+            if (branches[i] == null || !branches[i].matches(result)) {
+                throw new NotMergeableException(this + " -> " + Arrays.toString(branches));
+            } else if (branches[i].isExisting()) {
+                result = branches[i];
+            }
+        }
+        return result;
+    }
+
+    private static final DMatchedObject MERGER = new DMatchedObject(new Object[]{}) {
+
+        @Override
+        protected boolean matches(Object other) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        protected void read() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        protected void addSObject(Object sObject) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        protected Object reference(Object read) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        protected Object resolve(Object ref) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        protected Object create() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        protected DObjectType<?> getType() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public boolean isExternal() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public String toString() {
+            return "MERGER";
+        }
+    };
 
 }

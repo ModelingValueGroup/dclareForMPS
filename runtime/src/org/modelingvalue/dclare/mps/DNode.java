@@ -16,6 +16,7 @@
 package org.modelingvalue.dclare.mps;
 
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 import org.jetbrains.mps.openapi.language.SAbstractConcept;
@@ -48,6 +49,7 @@ import org.modelingvalue.dclare.Setable;
 
 import jetbrains.mps.errors.item.IssueKindReportItem;
 import jetbrains.mps.errors.item.NodeReportItem;
+import jetbrains.mps.smodel.SNodeId.Regular;
 import jetbrains.mps.smodel.SNodeUtil;
 
 @SuppressWarnings("unused")
@@ -203,9 +205,11 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
     @SuppressWarnings("rawtypes")
     protected static final Set<Setable>                                                                 SETABLES            = DMatchedObject.SETABLES.addAll(Set.of(NAME_OBSERVED, ROOT, MODEL, USER_OBJECTS, USED_MODELS, USED_LANGUAGES, ALL_MPS_ISSUES));
 
+    private static final AtomicLong                                                                     COUNTER             = new AtomicLong(0l);
+
     public static DNode of(SLanguage anonymousLanguage, String anonymousType, Object[] identity, SConcept concept) {
-        return construct(anonymousLanguage, anonymousType, identity, //
-                () -> new DNode(new Object[]{jetbrains.mps.smodel.SModel.generateUniqueId(), concept}));
+        return deriveConstruct(anonymousLanguage, anonymousType, identity, //
+                () -> new DNode(new Object[]{COUNTER.getAndIncrement(), concept}));
     }
 
     protected static DNode read(SNode original) {
@@ -223,7 +227,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
 
     public static DNode of(SConcept concept, SNodeReference ref) {
         Objects.requireNonNull(ref.getModelReference(), "DNode of empty SModel reference is most illogical");
-        return readConstruct(ref, () -> new DNode(new Object[]{jetbrains.mps.smodel.SModel.generateUniqueId(), concept}));
+        return readConstruct(ref, () -> new DNode(new Object[]{COUNTER.getAndIncrement(), concept}));
     }
 
     @Override
@@ -254,12 +258,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
     public String toString() {
         SConcept concept = getConcept();
         String name = concept.isSubConceptOf(SNodeUtil.concept_INamedConcept) ? getName() : null;
-        return concept.getName() + (name != null ? ":" + name : "#" + getIdString());
-    }
-
-    private String getIdString() {
-        SNodeId nodeId = getNodeId();
-        return nodeId instanceof jetbrains.mps.smodel.SNodeId.Regular ? Long.toString(((jetbrains.mps.smodel.SNodeId.Regular) nodeId).getId(), Character.MAX_RADIX) : nodeId.toString();
+        return concept.getName() + (name != null ? ":" + name : "#" + identity[0]);
     }
 
     protected SModel getOriginalModel() {
@@ -304,7 +303,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
 
     @Override
     public SNodeId getNodeId() {
-        return (SNodeId) identity[0];
+        return new Regular((long) identity[0]);
     }
 
     @Override
@@ -322,12 +321,6 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
         READ_PROPERTIES.trigger(this);
         READ_CHILDREN.trigger(this);
         READ_REFERENCES.trigger(this);
-    }
-
-    @Override
-    protected boolean basicMatches(DNode other) {
-        SConcept concept = getConcept();
-        return other.getConcept().equals(concept);
     }
 
     @Override
@@ -627,9 +620,12 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
         } else if (feature instanceof SContainmentLink) {
             SContainmentLink cl = (SContainmentLink) feature;
             if (cl.isMultiple()) {
-                List<DNode> element = value != null ? Collection.of((Iterable<DNode>) value).distinct().toList() : null;
+                List<DNode> element = value != null ? Collection.of((Iterable<DNode>) value).map(DObject::requireExisting).distinct().toList() : null;
                 MANY_CONTAINMENT.get(cl).set(this, (i, s) -> s == null || Objects.equals(s, i) ? i : s, element);
             } else {
+                if (value != null) {
+                    DObject.requireExisting((DNode) value);
+                }
                 SINGLE_CONTAINMENT.get(cl).set(this, (DNode) value);
             }
         } else {
