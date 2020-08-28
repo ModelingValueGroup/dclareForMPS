@@ -75,10 +75,15 @@ public abstract class DMatchedObject<T, R, S> extends DIdentifiedObject implemen
     protected void replaceMatching() {
         Pair<Mutable, Setable<Mutable, ?>> pc = D_PARENT_CONTAINING.get(this);
         Setable<Mutable, Set<DMatchedObject>> removed = REMOVED.get(pc.b());
+        boolean hasReference = hasReference();
+        outer:
         for (DMatchedObject rem : removed.get(pc.a())) {
             if (matches((T) rem)) {
                 for (DConstruction<?> cons : CONSTRUCTIONS.get(rem)) {
                     if (cons.isRead()) {
+                        if (hasReference) {
+                            continue outer;
+                        }
                         rem.stop(dClareMPS());
                         READ_MAPPING.set(cons, this);
                         START_ACTION.trigger(this);
@@ -153,6 +158,10 @@ public abstract class DMatchedObject<T, R, S> extends DIdentifiedObject implemen
 
     protected final void setDetached(S sObject) {
         DETACHED.set(this, sObject);
+    }
+
+    protected boolean hasReference() {
+        return reference(false) != null;
     }
 
     @SuppressWarnings("unchecked")
