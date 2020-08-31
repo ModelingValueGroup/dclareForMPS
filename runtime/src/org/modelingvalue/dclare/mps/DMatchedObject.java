@@ -40,34 +40,43 @@ import org.modelingvalue.dclare.mps.DRule.Constructed;
 @SuppressWarnings("rawtypes")
 public abstract class DMatchedObject<T, R, S> extends DIdentifiedObject implements Mergeable<DMatchedObject> {
 
-    protected static final Observed<DConstruction, DMatchedObject>                  READ_MAPPING  = Observed.of("$READ_MAPPING", null, (tx, c, b, a) -> {
-                                                                                                      if (b != null) {
-                                                                                                          DMatchedObject.CONSTRUCTIONS.set(b, Set::remove, c);
-                                                                                                      }
-                                                                                                      if (a != null) {
-                                                                                                          DMatchedObject.CONSTRUCTIONS.set(a, Set::add, c);
-                                                                                                      }
-                                                                                                  });
+    protected static final Observed<DConstruction, DMatchedObject>                READ_MAPPING  = Observed.of("$READ_MAPPING", null, (tx, c, b, a) -> {
+                                                                                                    if (b != null) {
+                                                                                                        DMatchedObject.CONSTRUCTIONS.set(b, Set::remove, c);
+                                                                                                    }
+                                                                                                    if (a != null) {
+                                                                                                        DMatchedObject.CONSTRUCTIONS.set(a, Set::add, c);
+                                                                                                    }
+                                                                                                });
 
-    protected static final Constant<Setable, Setable<Mutable, Set<DMatchedObject>>> REMOVED       = Constant.of("$REMOVED", s -> TemporalObserved.of(Pair.of(s, "$REMOVED"), Set.of()));
+    private static final Constant<Setable, Setable<Mutable, Set<DMatchedObject>>> REMOVED       = Constant.of("$REMOVED", s -> TemporalObserved.of(Pair.of(s, "$REMOVED"), Set.of()));
 
-    private static final Setable<DMatchedObject, Object>                            DETACHED      = Setable.of("$DETACHED", null);
+    private static final Setable<DMatchedObject, Object>                          DETACHED      = Setable.of("$DETACHED", null);
 
-    protected static final Observer<DMatchedObject>                                 MATCHER       = DObject.observer("$MATCHER", DMatchedObject::replaceMatching);
+    protected static final Observer<DMatchedObject>                               MATCHER       = DObject.observer("$MATCHER", DMatchedObject::replaceMatching);
 
-    protected static final Set<Observer>                                            OBSERVERS     = DObject.OBSERVERS.add(MATCHER);
+    protected static final Set<Observer>                                          OBSERVERS     = DObject.OBSERVERS.add(MATCHER);
 
-    protected static final Set<Setable>                                             SETABLES      = DObject.SETABLES.add(DETACHED);
+    protected static final Set<Setable>                                           SETABLES      = DObject.SETABLES.add(DETACHED);
 
-    protected static final Observed<DMatchedObject, Set<DConstruction>>             CONSTRUCTIONS = NonCheckingObserved.of("$CONSTRUCTIONS", Set.of());
+    protected static final Observed<DMatchedObject, Set<DConstruction>>           CONSTRUCTIONS = NonCheckingObserved.of("$CONSTRUCTIONS", Set.of());
 
-    protected static <P extends DObject, C extends DMatchedObject<C, ?, ?>, R extends ContainingCollection<C>> void keepManyRemoved(P parent, R pre, R post, Setable<Mutable, Set<DMatchedObject>> removed) {
-        removed.set(parent, Set::addAll, pre.removeAll(post).toSet());
+    protected static <P extends DObject, C extends DMatchedObject<C, ?, ?>, R extends ContainingCollection<C>> void keepManyRemoved(P parent, R pre, R post, Setable<P, R> setable) {
+        Setable<Mutable, Set<DMatchedObject>> removed = REMOVED.get(setable);
+        Setable.<ContainingCollection<C>, C> diff(pre, post, a -> {
+            removed.set(parent, Set::remove, a);
+        }, r -> {
+            removed.set(parent, Set::add, r);
+        });
     }
 
-    protected static <P extends DObject, C extends DMatchedObject<C, ?, ?>, R extends ContainingCollection<C>> void keepSingleRemoved(P parent, C pre, C post, Setable<Mutable, Set<DMatchedObject>> removed) {
+    protected static <P extends DObject, C extends DMatchedObject<C, ?, ?>> void keepSingleRemoved(P parent, C pre, C post, Setable<P, C> setable) {
+        Setable<Mutable, Set<DMatchedObject>> removed = REMOVED.get(setable);
         if (pre != null) {
             removed.set(parent, Set::add, pre);
+        }
+        if (post != null) {
+            removed.set(parent, Set::remove, post);
         }
     }
 

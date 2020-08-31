@@ -58,7 +58,7 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
                                                                                                  Setable.<Set<DModel>, DModel> diff(models(dModule.original()).sequential().map(DModel::of).toSet(), post,   //
                                                                                                          a -> a.original(true),                                                                              //
                                                                                                          r -> new ModelDeleteHelper(r.original()).delete());
-                                                                                             }, (tx, m, b, a) -> DMatchedObject.keepManyRemoved(m, b, a, DMatchedObject.REMOVED.get(DModule.MODELS)), null);
+                                                                                             }, (tx, m, b, a) -> DMatchedObject.keepManyRemoved(m, b, a, DModule.MODELS), null);
 
     protected static final Observed<DModule, Set<SLanguage>>                  LANGUAGES      = NonCheckingObserved.of("LANGUAGES", Set.of(), (tx, o, pre, post) -> {
                                                                                                  Setable.<Set<SLanguage>, SLanguage> diff(pre, post,                                                         //

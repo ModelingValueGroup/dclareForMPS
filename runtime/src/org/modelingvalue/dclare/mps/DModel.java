@@ -22,7 +22,6 @@ import java.util.stream.Collectors;
 
 import org.jetbrains.mps.openapi.language.SAbstractConcept;
 import org.jetbrains.mps.openapi.language.SConcept;
-import org.jetbrains.mps.openapi.language.SInterfaceConcept;
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.jetbrains.mps.openapi.model.EditableSModel;
 import org.jetbrains.mps.openapi.model.SModel;
@@ -74,33 +73,17 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
                                                                                                                             sModel::addRootNode,                                                                                                     //
                                                                                                                             sModel::removeRootNode);
                                                                                                                 }, (tx, m, pre, post) -> {
-                                                                                                                    DMatchedObject.keepManyRemoved(m, pre, post, REMOVED.get(DModel.ROOTS));
+                                                                                                                    DMatchedObject.keepManyRemoved(m, pre, post, DModel.ROOTS);
                                                                                                                     Setable.<Set<DNode>, DNode> diff(pre, post, a -> {
-                                                                                                                        for (SAbstractConcept c : DModel.SUPER_CONCEPTS.get(a.getConcept())) {
+                                                                                                                        for (SAbstractConcept c : DNode.SUPER_CONCEPTS.get(a.getConcept())) {
                                                                                                                             DModel.CONCEPT_ROOTS.get(c).set(m, Set::add, a);
                                                                                                                         }
                                                                                                                     }, r -> {
-                                                                                                                        for (SAbstractConcept c : DModel.SUPER_CONCEPTS.get(r.getConcept())) {
+                                                                                                                        for (SAbstractConcept c : DNode.SUPER_CONCEPTS.get(r.getConcept())) {
                                                                                                                             DModel.CONCEPT_ROOTS.get(c).set(m, Set::remove, r);
                                                                                                                         }
                                                                                                                     });
                                                                                                                 }, null);
-
-    private static final Constant<SAbstractConcept, Set<SAbstractConcept>>                  SUPER_CONCEPTS      = Constant.of("SUPER_CONCEPTS", ac -> {
-                                                                                                                    if (ac instanceof SInterfaceConcept) {
-                                                                                                                        SInterfaceConcept i = (SInterfaceConcept) ac;
-                                                                                                                        Set<SAbstractConcept> supers = Collection.of(i.getSuperInterfaces()).flatMap(s -> DModel.SUPER_CONCEPTS.get(s)).toSet();
-                                                                                                                        return supers.add(ac);
-                                                                                                                    } else {
-                                                                                                                        SConcept c = (SConcept) ac;
-                                                                                                                        Set<SAbstractConcept> supers = Collection.of(c.getSuperInterfaces()).flatMap(s -> DModel.SUPER_CONCEPTS.get(s)).toSet();
-                                                                                                                        SConcept sc = c.getSuperConcept();
-                                                                                                                        if (sc != null) {
-                                                                                                                            supers = supers.addAll(DModel.SUPER_CONCEPTS.get(sc));
-                                                                                                                        }
-                                                                                                                        return supers.add(ac);
-                                                                                                                    }
-                                                                                                                });
 
     protected static final Constant<SAbstractConcept, DObserved<DModel, Set<DNode>>>        CONCEPT_ROOTS       = Constant.of("CONCEPT_ROOTS", c -> DObserved.of(new RootsOfConcept(c), Set.of(), false, false, null, false, null, (tx, m, b, a) -> {
                                                                                                                     ROOTS.set(m, (rs, cs) -> cs.addAll(rs.filter(r -> !r.isInstanceOfConcept(c))), a);

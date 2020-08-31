@@ -44,7 +44,7 @@ public class DCopyType extends DNodeType {
     @SuppressWarnings("rawtypes")
     @Override
     protected Collection<Observer> observers() {
-        return Collection.concat(DNode.OBSERVERS, DCopy.CONCEPT_OBSERVERS.get(getConcept()));
+        return Collection.concat(DNode.OBSERVERS, DCopy.COPY_CONCEPT_OBSERVERS.get(getConcept()));
     }
 
 }

@@ -23,6 +23,7 @@ import org.jetbrains.mps.openapi.language.SAbstractConcept;
 import org.jetbrains.mps.openapi.language.SConcept;
 import org.jetbrains.mps.openapi.language.SConceptFeature;
 import org.jetbrains.mps.openapi.language.SContainmentLink;
+import org.jetbrains.mps.openapi.language.SInterfaceConcept;
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.jetbrains.mps.openapi.language.SProperty;
 import org.jetbrains.mps.openapi.language.SReferenceLink;
@@ -57,6 +58,22 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
 
     private static final Constant<Quadruple<Set<SLanguage>, SConcept, Set<String>, Boolean>, DNodeType> NODE_TYPE           = Constant.of("NODE_TYPE", DNodeType::new);
 
+    protected static final Constant<SAbstractConcept, Set<SAbstractConcept>>                            SUPER_CONCEPTS      = Constant.of("SUPER_CONCEPTS", ac -> {
+                                                                                                                                if (ac instanceof SInterfaceConcept) {
+                                                                                                                                    SInterfaceConcept i = (SInterfaceConcept) ac;
+                                                                                                                                    Set<SAbstractConcept> supers = Collection.of(i.getSuperInterfaces()).flatMap(s -> DNode.SUPER_CONCEPTS.get(s)).toSet();
+                                                                                                                                    return supers.add(ac);
+                                                                                                                                } else {
+                                                                                                                                    SConcept c = (SConcept) ac;
+                                                                                                                                    Set<SAbstractConcept> supers = Collection.of(c.getSuperInterfaces()).flatMap(s -> DNode.SUPER_CONCEPTS.get(s)).toSet();
+                                                                                                                                    SConcept sc = c.getSuperConcept();
+                                                                                                                                    if (sc != null) {
+                                                                                                                                        supers = supers.addAll(DNode.SUPER_CONCEPTS.get(sc));
+                                                                                                                                    }
+                                                                                                                                    return supers.add(ac);
+                                                                                                                                }
+                                                                                                                            });
+
     protected static final Observed<DNode, DModel>                                                      MODEL               = NonCheckingObserved.of("$MODEL", null);
 
     protected static final Observed<DNode, DNode>                                                       ROOT                = NonCheckingObserved.of("$ROOT", null, (tx, o, pre, post) -> {
@@ -84,7 +101,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
                 DObserved.map(ist, soll,                                                                                                                                                                                                                                                            //
                         (n, a) -> sNode.insertChildAfter(mc, n, a), r -> {
                         });
-            }, (tx, p, b, a) -> DMatchedObject.keepManyRemoved(p, b, a, REMOVED.get(DNode.MANY_CONTAINMENT.get(mc))), mc::getDeclarationNode, false));
+            }, (tx, p, b, a) -> DMatchedObject.keepManyRemoved(p, b, a, DNode.MANY_CONTAINMENT.get(mc)), mc::getDeclarationNode, false));
 
     @SuppressWarnings("deprecation")
     public static final Constant<SContainmentLink, DObserved<DNode, DNode>>                             SINGLE_CONTAINMENT  = Constant.of("SINGLE_CONTAINMENT", sc -> DObserved.of(sc, null, !sc.isOptional(), true, null, false,                                                                   //
@@ -99,7 +116,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
                 DObserved.map(ist, soll,                                                                                                                                                                                                                                                            //
                         (n, a) -> sNode.addChild(sc, n), r -> {
                         });
-            }, (tx, p, b, a) -> DMatchedObject.keepSingleRemoved(p, b, a, REMOVED.get(DNode.SINGLE_CONTAINMENT.get(sc))), sc::getDeclarationNode, false));
+            }, (tx, p, b, a) -> DMatchedObject.keepSingleRemoved(p, b, a, DNode.SINGLE_CONTAINMENT.get(sc)), sc::getDeclarationNode, false));
 
     @SuppressWarnings("deprecation")
     public static final Constant<SReferenceLink, DObserved<DNode, DNode>>                               REFERENCE           = Constant.of("REFERENCE", sr -> DObserved.of(sr, null, !sr.isOptional(), false, () -> DNode.OPPOSITE.get(sr), false,                                                   //

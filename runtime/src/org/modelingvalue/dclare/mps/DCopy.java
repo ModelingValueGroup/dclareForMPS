@@ -32,10 +32,10 @@ import org.modelingvalue.dclare.Observer;
 @SuppressWarnings("unused")
 public class DCopy extends DNode {
 
-    private static final Constant<Quadruple<Set<SLanguage>, SConcept, Set<String>, Boolean>, DCopyType> COPY_TYPE         = Constant.of("COPY_TYPE", q -> new DCopyType(q));
+    private static final Constant<Quadruple<Set<SLanguage>, SConcept, Set<String>, Boolean>, DCopyType> COPY_TYPE              = Constant.of("COPY_TYPE", q -> new DCopyType(q));
 
     @SuppressWarnings("rawtypes")
-    protected static final Constant<SConcept, Set<Observer>>                                            CONCEPT_OBSERVERS = Constant.of("RULES",                            //
+    protected static final Constant<SConcept, Set<Observer>>                                            COPY_CONCEPT_OBSERVERS = Constant.of("COPY_CONCEPT_OBSERVERS",           //
             c -> {
                 Set<Observer> observers = Set.of();
                 for (SProperty property : c.getProperties()) {
