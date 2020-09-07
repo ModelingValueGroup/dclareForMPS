@@ -170,7 +170,7 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
     private static final AtomicInteger                                                      COUNTER             = new AtomicInteger(0);
 
     public static DModel of(SLanguage anonymousLanguage, String anonymousType, Object[] identity, boolean temporal) {
-        return deriveConstruct(anonymousLanguage, anonymousType, identity, //
+        return quotationConstruct(anonymousLanguage, anonymousType, identity, //
                 () -> new DModel(new Object[]{COUNTER.getAndIncrement(), temporal}));
     }
 

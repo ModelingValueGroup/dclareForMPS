@@ -40,7 +40,7 @@ import org.modelingvalue.dclare.mps.DRule.Constructed;
 @SuppressWarnings("rawtypes")
 public abstract class DMatchedObject<T, R, S> extends DIdentifiedObject implements Mergeable<DMatchedObject> {
 
-    protected static final Observed<DConstruction, DMatchedObject>                READ_MAPPING  = Observed.of("$READ_MAPPING", null, (tx, c, b, a) -> {
+    protected static final Observed<DReadConstruction, DMatchedObject>            READ_MAPPING  = Observed.of("$READ_MAPPING", null, (tx, c, b, a) -> {
                                                                                                     if (b != null) {
                                                                                                         DMatchedObject.CONSTRUCTIONS.set(b, Set::remove, c);
                                                                                                     }
@@ -88,21 +88,22 @@ public abstract class DMatchedObject<T, R, S> extends DIdentifiedObject implemen
         outer:
         for (DMatchedObject rem : removed.get(pc.a())) {
             if (matches((T) rem)) {
-                for (DConstruction<?> cons : CONSTRUCTIONS.get(rem)) {
-                    if (cons.isRead()) {
+                for (DConstruction cons : CONSTRUCTIONS.get(rem)) {
+                    if (cons instanceof DReadConstruction) {
                         if (hasReference) {
                             continue outer;
                         }
                         rem.stop(dClareMPS());
-                        READ_MAPPING.set(cons, this);
+                        READ_MAPPING.set((DReadConstruction) cons, this);
                         START_ACTION.trigger(this);
                     } else {
-                        cons.observer().constructed.set(cons.object(), (map, e) -> map.put(cons, e), this);
+                        DDeriveConstruction der = (DDeriveConstruction) cons;
+                        der.observer().constructed.set(der.object(), (map, e) -> map.put(der, e), this);
                     }
                 }
                 LeafTransaction.getCurrent().properties(rem, (k, v) -> {
                     if (k instanceof Constructed) {
-                        Map<DConstruction, DMatchedObject> map = (Map<DConstruction, DMatchedObject>) v;
+                        Map<DDeriveConstruction, DMatchedObject> map = (Map<DDeriveConstruction, DMatchedObject>) v;
                         ((Constructed) k).set(this, map.toMap(e -> Entry.of(e.getKey().moveTo(this), e.getValue())));
                     }
                 });
@@ -117,9 +118,20 @@ public abstract class DMatchedObject<T, R, S> extends DIdentifiedObject implemen
         return !CONSTRUCTIONS.get(this).isEmpty();
     }
 
+    protected static <D extends DMatchedObject, A> D quotationConstruct(SLanguage anonymousLanguage, String anonymousType, Object[] ctx, Supplier<D> supplier) {
+        return derive(new DQuotationConstruction(anonymousLanguage, anonymousType, ctx), supplier);
+    }
+
+    protected static <D extends DMatchedObject, A> D copyRootConstruct(String anonymousType, DObject ctx, DNode copied, Supplier<D> supplier) {
+        return derive(new DCopyConstruction(anonymousType, ctx, copied), supplier);
+    }
+
+    protected static <D extends DMatchedObject, A> D copyChildConstruct(DConstruction root, DNode copied, Supplier<D> supplier) {
+        return derive(new DCopyConstruction(root, copied), supplier);
+    }
+
     @SuppressWarnings("unchecked")
-    protected static <D extends DMatchedObject, A> D deriveConstruct(SLanguage anonymousLanguage, String anonymousType, Object[] ctx, Supplier<D> supplier) {
-        DConstruction<?> id = DConstruction.of(anonymousLanguage, anonymousType, ctx);
+    private static <D extends DMatchedObject> D derive(DDeriveConstruction id, Supplier<D> supplier) {
         D d = (D) id.observer().constructed.get(id.object()).get(id);
         if (d == null) {
             d = supplier.get();
@@ -130,7 +142,7 @@ public abstract class DMatchedObject<T, R, S> extends DIdentifiedObject implemen
 
     @SuppressWarnings("unchecked")
     protected static <D extends DMatchedObject, I> D readConstruct(I ref, Supplier<D> supplier) {
-        DConstruction<I> id = DConstruction.of(ref);
+        DReadConstruction<I> id = new DReadConstruction(ref);
         D d = (D) READ_MAPPING.get(id);
         if (d == null) {
             d = supplier.get();
@@ -141,7 +153,7 @@ public abstract class DMatchedObject<T, R, S> extends DIdentifiedObject implemen
 
     @SuppressWarnings("unchecked")
     protected static <D extends DMatchedObject, I> D tryResolve(I ref) {
-        return (D) READ_MAPPING.get(DConstruction.of(ref));
+        return (D) READ_MAPPING.get(new DReadConstruction(ref));
     }
 
     protected DMatchedObject(Object[] identity) {
@@ -150,7 +162,7 @@ public abstract class DMatchedObject<T, R, S> extends DIdentifiedObject implemen
 
     @Override
     protected <V> V get(DIdentifyingAttribute<?, V> attr) {
-        for (DConstruction<?> c : CONSTRUCTIONS.get(this)) {
+        for (DQuotationConstruction c : CONSTRUCTIONS.get(this).filter(DQuotationConstruction.class)) {
             if (c.getAnonymousType() == attr.anonymousType()) {
                 return c.get(attr);
             }
@@ -175,12 +187,12 @@ public abstract class DMatchedObject<T, R, S> extends DIdentifiedObject implemen
 
     @SuppressWarnings("unchecked")
     protected final R reference(boolean create) {
-        R ref = (R) CONSTRUCTIONS.get(this).filter(DConstruction::isRead).map(DConstruction::reference).findFirst().orElse(null);
+        R ref = (R) CONSTRUCTIONS.get(this).filter(DReadConstruction.class).map(DReadConstruction::reference).findFirst().orElse(null);
         if (create && ref == null) {
             S sObject = create();
             addSObject(sObject);
             ref = reference(sObject);
-            READ_MAPPING.set(DConstruction.of(ref), this);
+            READ_MAPPING.set(new DReadConstruction(ref), this);
         }
         return ref;
     }
@@ -243,11 +255,23 @@ public abstract class DMatchedObject<T, R, S> extends DIdentifiedObject implemen
     protected abstract S create();
 
     public Set<String> getAnonymousTypes() {
-        return CONSTRUCTIONS.get(this).map(DConstruction::getAnonymousType).notNull().toSet();
+        return CONSTRUCTIONS.get(this).filter(DQuotationConstruction.class).map(DQuotationConstruction::getAnonymousType).notNull().toSet();
+    }
+
+    public Set<Integer> getCopyNumbers() {
+        Set<Integer> numbers = Set.of();
+        int i = 0;
+        for (DConstruction c : CONSTRUCTIONS.get(this)) {
+            if (c instanceof DCopyConstruction) {
+                numbers = numbers.add(i);
+            }
+            i++;
+        }
+        return numbers;
     }
 
     public Set<SLanguage> getAnonymousLanguages() {
-        return CONSTRUCTIONS.get(this).map(DConstruction::getAnonymousLanguage).notNull().toSet();
+        return CONSTRUCTIONS.get(this).filter(DQuotationConstruction.class).map(DQuotationConstruction::getAnonymousLanguage).notNull().toSet();
     }
 
     protected static final class TemporalObserved<O, T> extends NonCheckingObserved<O, T> {

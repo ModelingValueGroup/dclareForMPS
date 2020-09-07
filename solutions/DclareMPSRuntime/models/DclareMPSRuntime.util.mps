@@ -3088,21 +3088,26 @@
             <node concept="16syzq" id="70QPEjRB58z" role="10QFUM">
               <ref role="16sUi3" node="4wJaMXe_PHK" resolve="T" />
             </node>
-            <node concept="2YIFZM" id="70QPEjRB58$" role="10QFUP">
+            <node concept="2YIFZM" id="2Fs12p9UPLM" role="10QFUP">
+              <ref role="37wK5l" to="t4tl:~DCopy.of(org.modelingvalue.dclare.mps.DNode,org.modelingvalue.dclare.mps.DObject,java.lang.String)" resolve="of" />
               <ref role="1Pybhc" to="t4tl:~DCopy" resolve="DCopy" />
-              <ref role="37wK5l" to="t4tl:~DCopy.of(org.modelingvalue.dclare.mps.DNode,java.lang.Object,java.lang.Object)" resolve="of" />
-              <node concept="10QFUN" id="70QPEjRB58_" role="37wK5m">
-                <node concept="3uibUv" id="70QPEjRB58A" role="10QFUM">
+              <node concept="10QFUN" id="2Fs12p9UPLN" role="37wK5m">
+                <node concept="3uibUv" id="2Fs12p9UPLO" role="10QFUM">
                   <ref role="3uigEE" to="t4tl:~DNode" resolve="DNode" />
                 </node>
-                <node concept="37vLTw" id="70QPEjRB58B" role="10QFUP">
+                <node concept="37vLTw" id="2Fs12p9UPLP" role="10QFUP">
                   <ref role="3cqZAo" node="4wJaMXe_PK4" resolve="copied" />
                 </node>
               </node>
-              <node concept="37vLTw" id="6_VR9GIb_wK" role="37wK5m">
-                <ref role="3cqZAo" node="2cgEAjOjw8z" resolve="ctx" />
+              <node concept="10QFUN" id="2Fs12p9V3AY" role="37wK5m">
+                <node concept="37vLTw" id="2Fs12p9UPLQ" role="10QFUP">
+                  <ref role="3cqZAo" node="2cgEAjOjw8z" resolve="ctx" />
+                </node>
+                <node concept="3uibUv" id="2Fs12p9V5xT" role="10QFUM">
+                  <ref role="3uigEE" to="t4tl:~DObject" resolve="DObject" />
+                </node>
               </node>
-              <node concept="37vLTw" id="6_VR9GIb_Re" role="37wK5m">
+              <node concept="37vLTw" id="2Fs12p9UPLR" role="37wK5m">
                 <ref role="3cqZAo" node="2cgEAjNTkFc" resolve="id" />
               </node>
             </node>

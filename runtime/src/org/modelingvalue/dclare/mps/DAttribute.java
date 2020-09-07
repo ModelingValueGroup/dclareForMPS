@@ -38,10 +38,10 @@ import jetbrains.mps.smodel.adapter.structure.property.InvalidProperty;
 public interface DAttribute<O, T> extends DFeature {
 
     @SuppressWarnings("unchecked")
-    static <C, V> DAttribute<C, V> of(String id, String name, String anonymousType, boolean synthetic, boolean optional, boolean composite, int identifyingNr, Object def, Class<?> cls, String opposite, Supplier<SNode> source, Function<C, V> deriver, boolean onlyTemporal) {
-        return identifyingNr >= 0 ? new DIdentifyingAttribute(id, name, anonymousType, synthetic, composite, identifyingNr, cls, source) : //
+    static <C, V> DAttribute<C, V> of(String id, String name, String anonymousType, String ruleSetType, boolean synthetic, boolean optional, boolean composite, int identifyingNr, Object def, Class<?> cls, String opposite, Supplier<SNode> source, Function<C, V> deriver, boolean onlyTemporal) {
+        return identifyingNr >= 0 && ("StructRuleSet".equals(ruleSetType) || anonymousType != null) ? new DIdentifyingAttribute(id, name, anonymousType, synthetic, composite, identifyingNr, cls, source) : //
                 deriver != null ? new DConstant(id, name, synthetic, composite, cls, source, deriver, onlyTemporal) : //
-                        new DObservedAttribute(id, name, synthetic, optional, composite, def, cls, opposite != null ? () -> of(opposite) : null, source, new InvalidProperty(id.toString(), name));
+                        new DObservedAttribute(id, name, synthetic, identifyingNr >= 0 || optional, composite, identifyingNr >= 0, def, cls, opposite != null ? () -> of(opposite) : null, source, new InvalidProperty(id.toString(), name));
     }
 
     @SuppressWarnings("unchecked")
@@ -85,8 +85,9 @@ public interface DAttribute<O, T> extends DFeature {
         private final String    name;
         private final Class<?>  cls;
         private final SProperty sProperty;
+        private final boolean   indetifying;
 
-        public DObservedAttribute(Object id, String name, boolean synthetic, boolean optional, boolean composite, V def, Class<?> cls, Supplier<Setable<?, ?>> opposite, Supplier<SNode> source, SProperty sProperty) {
+        public DObservedAttribute(Object id, String name, boolean synthetic, boolean optional, boolean composite, boolean indetifying, V def, Class<?> cls, Supplier<Setable<?, ?>> opposite, Supplier<SNode> source, SProperty sProperty) {
             super(id, !optional, def, composite, opposite, synthetic, (o, b, a) -> {
                 if (o instanceof DNode) {
                     SNode sNode = ((DNode) o).original();
@@ -99,6 +100,7 @@ public interface DAttribute<O, T> extends DFeature {
             this.name = name;
             this.cls = cls;
             this.sProperty = sProperty;
+            this.indetifying = indetifying;
         }
 
         @Override
@@ -118,7 +120,7 @@ public interface DAttribute<O, T> extends DFeature {
 
         @Override
         public boolean isIndetifying() {
-            return false;
+            return indetifying;
         }
 
         @Override
@@ -129,7 +131,10 @@ public interface DAttribute<O, T> extends DFeature {
         @Override
         public V get(C object) {
             if (object instanceof DNode && LeafTransaction.getCurrent() instanceof ReadOnlyTransaction) {
-                ((DNode) object).original().getProperty(sProperty);
+                SNode original = ((DNode) object).original();
+                if (original != null) {
+                    original.getProperty(sProperty);
+                }
             }
             V result = super.get(object);
             if (result == null && mandatory() && LeafTransaction.getCurrent() instanceof ObserverTransaction) {

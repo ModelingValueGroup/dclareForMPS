@@ -17,37 +17,13 @@ package org.modelingvalue.dclare.mps;
 
 import java.util.Arrays;
 
-import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.util.Age;
-import org.modelingvalue.dclare.LeafTransaction;
-import org.modelingvalue.dclare.mps.DAttribute.DIdentifyingAttribute;
-import org.modelingvalue.dclare.mps.DRule.DObserver;
-import org.modelingvalue.dclare.mps.DRule.DObserverTransaction;
 
-public class DConstruction<R> {
+public abstract class DConstruction {
 
-    public static <R> DConstruction<R> of(R ref) {
-        return new DConstruction<R>(ref);
-    }
+    protected Object[] identity;
 
-    public static <R> DConstruction<R> of(SLanguage anonymousLanguage, String anonymousType, Object[] ctx) {
-        return new DConstruction<R>(anonymousLanguage, anonymousType, ctx);
-    }
-
-    private Object[] identity;
-
-    private DConstruction(R ref) {
-        this.identity = new Object[]{ref};
-    }
-
-    private DConstruction(SLanguage anonymousLanguage, String anonymousType, Object[] ctx) {
-        this.identity = Arrays.copyOf(ctx, ctx.length + 3);
-        identity[identity.length - 3] = ((DObserverTransaction) LeafTransaction.getCurrent()).observer();
-        identity[identity.length - 2] = anonymousLanguage;
-        identity[identity.length - 1] = anonymousType;
-    }
-
-    private DConstruction(Object[] identity) {
+    protected DConstruction(Object[] identity) {
         this.identity = identity;
     }
 
@@ -65,7 +41,7 @@ public class DConstruction<R> {
         } else if (getClass() != obj.getClass()) {
             return false;
         } else {
-            DConstruction<?> other = (DConstruction<?>) obj;
+            DConstruction other = (DConstruction) obj;
             if (other.identity == identity) {
                 return true;
             } else if (!Arrays.deepEquals(identity, other.identity)) {
@@ -81,45 +57,9 @@ public class DConstruction<R> {
         }
     }
 
-    @SuppressWarnings("unchecked")
-    protected <V> V get(DIdentifyingAttribute<?, V> attr) {
-        return (V) identity[attr.index()];
-    }
-
     @Override
     public String toString() {
         return Arrays.toString(identity);
-    }
-
-    public boolean isRead() {
-        return identity.length == 1;
-    }
-
-    @SuppressWarnings("unchecked")
-    public R reference() {
-        return isRead() ? (R) identity[0] : null;
-    }
-
-    public DObserver<?> observer() {
-        return isRead() ? null : (DObserver<?>) identity[identity.length - 3];
-    }
-
-    public DObject object() {
-        return isRead() ? null : (DObject) identity[0];
-    }
-
-    public String getAnonymousType() {
-        return isRead() ? null : (String) identity[identity.length - 1];
-    }
-
-    public SLanguage getAnonymousLanguage() {
-        return isRead() ? null : (SLanguage) identity[identity.length - 2];
-    }
-
-    protected DConstruction<R> moveTo(DObject object) {
-        Object[] id = identity.clone();
-        id[0] = object;
-        return new DConstruction<R>(id);
     }
 
 }

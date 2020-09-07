@@ -33,12 +33,12 @@ import org.modelingvalue.dclare.UniverseTransaction;
 @SuppressWarnings("rawtypes")
 public interface DRule<O> extends DFeature {
 
-    Constant<DRule, DObserver>                  OBSERVER     = Constant.of("OBSERVER",             //
+    Constant<DRule, DObserver>                        OBSERVER     = Constant.of("OBSERVER",       //
             r -> DObserver.of(r, r.initialLowPriority() ? Direction.backward : Direction.forward));
 
-    Context<Set<DIssue>>                        DISUES       = Context.of(Set.of());
+    Context<Set<DIssue>>                              DISUES       = Context.of(Set.of());
 
-    Context<Map<DConstruction, DMatchedObject>> DCONSTRUCTED = Context.of(Map.of());
+    Context<Map<DDeriveConstruction, DMatchedObject>> DCONSTRUCTED = Context.of(Map.of());
 
     class DObserver<O extends Mutable> extends Observer<O> {
 
@@ -114,7 +114,7 @@ public interface DRule<O> extends DFeature {
 
     boolean initialLowPriority();
 
-    class Constructed extends NonCheckingObserved<DObject, Map<DConstruction, DMatchedObject>> {
+    class Constructed extends NonCheckingObserved<DObject, Map<DDeriveConstruction, DMatchedObject>> {
 
         protected Constructed(DRule rule) {
             super(rule, false, Map.of(), false, null, null, (tx, o, pre, post) -> {

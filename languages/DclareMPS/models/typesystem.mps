@@ -1703,24 +1703,41 @@
             <node concept="3clFbS" id="67uyCwCTs2D" role="3clFbx">
               <node concept="2MkqsV" id="67uyCwCTtAv" role="3cqZAp">
                 <node concept="Xl_RD" id="67uyCwCTtAL" role="2MkJ7o">
-                  <property role="Xl_RC" value="Identifying attributes may only be defined in a Struct RuleSet" />
+                  <property role="Xl_RC" value="Identifying attributes may only be defined in a Struct or Node RuleSet" />
                 </node>
                 <node concept="1YBJjd" id="67uyCwCTtE8" role="1urrMF">
                   <ref role="1YBMHb" node="67uyCwCTrnv" resolve="attribute" />
                 </node>
               </node>
             </node>
-            <node concept="3fqX7Q" id="67uyCwCTtua" role="3clFbw">
-              <node concept="2OqwBi" id="67uyCwCTtuc" role="3fr31v">
-                <node concept="2OqwBi" id="67uyCwCTtud" role="2Oq$k0">
-                  <node concept="1YBJjd" id="67uyCwCTtue" role="2Oq$k0">
-                    <ref role="1YBMHb" node="67uyCwCTrnv" resolve="attribute" />
+            <node concept="1Wc70l" id="2McdWNXlVEF" role="3clFbw">
+              <node concept="3fqX7Q" id="67uyCwCTtua" role="3uHU7B">
+                <node concept="2OqwBi" id="67uyCwCTtuc" role="3fr31v">
+                  <node concept="2OqwBi" id="67uyCwCTtud" role="2Oq$k0">
+                    <node concept="1YBJjd" id="67uyCwCTtue" role="2Oq$k0">
+                      <ref role="1YBMHb" node="67uyCwCTrnv" resolve="attribute" />
+                    </node>
+                    <node concept="1mfA1w" id="67uyCwCTtuf" role="2OqNvi" />
                   </node>
-                  <node concept="1mfA1w" id="67uyCwCTtuf" role="2OqNvi" />
+                  <node concept="1mIQ4w" id="67uyCwCTtug" role="2OqNvi">
+                    <node concept="chp4Y" id="67uyCwCTtuh" role="cj9EA">
+                      <ref role="cht4Q" to="7ggn:3Qetf3cPkTM" resolve="StructRuleSet" />
+                    </node>
+                  </node>
                 </node>
-                <node concept="1mIQ4w" id="67uyCwCTtug" role="2OqNvi">
-                  <node concept="chp4Y" id="67uyCwCTtuh" role="cj9EA">
-                    <ref role="cht4Q" to="7ggn:3Qetf3cPkTM" resolve="StructRuleSet" />
+              </node>
+              <node concept="3fqX7Q" id="2McdWNXlVGU" role="3uHU7w">
+                <node concept="2OqwBi" id="2McdWNXlVGV" role="3fr31v">
+                  <node concept="2OqwBi" id="2McdWNXlVGW" role="2Oq$k0">
+                    <node concept="1YBJjd" id="2McdWNXlVGX" role="2Oq$k0">
+                      <ref role="1YBMHb" node="67uyCwCTrnv" resolve="attribute" />
+                    </node>
+                    <node concept="1mfA1w" id="2McdWNXlVGY" role="2OqNvi" />
+                  </node>
+                  <node concept="1mIQ4w" id="2McdWNXlVGZ" role="2OqNvi">
+                    <node concept="chp4Y" id="2McdWNXlVIb" role="cj9EA">
+                      <ref role="cht4Q" to="7ggn:6HWpSUEuark" resolve="NodeRuleSet" />
+                    </node>
                   </node>
                 </node>
               </node>
@@ -1730,21 +1747,36 @@
             <node concept="3clFbS" id="67uyCwCTtFS" role="3clFbx">
               <node concept="2MkqsV" id="67uyCwCTuZd" role="3cqZAp">
                 <node concept="Xl_RD" id="67uyCwCTuZe" role="2MkJ7o">
-                  <property role="Xl_RC" value="Identifying attributes may not have a value" />
+                  <property role="Xl_RC" value="Identifying attributes in Struct RuleSets may not have a value" />
                 </node>
                 <node concept="1YBJjd" id="67uyCwCTuZf" role="1urrMF">
                   <ref role="1YBMHb" node="67uyCwCTrnv" resolve="attribute" />
                 </node>
               </node>
             </node>
-            <node concept="3y3z36" id="67uyCwCTuMC" role="3clFbw">
-              <node concept="10Nm6u" id="67uyCwCTuVH" role="3uHU7w" />
-              <node concept="2OqwBi" id="67uyCwCTtXc" role="3uHU7B">
-                <node concept="1YBJjd" id="67uyCwCTtGx" role="2Oq$k0">
-                  <ref role="1YBMHb" node="67uyCwCTrnv" resolve="attribute" />
+            <node concept="1Wc70l" id="2McdWNXlVMX" role="3clFbw">
+              <node concept="3y3z36" id="67uyCwCTuMC" role="3uHU7B">
+                <node concept="2OqwBi" id="67uyCwCTtXc" role="3uHU7B">
+                  <node concept="1YBJjd" id="67uyCwCTtGx" role="2Oq$k0">
+                    <ref role="1YBMHb" node="67uyCwCTrnv" resolve="attribute" />
+                  </node>
+                  <node concept="3TrEf2" id="67uyCwCTurZ" role="2OqNvi">
+                    <ref role="3Tt5mk" to="tpee:fz3vP1I" resolve="initializer" />
+                  </node>
                 </node>
-                <node concept="3TrEf2" id="67uyCwCTurZ" role="2OqNvi">
-                  <ref role="3Tt5mk" to="tpee:fz3vP1I" resolve="initializer" />
+                <node concept="10Nm6u" id="67uyCwCTuVH" role="3uHU7w" />
+              </node>
+              <node concept="2OqwBi" id="2McdWNXlVZ1" role="3uHU7w">
+                <node concept="2OqwBi" id="2McdWNXlVZ2" role="2Oq$k0">
+                  <node concept="1YBJjd" id="2McdWNXlVZ3" role="2Oq$k0">
+                    <ref role="1YBMHb" node="67uyCwCTrnv" resolve="attribute" />
+                  </node>
+                  <node concept="1mfA1w" id="2McdWNXlVZ4" role="2OqNvi" />
+                </node>
+                <node concept="1mIQ4w" id="2McdWNXlVZ5" role="2OqNvi">
+                  <node concept="chp4Y" id="2McdWNXlVZ6" role="cj9EA">
+                    <ref role="cht4Q" to="7ggn:3Qetf3cPkTM" resolve="StructRuleSet" />
+                  </node>
                 </node>
               </node>
             </node>
