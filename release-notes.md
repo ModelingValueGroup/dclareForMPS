@@ -1,3 +1,5 @@
+# v1.2.4
+- several bugfixes
 # v1.2.0
 - based on MPS 2019.3.4
 - declarative model creation/deletion/renaming/matching
