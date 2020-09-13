@@ -332,7 +332,7 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
     }
 
     public void setRootNodes(SAbstractConcept concept, Iterable<DNode> roots) {
-        CONCEPT_ROOTS.get(concept).set(this, Collection.of(roots).map(DNode::of).map(DObject::requireExisting).toSet());
+        CONCEPT_ROOTS.get(concept).set(this, Collection.of(roots).map(Objects::requireNonNull).map(DNode::of).toSet());
     }
 
     public java.util.Collection<DNode> getRootNodes(SAbstractConcept concept) {

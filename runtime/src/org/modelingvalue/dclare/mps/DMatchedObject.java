@@ -113,8 +113,7 @@ public abstract class DMatchedObject<T, R, S> extends DIdentifiedObject implemen
         }
     }
 
-    @Override
-    protected boolean isExisting() {
+    private boolean isExisting() {
         return !CONSTRUCTIONS.get(this).isEmpty();
     }
 

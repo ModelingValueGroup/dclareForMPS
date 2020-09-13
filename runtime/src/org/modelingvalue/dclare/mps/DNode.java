@@ -738,11 +738,11 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
         } else if (feature instanceof SContainmentLink) {
             SContainmentLink cl = (SContainmentLink) feature;
             if (cl.isMultiple()) {
-                List<DNode> element = value != null ? Collection.of((Iterable<DNode>) value).map(DObject::requireExisting).distinct().toList() : null;
+                List<DNode> element = value != null ? Collection.of((Iterable<DNode>) value).map(Objects::requireNonNull).distinct().toList() : null;
                 MANY_CONTAINMENT.get(cl).set(this, (i, s) -> s == null || Objects.equals(s, i) ? i : s, element);
             } else {
                 if (value != null) {
-                    DObject.requireExisting((DNode) value);
+                    Objects.requireNonNull(value);
                 }
                 SINGLE_CONTAINMENT.get(cl).set(this, (DNode) value);
             }

@@ -194,15 +194,4 @@ public abstract class DObject implements Mutable {
 
     public abstract boolean isExternal();
 
-    protected boolean isExisting() {
-        return true;
-    }
-
-    protected static <T extends DObject> T requireExisting(T obj) {
-        if (!obj.isExisting()) {
-            throw new NullPointerException();
-        }
-        return obj;
-    }
-
 }
