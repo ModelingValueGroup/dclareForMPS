@@ -15,41 +15,26 @@
 
 package org.modelingvalue.dclare.mps;
 
-import java.util.Arrays;
-import java.util.Objects;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+import java.util.*;
+import java.util.function.*;
+import java.util.stream.*;
 
-import org.jetbrains.mps.openapi.language.SAbstractConcept;
-import org.jetbrains.mps.openapi.language.SConcept;
-import org.jetbrains.mps.openapi.language.SConceptFeature;
-import org.jetbrains.mps.openapi.language.SContainmentLink;
-import org.jetbrains.mps.openapi.language.SLanguage;
-import org.jetbrains.mps.openapi.language.SProperty;
-import org.jetbrains.mps.openapi.language.SReferenceLink;
+import org.jetbrains.mps.openapi.language.*;
 import org.jetbrains.mps.openapi.model.SModel;
 import org.jetbrains.mps.openapi.model.SModelReference;
 import org.jetbrains.mps.openapi.model.SNode;
 import org.jetbrains.mps.openapi.model.SNodeId;
-import org.jetbrains.mps.openapi.model.SNodeReference;
 import org.jetbrains.mps.openapi.model.SReference;
+import org.jetbrains.mps.openapi.model.*;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.Map;
 import org.modelingvalue.collections.Set;
-import org.modelingvalue.collections.util.Pair;
-import org.modelingvalue.collections.util.Quadruple;
-import org.modelingvalue.dclare.Action;
-import org.modelingvalue.dclare.Constant;
-import org.modelingvalue.dclare.Direction;
-import org.modelingvalue.dclare.Mutable;
-import org.modelingvalue.dclare.NonCheckingObserved;
-import org.modelingvalue.dclare.Observed;
+import org.modelingvalue.collections.util.*;
 import org.modelingvalue.dclare.Observer;
-import org.modelingvalue.dclare.Setable;
+import org.modelingvalue.dclare.*;
 
-import jetbrains.mps.errors.item.IssueKindReportItem;
-import jetbrains.mps.errors.item.NodeReportItem;
+import jetbrains.mps.errors.item.*;
 import jetbrains.mps.smodel.SNodeUtil;
 
 @SuppressWarnings("unused")
@@ -593,6 +578,11 @@ public class DNode extends DMatchedObject<SNodeReference, SNode> implements SNod
     }
 
     @Override
+    public void setReference(SReferenceLink sReferenceLink, ResolveInfo resolveInfo) {
+        throw new Error("@WIM: make this compatable with MPS 2020.2"); //TODO @Wim
+    }
+
+    @Override
     public DNode getReferenceTarget(SReferenceLink role) {
         return REFERENCE.get(role).get(this);
     }
@@ -648,6 +638,11 @@ public class DNode extends DMatchedObject<SNodeReference, SNode> implements SNod
     @Override
     public void setReference(SReferenceLink role, SReference reference) {
         REFERENCE.get(role).set(this, (DNode) reference.getTargetNode());
+    }
+
+    @Override
+    public void dropReference(SReferenceLink sReferenceLink) {
+        throw new Error("@WIM: make this compatable with MPS 2020.2"); //TODO @Wim
     }
 
     @SuppressWarnings("unchecked")
