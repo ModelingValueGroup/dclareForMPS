@@ -27,7 +27,7 @@ import org.jetbrains.mps.openapi.language.SContainmentLink;
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.jetbrains.mps.openapi.language.SProperty;
 import org.jetbrains.mps.openapi.language.SReferenceLink;
-//import org.jetbrains.mps.openapi.model.ResolveInfo;
+import org.jetbrains.mps.openapi.model.ResolveInfo;
 import org.jetbrains.mps.openapi.model.SModel;
 import org.jetbrains.mps.openapi.model.SModelReference;
 import org.jetbrains.mps.openapi.model.SNode;
@@ -337,7 +337,7 @@ public class DNode extends DMatchedObject<SNodeReference, SNode> implements SNod
         return result;
     }
     
-	/*
+	
     @Override
     public void dropReference(SReferenceLink role) {
         REFERENCE.get(role).set(this, null);
@@ -347,8 +347,7 @@ public class DNode extends DMatchedObject<SNodeReference, SNode> implements SNod
     public void setReference(SReferenceLink role, ResolveInfo resolveInfo) {
         String ri = resolveInfo instanceof ResolveInfo.S ? ((ResolveInfo.S) resolveInfo).getValue() : null;
         setReference(role, DynamicReference.createDynamicReference(role, this, null, ri));
-    }
-	*/
+    }	
 
     @Override
     public SNodeId getNodeId() {
