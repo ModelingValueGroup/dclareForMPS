@@ -15,7 +15,7 @@
 
 package org.modelingvalue.dclare.mps;
 
-import java.util.Objects;
+import java.time.Instant;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -80,7 +80,7 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
         try {
             toMPS.accept(object, pre, post);
         } catch (Throwable t) {
-            DObject.dClareMPS().addMessage(new ThrowableError(object, this, t));
+            DObject.dClareMPS().addMessage(new ThrowableError(object, this, Instant.now(), t));
         }
     }
 
@@ -138,19 +138,6 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
     }
 
     @Override
-    public T get(O object) {
-        return object != null ? super.get(object) : null;
-    }
-
-    @Override
-    public T set(O object, T value) {
-        if (mandatory() && LeafTransaction.getCurrent() instanceof DRule.DObserverTransaction) {
-            Objects.requireNonNull(value);
-        }
-        return super.set(object, value);
-    }
-
-    @Override
     protected boolean isOrphan(State state, Mutable m) {
         return m instanceof DObject && super.isOrphan(state, m) && !((DObject) m).isExternal();
     }
@@ -158,20 +145,6 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
     @Override
     protected boolean isEmpty(T result) {
         return (result == null && mandatory()) || result instanceof ContainingCollection;
-    }
-
-    @Override
-    protected T handleEmptyGet(T result) {
-        if (result == null) {
-            if (LeafTransaction.getCurrent() instanceof DRule.DObserverTransaction) {
-                DRule.EMPTY_ATTRIBUTE.set(true);
-            }
-        } else if (result instanceof ContainingCollection) {
-            if (LeafTransaction.getCurrent() instanceof DRule.DObserverTransaction) {
-                DRule.COLLECTION_ATTRIBUTE.set(true);
-            }
-        }
-        return result;
     }
 
     @Override

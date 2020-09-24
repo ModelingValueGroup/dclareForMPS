@@ -27,6 +27,7 @@ import org.jetbrains.mps.openapi.language.SContainmentLink;
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.jetbrains.mps.openapi.language.SProperty;
 import org.jetbrains.mps.openapi.language.SReferenceLink;
+//import org.jetbrains.mps.openapi.model.ResolveInfo;
 import org.jetbrains.mps.openapi.model.SModel;
 import org.jetbrains.mps.openapi.model.SModelReference;
 import org.jetbrains.mps.openapi.model.SNode;
@@ -50,6 +51,7 @@ import org.modelingvalue.dclare.Setable;
 
 import jetbrains.mps.errors.item.IssueKindReportItem;
 import jetbrains.mps.errors.item.NodeReportItem;
+import jetbrains.mps.smodel.DynamicReference;
 import jetbrains.mps.smodel.SNodeUtil;
 
 @SuppressWarnings("unused")
@@ -152,14 +154,13 @@ public class DNode extends DMatchedObject<SNodeReference, SNode> implements SNod
 
     private static final Observer<DNode>                                                           USED_MODELS_RULE       = DObject.observer(USED_MODELS, o -> USED_MODELS.set(o, o.getChildren().flatMap(DNode.USED_MODELS::get).toSet().addAll(o.getReferenced().map(                           //
             r -> {
-                DModel dm = MODEL.get(r);
-                if (dm == null) {
+                if (r.isRead()) {
                     SModel sm = r.getOriginalModel();
                     if (sm != null) {
-                        dm = DModel.of(sm);
+                        return DModel.of(sm);
                     }
                 }
-                return dm;
+                return MODEL.get(r);
             }).toSet())));
 
     protected static final Setable<DNode, String>                                                  NAME_OBSERVED          = PROPERTY.get(SNodeUtil.property_INamedConcept_name);
@@ -254,7 +255,7 @@ public class DNode extends DMatchedObject<SNodeReference, SNode> implements SNod
     }
 
     public static SNode wrap(SNode original) {
-        return of(original);
+        return original instanceof DNode ? (DNode) original : readNode(original.getConcept(), original.getReference());
     }
 
     protected DNode(Object[] identity) {
@@ -301,12 +302,11 @@ public class DNode extends DMatchedObject<SNodeReference, SNode> implements SNod
 
     @Override
     protected DNodeType getType() {
+        Set<SLanguage> ls = dClareMPS().getRepository().getType().getLanguages().add(getConcept().getLanguage());
         SLanguage al = getAnonymousLanguage();
-        SLanguage cl = getConcept().getLanguage();
-        if (DClareMPS.RULE_SETS.get(cl).isEmpty()) {
-            cl = null;
+        if (al != null) {
+            ls = ls.add(al);
         }
-        Set<SLanguage> ls = (al != null && cl != null) ? Set.of(al, cl) : al != null ? Set.of(al) : cl != null ? Set.of(cl) : Set.of();
         return NODE_TYPE.get(Quadruple.of(ls, getConcept(), getAnonymousType(), isExternal()));
     }
 
@@ -336,6 +336,19 @@ public class DNode extends DMatchedObject<SNodeReference, SNode> implements SNod
         }
         return result;
     }
+    
+	/*
+    @Override
+    public void dropReference(SReferenceLink role) {
+        REFERENCE.get(role).set(this, null);
+    }
+
+    @Override
+    public void setReference(SReferenceLink role, ResolveInfo resolveInfo) {
+        String ri = resolveInfo instanceof ResolveInfo.S ? ((ResolveInfo.S) resolveInfo).getValue() : null;
+        setReference(role, DynamicReference.createDynamicReference(role, this, null, ri));
+    }
+	*/
 
     @Override
     public SNodeId getNodeId() {

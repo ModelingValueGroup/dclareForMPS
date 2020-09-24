@@ -2,7 +2,7 @@
 <model ref="r:d496f872-14f4-4415-9dd1-a59394188d3a(DclareMessages.editor)">
   <persistence version="9" />
   <languages>
-    <use id="18bc6592-03a6-4e29-a83a-7ff23bde13ba" name="jetbrains.mps.lang.editor" version="13" />
+    <use id="18bc6592-03a6-4e29-a83a-7ff23bde13ba" name="jetbrains.mps.lang.editor" version="14" />
     <devkit ref="fbc25dd2-5da4-483a-8b19-70928e1b62d7(jetbrains.mps.devkit.general-purpose)" />
   </languages>
   <imports>
@@ -665,7 +665,7 @@
             </node>
           </node>
           <node concept="3F0ifn" id="1KqhpdG6mgU" role="1QoVPY">
-            <property role="3F0ifm" value="..." />
+            <property role="3F0ifm" value="……" />
             <ref role="1ERwB7" node="1KqhpdG5TiT" resolve="Expand" />
             <node concept="VechU" id="2seYxKlnZiV" role="3F10Kt">
               <property role="Vb096" value="g1_qRwE/darkGreen" />

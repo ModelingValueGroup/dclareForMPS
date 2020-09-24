@@ -28,7 +28,7 @@ import org.modelingvalue.dclare.Setable;
 public abstract class DMatchedObject<R, S> extends DIdentifiedObject {
 
     @SuppressWarnings("rawtypes")
-    private static final Setable<Object, DMatchedObject>  D_MATCHED   = Setable.of("$D_MATCHED", null);
+    private static final Observed<Object, DMatchedObject> D_MATCHED   = Observed.of("$D_MATCHED", null);
 
     @SuppressWarnings("rawtypes")
     private static final Observed<DMatchedObject, Object> MATCHED_REF = NonCheckingObserved.of("$MATCHED_REF", null, () -> D_MATCHED);
