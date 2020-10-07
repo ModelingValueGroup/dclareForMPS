@@ -251,6 +251,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
             }
 
         };
+        new MPSDeltaAdapter("mps-sync", universeTransaction, new MPSSerializationHelper() );
         this.dObserverTransactions = Concurrent.of(() -> new ReusableTransaction<>(universeTransaction));
         waitForEndThread = new Thread(() -> {
             State result = universeTransaction.emptyState();
