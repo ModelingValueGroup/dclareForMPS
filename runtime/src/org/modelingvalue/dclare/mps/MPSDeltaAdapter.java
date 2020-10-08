@@ -9,8 +9,7 @@ public class MPSDeltaAdapter extends DeltaAdaptor<DObjectType<DObject>, DObject,
 
 	public MPSDeltaAdapter(String name, UniverseTransaction tx,
 			SerializationHelper<DObjectType<DObject>, DObject, Setable<DObject, Object>> helper) {
-		super(name, tx, helper);
-		// TODO Auto-generated constructor stub
+		super(name, tx, helper);		
 	}
 
 }
