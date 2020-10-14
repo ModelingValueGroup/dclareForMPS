@@ -33,10 +33,10 @@ import org.modelingvalue.dclare.Mutable;
 import org.modelingvalue.dclare.NonCheckingObserved;
 import org.modelingvalue.dclare.Observed;
 import org.modelingvalue.dclare.Observer;
+import org.modelingvalue.dclare.ObserverTransaction;
 import org.modelingvalue.dclare.Setable;
 import org.modelingvalue.dclare.State;
 import org.modelingvalue.dclare.mps.DAttribute.DIdentifyingAttribute;
-import org.modelingvalue.dclare.mps.DRule.DObserverTransaction;
 
 @SuppressWarnings("rawtypes")
 public abstract class DMatchedObject<T, R, S> extends DIdentifiedObject implements Mergeable<DMatchedObject> {
@@ -127,12 +127,12 @@ public abstract class DMatchedObject<T, R, S> extends DIdentifiedObject implemen
     }
 
     protected static <D extends DMatchedObject, A> D copyRootConstruct(String anonymousType, DObject object, DNode copied, Supplier<D> supplier) {
-        return derive(new DCopyConstruction(object, ((DObserverTransaction) LeafTransaction.getCurrent()).observer(), copied, anonymousType), supplier);
+        return derive(new DCopyConstruction(object, ((ObserverTransaction) LeafTransaction.getCurrent()).observer(), copied, anonymousType), supplier);
     }
 
     protected static <D extends DMatchedObject, A> D copyChildConstruct(DConstruction root, DNode copied, Supplier<D> supplier) {
-        DObserverTransaction current = (DObserverTransaction) LeafTransaction.getCurrent();
-        return derive(new DCopyConstruction(current.object(), current.observer(), copied, root), supplier);
+        ObserverTransaction current = (ObserverTransaction) LeafTransaction.getCurrent();
+        return derive(new DCopyConstruction((DObject) current.mutable(), current.observer(), copied, root), supplier);
     }
 
     @SuppressWarnings("unchecked")
