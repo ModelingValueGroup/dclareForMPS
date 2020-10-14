@@ -18,19 +18,33 @@ package org.modelingvalue.dclare.mps;
 import java.util.function.Predicate;
 
 import org.jetbrains.mps.openapi.language.SConcept;
-import org.jetbrains.mps.openapi.model.SNode;
+import org.jetbrains.mps.openapi.model.SModel;
+import org.jetbrains.mps.openapi.model.SModelId;
 import org.jetbrains.mps.openapi.model.SNodeReference;
+import org.jetbrains.mps.openapi.module.SModule;
+import org.jetbrains.mps.openapi.module.SModuleId;
+import org.jetbrains.mps.openapi.persistence.PersistenceFacade;
 import org.modelingvalue.dclare.Mutable;
 import org.modelingvalue.dclare.Setable;
-import org.modelingvalue.dclare.sync.*;
+import org.modelingvalue.dclare.sync.SerializationHelper;
+import org.modelingvalue.dclare.sync.Util;
 
 import jetbrains.mps.project.ProjectRepository;
-import jetbrains.mps.smodel.SNodePointer;
 
 public class MPSSerializationHelper
 		implements SerializationHelper<DObjectType<DObject>, DObject, Setable<DObject, Object>> {
 
+	private static final String SETABLE_TYPE = "setable-";
+	private static final String DSTRUCT_TYPE = "dstruct-";
+	private static final String NODE_TYPE    = "node-";
+	private static final String MODEL_TYPE   = "model-";
+	private static final String MODULE_TYPE  = "module-";
 	private final ProjectRepository repos;
+	
+	
+	private PersistenceFacade mpsPersist() {
+		return PersistenceFacade.getInstance();
+	}
 
 	public MPSSerializationHelper(ProjectRepository repos) {
 		this.repos = repos;
@@ -49,30 +63,40 @@ public class MPSSerializationHelper
 
 	@Override
 	public String serializeClass(DObjectType<DObject> clazz) {
-		// TODO Auto-generated method stub
+		System.err.println("[SERIALIZE] class: " + clazz.toString());
 		return null;
 	}
 
 	@Override
 	public String serializeSetable(Setable<DObject, Object> setable) {
-		// TODO Auto-generated method stub
-		return null;
+		System.err.println("[SERIALIZE] setable " + setable.toString());
+		return Util.encodeWithLength(SETABLE_TYPE+setable.id().toString());
 	}
 
 	@Override
 	public String serializeMutable(DObject mutable) {
 		if (mutable instanceof DNode) {
 			DIdentifiedObject iObj = (DIdentifiedObject) mutable;
-			return serializeIdentity(iObj.getIdentity());
-		} else if (mutable instanceof DStructObject) {
-			// geen idee nog .....
-			DIdentifiedObject iObj = (DIdentifiedObject) mutable;
-			return serializeIdentity(iObj.getIdentity());
+			String s = Util.encodeWithLength(NODE_TYPE+serializeIdentity(iObj.getIdentity()));
+			System.err.println("[SERIALIZE] node: " + s);
+			return s;
+		} else if (mutable instanceof DStructObject) {			
+			DIdentifiedObject iObj = (DIdentifiedObject) mutable;			
+			String s = Util.encodeWithLength(DSTRUCT_TYPE+serializeIdentity(iObj.getIdentity()));
+			System.err.println("[SERIALIZE] struct: " + s);
+			return s;
 		} else if (mutable instanceof DModule) {
 			DModule dm = (DModule) mutable;
-			return Util.encodeWithLength("module-" + dm.getModuleId().toString());			
+			String s = Util.encodeWithLength(MODULE_TYPE + mpsPersist().asString(dm.getModuleId()));			
+			System.err.println("[SERIALIZE] module: " + s);
+			return s;
+		} else if (mutable instanceof DModel) {
+			DModel dm = (DModel) mutable;
+			String s =  Util.encodeWithLength(MODEL_TYPE + mpsPersist().asString(dm.getModelId()));
+			System.err.println("[SERIALIZE] model: " + s);
+			return s;
 		}
-		System.err.println("NO support for type: " + mutable.getClass().getName());
+		System.err.println("[SERIALIZE] NO support for type: " + mutable.getClass().getName());
 		return null;
 	}
 
@@ -80,12 +104,13 @@ public class MPSSerializationHelper
 		String[] id = new String[obj.length];
 		for (int i = 0; i < obj.length; i++) {
 			if (obj[i] instanceof SNodeReference) {
-				SNodeReference ref = (SNodeReference) obj[i];
-				id[i] = "ref-" + SNodePointer.serialize(ref);
-			}
-			if (obj[i] instanceof SConcept) {
+				SNodeReference ref = (SNodeReference) obj[i];			
+				id[i] = "ref-" + mpsPersist().asString(ref);
+			}else if (obj[i] instanceof SConcept) {
 				SConcept sc = (SConcept) obj[i];
-				id[i] = "concept-" + SNodePointer.serialize(sc.getSourceNode());
+				id[i] = "concept-" + mpsPersist().asString(sc);
+			} else {
+				System.err.println("[SERIALIZE] ERROR ident " + obj[i].getClass().getName() );
 			}
 		}
 		return Util.encodeWithLength(id);
@@ -93,7 +118,7 @@ public class MPSSerializationHelper
 
 	@Override
 	public Object serializeValue(Setable<DObject, Object> setable, Object value) {
-		// TODO Auto-generated method stub
+		System.err.println("[SERIALIZE] value: " + setable.toString() + " = " + value);
 		return null;
 	}
 
@@ -103,27 +128,35 @@ public class MPSSerializationHelper
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public Setable<DObject, Object> deserializeSetable(DObjectType<DObject> clazz, String s) {
-		// TODO Auto-generated method stub
-		return null;
+		String id = s.substring(SETABLE_TYPE.length()-1);
+		return (Setable<DObject, Object>) clazz.dSetables().filter(x->x.id().toString().equals(id)).findFirst().get();
 	}
 
 	@Override
 	public DObject deserializeMutable(String s) {
-		if (s.startsWith("module-")) {
-			
-		} else {
-			String[] ss = Util.decodeFromLength(s, 2);
-			SNodeReference ref = SNodePointer.deserialize(ss[0]);
-			SNodeReference conceptRef = SNodePointer.deserialize(ss[1]);
-			SNode node = conceptRef.resolve(null);
-			SConcept concept = node.getConcept(); // dit klopt nog niet.....
+		if (s.startsWith(MODULE_TYPE)) {
+			SModuleId mId = mpsPersist().createModuleId(s);
+			SModule module = repos.getModule(mId);
+			return DModule.of(module);
+		} else if (s.startsWith(MODEL_TYPE)){
+			SModelId mId = mpsPersist().createModelId(s);
+			SModel model = repos.getModel(mId);
+			return DModel.of(model);
+		} else if(s.startsWith(NODE_TYPE)) {
+			String[] ss = Util.decodeFromLength(s.substring(NODE_TYPE.length()-1), 2);
+			SNodeReference ref = mpsPersist().createNodeReference(ss[0]); 					
+			SConcept concept = (SConcept) mpsPersist().createConcept(ss[1]);		
 			DNode dnode = DNode.of(concept, ref);
-		}
-		return null;
+			return dnode;
+		} else {
+			System.err.println("[DESERIALIZE] FAILED: " + s);
+			return null;
+		}		
 	}
-
+	
 	@Override
 	public Object deserializeValue(Setable<DObject, Object> setable, Object s) {
 		// TODO Auto-generated method stub
