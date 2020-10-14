@@ -1,3 +1,7 @@
+# v1.4.1
+- update to latest MPS version
+# v1.4.0
+- update to latest MPS version
 # v1.2.4
 - several bugfixes
 # v1.2.0

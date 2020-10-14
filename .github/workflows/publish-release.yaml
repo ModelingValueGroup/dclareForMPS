@@ -16,8 +16,20 @@ jobs:
       - name: make release notes
         run: |
           tag="${GITHUB_REF#refs/tags/}"
-          releaseNotes="$(awk '/^# '"$tag"'$/ {on=1;next;} /^#/{on=0} on==1{gsub("%", "%25");printf "%s\\n", $0}' release-notes.md)"
-          echo "::set-env name=releaseNotes::$releaseNotes"
+
+          if ! fgrep -qx "# $tag" release-notes.md; then
+              echo "::error::release notes are missing, add them to 'release-notes.md' as '# $tag'"
+              exit 67
+          fi
+
+          . project.sh
+          cat <<EOF >> $GITHUB_ENV
+          releaseNotes<<EOF2
+          - based on MPS $mpsVersion
+          $(awk '/^# '"$tag"'$/ {on=1;next;} /^#/{on=0} on==1{gsub("%", "%25");printf "%s\n", $0}' release-notes.md)
+          EOF2
+          EOF
+
 
       - name: create release
         uses: actions/create-release@v1
