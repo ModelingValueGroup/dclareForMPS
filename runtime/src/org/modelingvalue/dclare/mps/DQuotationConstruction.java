@@ -19,8 +19,8 @@ import java.util.Arrays;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.dclare.LeafTransaction;
+import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.mps.DAttribute.DIdentifyingAttribute;
-import org.modelingvalue.dclare.mps.DRule.DObserver;
 import org.modelingvalue.dclare.mps.DRule.DObserverTransaction;
 
 public class DQuotationConstruction extends DDeriveConstruction {
@@ -36,6 +36,7 @@ public class DQuotationConstruction extends DDeriveConstruction {
         super(identity);
     }
 
+    @Override
     protected DQuotationConstruction moveTo(DObject object) {
         Object[] id = identity.clone();
         id[0] = object;
@@ -47,14 +48,17 @@ public class DQuotationConstruction extends DDeriveConstruction {
         return (V) identity[attr.index()];
     }
 
-    public DObserver<?> observer() {
-        return (DObserver<?>) identity[identity.length - 3];
+    @Override
+    public Observer<?> observer() {
+        return (Observer<?>) identity[identity.length - 3];
     }
 
+    @Override
     public DObject object() {
         return (DObject) identity[0];
     }
 
+    @Override
     public String getAnonymousType() {
         return (String) identity[identity.length - 1];
     }

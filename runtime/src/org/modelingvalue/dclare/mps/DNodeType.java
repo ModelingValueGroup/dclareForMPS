@@ -19,15 +19,14 @@ import org.jetbrains.mps.openapi.language.SConcept;
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
-import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.collections.util.Quintuple;
 import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.Setable;
 
 @SuppressWarnings("unused")
-public class DNodeType extends DObjectType<Quintuple<Set<SLanguage>, SConcept, Set<String>, Boolean, Set<Integer>>> {
+public class DNodeType extends DObjectType<Quintuple<Set<SLanguage>, SConcept, Set<String>, Boolean, Boolean>> {
 
-    public DNodeType(Quintuple<Set<SLanguage>, SConcept, Set<String>, Boolean, Set<Integer>> q) {
+    public DNodeType(Quintuple<Set<SLanguage>, SConcept, Set<String>, Boolean, Boolean> q) {
         super(q);
     }
 
@@ -61,7 +60,7 @@ public class DNodeType extends DObjectType<Quintuple<Set<SLanguage>, SConcept, S
         return id().c();
     }
 
-    public Set<Integer> getCopyNumbers() {
+    public boolean isCopy() {
         return id().e();
     }
 
@@ -74,7 +73,7 @@ public class DNodeType extends DObjectType<Quintuple<Set<SLanguage>, SConcept, S
     @SuppressWarnings("rawtypes")
     @Override
     protected Collection<Observer> observers() {
-        return DNode.OBSERVERS.addAll(getCopyNumbers().flatMap(n -> DNode.COPY_CONCEPT_OBSERVERS.get(Pair.of(getConcept(), n))));
+        return isCopy() ? DNode.OBSERVERS.addAll(DNode.COPY_CONCEPT_OBSERVERS.get(getConcept())) : DNode.OBSERVERS;
     }
 
 }

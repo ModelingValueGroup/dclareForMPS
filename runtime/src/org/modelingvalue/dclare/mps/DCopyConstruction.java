@@ -15,22 +15,16 @@
 
 package org.modelingvalue.dclare.mps;
 
-import org.modelingvalue.dclare.LeafTransaction;
-import org.modelingvalue.dclare.mps.DRule.DObserver;
-import org.modelingvalue.dclare.mps.DRule.DObserverTransaction;
+import org.modelingvalue.dclare.Observer;
 
 public class DCopyConstruction extends DDeriveConstruction {
 
-    protected DCopyConstruction(String anonymousType, DObject object, DNode copied) {
-        super(new Object[4]);
-        identity[0] = object;
-        identity[1] = copied;
-        identity[2] = ((DObserverTransaction) LeafTransaction.getCurrent()).observer();
-        identity[3] = anonymousType;
+    protected DCopyConstruction(DObject object, Observer<?> observer, DNode copied, String anonymousType) {
+        super(new Object[]{object, observer, copied, anonymousType});
     }
 
-    protected DCopyConstruction(DConstruction root, DNode copied) {
-        super(new Object[]{root, copied});
+    protected DCopyConstruction(DObject object, Observer<?> observer, DNode copied, DConstruction root) {
+        super(new Object[]{object, observer, copied, root});
     }
 
     private DCopyConstruction(Object[] identity) {
@@ -45,21 +39,21 @@ public class DCopyConstruction extends DDeriveConstruction {
     }
 
     public DCopyConstruction root() {
-        return identity.length == 2 ? (DCopyConstruction) identity[0] : this;
-    }
-
-    @Override
-    public DObserver<?> observer() {
-        return (DObserver<?>) root().identity[2];
-    }
-
-    public DNode copied() {
-        return (DNode) identity[1];
+        return identity[3] instanceof DCopyConstruction ? (DCopyConstruction) identity[3] : this;
     }
 
     @Override
     public DObject object() {
-        return (DObject) root().identity[0];
+        return (DObject) identity[0];
+    }
+
+    @Override
+    public Observer<?> observer() {
+        return (Observer<?>) identity[1];
+    }
+
+    public DNode copied() {
+        return (DNode) identity[2];
     }
 
     @Override

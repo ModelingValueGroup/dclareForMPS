@@ -23,6 +23,7 @@ import org.modelingvalue.collections.ContainingCollection;
 import org.modelingvalue.collections.Entry;
 import org.modelingvalue.collections.Map;
 import org.modelingvalue.collections.Set;
+import org.modelingvalue.collections.util.Context;
 import org.modelingvalue.collections.util.Mergeable;
 import org.modelingvalue.collections.util.NotMergeableException;
 import org.modelingvalue.collections.util.Pair;
@@ -35,7 +36,7 @@ import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.Setable;
 import org.modelingvalue.dclare.State;
 import org.modelingvalue.dclare.mps.DAttribute.DIdentifyingAttribute;
-import org.modelingvalue.dclare.mps.DRule.Constructed;
+import org.modelingvalue.dclare.mps.DRule.DObserverTransaction;
 
 @SuppressWarnings("rawtypes")
 public abstract class DMatchedObject<T, R, S> extends DIdentifiedObject implements Mergeable<DMatchedObject> {
@@ -80,6 +81,10 @@ public abstract class DMatchedObject<T, R, S> extends DIdentifiedObject implemen
         }
     }
 
+    protected static final Constant<Observer<?>, Constructed>                CONSTRUCTED  = Constant.of("CONSTRUCTED", o -> new Constructed(o));
+
+    protected static final Context<Map<DDeriveConstruction, DMatchedObject>> DCONSTRUCTED = Context.of(Map.of());
+
     @SuppressWarnings("unchecked")
     protected void replaceMatching() {
         Pair<Mutable, Setable<Mutable, ?>> pc = D_PARENT_CONTAINING.get(this);
@@ -98,7 +103,7 @@ public abstract class DMatchedObject<T, R, S> extends DIdentifiedObject implemen
                         START_ACTION.trigger(this);
                     } else {
                         DDeriveConstruction der = (DDeriveConstruction) cons;
-                        der.observer().constructed.set(der.object(), (map, e) -> map.put(der, e), this);
+                        CONSTRUCTED.get(der.observer()).set(der.object(), (map, e) -> map.put(der, e), this);
                     }
                 }
                 LeafTransaction.getCurrent().properties(rem, (k, v) -> {
@@ -121,21 +126,22 @@ public abstract class DMatchedObject<T, R, S> extends DIdentifiedObject implemen
         return derive(new DQuotationConstruction(anonymousLanguage, anonymousType, ctx), supplier);
     }
 
-    protected static <D extends DMatchedObject, A> D copyRootConstruct(String anonymousType, DObject ctx, DNode copied, Supplier<D> supplier) {
-        return derive(new DCopyConstruction(anonymousType, ctx, copied), supplier);
+    protected static <D extends DMatchedObject, A> D copyRootConstruct(String anonymousType, DObject object, DNode copied, Supplier<D> supplier) {
+        return derive(new DCopyConstruction(object, ((DObserverTransaction) LeafTransaction.getCurrent()).observer(), copied, anonymousType), supplier);
     }
 
     protected static <D extends DMatchedObject, A> D copyChildConstruct(DConstruction root, DNode copied, Supplier<D> supplier) {
-        return derive(new DCopyConstruction(root, copied), supplier);
+        DObserverTransaction current = (DObserverTransaction) LeafTransaction.getCurrent();
+        return derive(new DCopyConstruction(current.object(), current.observer(), copied, root), supplier);
     }
 
     @SuppressWarnings("unchecked")
     private static <D extends DMatchedObject> D derive(DDeriveConstruction id, Supplier<D> supplier) {
-        D d = (D) id.observer().constructed.get(id.object()).get(id);
+        D d = (D) CONSTRUCTED.get(id.observer()).get(id.object()).get(id);
         if (d == null) {
             d = supplier.get();
         }
-        DRule.DCONSTRUCTED.set(Map::put, id, d);
+        DCONSTRUCTED.set(Map::put, id, d);
         return d;
     }
 
@@ -148,6 +154,11 @@ public abstract class DMatchedObject<T, R, S> extends DIdentifiedObject implemen
         }
         READ_MAPPING.set(id, d);
         return d;
+    }
+
+    @SuppressWarnings("unchecked")
+    protected static <D extends DMatchedObject> D getDerived(DDeriveConstruction id) {
+        return (D) CONSTRUCTED.get(id.observer()).get(id.object()).get(id);
     }
 
     @SuppressWarnings("unchecked")
@@ -257,16 +268,8 @@ public abstract class DMatchedObject<T, R, S> extends DIdentifiedObject implemen
         return CONSTRUCTIONS.get(this).filter(DQuotationConstruction.class).map(DQuotationConstruction::getAnonymousType).notNull().toSet();
     }
 
-    public Set<Integer> getCopyNumbers() {
-        Set<Integer> numbers = Set.of();
-        int i = 0;
-        for (DConstruction c : CONSTRUCTIONS.get(this)) {
-            if (c instanceof DCopyConstruction) {
-                numbers = numbers.add(i);
-            }
-            i++;
-        }
-        return numbers;
+    public boolean isCopy() {
+        return CONSTRUCTIONS.get(this).anyMatch(c -> c instanceof DCopyConstruction);
     }
 
     public Set<SLanguage> getAnonymousLanguages() {
@@ -315,6 +318,24 @@ public abstract class DMatchedObject<T, R, S> extends DIdentifiedObject implemen
             }
         }
         return result;
+    }
+
+    public static class Constructed extends NonCheckingObserved<DObject, Map<DDeriveConstruction, DMatchedObject>> {
+
+        protected Constructed(Observer<?> observer) {
+            super(observer, false, Map.of(), false, null, null, (tx, o, pre, post) -> {
+                pre.diff(post).forEachOrdered(e -> {
+                    Pair<DMatchedObject, DMatchedObject> d = e.getValue();
+                    if (d.a() != null) {
+                        CONSTRUCTIONS.set(d.a(), Set::remove, e.getKey());
+                    }
+                    if (d.b() != null) {
+                        CONSTRUCTIONS.set(d.b(), Set::add, e.getKey());
+                    }
+                });
+            });
+        }
+
     }
 
     private static final DMatchedObject MERGER = new DMatchedObject(new Object[]{}) {

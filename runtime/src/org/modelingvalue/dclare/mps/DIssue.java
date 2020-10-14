@@ -85,7 +85,7 @@ public class DIssue extends DIdentifiedObject {
             }
         };
         this.dObject = dObject;
-        DRule.DISUES.set(Set::add, this);
+        DObject.DISUES.set(Set::add, this);
     }
 
     public MessageTarget getFeature() {

@@ -15,7 +15,7 @@
 
 package org.modelingvalue.dclare.mps;
 
-import org.modelingvalue.dclare.mps.DRule.DObserver;
+import org.modelingvalue.dclare.Observer;
 
 public abstract class DDeriveConstruction extends DConstruction {
 
@@ -25,7 +25,7 @@ public abstract class DDeriveConstruction extends DConstruction {
 
     protected abstract DDeriveConstruction moveTo(DObject object);
 
-    public abstract DObserver<?> observer();
+    public abstract Observer<?> observer();
 
     public abstract DObject object();
 
