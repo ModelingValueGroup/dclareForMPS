@@ -394,7 +394,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
     }
 
     private static List<DNode> copy(List<DNode> children, DCopyConstruction root) {
-        return children.map(c -> copy(c, root)).toList();
+        return children.sequential().map(c -> copy(c, root)).toList();
     }
 
     private static DNode copy(DNode child, DCopyConstruction root) {
