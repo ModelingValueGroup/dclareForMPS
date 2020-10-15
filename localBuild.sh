@@ -17,20 +17,20 @@
 if [[ "$1" == clean ]]; then
     echo "cleaning..."
     . project.sh
-    rm -rf "buildTools.jar" "$mpsDir" "lib" "out"
+    rm -rf "buildtools.jar" "$mpsDir" "lib" "out"
 fi
 
-if [[ ! -d ../buildTools ]]; then
-    echo "ERROR: no buildTools project in parent dir"
+if [[ ! -d ../buildtools ]]; then
+    echo "ERROR: no buildtools project in parent dir"
     exit 88
 fi
-if [[ ! -f ../buildTools/out/artifacts/buildTools.jar ]]; then
-    echo "ERROR: build buildTools first"
+if [[ ! -f ../buildtools/out/artifacts/buildtools.jar ]]; then
+    echo "ERROR: build buildtools first"
     exit 88
 fi
 
-cp ../buildTools/out/artifacts/buildTools.jar .
-. <(java -jar buildTools.jar)
+cp ../buildtools/out/artifacts/buildtools.jar .
+. <(java -jar buildtools.jar)
 generateAll
 . project.sh
 if [[ ! -d "$mpsDir" ]]; then
