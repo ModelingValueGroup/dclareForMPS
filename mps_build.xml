@@ -52,15 +52,7 @@
         <depends>jetbrains.mps.ide.devkit</depends>
         <depends>jetbrains.mps.build</depends>
         <depends>com.intellij.modules.mps</depends>
-<<<<<<< HEAD
         <idea-version since-build="201.6668" until-build="202.9999" />
-=======
-<<<<<<< HEAD
-        <idea-version since-build="201.6668" until-build="201.7846.1470" />
-=======
-        <idea-version since-build="201.6668" until-build="201.7846.1470" />
->>>>>>> branch 'matching' of https://github.com/ModelingValueGroup/DclareForMPS.git
->>>>>>> branch 'matching' of https://github.com/ModelingValueGroup/DclareForMPS.git
         
         <extensions defaultExtensionNs="com.intellij">
           <mps.LanguageLibrary dir="/languages" />
