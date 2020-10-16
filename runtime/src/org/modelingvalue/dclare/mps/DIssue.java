@@ -23,6 +23,7 @@ import org.modelingvalue.dclare.LeafTransaction;
 import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.Setable;
 import org.modelingvalue.dclare.mps.DRule.DObserver;
+import org.modelingvalue.dclare.mps.DRule.DObserverTransaction;
 
 import jetbrains.mps.errors.MessageStatus;
 import jetbrains.mps.errors.item.IssueKindReportItem;
@@ -63,7 +64,10 @@ public class DIssue extends DIdentifiedObject {
     protected static final Set<Setable>                   SETABLES         = DObject.SETABLES.addAll(Set.of(MESSAGE, DOBJECT, SEVERITY, FEATURE));
 
     public static DIssue of(Supplier<DObject> object, Supplier<MessageStatus> severity, Supplier<MessageTarget> feature, Supplier<String> message, Object[] identity) {
-        return new DIssue(((DObserver<?>) LeafTransaction.getCurrent().cls()).rule(), object, severity, feature, message, identity);
+        DObserverTransaction tx = (DObserverTransaction) LeafTransaction.getCurrent();
+        DIssue issue = new DIssue(((DObserver<?>) tx.cls()).rule(), object, severity, feature, message, identity);
+        tx.issues.change(s -> s.add(issue));
+        return issue;
     }
 
     private final Supplier<String>        message;
@@ -85,7 +89,6 @@ public class DIssue extends DIdentifiedObject {
             }
         };
         this.dObject = dObject;
-        DObject.DISUES.set(Set::add, this);
     }
 
     public MessageTarget getFeature() {

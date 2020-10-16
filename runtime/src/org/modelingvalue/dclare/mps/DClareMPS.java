@@ -69,6 +69,7 @@ import org.modelingvalue.dclare.ex.TooManyChangesException;
 import org.modelingvalue.dclare.ex.TooManyObservedException;
 import org.modelingvalue.dclare.ex.TooManyObserversException;
 import org.modelingvalue.dclare.ex.TransactionException;
+import org.modelingvalue.dclare.mps.DNonCheckingObserver.DNonCheckingTransaction;
 import org.modelingvalue.dclare.mps.DRule.DObserver;
 import org.modelingvalue.dclare.mps.DRule.DObserverTransaction;
 import org.modelingvalue.dclare.mps.DclareModelCheckerBuilder.RootItemsToCheck;
@@ -159,6 +160,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     private ImperativeTransaction                                                                       imperativeTransaction;
     private boolean                                                                                     running;
     protected final Concurrent<ReusableTransaction<DRule.DObserver<?>, DObserverTransaction>>           dObserverTransactions;
+    protected final Concurrent<ReusableTransaction<DNonCheckingObserver<?>, DNonCheckingTransaction>>   dNonCheckingTransactions;
     protected Map<DMessageType, QualifiedSet<Triple<DObject, DFeature, String>, DMessage>>              messages             = MESSAGE_QSET_MAP;
     private Thread                                                                                      commandThread;
     protected final DclareForMPSEngine                                                                  engine;
@@ -252,6 +254,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
 
         };
         this.dObserverTransactions = Concurrent.of(() -> new ReusableTransaction<>(universeTransaction));
+        this.dNonCheckingTransactions = Concurrent.of(() -> new ReusableTransaction<>(universeTransaction));
         waitForEndThread = new Thread(() -> {
             State result = universeTransaction.emptyState();
             try {

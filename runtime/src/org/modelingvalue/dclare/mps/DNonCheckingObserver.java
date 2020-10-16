@@ -15,78 +15,60 @@
 
 package org.modelingvalue.dclare.mps;
 
+import java.util.function.Consumer;
+
 import org.modelingvalue.collections.Map;
-import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Concurrent;
-import org.modelingvalue.dclare.Constant;
 import org.modelingvalue.dclare.Direction;
-import org.modelingvalue.dclare.Mutable;
 import org.modelingvalue.dclare.MutableTransaction;
-import org.modelingvalue.dclare.Observer;
-import org.modelingvalue.dclare.ObserverTransaction;
+import org.modelingvalue.dclare.NonCheckingObserver;
 import org.modelingvalue.dclare.State;
 import org.modelingvalue.dclare.Transaction;
 import org.modelingvalue.dclare.UniverseTransaction;
 
-@SuppressWarnings("rawtypes")
-public interface DRule<O> extends DFeature {
+public class DNonCheckingObserver<O extends DObject> extends NonCheckingObserver<O> {
 
-    Constant<DRule, DObserver> OBSERVER = Constant.of("OBSERVER", //
-            r -> DObserver.of(r, r.initialLowPriority() ? Direction.backward : Direction.forward));
-
-    class DObserver<O extends Mutable> extends Observer<O> {
-
-        private static <M extends Mutable> DObserver of(DRule rule, Direction initDirection) {
-            return new DObserver<M>(rule, initDirection);
-        }
-
-        @SuppressWarnings("unchecked")
-        private DObserver(DRule rule, Direction initDirection) {
-            super(rule, rule::run, initDirection);
-        }
-
-        public DRule rule() {
-            return (DRule) id();
-        }
-
-        @Override
-        public DRule.DObserverTransaction openTransaction(MutableTransaction parent) {
-            return ((DClareMPS) parent.universeTransaction().mutable()).dObserverTransactions.get().open(this, parent);
-        }
-
-        @Override
-        public void closeTransaction(Transaction tx) {
-            ((DClareMPS) tx.universeTransaction().mutable()).dObserverTransactions.get().close((DRule.DObserverTransaction) tx);
-        }
-
-        @Override
-        public DRule.DObserverTransaction newTransaction(UniverseTransaction universeTransaction) {
-            return new DRule.DObserverTransaction(universeTransaction);
-        }
-
+    public static <M extends DObject> DNonCheckingObserver<M> of(Consumer<M> action, Object id, Direction initDirection) {
+        return new DNonCheckingObserver<>(id, action, initDirection);
     }
 
-    class DObserverTransaction extends ObserverTransaction implements DConstructingTransaction {
+    private DNonCheckingObserver(Object id, Consumer<O> action, Direction initDirection) {
+        super(id, action, initDirection);
+    }
 
-        final Concurrent<Set<DIssue>>                              issues      = Concurrent.of();
+    @Override
+    public DNonCheckingObserver.DNonCheckingTransaction openTransaction(MutableTransaction parent) {
+        return ((DClareMPS) parent.universeTransaction().mutable()).dNonCheckingTransactions.get().open(this, parent);
+    }
 
+    @Override
+    public void closeTransaction(Transaction tx) {
+        ((DClareMPS) tx.universeTransaction().mutable()).dNonCheckingTransactions.get().close((DNonCheckingObserver.DNonCheckingTransaction) tx);
+    }
+
+    @Override
+    public DNonCheckingObserver.DNonCheckingTransaction newTransaction(UniverseTransaction universeTransaction) {
+        return new DNonCheckingTransaction(universeTransaction);
+    }
+
+    public static class DNonCheckingTransaction extends NonCheckingTransaction implements DConstructingTransaction {
+
+        @SuppressWarnings("rawtypes")
         final Concurrent<Map<DDeriveConstruction, DMatchedObject>> constructed = Concurrent.of();
 
-        private DObserverTransaction(UniverseTransaction root) {
+        private DNonCheckingTransaction(UniverseTransaction root) {
             super(root);
         }
 
         @Override
         protected final void doRun(State pre, UniverseTransaction universeTransaction) {
             DObject dObject = object();
-            issues.init(Set.of());
             constructed.init(Map.of());
             try {
                 if (dObject.isOwned()) {
                     super.doRun(pre, universeTransaction);
                 }
             } finally {
-                DObject.DRULE_ISSUES.set(dObject, (b, a) -> a.addAll(b.filter(i -> !i.getRule().equals(rule()))), issues.result());
                 runNonObserving(() -> DMatchedObject.CONSTRUCTED.get(observer()).set(dObject, constructed.result()));
             }
         }
@@ -96,24 +78,12 @@ public interface DRule<O> extends DFeature {
             return (DObject) mutable();
         }
 
-        @Override
-        public DObserver<?> observer() {
-            return (DObserver) super.observer();
-        }
-
-        public DRule rule() {
-            return observer().rule();
-        }
-
+        @SuppressWarnings("rawtypes")
         @Override
         public Concurrent<Map<DDeriveConstruction, DMatchedObject>> constructed() {
             return constructed;
         }
 
     }
-
-    void run(O object);
-
-    boolean initialLowPriority();
 
 }

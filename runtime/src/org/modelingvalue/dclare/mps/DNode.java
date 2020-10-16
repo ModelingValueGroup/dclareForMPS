@@ -44,13 +44,11 @@ import org.modelingvalue.collections.util.Quintuple;
 import org.modelingvalue.dclare.Action;
 import org.modelingvalue.dclare.Constant;
 import org.modelingvalue.dclare.Direction;
-import org.modelingvalue.dclare.LeafTransaction;
 import org.modelingvalue.dclare.Mutable;
 import org.modelingvalue.dclare.NonCheckingObserved;
 import org.modelingvalue.dclare.NonCheckingObserver;
 import org.modelingvalue.dclare.Observed;
 import org.modelingvalue.dclare.Observer;
-import org.modelingvalue.dclare.ObserverTransaction;
 import org.modelingvalue.dclare.Setable;
 
 import jetbrains.mps.errors.item.IssueKindReportItem;
@@ -271,17 +269,10 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
 
     public static NonCheckingObserver<DNode> copyObserver(Observed<DNode, ?> observed, BiConsumer<DNode, DCopyConstruction> action) {
         return observer(observed, o -> {
-            try {
-                for (DCopyConstruction cc : o.getCopyConstructions()) {
-                    action.accept(o, cc);
-                }
-            } finally {
-                ObserverTransaction current = (ObserverTransaction) LeafTransaction.getCurrent();
-                current.runNonObserving(() -> DMatchedObject.CONSTRUCTED.get(current.observer()).set(o, DMatchedObject.DCONSTRUCTED.get()));
-                DMatchedObject.DCONSTRUCTED.set(Map.of());
+            for (DCopyConstruction cc : o.getCopyConstructions()) {
+                action.accept(o, cc);
             }
         }, Direction.forward);
-
     }
 
     public static DNode of(SLanguage anonymousLanguage, String anonymousType, Object[] identity, SConcept concept) {

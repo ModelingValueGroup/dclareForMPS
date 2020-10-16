@@ -21,13 +21,11 @@ import java.util.stream.Collectors;
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
-import org.modelingvalue.collections.util.Context;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.dclare.Action;
 import org.modelingvalue.dclare.Direction;
 import org.modelingvalue.dclare.Mutable;
 import org.modelingvalue.dclare.NonCheckingObserved;
-import org.modelingvalue.dclare.NonCheckingObserver;
 import org.modelingvalue.dclare.Observed;
 import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.Setable;
@@ -99,8 +97,6 @@ public abstract class DObject implements Mutable {
     protected static final Set<Observer>                                               OBSERVERS                 = Set.of(TYPE_RULE, CONTAINING_ATTRIBUTE_RULE);
 
     protected static final Set<Setable>                                                SETABLES                  = Set.of(TYPE, MPS_ISSUES, DRULE_ISSUES, DCLARE_ISSUES, CONTAINING_ATTRIBUTE);
-
-    protected static final Context<Set<DIssue>>                                        DISUES                    = Context.of(Set.of());
 
     public static DClareMPS dClareMPS() {
         return DClareMPS.instance();
@@ -179,16 +175,12 @@ public abstract class DObject implements Mutable {
 
     protected abstract DObjectType<?> getType();
 
-    public static <O extends DObject> NonCheckingObserver<O> observer(Object id, Consumer<O> action) {
+    public static <O extends DObject> DNonCheckingObserver<O> observer(Object id, Consumer<O> action) {
         return observer(id, action, Direction.forward);
     }
 
-    public static <O extends DObject> NonCheckingObserver<O> observer(Object id, Consumer<O> action, Direction dir) {
-        return NonCheckingObserver.of(id, o -> {
-            if (o.isOwned()) {
-                action.accept(o);
-            }
-        }, dir);
+    public static <O extends DObject> DNonCheckingObserver<O> observer(Object id, Consumer<O> action, Direction dir) {
+        return DNonCheckingObserver.of(action, id, dir);
     }
 
     public boolean isDclareOnly() {

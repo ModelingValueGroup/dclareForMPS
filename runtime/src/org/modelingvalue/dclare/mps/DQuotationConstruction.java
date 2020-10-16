@@ -18,16 +18,14 @@ package org.modelingvalue.dclare.mps;
 import java.util.Arrays;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
-import org.modelingvalue.dclare.LeafTransaction;
 import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.mps.DAttribute.DIdentifyingAttribute;
-import org.modelingvalue.dclare.mps.DRule.DObserverTransaction;
 
 public class DQuotationConstruction extends DDeriveConstruction {
 
-    protected DQuotationConstruction(SLanguage anonymousLanguage, String anonymousType, Object[] ctx) {
+    protected DQuotationConstruction(SLanguage anonymousLanguage, String anonymousType, Observer<?> observer, Object[] ctx) {
         super(Arrays.copyOf(ctx, ctx.length + 3));
-        identity[identity.length - 3] = ((DObserverTransaction) LeafTransaction.getCurrent()).observer();
+        identity[identity.length - 3] = observer;
         identity[identity.length - 2] = anonymousLanguage;
         identity[identity.length - 1] = anonymousType;
     }

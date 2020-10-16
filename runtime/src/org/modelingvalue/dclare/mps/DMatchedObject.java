@@ -23,7 +23,6 @@ import org.modelingvalue.collections.ContainingCollection;
 import org.modelingvalue.collections.Entry;
 import org.modelingvalue.collections.Map;
 import org.modelingvalue.collections.Set;
-import org.modelingvalue.collections.util.Context;
 import org.modelingvalue.collections.util.Mergeable;
 import org.modelingvalue.collections.util.NotMergeableException;
 import org.modelingvalue.collections.util.Pair;
@@ -33,7 +32,6 @@ import org.modelingvalue.dclare.Mutable;
 import org.modelingvalue.dclare.NonCheckingObserved;
 import org.modelingvalue.dclare.Observed;
 import org.modelingvalue.dclare.Observer;
-import org.modelingvalue.dclare.ObserverTransaction;
 import org.modelingvalue.dclare.Setable;
 import org.modelingvalue.dclare.State;
 import org.modelingvalue.dclare.mps.DAttribute.DIdentifyingAttribute;
@@ -81,9 +79,7 @@ public abstract class DMatchedObject<T, R, S> extends DIdentifiedObject implemen
         }
     }
 
-    protected static final Constant<Observer<?>, Constructed>                CONSTRUCTED  = Constant.of("CONSTRUCTED", o -> new Constructed(o));
-
-    protected static final Context<Map<DDeriveConstruction, DMatchedObject>> DCONSTRUCTED = Context.of(Map.of());
+    protected static final Constant<Observer<?>, Constructed> CONSTRUCTED = Constant.of("CONSTRUCTED", o -> new Constructed(o));
 
     @SuppressWarnings("unchecked")
     protected void replaceMatching() {
@@ -123,25 +119,27 @@ public abstract class DMatchedObject<T, R, S> extends DIdentifiedObject implemen
     }
 
     protected static <D extends DMatchedObject, A> D quotationConstruct(SLanguage anonymousLanguage, String anonymousType, Object[] ctx, Supplier<D> supplier) {
-        return derive(new DQuotationConstruction(anonymousLanguage, anonymousType, ctx), supplier);
+        DConstructingTransaction tx = (DConstructingTransaction) LeafTransaction.getCurrent();
+        return derive(tx, new DQuotationConstruction(anonymousLanguage, anonymousType, tx.observer(), ctx), supplier);
     }
 
     protected static <D extends DMatchedObject, A> D copyRootConstruct(String anonymousType, DObject object, DNode copied, Supplier<D> supplier) {
-        return derive(new DCopyConstruction(object, ((ObserverTransaction) LeafTransaction.getCurrent()).observer(), copied, anonymousType), supplier);
+        DConstructingTransaction tx = (DConstructingTransaction) LeafTransaction.getCurrent();
+        return derive(tx, new DCopyConstruction(object, tx.observer(), copied, anonymousType), supplier);
     }
 
     protected static <D extends DMatchedObject, A> D copyChildConstruct(DConstruction root, DNode copied, Supplier<D> supplier) {
-        ObserverTransaction current = (ObserverTransaction) LeafTransaction.getCurrent();
-        return derive(new DCopyConstruction((DObject) current.mutable(), current.observer(), copied, root), supplier);
+        DConstructingTransaction tx = (DConstructingTransaction) LeafTransaction.getCurrent();
+        return derive(tx, new DCopyConstruction((DObject) tx.object(), tx.observer(), copied, root), supplier);
     }
 
     @SuppressWarnings("unchecked")
-    private static <D extends DMatchedObject> D derive(DDeriveConstruction id, Supplier<D> supplier) {
+    private static <D extends DMatchedObject> D derive(DConstructingTransaction tx, DDeriveConstruction id, Supplier<D> supplier) {
         D d = (D) CONSTRUCTED.get(id.observer()).get(id.object()).get(id);
         if (d == null) {
             d = supplier.get();
         }
-        DCONSTRUCTED.set(Map::put, id, d);
+        tx.constructed().set((m, v) -> m.put(id, v), d);
         return d;
     }
 
