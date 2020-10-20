@@ -25,7 +25,10 @@ import org.jetbrains.mps.openapi.module.SModule;
 import org.jetbrains.mps.openapi.module.SModuleId;
 import org.jetbrains.mps.openapi.persistence.PersistenceFacade;
 import org.modelingvalue.dclare.Mutable;
+import org.modelingvalue.dclare.NonCheckingObserver;
+import org.modelingvalue.dclare.Observed;
 import org.modelingvalue.dclare.Setable;
+import org.modelingvalue.dclare.Universe;
 import org.modelingvalue.dclare.sync.SerializationHelper;
 import org.modelingvalue.dclare.sync.Util;
 
@@ -52,18 +55,22 @@ public class MPSSerializationHelper
 
 	@Override
 	public Predicate<Mutable> mutableFilter() {
-		return m -> !(m instanceof DRepository);
+		return m -> !(m instanceof DRepository) && !(m instanceof Universe);
 	}
 
 	@Override
 	public Predicate<Setable<DObject, ?>> setableFilter() {
 		// TODO Auto-generated method stub
-		return m -> true;
+		return m -> m instanceof Observed 
+				&& m != (Object) DModule.LANGUAGES
+				&& m != (Object) DObject.D_PARENT_CONTAINING
+				&& m != (Object) DObject.TYPE;
 	}
 
 	@Override
 	public String serializeClass(DObjectType<DObject> clazz) {
 		System.err.println("[SERIALIZE] class: " + clazz.toString());
+		//TODO? never called?
 		return null;
 	}
 
@@ -76,12 +83,9 @@ public class MPSSerializationHelper
 	@Override
 	public String serializeMutable(DObject mutable) {
 		if (mutable instanceof DNode) {
-			DIdentifiedObject iObj = (DIdentifiedObject) mutable;
-			String s = Util.encodeWithLength(NODE_TYPE+serializeIdentity(iObj.getIdentity()));
-			System.err.println("[SERIALIZE] node: " + s);
-			return s;
+			return dNodetoString((DNode) mutable);
 		} else if (mutable instanceof DStructObject) {			
-			DIdentifiedObject iObj = (DIdentifiedObject) mutable;			
+			DStructObject iObj = (DStructObject) mutable;			
 			String s = Util.encodeWithLength(DSTRUCT_TYPE+serializeIdentity(iObj.getIdentity()));
 			System.err.println("[SERIALIZE] struct: " + s);
 			return s;
@@ -98,6 +102,12 @@ public class MPSSerializationHelper
 		}
 		System.err.println("[SERIALIZE] NO support for type: " + mutable.getClass().getName());
 		return null;
+	}
+
+	private String dNodetoString(DNode dnode) {
+		String s = Util.encodeWithLength(NODE_TYPE+serializeIdentity(dnode.getIdentity()));
+		System.err.println("[SERIALIZE] node: " + s);
+		return s;
 	}
 
 	private String serializeIdentity(Object[] obj) {
@@ -119,7 +129,10 @@ public class MPSSerializationHelper
 	@Override
 	public Object serializeValue(Setable<DObject, Object> setable, Object value) {
 		System.err.println("[SERIALIZE] value: " + setable.toString() + " = " + value);
-		return null;
+		if (value instanceof DNode) {
+			return dNodetoString((DNode) value);
+		}
+		return value;
 	}
 
 	@Override

@@ -15,10 +15,18 @@
 
 package org.modelingvalue.dclare.mps;
 
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.function.Predicate;
+
+import org.modelingvalue.collections.Map;
+import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.dclare.Setable;
+import org.modelingvalue.dclare.State;
 import org.modelingvalue.dclare.UniverseTransaction;
 import org.modelingvalue.dclare.sync.DeltaAdaptor;
 import org.modelingvalue.dclare.sync.SerializationHelper;
+import org.modelingvalue.dclare.sync.json.Json;
 
 public class MPSDeltaAdapter extends DeltaAdaptor<DObjectType<DObject>, DObject, Setable<DObject, Object>> {
 
@@ -26,5 +34,27 @@ public class MPSDeltaAdapter extends DeltaAdaptor<DObjectType<DObject>, DObject,
 			SerializationHelper<DObjectType<DObject>, DObject, Setable<DObject, Object>> helper) {
 		super(name, tx, helper);		
 	}
+	
+	
+	protected void queueDelta(State pre, State post, Boolean last) {
+        Map<Object, Map<Setable, Pair<Object, Object>>> deltaMap = pre.diff(post, getObjectFilter(), (Predicate<Setable>) (Object) helper.setableFilter()).toMap(e1 -> e1);
+        if (!deltaMap.isEmpty()) {
+            try {
+                String delta = new DeltaToJson().toJson(deltaMap);
+                System.err.println("SENDING:\n" + Json.pretty(delta));
+                deltaQueue.put(delta);
+                FileWriter w = new FileWriter("f:\\mps.json");
+                w.write(Json.pretty(delta));
+                w.flush();
+                w.close();
+            } catch (InterruptedException e) {
+                //e.printStackTrace();//TOMTOMTOM
+                throw new Error(e);
+            } catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+        }
+    }
 
 }
