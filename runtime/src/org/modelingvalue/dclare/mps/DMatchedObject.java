@@ -28,19 +28,19 @@ import org.modelingvalue.dclare.Setable;
 public abstract class DMatchedObject<R, S> extends DIdentifiedObject {
 
     @SuppressWarnings("rawtypes")
-    private static final Observed<Object, DMatchedObject> D_MATCHED   = Observed.of("$D_MATCHED", null);
+    protected static final Observed<Object, DMatchedObject> D_MATCHED   = Observed.of("$D_MATCHED", null);
 
     @SuppressWarnings("rawtypes")
-    private static final Observed<DMatchedObject, Object> MATCHED_REF = NonCheckingObserved.of("$MATCHED_REF", null, () -> D_MATCHED);
+    protected static final Observed<DMatchedObject, Object> MATCHED_REF = NonCheckingObserved.of("$MATCHED_REF", null, () -> D_MATCHED);
 
     @SuppressWarnings("rawtypes")
-    private static final Setable<DMatchedObject, Object>  DETACHED    = Setable.of("$DETACHED", null);
+    protected static final Setable<DMatchedObject, Object>  DETACHED    = Setable.of("$DETACHED", null);
 
     @SuppressWarnings("rawtypes")
-    protected static final Set<Observer>                  OBSERVERS   = DObject.OBSERVERS.addAll(Set.of());
+    protected static final Set<Observer>                    OBSERVERS   = DObject.OBSERVERS.addAll(Set.of());
 
     @SuppressWarnings("rawtypes")
-    protected static final Set<Setable>                   SETABLES    = DObject.SETABLES.addAll(Set.of(MATCHED_REF, DETACHED));
+    protected static final Set<Setable>                     SETABLES    = DObject.SETABLES.addAll(Set.of(MATCHED_REF, DETACHED));
 
     protected DMatchedObject(Object[] identity) {
         super(identity);
