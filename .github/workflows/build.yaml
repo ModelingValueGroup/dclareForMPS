@@ -66,6 +66,7 @@ jobs:
           . <(java -jar ~/buildtools.jar)
           . project.sh
           getAllDependencies "${{secrets.SCALEWAY_ACCESS_KEY}}" "${{secrets.SCALEWAY_SECRET_KEY}}"
+          installJunitlauncher
           installMps "$mpsDir" "$mpsVersion"
 
       - name: "adjust MPS compat range in ant file"
