@@ -9,6 +9,8 @@ jobs:
   build:
     name: publish
     runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: "${{secrets.REPO_AND_PACKAGES_TOKEN}}"
     steps:
       - name: Checkout code
         uses: actions/checkout@master
