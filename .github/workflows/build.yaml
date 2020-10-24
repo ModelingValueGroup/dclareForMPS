@@ -3,10 +3,11 @@ name: build
 on: [push]
 
 jobs:
-  build-and-test:
-    runs-on: ubuntu-latest
+  build:
+    runs-on: ubuntu-20.04
     env:
-      GITHUB_TOKEN: "${{secrets.REPO_AND_PACKAGES_TOKEN}}"
+      GITHUB_TOKEN: "${{secrets.GITHUB_TOKEN}}"
+      ALLREP_TOKEN: "${{secrets.ALLREP_TOKEN}}"
     steps:
       - name: "checkout"
         uses: actions/checkout@v1
@@ -133,4 +134,3 @@ jobs:
           file    : "build/artifacts/DclareForMPS/DclareForMPS.zip"
           hubToken: "${{secrets.JETBRAINS_PUBLISH_TOKEN}}"
           pluginId: "13797"
-          trace   : true
