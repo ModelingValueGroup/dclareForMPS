@@ -1,12 +1,13 @@
-name: build and test
+name: build
 
 on: [push]
 
 jobs:
-  build-and-test:
-
-    runs-on: ubuntu-latest
-
+  build:
+    runs-on: ubuntu-20.04
+    env:
+      GITHUB_TOKEN: "${{secrets.GITHUB_TOKEN}}"
+      ALLREP_TOKEN: "${{secrets.ALLREP_TOKEN}}"
     steps:
       - name: "checkout"
         uses: actions/checkout@v1
@@ -24,8 +25,6 @@ jobs:
 
       - name: "get buildtools"
         uses: ModelingValueGroup/buildtools@master
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: "if master: fail if there is already a tag for this version"
         if: github.ref == 'refs/heads/master'
@@ -67,7 +66,8 @@ jobs:
         run:  |
           . <(java -jar ~/buildtools.jar)
           . project.sh
-          getAllDependencies ${{ secrets.GITHUB_TOKEN }} "${{ secrets.SCALEWAY_ACCESS_KEY }}" "${{ secrets.SCALEWAY_SECRET_KEY }}"
+          getAllDependencies "${{secrets.SCALEWAY_ACCESS_KEY}}" "${{secrets.SCALEWAY_SECRET_KEY}}"
+          installJunitlauncher
           installMps "$mpsDir" "$mpsVersion"
 
       - name: "adjust MPS compat range in ant file"
@@ -82,7 +82,7 @@ jobs:
         run:  |
           . <(java -jar ~/buildtools.jar)
           . project.sh
-          pushBackToGithub "${{ secrets.GITHUB_TOKEN }}" "automation@modelingvalue.com" "adjusted files [by github actions]"
+          pushBackToGithub
 
       - name: "build"
         run:  ant
@@ -113,7 +113,7 @@ jobs:
         if: github.ref == 'refs/heads/master'
         run:  |
           . <(java -jar ~/buildtools.jar)
-          setVersionTag "${{ secrets.GITHUB_TOKEN }}" "automation@modelingvalue.com"
+          setVersionTag
 
       - name: "unzip for actions/upload-artifact"
         run:  |
@@ -132,6 +132,5 @@ jobs:
         uses: ModelingValueGroup/upload-jetbrains-plugin-action@master
         with:
           file    : "build/artifacts/DclareForMPS/DclareForMPS.zip"
-          hubToken: "${{ secrets.JETBRAINS_PUBLISH_TOKEN }}"
+          hubToken: "${{secrets.JETBRAINS_PUBLISH_TOKEN}}"
           pluginId: "13797"
-          trace   : true

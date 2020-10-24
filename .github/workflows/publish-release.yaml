@@ -8,7 +8,10 @@ name: Create Release
 jobs:
   build:
     name: publish
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
+    env:
+      GITHUB_TOKEN: "${{secrets.GITHUB_TOKEN}}"
+      ALLREP_TOKEN: "${{secrets.ALLREP_TOKEN}}"
     steps:
       - name: Checkout code
         uses: actions/checkout@master
@@ -33,8 +36,6 @@ jobs:
 
       - name: create release
         uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name    : ${{ github.ref }}
           release_name: release ${{ github.ref }}
