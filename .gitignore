@@ -8,7 +8,7 @@ artifacts
 
 /build
 /out
-/buildTools.jar
+/buildtools.jar
 /build.properties
 /MPS
 /lib
