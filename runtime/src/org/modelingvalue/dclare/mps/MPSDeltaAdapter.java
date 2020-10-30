@@ -47,6 +47,9 @@ public class MPSDeltaAdapter extends DeltaAdaptor<DObjectType<DObject>, DObject,
                 w.write(Json.pretty(delta));
                 w.flush();
                 w.close();
+                
+                //read in file, to test al id's are resolvable!
+                accept(delta);
             } catch (InterruptedException e) {
                 //e.printStackTrace();//TOMTOMTOM
                 throw new Error(e);
