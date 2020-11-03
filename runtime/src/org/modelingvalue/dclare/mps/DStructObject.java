@@ -37,7 +37,7 @@ public class DStructObject extends DIdentifiedObject implements SStructObject {
         return new DStructObject(identity);
     }
 
-    private DStructObject(Object[] identity) {
+    protected DStructObject(Object[] identity) {
         super(identity);
     }
 

@@ -40,6 +40,8 @@ import org.modelingvalue.dclare.sync.SerializationHelper;
 import org.modelingvalue.dclare.sync.Util;
 
 import jetbrains.mps.project.ProjectRepository;
+import jetbrains.mps.smodel.SNodePointer;
+import jetbrains.mps.smodel.adapter.structure.concept.SConceptAdapterById;
 import jetbrains.mps.smodel.adapter.structure.language.SLanguageAdapterById;
 
 public class MPSSerializationHelper
@@ -54,7 +56,12 @@ public class MPSSerializationHelper
 			Entry.of(DModelConverter.MODEL_PREFIX, new DModelConverter()), //
 			Entry.of(DNodeConverter.NODE_PREFIX, new DNodeConverter()), //
 			Entry.of(DStructConverter.DSTRUCT_PREFIX, new DStructConverter()), //
+			Entry.of(DStructClassConverter.DSTRUCTCLASS_PREFIX, new DStructClassConverter()), //
+			Entry.of(SStructClassConverter.SSTRUCTCLASS_PREFIX, new SStructClassConverter()), //
 			Entry.of(IntConverter.INT_PREFIX, new IntConverter()), //
+			Entry.of(StringConverter.STRING_PREFIX, new StringConverter()), //
+			Entry.of(SNodeReferenceConverter.SNODE_REF_PREFIX, new SNodeReferenceConverter()), //
+			Entry.of(SConceptConverter.SCONCEPT_PREFIX, new SConceptConverter()), //
 			Entry.of(SLanguageConverter.SLANGUAGE_PREFIX, new SLanguageConverter())//
 	);
 
@@ -63,7 +70,12 @@ public class MPSSerializationHelper
 			Entry.of(DModel.class, new DModelConverter()), //
 			Entry.of(DNode.class, new DNodeConverter()), //
 			Entry.of(DStructObject.class, new DStructConverter()), //
+			Entry.of(DStructClass.class, new DStructClassConverter()), //
+			Entry.of(SStructClass.class, new SStructClassConverter()), //
 			Entry.of(Integer.class, new IntConverter()), //
+			Entry.of(String.class, new StringConverter()), //
+			Entry.of(SNodePointer.class, new SNodeReferenceConverter()), //
+			Entry.of(SConceptAdapterById.class, new SConceptConverter()), //
 			Entry.of(SLanguageAdapterById.class, new SLanguageConverter()) //
 	);
 
@@ -114,15 +126,6 @@ public class MPSSerializationHelper
 		return null;
 	}
 
-	private String dStructClassToString(DStructClass clz) {
-		Triple<Set<SLanguage>, SStructClass, Boolean> id = clz.id();
-
-		String lang = Util.encodeWithLength((String[]) id.a().map(l -> mpsPersist().asString(l)).toArray());
-		String s = id.b().id();
-		String b = id.c().toString();
-		return Util.encodeWithLength(lang, s, b);
-	}
-
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private String serializeIdentity(Object[] obj) {
 		String[] id = new String[obj.length];
@@ -131,24 +134,11 @@ public class MPSSerializationHelper
 			Serializer serializer = serializeMap.get(obj[i].getClass());
 			if (serializer != null) {
 				id[i] = serializer.serialize(obj[i]);
-			}
-
-			if (obj[i] instanceof SNodeReference) {
-				SNodeReference ref = (SNodeReference) obj[i];
-				id[i] = "ref-" + mpsPersist().asString(ref);
-			} else if (obj[i] instanceof SConcept) {
-				SConcept sc = (SConcept) obj[i];
-				id[i] = "concept-" + mpsPersist().asString(sc);
-			} else if (obj[i] instanceof DStructClass) {
-				id[i] = dStructClassToString((DStructClass) obj[i]);
-			} else if (obj[i] instanceof SStructClass) {
-				id[i] = "sstructclass-" + ((SStructClass) obj[i]).id();
-			} else if (obj[i] instanceof String) {
-				id[i] = "string-" + (String) obj[i];
 			} else if (obj[i] instanceof ListImpl) {
 				id[i] = "list"; // TODO
 			} else {
 				System.err.println("[SERIALIZE] ERROR ident " + obj[i].getClass().getName());
+				throw new Error();
 			}
 		}
 		return Util.encodeWithLength(Integer.toString(obj.length), Util.encodeWithLength(id));
@@ -161,43 +151,61 @@ public class MPSSerializationHelper
 		Serializer serializer = serializeMap.get(value.getClass());
 		if (serializer != null) {
 			return serializer.serialize(value);
-		}	
+		}
 		return value;
 	}
 
 	@Override
 	public DObjectType<DObject> deserializeClass(String s) {
-		// TODO Auto-generated method stub
+		System.err.println("[DESERIALIZE] deserializeSetable: " + s);
 		return null;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public Setable<DObject, Object> deserializeSetable(DObjectType<DObject> clazz, String s) {
-		String id = s.substring(SETABLE_PREFIX.length() - 1);
+		try {
+		System.err.println("[DESERIALIZE] deserializeSetable: " + s);
+		String id = Util.decodeFromLength(s, 1)[0].substring(SETABLE_PREFIX.length());
+		System.err.println("[DESERIALIZE] find settable: " + id);
 		return (Setable<DObject, Object>) clazz.dSetables().filter(x -> x.id().toString().equals(id)).findFirst().get();
+		} catch (Throwable t) {
+			t.printStackTrace();
+		}
+		return null;
 	}
 
 	@Override
 	public DObject deserializeMutable(String string) {
-		String[] split = Util.decodeFromLength(string, 1);
-		String s = split[0];	
-		return (DObject) deserializeObject(s);		
+		System.err.println("[DESERIALIZE] deserializeSetable: " + string);
+		try {
+		return (DObject) deserializeObject(string);
+		} catch (Throwable t) {
+			t.printStackTrace();
+		}
+		return null;
 	}
 
 	@Override
 	public Object deserializeValue(Setable<DObject, Object> setable, Object s) {
 		System.err.println("[DESERIALIZE] deserializeValue: " + s);
-
 		return null;
 	}
 
-	private Object deserializeObject(String s) {
-		Serializer<?> serializer = deserialiseMap.get(s.substring(0,s.indexOf('-')+1));
-		if (serializer != null) {
-			return (DObject) serializer.deserialize(s);
+	private Object deserializeObject(String string) {
+		System.err.println("[DESERIALIZE] Object: " + string);
+		String s = string;
+		if (string.substring(0, 1).matches("[0-9]")) {
+			s = Util.decodeFromLength(string, 1)[0];
 		}
-		return s; //no conversion
+		String objectType = s.substring(0, s.indexOf('-') + 1);
+		System.err.println("[DESERIALIZE] looking for deserializer: " + objectType);
+		Serializer<?> serializer = deserialiseMap.get(objectType);
+		if (serializer != null) {
+			return serializer.deserialize(s);
+		}
+		System.err.println("[DESERIALIZE] Error? Object: " + s);
+		return s; // no conversion
 	}
 
 	private interface Serializer<T> {
@@ -248,6 +256,93 @@ public class MPSSerializationHelper
 			DModel m = DModel.of(model);
 			return m;
 		}
+	}
+
+	private class SStructClassConverter implements Serializer<SStructClass> {
+
+		private static final String SSTRUCTCLASS_PREFIX = "sstructclass-";
+
+		@Override
+		public String serialize(SStructClass t) {
+			return SSTRUCTCLASS_PREFIX + t.id();
+		}
+
+		@Override
+		public SStructClass deserialize(String s) {
+			String id = s.substring(SSTRUCTCLASS_PREFIX.length());
+			System.err.println("resolve structclass: " + id);
+			return SStructClass.of(id);
+		}
+
+	}
+
+	private class DStructClassConverter implements Serializer<DStructClass> {
+
+		private static final String DSTRUCTCLASS_PREFIX = "dstructclass-";
+
+		@Override
+		public String serialize(DStructClass clz) {
+			Triple<Set<SLanguage>, SStructClass, Boolean> id = clz.id();
+			String lang = Util.encodeWithLength(Integer.toString(id.a().size()),
+					Util.encodeWithLength((String[]) id.a().map(l -> mpsPersist().asString(l)).toArray()));
+			String s = id.b().id();
+			String b = id.c().toString();
+			return Util.encodeWithLength(DSTRUCTCLASS_PREFIX + Util.encodeWithLength(lang, s, b));
+		}
+
+		@Override
+		public DStructClass deserialize(String s) {
+			String[] fields = Util.decodeFromLength(s.substring(DSTRUCTCLASS_PREFIX.length()), 3);
+			String[] languageData = Util.decodeFromLength(fields[0], 2);
+			int nrOfLanguages = Integer.valueOf(languageData[0]);
+			Set<SLanguage> sLanguages = Set.of();
+			String[] strOfLanguags = Util.decodeFromLength(languageData[1], nrOfLanguages);
+			for (int i = 0; i < nrOfLanguages; i++) {
+				sLanguages = sLanguages.add(mpsPersist().createLanguage(strOfLanguags[i]));
+			}
+			SStructClass structClass = SStructClass.of(fields[1]);
+			Boolean bool = Boolean.valueOf(fields[2]);
+			return new DStructClass(Triple.of(sLanguages, structClass, bool));
+		}
+
+	}
+
+	private class SNodeReferenceConverter implements Serializer<SNodeReference> {
+
+		private static final String SNODE_REF_PREFIX = "ref-";
+
+		@Override
+		public String serialize(SNodeReference ref) {
+			return SNODE_REF_PREFIX + mpsPersist().asString(ref);
+		}
+
+		@Override
+		public SNodeReference deserialize(String s) {
+			System.err.println("    resolve reference: " + s);
+			try {
+				SNodeReference ref = mpsPersist().createNodeReference(s.substring(SNODE_REF_PREFIX.length()));
+				System.err.println("ref: " + ref);
+				return ref;
+			} catch (Throwable t) {
+				t.printStackTrace();
+			}
+			return null;
+		}
+	}
+
+	private class SConceptConverter implements Serializer<SConcept> {
+
+		private static final String SCONCEPT_PREFIX = "concept-";
+
+		@Override
+		public String serialize(SConcept concept) {
+			return SCONCEPT_PREFIX + mpsPersist().asString(concept);
+		}
+
+		@Override
+		public SConcept deserialize(String s) {
+			return (SConcept) mpsPersist().createConcept(s.substring(SCONCEPT_PREFIX.length()));
+		}
 
 	}
 
@@ -265,16 +360,20 @@ public class MPSSerializationHelper
 		@Override
 		public DNode deserialize(String s) {
 			System.err.println("[DESERIALIZE] DNode: " + s);
-			String[] ss = Util.decodeFromLength(s.substring(NODE_PREFIX.length() - 1), 2);
-			int length = Integer.parseInt(ss[0]);
-			ss = Util.decodeFromLength(ss[1], length);
-			// TODO loop on length
-			SNodeReference ref = mpsPersist().createNodeReference(ss[0]);
-			SConcept concept = (SConcept) mpsPersist().createConcept(ss[1]);
-			DNode dnode = DNode.of(concept, ref);
-			return dnode;
+			String[] ss = Util.decodeFromLength(s.substring(NODE_PREFIX.length()), 2);
+			int nrOfKeyFields = Integer.parseInt(ss[0]);
+			System.err.println("   nrOfKeyFields: " + nrOfKeyFields);
+			System.err.println("   fields       : " + ss[1]);
+			String[] strKeyFields = Util.decodeFromLength(ss[1], nrOfKeyFields);
+			System.err.println("strKeyFields: " + strKeyFields.length);
+			Object[] key = new Object[nrOfKeyFields];
+			for (int i = 0; i < nrOfKeyFields; i++) {
+				System.err.println(" field: " + i + " " + strKeyFields[i]);
+				key[i] = deserializeObject(strKeyFields[i]);
+			}
+			System.err.println("create DNode: ");
+			return new DNode(key);
 		}
-
 	}
 
 	private class DStructConverter implements Serializer<DStructObject> {
@@ -290,16 +389,17 @@ public class MPSSerializationHelper
 			System.err.println("[DESERIALIZE] DStruct: " + s);
 			System.err.println("          : " + s.substring(DSTRUCT_PREFIX.length()));
 			String[] ss = Util.decodeFromLength(s.substring(DSTRUCT_PREFIX.length()), 2);
-			int nrOfKeyfields = Integer.valueOf(ss[0]);
-			System.err.println("   nrOfKeyFields: " + nrOfKeyfields);
+			int nrOfKeyFields = Integer.valueOf(ss[0]);
+			System.err.println("   nrOfKeyFields: " + nrOfKeyFields);
 			System.err.println("   fields       : " + ss[1]);
-			String[] strKeyFields = Util.decodeFromLength(ss[1], nrOfKeyfields);
-			System.err.println("    keyFields: " + strKeyFields);
-			Object[] key = new Object[nrOfKeyfields];
-			for (int i = 0; i < nrOfKeyfields; i++) {
+			String[] strKeyFields = Util.decodeFromLength(ss[1], nrOfKeyFields);
+			Object[] key = new Object[nrOfKeyFields];
+			for (int i = 0; i < nrOfKeyFields; i++) {
+				System.err.println(" field: " + i + " " + strKeyFields[i]);
 				key[i] = deserializeObject(strKeyFields[i]);
 			}
-			return null;
+			System.err.println("create DStructObject: ");
+			return new DStructObject(key);
 		}
 	}
 
@@ -331,6 +431,21 @@ public class MPSSerializationHelper
 		@Override
 		public Integer deserialize(String s) {
 			return Integer.valueOf(s.substring(INT_PREFIX.length()));
+		}
+	}
+
+	private class StringConverter implements Serializer<String> {
+
+		private static final String STRING_PREFIX = "string-";
+
+		@Override
+		public String serialize(String s) {
+			return STRING_PREFIX + s;
+		}
+
+		@Override
+		public String deserialize(String s) {
+			return s.substring(STRING_PREFIX.length());
 		}
 
 	}
