@@ -419,10 +419,10 @@
       </concept>
     </language>
     <language id="c7fb639f-be78-4307-89b0-b5959c3fa8c8" name="jetbrains.mps.lang.text">
-      <concept id="155656958578482948" name="jetbrains.mps.lang.text.structure.Word" flags="ng" index="3oM_SD">
+      <concept id="155656958578482948" name="jetbrains.mps.lang.text.structure.Word" flags="nn" index="3oM_SD">
         <property id="155656958578482949" name="value" index="3oM_SC" />
       </concept>
-      <concept id="2535923850359271782" name="jetbrains.mps.lang.text.structure.Line" flags="ng" index="1PaTwC">
+      <concept id="2535923850359271782" name="jetbrains.mps.lang.text.structure.Line" flags="nn" index="1PaTwC">
         <child id="2535923850359271783" name="elements" index="1PaTwD" />
       </concept>
     </language>
@@ -6119,13 +6119,14 @@
       <node concept="3clFbS" id="6HWpSUEwLw4" role="3clF47">
         <node concept="3clFbF" id="6HWpSUEwLw5" role="3cqZAp">
           <node concept="2OqwBi" id="6HWpSUEwLw6" role="3clFbG">
-            <node concept="1PxgMI" id="6HWpSUEwLw7" role="2Oq$k0">
-              <node concept="chp4Y" id="6HWpSUEwLw8" role="3oSUPX">
-                <ref role="cht4Q" to="7ggn:29R9$zZUovD" resolve="RuleSet" />
-              </node>
-              <node concept="2OqwBi" id="6HWpSUEwLw9" role="1m5AlR">
-                <node concept="13iPFW" id="6HWpSUEwLwa" role="2Oq$k0" />
-                <node concept="1mfA1w" id="6HWpSUEwLwb" role="2OqNvi" />
+            <node concept="2OqwBi" id="1sKVndiDUBD" role="2Oq$k0">
+              <node concept="13iPFW" id="1sKVndiDUbL" role="2Oq$k0" />
+              <node concept="2Xjw5R" id="1sKVndiDV5O" role="2OqNvi">
+                <node concept="1xMEDy" id="1sKVndiDV5Q" role="1xVPHs">
+                  <node concept="chp4Y" id="1sKVndiDVd1" role="ri$Ld">
+                    <ref role="cht4Q" to="7ggn:29R9$zZUovD" resolve="RuleSet" />
+                  </node>
+                </node>
               </node>
             </node>
             <node concept="2qgKlT" id="6HWpSUEwLwc" role="2OqNvi">

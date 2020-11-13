@@ -73,7 +73,8 @@ public class DNodeType extends DObjectType<Quintuple<Set<SLanguage>, SConcept, S
     @SuppressWarnings("rawtypes")
     @Override
     protected Collection<Observer> observers() {
-        return isCopy() ? DNode.OBSERVERS.addAll(DNode.COPY_CONCEPT_OBSERVERS.get(getConcept())) : DNode.OBSERVERS;
+        Set<Observer> conceptObservers = DNode.OBSERVERS.addAll(DNode.CONCEPT_OBSERVERS.get(getConcept()));
+        return isCopy() ? conceptObservers.addAll(DNode.COPY_CONCEPT_OBSERVERS.get(getConcept())) : conceptObservers;
     }
 
 }

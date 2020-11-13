@@ -35,7 +35,7 @@ import jetbrains.mps.errors.item.IssueKindReportItem;
 @SuppressWarnings({"rawtypes", "unused"})
 public abstract class DObject implements Mutable {
 
-    protected static final Action<DObject>                                             START_ACTION              = Observer.of("START_ACTION", o -> o.start(dClareMPS()));
+    protected static final Observer<DObject>                                           START_ACTION              = Observer.of("START_ACTION", o -> o.start(dClareMPS()));
 
     public static final Observed<DObject, DObjectType<?>>                              TYPE                      = NonCheckingObserved.of("$TYPE", new DObjectType<String>("<DUMMY_TYPE>") {
                                                                                                                      @Override
@@ -94,7 +94,7 @@ public abstract class DObject implements Mutable {
     protected static final DObserved<DObject, Set<DIssue>>                             DCLARE_ISSUES             = DObserved.of("$DCLARE_ISSUES", Set.of(), false, false, () -> DIssue.DOBJECT, false, (dObject, pre, post) -> {
                                                                                                                  }, null);
 
-    protected static final Set<Observer>                                               OBSERVERS                 = Set.of(TYPE_RULE, CONTAINING_ATTRIBUTE_RULE);
+    protected static final Set<Observer>                                               OBSERVERS                 = Set.of(TYPE_RULE, CONTAINING_ATTRIBUTE_RULE, START_ACTION);
 
     protected static final Set<Setable>                                                SETABLES                  = Set.of(TYPE, MPS_ISSUES, DRULE_ISSUES, DCLARE_ISSUES, CONTAINING_ATTRIBUTE);
 
@@ -140,12 +140,6 @@ public abstract class DObject implements Mutable {
     }
 
     @Override
-    public final void dActivate() {
-        Mutable.super.dActivate();
-        START_ACTION.trigger(this);
-    }
-
-    @Override
     public final void dDeactivate() {
         Mutable.super.dDeactivate();
         stop(dClareMPS());
@@ -160,8 +154,10 @@ public abstract class DObject implements Mutable {
     }
 
     protected final void start(DClareMPS dClareMPS) {
-        init(dClareMPS);
-        read(dClareMPS);
+        if (!(dContaining() instanceof DMatchedObject.UnidentifiedObserved)) {
+            init(dClareMPS);
+            read(dClareMPS);
+        }
     }
 
     protected void stop(DClareMPS dClareMPS) {

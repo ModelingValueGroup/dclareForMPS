@@ -59,7 +59,7 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
                                                                                                  Setable.<Set<DModel>, DModel> diff(models(dModule.original()).sequential().map(DModel::of).toSet(), post,   //
                                                                                                          a -> a.original(true),                                                                              //
                                                                                                          r -> new ModelDeleteHelper(r.original()).delete());
-                                                                                             }, (tx, m, b, a) -> DMatchedObject.keepManyRemoved(m, b, a, DModule.MODELS), null);
+                                                                                             }, null, null);
 
     protected static final Observed<DModule, Set<SLanguage>>                  LANGUAGES      = NonCheckingObserved.of("LANGUAGES", Set.of(), (tx, o, pre, post) -> {
                                                                                                  Setable.<Set<SLanguage>, SLanguage> diff(pre, post,                                                         //
@@ -203,11 +203,13 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
 
     @Override
     public Iterable<SModel> getModels() {
+        DMatchedObject.checkMatching(this, MODELS);
         return MODELS.get(this).collect(Collectors.toSet());
     }
 
     public void setModels(Iterable<DModel> models) {
-        MODELS.set(this, Collection.of(models).map(Objects::requireNonNull).map(DModel::of).toSet());
+        Set<DModel> set = Collection.of(models).map(Objects::requireNonNull).map(DModel::of).toSet();
+        MODELS.set(this, (b, a) -> DMatchedObject.manyMatch(this, b, a, MODELS), set);
     }
 
     @Override

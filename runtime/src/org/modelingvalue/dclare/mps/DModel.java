@@ -73,7 +73,6 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
                                                                                                                             sModel::addRootNode,                                                                                                     //
                                                                                                                             sModel::removeRootNode);
                                                                                                                 }, (tx, m, pre, post) -> {
-                                                                                                                    DMatchedObject.keepManyRemoved(m, pre, post, DModel.ROOTS);
                                                                                                                     Setable.<Set<DNode>, DNode> diff(pre, post, a -> {
                                                                                                                         for (SAbstractConcept c : DNode.SUPER_CONCEPTS.get(a.getConcept())) {
                                                                                                                             DModel.CONCEPT_ROOTS.get(c).set(m, Set::add, a);
@@ -210,6 +209,11 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
     }
 
     @Override
+    protected boolean isIdentified() {
+        return super.isIdentified() || NAME.get(this) != null;
+    }
+
+    @Override
     protected void addSObject(SModel sObject) {
         init(dClareMPS(), sObject);
     }
@@ -332,11 +336,15 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
     }
 
     public void setRootNodes(SAbstractConcept concept, Iterable<DNode> roots) {
-        CONCEPT_ROOTS.get(concept).set(this, Collection.of(roots).map(Objects::requireNonNull).map(DNode::of).toSet());
+        Set<DNode> set = Collection.of(roots).map(Objects::requireNonNull).map(DNode::of).toSet();
+        DObserved<DModel, Set<DNode>> cr = CONCEPT_ROOTS.get(concept);
+        cr.set(this, (b, a) -> DMatchedObject.manyMatch(this, b, a, cr), set);
     }
 
     public java.util.Collection<DNode> getRootNodes(SAbstractConcept concept) {
-        return CONCEPT_ROOTS.get(concept).get(this).collect(Collectors.toList());
+        DObserved<DModel, Set<DNode>> cr = CONCEPT_ROOTS.get(concept);
+        DMatchedObject.checkMatching(this, cr);
+        return cr.get(this).collect(Collectors.toList());
     }
 
     @Override

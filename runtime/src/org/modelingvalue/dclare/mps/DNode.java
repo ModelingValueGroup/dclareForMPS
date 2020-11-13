@@ -96,34 +96,32 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
     protected static final Observed<DNode, Map<Object, Object>>                                                  USER_OBJECTS           = DObserved.of("USER_OBJECTS", Map.of(), false, false, null, false, null, null);
 
     @SuppressWarnings("deprecation")
-    public static final Constant<SContainmentLink, DObserved<DNode, List<DNode>>>                                MANY_CONTAINMENT       = Constant.of("MANY_CONTAINMENT", mc -> DObserved.of(mc, List.of(), !mc.isOptional(), true, null, false,                                                                //
-            (dNode, pre, post) -> {
-                SNode sNode = dNode.reParent();
-                List<SNode> soll = post.map(c -> c.reParent(sNode, mc, c.original(true))).toList();
-                List<SNode> ist = children(sNode, mc);
-                DObserved.map(ist, soll,                                                                                                                                                                                                                                                                        //
-                        (n, a) -> {
-                        }, sNode::removeChild);
-                ist = children(sNode, mc);
-                DObserved.map(ist, soll,                                                                                                                                                                                                                                                                        //
-                        (n, a) -> sNode.insertChildAfter(mc, n, a), r -> {
-                        });
-            }, (tx, p, b, a) -> DMatchedObject.keepManyRemoved(p, b, a, DNode.MANY_CONTAINMENT.get(mc)), mc::getDeclarationNode, false));
+    public static final Constant<SContainmentLink, DObserved<DNode, List<DNode>>>                                MANY_CONTAINMENT       = Constant.of("MANY_CONTAINMENT", mc -> DObserved.of(mc, List.of(), !mc.isOptional(), true, null, false, (dNode, pre, post) -> {
+                                                                                                                                            SNode sNode = dNode.reParent();
+                                                                                                                                            List<SNode> soll = post.map(c -> c.reParent(sNode, mc, c.original(true))).toList();
+                                                                                                                                            List<SNode> ist = children(sNode, mc);
+                                                                                                                                            DObserved.map(ist, soll,                                                                                                                                            //
+                                                                                                                                                    (n, a) -> {
+                                                                                                                                                    }, sNode::removeChild);
+                                                                                                                                            ist = children(sNode, mc);
+                                                                                                                                            DObserved.map(ist, soll,                                                                                                                                            //
+                                                                                                                                                    (n, a) -> sNode.insertChildAfter(mc, n, a), r -> {
+                                                                                                                                                                                                                                                                                        });
+                                                                                                                                        }, null, mc::getDeclarationNode, false));
 
     @SuppressWarnings("deprecation")
-    public static final Constant<SContainmentLink, DObserved<DNode, DNode>>                                      SINGLE_CONTAINMENT     = Constant.of("SINGLE_CONTAINMENT", sc -> DObserved.of(sc, null, !sc.isOptional(), true, null, false,                                                                   //
-            (dNode, pre, post) -> {
-                SNode sNode = dNode.reParent();
-                List<SNode> soll = post != null ? List.of(post.reParent(sNode, sc, post.original(true))) : List.of();
-                List<SNode> ist = children(sNode, sc);
-                DObserved.map(ist, soll,                                                                                                                                                                                                                                                                        //
-                        (n, a) -> {
-                        }, sNode::removeChild);
-                ist = children(sNode, sc);
-                DObserved.map(ist, soll,                                                                                                                                                                                                                                                                        //
-                        (n, a) -> sNode.addChild(sc, n), r -> {
-                        });
-            }, (tx, p, b, a) -> DMatchedObject.keepSingleRemoved(p, b, a, DNode.SINGLE_CONTAINMENT.get(sc)), sc::getDeclarationNode, false));
+    public static final Constant<SContainmentLink, DObserved<DNode, DNode>>                                      SINGLE_CONTAINMENT     = Constant.of("SINGLE_CONTAINMENT", sc -> DObserved.of(sc, null, !sc.isOptional(), true, null, false, (dNode, pre, post) -> {
+                                                                                                                                            SNode sNode = dNode.reParent();
+                                                                                                                                            List<SNode> soll = post != null ? List.of(post.reParent(sNode, sc, post.original(true))) : List.of();
+                                                                                                                                            List<SNode> ist = children(sNode, sc);
+                                                                                                                                            DObserved.map(ist, soll,                                                                                                                                            //
+                                                                                                                                                    (n, a) -> {
+                                                                                                                                                    }, sNode::removeChild);
+                                                                                                                                            ist = children(sNode, sc);
+                                                                                                                                            DObserved.map(ist, soll,                                                                                                                                            //
+                                                                                                                                                    (n, a) -> sNode.addChild(sc, n), r -> {
+                                                                                                                                                                                                                                                                                        });
+                                                                                                                                        }, null, sc::getDeclarationNode, false));
 
     @SuppressWarnings("deprecation")
     public static final Constant<SReferenceLink, DObserved<DNode, DNode>>                                        REFERENCE              = Constant.of("REFERENCE", sr -> DObserved.of(sr, null, !sr.isOptional(), false, () -> DNode.OPPOSITE.get(sr), false,                                                   //
@@ -245,6 +243,9 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
             Collection.of(c.getProperties()),                                                                                                                                                                                                                                                                   //
             Collection.of(c.getContainmentLinks()),                                                                                                                                                                                                                                                             //
             Collection.of(c.getReferenceLinks())).map(DNode::setable).toSet());
+
+    @SuppressWarnings("rawtypes")
+    protected static final Constant<SConcept, Set<Observer>>                                                     CONCEPT_OBSERVERS      = Constant.of("$CONCEPT_OBSERVERS", c -> Set.of());
 
     protected static final Setable<DNode, Set<Pair<DObject, IssueKindReportItem>>>                               ALL_MPS_ISSUES         = Setable.of("$ALL_MPS_ISSUES", Set.of(), (tx, o, pre, post) -> Setable.<Set<Pair<DObject, IssueKindReportItem>>, Pair<DObject, IssueKindReportItem>> diff(pre, post,   //
             a -> DObject.MPS_ISSUES.set(a.a(), Set::add, a),                                                                                                                                                                                                                                                    //
@@ -464,6 +465,32 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
             }
         }
         return false;
+    }
+
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    @Override
+    protected boolean isIdentified() {
+        if (super.isIdentified()) {
+            return true;
+        } else {
+            SConcept concept = getConcept();
+            Set<DAttribute> id = TYPE.get(this).getIndetifying();
+            if (!id.isEmpty()) {
+                for (DAttribute attr : id) {
+                    if (attr.get(this) == null) {
+                        return false;
+                    }
+                }
+                return true;
+            } else if (concept.isSubConceptOf(SNodeUtil.concept_INamedConcept)) {
+                return NAME_OBSERVED.get(this) != null;
+            } else if (SMART_REFERENCE.get(concept)) {
+                SReferenceLink rl = getConcept().getReferenceLinks().iterator().next();
+                return REFERENCE.get(rl).get(this) != null;
+            } else {
+                return INDEX.get(this) >= 0;
+            }
+        }
     }
 
     public Integer getIndex() {
@@ -759,13 +786,15 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
         } else if (feature instanceof SContainmentLink) {
             SContainmentLink cl = (SContainmentLink) feature;
             if (cl.isMultiple()) {
-                List<DNode> element = value != null ? Collection.of((Iterable<DNode>) value).map(Objects::requireNonNull).distinct().toList() : null;
-                MANY_CONTAINMENT.get(cl).set(this, (i, s) -> s == null || Objects.equals(s, i) ? i : s, element);
+                List<DNode> post = value != null ? Collection.of((Iterable<DNode>) value).map(Objects::requireNonNull).distinct().toList() : null;
+                DObserved<DNode, List<DNode>> mc = MANY_CONTAINMENT.get(cl);
+                mc.set(this, (b, a) -> DMatchedObject.manyMatch(this, b, a == null || Objects.equals(a, b) ? b : a, mc), post);
             } else {
                 if (value != null) {
                     Objects.requireNonNull(value);
                 }
-                SINGLE_CONTAINMENT.get(cl).set(this, (DNode) value);
+                DObserved<DNode, DNode> sc = SINGLE_CONTAINMENT.get(cl);
+                sc.set(this, (b, a) -> DMatchedObject.singleMatch(this, b, a, sc), (DNode) value);
             }
         } else {
             REFERENCE.get((SReferenceLink) feature).set(this, (DNode) value);
@@ -778,9 +807,13 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
         } else if (feature instanceof SContainmentLink) {
             SContainmentLink cl = (SContainmentLink) feature;
             if (cl.isMultiple()) {
-                return MANY_CONTAINMENT.get(cl).get(this).collect(Collectors.toList());
+                DObserved<DNode, List<DNode>> mc = MANY_CONTAINMENT.get(cl);
+                DMatchedObject.checkMatching(this, mc);
+                return mc.get(this).collect(Collectors.toList());
             } else {
-                return SINGLE_CONTAINMENT.get(cl).get(this);
+                DObserved<DNode, DNode> sc = SINGLE_CONTAINMENT.get(cl);
+                DMatchedObject.checkMatching(this, sc);
+                return sc.get(this);
             }
         } else {
             return REFERENCE.get((SReferenceLink) feature).get(this);
