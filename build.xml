@@ -162,7 +162,7 @@
   <target name="artifact.dclaremps" depends="init.artifacts, compile.module.runtime" description="Build 'DclareMps' artifact">
     <property name="artifact.temp.output.dclaremps" value="${artifacts.temp.dir}/DclareMps"/>
     <mkdir dir="${artifact.temp.output.dclaremps}"/>
-    <jar destfile="${temp.jar.path.DclareMps.jar}" duplicate="preserve" filesetmanifest="mergewithoutmain">
+    <jar destfile="${temp.jar.path.DclareMps.jar}" duplicate="preserve" filesetmanifest="merge">
       <zipfileset dir="${runtime.output.dir}"/>
       <zipfileset src="${basedir}/lib/immutable-collections.jar"/>
       <zipfileset src="${basedir}/lib/dclare.jar"/>
