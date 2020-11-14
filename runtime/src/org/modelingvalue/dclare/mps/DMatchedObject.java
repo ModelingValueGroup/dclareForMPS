@@ -56,30 +56,26 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
 
     protected static final Observed<DMatchedObject, Set<DConstruction>>           CONSTRUCTIONS         = NonCheckingObserved.of("$CONSTRUCTIONS", Set.of());
 
-    @SuppressWarnings("unchecked")
     protected static <P extends DObject, C extends DMatchedObject<C, ?, ?>, R extends ContainingCollection<C>> R manyMatch(P parent, R pres, R posts, Setable<P, R> setable) {
         if (parent.dContaining() instanceof UnidentifiedObserved) {
             return pres;
         }
-        ContainingCollection<C> rem = pres.removeAll(posts);
-        ContainingCollection<C> add = posts.removeAll(pres);
-        if (!rem.isEmpty() && !add.isEmpty()) {
-            Set<C> unidentified = add.filter(c -> !c.isIdentified()).toSet();
-            if (!unidentified.isEmpty()) {
-                UNIDENTIFIED_CHILDREN.get(setable).set(parent, Set::addAll, unidentified);
-                return pres;
-            } else {
-                UNIDENTIFIED_CHILDREN.get(setable).set(parent, Set.of());
-                for (C pre : rem) {
-                    for (C post : add) {
-                        if (pre.isMatch(post)) {
-                            posts = (R) posts.remove(post);
-                            posts = (R) posts.addAllUnique(rem);
+        Set<C> rem = pres.removeAll(posts).toSet();
+        if (!rem.isEmpty()) {
+            Set<C> add = posts.removeAll(pres).filter(a -> !a.isRead() && rem.anyMatch(r -> r.sameType(a))).toSet();
+            if (!add.isEmpty()) {
+                for (C post : add) {
+                    for (C pre : rem) {
+                        if (pre.sameType(post) && pre.matches(post)) {
+                            pre.combine(post);
                             add = add.remove(post);
+                            UNIDENTIFIED_CHILDREN.get(setable).set(parent, Set::remove, post);
                             break;
                         }
                     }
                 }
+                UNIDENTIFIED_CHILDREN.get(setable).set(parent, Set::addAll, add);
+                return pres;
             }
         }
         return posts;
@@ -89,18 +85,54 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
         if (parent.dContaining() instanceof UnidentifiedObserved) {
             return pre;
         }
-        if (pre != null && post != null && !pre.equals(post)) {
-            if (!post.isIdentified()) {
-                UNIDENTIFIED_CHILDREN.get(setable).set(parent, Set::add, post);
-                return pre;
+        if (pre != null && post != null && !pre.equals(post) && pre.sameType(post) && !post.isRead()) {
+            if (pre.matches(post)) {
+                pre.combine(post);
+                UNIDENTIFIED_CHILDREN.get(setable).set(parent, Set::remove, post);
             } else {
-                UNIDENTIFIED_CHILDREN.get(setable).set(parent, Set.of());
-                if (pre.isMatch(post)) {
-                    post = pre;
+                UNIDENTIFIED_CHILDREN.get(setable).set(parent, Set::add, post);
+            }
+            return pre;
+        }
+        return post;
+    }
+
+    protected void combine(T other) {
+        for (DDeriveConstruction cons : CONSTRUCTIONS.get(other).filter(DDeriveConstruction.class)) {
+            CONSTRUCTED.get(cons.observer()).set(cons.object(), (map, e) -> map.put(cons, e), this);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    protected boolean matches(T other) {
+        if (other.causes(Set.of()).contains(this)) {
+            return true;
+        } else {
+            Object a = key();
+            Object b = other.key();
+            return a != null && b != null && a.equals(b);
+        }
+    }
+
+    protected boolean isRead() {
+        return CONSTRUCTIONS.current(this).filter(DReadConstruction.class).findAny().isPresent();
+    }
+
+    protected abstract boolean sameType(T other);
+
+    protected abstract Object key();
+
+    @SuppressWarnings("unchecked")
+    protected Set<DMatchedObject> causes(Set<DMatchedObject> found) {
+        if (!found.contains(this)) {
+            found = found.add(this);
+            for (DDeriveConstruction cons : CONSTRUCTIONS.get(this).filter(DDeriveConstruction.class)) {
+                if (cons.object() instanceof DMatchedObject) {
+                    found = ((DMatchedObject) cons.object()).causes(found);
                 }
             }
         }
-        return post;
+        return found;
     }
 
     protected static void checkMatching(DObject parent, Setable setable) {
@@ -242,33 +274,9 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
     protected void exit(DClareMPS dClareMPS, S original) {
     }
 
-    private boolean isExisting() {
+    protected boolean isExisting() {
         return !CONSTRUCTIONS.get(this).isEmpty();
     }
-
-    protected boolean isIdentified() {
-        return CONSTRUCTIONS.current(this).filter(DReadConstruction.class).findAny().isPresent();
-    }
-
-    protected final boolean isMatch(T post) {
-        if (matches(post)) {
-            for (DConstruction cons : CONSTRUCTIONS.get(post)) {
-                if (cons instanceof DReadConstruction) {
-                    post.stop(dClareMPS());
-                    READ_MAPPING.set((DReadConstruction) cons, this);
-                    START_ACTION.trigger(this);
-                } else {
-                    DDeriveConstruction der = (DDeriveConstruction) cons;
-                    CONSTRUCTED.get(der.observer()).set(der.object(), (map, e) -> map.put(der, e), this);
-                }
-            }
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    protected abstract boolean matches(T other);
 
     protected abstract void read();
 
@@ -347,7 +355,12 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
     private static final DMatchedObject MERGER = new DMatchedObject(new Object[]{}) {
 
         @Override
-        protected boolean matches(DMatchedObject other) {
+        protected boolean sameType(DMatchedObject other) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        protected Object key() {
             throw new UnsupportedOperationException();
         }
 

@@ -441,55 +441,35 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
         READ_REFERENCES.trigger(this);
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
-    protected boolean matches(DNode other) {
-        SConcept concept = getConcept();
-        if (other.getConcept().equals(concept)) {
-            Set<DAttribute> id = TYPE.get(this).getIndetifying();
-            if (!id.isEmpty()) {
-                for (DAttribute attr : id) {
-                    if (!Objects.equals(attr.get(other), attr.get(this))) {
-                        return false;
-                    }
-                }
-                return true;
-            } else if (concept.isSubConceptOf(SNodeUtil.concept_INamedConcept)) {
-                return Objects.equals(NAME_OBSERVED.get(other), NAME_OBSERVED.get(this));
-            } else if (SMART_REFERENCE.get(concept)) {
-                SReferenceLink rl = getConcept().getReferenceLinks().iterator().next();
-                DObserved<DNode, DNode> ref = REFERENCE.get(rl);
-                return Objects.equals(ref.get(other), ref.get(this));
-            } else {
-                return Objects.equals(other.getIndex(), getIndex());
-            }
-        }
-        return false;
+    protected boolean sameType(DNode other) {
+        return other.getConcept().equals(getConcept());
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
-    protected boolean isIdentified() {
-        if (super.isIdentified()) {
-            return true;
-        } else {
-            SConcept concept = getConcept();
-            Set<DAttribute> id = TYPE.get(this).getIndetifying();
-            if (!id.isEmpty()) {
-                for (DAttribute attr : id) {
-                    if (attr.get(this) == null) {
-                        return false;
-                    }
+    protected Object key() {
+        SConcept concept = getConcept();
+        Set<DAttribute> id = TYPE.get(this).getIndetifying();
+        if (!id.isEmpty()) {
+            Map<DAttribute, Object> map = Map.of();
+            for (DAttribute attr : id) {
+                Object val = attr.get(this);
+                if (val == null) {
+                    return null;
+                } else {
+                    map = map.put(attr, val);
                 }
-                return true;
-            } else if (concept.isSubConceptOf(SNodeUtil.concept_INamedConcept)) {
-                return NAME_OBSERVED.get(this) != null;
-            } else if (SMART_REFERENCE.get(concept)) {
-                SReferenceLink rl = getConcept().getReferenceLinks().iterator().next();
-                return REFERENCE.get(rl).get(this) != null;
-            } else {
-                return INDEX.get(this) >= 0;
             }
+            return map;
+        } else if (concept.isSubConceptOf(SNodeUtil.concept_INamedConcept)) {
+            return NAME_OBSERVED.get(this);
+        } else if (SMART_REFERENCE.get(concept)) {
+            SReferenceLink rl = getConcept().getReferenceLinks().iterator().next();
+            return REFERENCE.get(rl).get(this);
+        } else {
+            Integer idx = INDEX.get(this);
+            return idx >= 0 ? idx : null;
         }
     }
 

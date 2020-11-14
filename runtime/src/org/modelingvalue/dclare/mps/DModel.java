@@ -204,13 +204,13 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
     }
 
     @Override
-    protected boolean matches(DModel other) {
-        return isTemporal() == other.isTemporal() && Objects.equals(NAME.get(other), NAME.get(this));
+    protected boolean sameType(DModel other) {
+        return isTemporal() == other.isTemporal();
     }
 
     @Override
-    protected boolean isIdentified() {
-        return super.isIdentified() || NAME.get(this) != null;
+    protected Object key() {
+        return NAME.get(this);
     }
 
     @Override
