@@ -60,13 +60,13 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
         if (parent.dContaining() instanceof UnidentifiedObserved) {
             return pres;
         }
-        Set<C> rem = pres.removeAll(posts).toSet();
+        Set<C> rem = pres.filter(r -> !posts.contains(r) && r.isRead()).toSet();
         if (!rem.isEmpty()) {
-            Set<C> add = posts.removeAll(pres).filter(a -> !a.isRead() && rem.anyMatch(r -> r.sameType(a))).toSet();
+            Set<C> add = posts.filter(a -> !pres.contains(a) && rem.anyMatch(r -> r.equalType(a)) && !a.isRead()).toSet();
             if (!add.isEmpty()) {
                 for (C post : add) {
                     for (C pre : rem) {
-                        if (pre.sameType(post) && pre.matches(post)) {
+                        if (pre.equalType(post) && pre.matches(post)) {
                             pre.combine(post);
                             add = add.remove(post);
                             UNIDENTIFIED_CHILDREN.get(setable).set(parent, Set::remove, post);
@@ -85,7 +85,7 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
         if (parent.dContaining() instanceof UnidentifiedObserved) {
             return pre;
         }
-        if (pre != null && post != null && !pre.equals(post) && pre.sameType(post) && !post.isRead()) {
+        if (pre != null && post != null && !pre.equals(post) && pre.equalType(post) && pre.isRead() && !post.isRead()) {
             if (pre.matches(post)) {
                 pre.combine(post);
                 UNIDENTIFIED_CHILDREN.get(setable).set(parent, Set::remove, post);
@@ -95,6 +95,10 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
             return pre;
         }
         return post;
+    }
+
+    protected boolean equalType(T other) {
+        return matchType().equals(other.matchType());
     }
 
     protected void combine(T other) {
@@ -108,8 +112,8 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
         if (other.causes(Set.of()).contains(this)) {
             return true;
         } else {
-            Object a = key();
-            Object b = other.key();
+            Object a = matchKey();
+            Object b = other.matchKey();
             return a != null && b != null && a.equals(b);
         }
     }
@@ -118,9 +122,9 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
         return CONSTRUCTIONS.current(this).filter(DReadConstruction.class).findAny().isPresent();
     }
 
-    protected abstract boolean sameType(T other);
+    protected abstract Object matchType();
 
-    protected abstract Object key();
+    protected abstract Object matchKey();
 
     @SuppressWarnings("unchecked")
     protected Set<DMatchedObject> causes(Set<DMatchedObject> found) {
@@ -355,12 +359,12 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
     private static final DMatchedObject MERGER = new DMatchedObject(new Object[]{}) {
 
         @Override
-        protected boolean sameType(DMatchedObject other) {
+        protected Object matchType() {
             throw new UnsupportedOperationException();
         }
 
         @Override
-        protected Object key() {
+        protected Object matchKey() {
             throw new UnsupportedOperationException();
         }
 

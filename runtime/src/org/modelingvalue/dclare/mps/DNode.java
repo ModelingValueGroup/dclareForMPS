@@ -442,13 +442,13 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
     }
 
     @Override
-    protected boolean sameType(DNode other) {
-        return other.getConcept().equals(getConcept());
+    protected Object matchType() {
+        return getConcept();
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
-    protected Object key() {
+    protected Object matchKey() {
         SConcept concept = getConcept();
         Set<DAttribute> id = TYPE.get(this).getIndetifying();
         if (!id.isEmpty()) {
