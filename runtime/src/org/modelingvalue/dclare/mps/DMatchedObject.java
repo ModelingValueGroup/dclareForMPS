@@ -60,6 +60,7 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
 
     protected static final Constant<Observer<?>, Constructed>                     CONSTRUCTED           = Constant.of("CONSTRUCTED", o -> new Constructed(o));
 
+    @SuppressWarnings("unchecked")
     protected static <P extends DObject, C extends DMatchedObject<C, ?, ?>, R extends ContainingCollection<C>> R manyMatch(P parent, R pres, R posts, Setable<P, R> setable) {
         if (parent.dContaining() instanceof UnidentifiedObserved) {
             return pres;
@@ -68,6 +69,7 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
         if (!rem.isEmpty()) {
             Set<C> add = posts.filter(a -> !pres.contains(a) && rem.anyMatch(r -> r.equalType(a)) && !a.isRead()).toSet();
             if (!add.isEmpty()) {
+                R result = pres;
                 for (C post : add) {
                     for (C pre : rem) {
                         if (pre.equalType(post) && pre.matches(post)) {
@@ -77,12 +79,19 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
                             break;
                         }
                     }
+                    if (add.contains(post) && post.hasMatchKey()) {
+                        add = add.remove(post);
+                        UNIDENTIFIED_CHILDREN.get(setable).set(parent, Set::remove, post);
+                        result = (R) result.add(post);
+                    }
                 }
                 UNIDENTIFIED_CHILDREN.get(setable).set(parent, Set::addAll, add);
-                return pres;
+                return result;
             } else if (pres.anyMatch(r -> r.derived(Set.of()).anyMatch(e -> !pres.contains(e) && !e.isRead()))) {
                 return pres;
             }
+        } else {
+            UNIDENTIFIED_CHILDREN.get(setable).set(parent, Set.of());
         }
         return posts;
     }
@@ -96,13 +105,19 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
                 if (pre.matches(post)) {
                     pre.combine(post);
                     UNIDENTIFIED_CHILDREN.get(setable).set(parent, Set::remove, post);
+                    return pre;
+                } else if (post.hasMatchKey()) {
+                    UNIDENTIFIED_CHILDREN.get(setable).set(parent, Set::remove, post);
+                    return post;
                 } else {
                     UNIDENTIFIED_CHILDREN.get(setable).set(parent, Set::add, post);
+                    return pre;
                 }
-                return pre;
             } else if (pre.derived(Set.of()).anyMatch(e -> !e.equals(pre) && !e.isRead())) {
                 return pre;
             }
+        } else {
+            UNIDENTIFIED_CHILDREN.get(setable).set(parent, Set.of());
         }
         return post;
     }
@@ -130,6 +145,10 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
 
     protected boolean isRead() {
         return CONSTRUCTIONS.get(this).filter(DReadConstruction.class).findAny().isPresent();
+    }
+
+    protected boolean hasMatchKey() {
+        return matchKey() != null;
     }
 
     protected abstract Object matchType();
