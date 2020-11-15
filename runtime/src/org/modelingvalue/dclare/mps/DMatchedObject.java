@@ -65,7 +65,7 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
         if (parent.dContaining() instanceof UnidentifiedObserved) {
             return pres;
         }
-        Set<C> rem = pres.filter(r -> !posts.contains(r) && r.isRead()).toSet();
+        Set<C> rem = pres.filter(r -> !posts.contains(r)).toSet();
         if (!rem.isEmpty()) {
             Set<C> add = posts.filter(a -> !pres.contains(a) && rem.anyMatch(r -> r.equalType(a)) && !a.isRead()).toSet();
             if (!add.isEmpty()) {
@@ -79,7 +79,7 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
                             break;
                         }
                     }
-                    if (add.contains(post) && post.hasMatchKey()) {
+                    if (add.contains(post) && post.matchKey() != null) {
                         add = add.remove(post);
                         UNIDENTIFIED_CHILDREN.get(setable).set(parent, Set::remove, post);
                         result = (R) result.add(post);
@@ -100,13 +100,13 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
         if (parent.dContaining() instanceof UnidentifiedObserved) {
             return pre;
         }
-        if (pre != null && !pre.equals(post) && pre.isRead()) {
+        if (pre != null && !pre.equals(post)) {
             if (post != null && pre.equalType(post) && !post.isRead()) {
                 if (pre.matches(post)) {
                     pre.combine(post);
                     UNIDENTIFIED_CHILDREN.get(setable).set(parent, Set::remove, post);
                     return pre;
-                } else if (post.hasMatchKey()) {
+                } else if (post.matchKey() != null) {
                     UNIDENTIFIED_CHILDREN.get(setable).set(parent, Set::remove, post);
                     return post;
                 } else {
@@ -145,10 +145,6 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
 
     protected boolean isRead() {
         return CONSTRUCTIONS.get(this).filter(DReadConstruction.class).findAny().isPresent();
-    }
-
-    protected boolean hasMatchKey() {
-        return matchKey() != null;
     }
 
     protected abstract Object matchType();
