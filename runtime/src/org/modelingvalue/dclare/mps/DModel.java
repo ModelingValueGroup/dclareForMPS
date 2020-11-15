@@ -344,9 +344,7 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
     }
 
     public java.util.Collection<DNode> getRootNodes(SAbstractConcept concept) {
-        DObserved<DModel, Set<DNode>> cr = CONCEPT_ROOTS.get(concept);
-        DMatchedObject.checkMatching(this, cr);
-        return cr.get(this).collect(Collectors.toList());
+        return CONCEPT_ROOTS.get(concept).get(this).collect(Collectors.toList());
     }
 
     @Override

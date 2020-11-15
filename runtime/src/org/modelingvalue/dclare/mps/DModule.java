@@ -203,7 +203,6 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
 
     @Override
     public Iterable<SModel> getModels() {
-        DMatchedObject.checkMatching(this, MODELS);
         return MODELS.get(this).collect(Collectors.toSet());
     }
 

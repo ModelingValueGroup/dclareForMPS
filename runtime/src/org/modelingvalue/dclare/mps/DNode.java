@@ -777,13 +777,9 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
         } else if (feature instanceof SContainmentLink) {
             SContainmentLink cl = (SContainmentLink) feature;
             if (cl.isMultiple()) {
-                DObserved<DNode, List<DNode>> mc = MANY_CONTAINMENT.get(cl);
-                DMatchedObject.checkMatching(this, mc);
-                return mc.get(this).collect(Collectors.toList());
+                return MANY_CONTAINMENT.get(cl).get(this).collect(Collectors.toList());
             } else {
-                DObserved<DNode, DNode> sc = SINGLE_CONTAINMENT.get(cl);
-                DMatchedObject.checkMatching(this, sc);
-                return sc.get(this);
+                return SINGLE_CONTAINMENT.get(cl).get(this);
             }
         } else {
             return REFERENCE.get((SReferenceLink) feature).get(this);

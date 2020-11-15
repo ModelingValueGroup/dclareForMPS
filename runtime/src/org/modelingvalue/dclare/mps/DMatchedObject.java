@@ -160,9 +160,6 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
         return found;
     }
 
-    protected static void checkMatching(DObject parent, Setable setable) {
-    }
-
     protected static <D extends DMatchedObject, A> D quotationConstruct(SLanguage anonymousLanguage, String anonymousType, Object[] ctx, Supplier<D> supplier) {
         DConstructingTransaction tx = (DConstructingTransaction) LeafTransaction.getCurrent();
         return derive(tx, new DQuotationConstruction(anonymousLanguage, anonymousType, tx.observer(), ctx), supplier);
