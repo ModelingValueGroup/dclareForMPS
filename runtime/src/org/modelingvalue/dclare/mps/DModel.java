@@ -257,7 +257,9 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
     @Override
     protected void init(DClareMPS dClareMPS, SModel original) {
         DModelListener l = new DModelListener(this, dClareMPS);
+        original.removeChangeListener(l);
         original.addChangeListener(l);
+        original.removeModelListener(l);
         original.addModelListener(l);
     }
 

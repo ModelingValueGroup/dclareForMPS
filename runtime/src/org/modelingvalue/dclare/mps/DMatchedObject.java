@@ -54,7 +54,11 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
 
     protected static final Set<Setable>                                           SETABLES              = DObject.SETABLES.add(DETACHED);
 
+    protected static final Observed<DMatchedObject, Set<DMatchedObject>>          DERIVED               = NonCheckingObserved.of("$DERIVED", Set.of());
+
     protected static final Observed<DMatchedObject, Set<DConstruction>>           CONSTRUCTIONS         = NonCheckingObserved.of("$CONSTRUCTIONS", Set.of());
+
+    protected static final Constant<Observer<?>, Constructed>                     CONSTRUCTED           = Constant.of("CONSTRUCTED", o -> new Constructed(o));
 
     protected static <P extends DObject, C extends DMatchedObject<C, ?, ?>, R extends ContainingCollection<C>> R manyMatch(P parent, R pres, R posts, Setable<P, R> setable) {
         if (parent.dContaining() instanceof UnidentifiedObserved) {
@@ -76,6 +80,8 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
                 }
                 UNIDENTIFIED_CHILDREN.get(setable).set(parent, Set::addAll, add);
                 return pres;
+            } else if (pres.anyMatch(r -> r.derived(Set.of()).anyMatch(e -> !pres.contains(e) && !e.isRead()))) {
+                return pres;
             }
         }
         return posts;
@@ -85,14 +91,18 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
         if (parent.dContaining() instanceof UnidentifiedObserved) {
             return pre;
         }
-        if (pre != null && post != null && !pre.equals(post) && pre.equalType(post) && pre.isRead() && !post.isRead()) {
-            if (pre.matches(post)) {
-                pre.combine(post);
-                UNIDENTIFIED_CHILDREN.get(setable).set(parent, Set::remove, post);
-            } else {
-                UNIDENTIFIED_CHILDREN.get(setable).set(parent, Set::add, post);
+        if (pre != null) {
+            if (post != null && !pre.equals(post) && pre.equalType(post) && pre.isRead() && !post.isRead()) {
+                if (pre.matches(post)) {
+                    pre.combine(post);
+                    UNIDENTIFIED_CHILDREN.get(setable).set(parent, Set::remove, post);
+                } else {
+                    UNIDENTIFIED_CHILDREN.get(setable).set(parent, Set::add, post);
+                }
+                return pre;
+            } else if (pre.derived(Set.of()).anyMatch(e -> !e.equals(pre) && !e.isRead())) {
+                return pre;
             }
-            return pre;
         }
         return post;
     }
@@ -109,7 +119,7 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
 
     @SuppressWarnings("unchecked")
     protected boolean matches(T other) {
-        if (other.causes(Set.of()).contains(this)) {
+        if (other.context(Set.of()).contains(this)) {
             return true;
         } else {
             Object a = matchKey();
@@ -119,7 +129,7 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
     }
 
     protected boolean isRead() {
-        return CONSTRUCTIONS.current(this).filter(DReadConstruction.class).findAny().isPresent();
+        return CONSTRUCTIONS.get(this).filter(DReadConstruction.class).findAny().isPresent();
     }
 
     protected abstract Object matchType();
@@ -127,13 +137,24 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
     protected abstract Object matchKey();
 
     @SuppressWarnings("unchecked")
-    protected Set<DMatchedObject> causes(Set<DMatchedObject> found) {
+    protected Set<DMatchedObject> context(Set<DMatchedObject> found) {
         if (!found.contains(this)) {
             found = found.add(this);
             for (DDeriveConstruction cons : CONSTRUCTIONS.get(this).filter(DDeriveConstruction.class)) {
-                if (cons.object() instanceof DMatchedObject) {
-                    found = ((DMatchedObject) cons.object()).causes(found);
+                for (DMatchedObject obj : cons.context()) {
+                    found = obj.context(found);
                 }
+            }
+        }
+        return found;
+    }
+
+    @SuppressWarnings("unchecked")
+    protected Set<DMatchedObject> derived(Set<DMatchedObject> found) {
+        if (!found.contains(this)) {
+            found = found.add(this);
+            for (DMatchedObject obj : DERIVED.get(this)) {
+                found = obj.derived(found);
             }
         }
         return found;
@@ -141,8 +162,6 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
 
     protected static void checkMatching(DObject parent, Setable setable) {
     }
-
-    protected static final Constant<Observer<?>, Constructed> CONSTRUCTED = Constant.of("CONSTRUCTED", o -> new Constructed(o));
 
     protected static <D extends DMatchedObject, A> D quotationConstruct(SLanguage anonymousLanguage, String anonymousType, Object[] ctx, Supplier<D> supplier) {
         DConstructingTransaction tx = (DConstructingTransaction) LeafTransaction.getCurrent();
@@ -346,9 +365,15 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
                     Pair<DMatchedObject, DMatchedObject> d = e.getValue();
                     if (d.a() != null) {
                         CONSTRUCTIONS.set(d.a(), Set::remove, e.getKey());
+                        for (DMatchedObject c : e.getKey().context()) {
+                            DERIVED.set(c, Set::remove, d.a());
+                        }
                     }
                     if (d.b() != null) {
                         CONSTRUCTIONS.set(d.b(), Set::add, e.getKey());
+                        for (DMatchedObject c : e.getKey().context()) {
+                            DERIVED.set(c, Set::add, d.b());
+                        }
                     }
                 });
             });

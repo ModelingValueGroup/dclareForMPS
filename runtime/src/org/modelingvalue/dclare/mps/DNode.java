@@ -425,16 +425,6 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
     }
 
     @Override
-    protected void init(DClareMPS dClareMPS) {
-        super.init(dClareMPS);
-    }
-
-    @Override
-    protected void exit(DClareMPS dClareMPS) {
-        super.exit(dClareMPS);
-    }
-
-    @Override
     protected void read() {
         READ_PROPERTIES.trigger(this);
         READ_CHILDREN.trigger(this);

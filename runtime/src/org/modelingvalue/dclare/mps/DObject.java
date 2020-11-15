@@ -35,9 +35,9 @@ import jetbrains.mps.errors.item.IssueKindReportItem;
 @SuppressWarnings({"rawtypes", "unused"})
 public abstract class DObject implements Mutable {
 
-    protected static final Observer<DObject>                                           START_ACTION              = Observer.of("START_ACTION", o -> o.start(dClareMPS()));
+    protected static final Observer<DObject>                                           START_OBSERVER            = Observer.of("START_OBSERVER", o -> o.start(dClareMPS()));
 
-    public static final Observed<DObject, DObjectType<?>>                              TYPE                      = NonCheckingObserved.of("$TYPE", new DObjectType<String>("<DUMMY_TYPE>") {
+    private static final DObjectType<String>                                           DUMMY_TYPE                = new DObjectType<String>("<DUMMY_TYPE>") {
                                                                                                                      @Override
                                                                                                                      public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
                                                                                                                          return Set.of();
@@ -57,7 +57,9 @@ public abstract class DObject implements Mutable {
                                                                                                                      public boolean external() {
                                                                                                                          return false;
                                                                                                                      }
-                                                                                                                 });
+                                                                                                                 };
+
+    public static final Observed<DObject, DObjectType<?>>                              TYPE                      = NonCheckingObserved.of("$TYPE", DUMMY_TYPE);
 
     protected static final Observer<DObject>                                           TYPE_RULE                 = observer(TYPE, o -> TYPE.set(o, o.getType()));
 
@@ -94,7 +96,7 @@ public abstract class DObject implements Mutable {
     protected static final DObserved<DObject, Set<DIssue>>                             DCLARE_ISSUES             = DObserved.of("$DCLARE_ISSUES", Set.of(), false, false, () -> DIssue.DOBJECT, false, (dObject, pre, post) -> {
                                                                                                                  }, null);
 
-    protected static final Set<Observer>                                               OBSERVERS                 = Set.of(TYPE_RULE, CONTAINING_ATTRIBUTE_RULE, START_ACTION);
+    protected static final Set<Observer>                                               OBSERVERS                 = Set.of(TYPE_RULE, CONTAINING_ATTRIBUTE_RULE, START_OBSERVER);
 
     protected static final Set<Setable>                                                SETABLES                  = Set.of(TYPE, MPS_ISSUES, DRULE_ISSUES, DCLARE_ISSUES, CONTAINING_ATTRIBUTE);
 
