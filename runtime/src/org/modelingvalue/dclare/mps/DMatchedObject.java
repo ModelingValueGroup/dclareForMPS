@@ -100,8 +100,8 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
         if (parent.dContaining() instanceof UnidentifiedObserved) {
             return pre;
         }
-        if (pre != null) {
-            if (post != null && !pre.equals(post) && pre.equalType(post) && pre.isRead() && !post.isRead()) {
+        if (pre != null && !pre.equals(post) && pre.isRead()) {
+            if (post != null && pre.equalType(post) && !post.isRead()) {
                 if (pre.matches(post)) {
                     pre.combine(post);
                     UNIDENTIFIED_CHILDREN.get(setable).set(parent, Set::remove, post);
