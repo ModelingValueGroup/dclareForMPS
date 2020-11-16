@@ -60,14 +60,14 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
 
     protected static final DObserved<DModel, String>                                        NAME                = DObserved.of("NAME", null, false, false, null, false, (dModel, pre, post) -> {
                                                                                                                     if (post != null) {
-                                                                                                                        SModel sModel = dModel.original(true);
+                                                                                                                        SModel sModel = dModel.original();
                                                                                                                         ((EditableSModel) sModel).rename(post, false);
                                                                                                                     }
                                                                                                                 }, null);
 
     protected static final DObserved<DModel, Set<DNode>>                                    ROOTS               = DObserved.of("ROOTS", Set.of(), false, true, null, false, (dModel, pre, post) -> {
-                                                                                                                    SModel sModel = dModel.original(true);
-                                                                                                                    Set<SNode> soll = post.map(r -> r.reParent(sModel, null, r.original(true))).toSet();
+                                                                                                                    SModel sModel = dModel.original();
+                                                                                                                    Set<SNode> soll = post.map(r -> r.reParent(sModel, null, r.original())).toSet();
                                                                                                                     Set<SNode> ist = DModel.roots(sModel);
                                                                                                                     DObserved.map(ist, soll,                                                                                                         //
                                                                                                                             sModel::addRootNode,                                                                                                     //
@@ -89,7 +89,7 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
                                                                                                                 }, null));
 
     protected static final DObserved<DModel, Set<SLanguage>>                                USED_LANGUAGES      = DObserved.of("USED_LANGUAGES", Set.of(), false, false, null, false, (dModel, pre, post) -> {
-                                                                                                                    SModelBase sModel = (SModelBase) dModel.original(true);
+                                                                                                                    SModelBase sModel = (SModelBase) dModel.original();
                                                                                                                     java.util.Collection<SLanguage> ls = sModel.importedLanguageIds();
                                                                                                                     for (SLanguage l : post) {
                                                                                                                         if (!ls.contains(l)) {
@@ -99,10 +99,10 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
                                                                                                                 }, null);
 
     protected static final DObserved<DModel, Set<DModel>>                                   USED_MODELS         = DObserved.of("USED_MODELS", Set.of(), false, false, null, false, (dModel, pre, post) -> {
-                                                                                                                    SModelBase sModel = (SModelBase) dModel.original(true);
+                                                                                                                    SModelBase sModel = (SModelBase) dModel.original();
                                                                                                                     java.util.Collection<SModelReference> ls = sModel.getModelImports();
                                                                                                                     for (DModel dm : post) {
-                                                                                                                        SModel sm = dm.original(true);
+                                                                                                                        SModel sm = dm.original();
                                                                                                                         if (ls.stream().noneMatch(r -> r.getModelId().equals(sm.getModelId()))) {
                                                                                                                             sModel.addModelImport(sm.getReference());
                                                                                                                         }
@@ -112,7 +112,7 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
     protected static final Observed<DModel, ModelRoot>                                      MODEL_ROOT          = NonCheckingObserved.of("MODEL_ROOT", null);
 
     private static final Observer<DModel>                                                   USED_LANGUAGES_RULE = DObject.observer(USED_LANGUAGES, o -> {
-                                                                                                                    SModel sModel = o.original();
+                                                                                                                    SModel sModel = o.tryOriginal();
                                                                                                                     if (sModel instanceof SModelBase) {
                                                                                                                         Set<SLanguage> ls = dClareMPS().read(() -> Collection.of(((SModelBase) sModel).importedLanguageIds()).sequential().toSet());
                                                                                                                         USED_LANGUAGES.set(o, Set::addAll, ls.addAll(ROOTS.get(o).flatMap(DNode.USED_LANGUAGES::get)));
@@ -121,7 +121,7 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
 
     private static final Observer<DModel>                                                   USED_MODELS_RULE    = DObject.observer(USED_MODELS, o -> {
                                                                                                                     DClareMPS dClareMPS = dClareMPS();
-                                                                                                                    SModel sModel = o.original();
+                                                                                                                    SModel sModel = o.tryOriginal();
                                                                                                                     if (sModel instanceof SModelBase) {
                                                                                                                         Set<DModel> ls = dClareMPS.read(() -> Collection.of(((SModelBase) sModel).getModelImports()).sequential().                   //
                                                                                                                         map(r -> r.resolve(null)).notNull().map(DModel::of).toSet());
@@ -130,7 +130,7 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
                                                                                                                 });
 
     private static final Observer<DModel>                                                   REFERENCED_RULE     = DObject.observer(DModule.MODELS, o -> USED_MODELS.get(o).forEachOrdered(mo -> {
-                                                                                                                    SModel sModel = mo.original();
+                                                                                                                    SModel sModel = mo.tryOriginal();
                                                                                                                     if (sModel instanceof SModelBase) {
                                                                                                                         SModule sModule = sModel.getModule();
                                                                                                                         DModule dModule = DModule.of(sModule);
@@ -146,7 +146,7 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
                                                                                                                 }));
 
     private static final Action<DModel>                                                     READ_ROOTS          = Action.of("$READ_ROOTS", m -> {
-                                                                                                                    SModel sModel = m.original();
+                                                                                                                    SModel sModel = m.tryOriginal();
                                                                                                                     if (sModel != null) {
                                                                                                                         MODEL_ROOT.set(m, dClareMPS().read(() -> sModel.getModelRoot()));
                                                                                                                         ROOTS.set(m, dClareMPS().read(() -> Collection.of(sModel.getRootNodes()).sequential().map(DNode::read).toSet()));
@@ -154,7 +154,7 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
                                                                                                                 }, Direction.forward);
 
     private static final Action<DModel>                                                     READ_NAME           = Action.of("$READ_NAME", m -> {
-                                                                                                                    SModel sModel = m.original();
+                                                                                                                    SModel sModel = m.tryOriginal();
                                                                                                                     if (sModel != null) {
                                                                                                                         NAME.set(m, dClareMPS().read(() -> sModel.getName().getLongName()));
                                                                                                                     }
@@ -199,7 +199,7 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
 
     @Override
     public boolean isExternal() {
-        SModel sModel = original();
+        SModel sModel = tryOriginal();
         return sModel != null && dClareMPS().project.getPath(sModel.getModule()) == null;
     }
 
@@ -296,7 +296,7 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
 
     @Override
     public SModelReference getReference() {
-        return reference(false);
+        return reference();
     }
 
     @Override
@@ -317,12 +317,12 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
 
     @Override
     public DNode createNode(SConcept concept) {
-        return DNode.of(original(true).createNode(concept));
+        return DNode.of(original().createNode(concept));
     }
 
     @Override
     public DNode createNode(SConcept concept, SNodeId nodeId) {
-        return DNode.of(original(true).createNode(concept, nodeId));
+        return DNode.of(original().createNode(concept, nodeId));
     }
 
     @Override
@@ -349,32 +349,32 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
 
     @Override
     public DNode getNode(SNodeId id) {
-        SModel sModel = original();
+        SModel sModel = tryOriginal();
         SNode sNode = sModel != null ? sModel.getNode(id) : null;
         return sNode != null ? DNode.of(sNode) : null;
     }
 
     @Override
     public DataSource getSource() {
-        SModel sModel = original();
+        SModel sModel = tryOriginal();
         return sModel != null ? sModel.getSource() : null;
     }
 
     @Override
     public boolean isReadOnly() {
-        SModel sModel = original();
+        SModel sModel = tryOriginal();
         return sModel != null && sModel.isReadOnly();
     }
 
     @Override
     public boolean isLoaded() {
-        SModel sModel = original();
+        SModel sModel = tryOriginal();
         return sModel == null || sModel.isLoaded();
     }
 
     @Override
     public void load() {
-        SModel sModel = original();
+        SModel sModel = tryOriginal();
         if (sModel != null) {
             sModel.load();
         }
@@ -382,13 +382,13 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
 
     @Override
     public Iterable<Problem> getProblems() {
-        SModel sModel = original();
+        SModel sModel = tryOriginal();
         return sModel != null ? sModel.getProblems() : Collections.emptySet();
     }
 
     @Override
     public void unload() {
-        SModel sModel = original();
+        SModel sModel = tryOriginal();
         if (sModel != null) {
             sModel.unload();
         }
@@ -396,7 +396,7 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
 
     @Override
     public void addModelListener(SModelListener l) {
-        SModel sModel = original();
+        SModel sModel = tryOriginal();
         if (sModel != null) {
             sModel.addModelListener(l);
         }
@@ -404,7 +404,7 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
 
     @Override
     public void removeModelListener(SModelListener l) {
-        SModel sModel = original();
+        SModel sModel = tryOriginal();
         if (sModel != null) {
             sModel.removeModelListener(l);
         }
@@ -412,7 +412,7 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
 
     @Override
     public void addAccessListener(SNodeAccessListener l) {
-        SModel sModel = original();
+        SModel sModel = tryOriginal();
         if (sModel != null) {
             sModel.addAccessListener(l);
         }
@@ -421,7 +421,7 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
 
     @Override
     public void removeAccessListener(SNodeAccessListener l) {
-        SModel sModel = original();
+        SModel sModel = tryOriginal();
         if (sModel != null) {
             sModel.removeAccessListener(l);
         }
@@ -430,7 +430,7 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
 
     @Override
     public void addChangeListener(SNodeChangeListener l) {
-        SModel sModel = original();
+        SModel sModel = tryOriginal();
         if (sModel != null) {
             sModel.addChangeListener(l);
         }
@@ -439,7 +439,7 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
 
     @Override
     public void removeChangeListener(SNodeChangeListener l) {
-        SModel sModel = original();
+        SModel sModel = tryOriginal();
         if (sModel != null) {
             sModel.removeChangeListener(l);
         }

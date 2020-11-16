@@ -116,9 +116,9 @@ public class DIssue extends DIdentifiedObject {
         if (o instanceof DModule) {
             return new DIssueModuleReportItem(getSeverity(), ((DModule) o).original(), getMessage(), ruleId());
         } else if (o instanceof DModel) {
-            return new DIssueModelReportItem(getSeverity(), ((DModel) o).original(true), getMessage(), ruleId());
+            return new DIssueModelReportItem(getSeverity(), ((DModel) o).original(), getMessage(), ruleId());
         } else {
-            return new DIssueNodeReportItem(getSeverity(), ((DNode) o).original(true), getFeature(), getMessage(), ruleId());
+            return new DIssueNodeReportItem(getSeverity(), ((DNode) o).original(), getFeature(), getMessage(), ruleId());
         }
     }
 

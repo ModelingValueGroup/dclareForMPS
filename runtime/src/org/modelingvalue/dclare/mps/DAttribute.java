@@ -90,7 +90,7 @@ public interface DAttribute<O, T> extends DFeature {
         public DObservedAttribute(Object id, String name, boolean synthetic, boolean optional, boolean composite, boolean indetifying, V def, Class<?> cls, Supplier<Setable<?, ?>> opposite, Supplier<SNode> source, SProperty sProperty) {
             super(id, !optional, def, composite, opposite, synthetic, (o, b, a) -> {
                 if (o instanceof DNode) {
-                    SNode sNode = ((DNode) o).original();
+                    SNode sNode = ((DNode) o).tryOriginal();
                     if (sNode != null) {
                         sNode.setProperty(sProperty, "");
                         sNode.setProperty(sProperty, null);
@@ -131,7 +131,7 @@ public interface DAttribute<O, T> extends DFeature {
         @Override
         public V get(C object) {
             if (object instanceof DNode && LeafTransaction.getCurrent() instanceof ReadOnlyTransaction) {
-                SNode original = ((DNode) object).original();
+                SNode original = ((DNode) object).tryOriginal();
                 if (original != null) {
                     original.getProperty(sProperty);
                 }

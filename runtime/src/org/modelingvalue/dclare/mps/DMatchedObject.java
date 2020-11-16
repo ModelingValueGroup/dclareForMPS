@@ -37,22 +37,13 @@ import org.modelingvalue.dclare.mps.DAttribute.DIdentifyingAttribute;
 @SuppressWarnings("rawtypes")
 public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DIdentifiedObject implements Mergeable<DMatchedObject> {
 
-    protected static final Observed<DReadConstruction, DMatchedObject>            READ_MAPPING          = Observed.of("$READ_MAPPING", null, (tx, c, b, a) -> {
-                                                                                                            if (b != null) {
-                                                                                                                DMatchedObject.CONSTRUCTIONS.set(b, Set::remove, c);
-                                                                                                            }
-                                                                                                            if (a != null) {
-                                                                                                                DMatchedObject.CONSTRUCTIONS.set(a, Set::add, c);
-                                                                                                            }
-                                                                                                        });
+    protected static final Observed<DReadConstruction, DMatchedObject>            READ_MAPPING          = Observed.of("$READ_MAPPING", null);
 
     private static final Constant<Setable, Setable<Mutable, Set<DMatchedObject>>> UNIDENTIFIED_CHILDREN = Constant.of("$UNIDENTIFIED_CHILDREN", UnidentifiedObserved::of);
 
-    private static final Setable<DMatchedObject, Object>                          DETACHED              = Setable.of("$DETACHED", null);
-
     protected static final Set<Observer>                                          OBSERVERS             = DObject.OBSERVERS;
 
-    protected static final Set<Setable>                                           SETABLES              = DObject.SETABLES.add(DETACHED);
+    protected static final Set<Setable>                                           SETABLES              = DObject.SETABLES;
 
     protected static final Observed<DMatchedObject, Set<DMatchedObject>>          DERIVED               = NonCheckingObserved.of("$DERIVED", Set.of());
 
@@ -208,8 +199,9 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
         D d = (D) READ_MAPPING.get(id);
         if (d == null) {
             d = supplier.get();
+            READ_MAPPING.set(id, d);
         }
-        READ_MAPPING.set(id, d);
+        DMatchedObject.CONSTRUCTIONS.set(d, Set::add, id);
         return d;
     }
 
@@ -239,48 +231,34 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
 
     @Override
     protected final void read(DClareMPS dClareMPS) {
-        if (reference(false) != null) {
+        if (reference() != null) {
             read();
         }
     }
 
-    protected final void setDetached(S sObject) {
-        DETACHED.set(this, sObject);
-    }
-
     protected boolean hasReference() {
-        return reference(false) != null;
+        return reference() != null;
     }
 
     @SuppressWarnings("unchecked")
-    protected final R reference(boolean create) {
-        R ref = (R) CONSTRUCTIONS.get(this).filter(DReadConstruction.class).map(DReadConstruction::reference).findFirst().orElse(null);
-        if (create && ref == null) {
-            S sObject = create();
+    protected final R reference() {
+        return (R) CONSTRUCTIONS.get(this).filter(DReadConstruction.class).map(DReadConstruction::reference).findFirst().orElse(null);
+    }
+
+    public final S tryOriginal() {
+        R ref = reference();
+        return ref != null ? dClareMPS().read(() -> resolve(ref)) : null;
+    }
+
+    @SuppressWarnings("unchecked")
+    protected final S original() {
+        S sObject = tryOriginal();
+        if (sObject == null) {
+            sObject = create();
             addSObject(sObject);
-            ref = reference(sObject);
-            READ_MAPPING.set(new DReadConstruction(ref), this);
-        }
-        return ref;
-    }
-
-    public final S original() {
-        return original(false);
-    }
-
-    @SuppressWarnings("unchecked")
-    protected final S original(boolean create) {
-        S sObject = null;
-        R ref = reference(create);
-        if (ref != null) {
-            sObject = dClareMPS().read(() -> resolve(ref));
-            if (create && sObject == null) {
-                sObject = (S) DETACHED.get(this);
-                if (sObject != null) {
-                    addSObject(sObject);
-                    DETACHED.set(this, null);
-                }
-            }
+            DReadConstruction id = new DReadConstruction(reference(sObject));
+            READ_MAPPING.set(id, this);
+            DMatchedObject.CONSTRUCTIONS.set(this, Set::add, id);
         }
         return sObject;
     }
@@ -288,7 +266,7 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
     @Override
     protected void init(DClareMPS dClareMPS) {
         super.init(dClareMPS);
-        S original = original();
+        S original = tryOriginal();
         if (original != null) {
             init(dClareMPS, original);
         }
@@ -297,7 +275,7 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
     @Override
     protected void exit(DClareMPS dClareMPS) {
         super.exit(dClareMPS);
-        S original = original();
+        S original = tryOriginal();
         if (original != null) {
             exit(dClareMPS, original);
         }

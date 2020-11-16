@@ -281,11 +281,10 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
 
     @Override
     public void init() {
-        start();
+        command(() -> start());
         Universe.super.init();
-        imperativeTransaction = universeTransaction.addImperative("$MPS_NATIVE", this, r -> {
-            if (isRunning() && !COMMITTING.get()) {
-                start();
+        imperativeTransaction = universeTransaction.addImperative("$MPS_NATIVE", p -> start(), this, r -> {
+            if (isRunning()) {
                 command(r);
             }
         }, false);
@@ -296,7 +295,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     private void start() {
         if (!running) {
             running = true;
-            command(() -> startStopHandler.start(project));
+            startStopHandler.start(project);
         }
     }
 
@@ -452,7 +451,6 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
         if (isRunning()) {
             if (isRunningCommand()) {
                 if (!COMMITTING.get()) {
-                    start();
                     try {
                         LeafTransaction.getContext().run(imperativeTransaction, action);
                     } catch (Throwable t) {
@@ -518,12 +516,12 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
                 pre.diff(post, o -> o instanceof DObject && !((DObject) o).isDclareOnly(), p -> p instanceof DObserved && !((DObserved) p).isDclareOnly()).forEachOrdered(e0 -> {
                     DObject dObject = (DObject) e0.getKey();
                     if (dObject instanceof DModel) {
-                        SModel sModel = ((DModel) dObject).original();
+                        SModel sModel = ((DModel) dObject).tryOriginal();
                         if (sModel != null) {
                             changedModels.change(s -> s.add(sModel));
                         }
                     } else if (dObject instanceof DNode) {
-                        SNode original = ((DNode) dObject).original();
+                        SNode original = ((DNode) dObject).tryOriginal();
                         SNode root = original != null ? original.getContainingRoot() : null;
                         if (root != null) {
                             changedRoots.change(s -> s.add(root));
@@ -536,9 +534,8 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
                         mpsObserved.toMPS(dObject, e1.getValue().a(), e1.getValue().b());
                     });
                 });
-                if (last) {
+                if (last && !runModelCheck()) {
                     running = false;
-                    runModelCheck();
                     startStopHandler.stop(project, post::get, this);
                 }
             } finally {
@@ -552,7 +549,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
 
     protected void stop() {
         if (isRunning()) {
-            State state = universeTransaction.preState();
+            State state = universeTransaction.currentState();
             ALL.remove(this);
             ModelAccess modelAccess = project.getModelAccess();
             modelAccess.executeCommandInEDT(() -> {
@@ -721,7 +718,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
         }
     }
 
-    private void runModelCheck() {
+    private boolean runModelCheck() {
         Set<SModel> models = changedModels.result();
         Set<SModule> modules = changedModules.result();
         Set<SNode> roots = changedRoots.result();
@@ -753,6 +750,9 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
                     }
                 });
             });
+            return true;
+        } else {
+            return false;
         }
     }
 

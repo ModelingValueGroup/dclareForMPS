@@ -89,9 +89,8 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
     public void nodeRemoved(SNodeRemoveEvent event) {
         b().handleMPSChange(() -> {
             SNode child = event.getChild();
-            SNodeReference ref = new jetbrains.mps.smodel.SNodePointer(a().reference(false), child.getNodeId());
+            SNodeReference ref = new jetbrains.mps.smodel.SNodePointer(a().reference(), child.getNodeId());
             DNode dNode = DNode.of(child.getConcept(), ref);
-            dNode.setDetached(child);
             if (event.isRoot()) {
                 DModel.ROOTS.set(DModel.of(event.getModel()), Set::remove, dNode);
             } else {
