@@ -42,7 +42,9 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
 
     @Override
     public void propertyChanged(SPropertyChangeEvent event) {
-        b().handleMPSChange(() -> DNode.PROPERTY.get(event.getProperty()).set(DNode.of(event.getNode()), event.getNewValue()));
+        b().handleMPSChange(() -> {
+            DNode.PROPERTY.get(event.getProperty()).set(DNode.of(event.getNode()), event.getNewValue());
+        });
     }
 
     @Override
