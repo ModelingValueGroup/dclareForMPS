@@ -256,8 +256,8 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
     @SuppressWarnings("rawtypes")
     private static final Observer<DNode>                                                                         INDEX_RULE             = DObject.observer(INDEX, o -> {
                                                                                                                                             Pair<Mutable, Setable<Mutable, ?>> pc = Mutable.D_PARENT_CONTAINING.get(o);
-                                                                                                                                            Object children = pc.b().get(pc.a());
-                                                                                                                                            INDEX.set(o, children instanceof List ? ((List) children).firstIndexOf(o) : -1);
+                                                                                                                                            Object children = pc != null ? pc.b().get(pc.a()) : null;
+                                                                                                                                            INDEX.set(o, o.equals(children) ? 0 : children instanceof List ? ((List) children).firstIndexOf(o) : -1);
                                                                                                                                         });
 
     @SuppressWarnings("rawtypes")
