@@ -57,7 +57,7 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
         if (parent.dContaining() instanceof UnidentifiedObserved) {
             return pres;
         }
-        Setable<P, ContainingCollection<C>> undidentified = (Setable<P, ContainingCollection<C>>) UNIDENTIFIED_CHILDREN.get(setable);
+        Setable<P, ContainingCollection<C>> unidentified = (Setable<P, ContainingCollection<C>>) UNIDENTIFIED_CHILDREN.get(setable);
         Set<C> rem = pres.filter(r -> !posts.contains(r)).toSet();
         if (!rem.isEmpty()) {
             Set<C> add = posts.filter(a -> !pres.contains(a) && rem.anyMatch(r -> r.equalType(a)) && !a.isRead()).toSet();
@@ -68,23 +68,23 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
                         if (pre.equalType(post) && pre.matches(post)) {
                             pre.combine(post);
                             add = add.remove(post);
-                            undidentified.set(parent, ContainingCollection::remove, post);
+                            unidentified.set(parent, ContainingCollection::remove, post);
                             break;
                         }
                     }
                     if (add.contains(post) && post.matchKey() != null) {
                         add = add.remove(post);
-                        undidentified.set(parent, ContainingCollection::remove, post);
+                        unidentified.set(parent, ContainingCollection::remove, post);
                         result = (R) result.add(post);
                     }
                 }
-                undidentified.set(parent, ContainingCollection::addAllUnique, add);
+                unidentified.set(parent, ContainingCollection::addAllUnique, add);
                 return result;
             } else if (pres.anyMatch(r -> r.derived(Set.of()).anyMatch(e -> !pres.contains(e) && !e.isRead()))) {
                 return pres;
             }
         } else {
-            undidentified.setDefault(parent);
+            unidentified.setDefault(parent);
         }
         return posts;
     }
@@ -94,25 +94,25 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
         if (parent.dContaining() instanceof UnidentifiedObserved) {
             return pre;
         }
-        Setable<P, C> undidentified = (Setable<P, C>) UNIDENTIFIED_CHILDREN.get(setable);
+        Setable<P, C> unidentified = (Setable<P, C>) UNIDENTIFIED_CHILDREN.get(setable);
         if (pre != null && !pre.equals(post)) {
             if (post != null && pre.equalType(post) && !post.isRead()) {
                 if (pre.matches(post)) {
                     pre.combine(post);
-                    undidentified.setDefault(parent);
+                    unidentified.setDefault(parent);
                     return pre;
                 } else if (post.matchKey() != null) {
-                    undidentified.setDefault(parent);
+                    unidentified.setDefault(parent);
                     return post;
                 } else {
-                    undidentified.set(parent, post);
+                    unidentified.set(parent, post);
                     return pre;
                 }
             } else if (pre.derived(Set.of()).anyMatch(e -> !e.equals(pre) && !e.isRead())) {
                 return pre;
             }
         } else {
-            undidentified.setDefault(parent);
+            unidentified.setDefault(parent);
         }
         return post;
     }
