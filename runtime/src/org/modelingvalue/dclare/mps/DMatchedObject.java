@@ -31,13 +31,14 @@ import org.modelingvalue.dclare.Mutable;
 import org.modelingvalue.dclare.NonCheckingObserved;
 import org.modelingvalue.dclare.Observed;
 import org.modelingvalue.dclare.Observer;
+import org.modelingvalue.dclare.ReadOnlyTransaction;
 import org.modelingvalue.dclare.Setable;
 import org.modelingvalue.dclare.mps.DAttribute.DIdentifyingAttribute;
 
 @SuppressWarnings("rawtypes")
 public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DIdentifiedObject implements Mergeable<DMatchedObject> {
 
-    protected static final Observed<DReadConstruction, DMatchedObject>   READ_MAPPING          = Observed.of("$READ_MAPPING", null);
+    protected static final Constant<DReadConstruction, DMatchedObject>   READ_MAPPING          = Constant.of("$READ_MAPPING", null);
 
     private static final Constant<Setable, Setable<Mutable, ?>>          UNIDENTIFIED_CHILDREN = Constant.of("$UNIDENTIFIED_CHILDREN", UnidentifiedObserved::of);
 
@@ -199,23 +200,16 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
     @SuppressWarnings("unchecked")
     protected static <D extends DMatchedObject, I> D readConstruct(I ref, Supplier<D> supplier) {
         DReadConstruction<I> id = new DReadConstruction(ref);
-        D d = (D) READ_MAPPING.get(id);
-        if (d == null) {
-            d = supplier.get();
-            READ_MAPPING.set(id, d);
+        D d = (D) READ_MAPPING.get(id, i -> supplier.get());
+        if (!(LeafTransaction.getCurrent() instanceof ReadOnlyTransaction)) {
+            DMatchedObject.CONSTRUCTIONS.set(d, Set::add, id);
         }
-        DMatchedObject.CONSTRUCTIONS.set(d, Set::add, id);
         return d;
     }
 
     @SuppressWarnings("unchecked")
     protected static <D extends DMatchedObject> D getDerived(DDeriveConstruction id) {
         return (D) CONSTRUCTED.get(id.observer()).get(id.object()).get(id);
-    }
-
-    @SuppressWarnings("unchecked")
-    protected static <D extends DMatchedObject, I> D tryResolve(I ref) {
-        return (D) READ_MAPPING.get(new DReadConstruction(ref));
     }
 
     protected DMatchedObject(Object[] identity) {

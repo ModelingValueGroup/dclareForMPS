@@ -635,11 +635,8 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
         public void check(SModel sModel, SRepository repository, Consumer<? super ModelReportItem> consumer, ProgressMonitor monitor) {
             if (isRunning()) {
                 imperativeTransaction.state().run(() -> {
-                    DModel dModel = DMatchedObject.tryResolve(sModel.getReference());
-                    if (dModel != null) {
-                        for (DIssue issue : DObject.DCLARE_ISSUES.get(dModel)) {
-                            consumer.consume((ModelReportItem) issue.getItem());
-                        }
+                    for (DIssue issue : DObject.DCLARE_ISSUES.get(DModel.of(sModel))) {
+                        consumer.consume((ModelReportItem) issue.getItem());
                     }
                 });
             }
@@ -682,11 +679,8 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
 
         @Override
         public void check(SNode sNode, SRepository repository, Consumer<? super NodeReportItem> consumer, ProgressMonitor monitor) {
-            DNode dNode = DNode.tryResolve(sNode.getReference());
-            if (dNode != null) {
-                for (DIssue issue : DObject.DCLARE_ISSUES.get(dNode)) {
-                    consumer.consume((NodeReportItem) issue.getItem());
-                }
+            for (DIssue issue : DObject.DCLARE_ISSUES.get(DNode.of(sNode))) {
+                consumer.consume((NodeReportItem) issue.getItem());
             }
         }
 
@@ -702,11 +696,8 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
         protected void checkNodeInEditor(SNode sNode, LanguageErrorsCollector errorsCollector, SRepository repository) {
             if (isRunning()) {
                 imperativeTransaction.state().run(() -> {
-                    DNode dNode = DNode.tryResolve(sNode.getReference());
-                    if (dNode != null) {
-                        for (DIssue issue : DObject.DCLARE_ISSUES.get(dNode)) {
-                            errorsCollector.addError((NodeReportItem) issue.getItem());
-                        }
+                    for (DIssue issue : DObject.DCLARE_ISSUES.get(DNode.of(sNode))) {
+                        errorsCollector.addError((NodeReportItem) issue.getItem());
                     }
                 });
             }
