@@ -15,38 +15,31 @@
 
 package org.modelingvalue.dclare.mps;
 
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
+import java.util.function.*;
+import java.util.stream.*;
 
-import org.jetbrains.mps.openapi.language.SLanguage;
-import org.modelingvalue.collections.Collection;
-import org.modelingvalue.collections.Set;
-import org.modelingvalue.collections.util.Pair;
-import org.modelingvalue.dclare.Action;
-import org.modelingvalue.dclare.Direction;
-import org.modelingvalue.dclare.Mutable;
-import org.modelingvalue.dclare.NonCheckingObserved;
-import org.modelingvalue.dclare.Observed;
-import org.modelingvalue.dclare.Observer;
-import org.modelingvalue.dclare.Setable;
+import org.jetbrains.mps.openapi.language.*;
+import org.modelingvalue.collections.*;
+import org.modelingvalue.collections.util.*;
+import org.modelingvalue.dclare.*;
 
-import jetbrains.mps.errors.item.IssueKindReportItem;
+import jetbrains.mps.errors.item.*;
 
 @SuppressWarnings({"rawtypes", "unused"})
 public abstract class DObject implements Mutable {
 
     protected static final Observer<DObject>                                           START_OBSERVER            = Observer.of("START_OBSERVER", o -> o.start(dClareMPS()));
 
-    private static final DObjectType<String>                                           DUMMY_TYPE                = new DObjectType<String>("<DUMMY_TYPE>") {
-                                                                                                                     @Override
-                                                                                                                     public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
-                                                                                                                         return Set.of();
-                                                                                                                     }
+    private static final DObjectType<String> DUMMY_TYPE = new DObjectType<>("<DUMMY_TYPE>") {
+        @Override
+        public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
+            return Set.of();
+        }
 
-                                                                                                                     @Override
-                                                                                                                     public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
-                                                                                                                         return Set.of();
-                                                                                                                     }
+        @Override
+        public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
+            return Set.of();
+        }
 
                                                                                                                      @Override
                                                                                                                      public Set<SLanguage> getLanguages() {
