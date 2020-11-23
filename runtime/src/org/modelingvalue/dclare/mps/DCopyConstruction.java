@@ -15,38 +15,50 @@
 
 package org.modelingvalue.dclare.mps;
 
-public abstract class DFromOriginalObject<O> extends DObject {
+import org.modelingvalue.dclare.Observer;
 
-    private final O original;
+public class DCopyConstruction extends DDeriveConstruction {
 
-    protected DFromOriginalObject(O original) {
-        this.original = original;
+    protected DCopyConstruction(DObject object, Observer<?> observer, DNode copied, String anonymousType) {
+        super(new Object[]{object, observer, copied, anonymousType});
     }
 
-    public O original() {
-        return original;
+    protected DCopyConstruction(DObject object, Observer<?> observer, DNode copied, DConstruction root) {
+        super(new Object[]{object, observer, copied, root});
     }
 
-    @Override
-    public int hashCode() {
-        return original.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        } else if (obj instanceof DFromOriginalObject) {
-            DFromOriginalObject<?> other = (DFromOriginalObject<?>) obj;
-            return original.equals(other.original);
-        } else {
-            return false;
-        }
+    private DCopyConstruction(Object[] identity) {
+        super(identity);
     }
 
     @Override
-    public String toString() {
-        return original.toString();
+    protected DCopyConstruction moveTo(DObject object) {
+        Object[] id = identity.clone();
+        id[0] = object;
+        return new DCopyConstruction(id);
+    }
+
+    public DCopyConstruction root() {
+        return identity[3] instanceof DCopyConstruction ? (DCopyConstruction) identity[3] : this;
+    }
+
+    @Override
+    public DObject object() {
+        return (DObject) identity[0];
+    }
+
+    @Override
+    public Observer<?> observer() {
+        return (Observer<?>) identity[1];
+    }
+
+    public DNode copied() {
+        return (DNode) identity[2];
+    }
+
+    @Override
+    public String getAnonymousType() {
+        return (String) root().identity[3];
     }
 
 }

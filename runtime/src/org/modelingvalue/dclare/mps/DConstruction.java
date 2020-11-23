@@ -15,38 +15,51 @@
 
 package org.modelingvalue.dclare.mps;
 
-public abstract class DFromOriginalObject<O> extends DObject {
+import java.util.Arrays;
 
-    private final O original;
+import org.modelingvalue.collections.util.Age;
 
-    protected DFromOriginalObject(O original) {
-        this.original = original;
-    }
+public abstract class DConstruction {
 
-    public O original() {
-        return original;
+    protected Object[] identity;
+
+    protected DConstruction(Object[] identity) {
+        this.identity = identity;
     }
 
     @Override
     public int hashCode() {
-        return original.hashCode();
+        return Arrays.deepHashCode(identity);
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == this) {
+        if (this == obj) {
             return true;
-        } else if (obj instanceof DFromOriginalObject) {
-            DFromOriginalObject<?> other = (DFromOriginalObject<?>) obj;
-            return original.equals(other.original);
-        } else {
+        } else if (obj == null) {
             return false;
+        } else if (getClass() != obj.getClass()) {
+            return false;
+        } else {
+            DConstruction other = (DConstruction) obj;
+            if (other.identity == identity) {
+                return true;
+            } else if (!Arrays.deepEquals(identity, other.identity)) {
+                return false;
+            } else {
+                if (Age.age(identity) > Age.age(other.identity)) {
+                    other.identity = identity;
+                } else {
+                    identity = other.identity;
+                }
+                return true;
+            }
         }
     }
 
     @Override
     public String toString() {
-        return original.toString();
+        return Arrays.toString(identity);
     }
 
 }

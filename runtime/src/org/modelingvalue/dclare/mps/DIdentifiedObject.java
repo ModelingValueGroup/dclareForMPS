@@ -18,6 +18,7 @@ package org.modelingvalue.dclare.mps;
 import java.util.Arrays;
 
 import org.modelingvalue.collections.util.Age;
+import org.modelingvalue.dclare.mps.DAttribute.DIdentifyingAttribute;
 
 public abstract class DIdentifiedObject extends DObject {
 
@@ -55,6 +56,11 @@ public abstract class DIdentifiedObject extends DObject {
                 return true;
             }
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    protected <V> V get(DIdentifyingAttribute<?, V> attr) {
+        return (V) identity[attr.index()];
     }
 
     @Override

@@ -22,22 +22,22 @@ import org.modelingvalue.collections.util.Triple;
 import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.Setable;
 
-public class DModelType extends DObjectType<Triple<Set<SLanguage>, Boolean, String>> {
+public class DModelType extends DObjectType<Triple<Set<SLanguage>, Boolean, Set<String>>> {
 
-    public DModelType(Triple<Set<SLanguage>, Boolean, String> identity) {
+    public DModelType(Triple<Set<SLanguage>, Boolean, Set<String>> identity) {
         super(identity);
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
-        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getModelRules(getAnonymousType()))).toSet();
+        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getModelRules(getAnonymousTypes()))).toSet();
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
     public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
-        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getModelAttributes(getAnonymousType()))).toSet();
+        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getModelAttributes(getAnonymousTypes()))).toSet();
     }
 
     @Override
@@ -50,7 +50,7 @@ public class DModelType extends DObjectType<Triple<Set<SLanguage>, Boolean, Stri
         return id().b();
     }
 
-    public String getAnonymousType() {
+    public Set<String> getAnonymousTypes() {
         return id().c();
     }
 

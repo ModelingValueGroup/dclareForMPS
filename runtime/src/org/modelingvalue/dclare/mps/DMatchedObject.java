@@ -15,116 +15,247 @@
 
 package org.modelingvalue.dclare.mps;
 
-import java.util.function.Function;
+import java.util.Arrays;
+import java.util.function.Supplier;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.ContainingCollection;
+import org.modelingvalue.collections.Map;
 import org.modelingvalue.collections.Set;
+import org.modelingvalue.collections.util.Mergeable;
+import org.modelingvalue.collections.util.NotMergeableException;
+import org.modelingvalue.collections.util.Pair;
+import org.modelingvalue.dclare.Constant;
+import org.modelingvalue.dclare.LeafTransaction;
+import org.modelingvalue.dclare.Mutable;
 import org.modelingvalue.dclare.NonCheckingObserved;
 import org.modelingvalue.dclare.Observed;
 import org.modelingvalue.dclare.Observer;
+import org.modelingvalue.dclare.ReadOnlyTransaction;
 import org.modelingvalue.dclare.Setable;
+import org.modelingvalue.dclare.mps.DAttribute.DIdentifyingAttribute;
 
-public abstract class DMatchedObject<R, S> extends DIdentifiedObject {
+@SuppressWarnings("rawtypes")
+public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DIdentifiedObject implements Mergeable<DMatchedObject> {
 
-    @SuppressWarnings("rawtypes")
-    private static final Observed<Object, DMatchedObject> D_MATCHED   = Observed.of("$D_MATCHED", null);
+    protected static final Constant<DReadConstruction, DMatchedObject>   READ_MAPPING          = Constant.of("$READ_MAPPING", null);
 
-    @SuppressWarnings("rawtypes")
-    private static final Observed<DMatchedObject, Object> MATCHED_REF = NonCheckingObserved.of("$MATCHED_REF", null, () -> D_MATCHED);
+    private static final Constant<Setable, Setable<Mutable, ?>>          UNIDENTIFIED_CHILDREN = Constant.of("$UNIDENTIFIED_CHILDREN", UnidentifiedObserved::of);
 
-    @SuppressWarnings("rawtypes")
-    private static final Setable<DMatchedObject, Object>  DETACHED    = Setable.of("$DETACHED", null);
+    protected static final Set<Observer>                                 OBSERVERS             = DObject.OBSERVERS;
 
-    @SuppressWarnings("rawtypes")
-    protected static final Set<Observer>                  OBSERVERS   = DObject.OBSERVERS.addAll(Set.of());
+    protected static final Set<Setable>                                  SETABLES              = DObject.SETABLES;
 
-    @SuppressWarnings("rawtypes")
-    protected static final Set<Setable>                   SETABLES    = DObject.SETABLES.addAll(Set.of(MATCHED_REF, DETACHED));
+    protected static final Observed<DMatchedObject, Set<DMatchedObject>> DERIVED               = NonCheckingObserved.of("$DERIVED", Set.of());
+
+    protected static final Observed<DMatchedObject, Set<DConstruction>>  CONSTRUCTIONS         = NonCheckingObserved.of("$CONSTRUCTIONS", Set.of());
+
+    protected static final Constant<Observer<?>, Constructed>            CONSTRUCTED           = Constant.of("CONSTRUCTED", o -> new Constructed(o));
+
+    @SuppressWarnings("unchecked")
+    protected static <P extends DObject, C extends DMatchedObject<C, ?, ?>, R extends ContainingCollection<C>> R manyMatch(P parent, R pres, R posts, Setable<P, R> setable) {
+        if (parent.dContaining() instanceof UnidentifiedObserved) {
+            return pres;
+        }
+        Setable<P, ContainingCollection<C>> unidentified = (Setable<P, ContainingCollection<C>>) UNIDENTIFIED_CHILDREN.get(setable);
+        Set<C> rem = pres.filter(r -> !posts.contains(r)).toSet();
+        if (!rem.isEmpty()) {
+            Set<C> add = posts.filter(a -> !pres.contains(a) && rem.anyMatch(r -> r.equalType(a)) && !a.isRead()).toSet();
+            if (!add.isEmpty()) {
+                R result = pres;
+                for (C post : add) {
+                    for (C pre : rem) {
+                        if (pre.equalType(post) && pre.matches(post)) {
+                            pre.combine(post);
+                            add = add.remove(post);
+                            unidentified.set(parent, ContainingCollection::remove, post);
+                            break;
+                        }
+                    }
+                    if (add.contains(post) && post.matchKey() != null) {
+                        add = add.remove(post);
+                        unidentified.set(parent, ContainingCollection::remove, post);
+                        result = (R) result.add(post);
+                    }
+                }
+                unidentified.set(parent, ContainingCollection::addAllUnique, add);
+                return result;
+            } else if (pres.anyMatch(r -> r.derived(Set.of()).anyMatch(e -> !pres.contains(e) && !e.isRead()))) {
+                return pres;
+            }
+        } else {
+            unidentified.setDefault(parent);
+        }
+        return posts;
+    }
+
+    @SuppressWarnings("unchecked")
+    protected static <P extends DObject, C extends DMatchedObject<C, ?, ?>> C singleMatch(P parent, C pre, C post, Setable<P, C> setable) {
+        if (parent.dContaining() instanceof UnidentifiedObserved) {
+            return pre;
+        }
+        Setable<P, C> unidentified = (Setable<P, C>) UNIDENTIFIED_CHILDREN.get(setable);
+        if (pre != null && !pre.equals(post)) {
+            if (post != null && pre.equalType(post) && !post.isRead()) {
+                if (pre.matches(post)) {
+                    pre.combine(post);
+                    unidentified.setDefault(parent);
+                    return pre;
+                } else if (post.matchKey() != null) {
+                    unidentified.setDefault(parent);
+                    return post;
+                } else {
+                    unidentified.set(parent, post);
+                    return pre;
+                }
+            } else if (pre.derived(Set.of()).anyMatch(e -> !e.equals(pre) && !e.isRead())) {
+                return pre;
+            }
+        } else {
+            unidentified.setDefault(parent);
+        }
+        return post;
+    }
+
+    protected boolean equalType(T other) {
+        return matchType().equals(other.matchType());
+    }
+
+    protected void combine(T other) {
+        for (DDeriveConstruction cons : CONSTRUCTIONS.get(other).filter(DDeriveConstruction.class)) {
+            CONSTRUCTED.get(cons.observer()).set(cons.object(), (map, e) -> map.put(cons, e), this);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    protected boolean matches(T other) {
+        if (other.context(Set.of()).contains(this)) {
+            return true;
+        } else {
+            Object a = matchKey();
+            Object b = other.matchKey();
+            return a != null && b != null && a.equals(b);
+        }
+    }
+
+    protected boolean isRead() {
+        return CONSTRUCTIONS.get(this).filter(DReadConstruction.class).findAny().isPresent();
+    }
+
+    protected abstract Object matchType();
+
+    protected abstract Object matchKey();
+
+    @SuppressWarnings("unchecked")
+    protected Set<DMatchedObject> context(Set<DMatchedObject> found) {
+        if (!found.contains(this)) {
+            found = found.add(this);
+            for (DDeriveConstruction cons : CONSTRUCTIONS.get(this).filter(DDeriveConstruction.class)) {
+                for (DMatchedObject obj : cons.context()) {
+                    found = obj.context(found);
+                }
+            }
+        }
+        return found;
+    }
+
+    @SuppressWarnings("unchecked")
+    protected Set<DMatchedObject> derived(Set<DMatchedObject> found) {
+        if (!found.contains(this)) {
+            found = found.add(this);
+            for (DMatchedObject obj : DERIVED.get(this)) {
+                found = obj.derived(found);
+            }
+        }
+        return found;
+    }
+
+    protected static <D extends DMatchedObject, A> D quotationConstruct(SLanguage anonymousLanguage, String anonymousType, Object[] ctx, Supplier<D> supplier) {
+        DConstructingTransaction tx = (DConstructingTransaction) LeafTransaction.getCurrent();
+        return derive(tx, new DQuotationConstruction(anonymousLanguage, anonymousType, tx.observer(), ctx), supplier);
+    }
+
+    protected static <D extends DMatchedObject, A> D copyRootConstruct(String anonymousType, DObject object, DNode copied, Supplier<D> supplier) {
+        DConstructingTransaction tx = (DConstructingTransaction) LeafTransaction.getCurrent();
+        return derive(tx, new DCopyConstruction(object, tx.observer(), copied, anonymousType), supplier);
+    }
+
+    protected static <D extends DMatchedObject, A> D copyChildConstruct(DConstruction root, DNode copied, Supplier<D> supplier) {
+        DConstructingTransaction tx = (DConstructingTransaction) LeafTransaction.getCurrent();
+        return derive(tx, new DCopyConstruction((DObject) tx.object(), tx.observer(), copied, root), supplier);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <D extends DMatchedObject> D derive(DConstructingTransaction tx, DDeriveConstruction id, Supplier<D> supplier) {
+        D d = (D) CONSTRUCTED.get(id.observer()).get(id.object()).get(id);
+        if (d == null && !(id.object().dContaining() instanceof UnidentifiedObserved)) {
+            d = supplier.get();
+        }
+        if (d != null) {
+            tx.constructed().set((m, v) -> m.put(id, v), d);
+        }
+        return d;
+    }
+
+    @SuppressWarnings("unchecked")
+    protected static <D extends DMatchedObject, I> D readConstruct(I ref, Supplier<D> supplier) {
+        DReadConstruction<I> id = new DReadConstruction(ref);
+        D d = (D) READ_MAPPING.get(id, i -> supplier.get());
+        if (!(LeafTransaction.getCurrent() instanceof ReadOnlyTransaction)) {
+            DMatchedObject.CONSTRUCTIONS.set(d, Set::add, id);
+        }
+        return d;
+    }
+
+    @SuppressWarnings("unchecked")
+    protected static <D extends DMatchedObject> D getDerived(DDeriveConstruction id) {
+        return (D) CONSTRUCTED.get(id.observer()).get(id.object()).get(id);
+    }
 
     protected DMatchedObject(Object[] identity) {
         super(identity);
     }
 
-    protected static <P extends DObject, I, M, C extends DMatchedObject<I, M>> void match(P parent, Function<P, ? extends ContainingCollection<M>> readFunction, ContainingCollection<C> posts) {
-        if (parent.isRead() || parent.isMatched()) {
-            ContainingCollection<M> readSet = null;
-            DClareMPS dClare = null;
-            Set<I> refs = null;
-            for (C post : posts.filter(p -> p.reference(false) == null)) {
-                if (readSet == null) {
-                    dClare = dClareMPS();
-                    readSet = readFunction.apply(parent);
-                    refs = posts.map(p -> p.reference(false)).notNull().toSet();
-                }
-                for (M read : readSet) {
-                    I ref = post.reference(read);
-                    if (!refs.contains(ref) && post.matches(dClare, read)) {
-                        MATCHED_REF.set(post, ref);
-                        post.read();
-                        post.init(dClare, read);
-                        readSet = readSet.remove(read);
-                        break;
-                    }
-                }
+    @Override
+    protected <V> V get(DIdentifyingAttribute<?, V> attr) {
+        for (DQuotationConstruction c : CONSTRUCTIONS.get(this).filter(DQuotationConstruction.class)) {
+            if (c.getAnonymousType() == attr.anonymousType()) {
+                return c.get(attr);
             }
         }
-    }
-
-    @SuppressWarnings("unchecked")
-    protected static final <I, M extends DMatchedObject<I, ?>> M getMatchedObject(I ref) {
-        return (M) D_MATCHED.get(ref);
+        throw new Error("Identifying attribute " + attr + " in " + this + " not found");
     }
 
     @Override
     protected final void read(DClareMPS dClareMPS) {
-        if (isRead() || isMatched()) {
+        if (reference() != null) {
             read();
         }
     }
 
-    protected final void setDetached(S sObject) {
-        DETACHED.set(this, sObject);
-    }
-
-    @Override
-    protected final boolean isMatched() {
-        return MATCHED_REF.get(this) != null;
+    protected boolean hasReference() {
+        return reference() != null;
     }
 
     @SuppressWarnings("unchecked")
-    protected final R reference(boolean create) {
-        if (isRead()) {
-            return (R) identity[0];
-        } else {
-            R ref = (R) MATCHED_REF.get(this);
-            if (create && ref == null) {
-                S sObject = create();
-                addSObject(sObject);
-                ref = reference(sObject);
-                MATCHED_REF.set(this, ref);
-            }
-            return ref;
-        }
+    protected final R reference() {
+        return (R) CONSTRUCTIONS.get(this).filter(DReadConstruction.class).map(DReadConstruction::reference).findFirst().orElse(null);
     }
 
-    public final S original() {
-        return original(false);
+    public final S tryOriginal() {
+        R ref = reference();
+        return ref != null ? dClareMPS().read(() -> resolve(ref)) : null;
     }
 
     @SuppressWarnings("unchecked")
-    protected final S original(boolean create) {
-        S sObject = null;
-        R ref = reference(create);
-        if (ref != null) {
-            sObject = dClareMPS().read(() -> resolve(ref));
-            if (create && sObject == null) {
-                sObject = (S) DETACHED.get(this);
-                if (sObject != null) {
-                    addSObject(sObject);
-                    DETACHED.set(this, null);
-                }
-            }
+    protected final S original() {
+        S sObject = tryOriginal();
+        if (sObject == null) {
+            sObject = create();
+            addSObject(sObject);
+            DReadConstruction id = new DReadConstruction(reference(sObject));
+            READ_MAPPING.set(id, this);
+            DMatchedObject.CONSTRUCTIONS.set(this, Set::add, id);
         }
         return sObject;
     }
@@ -132,7 +263,7 @@ public abstract class DMatchedObject<R, S> extends DIdentifiedObject {
     @Override
     protected void init(DClareMPS dClareMPS) {
         super.init(dClareMPS);
-        S original = original();
+        S original = tryOriginal();
         if (original != null) {
             init(dClareMPS, original);
         }
@@ -141,7 +272,7 @@ public abstract class DMatchedObject<R, S> extends DIdentifiedObject {
     @Override
     protected void exit(DClareMPS dClareMPS) {
         super.exit(dClareMPS);
-        S original = original();
+        S original = tryOriginal();
         if (original != null) {
             exit(dClareMPS, original);
         }
@@ -153,7 +284,9 @@ public abstract class DMatchedObject<R, S> extends DIdentifiedObject {
     protected void exit(DClareMPS dClareMPS, S original) {
     }
 
-    protected abstract boolean matches(DClareMPS dClare, S read);
+    protected boolean isExisting() {
+        return !CONSTRUCTIONS.get(this).isEmpty();
+    }
 
     protected abstract void read();
 
@@ -165,14 +298,127 @@ public abstract class DMatchedObject<R, S> extends DIdentifiedObject {
 
     protected abstract S create();
 
-    public abstract boolean hasAnonymousType();
-
-    public String getAnonymousType() {
-        return hasAnonymousType() ? (String) identity[identity.length - 1] : null;
+    public Set<String> getAnonymousTypes() {
+        return CONSTRUCTIONS.get(this).filter(DQuotationConstruction.class).map(DQuotationConstruction::getAnonymousType).notNull().toSet();
     }
 
-    public SLanguage getAnonymousLanguage() {
-        return hasAnonymousType() ? (SLanguage) identity[identity.length - 2] : null;
+    public boolean isCopy() {
+        return CONSTRUCTIONS.get(this).anyMatch(c -> c instanceof DCopyConstruction);
     }
+
+    public Set<SLanguage> getAnonymousLanguages() {
+        return CONSTRUCTIONS.get(this).filter(DQuotationConstruction.class).map(DQuotationConstruction::getAnonymousLanguage).notNull().toSet();
+    }
+
+    protected static final class UnidentifiedObserved<T> extends NonCheckingObserved<Mutable, T> {
+
+        public static <V> UnidentifiedObserved of(Setable<?, V> setable) {
+            return new UnidentifiedObserved<V>(setable);
+        }
+
+        private UnidentifiedObserved(Setable<?, T> setable) {
+            super(Pair.of("UNIDENTIFIED", setable), false, setable.getDefault(), true, null, null, null);
+        }
+
+    }
+
+    @Override
+    public DMatchedObject getMerger() {
+        return MERGER;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public DMatchedObject merge(DMatchedObject[] branches, int length) {
+        DMatchedObject result = branches[0];
+        if (result == null) {
+            throw new NotMergeableException(this + " -> " + Arrays.toString(branches));
+        }
+        for (int i = 1; i < length; i++) {
+            if (branches[i] == null || !branches[i].matches(result)) {
+                throw new NotMergeableException(this + " -> " + Arrays.toString(branches));
+            } else if (branches[i].isExisting()) {
+                result = branches[i];
+            }
+        }
+        return result;
+    }
+
+    public static class Constructed extends NonCheckingObserved<DObject, Map<DDeriveConstruction, DMatchedObject>> {
+
+        protected Constructed(Observer<?> observer) {
+            super(observer, false, Map.of(), false, null, null, (tx, o, pre, post) -> {
+                pre.diff(post).forEachOrdered(e -> {
+                    Pair<DMatchedObject, DMatchedObject> d = e.getValue();
+                    if (d.a() != null) {
+                        CONSTRUCTIONS.set(d.a(), Set::remove, e.getKey());
+                        for (DMatchedObject c : e.getKey().context()) {
+                            DERIVED.set(c, Set::remove, d.a());
+                        }
+                    }
+                    if (d.b() != null) {
+                        CONSTRUCTIONS.set(d.b(), Set::add, e.getKey());
+                        for (DMatchedObject c : e.getKey().context()) {
+                            DERIVED.set(c, Set::add, d.b());
+                        }
+                    }
+                });
+            });
+        }
+
+    }
+
+    private static final DMatchedObject MERGER = new DMatchedObject(new Object[]{}) {
+
+        @Override
+        protected Object matchType() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        protected Object matchKey() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        protected void read() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        protected void addSObject(Object sObject) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        protected Object reference(Object read) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        protected Object resolve(Object ref) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        protected Object create() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        protected DObjectType<?> getType() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public boolean isExternal() {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public String toString() {
+            return "MERGER";
+        }
+    };
 
 }

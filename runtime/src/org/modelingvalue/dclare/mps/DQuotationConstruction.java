@@ -15,38 +15,54 @@
 
 package org.modelingvalue.dclare.mps;
 
-public abstract class DFromOriginalObject<O> extends DObject {
+import java.util.Arrays;
 
-    private final O original;
+import org.jetbrains.mps.openapi.language.SLanguage;
+import org.modelingvalue.dclare.Observer;
+import org.modelingvalue.dclare.mps.DAttribute.DIdentifyingAttribute;
 
-    protected DFromOriginalObject(O original) {
-        this.original = original;
+public class DQuotationConstruction extends DDeriveConstruction {
+
+    protected DQuotationConstruction(SLanguage anonymousLanguage, String anonymousType, Observer<?> observer, Object[] ctx) {
+        super(Arrays.copyOf(ctx, ctx.length + 3));
+        identity[identity.length - 3] = observer;
+        identity[identity.length - 2] = anonymousLanguage;
+        identity[identity.length - 1] = anonymousType;
     }
 
-    public O original() {
-        return original;
-    }
-
-    @Override
-    public int hashCode() {
-        return original.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        } else if (obj instanceof DFromOriginalObject) {
-            DFromOriginalObject<?> other = (DFromOriginalObject<?>) obj;
-            return original.equals(other.original);
-        } else {
-            return false;
-        }
+    private DQuotationConstruction(Object[] identity) {
+        super(identity);
     }
 
     @Override
-    public String toString() {
-        return original.toString();
+    protected DQuotationConstruction moveTo(DObject object) {
+        Object[] id = identity.clone();
+        id[0] = object;
+        return new DQuotationConstruction(id);
+    }
+
+    @SuppressWarnings("unchecked")
+    protected <V> V get(DIdentifyingAttribute<?, V> attr) {
+        return (V) identity[attr.index()];
+    }
+
+    @Override
+    public Observer<?> observer() {
+        return (Observer<?>) identity[identity.length - 3];
+    }
+
+    @Override
+    public DObject object() {
+        return (DObject) identity[0];
+    }
+
+    @Override
+    public String getAnonymousType() {
+        return (String) identity[identity.length - 1];
+    }
+
+    public SLanguage getAnonymousLanguage() {
+        return (SLanguage) identity[identity.length - 2];
     }
 
 }
