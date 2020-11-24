@@ -15,23 +15,31 @@
 
 package org.modelingvalue.dclare.mps;
 
-import java.util.*;
-import java.util.function.*;
+import java.util.Arrays;
+import java.util.function.Supplier;
 
-import org.jetbrains.mps.openapi.language.*;
+import org.jetbrains.mps.openapi.language.SLanguage;
+import org.modelingvalue.collections.ContainingCollection;
 import org.modelingvalue.collections.Map;
 import org.modelingvalue.collections.Set;
-import org.modelingvalue.collections.*;
-import org.modelingvalue.collections.util.*;
+import org.modelingvalue.collections.util.Mergeable;
+import org.modelingvalue.collections.util.NotMergeableException;
+import org.modelingvalue.collections.util.Pair;
+import org.modelingvalue.dclare.Constant;
+import org.modelingvalue.dclare.LeafTransaction;
+import org.modelingvalue.dclare.Mutable;
+import org.modelingvalue.dclare.NonCheckingObserved;
+import org.modelingvalue.dclare.Observed;
 import org.modelingvalue.dclare.Observer;
-import org.modelingvalue.dclare.*;
-import org.modelingvalue.dclare.mps.DAttribute.*;
+import org.modelingvalue.dclare.ReadOnlyTransaction;
+import org.modelingvalue.dclare.Setable;
+import org.modelingvalue.dclare.mps.DAttribute.DIdentifyingAttribute;
 
 @SuppressWarnings("rawtypes")
 public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DIdentifiedObject implements Mergeable<DMatchedObject> {
     protected static final Constant<DReadConstruction, DMatchedObject>   READ_MAPPING          = Constant.of("$READ_MAPPING", null);
     @SuppressWarnings("unchecked")
-    private static final   Constant<Setable, Setable<Mutable, ?>>        UNIDENTIFIED_CHILDREN = Constant.of("$UNIDENTIFIED_CHILDREN", UnidentifiedObserved::of);
+    private static final Constant<Setable, Setable<Mutable, ?>>          UNIDENTIFIED_CHILDREN = Constant.of("$UNIDENTIFIED_CHILDREN", UnidentifiedObserved::of);
     protected static final Set<Observer>                                 OBSERVERS             = DObject.OBSERVERS;
     protected static final Set<Setable>                                  SETABLES              = DObject.SETABLES;
     protected static final Observed<DMatchedObject, Set<DMatchedObject>> DERIVED               = NonCheckingObserved.of("$DERIVED", Set.of());
@@ -44,7 +52,7 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
             return pres;
         }
         Setable<P, ContainingCollection<C>> unidentified = (Setable<P, ContainingCollection<C>>) UNIDENTIFIED_CHILDREN.get(setable);
-        Set<C>                              rem          = pres.filter(r -> !posts.contains(r)).toSet();
+        Set<C> rem = pres.filter(r -> !posts.contains(r)).toSet();
         if (!rem.isEmpty()) {
             Set<C> add = posts.filter(a -> !pres.contains(a) && rem.anyMatch(r -> r.equalType(a)) && !a.isRead()).toSet();
             if (!add.isEmpty()) {
@@ -113,6 +121,7 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
         }
     }
 
+    @SuppressWarnings("unchecked")
     protected boolean matches(T other) {
         if (other.context(Set.of()).contains(this)) {
             return true;
