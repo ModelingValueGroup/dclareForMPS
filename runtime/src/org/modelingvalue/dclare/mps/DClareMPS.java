@@ -22,7 +22,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.jetbrains.mps.openapi.model.SModel;
@@ -103,7 +103,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
 
     protected static Setable<DClareMPS, Map<String, SStructClass>>                                      STRUCT_CLASS_MAP     = Setable.of("STRUCT_CLASS_MAP", Map.of());
 
-    private static CopyOnWriteArrayList<DClareMPS>                                                      ALL                  = new CopyOnWriteArrayList<>();
+    private static final CopyOnWriteArrayList<DClareMPS> ALL = new CopyOnWriteArrayList<>();
 
     private static final Set<DMessageType>                                                              MESSAGE_TYPES        = Collection.of(DMessageType.values()).toSet();
 
