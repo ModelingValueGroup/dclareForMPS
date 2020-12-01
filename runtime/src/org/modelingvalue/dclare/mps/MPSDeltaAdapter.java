@@ -41,7 +41,7 @@ public class MPSDeltaAdapter extends DeltaAdaptor<DObjectType<DObject>, DObject,
         if (!deltaMap.isEmpty()) {
             try {
                 String delta = new DeltaToJson().toJson(deltaMap);
-                System.err.println("SENDING:\n" + Json.pretty(delta));
+                //System.err.println("SENDING:\n" + Json.pretty(delta));
                 deltaQueue.put(delta);
                 FileWriter w = new FileWriter("f:\\mps.json");
                 w.write(Json.pretty(delta));
@@ -49,7 +49,7 @@ public class MPSDeltaAdapter extends DeltaAdaptor<DObjectType<DObject>, DObject,
                 w.close();
                 
                 //read in file, to test al id's are resolvable!
-                accept(delta);
+                //accept(delta);
             } catch (InterruptedException e) {
                 //e.printStackTrace();//TOMTOMTOM
                 throw new Error(e);

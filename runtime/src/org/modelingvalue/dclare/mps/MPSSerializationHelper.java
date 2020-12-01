@@ -47,6 +47,8 @@ import jetbrains.mps.smodel.adapter.structure.language.SLanguageAdapterById;
 public class MPSSerializationHelper
 		implements SerializationHelper<DObjectType<DObject>, DObject, Setable<DObject, Object>> {
 
+	private static final boolean TRACE = false;
+
 	private static final String SETABLE_PREFIX = "setable-";
 
 	private final ProjectRepository repos;
@@ -105,14 +107,16 @@ public class MPSSerializationHelper
 
 	@Override
 	public String serializeClass(DObjectType<DObject> clazz) {
-		System.err.println("[SERIALIZE] class: " + clazz.toString());
+		if (TRACE)
+			System.err.println("[SERIALIZE] class: " + clazz.toString());
 		// TODO? never called?
 		return null;
 	}
 
 	@Override
 	public String serializeSetable(Setable<DObject, Object> setable) {
-		System.err.println("[SERIALIZE] setable " + setable.toString());
+		if (TRACE)
+			System.err.println("[SERIALIZE] setable " + setable.toString());
 		return Util.encodeWithLength(SETABLE_PREFIX + setable.id().toString());
 	}
 
@@ -122,7 +126,8 @@ public class MPSSerializationHelper
 		if (serializer != null) {
 			return serializer.serialize(mutable);
 		}
-		System.err.println("[SERIALIZE] NO support for type: " + mutable.getClass().getName());
+		if (TRACE)
+			System.err.println("[SERIALIZE] NO support for type: " + mutable.getClass().getName());
 		return null;
 	}
 
@@ -147,17 +152,22 @@ public class MPSSerializationHelper
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public Object serializeValue(Setable<DObject, Object> setable, Object value) {
-		System.err.println("[SERIALIZE] value: " + (setable != null ? setable.toString() : "null") + " = " + value);
-		Serializer serializer = serializeMap.get(value.getClass());
-		if (serializer != null) {
-			return serializer.serialize(value);
+		if (TRACE)
+			System.err.println("[SERIALIZE] value: " + (setable != null ? setable.toString() : "null") + " = " + value);
+		if (value != null) {
+			Serializer serializer = serializeMap.get(value.getClass());
+			if (serializer != null) {
+				return serializer.serialize(value);
+			}
 		}
 		return value;
+
 	}
 
 	@Override
 	public DObjectType<DObject> deserializeClass(String s) {
-		System.err.println("[DESERIALIZE] deserializeSetable: " + s);
+		if (TRACE)
+			System.err.println("[DESERIALIZE] deserializeClass: " + s);
 		return null;
 	}
 
@@ -165,10 +175,13 @@ public class MPSSerializationHelper
 	@Override
 	public Setable<DObject, Object> deserializeSetable(DObjectType<DObject> clazz, String s) {
 		try {
-		System.err.println("[DESERIALIZE] deserializeSetable: " + s);
-		String id = Util.decodeFromLength(s, 1)[0].substring(SETABLE_PREFIX.length());
-		System.err.println("[DESERIALIZE] find settable: " + id);
-		return (Setable<DObject, Object>) clazz.dSetables().filter(x -> x.id().toString().equals(id)).findFirst().get();
+			if (true)
+				System.err.println("[DESERIALIZE] deserializeSetable: " + s);
+			String id = Util.decodeFromLength(s, 1)[0].substring(SETABLE_PREFIX.length());
+			if (true)
+				System.err.println("[DESERIALIZE] find settable: " + id);
+			return (Setable<DObject, Object>) clazz.dSetables().filter(x -> x.id().toString().equals(id)).findFirst()
+					.get();
 		} catch (Throwable t) {
 			t.printStackTrace();
 		}
@@ -177,9 +190,10 @@ public class MPSSerializationHelper
 
 	@Override
 	public DObject deserializeMutable(String string) {
-		System.err.println("[DESERIALIZE] deserializeSetable: " + string);
+		if (TRACE)
+			System.err.println("[DESERIALIZE] deserializeSetable: " + string);
 		try {
-		return (DObject) deserializeObject(string);
+			return (DObject) deserializeObject(string);
 		} catch (Throwable t) {
 			t.printStackTrace();
 		}
@@ -188,23 +202,27 @@ public class MPSSerializationHelper
 
 	@Override
 	public Object deserializeValue(Setable<DObject, Object> setable, Object s) {
-		System.err.println("[DESERIALIZE] deserializeValue: " + s);
+		if (TRACE)
+			System.err.println("[DESERIALIZE] deserializeValue: " + s);
 		return null;
 	}
 
 	private Object deserializeObject(String string) {
-		System.err.println("[DESERIALIZE] Object: " + string);
+		if (TRACE)
+			System.err.println("[DESERIALIZE] Object: " + string);
 		String s = string;
 		if (string.substring(0, 1).matches("[0-9]")) {
 			s = Util.decodeFromLength(string, 1)[0];
 		}
 		String objectType = s.substring(0, s.indexOf('-') + 1);
-		System.err.println("[DESERIALIZE] looking for deserializer: " + objectType);
+		if (TRACE)
+			System.err.println("[DESERIALIZE] looking for deserializer: " + objectType);
 		Serializer<?> serializer = deserialiseMap.get(objectType);
 		if (serializer != null) {
 			return serializer.deserialize(s);
 		}
-		System.err.println("[DESERIALIZE] Error? Object: " + s);
+		if (TRACE)
+			System.err.println("[DESERIALIZE] Error? Object: " + s);
 		return s; // no conversion
 	}
 
@@ -223,13 +241,15 @@ public class MPSSerializationHelper
 		@Override
 		public String serialize(DModule dModule) {
 			String s = Util.encodeWithLength(MODULE_PREFIX + mpsPersist().asString(dModule.getModuleId()));
-			System.err.println("[SERIALIZE] module: " + s);
+			if (TRACE)
+				System.err.println("[SERIALIZE] module: " + s);
 			return s;
 		}
 
 		@Override
 		public DModule deserialize(String s) {
-			System.err.println("[DESERIALIZE] Module: " + s);
+			if (TRACE)
+				System.err.println("[DESERIALIZE] Module: " + s);
 			SModuleId mId = mpsPersist().createModuleId(s);
 			SModule module = repos.getModule(mId);
 			DModule m = DModule.of(module);
@@ -244,13 +264,15 @@ public class MPSSerializationHelper
 		@Override
 		public String serialize(DModel dModel) {
 			String s = Util.encodeWithLength(MODEL_PREFIX + mpsPersist().asString(dModel.getModelId()));
-			System.err.println("[SERIALIZE] model: " + s);
+			if (TRACE)
+				System.err.println("[SERIALIZE] model: " + s);
 			return s;
 		}
 
 		@Override
 		public DModel deserialize(String s) {
-			System.err.println("[DESERIALIZE] Model: " + s);
+			if (TRACE)
+				System.err.println("[DESERIALIZE] Model: " + s);
 			SModelId mId = mpsPersist().createModelId(s.substring(MODEL_PREFIX.length()));
 			SModel model = repos.getModel(mId);
 			DModel m = DModel.of(model);
@@ -270,7 +292,8 @@ public class MPSSerializationHelper
 		@Override
 		public SStructClass deserialize(String s) {
 			String id = s.substring(SSTRUCTCLASS_PREFIX.length());
-			System.err.println("resolve structclass: " + id);
+			if (TRACE)
+				System.err.println("resolve structclass: " + id);
 			return SStructClass.of(id);
 		}
 
@@ -318,10 +341,12 @@ public class MPSSerializationHelper
 
 		@Override
 		public SNodeReference deserialize(String s) {
-			System.err.println("    resolve reference: " + s);
+			if (TRACE)
+				System.err.println("    resolve reference: " + s);
 			try {
 				SNodeReference ref = mpsPersist().createNodeReference(s.substring(SNODE_REF_PREFIX.length()));
-				System.err.println("ref: " + ref);
+				if (TRACE)
+					System.err.println("ref: " + ref);
 				return ref;
 			} catch (Throwable t) {
 				t.printStackTrace();
@@ -353,25 +378,32 @@ public class MPSSerializationHelper
 		@Override
 		public String serialize(DNode d) {
 			String s = Util.encodeWithLength(NODE_PREFIX + serializeIdentity(d.getIdentity()));
-			System.err.println("[SERIALIZE] DNode: " + s);
+			if (TRACE)
+				System.err.println("[SERIALIZE] DNode: " + s);
 			return s;
 		}
 
 		@Override
 		public DNode deserialize(String s) {
-			System.err.println("[DESERIALIZE] DNode: " + s);
+			if (TRACE)
+				System.err.println("[DESERIALIZE] DNode: " + s);
 			String[] ss = Util.decodeFromLength(s.substring(NODE_PREFIX.length()), 2);
 			int nrOfKeyFields = Integer.parseInt(ss[0]);
-			System.err.println("   nrOfKeyFields: " + nrOfKeyFields);
-			System.err.println("   fields       : " + ss[1]);
+			if (TRACE)
+				System.err.println("   nrOfKeyFields: " + nrOfKeyFields);
+			if (TRACE)
+				System.err.println("   fields       : " + ss[1]);
 			String[] strKeyFields = Util.decodeFromLength(ss[1], nrOfKeyFields);
-			System.err.println("strKeyFields: " + strKeyFields.length);
+			if (TRACE)
+				System.err.println("strKeyFields: " + strKeyFields.length);
 			Object[] key = new Object[nrOfKeyFields];
 			for (int i = 0; i < nrOfKeyFields; i++) {
-				System.err.println(" field: " + i + " " + strKeyFields[i]);
+				if (TRACE)
+					System.err.println(" field: " + i + " " + strKeyFields[i]);
 				key[i] = deserializeObject(strKeyFields[i]);
 			}
-			System.err.println("create DNode: ");
+			if (TRACE)
+				System.err.println("create DNode: ");
 			return new DNode(key);
 		}
 	}
@@ -381,24 +413,31 @@ public class MPSSerializationHelper
 
 		public String serialize(DStructObject d) {
 			String s = Util.encodeWithLength(DSTRUCT_PREFIX + serializeIdentity(d.getIdentity()));
-			System.err.println("[SERIALIZE] struct: " + s);
+			if (TRACE)
+				System.err.println("[SERIALIZE] struct: " + s);
 			return s;
 		}
 
 		public DStructObject deserialize(String s) {
-			System.err.println("[DESERIALIZE] DStruct: " + s);
-			System.err.println("          : " + s.substring(DSTRUCT_PREFIX.length()));
+			if (TRACE)
+				System.err.println("[DESERIALIZE] DStruct: " + s);
+			if (TRACE)
+				System.err.println("          : " + s.substring(DSTRUCT_PREFIX.length()));
 			String[] ss = Util.decodeFromLength(s.substring(DSTRUCT_PREFIX.length()), 2);
 			int nrOfKeyFields = Integer.valueOf(ss[0]);
-			System.err.println("   nrOfKeyFields: " + nrOfKeyFields);
-			System.err.println("   fields       : " + ss[1]);
+			if (TRACE)
+				System.err.println("   nrOfKeyFields: " + nrOfKeyFields);
+			if (TRACE)
+				System.err.println("   fields       : " + ss[1]);
 			String[] strKeyFields = Util.decodeFromLength(ss[1], nrOfKeyFields);
 			Object[] key = new Object[nrOfKeyFields];
 			for (int i = 0; i < nrOfKeyFields; i++) {
-				System.err.println(" field: " + i + " " + strKeyFields[i]);
+				if (TRACE)
+					System.err.println(" field: " + i + " " + strKeyFields[i]);
 				key[i] = deserializeObject(strKeyFields[i]);
 			}
-			System.err.println("create DStructObject: ");
+			if (TRACE)
+				System.err.println("create DStructObject: ");
 			return new DStructObject(key);
 		}
 	}
