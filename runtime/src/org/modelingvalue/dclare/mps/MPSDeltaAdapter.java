@@ -26,7 +26,6 @@ import org.modelingvalue.dclare.State;
 import org.modelingvalue.dclare.UniverseTransaction;
 import org.modelingvalue.dclare.sync.DeltaAdaptor;
 import org.modelingvalue.dclare.sync.SerializationHelper;
-import org.modelingvalue.dclare.sync.json.Json;
 
 public class MPSDeltaAdapter extends DeltaAdaptor<DObjectType<DObject>, DObject, Setable<DObject, Object>> {
 
@@ -40,11 +39,11 @@ public class MPSDeltaAdapter extends DeltaAdaptor<DObjectType<DObject>, DObject,
         Map<Object, Map<Setable, Pair<Object, Object>>> deltaMap = pre.diff(post, getObjectFilter(), (Predicate<Setable>) (Object) helper.setableFilter()).toMap(e1 -> e1);
         if (!deltaMap.isEmpty()) {
             try {
-                String delta = new DeltaToJson().toJson(deltaMap);
+                String delta = ToJsonDeltas.toJson(deltaMap);
                 //System.err.println("SENDING:\n" + Json.pretty(delta));
                 deltaQueue.put(delta);
                 FileWriter w = new FileWriter("f:\\mps.json");
-                w.write(Json.pretty(delta));
+                w.write(delta);
                 w.flush();
                 w.close();
                 

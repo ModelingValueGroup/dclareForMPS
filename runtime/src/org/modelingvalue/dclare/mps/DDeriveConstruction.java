@@ -15,38 +15,32 @@
 
 package org.modelingvalue.dclare.mps;
 
-public abstract class DFromOriginalObject<O> extends DObject {
+import org.modelingvalue.collections.Set;
+import org.modelingvalue.dclare.Observer;
 
-    private final O original;
+public abstract class DDeriveConstruction extends DConstruction {
 
-    protected DFromOriginalObject(O original) {
-        this.original = original;
+    protected DDeriveConstruction(Object[] identity) {
+        super(identity);
     }
 
-    public O original() {
-        return original;
-    }
+    protected abstract DDeriveConstruction moveTo(DObject object);
 
-    @Override
-    public int hashCode() {
-        return original.hashCode();
-    }
+    public abstract Observer<?> observer();
 
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        } else if (obj instanceof DFromOriginalObject) {
-            DFromOriginalObject<?> other = (DFromOriginalObject<?>) obj;
-            return original.equals(other.original);
-        } else {
-            return false;
+    public abstract DObject object();
+
+    public abstract String getAnonymousType();
+
+    @SuppressWarnings("rawtypes")
+    public Set<DMatchedObject> context() {
+        Set<DMatchedObject> result = Set.of();
+        for (int i = 0; i < identity.length; i++) {
+            if (identity[i] instanceof DMatchedObject) {
+                result = result.add((DMatchedObject) identity[i]);
+            }
         }
-    }
-
-    @Override
-    public String toString() {
-        return original.toString();
+        return result;
     }
 
 }

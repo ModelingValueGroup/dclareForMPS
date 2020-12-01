@@ -15,38 +15,15 @@
 
 package org.modelingvalue.dclare.mps;
 
-public abstract class DFromOriginalObject<O> extends DObject {
+public class DReadConstruction<R> extends DConstruction {
 
-    private final O original;
-
-    protected DFromOriginalObject(O original) {
-        this.original = original;
+    protected DReadConstruction(R ref) {
+        super(new Object[]{ref});
     }
 
-    public O original() {
-        return original;
-    }
-
-    @Override
-    public int hashCode() {
-        return original.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        } else if (obj instanceof DFromOriginalObject) {
-            DFromOriginalObject<?> other = (DFromOriginalObject<?>) obj;
-            return original.equals(other.original);
-        } else {
-            return false;
-        }
-    }
-
-    @Override
-    public String toString() {
-        return original.toString();
+    @SuppressWarnings("unchecked")
+    public R reference() {
+        return (R) identity[0];
     }
 
 }

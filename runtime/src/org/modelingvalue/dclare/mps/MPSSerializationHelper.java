@@ -99,7 +99,7 @@ public class MPSSerializationHelper
 		// TODO Auto-generated method stub
 		return m -> m instanceof Observed && m != (Object) DModule.LANGUAGES
 				&& m != (Object) DObject.D_PARENT_CONTAINING && m != (Object) DObject.CONTAINING_ATTRIBUTE
-				&& m != (Object) DMatchedObject.MATCHED_REF && m != (Object) DNode.MODEL
+				&& m != (Object) DNode.MODEL
 				&& m != (Object) DModel.MODEL_ROOT
 				// && m != (Object) DModel.USED_LANGUAGES
 				&& m != (Object) DObject.TYPE;

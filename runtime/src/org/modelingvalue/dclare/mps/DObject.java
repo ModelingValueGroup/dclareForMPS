@@ -15,37 +15,31 @@
 
 package org.modelingvalue.dclare.mps;
 
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
+import java.util.function.*;
+import java.util.stream.*;
 
-import org.jetbrains.mps.openapi.language.SLanguage;
-import org.modelingvalue.collections.Collection;
-import org.modelingvalue.collections.Set;
-import org.modelingvalue.collections.util.Pair;
-import org.modelingvalue.dclare.Action;
-import org.modelingvalue.dclare.Direction;
-import org.modelingvalue.dclare.Mutable;
-import org.modelingvalue.dclare.NonCheckingObserved;
-import org.modelingvalue.dclare.NonCheckingObserver;
-import org.modelingvalue.dclare.Observed;
-import org.modelingvalue.dclare.Observer;
-import org.modelingvalue.dclare.Setable;
+import org.jetbrains.mps.openapi.language.*;
+import org.modelingvalue.collections.*;
+import org.modelingvalue.collections.util.*;
+import org.modelingvalue.dclare.*;
 
-import jetbrains.mps.errors.item.IssueKindReportItem;
+import jetbrains.mps.errors.item.*;
 
 @SuppressWarnings({"rawtypes", "unused"})
 public abstract class DObject implements Mutable {
 
-    public static final Observed<DObject, DObjectType<?>>                              TYPE                      = NonCheckingObserved.of("TYPE", new DObjectType<String>("<DUMMY_TYPE>") {
-                                                                                                                     @Override
-                                                                                                                     public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
-                                                                                                                         return Set.of();
-                                                                                                                     }
+    protected static final Observer<DObject>                                           START_OBSERVER            = Observer.of("START_OBSERVER", o -> o.start(dClareMPS()));
 
-                                                                                                                     @Override
-                                                                                                                     public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
-                                                                                                                         return Set.of();
-                                                                                                                     }
+    private static final DObjectType<String> DUMMY_TYPE = new DObjectType<>("<DUMMY_TYPE>") {
+        @Override
+        public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
+            return Set.of();
+        }
+
+        @Override
+        public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
+            return Set.of();
+        }
 
                                                                                                                      @Override
                                                                                                                      public Set<SLanguage> getLanguages() {
@@ -56,7 +50,9 @@ public abstract class DObject implements Mutable {
                                                                                                                      public boolean external() {
                                                                                                                          return false;
                                                                                                                      }
-                                                                                                                 });
+                                                                                                                 };
+
+    public static final Observed<DObject, DObjectType<?>>                              TYPE                      = NonCheckingObserved.of("$TYPE", DUMMY_TYPE);
 
     protected static final Observer<DObject>                                           TYPE_RULE                 = observer(TYPE, o -> TYPE.set(o, o.getType()));
 
@@ -93,7 +89,7 @@ public abstract class DObject implements Mutable {
     protected static final DObserved<DObject, Set<DIssue>>                             DCLARE_ISSUES             = DObserved.of("$DCLARE_ISSUES", Set.of(), false, false, () -> DIssue.DOBJECT, false, (dObject, pre, post) -> {
                                                                                                                  }, null);
 
-    protected static final Set<Observer>                                               OBSERVERS                 = Set.of(TYPE_RULE, CONTAINING_ATTRIBUTE_RULE);
+    protected static final Set<Observer>                                               OBSERVERS                 = Set.of(TYPE_RULE, CONTAINING_ATTRIBUTE_RULE, START_OBSERVER);
 
     protected static final Set<Setable>                                                SETABLES                  = Set.of(TYPE, MPS_ISSUES, DRULE_ISSUES, DCLARE_ISSUES, CONTAINING_ATTRIBUTE);
 
@@ -139,20 +135,10 @@ public abstract class DObject implements Mutable {
     }
 
     @Override
-    public final void dActivate() {
-        Mutable.super.dActivate();
-        start(dClareMPS());
-    }
-
-    @Override
     public final void dDeactivate() {
         Mutable.super.dDeactivate();
         stop(dClareMPS());
     }
-
-    abstract protected boolean isRead();
-
-    abstract protected boolean isMatched();
 
     protected abstract void read(DClareMPS dClareMPS);
 
@@ -163,8 +149,10 @@ public abstract class DObject implements Mutable {
     }
 
     protected final void start(DClareMPS dClareMPS) {
-        init(dClareMPS);
-        read(dClareMPS);
+        if (!(dContaining() instanceof DMatchedObject.UnidentifiedObserved)) {
+            init(dClareMPS);
+            read(dClareMPS);
+        }
     }
 
     protected void stop(DClareMPS dClareMPS) {
@@ -178,16 +166,12 @@ public abstract class DObject implements Mutable {
 
     protected abstract DObjectType<?> getType();
 
-    public static <O extends DObject> NonCheckingObserver<O> observer(Object id, Consumer<O> action) {
+    public static <O extends DObject> DNonCheckingObserver<O> observer(Object id, Consumer<O> action) {
         return observer(id, action, Direction.forward);
     }
 
-    public static <O extends DObject> NonCheckingObserver<O> observer(Object id, Consumer<O> action, Direction dir) {
-        return NonCheckingObserver.of(id, o -> {
-            if (o.isOwned()) {
-                action.accept(o);
-            }
-        }, dir);
+    public static <O extends DObject> DNonCheckingObserver<O> observer(Object id, Consumer<O> action, Direction dir) {
+        return DNonCheckingObserver.of(action, id, dir);
     }
 
     public boolean isDclareOnly() {

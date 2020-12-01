@@ -52,7 +52,6 @@ public class DModuleListener extends Pair<DModule, DClareMPS> implements SModule
             if (!a().isExternal() && DModule.hasRuleSets(DModule.LANGUAGES.get(a()))) {
                 if (!(module instanceof Language) || ((Language) module).isAccessoryModel(sModel.getReference())) {
                     DModel dModel = DModel.of(sModel);
-                    dModel.setDetached(sModel);
                     DModule.MODELS.set(a(), Set::remove, dModel);
                 }
             }
