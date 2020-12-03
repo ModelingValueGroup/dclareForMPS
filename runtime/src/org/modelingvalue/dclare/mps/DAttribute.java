@@ -96,7 +96,7 @@ public interface DAttribute<O, T> extends DFeature {
                         sNode.setProperty(sProperty, null);
                     }
                 }
-            }, null, source, true);
+            }, null, source, !synthetic);
             this.name = name;
             this.cls = cls;
             this.sProperty = sProperty;
