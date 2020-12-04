@@ -61,7 +61,9 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
     protected static final DObserved<DModel, String>                                        NAME                = DObserved.of("NAME", null, false, false, null, false, (dModel, pre, post) -> {
                                                                                                                     if (post != null) {
                                                                                                                         SModel sModel = dModel.original();
-                                                                                                                        ((EditableSModel) sModel).rename(post, false);
+                                                                                                                        if (!post.equals(sModel.getName().getLongName())) {
+                                                                                                                            ((EditableSModel) sModel).rename(post, false);
+                                                                                                                        }
                                                                                                                     }
                                                                                                                 }, null);
 
@@ -194,7 +196,11 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
     }
 
     public boolean isTemporal() {
-        return (Boolean) identity[identity.length - 1];
+        return (Boolean) identity[1];
+    }
+
+    private int number() {
+        return (Integer) identity[0];
     }
 
     @Override
@@ -226,7 +232,10 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
     @Override
     protected SModel create() {
         SModule sModule = getModule().original();
-        String name = "_" + hashCode();
+        String name = NAME.get(this);
+        if (name == null) {
+            name = "_" + Integer.toString(number());
+        }
         return isTemporal() ? //
                 new DTempModel(name, (SModuleBase) sModule) : //
                 sModule.getModelRoots().iterator().next().createModel(name);
