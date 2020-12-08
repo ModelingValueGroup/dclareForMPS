@@ -822,6 +822,9 @@
             </node>
           </node>
         </node>
+        <node concept="VechU" id="3lRZeYNUYF9" role="3F10Kt">
+          <property role="Vb096" value="fLwANPo/pink" />
+        </node>
       </node>
       <node concept="3F0ifn" id="3I0pf1O7UZ1" role="3EZMnx">
         <property role="3F0ifm" value="model" />

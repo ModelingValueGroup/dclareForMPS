@@ -42,7 +42,6 @@ import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.collections.util.Triple;
 import org.modelingvalue.dclare.Action;
 import org.modelingvalue.dclare.Constant;
-import org.modelingvalue.dclare.Direction;
 import org.modelingvalue.dclare.NonCheckingObserved;
 import org.modelingvalue.dclare.Observed;
 import org.modelingvalue.dclare.Observer;
@@ -153,14 +152,14 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
                                                                                                                         MODEL_ROOT.set(m, dClareMPS().read(() -> sModel.getModelRoot()));
                                                                                                                         ROOTS.set(m, dClareMPS().read(() -> Collection.of(sModel.getRootNodes()).sequential().map(DNode::read).toSet()));
                                                                                                                     }
-                                                                                                                }, Direction.forward);
+                                                                                                                });
 
     private static final Action<DModel>                                                     READ_NAME           = Action.of("$READ_NAME", m -> {
                                                                                                                     SModel sModel = m.tryOriginal();
                                                                                                                     if (sModel != null) {
                                                                                                                         NAME.set(m, dClareMPS().read(() -> sModel.getName().getLongName()));
                                                                                                                     }
-                                                                                                                }, Direction.forward);
+                                                                                                                });
 
     @SuppressWarnings("rawtypes")
     protected static final Set<Observer>                                                    OBSERVERS           = DMatchedObject.OBSERVERS.addAll(Set.of(USED_LANGUAGES_RULE, USED_MODELS_RULE, REFERENCED_RULE));

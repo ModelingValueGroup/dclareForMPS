@@ -43,7 +43,6 @@ import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.collections.util.Quintuple;
 import org.modelingvalue.dclare.Action;
 import org.modelingvalue.dclare.Constant;
-import org.modelingvalue.dclare.Direction;
 import org.modelingvalue.dclare.Mutable;
 import org.modelingvalue.dclare.NonCheckingObserved;
 import org.modelingvalue.dclare.NonCheckingObserver;
@@ -210,7 +209,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                                     PROPERTY.get(property).set(n, dClareMPS().read(() -> sNode.getProperty(property)));
                                                                                                                                                 }
                                                                                                                                             }
-                                                                                                                                        }, Direction.forward);
+                                                                                                                                        });
 
     private static final Action<DNode>                                                                           READ_REFERENCES        = Action.of("$READ_REFERENCES", n -> {
                                                                                                                                             SNode sNode = n.tryOriginal();
@@ -220,7 +219,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                                     REFERENCE.get(link).set(n, targetNode != null ? of(targetNode) : null);
                                                                                                                                                 }
                                                                                                                                             }
-                                                                                                                                        }, Direction.backward);
+                                                                                                                                        });
 
     private static final Action<DNode>                                                                           READ_CHILDREN          = Action.of("$READ_CHILDREN", n -> {
                                                                                                                                             SNode sNode = n.tryOriginal();
@@ -236,7 +235,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                                     }
                                                                                                                                                 }
                                                                                                                                             }
-                                                                                                                                        }, Direction.forward);
+                                                                                                                                        });
 
     @SuppressWarnings("rawtypes")
     protected static final Constant<SConcept, Set<? extends Setable>>                                            CONCEPT_SETABLES       = Constant.of("$CONCEPT_SETABLES", c -> Collection.concat(                                                                                                              //
@@ -273,7 +272,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
             for (DCopyConstruction cc : o.getCopyConstructions()) {
                 action.accept(o, cc);
             }
-        }, Direction.forward);
+        });
     }
 
     public static DNode of(SLanguage anonymousLanguage, String anonymousType, Object[] identity, SConcept concept) {
@@ -390,10 +389,6 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
         return result;
     }
 
-    private Collection<DCopyConstruction> getCopyConstructions() {
-        return CONSTRUCTIONS.get(this).filter(DCopyConstruction.class);
-    }
-
     private static List<DNode> copy(List<DNode> children, DCopyConstruction root) {
         return children.sequential().map(c -> copy(c, root)).toList();
     }
@@ -416,7 +411,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
                     SContainmentLink cl = referenced.getContainmentLink();
                     if (cl != null) {
                         DObserved<DNode, ?> observed = cl.isMultiple() ? MANY_CONTAINMENT.get(cl) : SINGLE_CONTAINMENT.get(cl);
-                        NonCheckingObserver<DObject> observer = NonCheckingObserver.of(observed, null, Direction.forward);
+                        NonCheckingObserver<DObject> observer = NonCheckingObserver.of(observed, null);
                         return getDerived(new DCopyConstruction(parent, observer, referenced, root));
                     }
                 }
