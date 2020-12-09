@@ -198,7 +198,8 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
         return (Boolean) identity[1];
     }
 
-    private int number() {
+    @Override
+    protected Integer number() {
         return (Integer) identity[0];
     }
 

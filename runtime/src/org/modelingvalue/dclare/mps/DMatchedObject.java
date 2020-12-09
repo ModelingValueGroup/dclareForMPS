@@ -54,6 +54,7 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
             return pres;
         }
         LeafTransaction tx = LeafTransaction.getCurrent();
+
         if (tx instanceof ObserverTransaction) {
             if (posts.anyMatch(p -> !p.isExisting())) {
                 return pres;
@@ -64,25 +65,33 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
             if (!unidentified.isEmpty()) {
                 return pres;
             }
-            List<C> preList = pres instanceof List ? pres.filter(p -> p.isRead()).toList() : pres.filter(p -> p.isRead()).sortedBy(DMatchedObject::readOrder).toList();
-            List<C> postList = posts instanceof List ? posts.filter(p -> !p.isRead()).toList() : posts.filter(p -> !p.isRead()).sortedBy(DMatchedObject::deriveOrder).toList();
-            for (C pre : preList) {
-                for (int i = 0; i < postList.size(); i++) {
-                    C post = postList.get(i);
+            List<C> preList = pres.filter(p -> p.isRead() && !posts.contains(p)).toList();
+            List<C> postList = posts.filter(p -> !p.isRead() && !pres.contains(p)).toList();
+            if (pres instanceof Set) {
+                preList = preList.sortedBy(DMatchedObject::number).toList();
+                postList = postList.sortedBy(o -> o.readContext().number()).toList();
+            }
+            R result = posts;
+            for (int i = 0; i < preList.size() && postList.size() > 0; i++) {
+                C pre = preList.get(i);
+                for (int ii = 0; ii < postList.size(); ii++) {
+                    C post = postList.get(ii);
                     if (pre.equalMatchType(post) && pre.matches(post) && !pre.sharesConstructionType(post)) {
-                        postList = postList.remove(i);
+                        postList = postList.remove(ii);
                         pre.combine(post);
                         if (pres.size() >= posts.size()) {
-                            posts = pres;
+                            result = pres;
                         } else {
-                            posts = (R) posts.replace(post, pre);
+                            result = (R) posts.replace(post, pre);
                         }
                         break;
                     }
                 }
             }
+            return result;
+        } else {
+            return posts;
         }
-        return posts;
     }
 
     @SuppressWarnings("unchecked")
@@ -117,14 +126,9 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
         return constructionTypes().anyMatch(postCts::contains);
     }
 
-    protected String readOrder() {
-        return constructions().filter(DReadConstruction.class).map(DReadConstruction::reference).findAny().get().toString();
-    }
-
     @SuppressWarnings("unchecked")
-    protected String deriveOrder() {
-        Collection<DReadConstruction<?>> coll = context(Set.of()).flatMap(DMatchedObject::constructions).filter(DReadConstruction.class);
-        return coll.map(DReadConstruction::reference).findAny().get().toString();
+    protected DMatchedObject readContext() {
+        return context(Set.of()).filter(DMatchedObject::isRead).findAny().get();
     }
 
     protected boolean unidentified() {
@@ -151,11 +155,15 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
 
     @SuppressWarnings("unchecked")
     protected boolean matches(DMatchedObject<?, ?, ?> other) {
-        Object a = matchKey();
-        if (a == null) {
-            return other.unidentifiedContext();
+        if (other.context(Set.of()).contains(this)) {
+            return true;
         } else {
-            return a.equals(other.matchKey());
+            Object a = matchKey();
+            if (a == null) {
+                return other.unidentifiedContext();
+            } else {
+                return a.equals(other.matchKey());
+            }
         }
     }
 
@@ -236,6 +244,8 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
     protected DMatchedObject(Object[] identity) {
         super(identity);
     }
+
+    protected abstract Comparable number();
 
     @Override
     protected <V> V get(DIdentifyingAttribute<?, V> attr) {
@@ -430,6 +440,11 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
         @Override
         public String toString() {
             return "MERGER";
+        }
+
+        @Override
+        protected Integer number() {
+            throw new UnsupportedOperationException();
         }
     };
 

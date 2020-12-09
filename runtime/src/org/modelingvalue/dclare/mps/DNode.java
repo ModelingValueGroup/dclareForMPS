@@ -314,8 +314,9 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
         return (SConcept) identity[1];
     }
 
-    private int number() {
-        return (Integer) identity[0];
+    @Override
+    protected Long number() {
+        return (Long) identity[0];
     }
 
     public static SNode wrap(SNode original) {
