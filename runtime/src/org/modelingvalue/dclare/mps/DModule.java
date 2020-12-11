@@ -143,7 +143,7 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
     @Override
     public SModuleReference getModuleReference() {
         return new SModuleReference() {
-            SModuleReference ref = original().getModuleReference();
+            final SModuleReference ref = original().getModuleReference();
 
             @Override
             public SModuleId getModuleId() {
