@@ -19,6 +19,7 @@ import java.util.function.Consumer;
 
 import org.modelingvalue.collections.Map;
 import org.modelingvalue.collections.util.Concurrent;
+import org.modelingvalue.dclare.Direction;
 import org.modelingvalue.dclare.MutableTransaction;
 import org.modelingvalue.dclare.NonCheckingObserver;
 import org.modelingvalue.dclare.State;
@@ -28,11 +29,15 @@ import org.modelingvalue.dclare.UniverseTransaction;
 public class DNonCheckingObserver<O extends DObject> extends NonCheckingObserver<O> {
 
     public static <M extends DObject> DNonCheckingObserver<M> of(Consumer<M> action, Object id) {
-        return new DNonCheckingObserver<>(id, action);
+        return new DNonCheckingObserver<>(id, action, Direction.forward);
     }
 
-    private DNonCheckingObserver(Object id, Consumer<O> action) {
-        super(id, action);
+    public static <M extends DObject> DNonCheckingObserver<M> of(Consumer<M> action, Object id, Direction initDirection) {
+        return new DNonCheckingObserver<>(id, action, initDirection);
+    }
+
+    private DNonCheckingObserver(Object id, Consumer<O> action, Direction initDirection) {
+        super(id, action, initDirection);
     }
 
     @Override

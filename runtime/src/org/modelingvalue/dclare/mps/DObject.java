@@ -23,6 +23,7 @@ import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.dclare.Action;
+import org.modelingvalue.dclare.Direction;
 import org.modelingvalue.dclare.Mutable;
 import org.modelingvalue.dclare.NonCheckingObserved;
 import org.modelingvalue.dclare.Observed;
@@ -173,7 +174,11 @@ public abstract class DObject implements Mutable {
     protected abstract DObjectType<?> getType();
 
     public static <O extends DObject> DNonCheckingObserver<O> observer(Object id, Consumer<O> action) {
-        return DNonCheckingObserver.of(action, id);
+        return observer(id, action, Direction.forward);
+    }
+
+    public static <O extends DObject> DNonCheckingObserver<O> observer(Object id, Consumer<O> action, Direction dir) {
+        return DNonCheckingObserver.of(action, id, dir);
     }
 
     public boolean isDclareOnly() {

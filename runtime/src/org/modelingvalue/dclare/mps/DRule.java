@@ -19,6 +19,7 @@ import org.modelingvalue.collections.Map;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Concurrent;
 import org.modelingvalue.dclare.Constant;
+import org.modelingvalue.dclare.Direction;
 import org.modelingvalue.dclare.Mutable;
 import org.modelingvalue.dclare.MutableTransaction;
 import org.modelingvalue.dclare.Observer;
@@ -31,17 +32,17 @@ import org.modelingvalue.dclare.UniverseTransaction;
 public interface DRule<O> extends DFeature {
 
     Constant<DRule, DObserver> OBSERVER = Constant.of("OBSERVER", //
-            r -> DObserver.of(r));
+            r -> DObserver.of(r, r.initialLowPriority() ? Direction.backward : Direction.forward));
 
     class DObserver<O extends Mutable> extends Observer<O> {
 
-        private static <M extends Mutable> DObserver of(DRule rule) {
-            return new DObserver<M>(rule);
+        private static <M extends Mutable> DObserver of(DRule rule, Direction initDirection) {
+            return new DObserver<M>(rule, initDirection);
         }
 
         @SuppressWarnings("unchecked")
-        private DObserver(DRule rule) {
-            super(rule, rule::run);
+        private DObserver(DRule rule, Direction initDirection) {
+            super(rule, rule::run, initDirection);
         }
 
         public DRule rule() {
@@ -112,5 +113,7 @@ public interface DRule<O> extends DFeature {
     }
 
     void run(O object);
+
+    boolean initialLowPriority();
 
 }

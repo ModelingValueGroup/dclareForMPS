@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import org.jetbrains.mps.openapi.language.SAbstractConcept;
 import org.jetbrains.mps.openapi.language.SConcept;
@@ -50,6 +51,8 @@ import org.modelingvalue.dclare.Setable;
 import jetbrains.mps.errors.item.ModelReportItem;
 import jetbrains.mps.extapi.model.SModelBase;
 import jetbrains.mps.extapi.module.SModuleBase;
+import jetbrains.mps.persistence.DefaultModelRoot;
+import jetbrains.mps.persistence.ModelCannotBeCreatedException;
 import jetbrains.mps.smodel.SModelId.IntegerSModelId;
 
 @SuppressWarnings("unused")
@@ -70,24 +73,10 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
                                                                                                                     SModel sModel = dModel.original();
                                                                                                                     Set<SNode> soll = post.map(r -> r.reParent(sModel, null, r.original())).toSet();
                                                                                                                     Set<SNode> ist = DModel.roots(sModel);
-                                                                                                                    DObserved.map(ist, soll,                                                                                                         //
-                                                                                                                            sModel::addRootNode,                                                                                                     //
+                                                                                                                    DObserved.map(ist, soll,                                                                                                        //
+                                                                                                                            sModel::addRootNode,                                                                                                    //
                                                                                                                             sModel::removeRootNode);
-                                                                                                                }, (tx, m, pre, post) -> {
-                                                                                                                    Setable.<Set<DNode>, DNode> diff(pre, post, a -> {
-                                                                                                                        for (SAbstractConcept c : DNode.SUPER_CONCEPTS.get(a.getConcept())) {
-                                                                                                                            DModel.CONCEPT_ROOTS.get(c).set(m, Set::add, a);
-                                                                                                                        }
-                                                                                                                    }, r -> {
-                                                                                                                        for (SAbstractConcept c : DNode.SUPER_CONCEPTS.get(r.getConcept())) {
-                                                                                                                            DModel.CONCEPT_ROOTS.get(c).set(m, Set::remove, r);
-                                                                                                                        }
-                                                                                                                    });
                                                                                                                 }, null);
-
-    protected static final Constant<SAbstractConcept, DObserved<DModel, Set<DNode>>>        CONCEPT_ROOTS       = Constant.of("CONCEPT_ROOTS", c -> DObserved.of(new RootsOfConcept(c), Set.of(), false, false, null, false, null, (tx, m, b, a) -> {
-                                                                                                                    ROOTS.set(m, (rs, cs) -> cs.addAll(rs.filter(r -> !r.isInstanceOfConcept(c))), a);
-                                                                                                                }, null));
 
     protected static final DObserved<DModel, Set<SLanguage>>                                USED_LANGUAGES      = DObserved.of("USED_LANGUAGES", Set.of(), false, false, null, false, (dModel, pre, post) -> {
                                                                                                                     SModelBase sModel = (SModelBase) dModel.original();
@@ -124,7 +113,7 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
                                                                                                                     DClareMPS dClareMPS = dClareMPS();
                                                                                                                     SModel sModel = o.tryOriginal();
                                                                                                                     if (sModel instanceof SModelBase) {
-                                                                                                                        Set<DModel> ls = dClareMPS.read(() -> Collection.of(((SModelBase) sModel).getModelImports()).sequential().                   //
+                                                                                                                        Set<DModel> ls = dClareMPS.read(() -> Collection.of(((SModelBase) sModel).getModelImports()).sequential().                  //
                                                                                                                         map(r -> r.resolve(null)).notNull().map(DModel::of).toSet());
                                                                                                                         USED_MODELS.set(o, ls.addAll(ROOTS.get(o).flatMap(DNode.USED_MODELS::get)).remove(o));
                                                                                                                     }
@@ -231,14 +220,21 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
 
     @Override
     protected SModel create() {
-        SModule sModule = getModule().original();
+        SModuleBase sModule = (SModuleBase) getModule().original();
         String name = NAME.get(this);
         if (name == null) {
             name = "_" + Integer.toString(number());
         }
-        return isTemporal() ? //
-                new DTempModel(name, (SModuleBase) sModule) : //
-                sModule.getModelRoots().iterator().next().createModel(name);
+        return isTemporal() ? new DTempModel(name, sModule) : createFileModel(name, sModule);
+    }
+
+    private SModel createFileModel(String modelName, SModuleBase sModule) {
+        DefaultModelRoot fbmr = (DefaultModelRoot) StreamSupport.stream(sModule.getModelRoots().spliterator(), false).filter(r -> r instanceof DefaultModelRoot).findAny().get();
+        try {
+            return fbmr.createFileModel(modelName, null);
+        } catch (ModelCannotBeCreatedException e) {
+            throw new Error(e);
+        }
     }
 
     @Override
@@ -348,12 +344,11 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
 
     public void setRootNodes(SAbstractConcept concept, Iterable<DNode> roots) {
         Set<DNode> set = Collection.of(roots).map(Objects::requireNonNull).map(DNode::of).toSet();
-        DObserved<DModel, Set<DNode>> cr = CONCEPT_ROOTS.get(concept);
-        cr.set(this, (b, a) -> DMatchedObject.manyMatch(this, b, a, cr), set);
+        ROOTS.set(this, (b, a) -> DMatchedObject.manyMatch(this, b, a.addAll(b.filter(r -> !r.isInstanceOfConcept(concept))), ROOTS), set);
     }
 
     public java.util.Collection<DNode> getRootNodes(SAbstractConcept concept) {
-        return CONCEPT_ROOTS.get(concept).get(this).collect(Collectors.toList());
+        return ROOTS.get(this).filter(r -> r.isInstanceOfConcept(concept)).collect(Collectors.toList());
     }
 
     @Override

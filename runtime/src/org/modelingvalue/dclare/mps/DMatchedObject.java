@@ -40,50 +40,42 @@ import org.modelingvalue.dclare.mps.DAttribute.DIdentifyingAttribute;
 
 @SuppressWarnings("rawtypes")
 public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DIdentifiedObject implements Mergeable<DMatchedObject> {
-    protected static final Constant<DReadConstruction, DMatchedObject>            READ_MAPPING          = Constant.of("$READ_MAPPING", null);
+    protected static final Constant<DReadConstruction, DMatchedObject> READ_MAPPING          = Constant.of("$READ_MAPPING", null);
     @SuppressWarnings("unchecked")
-    private static final Constant<Setable, Setable<Mutable, Set<DMatchedObject>>> UNIDENTIFIED_CHILDREN = Constant.of("$UNIDENTIFIED_CHILDREN", UnidentifiedObserved::of);
-    protected static final Set<Observer>                                          OBSERVERS             = DObject.OBSERVERS;
-    protected static final Set<Setable>                                           SETABLES              = DObject.SETABLES;
-    private static final Observed<DMatchedObject, Set<DConstruction>>             CONSTRUCTIONS         = NonCheckingObserved.of("$CONSTRUCTIONS", Set.of());
-    protected static final Constant<Observer<?>, Constructed>                     CONSTRUCTED           = Constant.of("CONSTRUCTED", Constructed::new);
+    private static final Constant<Setable, Setable<Mutable, ?>>        UNIDENTIFIED_CHILDREN = Constant.of("$UNIDENTIFIED_CHILDREN", UnidentifiedObserved::of);
+    protected static final Set<Observer>                               OBSERVERS             = DObject.OBSERVERS;
+    protected static final Set<Setable>                                SETABLES              = DObject.SETABLES;
+    private static final Observed<DMatchedObject, Set<DConstruction>>  CONSTRUCTIONS         = NonCheckingObserved.of("$CONSTRUCTIONS", Set.of());
+    protected static final Constant<Observer<?>, Constructed>          CONSTRUCTED           = Constant.of("CONSTRUCTED", Constructed::new);
 
     @SuppressWarnings("unchecked")
     protected static <P extends Mutable, C extends DMatchedObject<C, ?, ?>, R extends ContainingCollection<C>> R manyMatch(P parent, R pres, R posts, Setable<P, R> setable) {
         if (parent.dContaining() instanceof UnidentifiedObserved) {
             return pres;
         }
-        LeafTransaction tx = LeafTransaction.getCurrent();
-
-        if (tx instanceof ObserverTransaction) {
-            if (posts.anyMatch(p -> !p.isExisting())) {
-                return pres;
-            }
-            Setable<Mutable, Set<DMatchedObject>> uisetable = UNIDENTIFIED_CHILDREN.get(setable);
-            Set<DMatchedObject> unidentified = Collection.concat(uisetable.get(parent).filter(DMatchedObject::unidentified), posts.filter(DMatchedObject::unidentified)).toSet();
+        if (LeafTransaction.getCurrent() instanceof ObserverTransaction) {
+            R result = posts;
+            List<C> postList = posts.filter(p -> !p.isRead() && !pres.contains(p)).toList();
+            Setable<Mutable, R> uisetable = (Setable<Mutable, R>) UNIDENTIFIED_CHILDREN.get(setable);
+            R unidentified = (R) uisetable.getDefault().addAllUnique(postList.filter(DMatchedObject::unidentified));
             uisetable.set(parent, unidentified);
             if (!unidentified.isEmpty()) {
                 return pres;
             }
             List<C> preList = pres.filter(p -> p.isRead() && !posts.contains(p)).toList();
-            List<C> postList = posts.filter(p -> !p.isRead() && !pres.contains(p)).toList();
             if (pres instanceof Set) {
                 preList = preList.sortedBy(DMatchedObject::number).toList();
                 postList = postList.sortedBy(o -> o.readContext().number()).toList();
             }
-            R result = posts;
             for (int i = 0; i < preList.size() && postList.size() > 0; i++) {
                 C pre = preList.get(i);
                 for (int ii = 0; ii < postList.size(); ii++) {
                     C post = postList.get(ii);
                     if (pre.equalMatchType(post) && pre.matches(post) && !pre.sharesConstructionType(post)) {
+                        preList = preList.remove(i--);
                         postList = postList.remove(ii);
                         pre.combine(post);
-                        if (pres.size() >= posts.size()) {
-                            result = pres;
-                        } else {
-                            result = (R) posts.replace(post, pre);
-                        }
+                        result = (R) result.replace(post, pre);
                         break;
                     }
                 }
@@ -99,22 +91,18 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
         if (parent.dContaining() instanceof UnidentifiedObserved) {
             return pre;
         }
-        LeafTransaction tx = LeafTransaction.getCurrent();
-        if (tx instanceof ObserverTransaction) {
-            if (post != null && !post.isExisting()) {
-                return pre;
-            }
-            Setable<Mutable, Set<DMatchedObject>> uisetable = UNIDENTIFIED_CHILDREN.get(setable);
-            Collection<DMatchedObject> coll = uisetable.get(parent).filter(DMatchedObject::unidentified);
-            Set<DMatchedObject> unidentified = post != null && post.unidentified() ? Collection.concat(coll, post).toSet() : coll.toSet();
-            uisetable.set(parent, unidentified);
-            if (!unidentified.isEmpty()) {
-                return pre;
-            }
-            if (pre != null && post != null && pre.isRead() && !post.isRead() && //
-                    pre.equalMatchType(post) && pre.matches(post) && !pre.sharesConstructionType(post)) {
-                pre.combine(post);
-                return pre;
+        if (LeafTransaction.getCurrent() instanceof ObserverTransaction) {
+            if (pre != null && post != null && pre.isRead() && !post.isRead()) {
+                Setable<Mutable, C> uisetable = (Setable<Mutable, C>) UNIDENTIFIED_CHILDREN.get(setable);
+                C unidentified = post.unidentified() ? post : null;
+                uisetable.set(parent, unidentified);
+                if (unidentified != null) {
+                    return pre;
+                }
+                if (pre.equalMatchType(post) && pre.matches(post) && !pre.sharesConstructionType(post)) {
+                    pre.combine(post);
+                    return pre;
+                }
             }
         }
         return post;
@@ -128,7 +116,7 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
 
     @SuppressWarnings("unchecked")
     protected DMatchedObject readContext() {
-        return context(Set.of()).filter(DMatchedObject::isRead).findAny().get();
+        return context().filter(DMatchedObject::isRead).findAny().get();
     }
 
     protected boolean unidentified() {
@@ -136,7 +124,7 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
     }
 
     protected boolean unidentifiedContext() {
-        return context(Set.of()).anyMatch(c -> c.isRead() && c.matchKey() == null);
+        return context().anyMatch(c -> c.isRead() && c.matchKey() == null);
     }
 
     protected boolean equalMatchType(DMatchedObject<?, ?, ?> other) {
@@ -155,7 +143,7 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
 
     @SuppressWarnings("unchecked")
     protected boolean matches(DMatchedObject<?, ?, ?> other) {
-        if (other.context(Set.of()).contains(this)) {
+        if (other.context().contains(this)) {
             return true;
         } else {
             Object a = matchKey();
@@ -167,11 +155,6 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
         }
     }
 
-    @SuppressWarnings("unchecked")
-    protected boolean isExisting() {
-        return context(Set.of()).flatMap(DMatchedObject::constructions).anyMatch(DReadConstruction.class::isInstance);
-    }
-
     protected boolean isRead() {
         return constructions().anyMatch(DReadConstruction.class::isInstance);
     }
@@ -180,17 +163,20 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
 
     protected abstract Object matchKey();
 
+    protected Set<DMatchedObject> context() {
+        return context(Set.of());
+    }
+
     @SuppressWarnings("unchecked")
-    protected Set<DMatchedObject> context(Set<DMatchedObject> in) {
-        Set<DMatchedObject> out = in.add(this);
-        if (in != out) {
-            for (DDeriveConstruction cons : constructions().filter(DDeriveConstruction.class)) {
-                for (DMatchedObject obj : cons.context()) {
-                    out = obj.context(out);
+    private Set<DMatchedObject> context(Set<DMatchedObject> result) {
+        for (DDeriveConstruction cons : constructions().filter(DDeriveConstruction.class)) {
+            for (DMatchedObject obj : cons.context()) {
+                if (!result.contains(obj)) {
+                    result = obj.context(result.add(obj));
                 }
             }
         }
-        return out;
+        return result;
     }
 
     private Set<DConstruction> constructions() {
@@ -343,14 +329,14 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
         return constructions().filter(DCopyConstruction.class);
     }
 
-    protected static final class UnidentifiedObserved extends NonCheckingObserved<Mutable, Set<DMatchedObject>> {
+    protected static final class UnidentifiedObserved<T> extends Setable<Mutable, T> {
 
-        public static <V> UnidentifiedObserved of(Setable<?, ?> setable) {
-            return new UnidentifiedObserved(setable);
+        public static <V> UnidentifiedObserved of(Setable<?, V> setable) {
+            return new UnidentifiedObserved<V>(setable);
         }
 
-        private UnidentifiedObserved(Setable<?, ?> setable) {
-            super(Pair.of("UNIDENTIFIED", setable), false, Set.of(), true, null, null, null);
+        private UnidentifiedObserved(Setable<?, T> setable) {
+            super(setable, setable.getDefault(), true, null, null, null, false);
         }
 
     }
@@ -370,7 +356,7 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
         for (int i = 1; i < length; i++) {
             if (branches[i] == null || !branches[i].matches(result)) {
                 throw new NotMergeableException(this + " -> " + Arrays.toString(branches));
-            } else if (branches[i].isExisting()) {
+            } else if (!CONSTRUCTIONS.get(branches[i]).isEmpty()) {
                 result = branches[i];
             }
         }
