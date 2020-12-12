@@ -24,8 +24,6 @@ public abstract class DDeriveConstruction extends DConstruction {
         super(identity);
     }
 
-    protected abstract DDeriveConstruction moveTo(DObject object);
-
     public abstract Observer<?> observer();
 
     public abstract DObject object();

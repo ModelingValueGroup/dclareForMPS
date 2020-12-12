@@ -28,6 +28,7 @@ import org.modelingvalue.collections.util.Mergeable;
 import org.modelingvalue.collections.util.NotMergeableException;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.dclare.Constant;
+import org.modelingvalue.dclare.Leaf;
 import org.modelingvalue.dclare.LeafTransaction;
 import org.modelingvalue.dclare.Mutable;
 import org.modelingvalue.dclare.NonCheckingObserved;
@@ -40,23 +41,24 @@ import org.modelingvalue.dclare.mps.DAttribute.DIdentifyingAttribute;
 
 @SuppressWarnings("rawtypes")
 public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DIdentifiedObject implements Mergeable<DMatchedObject> {
-    protected static final Constant<DReadConstruction, DMatchedObject> READ_MAPPING          = Constant.of("$READ_MAPPING", null);
+    protected static final Constant<DReadConstruction, DMatchedObject>      READ_MAPPING          = Constant.of("$READ_MAPPING", null);
     @SuppressWarnings("unchecked")
-    private static final Constant<Setable, Setable<Mutable, ?>>        UNIDENTIFIED_CHILDREN = Constant.of("$UNIDENTIFIED_CHILDREN", UnidentifiedObserved::of);
-    protected static final Set<Observer>                               OBSERVERS             = DObject.OBSERVERS;
-    protected static final Set<Setable>                                SETABLES              = DObject.SETABLES;
-    private static final Observed<DMatchedObject, Set<DConstruction>>  CONSTRUCTIONS         = NonCheckingObserved.of("$CONSTRUCTIONS", Set.of());
-    protected static final Constant<Observer<?>, Constructed>          CONSTRUCTED           = Constant.of("CONSTRUCTED", Constructed::new);
+    private static final Constant<Pair<Setable, Leaf>, Setable<Mutable, ?>> UNIDENTIFIED_CHILDREN = Constant.of("$UNIDENTIFIED_CHILDREN", UnidentifiedObserved::of);
+    protected static final Set<Observer>                                    OBSERVERS             = DObject.OBSERVERS;
+    protected static final Set<Setable>                                     SETABLES              = DObject.SETABLES;
+    private static final Observed<DMatchedObject, Set<DConstruction>>       CONSTRUCTIONS         = NonCheckingObserved.of("$CONSTRUCTIONS", Set.of());
+    protected static final Constant<Observer<?>, Constructed>               CONSTRUCTED           = Constant.of("CONSTRUCTED", Constructed::new);
 
     @SuppressWarnings("unchecked")
     protected static <P extends Mutable, C extends DMatchedObject<C, ?, ?>, R extends ContainingCollection<C>> R manyMatch(P parent, R pres, R posts, Setable<P, R> setable) {
         if (parent.dContaining() instanceof UnidentifiedObserved) {
             return pres;
         }
-        if (LeafTransaction.getCurrent() instanceof ObserverTransaction) {
+        LeafTransaction tx = LeafTransaction.getCurrent();
+        if (tx instanceof ObserverTransaction) {
             R result = posts;
             List<C> postList = posts.filter(p -> !p.isRead() && !pres.contains(p)).toList();
-            Setable<Mutable, R> uisetable = (Setable<Mutable, R>) UNIDENTIFIED_CHILDREN.get(setable);
+            Setable<Mutable, R> uisetable = (Setable<Mutable, R>) UNIDENTIFIED_CHILDREN.get(Pair.of(setable, tx.leaf()));
             R unidentified = (R) uisetable.getDefault().addAllUnique(postList.filter(DMatchedObject::unidentified));
             uisetable.set(parent, unidentified);
             if (!unidentified.isEmpty()) {
@@ -74,7 +76,7 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
                     if (pre.equalMatchType(post) && pre.matches(post) && !pre.sharesConstructionType(post)) {
                         preList = preList.remove(i--);
                         postList = postList.remove(ii);
-                        pre.combine(post);
+                        pre.combine(tx, post);
                         result = (R) result.replace(post, pre);
                         break;
                     }
@@ -91,16 +93,17 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
         if (parent.dContaining() instanceof UnidentifiedObserved) {
             return pre;
         }
-        if (LeafTransaction.getCurrent() instanceof ObserverTransaction) {
+        LeafTransaction tx = LeafTransaction.getCurrent();
+        if (tx instanceof ObserverTransaction) {
             if (pre != null && post != null && pre.isRead() && !post.isRead()) {
-                Setable<Mutable, C> uisetable = (Setable<Mutable, C>) UNIDENTIFIED_CHILDREN.get(setable);
+                Setable<Mutable, C> uisetable = (Setable<Mutable, C>) UNIDENTIFIED_CHILDREN.get(Pair.of(setable, tx.leaf()));
                 C unidentified = post.unidentified() ? post : null;
                 uisetable.set(parent, unidentified);
                 if (unidentified != null) {
                     return pre;
                 }
                 if (pre.equalMatchType(post) && pre.matches(post) && !pre.sharesConstructionType(post)) {
-                    pre.combine(post);
+                    pre.combine(tx, post);
                     return pre;
                 }
             }
@@ -135,10 +138,14 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
         return constructions().filter(DDeriveConstruction.class).map(DDeriveConstruction::getAnonymousType).toSet();
     }
 
-    protected void combine(DMatchedObject<?, ?, ?> other) {
+    protected void combine(LeafTransaction tx, DMatchedObject<?, ?, ?> other) {
         for (DDeriveConstruction cons : other.constructions().filter(DDeriveConstruction.class)) {
+            if (tx.mutable().equals(cons.object()) && tx.leaf().equals(cons.observer())) {
+                ((DConstructingTransaction) tx).constructed().set((m, v) -> m.put(cons, v), this);
+            }
             CONSTRUCTED.get(cons.observer()).set(cons.object(), (map, e) -> map.put(cons, e), this);
         }
+
     }
 
     @SuppressWarnings("unchecked")
@@ -200,13 +207,14 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
 
     @SuppressWarnings("unchecked")
     private static <D extends DMatchedObject> D derive(DConstructingTransaction tx, DDeriveConstruction id, Supplier<D> supplier) {
-        D d = (D) CONSTRUCTED.get(id.observer()).get(id.object()).get(id);
+        Constructed cons = CONSTRUCTED.get(id.observer());
+        D d = (D) cons.get(id.object()).get(id);
         if (d == null && !(id.object().dContaining() instanceof UnidentifiedObserved)) {
             d = supplier.get();
         }
         if (d != null) {
             tx.constructed().set((m, v) -> m.put(id, v), d);
-            DMatchedObject.CONSTRUCTIONS.set(d, Set::add, id);
+            cons.set(id.object(), (map, e) -> map.put(id, e), d);
         }
         return d;
     }
@@ -331,12 +339,13 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
 
     protected static final class UnidentifiedObserved<T> extends Setable<Mutable, T> {
 
-        public static <V> UnidentifiedObserved of(Setable<?, V> setable) {
-            return new UnidentifiedObserved<V>(setable);
+        public static <V> UnidentifiedObserved of(Pair<Setable, Leaf> id) {
+            return new UnidentifiedObserved<V>(id);
         }
 
-        private UnidentifiedObserved(Setable<?, T> setable) {
-            super(setable, setable.getDefault(), true, null, null, null, false);
+        @SuppressWarnings("unchecked")
+        private UnidentifiedObserved(Pair<Setable, Leaf> id) {
+            super(id, (T) id.a().getDefault(), true, null, null, null, false);
         }
 
     }
@@ -370,6 +379,9 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
                 Pair<DMatchedObject, DMatchedObject> d = e.getValue();
                 if (d.a() != null) {
                     CONSTRUCTIONS.set(d.a(), Set::remove, e.getKey());
+                }
+                if (d.b() != null) {
+                    CONSTRUCTIONS.set(d.b(), Set::add, e.getKey());
                 }
             }));
         }

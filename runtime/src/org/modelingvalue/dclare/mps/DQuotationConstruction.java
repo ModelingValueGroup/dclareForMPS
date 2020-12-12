@@ -34,13 +34,6 @@ public class DQuotationConstruction extends DDeriveConstruction {
         super(identity);
     }
 
-    @Override
-    protected DQuotationConstruction moveTo(DObject object) {
-        Object[] id = identity.clone();
-        id[0] = object;
-        return new DQuotationConstruction(id);
-    }
-
     @SuppressWarnings("unchecked")
     protected <V> V get(DIdentifyingAttribute<?, V> attr) {
         return (V) identity[attr.index()];

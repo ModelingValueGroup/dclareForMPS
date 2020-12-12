@@ -31,13 +31,6 @@ public class DCopyConstruction extends DDeriveConstruction {
         super(identity);
     }
 
-    @Override
-    protected DCopyConstruction moveTo(DObject object) {
-        Object[] id = identity.clone();
-        id[0] = object;
-        return new DCopyConstruction(id);
-    }
-
     public DCopyConstruction root() {
         return identity[3] instanceof DCopyConstruction ? (DCopyConstruction) identity[3] : this;
     }
