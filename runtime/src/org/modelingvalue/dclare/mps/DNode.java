@@ -353,7 +353,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
     public String toString() {
         SConcept concept = getConcept();
         String name = concept.isSubConceptOf(SNodeUtil.concept_INamedConcept) ? getName() : null;
-        return concept.getName() + (name != null ? ":" + name + "#" + identity[0] : "#" + identity[0]);
+        return concept.getName() + (name != null ? ":" + name : "#" + identity[0]);
     }
 
     protected SModel getOriginalModel() {

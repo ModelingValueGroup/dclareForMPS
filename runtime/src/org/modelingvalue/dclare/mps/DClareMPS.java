@@ -338,6 +338,8 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
             addEmptyMandatoryExceptionMessage(object, feature, (EmptyMandatoryException) t);
         } else if (t instanceof ReferencedOrphanException) {
             addReferencedOrphanExceptionMessage(object, feature, (ReferencedOrphanException) t);
+        } else if (t instanceof UnidentifiedException) {
+            addUnidentifiedExceptionMessage(object, feature, (UnidentifiedException) t);
         } else if (t instanceof TooManyChangesException) {
             addTooManyChangesExceptionMessage(object, feature, (TooManyChangesException) t);
         } else if (t instanceof TooManyObservedException) {
@@ -390,6 +392,11 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
                 }
             }
         }
+        addMessage(message);
+    }
+
+    private void addUnidentifiedExceptionMessage(DObject context, DFeature feature, UnidentifiedException uie) {
+        DMessage message = new DMessage(context, feature, DMessageType.error, "UNIDENTIFIED", uie.getMessage());
         addMessage(message);
     }
 

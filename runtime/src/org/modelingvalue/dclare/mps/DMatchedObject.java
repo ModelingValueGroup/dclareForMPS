@@ -38,6 +38,7 @@ import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.ObserverTransaction;
 import org.modelingvalue.dclare.ReadOnlyTransaction;
 import org.modelingvalue.dclare.Setable;
+import org.modelingvalue.dclare.State;
 import org.modelingvalue.dclare.mps.DAttribute.DIdentifyingAttribute;
 
 @SuppressWarnings("rawtypes")
@@ -56,10 +57,10 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
             return pres;
         }
         LeafTransaction tx = LeafTransaction.getCurrent();
+        Setable<Mutable, R> uisetable = (Setable<Mutable, R>) UNIDENTIFIED_CHILDREN.get(Pair.of(setable, tx.leaf()));
         if (tx instanceof ObserverTransaction && !pres.equals(posts)) {
             R result = posts;
             List<C> postList = posts.filter(p -> !p.isRead() && !pres.contains(p)).toList();
-            Setable<Mutable, R> uisetable = (Setable<Mutable, R>) UNIDENTIFIED_CHILDREN.get(Pair.of(setable, tx.leaf()));
             R unidentified = (R) uisetable.getDefault().addAllUnique(postList.filter(DMatchedObject::unidentified));
             uisetable.set(parent, unidentified);
             if (!unidentified.isEmpty()) {
@@ -85,6 +86,7 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
             }
             return result;
         } else {
+            uisetable.set(parent, uisetable.getDefault());
             return posts;
         }
     }
@@ -95,9 +97,9 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
             return pre;
         }
         LeafTransaction tx = LeafTransaction.getCurrent();
+        Setable<Mutable, C> uisetable = (Setable<Mutable, C>) UNIDENTIFIED_CHILDREN.get(Pair.of(setable, tx.leaf()));
         if (tx instanceof ObserverTransaction && !Objects.equals(pre, post)) {
             if (pre != null && post != null && pre.isRead() && !post.isRead()) {
-                Setable<Mutable, C> uisetable = (Setable<Mutable, C>) UNIDENTIFIED_CHILDREN.get(Pair.of(setable, tx.leaf()));
                 C unidentified = post.unidentified() ? post : null;
                 uisetable.set(parent, unidentified);
                 if (unidentified != null) {
@@ -108,6 +110,8 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
                     return pre;
                 }
             }
+        } else {
+            uisetable.set(parent, uisetable.getDefault());
         }
         return post;
     }
@@ -347,6 +351,29 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
         @SuppressWarnings("unchecked")
         private UnidentifiedObserved(Pair<Setable, Leaf> id) {
             super(id, (T) id.a().getDefault(), true, null, null, null, false);
+        }
+
+        @Override
+        public boolean checkConsistency() {
+            return true;
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public void checkConsistency(State state, Mutable object, T post) {
+            if (post instanceof ContainingCollection ? !((ContainingCollection) post).isEmpty() : post != null) {
+                if (id().b() instanceof DRule.DObserver) {
+                    throw new UnidentifiedException(object, (DRule.DObserver) id().b(), post);
+                } else {
+                    throw new UnidentifiedException(object, id().a(), post);
+                }
+            }
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public Pair<Setable, Leaf> id() {
+            return (Pair<Setable, Leaf>) super.id();
         }
 
     }
