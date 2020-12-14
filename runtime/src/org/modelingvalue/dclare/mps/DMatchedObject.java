@@ -16,6 +16,7 @@
 package org.modelingvalue.dclare.mps;
 
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
@@ -55,7 +56,7 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
             return pres;
         }
         LeafTransaction tx = LeafTransaction.getCurrent();
-        if (tx instanceof ObserverTransaction) {
+        if (tx instanceof ObserverTransaction && !pres.equals(posts)) {
             R result = posts;
             List<C> postList = posts.filter(p -> !p.isRead() && !pres.contains(p)).toList();
             Setable<Mutable, R> uisetable = (Setable<Mutable, R>) UNIDENTIFIED_CHILDREN.get(Pair.of(setable, tx.leaf()));
@@ -94,7 +95,7 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
             return pre;
         }
         LeafTransaction tx = LeafTransaction.getCurrent();
-        if (tx instanceof ObserverTransaction) {
+        if (tx instanceof ObserverTransaction && !Objects.equals(pre, post)) {
             if (pre != null && post != null && pre.isRead() && !post.isRead()) {
                 Setable<Mutable, C> uisetable = (Setable<Mutable, C>) UNIDENTIFIED_CHILDREN.get(Pair.of(setable, tx.leaf()));
                 C unidentified = post.unidentified() ? post : null;

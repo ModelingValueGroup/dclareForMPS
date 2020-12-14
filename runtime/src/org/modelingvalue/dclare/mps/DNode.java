@@ -187,11 +187,17 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                                 if (containment.isMultiple()) {
                                                                                                                                                     Observed<DNode, List<DNode>> observed = MANY_CONTAINMENT.get(containment);
                                                                                                                                                     observers = observers.add(copyObserver(observed,                                                                                                            //
-                                                                                                                                                            (o, cc) -> observed.set(o, copy(observed.get(cc.copied()), cc.root()))));
+                                                                                                                                                            (o, cc) -> {
+                                                                                                                                                                List<DNode> post = copy(observed.get(cc.copied()), cc.root());
+                                                                                                                                                                observed.set(o, (b, a) -> DMatchedObject.manyMatch(o, b, a, observed), post);
+                                                                                                                                                            }));
                                                                                                                                                 } else {
                                                                                                                                                     Observed<DNode, DNode> observed = SINGLE_CONTAINMENT.get(containment);
                                                                                                                                                     observers = observers.add(copyObserver(observed,                                                                                                            //
-                                                                                                                                                            (o, cc) -> observed.set(o, copy(observed.get(cc.copied()), cc.root()))));
+                                                                                                                                                            (o, cc) -> {
+                                                                                                                                                                DNode post = copy(observed.get(cc.copied()), cc.root());
+                                                                                                                                                                observed.set(o, (b, a) -> DMatchedObject.singleMatch(o, b, a, observed), post);
+                                                                                                                                                            }));
                                                                                                                                                 }
                                                                                                                                             }
                                                                                                                                             for (SReferenceLink reference : c.getReferenceLinks()) {
@@ -347,7 +353,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
     public String toString() {
         SConcept concept = getConcept();
         String name = concept.isSubConceptOf(SNodeUtil.concept_INamedConcept) ? getName() : null;
-        return concept.getName() + (name != null ? ":" + name : "#" + identity[0]);
+        return concept.getName() + (name != null ? ":" + name + "#" + identity[0] : "#" + identity[0]);
     }
 
     protected SModel getOriginalModel() {
