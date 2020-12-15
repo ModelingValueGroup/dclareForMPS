@@ -34,6 +34,7 @@ public class DTempModel extends EditableModelDescriptor implements EditableSMode
 
     public DTempModel(String name, SModuleBase module) {
         super(createModelRef(name, module.getModuleReference()), new NullDataSource());
+        module.registerModel(this);
     }
 
     @Override

@@ -148,10 +148,6 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
                 }
             }, sp::getDeclarationNode, false));
 
-    public static final Observed<DNode, Set<SLanguage>>                                                          USED_LANGUAGES         = NonCheckingObserved.of("USED_LANGUAGES", Set.of());
-
-    public static final Observed<DNode, Set<DModel>>                                                             USED_MODELS            = NonCheckingObserved.of("USED_MODELS", Set.of());
-
     private static final Observer<DNode>                                                                         MODEL_RULE             = DObject.observer(MODEL, o -> {
                                                                                                                                             DNode p = o.getAncestor(DNode.class);
                                                                                                                                             MODEL.set(o, p != null ? MODEL.get(p) : o.getAncestor(DModel.class));
@@ -161,17 +157,6 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                             DNode p = o.getParent();
                                                                                                                                             ROOT.set(o, p != null ? ROOT.get(p) : o);
                                                                                                                                         });
-
-    private static final Observer<DNode>                                                                         USED_LANGUAGES_RULE    = DObject.observer(USED_LANGUAGES, o -> USED_LANGUAGES.set(o, o.getChildren().flatMap(DNode.USED_LANGUAGES::get).toSet().add(o.getConcept().getLanguage())));
-
-    private static final Observer<DNode>                                                                         USED_MODELS_RULE       = DObject.observer(USED_MODELS, o -> USED_MODELS.set(o, o.getChildren().flatMap(DNode.USED_MODELS::get).toSet().addAll(o.getReferenced().map(                           //
-            r -> {
-                SModel sm = r.getOriginalModel();
-                if (sm != null) {
-                    return DModel.of(sm);
-                }
-                return MODEL.get(r);
-            }).toSet())));
 
     protected static final Setable<DNode, String>                                                                NAME_OBSERVED          = PROPERTY.get(SNodeUtil.property_INamedConcept_name);
 
@@ -266,10 +251,10 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                         });
 
     @SuppressWarnings("rawtypes")
-    protected static final Set<Observer>                                                                         OBSERVERS              = DMatchedObject.OBSERVERS.addAll(Set.of(ROOT_RULE, MODEL_RULE, USED_LANGUAGES_RULE, USED_MODELS_RULE, INDEX_RULE));
+    protected static final Set<Observer>                                                                         OBSERVERS              = DMatchedObject.OBSERVERS.addAll(Set.of(ROOT_RULE, MODEL_RULE, INDEX_RULE));
 
     @SuppressWarnings("rawtypes")
-    protected static final Set<Setable>                                                                          SETABLES               = DMatchedObject.SETABLES.addAll(Set.of(NAME_OBSERVED, ROOT, MODEL, USER_OBJECTS, USED_MODELS, USED_LANGUAGES, ALL_MPS_ISSUES, INDEX));
+    protected static final Set<Setable>                                                                          SETABLES               = DMatchedObject.SETABLES.addAll(Set.of(NAME_OBSERVED, ROOT, MODEL, USER_OBJECTS, ALL_MPS_ISSUES, INDEX));
 
     protected static final AtomicLong                                                                            COUNTER                = new AtomicLong(0L);
 

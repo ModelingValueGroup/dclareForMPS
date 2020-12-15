@@ -32,7 +32,17 @@ import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
 
-public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChangeListener, SModelListener {
+import jetbrains.mps.smodel.event.SModelChildEvent;
+import jetbrains.mps.smodel.event.SModelDevKitEvent;
+import jetbrains.mps.smodel.event.SModelImportEvent;
+import jetbrains.mps.smodel.event.SModelLanguageEvent;
+import jetbrains.mps.smodel.event.SModelPropertyEvent;
+import jetbrains.mps.smodel.event.SModelReferenceEvent;
+import jetbrains.mps.smodel.event.SModelRenamedEvent;
+import jetbrains.mps.smodel.event.SModelRootEvent;
+import jetbrains.mps.smodel.loading.ModelLoadingState;
+
+public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChangeListener, SModelListener, jetbrains.mps.smodel.event.SModelListener {
 
     private static final long serialVersionUID = -5189200443861195660L;
 
@@ -138,6 +148,105 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
 
     @Override
     public void problemsDetected(SModel model, Iterable<Problem> problems) {
+    }
+
+    @Override
+    public void languageAdded(SModelLanguageEvent event) {
+        b().handleMPSChange(() -> {
+            DModel dModel = DModel.of(event.getModel());
+            DModel.USED_LANGUAGES.set(dModel, Set::add, event.getEventLanguage());
+        });
+    }
+
+    @Override
+    public void languageRemoved(SModelLanguageEvent event) {
+        b().handleMPSChange(() -> {
+            DModel dModel = DModel.of(event.getModel());
+            DModel.USED_LANGUAGES.set(dModel, Set::remove, event.getEventLanguage());
+        });
+    }
+
+    @Override
+    public void importAdded(SModelImportEvent event) {
+        b().handleMPSChange(() -> {
+            DModel dModel = DModel.of(event.getModel());
+            DModel add = DModel.of(event.getModelUID().resolve(null));
+            DModel.USED_MODELS.set(dModel, Set::add, add);
+        });
+    }
+
+    @Override
+    public void importRemoved(SModelImportEvent event) {
+        b().handleMPSChange(() -> {
+            DModel dModel = DModel.of(event.getModel());
+            DModel rem = DModel.of(event.getModelUID().resolve(null));
+            DModel.USED_MODELS.set(dModel, Set::remove, rem);
+        });
+    }
+
+    @Override
+    public void devkitAdded(SModelDevKitEvent event) {
+    }
+
+    @Override
+    public void devkitRemoved(SModelDevKitEvent event) {
+    }
+
+    @Override
+    public void rootAdded(SModelRootEvent event) {
+    }
+
+    @Override
+    public void rootRemoved(SModelRootEvent event) {
+    }
+
+    @Override
+    public void beforeRootRemoved(SModelRootEvent event) {
+    }
+
+    @Override
+    public void beforeModelRenamed(SModelRenamedEvent event) {
+    }
+
+    @Override
+    public void modelRenamed(SModelRenamedEvent event) {
+    }
+
+    @Override
+    public void propertyChanged(SModelPropertyEvent event) {
+    }
+
+    @Override
+    public void childAdded(SModelChildEvent event) {
+    }
+
+    @Override
+    public void childRemoved(SModelChildEvent event) {
+    }
+
+    @Override
+    public void beforeChildRemoved(SModelChildEvent event) {
+    }
+
+    @Override
+    public void referenceAdded(SModelReferenceEvent event) {
+    }
+
+    @Override
+    public void referenceRemoved(SModelReferenceEvent event) {
+    }
+
+    @Override
+    public void modelLoadingStateChanged(SModel sm, ModelLoadingState newState) {
+    }
+
+    @Override
+    public void beforeModelDisposed(SModel sm) {
+    }
+
+    @Override
+    public SModelListenerPriority getPriority() {
+        return SModelListenerPriority.CLIENT;
     }
 
 }

@@ -128,11 +128,15 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
     }
 
     protected boolean unidentified() {
-        return matchKey() == null && !unidentifiedContext();
+        return matchKey() == null && !hasUnidentifiedContext();
     }
 
-    protected boolean unidentifiedContext() {
-        return context().anyMatch(c -> c.isRead() && c.matchKey() == null);
+    protected boolean hasUnidentifiedContext() {
+        return unidentifiedContext() != null;
+    }
+
+    protected DMatchedObject unidentifiedContext() {
+        return context().filter(c -> c.isRead() && c.matchKey() == null).findAny().orElse(null);
     }
 
     protected boolean equalMatchType(DMatchedObject<?, ?, ?> other) {
@@ -160,7 +164,7 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
         } else {
             Object a = matchKey();
             if (a == null) {
-                return other.unidentifiedContext();
+                return other.hasUnidentifiedContext();
             } else {
                 return a.equals(other.matchKey());
             }
