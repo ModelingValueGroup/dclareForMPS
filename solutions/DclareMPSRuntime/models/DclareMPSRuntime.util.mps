@@ -2685,12 +2685,7 @@
           <ref role="3uigEE" to="c17a:~SAbstractConcept" resolve="SAbstractConcept" />
         </node>
       </node>
-      <node concept="3uibUv" id="5cJeDiflluS" role="3clF45">
-        <ref role="3uigEE" to="33ny:~Collection" resolve="Collection" />
-        <node concept="3uibUv" id="5cJeDiflluT" role="11_B2D">
-          <ref role="3uigEE" to="t4tl:~DNode" resolve="DNode" />
-        </node>
-      </node>
+      <node concept="2I9FWS" id="7DAUlEsVGT4" role="3clF45" />
     </node>
     <node concept="2tJIrI" id="5cJeDifmmJT" role="jymVt" />
     <node concept="2YIFZL" id="6agMp$f5NMN" role="jymVt">

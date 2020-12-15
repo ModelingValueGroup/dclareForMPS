@@ -318,7 +318,7 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
-    public Iterable<SNode> getRootNodes() {
+    public Set<SNode> getRootNodes() {
         return (Set) ROOTS.get(this);
     }
 
@@ -344,12 +344,12 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
         ROOTS.set(this, Set::remove, dNode);
     }
 
-    public void setRootNodes(SAbstractConcept concept, Iterable<DNode> roots) {
+    public void setRootNodes(SAbstractConcept concept, Iterable<SNode> roots) {
         Set<DNode> set = Collection.of(roots).map(Objects::requireNonNull).map(DNode::of).toSet();
         ROOTS.set(this, (b, a) -> DMatchedObject.manyMatch(this, b, a.addAll(b.filter(r -> !r.isInstanceOfConcept(concept))), ROOTS), set);
     }
 
-    public java.util.Collection<DNode> getRootNodes(SAbstractConcept concept) {
+    public java.util.List<SNode> getRootNodes(SAbstractConcept concept) {
         return ROOTS.get(this).filter(r -> r.isInstanceOfConcept(concept)).collect(Collectors.toList());
     }
 
