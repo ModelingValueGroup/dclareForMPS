@@ -2846,6 +2846,49 @@
       <node concept="3Tm1VV" id="29R9$zZq4Is" role="1B3o_S" />
     </node>
     <node concept="2tJIrI" id="5hwIp2JLcq3" role="jymVt" />
+    <node concept="2YIFZL" id="2mO6frpEN8y" role="jymVt">
+      <property role="TrG5h" value="setUsedLanguages" />
+      <node concept="3clFbS" id="2mO6frpEN8_" role="3clF47">
+        <node concept="3clFbF" id="2mO6frpEY6S" role="3cqZAp">
+          <node concept="2OqwBi" id="2mO6frpEY6U" role="3clFbG">
+            <node concept="1eOMI4" id="2mO6frpEY6V" role="2Oq$k0">
+              <node concept="10QFUN" id="2mO6frpEY6W" role="1eOMHV">
+                <node concept="3uibUv" id="2mO6frpEY6X" role="10QFUM">
+                  <ref role="3uigEE" to="t4tl:~DModel" resolve="DModel" />
+                </node>
+                <node concept="37vLTw" id="2mO6frpEY6Y" role="10QFUP">
+                  <ref role="3cqZAo" node="2mO6frpEReE" resolve="model" />
+                </node>
+              </node>
+            </node>
+            <node concept="liA8E" id="2mO6frpEZw0" role="2OqNvi">
+              <ref role="37wK5l" to="t4tl:~DModel.setUsedLanguages(java.lang.Iterable)" resolve="setUsedLanguages" />
+              <node concept="37vLTw" id="2mO6frpF08e" role="37wK5m">
+                <ref role="3cqZAo" node="2mO6frpES6w" resolve="languages" />
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+      <node concept="3Tm1VV" id="2mO6frpEIss" role="1B3o_S" />
+      <node concept="3cqZAl" id="2mO6frpEMSe" role="3clF45" />
+      <node concept="37vLTG" id="2mO6frpEReE" role="3clF46">
+        <property role="TrG5h" value="model" />
+        <node concept="3uibUv" id="2mO6frpEReD" role="1tU5fm">
+          <ref role="3uigEE" to="mhbf:~SModel" resolve="SModel" />
+        </node>
+      </node>
+      <node concept="37vLTG" id="2mO6frpES6w" role="3clF46">
+        <property role="TrG5h" value="languages" />
+        <node concept="3uibUv" id="2mO6frpESRK" role="1tU5fm">
+          <ref role="3uigEE" to="wyt6:~Iterable" resolve="Iterable" />
+          <node concept="3uibUv" id="2mO6frpEW$C" role="11_B2D">
+            <ref role="3uigEE" to="c17a:~SLanguage" resolve="SLanguage" />
+          </node>
+        </node>
+      </node>
+    </node>
+    <node concept="2tJIrI" id="2mO6frpEEoa" role="jymVt" />
     <node concept="2YIFZL" id="546l1t9$rDM" role="jymVt">
       <property role="TrG5h" value="getUsedLanguages" />
       <node concept="37vLTG" id="546l1t9$v5I" role="3clF46">
@@ -2880,7 +2923,92 @@
         </node>
       </node>
     </node>
-    <node concept="2tJIrI" id="546l1t9$jO2" role="jymVt" />
+    <node concept="2tJIrI" id="2D4CO$foM$4" role="jymVt" />
+    <node concept="2YIFZL" id="2mO6frpF57i" role="jymVt">
+      <property role="TrG5h" value="setUsedModels" />
+      <node concept="3clFbS" id="2mO6frpF57j" role="3clF47">
+        <node concept="3clFbF" id="2mO6frpF57k" role="3cqZAp">
+          <node concept="2OqwBi" id="2mO6frpF57l" role="3clFbG">
+            <node concept="1eOMI4" id="2mO6frpF57m" role="2Oq$k0">
+              <node concept="10QFUN" id="2mO6frpF57n" role="1eOMHV">
+                <node concept="3uibUv" id="2mO6frpF57o" role="10QFUM">
+                  <ref role="3uigEE" to="t4tl:~DModel" resolve="DModel" />
+                </node>
+                <node concept="37vLTw" id="2mO6frpF57p" role="10QFUP">
+                  <ref role="3cqZAo" node="2mO6frpF57u" resolve="model" />
+                </node>
+              </node>
+            </node>
+            <node concept="liA8E" id="2mO6frpF57q" role="2OqNvi">
+              <ref role="37wK5l" to="t4tl:~DModel.setUsedModels(java.lang.Iterable)" resolve="setUsedModels" />
+              <node concept="10QFUN" id="2mO6frpFoBz" role="37wK5m">
+                <node concept="3uibUv" id="2mO6frpFq1O" role="10QFUM">
+                  <ref role="3uigEE" to="wyt6:~Iterable" resolve="Iterable" />
+                </node>
+                <node concept="37vLTw" id="2mO6frpF57r" role="10QFUP">
+                  <ref role="3cqZAo" node="2mO6frpF57w" resolve="imports" />
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+      <node concept="3Tm1VV" id="2mO6frpF57s" role="1B3o_S" />
+      <node concept="3cqZAl" id="2mO6frpF57t" role="3clF45" />
+      <node concept="37vLTG" id="2mO6frpF57u" role="3clF46">
+        <property role="TrG5h" value="model" />
+        <node concept="3uibUv" id="2mO6frpF57v" role="1tU5fm">
+          <ref role="3uigEE" to="mhbf:~SModel" resolve="SModel" />
+        </node>
+      </node>
+      <node concept="37vLTG" id="2mO6frpF57w" role="3clF46">
+        <property role="TrG5h" value="imports" />
+        <node concept="3uibUv" id="2mO6frpF57x" role="1tU5fm">
+          <ref role="3uigEE" to="wyt6:~Iterable" resolve="Iterable" />
+          <node concept="3qUE_q" id="2mO6frpFp5g" role="11_B2D">
+            <node concept="3uibUv" id="2mO6frpFp5h" role="3qUE_r">
+              <ref role="3uigEE" to="mhbf:~SModel" resolve="SModel" />
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+    <node concept="2tJIrI" id="2mO6frpF0Ya" role="jymVt" />
+    <node concept="2YIFZL" id="2D4CO$foPTP" role="jymVt">
+      <property role="TrG5h" value="getUsedModels" />
+      <node concept="37vLTG" id="2D4CO$foPTQ" role="3clF46">
+        <property role="TrG5h" value="model" />
+        <node concept="3uibUv" id="2D4CO$foPTR" role="1tU5fm">
+          <ref role="3uigEE" to="mhbf:~SModel" resolve="SModel" />
+        </node>
+      </node>
+      <node concept="3clFbS" id="2D4CO$foPTS" role="3clF47">
+        <node concept="3clFbF" id="2D4CO$foPTT" role="3cqZAp">
+          <node concept="2OqwBi" id="48vpoA8WCcN" role="3clFbG">
+            <node concept="1eOMI4" id="48vpoA8WCcO" role="2Oq$k0">
+              <node concept="10QFUN" id="48vpoA8WCcP" role="1eOMHV">
+                <node concept="3uibUv" id="48vpoA8WCcQ" role="10QFUM">
+                  <ref role="3uigEE" to="t4tl:~DModel" resolve="DModel" />
+                </node>
+                <node concept="37vLTw" id="48vpoA8WCcR" role="10QFUP">
+                  <ref role="3cqZAo" node="2D4CO$foPTQ" resolve="model" />
+                </node>
+              </node>
+            </node>
+            <node concept="liA8E" id="48vpoA8WCcS" role="2OqNvi">
+              <ref role="37wK5l" to="t4tl:~DModel.getUsedModels()" resolve="getUsedModels" />
+            </node>
+          </node>
+        </node>
+      </node>
+      <node concept="3Tm1VV" id="2D4CO$foPU0" role="1B3o_S" />
+      <node concept="2hMVRd" id="2mO6frptYIX" role="3clF45">
+        <node concept="3uibUv" id="2mO6frptYIZ" role="2hN53Y">
+          <ref role="3uigEE" to="mhbf:~SModel" resolve="SModel" />
+        </node>
+      </node>
+    </node>
+    <node concept="2tJIrI" id="2D4CO$foOxO" role="jymVt" />
     <node concept="2YIFZL" id="6di_o0Bppmx" role="jymVt">
       <property role="TrG5h" value="getFromMPS" />
       <node concept="37vLTG" id="6di_o0BprPe" role="3clF46">

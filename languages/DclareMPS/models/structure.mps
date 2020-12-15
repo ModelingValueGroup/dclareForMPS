@@ -949,5 +949,39 @@
       <ref role="AX2Wp" to="tpck:fKAOsGN" resolve="string" />
     </node>
   </node>
+  <node concept="1TIwiD" id="2D4CO$foldT">
+    <property role="EcuMT" value="3045738782195274617" />
+    <property role="3GE5qa" value="models" />
+    <property role="TrG5h" value="UsedModels" />
+    <property role="34LRSv" value="imports" />
+    <ref role="1TJDcQ" to="tpck:gw2VY9q" resolve="BaseConcept" />
+    <node concept="PrWs8" id="2D4CO$foldU" role="PzmwI">
+      <ref role="PrY4T" to="tpee:hqOqG0K" resolve="IOperation" />
+    </node>
+  </node>
+  <node concept="1TIwiD" id="2mO6frpBuKv">
+    <property role="EcuMT" value="2716823923703278623" />
+    <property role="3GE5qa" value="models.builder" />
+    <property role="TrG5h" value="ModelBuilderLanguages" />
+    <property role="34LRSv" value="languages" />
+    <ref role="1TJDcQ" node="lSgC6t_tvD" resolve="ModelBuilderPart" />
+  </node>
+  <node concept="1TIwiD" id="2mO6frpBuKw">
+    <property role="EcuMT" value="2716823923703278624" />
+    <property role="3GE5qa" value="models.builder" />
+    <property role="TrG5h" value="ModelBuilderImports" />
+    <property role="34LRSv" value="imports" />
+    <ref role="1TJDcQ" node="lSgC6t_tvD" resolve="ModelBuilderPart" />
+  </node>
+  <node concept="1TIwiD" id="36ILQ9yf5gW">
+    <property role="EcuMT" value="3580017979174966332" />
+    <property role="3GE5qa" value="models" />
+    <property role="TrG5h" value="ModuleOperation" />
+    <property role="34LRSv" value="module" />
+    <ref role="1TJDcQ" to="tpck:gw2VY9q" resolve="BaseConcept" />
+    <node concept="PrWs8" id="36ILQ9yf5gX" role="PzmwI">
+      <ref role="PrY4T" to="tpee:hqOqG0K" resolve="IOperation" />
+    </node>
+  </node>
 </model>
 
