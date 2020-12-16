@@ -59,7 +59,6 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
         LeafTransaction tx = LeafTransaction.getCurrent();
         Setable<Mutable, R> uisetable = (Setable<Mutable, R>) UNIDENTIFIED_CHILDREN.get(Pair.of(setable, tx.leaf()));
         if (tx instanceof ObserverTransaction && !pres.equals(posts)) {
-            System.err.println("!!!!!!!!!!!! " + pres + " ->  " + posts);
             R result = posts;
             List<C> postList = posts.filter(p -> !p.isRead() && !pres.contains(p)).toList();
             R unidentified = (R) uisetable.getDefault().addAllUnique(postList.filter(DMatchedObject::unidentified));
@@ -195,7 +194,7 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
         return result;
     }
 
-    private Set<DConstruction> constructions() {
+    protected Set<DConstruction> constructions() {
         return CONSTRUCTIONS.current(this);
     }
 

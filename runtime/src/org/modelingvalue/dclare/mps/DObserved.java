@@ -162,4 +162,21 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
         return toMPS == null;
     }
 
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    @Override
+    protected T removeReplaced(T v) {
+        if (v instanceof ContainingCollection) {
+            ContainingCollection coll = (ContainingCollection) v;
+            for (int i = 0; i < coll.size(); i++) {
+                Object e = coll.get(i);
+                if (e instanceof DMatchedObject && ((DMatchedObject) e).constructions().isEmpty()) {
+                    coll = coll instanceof List ? ((List) coll).remove(i) : coll.remove(e);
+                    i--;
+                }
+            }
+            return (T) coll;
+        }
+        return v;
+    }
+
 }
