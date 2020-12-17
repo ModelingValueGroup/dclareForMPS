@@ -283,7 +283,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
 
     protected static DNode read(SNode original) {
         SConcept concept = original.getConcept();
-        DNode dNode = of(concept, original.getReference());
+        DNode dNode = of(concept, original.getReference(), original);
         if (concept.isSubConceptOf(SNodeUtil.concept_INamedConcept)) {
             NAME_OBSERVED.set(dNode, original.getName());
         }
@@ -292,12 +292,12 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
     }
 
     public static DNode of(SNode original) {
-        return original instanceof DNode ? (DNode) original : of(original.getConcept(), original.getReference());
+        return original instanceof DNode ? (DNode) original : of(original.getConcept(), original.getReference(), original);
     }
 
-    public static DNode of(SConcept concept, SNodeReference ref) {
+    public static DNode of(SConcept concept, SNodeReference ref, SNode original) {
         Objects.requireNonNull(ref.getModelReference(), "DNode of empty SModel reference is most illogical");
-        return readConstruct(ref, () -> new DNode(new Object[]{COUNTER.getAndIncrement(), concept}));
+        return readConstruct(ref, () -> new DNode(new Object[]{COUNTER.getAndIncrement(), concept}), original);
     }
 
     @Override
@@ -311,7 +311,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
     }
 
     public static SNode wrap(SNode original) {
-        return original instanceof DNode ? (DNode) original : of(original.getConcept(), original.getReference());
+        return original instanceof DNode ? (DNode) original : of(original.getConcept(), original.getReference(), original);
     }
 
     protected DNode(Object[] identity) {
@@ -327,7 +327,8 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
     @Override
     protected SNode create() {
         SConcept concept = getConcept();
-        SNode createNode = getModel().original().createNode(concept);
+        SModel sModel = getModel().original();
+        SNode createNode = sModel.createNode(concept);
         if (concept.isSubConceptOf(SNodeUtil.concept_INamedConcept)) {
             createNode.setProperty(SNodeUtil.property_INamedConcept_name, NAME_OBSERVED.get(this));
         }

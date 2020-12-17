@@ -35,8 +35,6 @@ import jetbrains.mps.errors.item.IssueKindReportItem;
 @SuppressWarnings({"rawtypes", "unused"})
 public abstract class DObject implements Mutable {
 
-    protected static final Observer<DObject>                                           START_OBSERVER            = Observer.of("START_OBSERVER", o -> o.start(dClareMPS()));
-
     private static final DObjectType<String>                                           DUMMY_TYPE                = new DObjectType<>("<DUMMY_TYPE>") {
                                                                                                                      @Override
                                                                                                                      public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
@@ -96,7 +94,7 @@ public abstract class DObject implements Mutable {
     protected static final DObserved<DObject, Set<DIssue>>                             DCLARE_ISSUES             = DObserved.of("$DCLARE_ISSUES", Set.of(), false, false, () -> DIssue.DOBJECT, false, (dObject, pre, post) -> {
                                                                                                                  }, null);
 
-    protected static final Set<Observer>                                               OBSERVERS                 = Set.of(TYPE_RULE, CONTAINING_ATTRIBUTE_RULE, START_OBSERVER);
+    protected static final Set<Observer>                                               OBSERVERS                 = Set.of(TYPE_RULE, CONTAINING_ATTRIBUTE_RULE);
 
     protected static final Set<Setable>                                                SETABLES                  = Set.of(TYPE, MPS_ISSUES, DRULE_ISSUES, DCLARE_ISSUES, CONTAINING_ATTRIBUTE);
 
@@ -139,6 +137,12 @@ public abstract class DObject implements Mutable {
         } else {
             return v == null ? Set.of() : Set.of((DObject) v);
         }
+    }
+
+    @Override
+    public final void dActivate() {
+        Mutable.super.dActivate();
+        start(dClareMPS());
     }
 
     @Override

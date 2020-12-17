@@ -44,6 +44,7 @@ import org.modelingvalue.dclare.mps.DAttribute.DIdentifyingAttribute;
 @SuppressWarnings("rawtypes")
 public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DIdentifiedObject implements Mergeable<DMatchedObject> {
     protected static final Constant<DReadConstruction, DMatchedObject>      READ_MAPPING          = Constant.of("$READ_MAPPING", null);
+    protected static final Setable<DMatchedObject, Object>                  ORIGINAL              = Setable.of("$ORIGINAL", null);
     @SuppressWarnings("unchecked")
     private static final Constant<Pair<Setable, Leaf>, Setable<Mutable, ?>> UNIDENTIFIED_CHILDREN = Constant.of("$UNIDENTIFIED_CHILDREN", UnidentifiedObserved::of);
     protected static final Set<Observer>                                    OBSERVERS             = DObject.OBSERVERS;
@@ -228,12 +229,13 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
     }
 
     @SuppressWarnings("unchecked")
-    protected static <D extends DMatchedObject, I> D readConstruct(I ref, Supplier<D> supplier) {
+    protected static <D extends DMatchedObject, I, S> D readConstruct(I ref, Supplier<D> supplier, S original) {
         DReadConstruction<I> id = new DReadConstruction(ref);
         D d = (D) READ_MAPPING.get(id, i -> supplier.get());
         LeafTransaction tx = LeafTransaction.getCurrent();
         if (!(tx instanceof ReadOnlyTransaction)) {
-            DMatchedObject.CONSTRUCTIONS.set(d, Set::add, id);
+            ORIGINAL.set(d, original);
+            CONSTRUCTIONS.set(d, Set::add, id);
         }
         return d;
     }
@@ -262,35 +264,44 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
 
     @Override
     protected final void read(DClareMPS dClareMPS) {
-        if (reference() != null) {
+        if (readConstruction() != null) {
             read();
         }
     }
 
-    @SuppressWarnings("unused")
-    protected boolean hasReference() {
-        return reference() != null;
+    @SuppressWarnings("unchecked")
+    protected final R reference() {
+        DReadConstruction<R> rc = readConstruction();
+        return rc != null ? rc.reference() : null;
     }
 
     @SuppressWarnings("unchecked")
-    protected final R reference() {
-        return (R) constructions().filter(DReadConstruction.class).map(DReadConstruction::reference).findFirst().orElse(null);
+    protected final DReadConstruction<R> readConstruction() {
+        return constructions().filter(DReadConstruction.class).findFirst().orElse(null);
     }
 
     public final S tryOriginal() {
-        R ref = reference();
-        return ref != null ? dClareMPS().read(() -> resolve(ref)) : null;
+        DReadConstruction<R> rc = readConstruction();
+        S sObject = rc != null ? dClareMPS().read(() -> resolve(rc.reference())) : null;
+        if (sObject != null && !(LeafTransaction.getCurrent() instanceof ReadOnlyTransaction)) {
+            ORIGINAL.set(this, sObject);
+        }
+        return sObject;
     }
 
     @SuppressWarnings("unchecked")
     protected final S original() {
         S sObject = tryOriginal();
         if (sObject == null) {
-            sObject = create();
-            addSObject(sObject);
+            sObject = (S) ORIGINAL.get(this);
+            if (sObject == null) {
+                sObject = create();
+            }
             DReadConstruction id = new DReadConstruction(reference(sObject));
             READ_MAPPING.set(id, this);
+            ORIGINAL.set(this, sObject);
             DMatchedObject.CONSTRUCTIONS.set(this, Set::add, id);
+            addSObject(sObject);
         }
         return sObject;
     }

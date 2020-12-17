@@ -152,7 +152,7 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
     }
 
     protected static DModel read(SModel original) {
-        DModel dModel = of(original.getReference());
+        DModel dModel = of(original.getReference(), original);
         DClareMPS dClareMPS = dClareMPS();
         NAME.set(dModel, original.getName().getLongName());
         USED_LANGUAGES.set(dModel, Collection.of(((SModelInternal) original).importedLanguageIds()).toSet());
@@ -160,11 +160,11 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
     }
 
     public static DModel of(SModel original) {
-        return original instanceof DModel ? (DModel) original : of(original.getReference());
+        return original instanceof DModel ? (DModel) original : of(original.getReference(), original);
     }
 
-    public static DModel of(SModelReference ref) {
-        return readConstruct(ref, () -> new DModel(new Object[]{COUNTER.getAndIncrement(), false}));
+    public static DModel of(SModelReference ref, SModel original) {
+        return readConstruct(ref, () -> new DModel(new Object[]{COUNTER.getAndIncrement(), false}), original);
     }
 
     protected DModel(Object[] identity) {
