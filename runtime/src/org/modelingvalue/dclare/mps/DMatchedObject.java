@@ -300,7 +300,7 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
             DReadConstruction id = new DReadConstruction(reference(sObject));
             READ_MAPPING.set(id, this);
             ORIGINAL.set(this, sObject);
-            DMatchedObject.CONSTRUCTIONS.set(this, Set::add, id);
+            CONSTRUCTIONS.set(this, Set::add, id);
             addSObject(sObject);
         }
         return sObject;

@@ -484,11 +484,15 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
         if (parent instanceof DModel) {
             SModel sParent = ((DModel) parent).original();
             //noinspection ConstantConditions
-            sParent.addRootNode(sNode);
+            if (sNode.getModel() == null) {
+                sParent.addRootNode(sNode);
+            }
         } else {
             SNode sParent = ((DNode) parent).original();
             //noinspection ConstantConditions
-            sParent.addChild(getContainmentLink(), sNode);
+            if (sNode.getParent() == null) {
+                sParent.addChild(getContainmentLink(), sNode);
+            }
         }
     }
 
