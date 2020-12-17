@@ -328,11 +328,25 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
     protected SNode create() {
         SConcept concept = getConcept();
         SModel sModel = getModel().original();
-        SNode createNode = sModel.createNode(concept);
-        if (concept.isSubConceptOf(SNodeUtil.concept_INamedConcept)) {
-            createNode.setProperty(SNodeUtil.property_INamedConcept_name, NAME_OBSERVED.get(this));
+        SNode sNode = sModel.createNode(concept);
+        DObject parent = dObjectParent();
+        if (parent instanceof DModel) {
+            SModel sParent = ((DModel) parent).original();
+            //noinspection ConstantConditions
+            if (sNode.getModel() == null) {
+                sParent.addRootNode(sNode);
+            }
+        } else {
+            SNode sParent = ((DNode) parent).original();
+            //noinspection ConstantConditions
+            if (sNode.getParent() == null) {
+                sParent.addChild(getContainmentLink(), sNode);
+            }
         }
-        return createNode;
+        if (concept.isSubConceptOf(SNodeUtil.concept_INamedConcept)) {
+            sNode.setProperty(SNodeUtil.property_INamedConcept_name, NAME_OBSERVED.get(this));
+        }
+        return sNode;
     }
 
     @Override
@@ -476,24 +490,6 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
     @Override
     protected SNode resolve(SNodeReference ref) {
         return ref.resolve(null);
-    }
-
-    @Override
-    protected void addSObject(SNode sNode) {
-        DObject parent = dObjectParent();
-        if (parent instanceof DModel) {
-            SModel sParent = ((DModel) parent).original();
-            //noinspection ConstantConditions
-            if (sNode.getModel() == null) {
-                sParent.addRootNode(sNode);
-            }
-        } else {
-            SNode sParent = ((DNode) parent).original();
-            //noinspection ConstantConditions
-            if (sNode.getParent() == null) {
-                sParent.addChild(getContainmentLink(), sNode);
-            }
-        }
     }
 
     protected SNode reParent() {

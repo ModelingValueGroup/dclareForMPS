@@ -61,7 +61,7 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
         Setable<Mutable, R> uisetable = (Setable<Mutable, R>) UNIDENTIFIED_CHILDREN.get(Pair.of(setable, tx.leaf()));
         if (tx instanceof ObserverTransaction && !pres.equals(posts)) {
             R result = posts;
-            List<C> postList = posts.filter(p -> !p.isRead() && !pres.contains(p)).toList();
+            List<C> postList = posts.filter(p -> !p.isRead() && p.isDerived() && !pres.contains(p)).toList();
             R unidentified = (R) uisetable.getDefault().addAllUnique(postList.filter(DMatchedObject::unidentified));
             uisetable.set(parent, unidentified);
             if (!unidentified.isEmpty()) {
@@ -100,7 +100,7 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
         LeafTransaction tx = LeafTransaction.getCurrent();
         Setable<Mutable, C> uisetable = (Setable<Mutable, C>) UNIDENTIFIED_CHILDREN.get(Pair.of(setable, tx.leaf()));
         if (tx instanceof ObserverTransaction && !Objects.equals(pre, post)) {
-            if (pre != null && post != null && pre.isRead() && !post.isRead()) {
+            if (pre != null && post != null && pre.isRead() && !post.isRead() && post.isDerived()) {
                 C unidentified = post.unidentified() ? post : null;
                 uisetable.set(parent, unidentified);
                 if (unidentified != null) {
@@ -173,6 +173,10 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
 
     protected boolean isRead() {
         return constructions().anyMatch(DReadConstruction.class::isInstance);
+    }
+
+    protected boolean isDerived() {
+        return constructions().anyMatch(DDeriveConstruction.class::isInstance);
     }
 
     protected abstract Object matchType();
@@ -301,7 +305,7 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
             READ_MAPPING.set(id, this);
             ORIGINAL.set(this, sObject);
             CONSTRUCTIONS.set(this, Set::add, id);
-            addSObject(sObject);
+            init(dClareMPS(), sObject);
         }
         return sObject;
     }
@@ -331,8 +335,6 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
     }
 
     protected abstract void read();
-
-    protected abstract void addSObject(S sObject);
 
     protected abstract R reference(S read);
 
@@ -444,11 +446,6 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
 
         @Override
         protected void read() {
-            throw new UnsupportedOperationException();
-        }
-
-        @Override
-        protected void addSObject(Object sObject) {
             throw new UnsupportedOperationException();
         }
 

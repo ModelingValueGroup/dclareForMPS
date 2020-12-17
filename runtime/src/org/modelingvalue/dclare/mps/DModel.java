@@ -197,11 +197,6 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
     }
 
     @Override
-    protected void addSObject(SModel sObject) {
-        init(dClareMPS(), sObject);
-    }
-
-    @Override
     protected SModelReference reference(SModel read) {
         return read.getReference();
     }
