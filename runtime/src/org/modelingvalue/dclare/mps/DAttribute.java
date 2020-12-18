@@ -1,5 +1,5 @@
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// (C) Copyright 2018-2019 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
+// (C) Copyright 2018-2020 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
 //                                                                                                                     ~
 // Licensed under the GNU Lesser General Public License v3.0 (the 'License'). You may not use this file except in      ~
 // compliance with the License. You may obtain a copy of the License at: https://choosealicense.com/licenses/lgpl-3.0  ~
@@ -16,16 +16,20 @@
 package org.modelingvalue.dclare.mps;
 
 import java.util.Collections;
+import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 import org.jetbrains.mps.openapi.language.SProperty;
 import org.jetbrains.mps.openapi.model.SNode;
+import org.modelingvalue.collections.ContainingCollection;
 import org.modelingvalue.dclare.Constant;
 import org.modelingvalue.dclare.LeafTransaction;
 import org.modelingvalue.dclare.Mutable;
+import org.modelingvalue.dclare.ObserverTransaction;
 import org.modelingvalue.dclare.ReadOnlyTransaction;
+import org.modelingvalue.dclare.Setable;
 import org.modelingvalue.dclare.State;
 
 import jetbrains.mps.smodel.adapter.structure.property.InvalidProperty;
@@ -34,10 +38,10 @@ import jetbrains.mps.smodel.adapter.structure.property.InvalidProperty;
 public interface DAttribute<O, T> extends DFeature {
 
     @SuppressWarnings("unchecked")
-    static <C, V> DAttribute<C, V> of(String id, String name, boolean synthetic, boolean optional, boolean composite, int identifyingNr, Object def, Class<?> cls, Supplier<SNode> source, Function<C, V> deriver, boolean onlyTemporal) {
-        return identifyingNr >= 0 ? new DIdentifyingAttribute(id, name, synthetic, composite, identifyingNr, cls, source) : //
+    static <C, V> DAttribute<C, V> of(String id, String name, String anonymousType, String ruleSetType, boolean synthetic, boolean optional, boolean composite, int identifyingNr, Object def, Class<?> cls, String opposite, Supplier<SNode> source, Function<C, V> deriver, boolean onlyTemporal) {
+        return identifyingNr >= 0 && ("StructRuleSet".equals(ruleSetType) || anonymousType != null) ? new DIdentifyingAttribute(id, name, anonymousType, synthetic, composite, identifyingNr, cls, source) : //
                 deriver != null ? new DConstant(id, name, synthetic, composite, cls, source, deriver, onlyTemporal) : //
-                        new DObservedAttribute(id, name, synthetic, optional, composite, def, cls, source, new InvalidProperty(id.toString(), name));
+                        new DObservedAttribute(id, name, synthetic, identifyingNr >= 0 || optional, composite, identifyingNr >= 0, def, cls, opposite != null ? () -> of(opposite) : null, source, new InvalidProperty(id.toString(), name));
     }
 
     @SuppressWarnings("unchecked")
@@ -81,11 +85,12 @@ public interface DAttribute<O, T> extends DFeature {
         private final String    name;
         private final Class<?>  cls;
         private final SProperty sProperty;
+        private final boolean   indetifying;
 
-        public DObservedAttribute(Object id, String name, boolean synthetic, boolean optional, boolean composite, V def, Class<?> cls, Supplier<SNode> source, SProperty sProperty) {
-            super(id, !optional, def, composite, null, synthetic, (o, b, a) -> {
+        public DObservedAttribute(Object id, String name, boolean synthetic, boolean optional, boolean composite, boolean indetifying, V def, Class<?> cls, Supplier<Setable<?, ?>> opposite, Supplier<SNode> source, SProperty sProperty) {
+            super(id, !optional, def, composite, opposite, synthetic, (o, b, a) -> {
                 if (o instanceof DNode) {
-                    SNode sNode = ((DNode) o).original();
+                    SNode sNode = ((DNode) o).tryOriginal();
                     if (sNode != null) {
                         sNode.setProperty(sProperty, "");
                         sNode.setProperty(sProperty, null);
@@ -95,6 +100,7 @@ public interface DAttribute<O, T> extends DFeature {
             this.name = name;
             this.cls = cls;
             this.sProperty = sProperty;
+            this.indetifying = indetifying;
         }
 
         @Override
@@ -114,7 +120,7 @@ public interface DAttribute<O, T> extends DFeature {
 
         @Override
         public boolean isIndetifying() {
-            return false;
+            return indetifying;
         }
 
         @Override
@@ -125,9 +131,24 @@ public interface DAttribute<O, T> extends DFeature {
         @Override
         public V get(C object) {
             if (object instanceof DNode && LeafTransaction.getCurrent() instanceof ReadOnlyTransaction) {
-                ((DNode) object).original().getProperty(sProperty);
+                SNode original = ((DNode) object).tryOriginal();
+                if (original != null) {
+                    original.getProperty(sProperty);
+                }
             }
-            return super.get(object);
+            V result = super.get(object);
+            if (result == null && mandatory() && LeafTransaction.getCurrent() instanceof ObserverTransaction) {
+                throw new NullPointerException();
+            }
+            return result;
+        }
+
+        @Override
+        public V set(C object, V value) {
+            if (containment && value instanceof ContainingCollection) {
+                ((ContainingCollection<?>) value).forEach(Objects::requireNonNull);
+            }
+            return super.set(object, value);
         }
 
         @Override
@@ -140,15 +161,17 @@ public interface DAttribute<O, T> extends DFeature {
     final class DIdentifyingAttribute<C extends DIdentifiedObject, V> implements DAttribute<C, V> {
         private final String          id;
         private final String          name;
+        private final String          anonymousType;
         private final boolean         composite;
         private final int             index;
         private final boolean         synthetic;
         private final Supplier<SNode> source;
         private final Class<?>        cls;
 
-        public DIdentifyingAttribute(String id, String name, boolean synthetic, boolean composite, int index, Class<?> cls, Supplier<SNode> source) {
+        public DIdentifyingAttribute(String id, String name, String anonymousType, boolean synthetic, boolean composite, int index, Class<?> cls, Supplier<SNode> source) {
             this.id = id;
             this.name = name;
+            this.anonymousType = anonymousType;
             this.composite = composite;
             this.index = index;
             this.synthetic = synthetic;
@@ -171,6 +194,10 @@ public interface DAttribute<O, T> extends DFeature {
             return id;
         }
 
+        public String anonymousType() {
+            return anonymousType;
+        }
+
         @Override
         public boolean equals(Object obj) {
             if (this == obj) {
@@ -183,10 +210,13 @@ public interface DAttribute<O, T> extends DFeature {
             }
         }
 
-        @SuppressWarnings("unchecked")
         @Override
         public V get(C object) {
-            return (V) object.getIdentity()[index];
+            return object.get(this);
+        }
+
+        public int index() {
+            return index;
         }
 
         @Override

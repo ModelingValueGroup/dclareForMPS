@@ -1,5 +1,5 @@
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// (C) Copyright 2018-2019 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
+// (C) Copyright 2018-2020 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
 //                                                                                                                     ~
 // Licensed under the GNU Lesser General Public License v3.0 (the 'License'). You may not use this file except in      ~
 // compliance with the License. You may obtain a copy of the License at: https://choosealicense.com/licenses/lgpl-3.0  ~
@@ -20,12 +20,13 @@ import java.util.List;
 import org.jetbrains.mps.openapi.language.SAbstractConcept;
 import org.jetbrains.mps.openapi.model.SModel;
 import org.jetbrains.mps.openapi.model.SNode;
+import org.modelingvalue.collections.Set;
 
 public interface IRuleSet {
 
-    List<DAttribute<SNode, ?>> getNodeAttributes(SAbstractConcept concept, String anonymousType);
+    List<DAttribute<SNode, ?>> getNodeAttributes(SAbstractConcept concept, Set<String> anonymousTypes);
 
-    List<DAttribute<SModel, ?>> getModelAttributes(String anonymousType);
+    List<DAttribute<SModel, ?>> getModelAttributes(Set<String> anonymousTypes);
 
     List<DAttribute<DModule, ?>> getModuleAttributes();
 
@@ -33,9 +34,9 @@ public interface IRuleSet {
 
     List<DAttribute<SStructObject, ?>> getClassAttributes(SStructClass cls);
 
-    List<DRule<SNode>> getNodeRules(SAbstractConcept concept, String anonymousType);
+    List<DRule<SNode>> getNodeRules(SAbstractConcept concept, Set<String> anonymousTypes);
 
-    List<DRule<SModel>> getModelRules(String anonymousType);
+    List<DRule<SModel>> getModelRules(Set<String> anonymousTypes);
 
     List<DRule<DModule>> getModuleRules();
 

@@ -1,5 +1,5 @@
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// (C) Copyright 2018-2019 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
+// (C) Copyright 2018-2020 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
 //                                                                                                                     ~
 // Licensed under the GNU Lesser General Public License v3.0 (the 'License'). You may not use this file except in      ~
 // compliance with the License. You may obtain a copy of the License at: https://choosealicense.com/licenses/lgpl-3.0  ~
@@ -28,7 +28,6 @@ import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.dclare.Action;
 import org.modelingvalue.dclare.Constant;
-import org.modelingvalue.dclare.Direction;
 import org.modelingvalue.dclare.NonCheckingObserved;
 import org.modelingvalue.dclare.Observed;
 import org.modelingvalue.dclare.Observer;
@@ -52,7 +51,7 @@ public class DRepository extends DFromOriginalObject<ProjectRepository> implemen
                                                                                        MODULES.set(o, Set::addAll, referenced);
                                                                                    });
 
-    private static final Action<DRepository>                       READ_MODULES    = Action.of("$READ_MODULES", r -> MODULES.set(r, dClareMPS().read(DRepository::modules).map(DModule::of).toSet()), Direction.forward);
+    private static final Action<DRepository>                       READ_MODULES    = Action.of("$READ_MODULES", r -> MODULES.set(r, dClareMPS().read(DRepository::modules).map(DModule::of).toSet()));
 
     @SuppressWarnings("rawtypes")
     protected static final Set<Observer>                           OBSERVERS       = DObject.OBSERVERS.add(MODULES_RULE);

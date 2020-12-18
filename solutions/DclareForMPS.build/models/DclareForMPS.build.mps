@@ -335,13 +335,13 @@
         <node concept="2pNUuL" id="ffBaz0uMOz" role="2pNNFR">
           <property role="2pNUuO" value="since-build" />
           <node concept="2pMdtt" id="ffBaz0uMO$" role="2pMdts">
-            <property role="2pMdty" value="201.6668" />
+            <property role="2pMdty" value="202.6397" />
           </node>
         </node>
         <node concept="2pNUuL" id="ffBaz0uMP9" role="2pNNFR">
           <property role="2pNUuO" value="until-build" />
           <node concept="2pMdtt" id="ffBaz0uMPa" role="2pMdts">
-            <property role="2pMdty" value="202.9999" />
+            <property role="2pMdty" value="202.6397.948" />
           </node>
         </node>
       </node>
@@ -599,6 +599,11 @@
             <node concept="3qWCbU" id="oVVxO6tTvb" role="3LXTna">
               <property role="3qWCbO" value="**/*.mps, **/*.mpsr, **/.model" />
             </node>
+          </node>
+        </node>
+        <node concept="1SiIV0" id="5mlqCDk6NJT" role="3bR37C">
+          <node concept="3bR9La" id="5mlqCDk6NJU" role="1SiIV1">
+            <ref role="3bR37D" to="ffeo:7Kfy9QB6L8q" resolve="jetbrains.mps.lang.pattern" />
           </node>
         </node>
       </node>

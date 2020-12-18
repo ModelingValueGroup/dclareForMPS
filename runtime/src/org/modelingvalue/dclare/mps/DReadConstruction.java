@@ -15,13 +15,15 @@
 
 package org.modelingvalue.dclare.mps;
 
-import org.jetbrains.mps.openapi.model.SNode;
-import org.modelingvalue.collections.util.Internable;
+public class DReadConstruction<R> extends DConstruction {
 
-public interface DFeature extends Internable {
-    SNode getSource();
+    protected DReadConstruction(R ref) {
+        super(new Object[]{ref});
+    }
 
-    boolean isSynthetic();
+    @SuppressWarnings("unchecked")
+    public R reference() {
+        return (R) identity[0];
+    }
 
-    boolean onlyTemporal();
 }

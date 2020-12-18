@@ -1,5 +1,5 @@
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// (C) Copyright 2018-2019 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
+// (C) Copyright 2018-2020 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
 //                                                                                                                     ~
 // Licensed under the GNU Lesser General Public License v3.0 (the 'License'). You may not use this file except in      ~
 // compliance with the License. You may obtain a copy of the License at: https://choosealicense.com/licenses/lgpl-3.0  ~
@@ -19,27 +19,27 @@ import org.jetbrains.mps.openapi.language.SConcept;
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
-import org.modelingvalue.collections.util.Quadruple;
+import org.modelingvalue.collections.util.Quintuple;
 import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.Setable;
 
 @SuppressWarnings("unused")
-public class DNodeType extends DObjectType<Quadruple<Set<SLanguage>, SConcept, String, Boolean>> {
+public class DNodeType extends DObjectType<Quintuple<Set<SLanguage>, SConcept, Set<String>, Boolean, Boolean>> {
 
-    public DNodeType(Quadruple<Set<SLanguage>, SConcept, String, Boolean> q) {
+    public DNodeType(Quintuple<Set<SLanguage>, SConcept, Set<String>, Boolean, Boolean> q) {
         super(q);
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
-        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getNodeRules(getConcept(), getAnonymousType()))).toSet();
+        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getNodeRules(getConcept(), getAnonymousTypes()))).toSet();
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
-        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getNodeAttributes(getConcept(), getAnonymousType()))).toSet();
+        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getNodeAttributes(getConcept(), getAnonymousTypes()))).toSet();
     }
 
     @Override
@@ -56,8 +56,12 @@ public class DNodeType extends DObjectType<Quadruple<Set<SLanguage>, SConcept, S
         return id().d();
     }
 
-    public String getAnonymousType() {
+    public Set<String> getAnonymousTypes() {
         return id().c();
+    }
+
+    public boolean isCopy() {
+        return id().e();
     }
 
     @SuppressWarnings("rawtypes")
@@ -69,7 +73,8 @@ public class DNodeType extends DObjectType<Quadruple<Set<SLanguage>, SConcept, S
     @SuppressWarnings("rawtypes")
     @Override
     protected Collection<Observer> observers() {
-        return Collection.concat(DNode.OBSERVERS, DNode.CONCEPT_OBSERVERS.get(getConcept()));
+        Set<Observer> conceptObservers = DNode.OBSERVERS.addAll(DNode.CONCEPT_OBSERVERS.get(getConcept()));
+        return isCopy() ? conceptObservers.addAll(DNode.COPY_CONCEPT_OBSERVERS.get(getConcept())) : conceptObservers;
     }
 
 }

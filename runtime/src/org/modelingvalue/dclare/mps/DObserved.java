@@ -1,5 +1,5 @@
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// (C) Copyright 2018-2019 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
+// (C) Copyright 2018-2020 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
 //                                                                                                                     ~
 // Licensed under the GNU Lesser General Public License v3.0 (the 'License'). You may not use this file except in      ~
 // compliance with the License. You may obtain a copy of the License at: https://choosealicense.com/licenses/lgpl-3.0  ~
@@ -49,6 +49,10 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
 
     public static <C extends DObject, V> DObserved<C, V> of(Object id, V def, boolean mandatory, boolean composite, Supplier<Setable<?, ?>> opposite, boolean synthetic, TriConsumer<C, V, V> toMPS, QuadConsumer<LeafTransaction, C, V, V> changed, Supplier<SNode> source) {
         return new DObserved<>(id, mandatory, def, composite, opposite, synthetic, toMPS, changed, source, true);
+    }
+
+    public static <C extends DObject, V> DObserved<C, V> of(Object id, V def, boolean mandatory, boolean composite, Supplier<Setable<?, ?>> opposite, boolean synthetic, TriConsumer<C, V, V> toMPS, QuadConsumer<LeafTransaction, C, V, V> changed, Supplier<SNode> source, boolean checkConsistency) {
+        return new DObserved<>(id, mandatory, def, composite, opposite, synthetic, toMPS, changed, source, checkConsistency);
     }
 
     private final TriConsumer<O, T, T> toMPS;
@@ -156,6 +160,23 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
 
     public boolean isDclareOnly() {
         return toMPS == null;
+    }
+
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    @Override
+    protected T removeReplaced(T v) {
+        if (v instanceof ContainingCollection) {
+            ContainingCollection coll = (ContainingCollection) v;
+            for (int i = 0; i < coll.size(); i++) {
+                Object e = coll.get(i);
+                if (e instanceof DMatchedObject && ((DMatchedObject) e).constructions().isEmpty()) {
+                    coll = coll instanceof List ? ((List) coll).remove(i) : coll.remove(e);
+                    i--;
+                }
+            }
+            return (T) coll;
+        }
+        return v;
     }
 
 }

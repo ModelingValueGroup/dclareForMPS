@@ -15,13 +15,43 @@
 
 package org.modelingvalue.dclare.mps;
 
-import org.jetbrains.mps.openapi.model.SNode;
-import org.modelingvalue.collections.util.Internable;
+import org.modelingvalue.dclare.Observer;
 
-public interface DFeature extends Internable {
-    SNode getSource();
+public class DCopyConstruction extends DDeriveConstruction {
 
-    boolean isSynthetic();
+    protected DCopyConstruction(DObject object, Observer<?> observer, DNode copied, String anonymousType) {
+        super(new Object[]{object, observer, copied, anonymousType});
+    }
 
-    boolean onlyTemporal();
+    protected DCopyConstruction(DObject object, Observer<?> observer, DNode copied, DConstruction root) {
+        super(new Object[]{object, observer, copied, root});
+    }
+
+    private DCopyConstruction(Object[] identity) {
+        super(identity);
+    }
+
+    public DCopyConstruction root() {
+        return identity[3] instanceof DCopyConstruction ? (DCopyConstruction) identity[3] : this;
+    }
+
+    @Override
+    public DObject object() {
+        return (DObject) identity[0];
+    }
+
+    @Override
+    public Observer<?> observer() {
+        return (Observer<?>) identity[1];
+    }
+
+    public DNode copied() {
+        return (DNode) identity[2];
+    }
+
+    @Override
+    public String getAnonymousType() {
+        return (String) root().identity[3];
+    }
+
 }

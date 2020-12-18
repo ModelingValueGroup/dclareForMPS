@@ -1,12 +1,13 @@
-name: build and test
+name: build
 
 on: [push]
 
 jobs:
-  build-and-test:
-
-    runs-on: ubuntu-latest
-
+  build:
+    runs-on: ubuntu-20.04
+    env:
+      GITHUB_TOKEN: "${{secrets.GITHUB_TOKEN}}"
+      ALLREP_TOKEN: "${{secrets.ALLREP_TOKEN}}"
     steps:
       - name: "checkout"
         uses: actions/checkout@v1
@@ -22,15 +23,13 @@ jobs:
       - name: "get generic mvg-info"
         uses: ModelingValueGroup/generic-info@master
 
-      - name: "get buildTools"
-        uses: ModelingValueGroup/buildTools@master
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: "get buildtools"
+        uses: ModelingValueGroup/buildtools@master
 
       - name: "if master: fail if there is already a tag for this version"
         if: github.ref == 'refs/heads/master'
         run:  |
-          . <(java -jar ~/buildTools.jar)
+          . <(java -jar ~/buildtools.jar)
           errorIfVersionTagExists
 
       - name: "prepare"
@@ -53,26 +52,27 @@ jobs:
             versionExtraArg="-DversionExtra=alpha"
             versionStampArg=
           fi
-          echo "::set-env name=versionExtraArg::$versionExtraArg"
-          echo "::set-env name=versionStampArg::$versionStampArg"
+          echo "versionExtraArg=$versionExtraArg" >> $GITHUB_ENV
+          echo "versionStampArg=$versionStampArg" >> $GITHUB_ENV
 
       - name: "(re)generate some files"
         run:  |
-          . <(java -jar ~/buildTools.jar)
+          . <(java -jar ~/buildtools.jar)
           generateAll
           correctEols
           correctHeaders header
 
       - name: "download dependencies (MPS and jars from pom)"
         run:  |
-          . <(java -jar ~/buildTools.jar)
+          . <(java -jar ~/buildtools.jar)
           . project.sh
-          getAllDependencies ${{ secrets.GITHUB_TOKEN }} "${{ secrets.SCALEWAY_ACCESS_KEY }}" "${{ secrets.SCALEWAY_SECRET_KEY }}"
+          getAllDependencies
+          installJunitlauncher
           installMps "$mpsDir" "$mpsVersion"
 
       - name: "adjust MPS compat range in ant file"
         run:  |
-          . <(java -jar ~/buildTools.jar)
+          . <(java -jar ~/buildtools.jar)
           . project.sh
           mpsUntilDefault="$(sed -n 's/^mps[.]build[.]number=MPS-//p' "$mpsDir/build.properties")"
           sed -i 's/ since-build="[^"]*"/ since-build="'"$mpsSince"'"/' *.xml
@@ -80,9 +80,9 @@ jobs:
 
       - name: "push changes back to github"
         run:  |
-          . <(java -jar ~/buildTools.jar)
+          . <(java -jar ~/buildtools.jar)
           . project.sh
-          pushBackToGithub "${{ secrets.GITHUB_TOKEN }}" "automation@modelingvalue.com" "adjusted files [by github actions]"
+          pushBackToGithub
 
       - name: "build"
         run:  ant
@@ -102,7 +102,7 @@ jobs:
 
       - name: "dclare-plugin: build"
         run:  |
-          . <(java -jar ~/buildTools.jar)
+          . <(java -jar ~/buildtools.jar)
           . project.sh
           action() {
             ant -Dmps_home="$mpsDir" "-Dversion=$version" "$versionExtraArg" "$versionStampArg" -f mps_build.xml cleanSources clean generate build
@@ -112,8 +112,8 @@ jobs:
       - name: "if master: tag with version"
         if: github.ref == 'refs/heads/master'
         run:  |
-          . <(java -jar ~/buildTools.jar)
-          setVersionTag "${{ secrets.GITHUB_TOKEN }}" "automation@modelingvalue.com"
+          . <(java -jar ~/buildtools.jar)
+          setVersionTag
 
       - name: "unzip for actions/upload-artifact"
         run:  |
@@ -132,6 +132,5 @@ jobs:
         uses: ModelingValueGroup/upload-jetbrains-plugin-action@master
         with:
           file    : "build/artifacts/DclareForMPS/DclareForMPS.zip"
-          hubToken: "${{ secrets.JETBRAINS_PUBLISH_TOKEN }}"
+          hubToken: "${{secrets.JETBRAINS_PUBLISH_TOKEN}}"
           pluginId: "13797"
-          trace   : true

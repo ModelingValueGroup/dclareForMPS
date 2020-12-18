@@ -15,13 +15,17 @@
 
 package org.modelingvalue.dclare.mps;
 
-import org.jetbrains.mps.openapi.model.SNode;
-import org.modelingvalue.collections.util.Internable;
+import org.modelingvalue.collections.Map;
+import org.modelingvalue.collections.util.Concurrent;
+import org.modelingvalue.dclare.Observer;
 
-public interface DFeature extends Internable {
-    SNode getSource();
+public interface DConstructingTransaction {
 
-    boolean isSynthetic();
+    @SuppressWarnings("rawtypes")
+    Concurrent<Map<DDeriveConstruction, DMatchedObject>> constructed();
 
-    boolean onlyTemporal();
+    Observer<?> observer();
+
+    DObject object();
+
 }

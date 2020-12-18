@@ -15,13 +15,30 @@
 
 package org.modelingvalue.dclare.mps;
 
-import org.jetbrains.mps.openapi.model.SNode;
-import org.modelingvalue.collections.util.Internable;
+import org.modelingvalue.collections.Set;
+import org.modelingvalue.dclare.Observer;
 
-public interface DFeature extends Internable {
-    SNode getSource();
+public abstract class DDeriveConstruction extends DConstruction {
 
-    boolean isSynthetic();
+    protected DDeriveConstruction(Object[] identity) {
+        super(identity);
+    }
 
-    boolean onlyTemporal();
+    public abstract Observer<?> observer();
+
+    public abstract DObject object();
+
+    public abstract String getAnonymousType();
+
+    @SuppressWarnings("rawtypes")
+    public Set<DMatchedObject> context() {
+        Set<DMatchedObject> result = Set.of();
+        for (int i = 0; i < identity.length; i++) {
+            if (identity[i] instanceof DMatchedObject) {
+                result = result.add((DMatchedObject) identity[i]);
+            }
+        }
+        return result;
+    }
+
 }

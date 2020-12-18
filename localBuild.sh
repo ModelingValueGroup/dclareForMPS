@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-## (C) Copyright 2018-2019 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
+## (C) Copyright 2018-2020 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
 ##                                                                                                                     ~
 ## Licensed under the GNU Lesser General Public License v3.0 (the 'License'). You may not use this file except in      ~
 ## compliance with the License. You may obtain a copy of the License at: https://choosealicense.com/licenses/lgpl-3.0  ~
@@ -17,20 +17,20 @@
 if [[ "$1" == clean ]]; then
     echo "cleaning..."
     . project.sh
-    rm -rf "buildTools.jar" "$mpsDir" "lib" "out"
+    rm -rf "buildtools.jar" "$mpsDir" "lib" "out"
 fi
 
-if [[ ! -d ../buildTools ]]; then
-    echo "ERROR: no buildTools project in parent dir"
+if [[ ! -d ../buildtools ]]; then
+    echo "ERROR: no buildtools project in parent dir"
     exit 88
 fi
-if [[ ! -f ../buildTools/out/artifacts/buildTools.jar ]]; then
-    echo "ERROR: build buildTools first"
+if [[ ! -f ../buildtools/out/artifacts/buildtools.jar ]]; then
+    echo "ERROR: build buildtools first"
     exit 88
 fi
 
-cp ../buildTools/out/artifacts/buildTools.jar .
-. <(java -jar buildTools.jar)
+cp ../buildtools/out/artifacts/buildtools.jar .
+. <(java -jar buildtools.jar)
 generateAll
 . project.sh
 if [[ ! -d "$mpsDir" ]]; then
