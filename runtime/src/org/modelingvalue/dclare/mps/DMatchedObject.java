@@ -392,15 +392,16 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
     @SuppressWarnings("unchecked")
     @Override
     public DMatchedObject merge(DMatchedObject[] branches, int length) {
-        DMatchedObject result = branches[0];
-        if (result == null) {
-            throw new NotMergeableException(this + " -> " + Arrays.toString(branches));
-        }
-        for (int i = 1; i < length; i++) {
-            if (branches[i] == null || !branches[i].matches(result)) {
-                throw new NotMergeableException(this + " -> " + Arrays.toString(branches));
-            } else if (!CONSTRUCTIONS.get(branches[i]).isEmpty()) {
-                result = branches[i];
+        DMatchedObject result = null;
+        for (int i = 0; i < length; i++) {
+            if (branches[i] != null) {
+                if (result == null) {
+                    result = branches[i];
+                } else if (!branches[i].matches(result)) {
+                    throw new NotMergeableException(this + " -> " + Arrays.toString(branches));
+                } else if (!CONSTRUCTIONS.get(branches[i]).isEmpty()) {
+                    result = branches[i];
+                }
             }
         }
         return result;
