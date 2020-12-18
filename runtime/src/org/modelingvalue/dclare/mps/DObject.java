@@ -29,6 +29,7 @@ import org.modelingvalue.dclare.NonCheckingObserved;
 import org.modelingvalue.dclare.Observed;
 import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.Setable;
+import org.modelingvalue.dclare.mps.DMatchedObject.UnidentifiedObserved;
 
 import jetbrains.mps.errors.item.IssueKindReportItem;
 
@@ -103,7 +104,12 @@ public abstract class DObject implements Mutable {
     }
 
     public boolean isOwned() {
-        return dParent() != null;
+        if (dParent() == null) {
+            return false;
+        } else {
+            DMatchedObject unidentified = dAncestor(DMatchedObject.class, UnidentifiedObserved.class::isInstance);
+            return unidentified == null || unidentified.matchKey() == null;
+        }
     }
 
     public java.util.List<DAttribute> getAttributes() {
@@ -160,10 +166,8 @@ public abstract class DObject implements Mutable {
     }
 
     protected final void start(DClareMPS dClareMPS) {
-        if (!(dContaining() instanceof DMatchedObject.UnidentifiedObserved)) {
-            init(dClareMPS);
-            read(dClareMPS);
-        }
+        init(dClareMPS);
+        read(dClareMPS);
     }
 
     protected void stop(DClareMPS dClareMPS) {

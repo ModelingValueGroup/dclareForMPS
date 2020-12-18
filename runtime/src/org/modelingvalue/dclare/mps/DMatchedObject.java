@@ -54,9 +54,6 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
 
     @SuppressWarnings("unchecked")
     protected static <P extends Mutable, C extends DMatchedObject<C, ?, ?>, R extends ContainingCollection<C>> R manyMatch(P parent, R pres, R posts, Setable<P, R> setable) {
-        if (parent.dContaining() instanceof UnidentifiedObserved) {
-            return pres;
-        }
         LeafTransaction tx = LeafTransaction.getCurrent();
         Setable<Mutable, R> uisetable = (Setable<Mutable, R>) UNIDENTIFIED_CHILDREN.get(Pair.of(setable, tx.leaf()));
         if (tx instanceof ObserverTransaction && !pres.equals(posts)) {
@@ -94,9 +91,6 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
 
     @SuppressWarnings("unchecked")
     protected static <P extends Mutable, C extends DMatchedObject<C, ?, ?>> C singleMatch(P parent, C pre, C post, Setable<P, C> setable) {
-        if (parent.dContaining() instanceof UnidentifiedObserved) {
-            return pre;
-        }
         LeafTransaction tx = LeafTransaction.getCurrent();
         Setable<Mutable, C> uisetable = (Setable<Mutable, C>) UNIDENTIFIED_CHILDREN.get(Pair.of(setable, tx.leaf()));
         if (tx instanceof ObserverTransaction && !Objects.equals(pre, post)) {
@@ -218,7 +212,7 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
     private static <D extends DMatchedObject> D derive(DConstructingTransaction tx, DDeriveConstruction id, Supplier<D> supplier) {
         Constructed cons = CONSTRUCTED.get(id.observer());
         D d = (D) cons.get(id.object()).get(id);
-        if (d == null && !(id.object().dContaining() instanceof UnidentifiedObserved)) {
+        if (d == null) {
             d = supplier.get();
         }
         if (d != null) {
