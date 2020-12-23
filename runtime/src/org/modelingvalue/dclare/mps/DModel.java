@@ -47,6 +47,7 @@ import org.modelingvalue.dclare.NonCheckingObserved;
 import org.modelingvalue.dclare.Observed;
 import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.Setable;
+import org.modelingvalue.dclare.SetableModifier;
 
 import jetbrains.mps.errors.item.ModelReportItem;
 import jetbrains.mps.extapi.module.SModuleBase;
@@ -60,34 +61,34 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
 
     private static final Constant<Triple<Set<SLanguage>, Boolean, Set<String>>, DModelType> MODEL_TYPE           = Constant.of("MODEL_TYPE", t -> new DModelType(t));
 
-    protected static final DObserved<DModel, String>                                        NAME                 = DObserved.of("NAME", null, false, false, null, false, (dModel, pre, post) -> {
+    protected static final DObserved<DModel, String>                                        NAME                 = DObserved.of("NAME", null, (dModel, pre, post) -> {
                                                                                                                      if (post != null) {
                                                                                                                          SModel sModel = dModel.original();
                                                                                                                          if (!post.equals(sModel.getName().getLongName())) {
                                                                                                                              ((EditableSModel) sModel).rename(post, true);
                                                                                                                          }
                                                                                                                      }
-                                                                                                                 }, null);
+                                                                                                                 });
 
-    protected static final DObserved<DModel, Set<DNode>>                                    ROOTS                = DObserved.of("ROOTS", Set.of(), false, true, null, false, (dModel, pre, post) -> {
+    protected static final DObserved<DModel, Set<DNode>>                                    ROOTS                = DObserved.of("ROOTS", Set.of(), (dModel, pre, post) -> {
                                                                                                                      SModel sModel = dModel.original();
                                                                                                                      Set<SNode> soll = post.map(r -> r.reParent(sModel, null, r.original())).toSet();
                                                                                                                      Set<SNode> ist = DModel.roots(sModel);
                                                                                                                      DObserved.map(ist, soll, sModel::addRootNode, sModel::removeRootNode);
-                                                                                                                 }, null);
+                                                                                                                 }, SetableModifier.containment);
 
-    protected static final DObserved<DModel, Set<SLanguage>>                                USED_LANGUAGES       = DObserved.of("USED_LANGUAGES", Set.of(), false, false, null, false, (dModel, pre, post) -> {
+    protected static final DObserved<DModel, Set<SLanguage>>                                USED_LANGUAGES       = DObserved.of("USED_LANGUAGES", Set.of(), (dModel, pre, post) -> {
                                                                                                                      SModelInternal sModel = (SModelInternal) dModel.original();
                                                                                                                      Set<SLanguage> ist = Collection.of(((SModelInternal) sModel).importedLanguageIds()).sequential().toSet();
                                                                                                                      DObserved.map(ist, post, sModel::addLanguage, sModel::deleteLanguageId);
-                                                                                                                 }, null);
+                                                                                                                 });
 
-    protected static final DObserved<DModel, Set<DModel>>                                   USED_MODELS          = DObserved.of("USED_MODELS", Set.of(), false, false, null, false, (dModel, pre, post) -> {
+    protected static final DObserved<DModel, Set<DModel>>                                   USED_MODELS          = DObserved.of("USED_MODELS", Set.of(), (dModel, pre, post) -> {
                                                                                                                      SModelInternal sModel = (SModelInternal) dModel.original();
                                                                                                                      Set<SModelReference> soll = post.map(DModel::reference).notNull().toSet();
                                                                                                                      Set<SModelReference> ist = Collection.of(((SModelInternal) sModel).getModelImports()).sequential().toSet();
                                                                                                                      DObserved.map(ist, soll, sModel::addModelImport, sModel::deleteModelImport);
-                                                                                                                 }, null);
+                                                                                                                 });
 
     protected static final Observed<DModel, ModelRoot>                                      MODEL_ROOT           = NonCheckingObserved.of("MODEL_ROOT", null);
 

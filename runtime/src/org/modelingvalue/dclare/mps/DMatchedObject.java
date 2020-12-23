@@ -38,6 +38,7 @@ import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.ObserverTransaction;
 import org.modelingvalue.dclare.ReadOnlyTransaction;
 import org.modelingvalue.dclare.Setable;
+import org.modelingvalue.dclare.SetableModifier;
 import org.modelingvalue.dclare.State;
 import org.modelingvalue.dclare.mps.DAttribute.DIdentifyingAttribute;
 
@@ -356,7 +357,7 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
 
         @SuppressWarnings("unchecked")
         private UnidentifiedObserved(Pair<Setable, Leaf> id) {
-            super(id, (T) id.a().getDefault(), true, null, null, null, false);
+            super(id, (T) id.a().getDefault(), null, null, null, SetableModifier.containment, SetableModifier.doNotCheckConsistency);
         }
 
         @Override
@@ -410,7 +411,7 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
     public static class Constructed extends NonCheckingObserved<DObject, Map<DDeriveConstruction, DMatchedObject>> {
 
         protected Constructed(Observer<?> observer) {
-            super(observer, false, Map.of(), false, null, null, (tx, o, pre, post) -> pre.diff(post).forEachOrdered(e -> {
+            super(observer, Map.of(), null, null, (tx, o, pre, post) -> pre.diff(post).forEachOrdered(e -> {
                 Pair<DMatchedObject, DMatchedObject> d = e.getValue();
                 if (d.a() != null) {
                     CONSTRUCTIONS.set(d.a(), Set::remove, e.getKey());

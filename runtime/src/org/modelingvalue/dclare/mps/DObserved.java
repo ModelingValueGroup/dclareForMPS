@@ -32,6 +32,7 @@ import org.modelingvalue.dclare.LeafTransaction;
 import org.modelingvalue.dclare.Mutable;
 import org.modelingvalue.dclare.Observed;
 import org.modelingvalue.dclare.Setable;
+import org.modelingvalue.dclare.SetableModifier;
 import org.modelingvalue.dclare.State;
 import org.modelingvalue.dclare.ex.EmptyMandatoryException;
 import org.modelingvalue.dclare.ex.ThrowableError;
@@ -39,31 +40,33 @@ import org.modelingvalue.dclare.ex.ThrowableError;
 @SuppressWarnings("unused")
 public class DObserved<O extends DObject, T> extends Observed<O, T> implements DFeature {
 
-    public static <C extends DObject, V> DObserved<C, V> of(Object id, V def, boolean mandatory, boolean composite, Supplier<Setable<?, ?>> opposite, boolean synthetic, TriConsumer<C, V, V> toMPS, Supplier<SNode> source) {
-        return new DObserved<>(id, mandatory, def, composite, opposite, synthetic, toMPS, null, source, true);
+    public static <C extends DObject, V> DObserved<C, V> of(Object id, V def, TriConsumer<C, V, V> toMPS, SetableModifier... modifiers) {
+        return new DObserved<>(id, def, null, toMPS, null, null, modifiers);
     }
 
-    public static <C extends DObject, V> DObserved<C, V> of(Object id, V def, boolean mandatory, boolean composite, Supplier<Setable<?, ?>> opposite, boolean synthetic, TriConsumer<C, V, V> toMPS, Supplier<SNode> source, boolean checkConsistency) {
-        return new DObserved<>(id, mandatory, def, composite, opposite, synthetic, toMPS, null, source, checkConsistency);
+    public static <C extends DObject, V> DObserved<C, V> of(Object id, V def, TriConsumer<C, V, V> toMPS, Supplier<SNode> source, SetableModifier... modifiers) {
+        return new DObserved<>(id, def, null, toMPS, null, source, modifiers);
     }
 
-    public static <C extends DObject, V> DObserved<C, V> of(Object id, V def, boolean mandatory, boolean composite, Supplier<Setable<?, ?>> opposite, boolean synthetic, TriConsumer<C, V, V> toMPS, QuadConsumer<LeafTransaction, C, V, V> changed, Supplier<SNode> source) {
-        return new DObserved<>(id, mandatory, def, composite, opposite, synthetic, toMPS, changed, source, true);
+    public static <C extends DObject, V> DObserved<C, V> of(Object id, V def, TriConsumer<C, V, V> toMPS, QuadConsumer<LeafTransaction, C, V, V> changed, Supplier<SNode> source, SetableModifier... modifiers) {
+        return new DObserved<>(id, def, null, toMPS, changed, source, modifiers);
     }
 
-    public static <C extends DObject, V> DObserved<C, V> of(Object id, V def, boolean mandatory, boolean composite, Supplier<Setable<?, ?>> opposite, boolean synthetic, TriConsumer<C, V, V> toMPS, QuadConsumer<LeafTransaction, C, V, V> changed, Supplier<SNode> source, boolean checkConsistency) {
-        return new DObserved<>(id, mandatory, def, composite, opposite, synthetic, toMPS, changed, source, checkConsistency);
+    public static <C extends DObject, V> DObserved<C, V> of(Object id, V def, Supplier<Setable<?, ?>> opposite, TriConsumer<C, V, V> toMPS, Supplier<SNode> source, SetableModifier... modifiers) {
+        return new DObserved<>(id, def, opposite, toMPS, null, source, modifiers);
+    }
+
+    public static <C extends DObject, V> DObserved<C, V> of(Object id, V def, Supplier<Setable<?, ?>> opposite, TriConsumer<C, V, V> toMPS, QuadConsumer<LeafTransaction, C, V, V> changed, Supplier<SNode> source, SetableModifier... modifiers) {
+        return new DObserved<>(id, def, opposite, toMPS, changed, source, modifiers);
     }
 
     private final TriConsumer<O, T, T> toMPS;
     private final Supplier<SNode>      source;
-    private final boolean              synthetic;
 
-    protected DObserved(Object id, boolean mandatory, T def, boolean composite, Supplier<Setable<?, ?>> opposite, boolean synthetic, TriConsumer<O, T, T> toMPS, QuadConsumer<LeafTransaction, O, T, T> changed, Supplier<SNode> source, boolean checkConsistency) {
-        super(id, mandatory, def, composite, opposite, null, changed, checkConsistency);
+    protected DObserved(Object id, T def, Supplier<Setable<?, ?>> opposite, TriConsumer<O, T, T> toMPS, QuadConsumer<LeafTransaction, O, T, T> changed, Supplier<SNode> source, SetableModifier... modifiers) {
+        super(id, def, opposite, null, changed, modifiers);
         this.toMPS = toMPS;
         this.source = source;
-        this.synthetic = synthetic;
     }
 
     public boolean isComposite() {
@@ -138,7 +141,7 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
 
     @Override
     public boolean isSynthetic() {
-        return synthetic;
+        return synthetic();
     }
 
     @Override
@@ -160,23 +163,6 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
 
     public boolean isDclareOnly() {
         return toMPS == null;
-    }
-
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    @Override
-    protected T removeReplaced(T v) {
-        if (v instanceof ContainingCollection) {
-            ContainingCollection coll = (ContainingCollection) v;
-            for (int i = 0; i < coll.size(); i++) {
-                Object e = coll.get(i);
-                if (e instanceof DMatchedObject && ((DMatchedObject) e).constructions().isEmpty()) {
-                    coll = coll instanceof List ? ((List) coll).remove(i) : coll.remove(e);
-                    i--;
-                }
-            }
-            return (T) coll;
-        }
-        return v;
     }
 
 }

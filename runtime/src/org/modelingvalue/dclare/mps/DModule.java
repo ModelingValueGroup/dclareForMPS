@@ -40,6 +40,7 @@ import org.modelingvalue.dclare.NonCheckingObserved;
 import org.modelingvalue.dclare.Observed;
 import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.Setable;
+import org.modelingvalue.dclare.SetableModifier;
 
 import jetbrains.mps.errors.item.ModuleReportItem;
 import jetbrains.mps.model.ModelDeleteHelper;
@@ -54,11 +55,11 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
 
     private static final Constant<Pair<Boolean, Set<SLanguage>>, DModuleType> MODULE_TYPE    = Constant.of("MODULE_TYPE", p -> new DModuleType(p));
 
-    protected static final DObserved<DModule, Set<DModel>>                    MODELS         = DObserved.of("MODELS", Set.of(), false, true, null, false, (dModule, pre, post) -> {
+    protected static final DObserved<DModule, Set<DModel>>                    MODELS         = DObserved.of("MODELS", Set.of(), (dModule, pre, post) -> {
                                                                                                  Setable.<Set<DModel>, DModel> diff(models(dModule.original()).sequential().map(DModel::of).toSet(), post,   //
                                                                                                          a -> a.original(),                                                                                  //
                                                                                                          r -> new ModelDeleteHelper(r.tryOriginal()).delete());
-                                                                                             }, null, null);
+                                                                                             }, SetableModifier.containment);
 
     protected static final Observed<DModule, Set<SLanguage>>                  LANGUAGES      = NonCheckingObserved.of("LANGUAGES", Set.of(), (tx, o, pre, post) -> {
                                                                                                  Setable.<Set<SLanguage>, SLanguage> diff(pre, post,                                                         //
