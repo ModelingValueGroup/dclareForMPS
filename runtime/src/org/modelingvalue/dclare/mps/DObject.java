@@ -30,7 +30,6 @@ import org.modelingvalue.dclare.Observed;
 import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.Setable;
 import org.modelingvalue.dclare.SetableModifier;
-import org.modelingvalue.dclare.mps.DMatchedObject.UnidentifiedObserved;
 
 import jetbrains.mps.errors.item.IssueKindReportItem;
 
@@ -89,7 +88,7 @@ public abstract class DObject implements Mutable {
                                                                                                                                  a -> DNode.ALL_MPS_ISSUES.set(root, Set::add, a),                                               //
                                                                                                                                  r -> DNode.ALL_MPS_ISSUES.set(root, Set::remove, r));
                                                                                                                      }
-                                                                                                                 }, null);
+                                                                                                                 });
 
     protected static final Setable<DObject, Set<DIssue>>                               DRULE_ISSUES              = Setable.of("$DRULE_ISSUES", Set.of(), SetableModifier.containment);
 
@@ -105,12 +104,7 @@ public abstract class DObject implements Mutable {
     }
 
     public boolean isOwned() {
-        if (dParent() == null) {
-            return false;
-        } else {
-            DMatchedObject unidentified = dAncestor(DMatchedObject.class, UnidentifiedObserved.class::isInstance);
-            return unidentified == null || unidentified.matchKey() == null;
-        }
+        return dParent() != null;
     }
 
     public java.util.List<DAttribute> getAttributes() {

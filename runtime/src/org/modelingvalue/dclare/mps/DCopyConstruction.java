@@ -15,16 +15,14 @@
 
 package org.modelingvalue.dclare.mps;
 
-import org.modelingvalue.dclare.Observer;
-
 public class DCopyConstruction extends DDeriveConstruction {
 
-    protected DCopyConstruction(DObject object, Observer<?> observer, DNode copied, String anonymousType) {
-        super(new Object[]{object, observer, copied, anonymousType});
+    protected DCopyConstruction(DNode copied, String anonymousType) {
+        super(new Object[]{copied, anonymousType});
     }
 
-    protected DCopyConstruction(DObject object, Observer<?> observer, DNode copied, DConstruction root) {
-        super(new Object[]{object, observer, copied, root});
+    protected DCopyConstruction(DNode copied, DCopyConstruction root) {
+        super(new Object[]{copied, root});
     }
 
     private DCopyConstruction(Object[] identity) {
@@ -32,26 +30,16 @@ public class DCopyConstruction extends DDeriveConstruction {
     }
 
     public DCopyConstruction root() {
-        return identity[3] instanceof DCopyConstruction ? (DCopyConstruction) identity[3] : this;
-    }
-
-    @Override
-    public DObject object() {
-        return (DObject) identity[0];
-    }
-
-    @Override
-    public Observer<?> observer() {
-        return (Observer<?>) identity[1];
+        return array()[1] instanceof DCopyConstruction ? (DCopyConstruction) array()[1] : this;
     }
 
     public DNode copied() {
-        return (DNode) identity[2];
+        return (DNode) array()[0];
     }
 
     @Override
     public String getAnonymousType() {
-        return (String) root().identity[3];
+        return (String) root().array()[1];
     }
 
 }

@@ -18,44 +18,29 @@ package org.modelingvalue.dclare.mps;
 import java.util.Arrays;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
-import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.mps.DAttribute.DIdentifyingAttribute;
 
 public class DQuotationConstruction extends DDeriveConstruction {
 
-    protected DQuotationConstruction(SLanguage anonymousLanguage, String anonymousType, Observer<?> observer, Object[] ctx) {
-        super(Arrays.copyOf(ctx, ctx.length + 3));
-        identity[identity.length - 3] = observer;
-        identity[identity.length - 2] = anonymousLanguage;
-        identity[identity.length - 1] = anonymousType;
-    }
-
-    private DQuotationConstruction(Object[] identity) {
-        super(identity);
+    protected DQuotationConstruction(SLanguage anonymousLanguage, String anonymousType, Object[] ctx) {
+        super(Arrays.copyOf(ctx, ctx.length + 2));
+        Object[] array = array();
+        array[array.length - 2] = anonymousLanguage;
+        array[array.length - 1] = anonymousType;
     }
 
     @SuppressWarnings("unchecked")
     protected <V> V get(DIdentifyingAttribute<?, V> attr) {
-        return (V) identity[attr.index()];
-    }
-
-    @Override
-    public Observer<?> observer() {
-        return (Observer<?>) identity[identity.length - 3];
-    }
-
-    @Override
-    public DObject object() {
-        return (DObject) identity[0];
+        return (V) array()[attr.index()];
     }
 
     @Override
     public String getAnonymousType() {
-        return (String) identity[identity.length - 1];
+        return (String) array()[array().length - 1];
     }
 
     public SLanguage getAnonymousLanguage() {
-        return (SLanguage) identity[identity.length - 2];
+        return (SLanguage) array()[array().length - 2];
     }
 
 }

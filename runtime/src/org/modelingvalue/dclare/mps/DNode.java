@@ -16,7 +16,6 @@
 package org.modelingvalue.dclare.mps;
 
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
@@ -44,9 +43,9 @@ import org.modelingvalue.collections.util.Quintuple;
 import org.modelingvalue.collections.util.TriConsumer;
 import org.modelingvalue.dclare.Action;
 import org.modelingvalue.dclare.Constant;
+import org.modelingvalue.dclare.Construction;
 import org.modelingvalue.dclare.Mutable;
 import org.modelingvalue.dclare.NonCheckingObserved;
-import org.modelingvalue.dclare.NonCheckingObserver;
 import org.modelingvalue.dclare.Observed;
 import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.Setable;
@@ -187,31 +186,25 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
     protected static final Constant<SConcept, Set<Observer>>                                                     COPY_CONCEPT_OBSERVERS = Constant.of("COPY_CONCEPT_OBSERVERS", c -> {
                                                                                                                                             Set<Observer> observers = Set.of();
                                                                                                                                             for (SProperty property : c.getProperties()) {
-                                                                                                                                                Observed<DNode, String> observed = PROPERTY.get(property);
+                                                                                                                                                DObserved<DNode, String> observed = PROPERTY.get(property);
                                                                                                                                                 observers = observers.add(copyObserver(observed,                                                                                                                //
                                                                                                                                                         (o, cc) -> observed.set(o, observed.get(cc.copied()))));
                                                                                                                                             }
                                                                                                                                             for (SContainmentLink containment : c.getContainmentLinks()) {
                                                                                                                                                 if (containment.isMultiple()) {
-                                                                                                                                                    Observed<DNode, List<DNode>> observed = MANY_CONTAINMENT.get(containment);
+                                                                                                                                                    DObserved<DNode, List<DNode>> observed = MANY_CONTAINMENT.get(containment);
                                                                                                                                                     observers = observers.add(copyObserver(observed,                                                                                                            //
-                                                                                                                                                            (o, cc) -> {
-                                                                                                                                                                List<DNode> post = copy(observed.get(cc.copied()), cc.root());
-                                                                                                                                                                observed.set(o, (b, a) -> DMatchedObject.manyMatch(o, b, a, observed), post);
-                                                                                                                                                            }));
+                                                                                                                                                            (o, cc) -> observed.set(o, copy(observed.get(cc.copied()), cc.root()))));
                                                                                                                                                 } else {
-                                                                                                                                                    Observed<DNode, DNode> observed = SINGLE_CONTAINMENT.get(containment);
+                                                                                                                                                    DObserved<DNode, DNode> observed = SINGLE_CONTAINMENT.get(containment);
                                                                                                                                                     observers = observers.add(copyObserver(observed,                                                                                                            //
-                                                                                                                                                            (o, cc) -> {
-                                                                                                                                                                DNode post = copy(observed.get(cc.copied()), cc.root());
-                                                                                                                                                                observed.set(o, (b, a) -> DMatchedObject.singleMatch(o, b, a, observed), post);
-                                                                                                                                                            }));
+                                                                                                                                                            (o, cc) -> observed.set(o, copy(observed.get(cc.copied()), cc.root()))));
                                                                                                                                                 }
                                                                                                                                             }
                                                                                                                                             for (SReferenceLink reference : c.getReferenceLinks()) {
-                                                                                                                                                Observed<DNode, DNode> observed = REFERENCE.get(reference);
+                                                                                                                                                DObserved<DNode, DNode> observed = REFERENCE.get(reference);
                                                                                                                                                 observers = observers.add(copyObserver(observed,                                                                                                                //
-                                                                                                                                                        (o, cc) -> observed.set(o, map(observed.get(cc.copied()), cc.root()))));
+                                                                                                                                                        (o, cc) -> observed.set(o, map(o, observed.get(cc.copied()), cc.root()))));
                                                                                                                                             }
                                                                                                                                             return observers;
                                                                                                                                         });
@@ -280,9 +273,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
     @SuppressWarnings("rawtypes")
     protected static final Set<Setable>                                                                          SETABLES               = DMatchedObject.SETABLES.addAll(Set.of(NAME_OBSERVED, ROOT, MODEL, USER_OBJECTS, ALL_MPS_ISSUES, INDEX));
 
-    protected static final AtomicLong                                                                            COUNTER                = new AtomicLong(0L);
-
-    public static NonCheckingObserver<DNode> copyObserver(Observed<DNode, ?> observed, BiConsumer<DNode, DCopyConstruction> action) {
+    public static DNonCheckingObserver<DNode> copyObserver(Observed<DNode, ?> observed, BiConsumer<DNode, DCopyConstruction> action) {
         return observer(observed, o -> {
             for (DCopyConstruction cc : o.getCopyConstructions()) {
                 action.accept(o, cc);
@@ -300,7 +291,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
                 () -> new DNode(new Object[]{COUNTER.getAndIncrement(), getConcept()}));
     }
 
-    private DNode copy(DConstruction root) {
+    private DNode copy(DCopyConstruction root) {
         return copyChildConstruct(root, this, //
                 () -> new DNode(new Object[]{COUNTER.getAndIncrement(), getConcept()}));
     }
@@ -330,7 +321,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
     }
 
     @Override
-    protected Long number() {
+    public Long dSortKey() {
         return (Long) identity[0];
     }
 
@@ -377,7 +368,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
     public String toString() {
         SConcept concept = getConcept();
         String name = concept.isSubConceptOf(SNodeUtil.concept_INamedConcept) ? getName() : null;
-        return concept.getName() + (name != null ? ":" + name : "#" + identity[0]);
+        return concept.getName() + (name != null ? "#" + identity[0] + ":" + name : "#" + identity[0]);
     }
 
     protected SModel getOriginalModel() {
@@ -432,25 +423,26 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
         }
     }
 
-    private static DNode map(DNode referenced, DCopyConstruction root) {
+    private static DNode map(DNode dNode, DNode referenced, DCopyConstruction root) {
         if (referenced != null) {
             if (referenced.equals(root.copied())) {
-                return getDerived(root);
+                while (dNode != null && !dNode.dConstructions().anyMatch(c -> c.context().equals(root))) {
+                    dNode = (DNode) dNode.dParent();
+                }
+                return dNode;
             } else if (referenced.hasAncestor(root.copied())) {
-                DNode parent = map(referenced.getParent(), root);
+                DNode parent = map(dNode, referenced.getParent(), root);
                 if (parent != null) {
-                    SContainmentLink cl = referenced.getContainmentLink();
-                    if (cl != null) {
-                        DObserved<DNode, ?> observed = cl.isMultiple() ? MANY_CONTAINMENT.get(cl) : SINGLE_CONTAINMENT.get(cl);
-                        NonCheckingObserver<DObject> observer = NonCheckingObserver.of(observed, null);
-                        return getDerived(new DCopyConstruction(parent, observer, referenced, root));
-                    }
+                    DCopyConstruction id = new DCopyConstruction(referenced, root);
+                    DNonCheckingObserver<?> observer = DNonCheckingObserver.of(null, referenced.dContaining());
+                    return (DNode) observer.constructed().get(parent).get(Construction.of(parent, observer, id));
                 }
             } else {
                 return referenced;
             }
         }
         return null;
+
     }
 
     @Override
@@ -466,13 +458,13 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
     }
 
     @Override
-    protected Object matchType() {
+    public Object dNewableType() {
         return getConcept();
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
-    protected Object matchKey() {
+    public Object dIdentity() {
         SConcept concept = getConcept();
         Set<DAttribute> id = TYPE.get(this).getIndetifying();
         if (!id.isEmpty()) {
@@ -777,14 +769,12 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
             SContainmentLink cl = (SContainmentLink) feature;
             if (cl.isMultiple()) {
                 List<DNode> post = value != null ? Collection.of((Iterable<DNode>) value).map(Objects::requireNonNull).distinct().toList() : null;
-                DObserved<DNode, List<DNode>> mc = MANY_CONTAINMENT.get(cl);
-                mc.set(this, (b, a) -> DMatchedObject.manyMatch(this, b, a == null || Objects.equals(a, b) ? b : a, mc), post);
+                MANY_CONTAINMENT.get(cl).set(this, (b, a) -> a == null || Objects.equals(a, b) ? b : a, post);
             } else {
                 if (value != null) {
                     Objects.requireNonNull(value);
                 }
-                DObserved<DNode, DNode> sc = SINGLE_CONTAINMENT.get(cl);
-                sc.set(this, (b, a) -> DMatchedObject.singleMatch(this, b, a, sc), (DNode) value);
+                SINGLE_CONTAINMENT.get(cl).set(this, (DNode) value);
             }
         } else {
             REFERENCE.get((SReferenceLink) feature).set(this, (DNode) value);

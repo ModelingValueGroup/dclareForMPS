@@ -48,6 +48,10 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
         return new DObserved<>(id, def, null, toMPS, null, source, modifiers);
     }
 
+    public static <C extends DObject, V> DObserved<C, V> of(Object id, V def, TriConsumer<C, V, V> toMPS, QuadConsumer<LeafTransaction, C, V, V> changed, SetableModifier... modifiers) {
+        return new DObserved<>(id, def, null, toMPS, changed, null, modifiers);
+    }
+
     public static <C extends DObject, V> DObserved<C, V> of(Object id, V def, TriConsumer<C, V, V> toMPS, QuadConsumer<LeafTransaction, C, V, V> changed, Supplier<SNode> source, SetableModifier... modifiers) {
         return new DObserved<>(id, def, null, toMPS, changed, source, modifiers);
     }
@@ -118,7 +122,7 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
             if (ii != is) {
                 if (ii >= 0) {
                     remove.accept(n);
-                    ist = ist.remove(ii);
+                    ist = ist.removeIndex(ii);
                 }
                 add.accept(n, is > 0 ? ist.get(is - 1) : null);
                 ist = ist.insert(is, n);

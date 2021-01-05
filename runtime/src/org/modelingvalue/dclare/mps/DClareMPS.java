@@ -745,7 +745,9 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
                     }
                     for (IssueKindReportItem item : reportItems) {
                         DObject d = read(() -> context(item));
-                        DObject.MPS_ISSUES.set(d, Set::add, Pair.of(d, item));
+                        if (d != null) {
+                            DObject.MPS_ISSUES.set(d, Set::add, Pair.of(d, item));
+                        }
                     }
                 });
             });
@@ -758,11 +760,14 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     protected DObject context(ReportItem item) {
         SRepository repos = getRepository().original();
         if (item instanceof NodeReportItem) {
-            return DNode.of(((NodeReportItem) item).getNode().resolve(repos));
+            SNode s = ((NodeReportItem) item).getNode().resolve(repos);
+            return s != null ? DNode.of(s) : null;
         } else if (item instanceof ModelReportItem) {
-            return DModel.of(((ModelReportItem) item).getModel().resolve(repos));
+            SModel s = ((ModelReportItem) item).getModel().resolve(repos);
+            return s != null ? DModel.of(s) : null;
         } else {
-            return DModule.of(((ModuleReportItem) item).getModule().resolve(repos));
+            SModule s = ((ModuleReportItem) item).getModule().resolve(repos);
+            return s != null ? DModule.of(s) : null;
         }
     }
 

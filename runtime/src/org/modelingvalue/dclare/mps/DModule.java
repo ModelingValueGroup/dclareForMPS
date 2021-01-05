@@ -207,8 +207,7 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
     }
 
     public void setModels(Iterable<DModel> models) {
-        Set<DModel> set = Collection.of(models).map(Objects::requireNonNull).map(DModel::of).toSet();
-        MODELS.set(this, (b, a) -> DMatchedObject.manyMatch(this, b, a, MODELS), set);
+        MODELS.set(this, Collection.of(models).map(Objects::requireNonNull).map(DModel::of).toSet());
     }
 
     @Override

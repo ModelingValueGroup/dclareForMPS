@@ -17,7 +17,7 @@ package org.modelingvalue.dclare.mps;
 
 import java.util.Collections;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -38,11 +38,14 @@ import org.jetbrains.mps.openapi.module.SModule;
 import org.jetbrains.mps.openapi.persistence.DataSource;
 import org.jetbrains.mps.openapi.persistence.ModelRoot;
 import org.modelingvalue.collections.Collection;
+import org.modelingvalue.collections.Map;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.collections.util.Triple;
 import org.modelingvalue.dclare.Action;
 import org.modelingvalue.dclare.Constant;
+import org.modelingvalue.dclare.Construction;
+import org.modelingvalue.dclare.Newable;
 import org.modelingvalue.dclare.NonCheckingObserved;
 import org.modelingvalue.dclare.Observed;
 import org.modelingvalue.dclare.Observer;
@@ -145,8 +148,6 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
     @SuppressWarnings("rawtypes")
     protected static final Set<Setable>                                                     SETABLES             = DMatchedObject.SETABLES.addAll(Set.of(NAME, ROOTS, MODEL_ROOT, USED_MODELS, USED_LANGUAGES));
 
-    private static final AtomicInteger                                                      COUNTER              = new AtomicInteger(0);
-
     public static DModel of(SLanguage anonymousLanguage, String anonymousType, Object[] identity, boolean temporal) {
         return quotationConstruct(anonymousLanguage, anonymousType, identity, //
                 () -> new DModel(new Object[]{COUNTER.getAndIncrement(), temporal}));
@@ -177,8 +178,8 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
     }
 
     @Override
-    protected Integer number() {
-        return (Integer) identity[0];
+    public Long dSortKey() {
+        return (Long) identity[0];
     }
 
     @Override
@@ -188,12 +189,12 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
     }
 
     @Override
-    protected Object matchType() {
+    public Object dNewableType() {
         return isTemporal();
     }
 
     @Override
-    protected Object matchKey() {
+    public Object dIdentity() {
         return NAME.get(this);
     }
 
@@ -205,7 +206,9 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
     @Override
     protected SModel create() {
         SModuleBase sModule = (SModuleBase) getModule().original();
-        String name = hasUnidentifiedContext() ? name = "_" + Long.toString(System.currentTimeMillis(), Character.MAX_RADIX) : NAME.get(this);
+        Optional<Newable> source = Construction.notObserverSource(Construction.sources(dConstructions(), Map.of()));
+        String name = NAME.get(this);
+        name = name == null || source.isPresent() && source.get().dIdentity() == null ? "_" + Long.toString(System.currentTimeMillis(), Character.MAX_RADIX) : name;
         return isTemporal() ? new DTempModel(name, sModule) : createFileModel(name, sModule);
     }
 
@@ -342,7 +345,7 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
 
     public void setRootNodes(SAbstractConcept concept, Iterable<SNode> roots) {
         Set<DNode> set = Collection.of(roots).map(Objects::requireNonNull).map(DNode::of).toSet();
-        ROOTS.set(this, (b, a) -> DMatchedObject.manyMatch(this, b, a.addAll(b.filter(r -> !r.isInstanceOfConcept(concept))), ROOTS), set);
+        ROOTS.set(this, (b, a) -> a.addAll(b.filter(r -> !r.isInstanceOfConcept(concept))), set);
     }
 
     public java.util.List<SNode> getRootNodes(SAbstractConcept concept) {

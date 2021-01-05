@@ -15,7 +15,9 @@
 
 package org.modelingvalue.dclare.mps;
 
-public class DReadConstruction<R> extends DConstruction {
+import org.modelingvalue.dclare.Construction;
+
+public class DReadConstruction<R> extends Construction.Context {
 
     protected DReadConstruction(R ref) {
         super(new Object[]{ref});
@@ -23,7 +25,7 @@ public class DReadConstruction<R> extends DConstruction {
 
     @SuppressWarnings("unchecked")
     public R reference() {
-        return (R) identity[0];
+        return (R) array()[0];
     }
 
 }

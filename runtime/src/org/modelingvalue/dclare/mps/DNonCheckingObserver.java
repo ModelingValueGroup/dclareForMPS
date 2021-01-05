@@ -17,8 +17,6 @@ package org.modelingvalue.dclare.mps;
 
 import java.util.function.Consumer;
 
-import org.modelingvalue.collections.Map;
-import org.modelingvalue.collections.util.Concurrent;
 import org.modelingvalue.dclare.Direction;
 import org.modelingvalue.dclare.MutableTransaction;
 import org.modelingvalue.dclare.NonCheckingObserver;
@@ -55,10 +53,7 @@ public class DNonCheckingObserver<O extends DObject> extends NonCheckingObserver
         return new DNonCheckingTransaction(universeTransaction);
     }
 
-    public static class DNonCheckingTransaction extends NonCheckingTransaction implements DConstructingTransaction {
-
-        @SuppressWarnings("rawtypes")
-        final Concurrent<Map<DDeriveConstruction, DMatchedObject>> constructed = Concurrent.of();
+    public static class DNonCheckingTransaction extends NonCheckingTransaction {
 
         private DNonCheckingTransaction(UniverseTransaction root) {
             super(root);
@@ -66,26 +61,14 @@ public class DNonCheckingObserver<O extends DObject> extends NonCheckingObserver
 
         @Override
         protected final void doRun(State pre, UniverseTransaction universeTransaction) {
-            DObject dObject = object();
-            constructed.init(Map.of());
-            try {
-                if (dObject.isOwned()) {
-                    super.doRun(pre, universeTransaction);
-                }
-            } finally {
-                runNonObserving(() -> DMatchedObject.CONSTRUCTED.get(observer()).set(dObject, constructed.result()));
+            if (mutable().isOwned()) {
+                super.doRun(pre, universeTransaction);
             }
         }
 
         @Override
-        public DObject object() {
-            return (DObject) mutable();
-        }
-
-        @SuppressWarnings("rawtypes")
-        @Override
-        public Concurrent<Map<DDeriveConstruction, DMatchedObject>> constructed() {
-            return constructed;
+        public DObject mutable() {
+            return (DObject) super.mutable();
         }
 
     }
