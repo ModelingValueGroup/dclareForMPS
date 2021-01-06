@@ -43,26 +43,26 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
     protected static final AtomicLong                    COUNTER   = new AtomicLong(0L);
 
     protected static <D extends DMatchedObject> D quotationConstruct(SLanguage anonymousLanguage, String anonymousType, Object[] ctx, Supplier<D> supplier) {
-        return derive(new DQuotationConstruction(anonymousLanguage, anonymousType, ctx), supplier);
+        return derive(new DQuotation(anonymousLanguage, anonymousType, ctx), supplier);
     }
 
     protected static <D extends DMatchedObject> D copyRootConstruct(String anonymousType, DObject object, DNode copied, Supplier<D> supplier) {
-        return derive(new DCopyConstruction(copied, anonymousType), supplier);
+        return derive(new DCopy(copied, anonymousType), supplier);
     }
 
-    protected static <D extends DMatchedObject> D copyChildConstruct(DCopyConstruction root, DNode copied, Supplier<D> supplier) {
-        return derive(new DCopyConstruction(copied, root), supplier);
+    protected static <D extends DMatchedObject> D copyChildConstruct(DCopy root, DNode copied, Supplier<D> supplier) {
+        return derive(new DCopy(copied, root), supplier);
     }
 
     @SuppressWarnings("unchecked")
-    private static <D extends DMatchedObject> D derive(DDeriveConstruction id, Supplier<D> supplier) {
+    private static <D extends DMatchedObject> D derive(DDerive id, Supplier<D> supplier) {
         return LeafTransaction.getCurrent().construct(id, supplier);
     }
 
     @SuppressWarnings("unchecked")
     protected static <D extends DMatchedObject, I, S> D readConstruct(I ref, Supplier<D> supplier, S original) {
         LeafTransaction tx = LeafTransaction.getCurrent();
-        D d = tx.construct(new DReadConstruction(ref), supplier);
+        D d = tx.construct(new DRead(ref), supplier);
         if (!(tx instanceof ReadOnlyTransaction)) {
             ORIGINAL.set(d, original);
         }
@@ -75,7 +75,7 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
 
     @Override
     protected <V> V get(DIdentifyingAttribute<?, V> attr) {
-        for (DQuotationConstruction c : constructions().filter(DQuotationConstruction.class)) {
+        for (DQuotation c : constructions().filter(DQuotation.class)) {
             //noinspection StringEquality
             if (c.getAnonymousType() == attr.anonymousType()) {
                 return c.get(attr);
@@ -97,29 +97,29 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
 
     @SuppressWarnings("unchecked")
     protected final R reference() {
-        DReadConstruction<R> rc = readConstruction();
+        DRead<R> rc = readConstruction();
         return rc != null ? rc.reference() : null;
     }
 
     @SuppressWarnings("unchecked")
-    protected final DReadConstruction<R> readConstruction() {
-        return constructions().filter(DReadConstruction.class).findFirst().orElse(null);
+    protected final DRead<R> readConstruction() {
+        return constructions().filter(DRead.class).findFirst().orElse(null);
     }
 
     public Set<String> getAnonymousTypes() {
-        return constructions().filter(DQuotationConstruction.class).map(DQuotationConstruction::getAnonymousType).notNull().toSet();
+        return constructions().filter(DQuotation.class).map(DQuotation::getAnonymousType).notNull().toSet();
     }
 
     public boolean isCopy() {
-        return constructions().anyMatch(c -> c instanceof DCopyConstruction);
+        return constructions().anyMatch(c -> c instanceof DCopy);
     }
 
     public Set<SLanguage> getAnonymousLanguages() {
-        return constructions().filter(DQuotationConstruction.class).map(DQuotationConstruction::getAnonymousLanguage).notNull().toSet();
+        return constructions().filter(DQuotation.class).map(DQuotation::getAnonymousLanguage).notNull().toSet();
     }
 
-    protected Collection<DCopyConstruction> getCopyConstructions() {
-        return constructions().filter(DCopyConstruction.class);
+    protected Collection<DCopy> getCopyConstructions() {
+        return constructions().filter(DCopy.class);
     }
 
     public final S tryOriginal() {

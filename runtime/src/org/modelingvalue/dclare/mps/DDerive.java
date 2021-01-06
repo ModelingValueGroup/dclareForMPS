@@ -17,9 +17,9 @@ package org.modelingvalue.dclare.mps;
 
 import org.modelingvalue.dclare.Construction;
 
-public abstract class DDeriveConstruction extends Construction.Context {
+public abstract class DDerive extends Construction.Context {
 
-    protected DDeriveConstruction(Object[] identity) {
+    protected DDerive(Object[] identity) {
         super(identity);
     }
 

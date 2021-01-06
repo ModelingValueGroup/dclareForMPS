@@ -17,7 +17,7 @@ package org.modelingvalue.dclare.mps;
 
 import org.modelingvalue.dclare.Construction;
 
-public class DReadConstruction<R> extends Construction.Context {
+public class DRead<R> extends Construction.Context {
 
     private static final Object READ = new Object() {
         @Override
@@ -26,7 +26,7 @@ public class DReadConstruction<R> extends Construction.Context {
         }
     };
 
-    protected DReadConstruction(R ref) {
+    protected DRead(R ref) {
         super(new Object[]{ref});
     }
 

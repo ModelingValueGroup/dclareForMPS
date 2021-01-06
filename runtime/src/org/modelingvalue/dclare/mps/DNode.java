@@ -277,9 +277,9 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
     @SuppressWarnings("rawtypes")
     protected static final Set<Setable>                                                                          SETABLES               = DMatchedObject.SETABLES.addAll(Set.of(NAME_OBSERVED, ROOT, MODEL, USER_OBJECTS, ALL_MPS_ISSUES, INDEX));
 
-    public static DNonCheckingObserver<DNode> copyObserver(Observed<DNode, ?> observed, BiConsumer<DNode, DCopyConstruction> action) {
+    public static DNonCheckingObserver<DNode> copyObserver(Observed<DNode, ?> observed, BiConsumer<DNode, DCopy> action) {
         return observer(observed, o -> {
-            for (DCopyConstruction cc : o.getCopyConstructions()) {
+            for (DCopy cc : o.getCopyConstructions()) {
                 action.accept(o, cc);
             }
         });
@@ -295,7 +295,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
                 () -> new DNode(new Object[]{COUNTER.getAndIncrement(), getConcept()}));
     }
 
-    private DNode copy(DCopyConstruction root) {
+    private DNode copy(DCopy root) {
         return copyChildConstruct(root, this, //
                 () -> new DNode(new Object[]{COUNTER.getAndIncrement(), getConcept()}));
     }
@@ -417,11 +417,11 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
         return result;
     }
 
-    private static List<DNode> copy(List<DNode> children, DCopyConstruction root) {
+    private static List<DNode> copy(List<DNode> children, DCopy root) {
         return children.sequential().map(c -> copy(c, root)).toList();
     }
 
-    private static DNode copy(DNode child, DCopyConstruction root) {
+    private static DNode copy(DNode child, DCopy root) {
         if (child != null) {
             return child.copy(root);
         } else {
@@ -429,7 +429,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
         }
     }
 
-    private static DNode map(DNode dNode, DNode referenced, DCopyConstruction root) {
+    private static DNode map(DNode dNode, DNode referenced, DCopy root) {
         if (referenced != null) {
             if (referenced.equals(root.copied())) {
                 while (dNode != null && !dNode.dConstructions().anyMatch(c -> c.context().equals(root))) {
@@ -439,7 +439,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
             } else if (referenced.hasAncestor(root.copied())) {
                 DNode parent = map(dNode, referenced.getParent(), root);
                 if (parent != null) {
-                    DCopyConstruction id = new DCopyConstruction(referenced, root);
+                    DCopy id = new DCopy(referenced, root);
                     DNonCheckingObserver<?> observer = DNonCheckingObserver.of(null, referenced.dContaining());
                     return (DNode) observer.constructed().get(parent).get(Construction.of(parent, observer, id));
                 }

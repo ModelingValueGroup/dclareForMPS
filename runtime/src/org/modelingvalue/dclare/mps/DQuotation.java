@@ -15,31 +15,32 @@
 
 package org.modelingvalue.dclare.mps;
 
-public class DCopyConstruction extends DDeriveConstruction {
+import java.util.Arrays;
 
-    protected DCopyConstruction(DNode copied, String anonymousType) {
-        super(new Object[]{copied, anonymousType});
+import org.jetbrains.mps.openapi.language.SLanguage;
+import org.modelingvalue.dclare.mps.DAttribute.DIdentifyingAttribute;
+
+public class DQuotation extends DDerive {
+
+    protected DQuotation(SLanguage anonymousLanguage, String anonymousType, Object[] ctx) {
+        super(Arrays.copyOf(ctx, ctx.length + 2));
+        Object[] array = array();
+        array[array.length - 2] = anonymousLanguage;
+        array[array.length - 1] = anonymousType;
     }
 
-    protected DCopyConstruction(DNode copied, DCopyConstruction root) {
-        super(new Object[]{copied, root});
-    }
-
-    private DCopyConstruction(Object[] identity) {
-        super(identity);
-    }
-
-    public DCopyConstruction root() {
-        return array()[1] instanceof DCopyConstruction ? (DCopyConstruction) array()[1] : this;
-    }
-
-    public DNode copied() {
-        return (DNode) array()[0];
+    @SuppressWarnings("unchecked")
+    protected <V> V get(DIdentifyingAttribute<?, V> attr) {
+        return (V) array()[attr.index()];
     }
 
     @Override
     public String getAnonymousType() {
-        return (String) root().array()[1];
+        return (String) array()[array().length - 1];
+    }
+
+    public SLanguage getAnonymousLanguage() {
+        return (SLanguage) array()[array().length - 2];
     }
 
 }
