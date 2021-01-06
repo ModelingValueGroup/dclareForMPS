@@ -17,7 +17,7 @@ package org.modelingvalue.dclare.mps;
 
 import org.modelingvalue.dclare.Construction;
 
-public abstract class DDerive extends Construction.Context {
+public abstract class DDerive extends Construction.Reason {
 
     protected DDerive(Object[] identity) {
         super(identity);
@@ -26,7 +26,7 @@ public abstract class DDerive extends Construction.Context {
     public abstract String getAnonymousType();
 
     @Override
-    public Object reason() {
+    public Object type() {
         return getAnonymousType();
     }
 

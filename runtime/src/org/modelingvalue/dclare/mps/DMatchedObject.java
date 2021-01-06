@@ -22,7 +22,7 @@ import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.dclare.Construction;
-import org.modelingvalue.dclare.Construction.Context;
+import org.modelingvalue.dclare.Construction.Reason;
 import org.modelingvalue.dclare.LeafTransaction;
 import org.modelingvalue.dclare.Newable;
 import org.modelingvalue.dclare.Observer;
@@ -75,7 +75,7 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
 
     @Override
     protected <V> V get(DIdentifyingAttribute<?, V> attr) {
-        for (DQuotation c : constructions().filter(DQuotation.class)) {
+        for (DQuotation c : reasons().filter(DQuotation.class)) {
             //noinspection StringEquality
             if (c.getAnonymousType() == attr.anonymousType()) {
                 return c.get(attr);
@@ -84,42 +84,42 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
         throw new Error("Identifying attribute " + attr + " in " + this + " not found");
     }
 
-    private Collection<Context> constructions() {
-        return dConstructions().map(Construction::context);
+    private Collection<Reason> reasons() {
+        return dConstructions().map(Construction::reason);
     }
 
     @Override
     protected final void read(DClareMPS dClareMPS) {
-        if (readConstruction() != null) {
+        if (readReasons() != null) {
             read();
         }
     }
 
     @SuppressWarnings("unchecked")
     protected final R reference() {
-        DRead<R> rc = readConstruction();
+        DRead<R> rc = readReasons();
         return rc != null ? rc.reference() : null;
     }
 
     @SuppressWarnings("unchecked")
-    protected final DRead<R> readConstruction() {
-        return constructions().filter(DRead.class).findFirst().orElse(null);
+    protected final DRead<R> readReasons() {
+        return reasons().filter(DRead.class).findFirst().orElse(null);
     }
 
     public Set<String> getAnonymousTypes() {
-        return constructions().filter(DQuotation.class).map(DQuotation::getAnonymousType).notNull().toSet();
+        return reasons().filter(DQuotation.class).map(DQuotation::getAnonymousType).notNull().toSet();
     }
 
     public boolean isCopy() {
-        return constructions().anyMatch(c -> c instanceof DCopy);
+        return reasons().anyMatch(c -> c instanceof DCopy);
     }
 
     public Set<SLanguage> getAnonymousLanguages() {
-        return constructions().filter(DQuotation.class).map(DQuotation::getAnonymousLanguage).notNull().toSet();
+        return reasons().filter(DQuotation.class).map(DQuotation::getAnonymousLanguage).notNull().toSet();
     }
 
-    protected Collection<DCopy> getCopyConstructions() {
-        return constructions().filter(DCopy.class);
+    protected Collection<DCopy> getCopyReasons() {
+        return reasons().filter(DCopy.class);
     }
 
     public final S tryOriginal() {

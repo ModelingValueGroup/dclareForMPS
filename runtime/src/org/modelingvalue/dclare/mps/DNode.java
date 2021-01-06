@@ -279,7 +279,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
 
     public static DNonCheckingObserver<DNode> copyObserver(Observed<DNode, ?> observed, BiConsumer<DNode, DCopy> action) {
         return observer(observed, o -> {
-            for (DCopy cc : o.getCopyConstructions()) {
+            for (DCopy cc : o.getCopyReasons()) {
                 action.accept(o, cc);
             }
         });
@@ -432,16 +432,16 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
     private static DNode map(DNode dNode, DNode referenced, DCopy root) {
         if (referenced != null) {
             if (referenced.equals(root.copied())) {
-                while (dNode != null && !dNode.dConstructions().anyMatch(c -> c.context().equals(root))) {
+                while (dNode != null && !dNode.dConstructions().anyMatch(c -> c.reason().equals(root))) {
                     dNode = (DNode) dNode.dParent();
                 }
                 return dNode;
             } else if (referenced.hasAncestor(root.copied())) {
                 DNode parent = map(dNode, referenced.getParent(), root);
                 if (parent != null) {
-                    DCopy id = new DCopy(referenced, root);
+                    DCopy reason = new DCopy(referenced, root);
                     DNonCheckingObserver<?> observer = DNonCheckingObserver.of(null, referenced.dContaining());
-                    return (DNode) observer.constructed().get(parent).get(Construction.of(parent, observer, id));
+                    return (DNode) observer.constructed().get(parent).get(Construction.of(parent, observer, reason));
                 }
             } else {
                 return referenced;
