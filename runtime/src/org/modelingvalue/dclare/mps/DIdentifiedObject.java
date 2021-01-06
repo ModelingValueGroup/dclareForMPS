@@ -30,7 +30,7 @@ public abstract class DIdentifiedObject extends DObject {
 
     @Override
     public int hashCode() {
-        return Arrays.deepHashCode(identity);
+        return Arrays.hashCode(identity);
     }
 
     @Override
@@ -45,7 +45,7 @@ public abstract class DIdentifiedObject extends DObject {
             DIdentifiedObject other = (DIdentifiedObject) obj;
             if (other.identity == identity) {
                 return true;
-            } else if (!Arrays.deepEquals(identity, other.identity)) {
+            } else if (!Arrays.equals(identity, other.identity)) {
                 return false;
             } else {
                 if (Age.age(identity) > Age.age(other.identity)) {
