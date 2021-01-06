@@ -76,20 +76,16 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
                 DModel.ROOTS.set(dModel, Set::add, dNode);
             } else {
                 SContainmentLink al = event.getAggregationLink();
-                //noinspection ConstantConditions
-                if (!al.getName().equals("smodelAttribute")) {
-                    if (al.isMultiple()) {
-                        //noinspection ConstantConditions
-                        int index = DNode.children(event.getParent(), al).firstIndexOf(sNode);
-                        if (index >= 0) {
-                            DNode.MANY_CONTAINMENT.get(al).set(DNode.of(event.getParent()), (l, e) -> {
-                                List<DNode> now = l.remove(e);
-                                return now.insert(Math.min(now.size(), index), e);
-                            }, dNode);
-                        }
-                    } else {
-                        DNode.SINGLE_CONTAINMENT.get(al).set(DNode.of(event.getParent()), dNode);
+                if (al.isMultiple()) {
+                    int index = DNode.children(event.getParent(), al).firstIndexOf(sNode);
+                    if (index >= 0) {
+                        DNode.MANY_CONTAINMENT.get(al).set(DNode.of(event.getParent()), (l, e) -> {
+                            List<DNode> now = l.remove(e);
+                            return now.insert(Math.min(now.size(), index), e);
+                        }, dNode);
                     }
+                } else {
+                    DNode.SINGLE_CONTAINMENT.get(al).set(DNode.of(event.getParent()), dNode);
                 }
             }
         });
@@ -105,13 +101,10 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
                 DModel.ROOTS.set(DModel.of(event.getModel()), Set::remove, dNode);
             } else {
                 SContainmentLink al = event.getAggregationLink();
-                //noinspection ConstantConditions
-                if (!al.getName().equals("smodelAttribute")) {
-                    if (al.isMultiple()) {
-                        DNode.MANY_CONTAINMENT.get(al).set(DNode.of(event.getParent()), List::remove, dNode);
-                    } else {
-                        DNode.SINGLE_CONTAINMENT.get(al).set(DNode.of(event.getParent()), (v, e) -> e.equals(v) ? null : v, dNode);
-                    }
+                if (al.isMultiple()) {
+                    DNode.MANY_CONTAINMENT.get(al).set(DNode.of(event.getParent()), List::remove, dNode);
+                } else {
+                    DNode.SINGLE_CONTAINMENT.get(al).set(DNode.of(event.getParent()), (v, e) -> e.equals(v) ? null : v, dNode);
                 }
             }
         });

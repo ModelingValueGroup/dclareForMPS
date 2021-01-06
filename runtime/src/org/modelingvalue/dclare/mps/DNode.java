@@ -79,7 +79,13 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                             }
                                                                                                                                         });
 
-    protected static final Constant<SConcept, Boolean>                                                           SMART_REFERENCE        = Constant.of("SMART_REFERENCE", c -> c.getProperties().isEmpty() && c.getContainmentLinks().isEmpty() && c.getReferenceLinks().size() == 1);
+    protected static final Constant<SConcept, SReferenceLink>                                                    SMART_REFERENCE        = Constant.of("SMART_REFERENCE", c -> {
+                                                                                                                                            int ps = c.getProperties().size() - SNodeUtil.concept_BaseConcept.getProperties().size();
+                                                                                                                                            int cs = c.getContainmentLinks().size() - SNodeUtil.concept_BaseConcept.getContainmentLinks().size();
+                                                                                                                                            int rs = c.getReferenceLinks().size() - SNodeUtil.concept_BaseConcept.getReferenceLinks().size();
+                                                                                                                                            return ps == 0 && cs == 0 && rs == 1 ?                                                                                                                              //
+                                                                                                                                            c.getReferenceLinks().stream().filter(r -> !SNodeUtil.concept_BaseConcept.getReferenceLinks().contains(r)).findAny().get() : null;
+                                                                                                                                        });
 
     protected static final Observed<DNode, DModel>                                                               MODEL                  = NonCheckingObserved.of("$MODEL", null);
 
@@ -232,13 +238,11 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                             SNode sNode = n.tryOriginal();
                                                                                                                                             if (sNode != null) {
                                                                                                                                                 for (SContainmentLink link : n.getConcept().getContainmentLinks()) {
-                                                                                                                                                    if (!link.getName().equals("smodelAttribute")) {
-                                                                                                                                                        List<DNode> list = dClareMPS().read(() -> Collection.of(sNode.getChildren(link)).sequential().map(DNode::read).toList());
-                                                                                                                                                        if (link.isMultiple()) {
-                                                                                                                                                            MANY_CONTAINMENT.get(link).set(n, list);
-                                                                                                                                                        } else {
-                                                                                                                                                            SINGLE_CONTAINMENT.get(link).set(n, list.first());
-                                                                                                                                                        }
+                                                                                                                                                    List<DNode> list = dClareMPS().read(() -> Collection.of(sNode.getChildren(link)).sequential().map(DNode::read).toList());
+                                                                                                                                                    if (link.isMultiple()) {
+                                                                                                                                                        MANY_CONTAINMENT.get(link).set(n, list);
+                                                                                                                                                    } else {
+                                                                                                                                                        SINGLE_CONTAINMENT.get(link).set(n, list.first());
                                                                                                                                                     }
                                                                                                                                                 }
                                                                                                                                             }
@@ -368,7 +372,9 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
     public String toString() {
         SConcept concept = getConcept();
         String name = concept.isSubConceptOf(SNodeUtil.concept_INamedConcept) ? getName() : null;
-        return concept.getName() + (name != null ? "#" + identity[0] + ":" + name : "#" + identity[0]);
+        SReferenceLink smart = name == null ? SMART_REFERENCE.get(concept) : null;
+        DNode referenced = smart != null ? REFERENCE.get(smart).get(this) : null;
+        return concept.getName() + (referenced != null ? "#" + identity[0] + "(" + referenced + ")" : name != null ? "#" + identity[0] + ":" + name : "#" + identity[0]);
     }
 
     protected SModel getOriginalModel() {
@@ -480,12 +486,14 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
             return map;
         } else if (concept.isSubConceptOf(SNodeUtil.concept_INamedConcept)) {
             return NAME_OBSERVED.get(this);
-        } else if (SMART_REFERENCE.get(concept)) {
-            SReferenceLink rl = getConcept().getReferenceLinks().iterator().next();
-            return REFERENCE.get(rl).get(this);
         } else {
-            Integer idx = INDEX.get(this);
-            return idx >= 0 ? idx : null;
+            SReferenceLink smart = SMART_REFERENCE.get(concept);
+            if (smart != null) {
+                return REFERENCE.get(smart).get(this);
+            } else {
+                Integer idx = INDEX.get(this);
+                return idx >= 0 ? idx : null;
+            }
         }
     }
 

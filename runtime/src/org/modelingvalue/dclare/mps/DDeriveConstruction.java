@@ -25,4 +25,9 @@ public abstract class DDeriveConstruction extends Construction.Context {
 
     public abstract String getAnonymousType();
 
+    @Override
+    public Object reason() {
+        return getAnonymousType();
+    }
+
 }
