@@ -16,7 +16,6 @@
 package org.modelingvalue.dclare.mps;
 
 import java.util.Collections;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -344,7 +343,7 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
     }
 
     public void setRootNodes(SAbstractConcept concept, Iterable<SNode> roots) {
-        Set<DNode> set = Collection.of(roots).map(Objects::requireNonNull).map(DNode::of).toSet();
+        Set<DNode> set = Collection.of(roots).notNull().map(DNode::of).toSet();
         ROOTS.set(this, (b, a) -> a.addAll(b.filter(r -> !r.isInstanceOfConcept(concept))), set);
     }
 

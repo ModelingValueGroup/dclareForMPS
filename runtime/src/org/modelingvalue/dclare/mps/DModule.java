@@ -16,7 +16,6 @@
 package org.modelingvalue.dclare.mps;
 
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
@@ -207,7 +206,7 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
     }
 
     public void setModels(Iterable<DModel> models) {
-        MODELS.set(this, Collection.of(models).map(Objects::requireNonNull).map(DModel::of).toSet());
+        MODELS.set(this, Collection.of(models).notNull().map(DModel::of).toSet());
     }
 
     @Override

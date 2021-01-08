@@ -16,7 +16,6 @@
 package org.modelingvalue.dclare.mps;
 
 import java.util.Collections;
-import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -27,7 +26,6 @@ import org.modelingvalue.collections.ContainingCollection;
 import org.modelingvalue.dclare.Constant;
 import org.modelingvalue.dclare.LeafTransaction;
 import org.modelingvalue.dclare.Mutable;
-import org.modelingvalue.dclare.ObserverTransaction;
 import org.modelingvalue.dclare.ReadOnlyTransaction;
 import org.modelingvalue.dclare.Setable;
 import org.modelingvalue.dclare.SetableModifier;
@@ -147,17 +145,15 @@ public interface DAttribute<O, T> extends DFeature {
                     original.getProperty(sProperty);
                 }
             }
-            V result = super.get(object);
-            if (result == null && mandatory() && LeafTransaction.getCurrent() instanceof ObserverTransaction) {
-                throw new NullPointerException();
-            }
-            return result;
+            return super.get(object);
         }
 
+        @SuppressWarnings("unchecked")
         @Override
         public V set(C object, V value) {
             if (containment() && value instanceof ContainingCollection) {
-                ((ContainingCollection<?>) value).forEach(Objects::requireNonNull);
+                ContainingCollection cc = (ContainingCollection) value;
+                value = (V) cc.clear().addAll(cc.notNull());
             }
             return super.set(object, value);
         }
