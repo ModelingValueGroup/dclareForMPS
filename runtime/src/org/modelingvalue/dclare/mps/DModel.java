@@ -16,7 +16,6 @@
 package org.modelingvalue.dclare.mps;
 
 import java.util.Collections;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -37,7 +36,6 @@ import org.jetbrains.mps.openapi.module.SModule;
 import org.jetbrains.mps.openapi.persistence.DataSource;
 import org.jetbrains.mps.openapi.persistence.ModelRoot;
 import org.modelingvalue.collections.Collection;
-import org.modelingvalue.collections.Map;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.collections.util.Triple;
@@ -205,9 +203,9 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
     @Override
     protected SModel create() {
         SModuleBase sModule = (SModuleBase) getModule().original();
-        Optional<Newable> source = Construction.notObservedSource(Construction.sources(dConstructions(), Map.of()));
+        Set<Newable> sources = Construction.notObservedSources(Construction.sources(dConstructions()));
         String name = NAME.get(this);
-        name = name == null || source.isPresent() && source.get().dIdentity() == null ? "_" + Long.toString(System.currentTimeMillis(), Character.MAX_RADIX) : name;
+        name = name == null || sources.anyMatch(s -> s.dIdentity() == null) ? "_" + Long.toString(System.currentTimeMillis(), Character.MAX_RADIX) : name;
         return isTemporal() ? new DTempModel(name, sModule) : createFileModel(name, sModule);
     }
 
