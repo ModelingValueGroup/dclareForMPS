@@ -61,6 +61,13 @@ import jetbrains.mps.smodel.SNodeUtil;
 @SuppressWarnings("unused")
 public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implements SNode {
 
+    private static final Object                                                                                  DUMMY_ID               = new Object() {
+                                                                                                                                            @Override
+                                                                                                                                            public String toString() {
+                                                                                                                                                return "DUMMY_ID";
+                                                                                                                                            }
+                                                                                                                                        };
+
     private static final Constant<Quintuple<Set<SLanguage>, SConcept, Set<String>, Boolean, Boolean>, DNodeType> NODE_TYPE              = Constant.of("NODE_TYPE", DNodeType::new);
 
     protected static final Constant<SAbstractConcept, Set<SAbstractConcept>>                                     SUPER_CONCEPTS         = Constant.of("SUPER_CONCEPTS", ac -> {
@@ -371,10 +378,8 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
     @Override
     public String toString() {
         SConcept concept = getConcept();
-        String name = concept.isSubConceptOf(SNodeUtil.concept_INamedConcept) ? getName() : null;
-        SReferenceLink smart = name == null ? SMART_REFERENCE.get(concept) : null;
-        DNode referenced = smart != null ? REFERENCE.get(smart).get(this) : null;
-        return concept.getName() + (referenced != null ? "#" + identity[0] + "(" + referenced + ")" : name != null ? "#" + identity[0] + ":" + name : "#" + identity[0]);
+        Object id = dIdentity();
+        return concept.getName() + (id != null && id != DUMMY_ID ? "#" + identity[0] + ":" + id : "#" + identity[0]);
     }
 
     protected SModel getOriginalModel() {
@@ -491,8 +496,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
             if (smart != null) {
                 return REFERENCE.get(smart).get(this);
             } else {
-                Integer idx = INDEX.get(this);
-                return idx >= 0 ? idx : null;
+                return DUMMY_ID;
             }
         }
     }

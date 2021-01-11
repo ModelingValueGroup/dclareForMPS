@@ -203,7 +203,7 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
     @Override
     protected SModel create() {
         SModuleBase sModule = (SModuleBase) getModule().original();
-        Set<Newable> sources = Construction.notObservedSources(Construction.sources(dConstructions()));
+        Set<Newable> sources = Construction.notObservedSources(dConstructions());
         String name = NAME.get(this);
         name = name == null || sources.anyMatch(s -> s.dIdentity() == null) ? "_" + Long.toString(System.currentTimeMillis(), Character.MAX_RADIX) : name;
         return isTemporal() ? new DTempModel(name, sModule) : createFileModel(name, sModule);
