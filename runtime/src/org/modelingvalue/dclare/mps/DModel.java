@@ -42,7 +42,6 @@ import org.modelingvalue.collections.util.Triple;
 import org.modelingvalue.dclare.Action;
 import org.modelingvalue.dclare.Constant;
 import org.modelingvalue.dclare.Construction;
-import org.modelingvalue.dclare.Newable;
 import org.modelingvalue.dclare.NonCheckingObserved;
 import org.modelingvalue.dclare.Observed;
 import org.modelingvalue.dclare.Observer;
@@ -203,9 +202,9 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
     @Override
     protected SModel create() {
         SModuleBase sModule = (SModuleBase) getModule().original();
-        Set<Newable> sources = Construction.notObservedSources(dConstructions());
         String name = NAME.get(this);
-        name = name == null || sources.anyMatch(s -> s.dIdentity() == null) ? "_" + Long.toString(System.currentTimeMillis(), Character.MAX_RADIX) : name;
+        name = name == null || Construction.MatchInfo.of(this).hasUnidentifiedSource() ? //
+                "_" + Long.toString(System.currentTimeMillis(), Character.MAX_RADIX) : name;
         return isTemporal() ? new DTempModel(name, sModule) : createFileModel(name, sModule);
     }
 
