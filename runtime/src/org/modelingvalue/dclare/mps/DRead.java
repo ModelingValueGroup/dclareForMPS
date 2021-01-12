@@ -19,13 +19,6 @@ import org.modelingvalue.dclare.Construction;
 
 public class DRead<R> extends Construction.Reason {
 
-    private static final Object READ = new Object() {
-        @Override
-        public String toString() {
-            return "READ";
-        }
-    };
-
     protected DRead(R ref) {
         super(new Object[]{ref});
     }
@@ -33,11 +26,6 @@ public class DRead<R> extends Construction.Reason {
     @SuppressWarnings("unchecked")
     public R reference() {
         return (R) array()[0];
-    }
-
-    @Override
-    public Object type() {
-        return READ;
     }
 
 }

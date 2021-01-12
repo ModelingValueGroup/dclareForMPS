@@ -25,9 +25,4 @@ public abstract class DDerive extends Construction.Reason {
 
     public abstract String getAnonymousType();
 
-    @Override
-    public Object type() {
-        return getAnonymousType();
-    }
-
 }

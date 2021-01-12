@@ -114,6 +114,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                             SetableModifier[] mods = new SetableModifier[]{SetableModifier.containment};
                                                                                                                                             if (!mc.isOptional()) {
                                                                                                                                                 mods = Setable.addModifier(mods, SetableModifier.mandatory);
+                                                                                                                                                mods = Setable.addModifier(mods, SetableModifier.doNotCheckMandatory);
                                                                                                                                             }
                                                                                                                                             return DObserved.of(mc, List.of(),                                                                                                                                  //
                                                                                                                                                     (dNode, pre, post) -> {
@@ -135,6 +136,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                             SetableModifier[] mods = new SetableModifier[]{SetableModifier.containment};
                                                                                                                                             if (!sc.isOptional()) {
                                                                                                                                                 mods = Setable.addModifier(mods, SetableModifier.mandatory);
+                                                                                                                                                mods = Setable.addModifier(mods, SetableModifier.doNotCheckMandatory);
                                                                                                                                             }
                                                                                                                                             return DObserved.of(sc, null,                                                                                                                                       //
                                                                                                                                                     (dNode, pre, post) -> {
@@ -156,6 +158,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                             SetableModifier[] mods = new SetableModifier[0];
                                                                                                                                             if (!sr.isOptional()) {
                                                                                                                                                 mods = Setable.addModifier(mods, SetableModifier.mandatory);
+                                                                                                                                                mods = Setable.addModifier(mods, SetableModifier.doNotCheckMandatory);
                                                                                                                                             }
                                                                                                                                             return DObserved.of(sr, null, () -> DNode.OPPOSITE.get(sr),                                                                                                         //
                                                                                                                                                     (dNode, pre, post) -> {
@@ -181,7 +184,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                             if (!Objects.equals(ist, post)) {
                                                                                                                                                 sNode.setProperty(sp, post);
                                                                                                                                             }
-                                                                                                                                        }, sp::getDeclarationNode, SetableModifier.mandatory, SetableModifier.doNotCheckConsistency));
+                                                                                                                                        }, sp::getDeclarationNode, SetableModifier.mandatory, SetableModifier.doNotCheckMandatory));
 
     private static final Observer<DNode>                                                                         MODEL_RULE             = DObject.observer(MODEL, o -> {
                                                                                                                                             DNode p = o.getAncestor(DNode.class);

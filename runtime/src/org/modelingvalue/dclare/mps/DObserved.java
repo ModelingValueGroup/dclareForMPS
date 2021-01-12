@@ -21,7 +21,6 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import org.jetbrains.mps.openapi.model.SNode;
-import org.modelingvalue.collections.ContainingCollection;
 import org.modelingvalue.collections.Entry;
 import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.Map;
@@ -34,7 +33,6 @@ import org.modelingvalue.dclare.Observed;
 import org.modelingvalue.dclare.Setable;
 import org.modelingvalue.dclare.SetableModifier;
 import org.modelingvalue.dclare.State;
-import org.modelingvalue.dclare.ex.EmptyMandatoryException;
 import org.modelingvalue.dclare.ex.ThrowableError;
 
 @SuppressWarnings("unused")
@@ -155,14 +153,7 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
 
     @Override
     protected boolean isEmpty(T result) {
-        return (result == null && mandatory()) || result instanceof ContainingCollection;
-    }
-
-    @Override
-    protected void handleEmptyCheck(O object, T result) {
-        if (result == null) {
-            throw new EmptyMandatoryException(object, this);
-        }
+        return result == null;
     }
 
     public boolean isDclareOnly() {
