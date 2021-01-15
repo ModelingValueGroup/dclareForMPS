@@ -163,6 +163,18 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
         }
     }
 
+    @Override
+    public final void dActivate() {
+        Newable.super.dActivate();
+        start(dClareMPS());
+    }
+
+    @Override
+    public final void dDeactivate() {
+        Newable.super.dDeactivate();
+        stop(dClareMPS());
+    }
+
     protected void init(DClareMPS dClareMPS, S original) {
     }
 

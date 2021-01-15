@@ -767,7 +767,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
 
     @Override
     public void dropReference(SReferenceLink role) {
-        REFERENCE.get(role).set(this, null);
+        REFERENCE.get(role).setDefault(this);
     }
 
     @Override
