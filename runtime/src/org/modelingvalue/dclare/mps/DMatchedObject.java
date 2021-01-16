@@ -75,13 +75,26 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
 
     @Override
     protected <V> V get(DIdentifyingAttribute<?, V> attr) {
+        DQuotation c = getDQuotation(attr.anonymousType());
+        if (c != null) {
+            return c.get(attr);
+        } else {
+            throw new Error("Identifying attribute " + attr + " in " + this + " not found");
+        }
+    }
+
+    @Override
+    protected boolean isObsolete(String anonymousType) {
+        return anonymousType != null && getDQuotation(anonymousType).dIsObsolete();
+    }
+
+    protected DQuotation getDQuotation(String anonymousType) {
         for (DQuotation c : reasons().filter(DQuotation.class)) {
-            //noinspection StringEquality
-            if (c.getAnonymousType() == attr.anonymousType()) {
-                return c.get(attr);
+            if (c.getAnonymousType() == anonymousType) {
+                return c;
             }
         }
-        throw new Error("Identifying attribute " + attr + " in " + this + " not found");
+        return null;
     }
 
     private Collection<Reason> reasons() {

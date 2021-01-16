@@ -190,4 +190,8 @@ public abstract class DObject implements Mutable {
 
     public abstract boolean isExternal();
 
+    protected boolean isObsolete(String anonymousType) {
+        return false;
+    }
+
 }

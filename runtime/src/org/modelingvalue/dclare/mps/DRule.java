@@ -78,7 +78,7 @@ public interface DRule<O> extends DFeature {
             DObject dObject = mutable();
             issues.init(Set.of());
             try {
-                if (dObject.isOwned()) {
+                if (dObject.isOwned() && !dObject.isObsolete(rule().anonymousType())) {
                     super.doRun(pre, universeTransaction);
                 }
             } finally {
@@ -105,5 +105,7 @@ public interface DRule<O> extends DFeature {
     void run(O object);
 
     boolean initialLowPriority();
+
+    String anonymousType();
 
 }
