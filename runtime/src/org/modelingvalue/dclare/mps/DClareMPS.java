@@ -310,7 +310,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
             universeTransaction.currentState().run(() -> {
                 DObject object = getRepository();
                 DFeature feature = DRepository.EXCEPTIONS;
-                for (Throwable t : throwables) {
+                for (Throwable t : throwables.sorted(universeTransaction::compareThrowable)) {
                     while (t instanceof TransactionException) {
                         if (((TransactionException) t).getTransactionClass() instanceof DObserver) {
                             feature = ((DObserver) ((TransactionException) t).getTransactionClass()).rule();
