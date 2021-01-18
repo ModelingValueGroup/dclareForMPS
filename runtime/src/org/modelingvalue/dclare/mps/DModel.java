@@ -457,7 +457,7 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
     @Override
     public String toString() {
         String name = NAME.get(this);
-        return "model" + (name != null ? ":" + name : "#" + identity[0]);
+        return "model" + (name != null ? "#" + identity[0] + ":" + name : "#" + identity[0]);
     }
 
     @SuppressWarnings("unchecked")
