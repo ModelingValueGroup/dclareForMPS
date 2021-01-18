@@ -15,31 +15,34 @@
 
 package org.modelingvalue.dclare.mps;
 
+import org.modelingvalue.dclare.Mutable;
+
 public class DCopy extends DDerive {
 
-    protected DCopy(DNode copied, String anonymousType) {
-        super(new Object[]{copied, anonymousType});
+    protected DCopy(Mutable thiz, DNode copied, String anonymousType) {
+        this(new Object[]{copied, anonymousType});
     }
 
-    protected DCopy(DNode copied, DCopy root) {
-        super(new Object[]{copied, root});
+    protected DCopy(Mutable thiz, DNode copied, DCopy root) {
+        this(new Object[]{copied, root});
     }
 
     private DCopy(Object[] identity) {
-        super(identity);
+        super(null, identity);
     }
 
     public DCopy root() {
-        return array()[1] instanceof DCopy ? (DCopy) array()[1] : this;
+        Object e = get(null, 1);
+        return e instanceof DCopy ? (DCopy) e : this;
     }
 
     public DNode copied() {
-        return (DNode) array()[0];
+        return (DNode) get(null, 0);
     }
 
     @Override
     public String getAnonymousType() {
-        return (String) root().array()[1];
+        return (String) root().get(null, 1);
     }
 
 }

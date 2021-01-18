@@ -20,12 +20,12 @@ import org.modelingvalue.dclare.Construction;
 public class DRead<R> extends Construction.Reason {
 
     protected DRead(R ref) {
-        super(new Object[]{ref});
+        super(null, new Object[]{ref});
     }
 
     @SuppressWarnings("unchecked")
     public R reference() {
-        return (R) array()[0];
+        return (R) get(null, 0);
     }
 
 }

@@ -43,20 +43,18 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
     protected static final AtomicLong                    COUNTER   = new AtomicLong(0L);
 
     protected static <D extends DMatchedObject> D quotationConstruct(SLanguage anonymousLanguage, String anonymousType, Object[] ctx, Supplier<D> supplier) {
-        return derive(new DQuotation(anonymousLanguage, anonymousType, ctx), supplier);
+        LeafTransaction tx = LeafTransaction.getCurrent();
+        return tx.construct(new DQuotation(tx.mutable(), anonymousLanguage, anonymousType, ctx), supplier);
     }
 
     protected static <D extends DMatchedObject> D copyRootConstruct(String anonymousType, DObject object, DNode copied, Supplier<D> supplier) {
-        return derive(new DCopy(copied, anonymousType), supplier);
+        LeafTransaction tx = LeafTransaction.getCurrent();
+        return tx.construct(new DCopy(tx.mutable(), copied, anonymousType), supplier);
     }
 
     protected static <D extends DMatchedObject> D copyChildConstruct(DCopy root, DNode copied, Supplier<D> supplier) {
-        return derive(new DCopy(copied, root), supplier);
-    }
-
-    @SuppressWarnings("unchecked")
-    private static <D extends DMatchedObject> D derive(DDerive id, Supplier<D> supplier) {
-        return LeafTransaction.getCurrent().construct(id, supplier);
+        LeafTransaction tx = LeafTransaction.getCurrent();
+        return tx.construct(new DCopy(tx.mutable(), copied, root), supplier);
     }
 
     @SuppressWarnings("unchecked")
@@ -73,50 +71,51 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
         super(identity);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     protected <V> V get(DIdentifyingAttribute<?, V> attr) {
-        DQuotation c = getDQuotation(attr.anonymousType());
+        Construction c = getQuotationConstruction(attr.anonymousType());
         if (c != null) {
-            return c.get(attr);
+            return (V) c.get(attr.index());
         } else {
-            throw new Error("Identifying attribute " + attr + " in " + this + " not found");
+            return null;
         }
     }
 
     @Override
     protected boolean isObsolete(String anonymousType) {
-        return anonymousType != null && getDQuotation(anonymousType).dIsObsolete();
+        return anonymousType != null && getQuotationConstruction(anonymousType) == null;
     }
 
-    protected DQuotation getDQuotation(String anonymousType) {
-        for (DQuotation c : reasons().filter(DQuotation.class)) {
-            if (c.getAnonymousType() == anonymousType) {
+    private Construction getQuotationConstruction(String anonymousType) {
+        for (Construction c : dConstructions()) {
+            if (c.reason() instanceof DQuotation && ((DQuotation) c.reason()).getAnonymousType() == anonymousType && !c.isObsolete()) {
                 return c;
             }
         }
         return null;
     }
 
-    private Collection<Reason> reasons() {
-        return dConstructions().map(Construction::reason);
-    }
-
     @Override
     protected final void read(DClareMPS dClareMPS) {
-        if (readReasons() != null) {
+        if (readReason() != null) {
             read();
         }
     }
 
     @SuppressWarnings("unchecked")
     protected final R reference() {
-        DRead<R> rc = readReasons();
+        DRead<R> rc = readReason();
         return rc != null ? rc.reference() : null;
     }
 
     @SuppressWarnings("unchecked")
-    protected final DRead<R> readReasons() {
+    protected final DRead<R> readReason() {
         return reasons().filter(DRead.class).findFirst().orElse(null);
+    }
+
+    private Collection<Reason> reasons() {
+        return dConstructions().map(Construction::reason);
     }
 
     public Set<String> getAnonymousTypes() {
@@ -129,10 +128,6 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
 
     public Set<SLanguage> getAnonymousLanguages() {
         return reasons().filter(DQuotation.class).map(DQuotation::getAnonymousLanguage).notNull().toSet();
-    }
-
-    protected Collection<DCopy> getCopyReasons() {
-        return reasons().filter(DCopy.class);
     }
 
     public final S tryOriginal() {

@@ -18,29 +18,28 @@ package org.modelingvalue.dclare.mps;
 import java.util.Arrays;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
-import org.modelingvalue.dclare.mps.DAttribute.DIdentifyingAttribute;
+import org.modelingvalue.dclare.Mutable;
 
 public class DQuotation extends DDerive {
 
-    protected DQuotation(SLanguage anonymousLanguage, String anonymousType, Object[] ctx) {
-        super(Arrays.copyOf(ctx, ctx.length + 2));
-        Object[] array = array();
-        array[array.length - 2] = anonymousLanguage;
-        array[array.length - 1] = anonymousType;
+    protected DQuotation(Mutable thiz, SLanguage anonymousLanguage, String anonymousType, Object[] ctx) {
+        super(thiz, init(ctx, anonymousLanguage, anonymousType));
     }
 
-    @SuppressWarnings("unchecked")
-    protected <V> V get(DIdentifyingAttribute<?, V> attr) {
-        return (V) array()[attr.index()];
+    private static Object[] init(Object[] ctx, SLanguage anonymousLanguage, String anonymousType) {
+        Object[] array = Arrays.copyOf(ctx, ctx.length + 2);
+        array[array.length - 2] = anonymousLanguage;
+        array[array.length - 1] = anonymousType;
+        return array;
     }
 
     @Override
     public String getAnonymousType() {
-        return (String) array()[array().length - 1];
+        return (String) get(null, size() - 1);
     }
 
     public SLanguage getAnonymousLanguage() {
-        return (SLanguage) array()[array().length - 2];
+        return (SLanguage) get(null, size() - 2);
     }
 
 }

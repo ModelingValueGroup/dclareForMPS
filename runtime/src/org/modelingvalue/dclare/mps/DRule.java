@@ -78,7 +78,7 @@ public interface DRule<O> extends DFeature {
             DObject dObject = mutable();
             issues.init(Set.of());
             try {
-                if (dObject.isOwned() && !dObject.isObsolete(rule().anonymousType())) {
+                if (!dObject.isObsolete(rule().anonymousType())) {
                     super.doRun(pre, universeTransaction);
                 }
             } finally {

@@ -16,7 +16,6 @@
 package org.modelingvalue.dclare.mps;
 
 import java.util.Objects;
-import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
 import org.jetbrains.mps.openapi.language.SAbstractConcept;
@@ -204,23 +203,23 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                             for (SProperty property : c.getProperties()) {
                                                                                                                                                 DObserved<DNode, String> observed = PROPERTY.get(property);
                                                                                                                                                 observers = observers.add(copyObserver(observed,                                                                                                                //
-                                                                                                                                                        (o, cc) -> observed.set(o, observed.get(cc.copied()))));
+                                                                                                                                                        (t, s, r) -> observed.set(t, observed.get(s))));
                                                                                                                                             }
                                                                                                                                             for (SContainmentLink containment : c.getContainmentLinks()) {
                                                                                                                                                 if (containment.isMultiple()) {
                                                                                                                                                     DObserved<DNode, List<DNode>> observed = MANY_CONTAINMENT.get(containment);
                                                                                                                                                     observers = observers.add(copyObserver(observed,                                                                                                            //
-                                                                                                                                                            (o, cc) -> observed.set(o, copy(observed.get(cc.copied()), cc.root()))));
+                                                                                                                                                            (t, s, r) -> observed.set(t, copy(observed.get(s), r))));
                                                                                                                                                 } else {
                                                                                                                                                     DObserved<DNode, DNode> observed = SINGLE_CONTAINMENT.get(containment);
                                                                                                                                                     observers = observers.add(copyObserver(observed,                                                                                                            //
-                                                                                                                                                            (o, cc) -> observed.set(o, copy(observed.get(cc.copied()), cc.root()))));
+                                                                                                                                                            (t, s, r) -> observed.set(t, copy(observed.get(s), r))));
                                                                                                                                                 }
                                                                                                                                             }
                                                                                                                                             for (SReferenceLink reference : c.getReferenceLinks()) {
                                                                                                                                                 DObserved<DNode, DNode> observed = REFERENCE.get(reference);
                                                                                                                                                 observers = observers.add(copyObserver(observed,                                                                                                                //
-                                                                                                                                                        (o, cc) -> observed.set(o, map(o, observed.get(cc.copied()), cc.root()))));
+                                                                                                                                                        (t, s, r) -> observed.set(t, map(t, s, observed.get(s), r.copied()))));
                                                                                                                                             }
                                                                                                                                             return observers;
                                                                                                                                         });
@@ -287,10 +286,13 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
     @SuppressWarnings("rawtypes")
     protected static final Set<Setable>                                                                          SETABLES               = DMatchedObject.SETABLES.addAll(Set.of(NAME_OBSERVED, ROOT, MODEL, USER_OBJECTS, ALL_MPS_ISSUES, INDEX));
 
-    public static DNonCheckingObserver<DNode> copyObserver(Observed<DNode, ?> observed, BiConsumer<DNode, DCopy> action) {
-        return observer(observed, o -> {
-            for (DCopy cc : o.getCopyReasons()) {
-                action.accept(o, cc);
+    public static DNonCheckingObserver<DNode> copyObserver(Observed<DNode, ?> observed, TriConsumer<DNode, DNode, DCopy> action) {
+        return observer(observed, t -> {
+            for (Construction c : t.dConstructions()) {
+                if (c.reason() instanceof DCopy) {
+                    DCopy reason = (DCopy) c.reason();
+                    action.accept(t, reason.copied(), reason.root());
+                }
             }
         });
     }
@@ -399,7 +401,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
     }
 
     @Override
-    public List<? extends DNode> getChildren() {
+    public List<DNode> getChildren() {
         List<DNode> result = List.of();
         for (SContainmentLink cl : getConcept().getContainmentLinks()) {
             if (cl.isMultiple()) {
@@ -414,7 +416,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
         return result;
     }
 
-    public Set<? extends DNode> getReferenced() {
+    public Set<DNode> getReferenced() {
         Set<DNode> result = Set.of();
         for (SReferenceLink rl : getConcept().getReferenceLinks()) {
             DNode ref = REFERENCE.get(rl).get(this);
@@ -437,26 +439,31 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
         }
     }
 
-    private static DNode map(DNode dNode, DNode referenced, DCopy root) {
-        if (referenced != null) {
-            if (referenced.equals(root.copied())) {
-                while (dNode != null && !dNode.dConstructions().anyMatch(c -> c.reason().equals(root))) {
-                    dNode = (DNode) dNode.dParent();
-                }
-                return dNode;
-            } else if (referenced.hasAncestor(root.copied())) {
-                DNode parent = map(dNode, referenced.getParent(), root);
-                if (parent != null) {
-                    DCopy reason = new DCopy(referenced, root);
-                    DNonCheckingObserver<?> observer = DNonCheckingObserver.of(null, referenced.dContaining());
-                    return (DNode) observer.constructed().get(parent).get(Construction.of(parent, observer, reason));
-                }
-            } else {
-                return referenced;
+    private static DNode map(DNode copy, DNode copied, DNode referenced, DNode copiedRoot) {
+        if (referenced != null && referenced.hasAncestor(copiedRoot)) {
+            while (!referenced.hasAncestor(copied)) {
+                copied = copied.getParent();
+                copy = copy.getParent();
             }
+            while (!referenced.equals(copied)) {
+                List<DNode> copiedChildren = copied.getChildren();
+                List<DNode> copyChildren = copy.getChildren();
+                if (copiedChildren.size() == copyChildren.size()) {
+                    for (int i = 0; i < copiedChildren.size(); i++) {
+                        copied = copiedChildren.get(i);
+                        if (referenced.hasAncestor(copied)) {
+                            copy = copyChildren.get(i);
+                            break;
+                        }
+                    }
+                } else {
+                    return null;
+                }
+            }
+            return copy;
+        } else {
+            return referenced;
         }
-        return null;
-
     }
 
     @Override
@@ -940,9 +947,12 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
         return ist;
     }
 
-    public boolean hasAncestor(DNode dNode) {
-        DNode parent = getParent();
-        return equals(dNode) || (parent != null && parent.hasAncestor(dNode));
+    public boolean hasAncestor(DNode ancestor) {
+        DNode parent = this;
+        while (parent != null && !parent.equals(ancestor)) {
+            parent = parent.getParent();
+        }
+        return parent != null;
     }
 
     @SuppressWarnings("unchecked")

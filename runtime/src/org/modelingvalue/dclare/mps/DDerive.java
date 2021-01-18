@@ -16,11 +16,12 @@
 package org.modelingvalue.dclare.mps;
 
 import org.modelingvalue.dclare.Construction;
+import org.modelingvalue.dclare.Mutable;
 
 public abstract class DDerive extends Construction.Reason {
 
-    protected DDerive(Object[] identity) {
-        super(identity);
+    protected DDerive(Mutable thiz, Object[] identity) {
+        super(thiz, identity);
     }
 
     public abstract String getAnonymousType();
