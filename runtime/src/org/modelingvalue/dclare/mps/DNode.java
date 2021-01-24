@@ -383,7 +383,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
     @Override
     public String toString() {
         SConcept concept = getConcept();
-        Object id = dIdentity();
+        Object id = dCatchingIdentity();
         return concept.getName() + (id != null && id != DUMMY_ID ? "#" + identity[0] + ":" + id : "#" + identity[0]);
     }
 
