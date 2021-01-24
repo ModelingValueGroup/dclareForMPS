@@ -38,17 +38,18 @@ public interface DAttribute<O, T> extends DFeature {
 
     @SuppressWarnings("unchecked")
     static <C, V> DAttribute<C, V> of(String id, String name, String anonymousType, String ruleSetType, boolean synthetic, boolean optional, boolean composite, int identifyingNr, Object def, Class<?> cls, String opposite, Supplier<SNode> source, Function<C, V> deriver, boolean onlyTemporal) {
+        boolean idAttr = identifyingNr >= 0 && ("StructRuleSet".equals(ruleSetType) || anonymousType != null);
         SetableModifier[] mods = new SetableModifier[0];
         if (synthetic) {
             mods = Setable.addModifier(mods, SetableModifier.synthetic);
         }
-        if (!optional || identifyingNr >= 0) {
+        if (idAttr || (!optional && identifyingNr < 0)) {
             mods = Setable.addModifier(mods, SetableModifier.mandatory);
         }
         if (composite) {
             mods = Setable.addModifier(mods, SetableModifier.containment);
         }
-        return identifyingNr >= 0 && ("StructRuleSet".equals(ruleSetType) || anonymousType != null) ? new DIdentifyingAttribute(id, name, anonymousType, identifyingNr, cls, source, mods) : //
+        return idAttr ? new DIdentifyingAttribute(id, name, anonymousType, identifyingNr, cls, source, mods) : //
                 deriver != null ? new DConstant(id, name, cls, source, deriver, onlyTemporal, mods) : //
                         new DObservedAttribute(id, name, identifyingNr >= 0, def, cls, opposite != null ? () -> of(opposite) : null, source, new InvalidProperty(id.toString(), name), mods);
     }
