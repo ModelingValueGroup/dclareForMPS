@@ -73,9 +73,7 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
                                                                                              });
 
     private static final Action<DModule>                                      READ_MODELS    = Action.of("$READ_MODELS", m -> {
-                                                                                                 Set<SLanguage> languages = dClareMPS().read(() -> languages(m.original()));
-                                                                                                 LANGUAGES.set(m, languages);
-                                                                                                 if (!m.isExternal() && hasRuleSets(languages)) {
+                                                                                                 if (!m.isExternal()) {
                                                                                                      MODELS.set(m, dClareMPS().read(() -> models(m.original()).sequential().map(DModel::read).toSet()));
                                                                                                  }
                                                                                              });
