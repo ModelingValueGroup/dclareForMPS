@@ -74,6 +74,7 @@ import org.modelingvalue.dclare.mps.DNonCheckingObserver.DNonCheckingTransaction
 import org.modelingvalue.dclare.mps.DRule.DObserver;
 import org.modelingvalue.dclare.mps.DRule.DObserverTransaction;
 import org.modelingvalue.dclare.mps.DclareModelCheckerBuilder.RootItemsToCheck;
+import org.modelingvalue.dclare.sync.NetUtils;
 
 import jetbrains.mps.checkers.AbstractNodeCheckerInEditor;
 import jetbrains.mps.checkers.IAbstractChecker;
@@ -172,6 +173,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     private final NodeCheckerInEditor                                                                   nodeCheckerInEditor;
     private final LanguageEditorChecker                                                                 languageEditorChecker;
     private final IAbstractChecker<ItemsToCheck, IssueKindReportItem>                                   mpsChecker;
+    private final MPSDeltaAdapter                                                                       deltaAdapter;
     private final Concurrent<Set<SModel>>                                                               changedModels        = Concurrent.of(Set.of());
     private final Concurrent<Set<SModule>>                                                              changedModules       = Concurrent.of(Set.of());
     private final Concurrent<Set<SNode>>                                                                changedRoots         = Concurrent.of(Set.of());
@@ -254,6 +256,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
             }
 
         };
+        deltaAdapter = new MPSDeltaAdapter("mps-sync", universeTransaction, new MPSSerializationHelper(projectRepository) );
         this.dObserverTransactions = Concurrent.of(() -> new ReusableTransaction<>(universeTransaction));
         this.dNonCheckingTransactions = Concurrent.of(() -> new ReusableTransaction<>(universeTransaction));
         waitForEndThread = new Thread(() -> {
@@ -275,6 +278,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
                 }
             }
         }, "dclare-waitForEnd");
+        
         waitForEndThread.setDaemon(true);
         waitForEndThread.start();
         statsThread = new StatsUpdater();
@@ -291,6 +295,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
         }, false);
         ALL.add(this);
         REPOSITORY_CONTAINER.set(this, getRepository());
+        universeTransaction.put("delta-support-starter", ()->NetUtils.startDeltaSupport(deltaAdapter));
     }
 
     private void start() {

@@ -135,6 +135,9 @@
   <path id="library.gen:_immutable-collections.classpath">
     <pathelement location="${basedir}/lib/immutable-collections.jar"/>
   </path>
+  <path id="library.gen:_mvgjson.classpath">
+    <pathelement location="${basedir}/lib/mvgjson.jar"/>
+  </path>
   <path id="library.gen:_mps.classpath">
     <pathelement location="${path.variable.mps_home}/lib/extensions.jar"/>
     <pathelement location="${path.variable.mps_home}/lib/mps-closures.jar"/>
