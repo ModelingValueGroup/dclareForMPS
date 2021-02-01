@@ -1,5 +1,5 @@
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// (C) Copyright 2018-2020 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
+// (C) Copyright 2018-2021 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
 //                                                                                                                     ~
 // Licensed under the GNU Lesser General Public License v3.0 (the 'License'). You may not use this file except in      ~
 // compliance with the License. You may obtain a copy of the License at: https://choosealicense.com/licenses/lgpl-3.0  ~
@@ -15,31 +15,37 @@
 
 package org.modelingvalue.dclare.mps;
 
-import java.util.function.*;
-import java.util.stream.*;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
-import org.jetbrains.mps.openapi.language.*;
-import org.modelingvalue.collections.*;
-import org.modelingvalue.collections.util.*;
-import org.modelingvalue.dclare.*;
+import org.jetbrains.mps.openapi.language.SLanguage;
+import org.modelingvalue.collections.Collection;
+import org.modelingvalue.collections.Set;
+import org.modelingvalue.collections.util.Pair;
+import org.modelingvalue.dclare.Action;
+import org.modelingvalue.dclare.Direction;
+import org.modelingvalue.dclare.Mutable;
+import org.modelingvalue.dclare.NonCheckingObserved;
+import org.modelingvalue.dclare.Observed;
+import org.modelingvalue.dclare.Observer;
+import org.modelingvalue.dclare.Setable;
+import org.modelingvalue.dclare.SetableModifier;
 
-import jetbrains.mps.errors.item.*;
+import jetbrains.mps.errors.item.IssueKindReportItem;
 
 @SuppressWarnings({"rawtypes", "unused"})
 public abstract class DObject implements Mutable {
 
-    protected static final Observer<DObject>                                           START_OBSERVER            = Observer.of("START_OBSERVER", o -> o.start(dClareMPS()));
+    private static final DObjectType<String>                                           DUMMY_TYPE                = new DObjectType<>("<DUMMY_TYPE>") {
+                                                                                                                     @Override
+                                                                                                                     public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
+                                                                                                                         return Set.of();
+                                                                                                                     }
 
-    private static final DObjectType<String> DUMMY_TYPE = new DObjectType<>("<DUMMY_TYPE>") {
-        @Override
-        public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
-            return Set.of();
-        }
-
-        @Override
-        public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
-            return Set.of();
-        }
+                                                                                                                     @Override
+                                                                                                                     public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
+                                                                                                                         return Set.of();
+                                                                                                                     }
 
                                                                                                                      @Override
                                                                                                                      public Set<SLanguage> getLanguages() {
@@ -68,28 +74,28 @@ public abstract class DObject implements Mutable {
                                                                                                                      for (DObject c : o.getAllChildren()) {
                                                                                                                          DObject.REFRESH.trigger(c);
                                                                                                                      }
-                                                                                                                 }, Direction.forward);
+                                                                                                                 });
 
     protected static final Action<DObject>                                             REFRESH                   = Action.of("$REFRESH", o -> {
                                                                                                                      o.read(dClareMPS());
                                                                                                                      DObject.REFRESH_CHILDREN.trigger(o);
-                                                                                                                 }, Direction.forward);
+                                                                                                                 });
 
-    protected static final DObserved<DObject, Set<Pair<DObject, IssueKindReportItem>>> MPS_ISSUES                = DObserved.of("$MPS_ISSUES", Set.of(), false, false, null, false, null, (tx, o, pre, post) -> {
+    protected static final DObserved<DObject, Set<Pair<DObject, IssueKindReportItem>>> MPS_ISSUES                = DObserved.of("$MPS_ISSUES", Set.of(), null, (tx, o, pre, post) -> {
                                                                                                                      DNode root = o instanceof DNode ? ((DNode) o).getContainingRoot() : null;
                                                                                                                      if (root != null) {
                                                                                                                          Setable.<Set<Pair<DObject, IssueKindReportItem>>, Pair<DObject, IssueKindReportItem>> diff(pre, post,   //
                                                                                                                                  a -> DNode.ALL_MPS_ISSUES.set(root, Set::add, a),                                               //
                                                                                                                                  r -> DNode.ALL_MPS_ISSUES.set(root, Set::remove, r));
                                                                                                                      }
+                                                                                                                 });
+
+    protected static final Setable<DObject, Set<DIssue>>                               DRULE_ISSUES              = Setable.of("$DRULE_ISSUES", Set.of(), SetableModifier.containment);
+
+    protected static final DObserved<DObject, Set<DIssue>>                             DCLARE_ISSUES             = DObserved.of("$DCLARE_ISSUES", Set.of(), () -> DIssue.DOBJECT, (dObject, pre, post) -> {
                                                                                                                  }, null);
 
-    protected static final Setable<DObject, Set<DIssue>>                               DRULE_ISSUES              = Setable.of("$DRULE_ISSUES", Set.of(), true);
-
-    protected static final DObserved<DObject, Set<DIssue>>                             DCLARE_ISSUES             = DObserved.of("$DCLARE_ISSUES", Set.of(), false, false, () -> DIssue.DOBJECT, false, (dObject, pre, post) -> {
-                                                                                                                 }, null);
-
-    protected static final Set<Observer>                                               OBSERVERS                 = Set.of(TYPE_RULE, CONTAINING_ATTRIBUTE_RULE, START_OBSERVER);
+    protected static final Set<Observer>                                               OBSERVERS                 = Set.of(TYPE_RULE, CONTAINING_ATTRIBUTE_RULE);
 
     protected static final Set<Setable>                                                SETABLES                  = Set.of(TYPE, MPS_ISSUES, DRULE_ISSUES, DCLARE_ISSUES, CONTAINING_ATTRIBUTE);
 
@@ -135,7 +141,13 @@ public abstract class DObject implements Mutable {
     }
 
     @Override
-    public final void dDeactivate() {
+    public void dActivate() {
+        Mutable.super.dActivate();
+        start(dClareMPS());
+    }
+
+    @Override
+    public void dDeactivate() {
         Mutable.super.dDeactivate();
         stop(dClareMPS());
     }
@@ -149,10 +161,8 @@ public abstract class DObject implements Mutable {
     }
 
     protected final void start(DClareMPS dClareMPS) {
-        if (!(dContaining() instanceof DMatchedObject.UnidentifiedObserved)) {
-            init(dClareMPS);
-            read(dClareMPS);
-        }
+        init(dClareMPS);
+        read(dClareMPS);
     }
 
     protected void stop(DClareMPS dClareMPS) {
@@ -179,5 +189,9 @@ public abstract class DObject implements Mutable {
     }
 
     public abstract boolean isExternal();
+
+    protected boolean isObsolete(String anonymousType) {
+        return false;
+    }
 
 }

@@ -1,5 +1,5 @@
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// (C) Copyright 2018-2020 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
+// (C) Copyright 2018-2021 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
 //                                                                                                                     ~
 // Licensed under the GNU Lesser General Public License v3.0 (the 'License'). You may not use this file except in      ~
 // compliance with the License. You may obtain a copy of the License at: https://choosealicense.com/licenses/lgpl-3.0  ~
@@ -55,6 +55,7 @@ import org.modelingvalue.dclare.Observed;
 import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.ReusableTransaction;
 import org.modelingvalue.dclare.Setable;
+import org.modelingvalue.dclare.SetableModifier;
 import org.modelingvalue.dclare.State;
 import org.modelingvalue.dclare.Universe;
 import org.modelingvalue.dclare.UniverseStatistics;
@@ -147,7 +148,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
                                                                                                                                  return aspect != null ? Collection.of(aspect.getRuleSets()).toSet() : Set.of();
                                                                                                                              });
 
-    private final static Setable<DClareMPS, DRepository>                                                REPOSITORY_CONTAINER = Setable.of("REPOSITORY_CONTAINER", null, true);
+    private final static Setable<DClareMPS, DRepository>                                                REPOSITORY_CONTAINER = Setable.of("REPOSITORY_CONTAINER", null, SetableModifier.containment);
 
     protected static final Set<? extends Setable<? extends Mutable, ?>>                                 SETABLES             = Set.of(REPOSITORY_CONTAINER);
 
@@ -224,8 +225,8 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
             }
 
             @Override
-            protected void handleException(Throwable t) {
-                addMessage(t);
+            protected void handleExceptions(Set<Throwable> errors) {
+                addMessages(errors);
             }
 
             @Override
@@ -304,26 +305,31 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
         }
     }
 
-    @SuppressWarnings("rawtypes")
     protected void addMessage(Throwable throwable) {
+        addMessages(Set.of(throwable));
+    }
+
+    @SuppressWarnings("rawtypes")
+    protected void addMessages(Set<Throwable> throwables) {
         if (!universeTransaction.isKilled()) {
             universeTransaction.currentState().run(() -> {
                 DObject object = getRepository();
                 DFeature feature = DRepository.EXCEPTIONS;
-                Throwable t = throwable;
-                while (t instanceof TransactionException) {
-                    if (((TransactionException) t).getTransactionClass() instanceof DObserver) {
-                        feature = ((DObserver) ((TransactionException) t).getTransactionClass()).rule();
+                for (Throwable t : throwables.sorted(universeTransaction::compareThrowable)) {
+                    while (t instanceof TransactionException) {
+                        if (((TransactionException) t).getTransactionClass() instanceof DObserver) {
+                            feature = ((DObserver) ((TransactionException) t).getTransactionClass()).rule();
+                        }
+                        if (((TransactionException) t).getTransactionClass() instanceof DObject) {
+                            object = (DObject) ((TransactionException) t).getTransactionClass();
+                        }
+                        t = t.getCause();
                     }
-                    if (((TransactionException) t).getTransactionClass() instanceof DObject) {
-                        object = (DObject) ((TransactionException) t).getTransactionClass();
+                    if (t instanceof ConsistencyError) {
+                        addMessage((ConsistencyError) t);
+                    } else {
+                        addThrowableMessage(object, feature, t);
                     }
-                    t = t.getCause();
-                }
-                if (t instanceof ConsistencyError) {
-                    addMessage((ConsistencyError) t);
-                } else {
-                    addThrowableMessage(object, feature, t);
                 }
             });
             engine.stopEngine();
@@ -343,6 +349,8 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
             addEmptyMandatoryExceptionMessage(object, feature, (EmptyMandatoryException) t);
         } else if (t instanceof ReferencedOrphanException) {
             addReferencedOrphanExceptionMessage(object, feature, (ReferencedOrphanException) t);
+        } else if (t instanceof UnidentifiedException) {
+            addUnidentifiedExceptionMessage(object, feature, (UnidentifiedException) t);
         } else if (t instanceof TooManyChangesException) {
             addTooManyChangesExceptionMessage(object, feature, (TooManyChangesException) t);
         } else if (t instanceof TooManyObservedException) {
@@ -395,6 +403,11 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
                 }
             }
         }
+        addMessage(message);
+    }
+
+    private void addUnidentifiedExceptionMessage(DObject context, DFeature feature, UnidentifiedException uie) {
+        DMessage message = new DMessage(context, feature, DMessageType.error, "UNIDENTIFIED", uie.getMessage());
         addMessage(message);
     }
 
@@ -742,7 +755,9 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
                     }
                     for (IssueKindReportItem item : reportItems) {
                         DObject d = read(() -> context(item));
-                        DObject.MPS_ISSUES.set(d, Set::add, Pair.of(d, item));
+                        if (d != null) {
+                            DObject.MPS_ISSUES.set(d, Set::add, Pair.of(d, item));
+                        }
                     }
                 });
             });
@@ -755,11 +770,14 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     protected DObject context(ReportItem item) {
         SRepository repos = getRepository().original();
         if (item instanceof NodeReportItem) {
-            return DNode.of(((NodeReportItem) item).getNode().resolve(repos));
+            SNode s = ((NodeReportItem) item).getNode().resolve(repos);
+            return s != null ? DNode.of(s) : null;
         } else if (item instanceof ModelReportItem) {
-            return DModel.of(((ModelReportItem) item).getModel().resolve(repos));
+            SModel s = ((ModelReportItem) item).getModel().resolve(repos);
+            return s != null ? DModel.of(s) : null;
         } else {
-            return DModule.of(((ModuleReportItem) item).getModule().resolve(repos));
+            SModule s = ((ModuleReportItem) item).getModule().resolve(repos);
+            return s != null ? DModule.of(s) : null;
         }
     }
 

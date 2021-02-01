@@ -1,5 +1,5 @@
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// (C) Copyright 2018-2020 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
+// (C) Copyright 2018-2021 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
 //                                                                                                                     ~
 // Licensed under the GNU Lesser General Public License v3.0 (the 'License'). You may not use this file except in      ~
 // compliance with the License. You may obtain a copy of the License at: https://choosealicense.com/licenses/lgpl-3.0  ~
@@ -15,51 +15,22 @@
 
 package org.modelingvalue.dclare.mps;
 
-import java.util.Arrays;
+import org.modelingvalue.dclare.Setable;
+import org.modelingvalue.dclare.ex.ConsistencyError;
 
-import org.modelingvalue.collections.util.Age;
+@SuppressWarnings("unused")
+public final class UnidentifiedException extends ConsistencyError {
 
-public abstract class DConstruction {
+    private static final long serialVersionUID = 5442977255041372354L;
 
-    protected Object[] identity;
-
-    protected DConstruction(Object[] identity) {
-        this.identity = identity;
+    @SuppressWarnings("rawtypes")
+    public UnidentifiedException(Object object, DRule.DObserver observer, Object value) {
+        super(object, observer, 4, "Rule '" + observer.rule() + "' in object '" + object + "' assigns unidentified objects '" + value + "'");
     }
 
-    @Override
-    public int hashCode() {
-        return Arrays.deepHashCode(identity);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        } else if (obj == null) {
-            return false;
-        } else if (getClass() != obj.getClass()) {
-            return false;
-        } else {
-            DConstruction other = (DConstruction) obj;
-            if (other.identity == identity) {
-                return true;
-            } else if (!Arrays.deepEquals(identity, other.identity)) {
-                return false;
-            } else {
-                if (Age.age(identity) > Age.age(other.identity)) {
-                    other.identity = identity;
-                } else {
-                    identity = other.identity;
-                }
-                return true;
-            }
-        }
-    }
-
-    @Override
-    public String toString() {
-        return Arrays.toString(identity);
+    @SuppressWarnings("rawtypes")
+    public UnidentifiedException(Object object, Setable setable, Object value) {
+        super(object, setable, 4, "Property '" + setable + "' of object '" + object + "' is assigned with unidentified objects '" + value + "'");
     }
 
 }

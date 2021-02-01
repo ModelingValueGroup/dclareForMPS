@@ -1,5 +1,5 @@
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// (C) Copyright 2018-2020 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
+// (C) Copyright 2018-2021 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
 //                                                                                                                     ~
 // Licensed under the GNU Lesser General Public License v3.0 (the 'License'). You may not use this file except in      ~
 // compliance with the License. You may obtain a copy of the License at: https://choosealicense.com/licenses/lgpl-3.0  ~
@@ -15,32 +15,34 @@
 
 package org.modelingvalue.dclare.mps;
 
-import org.modelingvalue.collections.Set;
-import org.modelingvalue.dclare.Observer;
+import org.modelingvalue.dclare.Mutable;
 
-public abstract class DDeriveConstruction extends DConstruction {
+public class DCopy extends DDerive {
 
-    protected DDeriveConstruction(Object[] identity) {
-        super(identity);
+    protected DCopy(Mutable thiz, DNode copied, String anonymousType) {
+        this(new Object[]{copied, anonymousType});
     }
 
-    protected abstract DDeriveConstruction moveTo(DObject object);
+    protected DCopy(Mutable thiz, DNode copied, DCopy root) {
+        this(new Object[]{copied, root});
+    }
 
-    public abstract Observer<?> observer();
+    private DCopy(Object[] identity) {
+        super(null, identity);
+    }
 
-    public abstract DObject object();
+    public DCopy root() {
+        Object e = get(null, 1);
+        return e instanceof DCopy ? (DCopy) e : this;
+    }
 
-    public abstract String getAnonymousType();
+    public DNode copied() {
+        return (DNode) get(null, 0);
+    }
 
-    @SuppressWarnings("rawtypes")
-    public Set<DMatchedObject> context() {
-        Set<DMatchedObject> result = Set.of();
-        for (int i = 0; i < identity.length; i++) {
-            if (identity[i] instanceof DMatchedObject) {
-                result = result.add((DMatchedObject) identity[i]);
-            }
-        }
-        return result;
+    @Override
+    public String getAnonymousType() {
+        return (String) root().get(null, 1);
     }
 
 }

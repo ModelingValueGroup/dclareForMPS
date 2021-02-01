@@ -1,5 +1,5 @@
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// (C) Copyright 2018-2020 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
+// (C) Copyright 2018-2021 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
 //                                                                                                                     ~
 // Licensed under the GNU Lesser General Public License v3.0 (the 'License'). You may not use this file except in      ~
 // compliance with the License. You may obtain a copy of the License at: https://choosealicense.com/licenses/lgpl-3.0  ~
@@ -15,7 +15,6 @@
 
 package org.modelingvalue.dclare.mps;
 
-import org.modelingvalue.collections.Map;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Concurrent;
 import org.modelingvalue.dclare.Constant;
@@ -66,11 +65,9 @@ public interface DRule<O> extends DFeature {
 
     }
 
-    class DObserverTransaction extends ObserverTransaction implements DConstructingTransaction {
+    class DObserverTransaction extends ObserverTransaction {
 
-        final Concurrent<Set<DIssue>>                              issues      = Concurrent.of();
-
-        final Concurrent<Map<DDeriveConstruction, DMatchedObject>> constructed = Concurrent.of();
+        final Concurrent<Set<DIssue>> issues = Concurrent.of();
 
         private DObserverTransaction(UniverseTransaction root) {
             super(root);
@@ -78,22 +75,20 @@ public interface DRule<O> extends DFeature {
 
         @Override
         protected final void doRun(State pre, UniverseTransaction universeTransaction) {
-            DObject dObject = object();
+            DObject dObject = mutable();
             issues.init(Set.of());
-            constructed.init(Map.of());
             try {
-                if (dObject.isOwned()) {
+                if (!dObject.isObsolete(rule().anonymousType())) {
                     super.doRun(pre, universeTransaction);
                 }
             } finally {
                 DObject.DRULE_ISSUES.set(dObject, (b, a) -> a.addAll(b.filter(i -> !i.getRule().equals(rule()))), issues.result());
-                runNonObserving(() -> DMatchedObject.CONSTRUCTED.get(observer()).set(dObject, constructed.result()));
             }
         }
 
         @Override
-        public DObject object() {
-            return (DObject) mutable();
+        public DObject mutable() {
+            return (DObject) super.mutable();
         }
 
         @Override
@@ -105,15 +100,12 @@ public interface DRule<O> extends DFeature {
             return observer().rule();
         }
 
-        @Override
-        public Concurrent<Map<DDeriveConstruction, DMatchedObject>> constructed() {
-            return constructed;
-        }
-
     }
 
     void run(O object);
 
     boolean initialLowPriority();
+
+    String anonymousType();
 
 }
