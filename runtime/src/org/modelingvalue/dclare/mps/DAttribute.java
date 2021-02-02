@@ -104,7 +104,6 @@ public interface DAttribute<O, T> extends DFeature {
                     if (sNode != null) {
                         sNode.setProperty(sProperty, "");
                         sNode.setProperty(sProperty, null);
-                        System.err.println("!!!!!!!!SET!!!!!!!!!!!! " + o + "." + sProperty);
                     }
                 }
             }, null, source, modifiers);
@@ -145,7 +144,6 @@ public interface DAttribute<O, T> extends DFeature {
                 SNode original = ((DNode) object).tryOriginal();
                 if (original != null) {
                     original.getProperty(sProperty);
-                    System.err.println("!!!!!!!!!GET!!!!!!!!!!! " + object + "." + sProperty);
                 }
             }
             return super.get(object);
