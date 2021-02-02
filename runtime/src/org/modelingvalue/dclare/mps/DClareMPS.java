@@ -254,7 +254,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
             }
 
         };
-        deltaAdapter = new MPSDeltaAdapter("mps-sync", universeTransaction, new MPSSerializationHelper(projectRepository) );
+        deltaAdapter = new MPSDeltaAdapter("mps-sync", universeTransaction, new MPSSerializationHelper(projectRepository));
         this.dObserverTransactions = Concurrent.of(() -> new ReusableTransaction<>(universeTransaction));
         waitForEndThread = new Thread(() -> {
             State result = universeTransaction.emptyState();
@@ -275,7 +275,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
                 }
             }
         }, "dclare-waitForEnd");
-        
+
         waitForEndThread.setDaemon(true);
         waitForEndThread.start();
         statsThread = new StatsUpdater();
@@ -292,7 +292,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
         }, false);
         ALL.add(this);
         REPOSITORY_CONTAINER.set(this, getRepository());
-        universeTransaction.put("delta-support-starter", ()->NetUtils.startDeltaSupport(deltaAdapter));
+        universeTransaction.put("delta-support-starter", () -> NetUtils.startDeltaSupport(deltaAdapter));
     }
 
     private void start() {
