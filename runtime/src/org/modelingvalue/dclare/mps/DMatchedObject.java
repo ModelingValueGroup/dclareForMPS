@@ -15,7 +15,6 @@
 
 package org.modelingvalue.dclare.mps;
 
-import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Supplier;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
@@ -39,8 +38,6 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
     protected static final Set<Observer>                 OBSERVERS = DObject.OBSERVERS;
 
     protected static final Set<Setable>                  SETABLES  = DObject.SETABLES;
-
-    protected static final AtomicLong                    COUNTER   = new AtomicLong(0L);
 
     protected static <D extends DMatchedObject> D quotationConstruct(SLanguage anonymousLanguage, String anonymousType, Object[] ctx, Supplier<D> supplier) {
         LeafTransaction tx = LeafTransaction.getCurrent();

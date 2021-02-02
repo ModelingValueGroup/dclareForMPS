@@ -160,7 +160,7 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
 
     public static DModel of(SLanguage anonymousLanguage, String anonymousType, Object[] identity, boolean temporal) {
         return quotationConstruct(anonymousLanguage, anonymousType, identity, //
-                () -> new DModel(new Object[]{COUNTER.getAndIncrement(), temporal}));
+                () -> new DModel(new Object[]{DClareMPS.uniqueLong(), temporal}));
     }
 
     protected static DModel read(SModel original) {
@@ -176,7 +176,7 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
     }
 
     public static DModel of(SModelReference ref, SModel original) {
-        return readConstruct(ref, () -> new DModel(new Object[]{COUNTER.getAndIncrement(), false}), original);
+        return readConstruct(ref, () -> new DModel(new Object[]{DClareMPS.uniqueLong(), false}), original);
     }
 
     protected DModel(Object[] identity) {

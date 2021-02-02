@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -175,6 +176,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     private final Concurrent<Set<SModel>>                                                               changedModels        = Concurrent.of(Set.of());
     private final Concurrent<Set<SModule>>                                                              changedModules       = Concurrent.of(Set.of());
     private final Concurrent<Set<SNode>>                                                                changedRoots         = Concurrent.of(Set.of());
+    private final AtomicLong                                                                            counter              = new AtomicLong(0L);
 
     protected DClareMPS(DclareForMPSEngine engine, ProjectBase project, State prevState, int maxTotalNrOfChanges, int maxNrOfChanges, int maxNrOfObserved, int maxNrOfObservers, StartStopHandler startStopHandler) {
         this.project = project;
@@ -517,6 +519,10 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
 
     public static DClareMPS instance() {
         return (DClareMPS) LeafTransaction.getCurrent().universeTransaction().mutable();
+    }
+
+    public static long uniqueLong() {
+        return instance().counter.getAndIncrement();
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})

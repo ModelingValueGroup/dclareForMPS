@@ -300,17 +300,17 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
 
     public static DNode of(SLanguage anonymousLanguage, String anonymousType, Object[] identity, SConcept concept) {
         return quotationConstruct(anonymousLanguage, anonymousType, identity, //
-                () -> new DNode(new Object[]{COUNTER.getAndIncrement(), concept}));
+                () -> new DNode(new Object[]{DClareMPS.uniqueLong(), concept}));
     }
 
     public DNode copy(String anonymousType, DObject ctx) {
         return copyRootConstruct(anonymousType, ctx, this, //
-                () -> new DNode(new Object[]{COUNTER.getAndIncrement(), getConcept()}));
+                () -> new DNode(new Object[]{DClareMPS.uniqueLong(), getConcept()}));
     }
 
     private DNode copy(DCopy root) {
         return copyChildConstruct(root, this, //
-                () -> new DNode(new Object[]{COUNTER.getAndIncrement(), getConcept()}));
+                () -> new DNode(new Object[]{DClareMPS.uniqueLong(), getConcept()}));
     }
 
     protected static DNode read(SNode original) {
@@ -329,7 +329,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
 
     public static DNode of(SConcept concept, SNodeReference ref, SNode original) {
         Objects.requireNonNull(ref.getModelReference(), "DNode of empty SModel reference is most illogical");
-        return readConstruct(ref, () -> new DNode(new Object[]{COUNTER.getAndIncrement(), concept}), original);
+        return readConstruct(ref, () -> new DNode(new Object[]{DClareMPS.uniqueLong(), concept}), original);
     }
 
     @Override
