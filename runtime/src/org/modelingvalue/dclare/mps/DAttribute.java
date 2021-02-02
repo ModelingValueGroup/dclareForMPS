@@ -100,10 +100,11 @@ public interface DAttribute<O, T> extends DFeature {
         public DObservedAttribute(Object id, String name, boolean indetifying, V def, Class<?> cls, Supplier<Setable<?, ?>> opposite, Supplier<SNode> source, SProperty sProperty, SetableModifier... modifiers) {
             super(id, def, opposite, (o, b, a) -> {
                 if (o instanceof DNode) {
-                    SNode sNode = ((DNode) o).tryOriginal();
+                    SNode sNode = ((DNode) o).original();
                     if (sNode != null) {
                         sNode.setProperty(sProperty, "");
                         sNode.setProperty(sProperty, null);
+                        System.err.println("!!!!!!!!SET!!!!!!!!!!!! " + o + "." + sProperty);
                     }
                 }
             }, null, source, modifiers);
@@ -144,6 +145,7 @@ public interface DAttribute<O, T> extends DFeature {
                 SNode original = ((DNode) object).tryOriginal();
                 if (original != null) {
                     original.getProperty(sProperty);
+                    System.err.println("!!!!!!!!!GET!!!!!!!!!!! " + object + "." + sProperty);
                 }
             }
             return super.get(object);
