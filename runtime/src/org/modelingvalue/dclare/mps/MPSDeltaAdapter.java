@@ -29,13 +29,13 @@ import org.modelingvalue.dclare.sync.SerializationHelper;
 
 public class MPSDeltaAdapter extends DeltaAdaptor<DObjectType<DObject>, DObject, Setable<DObject, Object>> {
 
-	public MPSDeltaAdapter(String name, UniverseTransaction tx,
-			SerializationHelper<DObjectType<DObject>, DObject, Setable<DObject, Object>> helper) {
-		super(name, tx, helper);		
-	}
-	
-	
-	protected void queueDelta(State pre, State post, Boolean last) {
+    public MPSDeltaAdapter(String name, UniverseTransaction tx, SerializationHelper<DObjectType<DObject>, DObject, Setable<DObject, Object>> helper) {
+        super(name, tx, helper);
+    }
+
+    @Override
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    protected void queueDelta(State pre, State post, Boolean last) {
         Map<Object, Map<Setable, Pair<Object, Object>>> deltaMap = pre.diff(post, getObjectFilter(), (Predicate<Setable>) (Object) helper.setableFilter()).toMap(e1 -> e1);
         if (!deltaMap.isEmpty()) {
             try {
@@ -46,16 +46,16 @@ public class MPSDeltaAdapter extends DeltaAdaptor<DObjectType<DObject>, DObject,
                 w.write(delta);
                 w.flush();
                 w.close();
-                
+
                 //read in file, to test al id's are resolvable!
                 //accept(delta);
             } catch (InterruptedException e) {
                 //e.printStackTrace();//TOMTOMTOM
                 throw new Error(e);
             } catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         }
     }
 
