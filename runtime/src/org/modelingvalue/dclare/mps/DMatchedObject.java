@@ -89,7 +89,7 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
 
     private Construction getQuotationConstruction(String anonymousType) {
         for (Construction c : dConstructions()) {
-            if (c.reason() instanceof DQuotation && ((DQuotation) c.reason()).getAnonymousType() == anonymousType && !c.isObsolete()) {
+            if (c.reason() instanceof DQuotation && ((DQuotation) c.reason()).getAnonymousType() == anonymousType && !c.object().dIsObsolete()) {
                 return c;
             }
         }

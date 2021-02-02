@@ -286,12 +286,13 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
     @SuppressWarnings("rawtypes")
     protected static final Set<Setable>                                                                          SETABLES               = DMatchedObject.SETABLES.addAll(Set.of(NAME_OBSERVED, ROOT, MODEL, USER_OBJECTS, ALL_MPS_ISSUES, INDEX));
 
-    public static DNonCheckingObserver<DNode> copyObserver(Observed<DNode, ?> observed, TriConsumer<DNode, DNode, DCopy> action) {
-        return observer(observed, t -> {
+    public static Observer<DNode> copyObserver(Observed<DNode, ?> observed, TriConsumer<DNode, DNode, DCopy> action) {
+        return Observer.of(observed, t -> {
             for (Construction c : t.dConstructions()) {
-                if (c.reason() instanceof DCopy) {
+                if (c.reason() instanceof DCopy && !c.object().dIsObsolete()) {
                     DCopy reason = (DCopy) c.reason();
                     action.accept(t, reason.copied(), reason.root());
+                    break;
                 }
             }
         });
@@ -358,7 +359,8 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
     @Override
     protected SNode create() {
         SConcept concept = getConcept();
-        SModel sModel = getModel().original();
+        DModel dModel = getModel();
+        SModel sModel = dModel.original();
         SNode sNode = sModel.createNode(concept);
         DObject parent = dObjectParent();
         if (parent instanceof DModel) {
@@ -383,7 +385,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
     @Override
     public String toString() {
         SConcept concept = getConcept();
-        Object id = dCatchingIdentity();
+        Object id = dMatchingIdentity();
         return concept.getName() + (id != null && id != DUMMY_ID ? "#" + identity[0] + ":" + id : "#" + identity[0]);
     }
 
