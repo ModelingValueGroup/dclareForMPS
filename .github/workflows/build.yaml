@@ -1,136 +1,26 @@
 name: build
 
-on: [push]
+on:
+  push:
+    branches: [ "*" ]
 
 jobs:
   build:
     runs-on: ubuntu-20.04
+    if: "!contains(github.event.head_commit.message, '[no-ci]')"
     env:
-      GITHUB_TOKEN: "${{secrets.GITHUB_TOKEN}}"
       ALLREP_TOKEN: "${{secrets.ALLREP_TOKEN}}"
+      TOKEN: "${{secrets.ALLREP_TOKEN}}"
+      CI: "true"
     steps:
-      - name: "checkout"
-        uses: actions/checkout@v1
+      - uses: actions/checkout@v2.3.4
+        with:
+          fetch-depth: 0
 
-      - name: "attach git head"
-        run: git checkout "${GITHUB_REF#refs/heads/}"
-
-      - name: "setup JDK"
-        uses: actions/setup-java@v1
+      - uses: actions/setup-java@v1
         with:
           java-version: 11
 
-      - name: "get generic mvg-info"
-        uses: ModelingValueGroup/generic-info@master
-
-      - name: "get buildtools"
-        uses: ModelingValueGroup/buildtools@master
-
-      - name: "if master: fail if there is already a tag for this version"
-        if: github.ref == 'refs/heads/master'
-        run:  |
-          . <(java -jar ~/buildtools.jar)
-          errorIfVersionTagExists
-
-      - name: "prepare"
-        run:  |
-          cat <<EOF >build.properties
-          jdk.home.11=$JAVA_HOME
-          path.variable.mps_home=./MPS
-          EOF
-
-      - name: "determine versionExtra and versionStamp"
-        run:  |
-          branch="${GITHUB_REF#refs/heads/}"
-          if [[ "$branch" == master ]]; then
-            versionExtraArg="-DversionExtra="
-            versionStampArg="-DversionStamp="
-          elif [[ "$branch" == develop ]]; then
-            versionExtraArg="-DversionExtra=beta"
-            versionStampArg=
-          else
-            versionExtraArg="-DversionExtra=alpha"
-            versionStampArg=
-          fi
-          echo "versionExtraArg=$versionExtraArg" >> $GITHUB_ENV
-          echo "versionStampArg=$versionStampArg" >> $GITHUB_ENV
-
-      - name: "(re)generate some files"
-        run:  |
-          . <(java -jar ~/buildtools.jar)
-          generateAll
-          correctEols
-          correctHeaders header
-
-      - name: "download dependencies (MPS and jars from pom)"
-        run:  |
-          . <(java -jar ~/buildtools.jar)
-          . project.sh
-          getAllDependencies
-          installJunitlauncher
-          installMps "$mpsDir" "$mpsVersion"
-
-      - name: "adjust MPS compat range in ant file"
-        run:  |
-          . <(java -jar ~/buildtools.jar)
-          . project.sh
-          mpsUntilDefault="$(sed -n 's/^mps[.]build[.]number=MPS-//p' "$mpsDir/build.properties")"
-          sed -i 's/ since-build="[^"]*"/ since-build="'"$mpsSince"'"/' *.xml
-          sed -i 's/ until-build="[^"]*"/ until-build="'"${mpsUntil:-$mpsUntilDefault}"'"/' *.xml
-
-      - name: "push changes back to github"
-        run:  |
-          . <(java -jar ~/buildtools.jar)
-          . project.sh
-          pushBackToGithub
-
+      ################################################################################
       - name: "build"
-        run:  ant
-
-      - name: "test"
-        run:  |
-          if ! ant test; then
-            for i in TEST-*.xml; do
-              echo "=============== $i"
-              sed "s/^/>> /" $i
-            done
-            exit 42
-          fi
-
-      - name: "generate javadoc"
-        run:  ant javadoc
-
-      - name: "dclare-plugin: build"
-        run:  |
-          . <(java -jar ~/buildtools.jar)
-          . project.sh
-          action() {
-            ant -Dmps_home="$mpsDir" "-Dversion=$version" "$versionExtraArg" "$versionStampArg" -f mps_build.xml cleanSources clean generate build
-          }
-          doubleBuild action mps_build.xml
-
-      - name: "if master: tag with version"
-        if: github.ref == 'refs/heads/master'
-        run:  |
-          . <(java -jar ~/buildtools.jar)
-          setVersionTag
-
-      - name: "unzip for actions/upload-artifact"
-        run:  |
-          # the subsequent actions/upload-artifact step would re-zip the zip, so we unzip and the action below will rezip...
-          mkdir build/artifacts/DclareForMPS/DclareForMPS
-          cd build/artifacts/DclareForMPS/DclareForMPS
-          unzip ../DclareForMPS.zip
-
-      - name: "publish action-artifact zip"
-        uses: actions/upload-artifact@v1
-        with:
-          name: DclareForMPS
-          path: build/artifacts/DclareForMPS/DclareForMPS
-
-      - name: "Upload to JetBrains"
-        uses: ModelingValueGroup/upload-jetbrains-plugin-action@master
-        with:
-          file    : "build/artifacts/DclareForMPS/DclareForMPS.zip"
-          hubToken: "${{secrets.JETBRAINS_PUBLISH_TOKEN}}"
-          pluginId: "13797"
+        run: ./gradlew --scan
