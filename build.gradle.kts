@@ -25,7 +25,7 @@ defaultTasks(
 )
 
 plugins {
-    id("org.modelingvalue.gradle.mvgplugin") version "0.4.23"
+    id("org.modelingvalue.gradle.mvgplugin") version "0.4.24"
 }
 
 // import ant file:
@@ -53,4 +53,7 @@ tasks.filter {
 // upload plugin to jetbrains
 mvguploader {
     pluginId = "13797"
+}
+tasks.mvguploader {
+    dependsOn("mpsant-assemble")
 }
