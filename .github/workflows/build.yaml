@@ -11,6 +11,7 @@ jobs:
     env:
       ALLREP_TOKEN: "${{secrets.ALLREP_TOKEN}}"
       TOKEN: "${{secrets.ALLREP_TOKEN}}"
+      JETBRAINS_PUBLISH_TOKEN: "${{secrets.JETBRAINS_PUBLISH_TOKEN}}"
       CI: "true"
     steps:
       - uses: actions/checkout@v2.3.4
