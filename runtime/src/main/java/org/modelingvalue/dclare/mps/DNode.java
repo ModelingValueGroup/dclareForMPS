@@ -40,6 +40,7 @@ import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.collections.util.Quintuple;
 import org.modelingvalue.collections.util.TriConsumer;
+import org.modelingvalue.collections.util.TriFunction;
 import org.modelingvalue.dclare.Action;
 import org.modelingvalue.dclare.Constant;
 import org.modelingvalue.dclare.Construction;
@@ -106,7 +107,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                         });
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    protected static final DObserved<DNode, Map<Object, Object>>                                                 USER_OBJECTS           = DObserved.of("USER_OBJECTS", Map.of(), (TriConsumer) null);
+    protected static final DObserved<DNode, Map<Object, Object>>                                                 USER_OBJECTS           = DObserved.of("USER_OBJECTS", Map.of(), (TriFunction) null);
 
     @SuppressWarnings("deprecation")
     public static final Constant<SContainmentLink, DObserved<DNode, List<DNode>>>                                MANY_CONTAINMENT       = Constant.of("MANY_CONTAINMENT", mc -> {
@@ -120,13 +121,19 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                                         SNode sNode = dNode.reParent();
                                                                                                                                                         List<SNode> soll = post.map(c -> c.reParent(sNode, mc, c.original())).toList();
                                                                                                                                                         List<SNode> ist = children(sNode, mc);
-                                                                                                                                                        DObserved.map(ist, soll,                                                                                                                                //
-                                                                                                                                                                (n, a) -> {
-                                                                                                                                                                }, sNode::removeChild);
-                                                                                                                                                        ist = children(sNode, mc);
-                                                                                                                                                        DObserved.map(ist, soll,                                                                                                                                //
-                                                                                                                                                                (n, a) -> sNode.insertChildAfter(mc, n, a), r -> {
-                                                                                                                                                                                                                                                                                                    });
+                                                                                                                                                        if (!soll.equals(ist)) {
+                                                                                                                                                            DObserved.map(ist, soll,                                                                                                                            //
+                                                                                                                                                                    (n, a) -> {
+                                                                                                                                                                    }, sNode::removeChild);
+                                                                                                                                                            ist = children(sNode, mc);
+                                                                                                                                                            DObserved.map(ist, soll,                                                                                                                            //
+                                                                                                                                                                    (n, a) -> sNode.insertChildAfter(mc, n, a),                                                                                                 //
+                                                                                                                                                                    r -> {
+                                                                                                                                                                    });
+                                                                                                                                                            return true;
+                                                                                                                                                        } else {
+                                                                                                                                                            return false;
+                                                                                                                                                        }
                                                                                                                                                     }, mc::getDeclarationNode, mods);
                                                                                                                                         });
 
@@ -142,13 +149,19 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                                         SNode sNode = dNode.reParent();
                                                                                                                                                         List<SNode> soll = post != null ? List.of(post.reParent(sNode, sc, post.original())) : List.of();
                                                                                                                                                         List<SNode> ist = children(sNode, sc);
-                                                                                                                                                        DObserved.map(ist, soll,                                                                                                                                //
-                                                                                                                                                                (n, a) -> {
-                                                                                                                                                                }, sNode::removeChild);
-                                                                                                                                                        ist = children(sNode, sc);
-                                                                                                                                                        DObserved.map(ist, soll,                                                                                                                                //
-                                                                                                                                                                (n, a) -> sNode.addChild(sc, n), r -> {
-                                                                                                                                                                                                                                                                                                    });
+                                                                                                                                                        if (!soll.equals(ist)) {
+                                                                                                                                                            DObserved.map(ist, soll,                                                                                                                            //
+                                                                                                                                                                    (n, a) -> {
+                                                                                                                                                                    }, sNode::removeChild);
+                                                                                                                                                            ist = children(sNode, sc);
+                                                                                                                                                            DObserved.map(ist, soll,                                                                                                                            //
+                                                                                                                                                                    (n, a) -> sNode.addChild(sc, n),                                                                                                            //
+                                                                                                                                                                    r -> {
+                                                                                                                                                                    });
+                                                                                                                                                            return true;
+                                                                                                                                                        } else {
+                                                                                                                                                            return false;
+                                                                                                                                                        }
                                                                                                                                                     }, sc::getDeclarationNode, mods);
                                                                                                                                         });
 
@@ -166,6 +179,9 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                                         SNode soll = post != null ? post.original() : null;
                                                                                                                                                         if (!Objects.equals(ist, soll)) {
                                                                                                                                                             sNode.setReferenceTarget(sr, soll);
+                                                                                                                                                            return true;
+                                                                                                                                                        } else {
+                                                                                                                                                            return false;
                                                                                                                                                         }
                                                                                                                                                     }, sr::getDeclarationNode, mods);
                                                                                                                                         }
@@ -182,6 +198,9 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                             String ist = sNode.getProperty(sp);
                                                                                                                                             if (!Objects.equals(ist, post)) {
                                                                                                                                                 sNode.setProperty(sp, post);
+                                                                                                                                                return true;
+                                                                                                                                            } else {
+                                                                                                                                                return false;
                                                                                                                                             }
                                                                                                                                         }, sp::getDeclarationNode, SetableModifier.mandatory, SetableModifier.doNotCheckMandatory));
 
@@ -271,7 +290,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
             r -> DObject.MPS_ISSUES.set(r.a(), Set::remove, r)));
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    protected static final DObserved<DNode, Integer>                                                             INDEX                  = DObserved.of("INDEX", -1, (TriConsumer) null);
+    protected static final DObserved<DNode, Integer>                                                             INDEX                  = DObserved.of("INDEX", -1, (TriFunction) null);
 
     @SuppressWarnings("rawtypes")
     private static final Observer<DNode>                                                                         INDEX_RULE             = DObject.observer(INDEX, o -> {

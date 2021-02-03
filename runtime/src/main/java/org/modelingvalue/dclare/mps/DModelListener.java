@@ -53,7 +53,7 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
     @Override
     public void propertyChanged(SPropertyChangeEvent event) {
         b().handleMPSChange(() -> {
-            if (a().isRead()) {
+            if (a().isActive()) {
                 DNode.PROPERTY.get(event.getProperty()).set(DNode.of(event.getNode()), event.getNewValue());
             }
         });
@@ -62,7 +62,7 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
     @Override
     public void referenceChanged(SReferenceChangeEvent event) {
         b().handleMPSChange(() -> {
-            if (a().isRead()) {
+            if (a().isActive()) {
                 SReference newValue = event.getNewValue();
                 SNode targetNode = newValue != null ? newValue.getTargetNode() : null;
                 DNode.REFERENCE.get(event.getAssociationLink()).set(DNode.of(event.getNode()), targetNode != null ? DNode.of(targetNode) : null);
@@ -73,7 +73,7 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
     @Override
     public void nodeAdded(SNodeAddEvent event) {
         b().handleMPSChange(() -> {
-            if (a().isRead()) {
+            if (a().isActive()) {
                 SNode sNode = event.getChild();
                 DNode dNode = DNode.of(sNode);
                 DModel dModel = DModel.of(event.getModel());
@@ -100,7 +100,7 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
     @Override
     public void nodeRemoved(SNodeRemoveEvent event) {
         b().handleMPSChange(() -> {
-            if (a().isRead()) {
+            if (a().isActive()) {
                 SNode child = event.getChild();
                 SNodeReference ref = new jetbrains.mps.smodel.SNodePointer(a().reference(), child.getNodeId());
                 DNode dNode = DNode.of(child.getConcept(), ref, child);
@@ -120,17 +120,23 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
 
     @Override
     public void modelLoaded(SModel model, boolean partially) {
+        b().handleMPSChange(() -> {
+            DModel.LOADED.set(a(), Boolean.TRUE);
+        });
     }
 
     @Override
     public void modelReplaced(SModel model) {
-        if (a().isRead()) {
+        if (a().isActive()) {
             b().universeTransaction().put("$REFRESH", () -> DModel.REFRESH.trigger(DModel.of(model)));
         }
     }
 
     @Override
     public void modelUnloaded(SModel model) {
+        b().handleMPSChange(() -> {
+            DModel.LOADED.set(a(), Boolean.FALSE);
+        });
     }
 
     @Override
@@ -172,7 +178,7 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
     @Override
     public void importAdded(SModelImportEvent event) {
         b().handleMPSChange(() -> {
-            if (a().isActive()) {
+            if (!a().isExternal()) {
                 DModel dModel = DModel.of(event.getModel());
                 DModel add = DModel.of(event.getModelUID().resolve(null));
                 DModel.USED_MODELS.set(dModel, Set::add, add);
@@ -183,7 +189,7 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
     @Override
     public void importRemoved(SModelImportEvent event) {
         b().handleMPSChange(() -> {
-            if (a().isActive()) {
+            if (!a().isExternal()) {
                 DModel dModel = DModel.of(event.getModel());
                 DModel rem = DModel.of(event.getModelUID().resolve(null));
                 DModel.USED_MODELS.set(dModel, Set::remove, rem);
