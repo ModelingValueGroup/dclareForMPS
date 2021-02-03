@@ -26,7 +26,7 @@ import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.Map;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.QuadConsumer;
-import org.modelingvalue.collections.util.TriConsumer;
+import org.modelingvalue.collections.util.TriFunction;
 import org.modelingvalue.dclare.LeafTransaction;
 import org.modelingvalue.dclare.Mutable;
 import org.modelingvalue.dclare.Observed;
@@ -38,34 +38,34 @@ import org.modelingvalue.dclare.ex.ThrowableError;
 @SuppressWarnings("unused")
 public class DObserved<O extends DObject, T> extends Observed<O, T> implements DFeature {
 
-    public static <C extends DObject, V> DObserved<C, V> of(Object id, V def, TriConsumer<C, V, V> toMPS, SetableModifier... modifiers) {
+    public static <C extends DObject, V> DObserved<C, V> of(Object id, V def, TriFunction<C, V, V, Boolean> toMPS, SetableModifier... modifiers) {
         return new DObserved<>(id, def, null, toMPS, null, null, modifiers);
     }
 
-    public static <C extends DObject, V> DObserved<C, V> of(Object id, V def, TriConsumer<C, V, V> toMPS, Supplier<SNode> source, SetableModifier... modifiers) {
+    public static <C extends DObject, V> DObserved<C, V> of(Object id, V def, TriFunction<C, V, V, Boolean> toMPS, Supplier<SNode> source, SetableModifier... modifiers) {
         return new DObserved<>(id, def, null, toMPS, null, source, modifiers);
     }
 
-    public static <C extends DObject, V> DObserved<C, V> of(Object id, V def, TriConsumer<C, V, V> toMPS, QuadConsumer<LeafTransaction, C, V, V> changed, SetableModifier... modifiers) {
+    public static <C extends DObject, V> DObserved<C, V> of(Object id, V def, TriFunction<C, V, V, Boolean> toMPS, QuadConsumer<LeafTransaction, C, V, V> changed, SetableModifier... modifiers) {
         return new DObserved<>(id, def, null, toMPS, changed, null, modifiers);
     }
 
-    public static <C extends DObject, V> DObserved<C, V> of(Object id, V def, TriConsumer<C, V, V> toMPS, QuadConsumer<LeafTransaction, C, V, V> changed, Supplier<SNode> source, SetableModifier... modifiers) {
+    public static <C extends DObject, V> DObserved<C, V> of(Object id, V def, TriFunction<C, V, V, Boolean> toMPS, QuadConsumer<LeafTransaction, C, V, V> changed, Supplier<SNode> source, SetableModifier... modifiers) {
         return new DObserved<>(id, def, null, toMPS, changed, source, modifiers);
     }
 
-    public static <C extends DObject, V> DObserved<C, V> of(Object id, V def, Supplier<Setable<?, ?>> opposite, TriConsumer<C, V, V> toMPS, Supplier<SNode> source, SetableModifier... modifiers) {
+    public static <C extends DObject, V> DObserved<C, V> of(Object id, V def, Supplier<Setable<?, ?>> opposite, TriFunction<C, V, V, Boolean> toMPS, Supplier<SNode> source, SetableModifier... modifiers) {
         return new DObserved<>(id, def, opposite, toMPS, null, source, modifiers);
     }
 
-    public static <C extends DObject, V> DObserved<C, V> of(Object id, V def, Supplier<Setable<?, ?>> opposite, TriConsumer<C, V, V> toMPS, QuadConsumer<LeafTransaction, C, V, V> changed, Supplier<SNode> source, SetableModifier... modifiers) {
+    public static <C extends DObject, V> DObserved<C, V> of(Object id, V def, Supplier<Setable<?, ?>> opposite, TriFunction<C, V, V, Boolean> toMPS, QuadConsumer<LeafTransaction, C, V, V> changed, Supplier<SNode> source, SetableModifier... modifiers) {
         return new DObserved<>(id, def, opposite, toMPS, changed, source, modifiers);
     }
 
-    private final TriConsumer<O, T, T> toMPS;
-    private final Supplier<SNode>      source;
+    private final TriFunction<O, T, T, Boolean> toMPS;
+    private final Supplier<SNode>               source;
 
-    protected DObserved(Object id, T def, Supplier<Setable<?, ?>> opposite, TriConsumer<O, T, T> toMPS, QuadConsumer<LeafTransaction, O, T, T> changed, Supplier<SNode> source, SetableModifier... modifiers) {
+    protected DObserved(Object id, T def, Supplier<Setable<?, ?>> opposite, TriFunction<O, T, T, Boolean> toMPS, QuadConsumer<LeafTransaction, O, T, T> changed, Supplier<SNode> source, SetableModifier... modifiers) {
         super(id, def, opposite, null, changed, modifiers);
         this.toMPS = toMPS;
         this.source = source;
@@ -85,11 +85,12 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
         return source != null ? source.get() : null;
     }
 
-    public void toMPS(O object, T pre, T post) {
+    public boolean toMPS(O object, T pre, T post) {
         try {
-            toMPS.accept(object, pre, post);
+            return toMPS.apply(object, pre, post);
         } catch (Throwable t) {
             DObject.dClareMPS().addMessage(new ThrowableError(object, this, Instant.now(), t));
+            return false;
         }
     }
 

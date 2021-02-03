@@ -37,6 +37,7 @@ import org.jetbrains.mps.openapi.persistence.ModelRoot;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
+import org.modelingvalue.collections.util.TriFunction;
 import org.modelingvalue.collections.util.Triple;
 import org.modelingvalue.dclare.Action;
 import org.modelingvalue.dclare.Constant;
@@ -64,32 +65,47 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
                                                                                                                      SModel sModel = dModel.original();
                                                                                                                      if (!post.equals(sModel.getName().getLongName())) {
                                                                                                                          ((EditableSModel) sModel).rename(post, true);
+                                                                                                                         return true;
                                                                                                                      }
                                                                                                                  }
+                                                                                                                 return false;
                                                                                                              });
 
     protected static final DObserved<DModel, Set<DNode>>                                    ROOTS            = DObserved.of("ROOTS", Set.of(), (dModel, pre, post) -> {
-                                                                                                                 if (dModel.isRead()) {
+                                                                                                                 if (dModel.isActive()) {
                                                                                                                      SModel sModel = dModel.original();
                                                                                                                      Set<SNode> soll = post.map(r -> r.reParent(sModel, null, r.original())).toSet();
                                                                                                                      Set<SNode> ist = DModel.roots(sModel);
-                                                                                                                     DObserved.map(ist, soll, sModel::addRootNode, sModel::removeRootNode);
+                                                                                                                     if (!soll.equals(ist)) {
+                                                                                                                         DObserved.map(ist, soll, sModel::addRootNode, sModel::removeRootNode);
+                                                                                                                         return true;
+                                                                                                                     }
                                                                                                                  }
-                                                                                                             }, SetableModifier.containment);
+                                                                                                                 return false;
+                                                                                                             }, (t, m, b, a) -> DModel.ACTIVE.set(m, Boolean.TRUE), SetableModifier.containment);
 
     protected static final DObserved<DModel, Set<SLanguage>>                                USED_LANGUAGES   = DObserved.of("USED_LANGUAGES", Set.of(), (dModel, pre, post) -> {
                                                                                                                  SModelInternal sModel = (SModelInternal) dModel.original();
                                                                                                                  Set<SLanguage> ist = Collection.of(((SModelInternal) sModel).importedLanguageIds()).sequential().toSet();
-                                                                                                                 DObserved.map(ist, post, sModel::addLanguage, sModel::deleteLanguageId);
+                                                                                                                 if (!post.equals(ist)) {
+                                                                                                                     DObserved.map(ist, post, sModel::addLanguage, sModel::deleteLanguageId);
+                                                                                                                     return true;
+                                                                                                                 } else {
+                                                                                                                     return false;
+                                                                                                                 }
                                                                                                              });
 
     protected static final DObserved<DModel, Set<DModel>>                                   USED_MODELS      = DObserved.of("USED_MODELS", Set.of(), (dModel, pre, post) -> {
-                                                                                                                 if (dModel.isActive()) {
+                                                                                                                 if (!dModel.isExternal()) {
                                                                                                                      SModelInternal sModel = (SModelInternal) dModel.original();
                                                                                                                      Set<SModelReference> soll = post.map(DModel::reference).notNull().toSet();
                                                                                                                      Set<SModelReference> ist = Collection.of(((SModelInternal) sModel).getModelImports()).sequential().toSet();
-                                                                                                                     DObserved.map(ist, soll, sModel::addModelImport, sModel::deleteModelImport);
+                                                                                                                     if (!soll.equals(ist)) {
+                                                                                                                         DObserved.map(ist, soll, sModel::addModelImport, sModel::deleteModelImport);
+                                                                                                                         return true;
+                                                                                                                     }
                                                                                                                  }
+                                                                                                                 return false;
                                                                                                              });
 
     protected static final Observed<DModel, ModelRoot>                                      MODEL_ROOT       = NonCheckingObserved.of("MODEL_ROOT", null);
@@ -126,37 +142,58 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
                                                                                                                  }
                                                                                                              });
 
-    protected static final Setable<DModel, Set<Boolean>>                                    ACTIVE           = Setable.of("ACTIVE", Set.of(), (tx, dModel, pre, post) -> {
-                                                                                                                 if (pre.isEmpty()) {
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    protected static final DObserved<DModel, Boolean>                                       ACTIVE           = DObserved.of("ACTIVE", Boolean.FALSE, null, (tx, dModel, pre, post) -> {
+                                                                                                                 if (!pre && post) {
                                                                                                                      READ_ROOTS.trigger(dModel);
                                                                                                                  }
-                                                                                                                 if (post.contains(true)) {
-                                                                                                                     READ_USED_MODELS.trigger(dModel);
+                                                                                                             });
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    protected static final DObserved<DModel, Boolean>                                       LOADED           = DObserved.of("LOADED", Boolean.FALSE, (TriFunction) null);
+
+    private static final Action<DModel>                                                     READ_LOADED      = Action.of("$READ_LOADED", m -> {
+                                                                                                                 SModel sModel = m.tryOriginal();
+                                                                                                                 if (sModel != null) {
+                                                                                                                     LOADED.set(m, dClareMPS().read(() -> sModel.isLoaded()));
                                                                                                                  }
                                                                                                              });
 
-    private static final Observer<DModel>                                                   REFERENCED_RULE  = DObject.observer("$REFERENCED_RULE", o -> USED_MODELS.get(o).forEachOrdered(mo -> {
-                                                                                                                 SModel sModel = mo.tryOriginal();
-                                                                                                                 if (sModel instanceof SModelInternal) {
-                                                                                                                     DModule dModule = DModule.of(sModel.getModule());
-                                                                                                                     DRepository.REFERENCED.set(dClareMPS().getRepository(), Set::add, dModule);
-                                                                                                                     DModule.MODELS.set(dModule, Set::add, mo);
-                                                                                                                     ACTIVE.set(mo, Set::add, false);
+    private static final Observer<DModel>                                                   REFERENCED_RULE  = DObject.observer("$REFERENCED_RULE", o -> {
+                                                                                                                 if (!o.isExternal()) {
+                                                                                                                     Set<DModel> used = USED_MODELS.get(o);
+                                                                                                                     boolean active = o.isActive();
+                                                                                                                     used.forEachOrdered(                                                                                                            //
+                                                                                                                             mo -> {
+                                                                                                                                 SModel sModel = mo.tryOriginal();
+                                                                                                                                 if (sModel instanceof SModelInternal) {
+                                                                                                                                     DModule dModule = DModule.of(sModel.getModule());
+                                                                                                                                     DRepository.REFERENCED.set(dClareMPS().getRepository(), Set::add, dModule);
+                                                                                                                                     DModule.MODELS.set(dModule, Set::add, mo);
+                                                                                                                                     if (active) {
+                                                                                                                                         ACTIVE.set(mo, Boolean.TRUE);
+                                                                                                                                     }
+                                                                                                                                 }
+                                                                                                                             });
+                                                                                                                     if (used.exclude(DModel::isExternal).anyMatch(DModel::isActive)) {
+                                                                                                                         ACTIVE.set(o, Boolean.TRUE);
+                                                                                                                     }
                                                                                                                  }
-                                                                                                             }));
+                                                                                                             });
 
     private static final Observer<DModel>                                                   ACTIVATE_RULE    = DObject.observer("$ACTIVATE_RULE", o -> {
-                                                                                                                 DObjectType<?> pre = TYPE.pre(o);
-                                                                                                                 DObjectType<?> post = TYPE.get(o);
-                                                                                                                 if (pre.getLanguages().isEmpty() && !post.getLanguages().isEmpty()) {
-                                                                                                                     ACTIVE.set(o, Set.of(true, false));
+                                                                                                                 if (!o.isExternal()) {
+                                                                                                                     boolean pre = !TYPE.pre(o).getLanguages().isEmpty() && LOADED.pre(o);
+                                                                                                                     boolean post = !TYPE.get(o).getLanguages().isEmpty() && LOADED.get(o);
+                                                                                                                     if (!pre && post) {
+                                                                                                                         ACTIVE.set(o, Boolean.TRUE);
+                                                                                                                     }
                                                                                                                  }
                                                                                                              });
     @SuppressWarnings("rawtypes")
     protected static final Set<Observer>                                                    OBSERVERS        = DMatchedObject.OBSERVERS.addAll(Set.of(ACTIVATE_RULE, REFERENCED_RULE));
 
     @SuppressWarnings("rawtypes")
-    protected static final Set<Setable>                                                     SETABLES         = DMatchedObject.SETABLES.addAll(Set.of(NAME, ROOTS, MODEL_ROOT, USED_MODELS, USED_LANGUAGES));
+    protected static final Set<Setable>                                                     SETABLES         = DMatchedObject.SETABLES.addAll(Set.of(NAME, ROOTS, MODEL_ROOT, USED_MODELS, USED_LANGUAGES, ACTIVE, LOADED));
 
     public static DModel of(SLanguage anonymousLanguage, String anonymousType, Object[] identity, boolean temporal) {
         return quotationConstruct(anonymousLanguage, anonymousType, identity, //
@@ -203,12 +240,8 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
         return isTemporal();
     }
 
-    protected boolean isRead() {
-        return !ACTIVE.get(this).isEmpty();
-    }
-
     protected boolean isActive() {
-        return ACTIVE.get(this).contains(true);
+        return ACTIVE.get(this);
     }
 
     @Override
@@ -269,8 +302,12 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
 
     @Override
     protected void read() {
+        READ_LOADED.trigger(this);
         READ_NAME.trigger(this);
         READ_LANGUAGES.trigger(this);
+        if (!isExternal()) {
+            READ_USED_MODELS.trigger(this);
+        }
     }
 
     @Override
@@ -334,6 +371,7 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     public Set<SNode> getRootNodes() {
+        ACTIVE.set(this, Boolean.TRUE);
         return (Set) ROOTS.get(this);
     }
 
@@ -365,6 +403,7 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
     }
 
     public java.util.List<SNode> getRootNodes(SAbstractConcept concept) {
+        ACTIVE.set(this, Boolean.TRUE);
         return ROOTS.get(this).filter(r -> r.isInstanceOfConcept(concept)).collect(Collectors.toList());
     }
 
@@ -389,8 +428,7 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
 
     @Override
     public boolean isLoaded() {
-        SModel sModel = tryOriginal();
-        return sModel == null || sModel.isLoaded();
+        return LOADED.get(this);
     }
 
     @Override

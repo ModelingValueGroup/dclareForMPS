@@ -26,7 +26,7 @@ import org.jetbrains.mps.openapi.module.SRepository;
 import org.jetbrains.mps.openapi.module.SRepositoryListener;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
-import org.modelingvalue.collections.util.TriConsumer;
+import org.modelingvalue.collections.util.TriFunction;
 import org.modelingvalue.dclare.Action;
 import org.modelingvalue.dclare.Constant;
 import org.modelingvalue.dclare.NonCheckingObserved;
@@ -45,10 +45,10 @@ public class DRepository extends DFromOriginalObject<ProjectRepository> implemen
     protected static final Observed<DRepository, Set<DModule>>     REFERENCED      = NonCheckingObserved.of("REFERENCED", Set.of());
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    protected static final DObserved<DRepository, Set<DModule>>    MODULES         = DObserved.of("MODULES", Set.of(), (TriConsumer) null, SetableModifier.containment);
+    protected static final DObserved<DRepository, Set<DModule>>    MODULES         = DObserved.of("MODULES", Set.of(), (TriFunction) null, SetableModifier.containment);
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    protected static final DObserved<DRepository, Set<?>>          EXCEPTIONS      = DObserved.of("EXCEPTIONS", Set.of(), (TriConsumer) null);
+    protected static final DObserved<DRepository, Set<?>>          EXCEPTIONS      = DObserved.of("EXCEPTIONS", Set.of(), (TriFunction) null);
 
     private static final Observer<DRepository>                     MODULES_RULE    = DObject.observer(MODULES, o -> {
                                                                                        Set<DModule> referenced = REFERENCED.get(o);

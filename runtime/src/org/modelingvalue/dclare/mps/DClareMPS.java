@@ -536,24 +536,26 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
             try {
                 pre.diff(post, o -> o instanceof DObject && !((DObject) o).isDclareOnly(), p -> p instanceof DObserved && !((DObserved) p).isDclareOnly()).forEachOrdered(e0 -> {
                     DObject dObject = (DObject) e0.getKey();
-                    if (dObject instanceof DModel) {
-                        SModel sModel = ((DModel) dObject).tryOriginal();
-                        if (sModel != null) {
-                            changedModels.change(s -> s.add(sModel));
-                        }
-                    } else if (dObject instanceof DNode) {
-                        SNode original = ((DNode) dObject).tryOriginal();
-                        SNode root = original != null ? original.getContainingRoot() : null;
-                        if (root != null) {
-                            changedRoots.change(s -> s.add(root));
-                        }
-                    } else if (dObject instanceof DModule) {
-                        changedModules.change(s -> s.add(((DModule) dObject).original()));
+                    boolean changed = false;
+                    for (Entry<Setable, Pair<Object, Object>> e1 : e0.getValue()) {
+                        changed |= ((DObserved) e1.getKey()).toMPS(dObject, e1.getValue().a(), e1.getValue().b());
                     }
-                    e0.getValue().forEachOrdered(e1 -> {
-                        DObserved mpsObserved = (DObserved) e1.getKey();
-                        mpsObserved.toMPS(dObject, e1.getValue().a(), e1.getValue().b());
-                    });
+                    if (changed) {
+                        if (dObject instanceof DModel) {
+                            SModel sModel = ((DModel) dObject).tryOriginal();
+                            if (sModel != null) {
+                                changedModels.change(s -> s.add(sModel));
+                            }
+                        } else if (dObject instanceof DNode) {
+                            SNode original = ((DNode) dObject).tryOriginal();
+                            SNode root = original != null ? original.getContainingRoot() : null;
+                            if (root != null) {
+                                changedRoots.change(s -> s.add(root));
+                            }
+                        } else if (dObject instanceof DModule) {
+                            changedModules.change(s -> s.add(((DModule) dObject).original()));
+                        }
+                    }
                 });
                 if (last && !runModelCheck()) {
                     running = false;

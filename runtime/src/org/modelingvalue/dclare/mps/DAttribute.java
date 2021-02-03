@@ -21,6 +21,8 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 import org.jetbrains.mps.openapi.language.SProperty;
+import org.jetbrains.mps.openapi.model.EditableSModel;
+import org.jetbrains.mps.openapi.model.SModel;
 import org.jetbrains.mps.openapi.model.SNode;
 import org.modelingvalue.collections.ContainingCollection;
 import org.modelingvalue.dclare.Constant;
@@ -100,12 +102,17 @@ public interface DAttribute<O, T> extends DFeature {
         public DObservedAttribute(Object id, String name, boolean indetifying, V def, Class<?> cls, Supplier<Setable<?, ?>> opposite, Supplier<SNode> source, SProperty sProperty, SetableModifier... modifiers) {
             super(id, def, opposite, (o, b, a) -> {
                 if (o instanceof DNode) {
-                    SNode sNode = ((DNode) o).original();
-                    if (sNode != null) {
+                    SNode sNode = ((DNode) o).tryOriginal();
+                    SModel sModel = sNode != null ? sNode.getModel() : null;
+                    if (sNode != null && sModel instanceof EditableSModel) {
+                        boolean changed = ((EditableSModel) sModel).isChanged();
                         sNode.setProperty(sProperty, "");
                         sNode.setProperty(sProperty, null);
+                        ((EditableSModel) sModel).setChanged(changed);
+                        return true;
                     }
                 }
+                return false;
             }, null, source, modifiers);
             this.name = name;
             this.cls = cls;
