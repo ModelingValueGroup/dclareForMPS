@@ -53,7 +53,7 @@
         <depends>jetbrains.mps.ide.devkit</depends>
         <depends>jetbrains.mps.build</depends>
         <depends>com.intellij.modules.mps</depends>
-        <idea-version since-build="202.7660.1015" until-build="202.6397.948" />
+        <idea-version since-build="202.6397" until-build="203.5981.1014" />
         
         <extensions defaultExtensionNs="com.intellij">
           <mps.LanguageLibrary dir="/languages" />
@@ -429,7 +429,10 @@
           <language id="l:83888646-71ce-4f1c-9c53-c54016f6ad4f:jetbrains.mps.baseLanguage.collections" />
           <language id="l:7866978e-a0f0-4cc7-81bc-4d213d9375e1:jetbrains.mps.lang.smodel" />
         </uses>
-        <library jar="../../DclareMps.jar" />
+        <library jar="../../dclare.jar" />
+        <library jar="../../immutable-collections.jar" />
+        <library jar="../../mvgjson.jar" />
+        <library jar="../../runtime.jar" />
         <classpath>
           <entry path="." />
         </classpath>
@@ -570,7 +573,10 @@
     </jar>
     <zip destfile="${build.layout}/DclareForMPS.zip">
       <zipfileset dir="${dclare_home}/languages/DclareMPS/icons" prefix="DclareForMPS" />
-      <zipfileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/DclareMps.jar" prefix="DclareForMPS" />
+      <zipfileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/dclare.jar" prefix="DclareForMPS" />
+      <zipfileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/immutable-collections.jar" prefix="DclareForMPS" />
+      <zipfileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/mvgjson.jar" prefix="DclareForMPS" />
+      <zipfileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/runtime.jar" prefix="DclareForMPS" />
       <fileset dir="${build.tmp}/default/DclareForMPS.zip" />
     </zip>
     <echo file="${build.layout}/build.properties">DclareForMPS.version=${version}${line.separator}DclareForMPS.versionExtra=${versionExtra}${line.separator}DclareForMPS.versionStamp=${versionStamp}${line.separator}DclareForMPS.fullVersion=${fullVersion}${line.separator}mps.build.number=${mps.build.number}${line.separator}mps.date=${mps.date}${line.separator}mps.build.vcs.number=${mps.build.vcs.number}${line.separator}mps.teamcity.buildConfName=${mps.teamcity.buildConfName}${line.separator}mps.idea.platform.build.number=${mps.idea.platform.build.number}${line.separator}mps.mps.build.counter=${mps.mps.build.counter}${line.separator}mpsBootstrapCore.version.major=${mpsBootstrapCore.version.major}${line.separator}mpsBootstrapCore.version.minor=${mpsBootstrapCore.version.minor}${line.separator}mpsBootstrapCore.version.bugfixNr=${mpsBootstrapCore.version.bugfixNr}${line.separator}mpsBootstrapCore.version.eap=${mpsBootstrapCore.version.eap}${line.separator}mpsBootstrapCore.version=${mpsBootstrapCore.version}</echo>
@@ -790,7 +796,10 @@
         <fileset file="${artifacts.mps}/lib/mps-editor-api.jar" />
         <fileset file="${artifacts.mps}/lib/mps-editor-runtime.jar" />
         <fileset file="${artifacts.mps}/lib/mps-environment.jar" />
-        <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/DclareMps.jar" />
+        <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/dclare.jar" />
+        <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/immutable-collections.jar" />
+        <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/mvgjson.jar" />
+        <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/runtime.jar" />
         <fileset file="${artifacts.IDEA}/lib/annotations.jar" />
         <fileset dir="${artifacts.IDEA}/lib" includes="*.jar" />
         <fileset file="${artifacts.IDEA}/lib/log4j.jar" />
@@ -861,7 +870,10 @@
         <fileset file="${artifacts.mps}/lib/mps-textgen.jar" />
         <pathelement path="${build.tmp}/java/out/DclareMPS" />
         <pathelement path="${build.tmp}/java/out/DclareMPSRuntime" />
-        <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/DclareMps.jar" />
+        <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/dclare.jar" />
+        <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/immutable-collections.jar" />
+        <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/mvgjson.jar" />
+        <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/runtime.jar" />
         <fileset file="${artifacts.IDEA}/lib/annotations.jar" />
         <fileset dir="${artifacts.IDEA}/lib" includes="*.jar" />
         <fileset file="${artifacts.IDEA}/lib/log4j.jar" />
@@ -926,7 +938,10 @@
         <fileset file="${artifacts.mps}/lib/mps-editor-api.jar" />
         <fileset file="${artifacts.mps}/lib/mps-editor-runtime.jar" />
         <fileset file="${artifacts.mps}/lib/mps-environment.jar" />
-        <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/DclareMps.jar" />
+        <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/dclare.jar" />
+        <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/immutable-collections.jar" />
+        <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/mvgjson.jar" />
+        <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/runtime.jar" />
         <fileset file="${artifacts.IDEA}/lib/annotations.jar" />
         <fileset dir="${artifacts.IDEA}/lib" includes="*.jar" />
         <fileset file="${artifacts.IDEA}/lib/log4j.jar" />
@@ -1023,7 +1038,10 @@
         <fileset file="${artifacts.mps}/lib/mps-persistence.jar" />
         <fileset file="${artifacts.mps}/lib/mps-project-check.jar" />
         <fileset file="${artifacts.mps}/lib/mps-textgen.jar" />
-        <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/DclareMps.jar" />
+        <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/dclare.jar" />
+        <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/immutable-collections.jar" />
+        <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/mvgjson.jar" />
+        <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/runtime.jar" />
         <fileset file="${artifacts.IDEA}/lib/annotations.jar" />
         <fileset dir="${artifacts.IDEA}/lib" includes="*.jar" />
         <fileset file="${artifacts.IDEA}/lib/log4j.jar" />
@@ -1077,7 +1095,10 @@
         <fileset file="${artifacts.mps}/plugins/mps-devkit/lib/jetbrains.mps.ide.mpsdevkit.jar" />
         <fileset file="${artifacts.mps}/lib/mps-icons.jar" />
         <fileset file="${artifacts.mps}/lib/mps-workbench.jar" />
-        <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/DclareMps.jar" />
+        <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/dclare.jar" />
+        <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/immutable-collections.jar" />
+        <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/mvgjson.jar" />
+        <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/runtime.jar" />
         <fileset file="${artifacts.IDEA}/lib/annotations.jar" />
         <fileset dir="${artifacts.IDEA}/lib" includes="*.jar" />
         <fileset file="${artifacts.IDEA}/lib/log4j.jar" />
