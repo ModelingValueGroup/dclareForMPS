@@ -371,8 +371,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
 
     @Override
     public boolean isExternal() {
-        SModel sModel = getOriginalModel();
-        return sModel != null && dClareMPS().project.getPath(sModel.getModule()) == null;
+        return DModel.isExternal(getOriginalModel());
     }
 
     @Override

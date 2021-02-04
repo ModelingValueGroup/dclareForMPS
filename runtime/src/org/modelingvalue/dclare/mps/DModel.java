@@ -32,6 +32,7 @@ import org.jetbrains.mps.openapi.model.SNode;
 import org.jetbrains.mps.openapi.model.SNodeAccessListener;
 import org.jetbrains.mps.openapi.model.SNodeChangeListener;
 import org.jetbrains.mps.openapi.model.SNodeId;
+import org.jetbrains.mps.openapi.module.SModule;
 import org.jetbrains.mps.openapi.persistence.DataSource;
 import org.jetbrains.mps.openapi.persistence.ModelRoot;
 import org.modelingvalue.collections.Collection;
@@ -52,6 +53,8 @@ import jetbrains.mps.errors.item.ModelReportItem;
 import jetbrains.mps.extapi.module.SModuleBase;
 import jetbrains.mps.persistence.DefaultModelRoot;
 import jetbrains.mps.persistence.ModelCannotBeCreatedException;
+import jetbrains.mps.project.Solution;
+import jetbrains.mps.smodel.Language;
 import jetbrains.mps.smodel.SModelId.IntegerSModelId;
 import jetbrains.mps.smodel.SModelInternal;
 
@@ -95,9 +98,9 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
                                                                                                                  }
                                                                                                              });
 
-    protected static final DObserved<DModel, Set<DModel>>                                   USED_MODELS      = DObserved.of("USED_MODELS", Set.of(), (dModel, pre, post) -> {
-                                                                                                                 if (!dModel.isExternal()) {
-                                                                                                                     SModelInternal sModel = (SModelInternal) dModel.original();
+    protected static final DObserved<DModel, Set<DModel>>                                   USED_MODELS      = DObserved.of("USED_MODELS", Set.of(), (o, pre, post) -> {
+                                                                                                                 if (!o.isExternal() && o.isActive()) {
+                                                                                                                     SModelInternal sModel = (SModelInternal) o.original();
                                                                                                                      Set<SModelReference> soll = post.map(DModel::reference).notNull().toSet();
                                                                                                                      Set<SModelReference> ist = Collection.of(((SModelInternal) sModel).getModelImports()).sequential().toSet();
                                                                                                                      if (!soll.equals(ist)) {
@@ -143,11 +146,16 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
                                                                                                              });
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    protected static final DObserved<DModel, Boolean>                                       ACTIVE           = DObserved.of("ACTIVE", Boolean.FALSE, null, (tx, dModel, pre, post) -> {
+    protected static final DObserved<DModel, Boolean>                                       ACTIVE           = DObserved.of("ACTIVE", Boolean.FALSE, null, (tx, o, pre, post) -> {
                                                                                                                  if (!pre && post) {
-                                                                                                                     READ_ROOTS.trigger(dModel);
+                                                                                                                     SModel or = o.tryOriginal();
+                                                                                                                     System.err.println("DCLARE: ACTIVATE " + (or != null ? or.getName() : o) + " (external = " + o.isExternal() + ")");
+                                                                                                                     if (!o.isExternal()) {
+                                                                                                                         READ_USED_MODELS.trigger(o);
+                                                                                                                     }
+                                                                                                                     READ_ROOTS.trigger(o);
                                                                                                                  }
-                                                                                                             });
+                                                                                                             }, SetableModifier.synthetic);
     @SuppressWarnings({"rawtypes", "unchecked"})
     protected static final DObserved<DModel, Boolean>                                       LOADED           = DObserved.of("LOADED", Boolean.FALSE, (TriFunction) null);
 
@@ -159,23 +167,15 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
                                                                                                              });
 
     private static final Observer<DModel>                                                   REFERENCED_RULE  = DObject.observer("$REFERENCED_RULE", o -> {
-                                                                                                                 if (!o.isExternal()) {
-                                                                                                                     Set<DModel> used = USED_MODELS.get(o);
-                                                                                                                     boolean active = o.isActive();
-                                                                                                                     used.forEachOrdered(                                                                                                            //
-                                                                                                                             mo -> {
-                                                                                                                                 SModel sModel = mo.tryOriginal();
-                                                                                                                                 if (sModel instanceof SModelInternal) {
-                                                                                                                                     DModule dModule = DModule.of(sModel.getModule());
-                                                                                                                                     DRepository.REFERENCED.set(dClareMPS().getRepository(), Set::add, dModule);
-                                                                                                                                     DModule.MODELS.set(dModule, Set::add, mo);
-                                                                                                                                     if (active) {
-                                                                                                                                         ACTIVE.set(mo, Boolean.TRUE);
-                                                                                                                                     }
-                                                                                                                                 }
-                                                                                                                             });
-                                                                                                                     if (used.exclude(DModel::isExternal).anyMatch(DModel::isActive)) {
-                                                                                                                         ACTIVE.set(o, Boolean.TRUE);
+                                                                                                                 if (!o.isExternal() && o.isActive()) {
+                                                                                                                     for (DModel mo : USED_MODELS.get(o)) {
+                                                                                                                         SModel sModel = mo.tryOriginal();
+                                                                                                                         if (sModel instanceof SModelInternal) {
+                                                                                                                             DModule dModule = DModule.of(sModel.getModule());
+                                                                                                                             DRepository.REFERENCED.set(dClareMPS().getRepository(), Set::add, dModule);
+                                                                                                                             DModule.MODELS.set(dModule, Set::add, mo);
+                                                                                                                             ACTIVE.set(mo, Boolean.TRUE);
+                                                                                                                         }
                                                                                                                      }
                                                                                                                  }
                                                                                                              });
@@ -231,8 +231,16 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
 
     @Override
     public boolean isExternal() {
-        SModel sModel = tryOriginal();
-        return sModel != null && dClareMPS().project.getPath(sModel.getModule()) == null;
+        return isExternal(tryOriginal());
+    }
+
+    protected static boolean isExternal(SModel sModel) {
+        if (sModel != null && dClareMPS().project.getPath(sModel.getModule()) == null) {
+            return true;
+        } else {
+            SModule sModule = sModel != null ? sModel.getModule() : null;
+            return !(sModule == null || (sModule instanceof Language ? ((Language) sModule).getAccessoryModels().contains(sModel) : sModule instanceof Solution));
+        }
     }
 
     @Override
@@ -305,9 +313,6 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
         READ_LOADED.trigger(this);
         READ_NAME.trigger(this);
         READ_LANGUAGES.trigger(this);
-        if (!isExternal()) {
-            READ_USED_MODELS.trigger(this);
-        }
     }
 
     @Override
