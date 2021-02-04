@@ -25,10 +25,11 @@ defaultTasks(
 )
 
 plugins {
-    id("org.modelingvalue.gradle.mvgplugin") version "0.4.24"
+    id("org.modelingvalue.gradle.mvgplugin") version "0.4.25"
 }
 
 // import ant file:
+ant.lifecycleLogLevel = AntBuilder.AntMessagePriority.INFO
 ant.setProperty("mps_home", mvgmps.mpsInstallDir.toString())
 ant.setProperty("version", version)
 ant.setProperty("versionExtra", mvgmps.versionExtra)
