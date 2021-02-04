@@ -54,6 +54,7 @@ tasks.filter {
 // upload plugin to jetbrains
 mvguploader {
     pluginId = "13797"
+    channel = "testing"
 }
 tasks.mvguploader {
     dependsOn("mpsant-assemble")
