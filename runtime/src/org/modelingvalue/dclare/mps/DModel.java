@@ -61,6 +61,8 @@ import jetbrains.mps.smodel.SModelInternal;
 @SuppressWarnings("unused")
 public class DModel extends DMatchedObject<DModel, SModelReference, SModel> implements SModel {
 
+    private static final boolean                                                            TRACE_ACTIVATION = Boolean.getBoolean("TRACE_ACTIVATION");
+
     private static final Constant<Triple<Set<SLanguage>, Boolean, Set<String>>, DModelType> MODEL_TYPE       = Constant.of("MODEL_TYPE", t -> new DModelType(t));
 
     protected static final DObserved<DModel, String>                                        NAME             = DObserved.of("NAME", null, (dModel, pre, post) -> {
@@ -149,7 +151,9 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
     protected static final DObserved<DModel, Boolean>                                       ACTIVE           = DObserved.of("ACTIVE", Boolean.FALSE, null, (tx, o, pre, post) -> {
                                                                                                                  if (!pre && post) {
                                                                                                                      SModel or = o.tryOriginal();
-                                                                                                                     System.err.println("DCLARE: ACTIVATE " + (or != null ? or.getName() : o) + " (external = " + o.isExternal() + ")");
+                                                                                                                     if (TRACE_ACTIVATION) {
+                                                                                                                         System.err.println("DCLARE: ACTIVATE " + (or != null ? or.getName() : o) + " (external = " + o.isExternal() + ")");
+                                                                                                                     }
                                                                                                                      if (!o.isExternal()) {
                                                                                                                          READ_USED_MODELS.trigger(o);
                                                                                                                      }

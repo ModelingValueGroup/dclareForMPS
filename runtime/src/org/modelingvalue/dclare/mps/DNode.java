@@ -16,6 +16,7 @@
 package org.modelingvalue.dclare.mps;
 
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.stream.Collectors;
 
 import org.jetbrains.mps.openapi.language.SAbstractConcept;
@@ -69,6 +70,8 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                         };
 
     private static final Constant<Quintuple<Set<SLanguage>, SConcept, Set<String>, Boolean, Boolean>, DNodeType> NODE_TYPE              = Constant.of("NODE_TYPE", DNodeType::new);
+
+    private static final Constant<SConcept, AtomicLong>                                                          NODE_COUNTER           = Constant.of("NODE_COUNTER", ac -> new NodeCounter(ac));
 
     protected static final Constant<SAbstractConcept, Set<SAbstractConcept>>                                     SUPER_CONCEPTS         = Constant.of("SUPER_CONCEPTS", ac -> {
                                                                                                                                             if (ac instanceof SInterfaceConcept) {
@@ -311,7 +314,6 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
                 if (c.reason() instanceof DCopy && !c.object().dIsObsolete()) {
                     DCopy reason = (DCopy) c.reason();
                     action.accept(t, reason.copied(), reason.root());
-                    break;
                 }
             }
         });
@@ -319,17 +321,21 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
 
     public static DNode of(SLanguage anonymousLanguage, String anonymousType, Object[] identity, SConcept concept) {
         return quotationConstruct(anonymousLanguage, anonymousType, identity, //
-                () -> new DNode(new Object[]{DClareMPS.uniqueLong(), concept}));
+                () -> new DNode(new Object[]{uniqueLong(concept), concept}));
     }
 
     public DNode copy(String anonymousType, DObject ctx) {
         return copyRootConstruct(anonymousType, ctx, this, //
-                () -> new DNode(new Object[]{DClareMPS.uniqueLong(), getConcept()}));
+                () -> new DNode(new Object[]{uniqueLong(getConcept()), getConcept()}));
     }
 
     private DNode copy(DCopy root) {
         return copyChildConstruct(root, this, //
-                () -> new DNode(new Object[]{DClareMPS.uniqueLong(), getConcept()}));
+                () -> new DNode(new Object[]{uniqueLong(getConcept()), getConcept()}));
+    }
+
+    private static long uniqueLong(SConcept concept) {
+        return NODE_COUNTER.get(concept).getAndIncrement();
     }
 
     protected static DNode read(SNode original) {
@@ -348,7 +354,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
 
     public static DNode of(SConcept concept, SNodeReference ref, SNode original) {
         Objects.requireNonNull(ref.getModelReference(), "DNode of empty SModel reference is most illogical");
-        return readConstruct(ref, () -> new DNode(new Object[]{DClareMPS.uniqueLong(), concept}), original);
+        return readConstruct(ref, () -> new DNode(new Object[]{uniqueLong(concept), concept}), original);
     }
 
     @Override
@@ -988,6 +994,43 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
     @Override
     public java.util.Set<NodeReportItem> getIssues() {
         return (java.util.Set<NodeReportItem>) super.getIssues();
+    }
+
+    private static final class NodeCounter extends AtomicLong {
+
+        private static final long serialVersionUID = 4263581166804140293L;
+
+        private final SConcept    concept;
+
+        private NodeCounter(SConcept concept) {
+            super(0L);
+            this.concept = concept;
+        }
+
+        @Override
+        public int hashCode() {
+            return concept.hashCode();
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) {
+                return true;
+            } else if (obj == null) {
+                return false;
+            } else if (!(obj instanceof NodeCounter)) {
+                return false;
+            } else {
+                NodeCounter other = (NodeCounter) obj;
+                return concept.equals(other.concept);
+            }
+        }
+
+        @Override
+        public String toString() {
+            return concept.getName() + super.toString();
+        }
+
     }
 
 }
