@@ -46,7 +46,6 @@ import org.modelingvalue.dclare.Action;
 import org.modelingvalue.dclare.Constant;
 import org.modelingvalue.dclare.Construction;
 import org.modelingvalue.dclare.Mutable;
-import org.modelingvalue.dclare.NonCheckingObserved;
 import org.modelingvalue.dclare.Observed;
 import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.Setable;
@@ -97,9 +96,9 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                             c.getReferenceLinks().stream().filter(r -> !SNodeUtil.concept_BaseConcept.getReferenceLinks().contains(r)).findAny().get() : null;
                                                                                                                                         });
 
-    protected static final Observed<DNode, DModel>                                                               MODEL                  = NonCheckingObserved.of("$MODEL", null);
+    protected static final Observed<DNode, DModel>                                                               MODEL                  = Observed.of("$MODEL", null, SetableModifier.doNotCheckConsistency);
 
-    protected static final Observed<DNode, DNode>                                                                ROOT                   = NonCheckingObserved.of("$ROOT", null, (tx, o, pre, post) -> {
+    protected static final Observed<DNode, DNode>                                                                ROOT                   = Observed.of("$ROOT", null, (tx, o, pre, post) -> {
                                                                                                                                             Set<Pair<DObject, IssueKindReportItem>> items = MPS_ISSUES.get(o);
                                                                                                                                             if (pre != null) {
                                                                                                                                                 DNode.ALL_MPS_ISSUES.set(pre, Set::removeAll, items);
@@ -107,7 +106,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                             if (post != null) {
                                                                                                                                                 DNode.ALL_MPS_ISSUES.set(post, Set::addAll, items);
                                                                                                                                             }
-                                                                                                                                        });
+                                                                                                                                        }, SetableModifier.doNotCheckConsistency);
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     protected static final DObserved<DNode, Map<Object, Object>>                                                 USER_OBJECTS           = DObserved.of("USER_OBJECTS", Map.of(), (TriFunction) null);

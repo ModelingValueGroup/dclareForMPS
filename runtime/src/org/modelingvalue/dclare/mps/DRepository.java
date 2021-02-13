@@ -29,7 +29,6 @@ import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.TriFunction;
 import org.modelingvalue.dclare.Action;
 import org.modelingvalue.dclare.Constant;
-import org.modelingvalue.dclare.NonCheckingObserved;
 import org.modelingvalue.dclare.Observed;
 import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.Setable;
@@ -42,7 +41,7 @@ public class DRepository extends DFromOriginalObject<ProjectRepository> implemen
 
     private static final Constant<Set<SLanguage>, DRepositoryType> REPOSITORY_TYPE = Constant.of("REPOSITORY_TYPE", ls -> new DRepositoryType(ls));
 
-    protected static final Observed<DRepository, Set<DModule>>     REFERENCED      = NonCheckingObserved.of("REFERENCED", Set.of());
+    protected static final Observed<DRepository, Set<DModule>>     REFERENCED      = Observed.of("REFERENCED", Set.of(), SetableModifier.doNotCheckConsistency);
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     protected static final DObserved<DRepository, Set<DModule>>    MODULES         = DObserved.of("MODULES", Set.of(), (TriFunction) null, SetableModifier.containment);

@@ -51,7 +51,6 @@ import org.modelingvalue.dclare.ImperativeTransaction;
 import org.modelingvalue.dclare.LeafTransaction;
 import org.modelingvalue.dclare.Mutable;
 import org.modelingvalue.dclare.MutableClass;
-import org.modelingvalue.dclare.NonCheckingObserved;
 import org.modelingvalue.dclare.Observed;
 import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.ReusableTransaction;
@@ -131,7 +130,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
 
     private final ThreadLocal<Boolean>                                                                  COMMITTING           = ThreadLocal.withInitial(() -> false);
 
-    public final static Observed<DClareMPS, Set<SLanguage>>                                             ALL_LANGUAGES        = NonCheckingObserved.of("ALL_LANGAUGES", Set.of(), (tx, d, o, n) -> {
+    public final static Observed<DClareMPS, Set<SLanguage>>                                             ALL_LANGUAGES        = Observed.of("ALL_LANGAUGES", Set.of(), (tx, d, o, n) -> {
                                                                                                                                  Setable.<Set<SLanguage>, SLanguage> diff(o, n,                                                                                                    //
                                                                                                                                          a -> DClareMPS.RULE_SETS.get(a).forEachOrdered(                                                                                           //
                                                                                                                                                  rs -> {
@@ -140,7 +139,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
                                                                                                                                                  }),                                                                                                                               //
                                                                                                                                          r -> {
                                                                                                                                          });
-                                                                                                                             });
+                                                                                                                             }, SetableModifier.doNotCheckConsistency);
 
     public final static Constant<SLanguage, Set<IRuleSet>>                                              RULE_SETS            = Constant.of("RULE_SETS", Set.of(), language -> {
                                                                                                                                  LanguageRuntime rtLang = registry().getLanguage(language);
@@ -285,7 +284,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     public void init() {
         command(() -> start());
         Universe.super.init();
-        imperativeTransaction = universeTransaction.addImperative("$MPS_NATIVE", p -> start(), this, r -> {
+        imperativeTransaction = universeTransaction.addImperative("$MPS_CONNECTOR", p -> start(), this, r -> {
             if (isRunning()) {
                 command(r);
             }

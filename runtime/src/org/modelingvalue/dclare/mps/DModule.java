@@ -35,7 +35,6 @@ import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.dclare.Action;
 import org.modelingvalue.dclare.Constant;
-import org.modelingvalue.dclare.NonCheckingObserved;
 import org.modelingvalue.dclare.Observed;
 import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.Setable;
@@ -66,12 +65,12 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
                                                                                                  }
                                                                                              }, SetableModifier.containment);
 
-    protected static final Observed<DModule, Set<SLanguage>>                  LANGUAGES      = NonCheckingObserved.of("LANGUAGES", Set.of(), (tx, o, pre, post) -> {
+    protected static final Observed<DModule, Set<SLanguage>>                  LANGUAGES      = Observed.of("LANGUAGES", Set.of(), (tx, o, pre, post) -> {
                                                                                                  Setable.<Set<SLanguage>, SLanguage> diff(pre, post,                                                    //
                                                                                                          a -> DClareMPS.ALL_LANGUAGES.set(dClareMPS(), Set::add, a),                                    //
                                                                                                          r -> {
                                                                                                          });
-                                                                                             });
+                                                                                             }, SetableModifier.doNotCheckConsistency);
 
     private static final Observer<DModule>                                    LANGUAGES_RULE = DObject.observer(LANGUAGES, o -> {
                                                                                                  LANGUAGES.set(o, dClareMPS().read(() -> languages(o.original()))                                       //

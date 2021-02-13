@@ -43,7 +43,6 @@ import org.modelingvalue.collections.util.Triple;
 import org.modelingvalue.dclare.Action;
 import org.modelingvalue.dclare.Constant;
 import org.modelingvalue.dclare.Construction;
-import org.modelingvalue.dclare.NonCheckingObserved;
 import org.modelingvalue.dclare.Observed;
 import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.Setable;
@@ -113,7 +112,7 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
                                                                                                                  return false;
                                                                                                              });
 
-    protected static final Observed<DModel, ModelRoot>                                      MODEL_ROOT       = NonCheckingObserved.of("MODEL_ROOT", null);
+    protected static final Observed<DModel, ModelRoot>                                      MODEL_ROOT       = Observed.of("MODEL_ROOT", null, SetableModifier.doNotCheckConsistency);
 
     private static final Action<DModel>                                                     READ_ROOTS       = Action.of("$READ_ROOTS", m -> {
                                                                                                                  SModel sModel = m.tryOriginal();
