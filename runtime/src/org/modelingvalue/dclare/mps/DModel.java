@@ -158,7 +158,7 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
                                                                                                                      }
                                                                                                                      READ_ROOTS.trigger(o);
                                                                                                                  }
-                                                                                                             }, SetableModifier.synthetic);
+                                                                                                             }, SetableModifier.doNotCheckConsistency);
     @SuppressWarnings({"rawtypes", "unchecked"})
     protected static final DObserved<DModel, Boolean>                                       LOADED           = DObserved.of("LOADED", Boolean.FALSE, (TriFunction) null);
 
