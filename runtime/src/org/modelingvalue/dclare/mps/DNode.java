@@ -17,6 +17,7 @@ package org.modelingvalue.dclare.mps;
 
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import org.jetbrains.mps.openapi.language.SAbstractConcept;
@@ -45,11 +46,16 @@ import org.modelingvalue.collections.util.TriFunction;
 import org.modelingvalue.dclare.Action;
 import org.modelingvalue.dclare.Constant;
 import org.modelingvalue.dclare.Construction;
+import org.modelingvalue.dclare.Direction;
 import org.modelingvalue.dclare.Mutable;
+import org.modelingvalue.dclare.MutableTransaction;
 import org.modelingvalue.dclare.Observed;
 import org.modelingvalue.dclare.Observer;
+import org.modelingvalue.dclare.ObserverTransaction;
 import org.modelingvalue.dclare.Setable;
 import org.modelingvalue.dclare.SetableModifier;
+import org.modelingvalue.dclare.Transaction;
+import org.modelingvalue.dclare.UniverseTransaction;
 
 import jetbrains.mps.errors.item.IssueKindReportItem;
 import jetbrains.mps.errors.item.NodeReportItem;
@@ -307,8 +313,8 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
     @SuppressWarnings("rawtypes")
     protected static final Set<Setable>                                                                          SETABLES               = DMatchedObject.SETABLES.addAll(Set.of(NAME_OBSERVED, ROOT, MODEL, USER_OBJECTS, ALL_MPS_ISSUES, INDEX));
 
-    public static Observer<DNode> copyObserver(Observed<DNode, ?> observed, TriConsumer<DNode, DNode, DCopy> action) {
-        return Observer.of(observed, t -> {
+    public static Observer<DNode> copyObserver(DObserved<DNode, ?> observed, TriConsumer<DNode, DNode, DCopy> action) {
+        return DCopyObserver.of(observed, t -> {
             for (Construction c : t.dConstructions()) {
                 if (c.reason() instanceof DCopy && !c.object().dIsObsolete()) {
                     DCopy reason = (DCopy) c.reason();
@@ -316,6 +322,61 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
                 }
             }
         });
+    }
+
+    static public class DCopyObserver extends Observer<DNode> {
+
+        private static DCopyObserver of(DObserved<DNode, ?> observed, Consumer<DNode> action) {
+            return new DCopyObserver(observed, action);
+        }
+
+        @SuppressWarnings("unchecked")
+        private DCopyObserver(DObserved<DNode, ?> observed, Consumer<DNode> action) {
+            super(observed, action, Direction.forward);
+        }
+
+        @SuppressWarnings("unchecked")
+        public DObserved<DNode, ?> dObserved() {
+            return (DObserved<DNode, ?>) id();
+        }
+
+        @Override
+        public DCopyTransaction openTransaction(MutableTransaction parent) {
+            return ((DClareMPS) parent.universeTransaction().mutable()).dCopyObserverTransactions.get().open(this, parent);
+        }
+
+        @Override
+        public void closeTransaction(Transaction tx) {
+            ((DClareMPS) tx.universeTransaction().mutable()).dCopyObserverTransactions.get().close((DCopyTransaction) tx);
+        }
+
+        @Override
+        public DCopyTransaction newTransaction(UniverseTransaction universeTransaction) {
+            return new DCopyTransaction(universeTransaction);
+        }
+
+    }
+
+    public static class DCopyTransaction extends ObserverTransaction {
+
+        private DCopyTransaction(UniverseTransaction root) {
+            super(root);
+        }
+
+        @Override
+        public DNode mutable() {
+            return (DNode) super.mutable();
+        }
+
+        @Override
+        public DCopyObserver observer() {
+            return (DCopyObserver) super.observer();
+        }
+
+        public DObserved<DNode, ?> dObserved() {
+            return observer().dObserved();
+        }
+
     }
 
     public static DNode of(SLanguage anonymousLanguage, String anonymousType, Object[] identity, SConcept concept) {
