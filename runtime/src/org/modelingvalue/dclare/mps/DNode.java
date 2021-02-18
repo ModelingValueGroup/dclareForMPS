@@ -298,7 +298,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
             r -> DObject.MPS_ISSUES.set(r.a(), Set::remove, r)));
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    protected static final DObserved<DNode, Integer>                                                             INDEX                  = DObserved.of("INDEX", -1, (TriFunction) null);
+    protected static final DObserved<DNode, Integer>                                                             INDEX                  = DObserved.of("INDEX", -1, (TriFunction) null, SetableModifier.doNotCheckConsistency);
 
     @SuppressWarnings("rawtypes")
     private static final Observer<DNode>                                                                         INDEX_RULE             = DObject.observer(INDEX, o -> {

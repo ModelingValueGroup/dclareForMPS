@@ -86,7 +86,11 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
                                                                                                                      }
                                                                                                                  }
                                                                                                                  return false;
-                                                                                                             }, (t, m, b, a) -> DModel.ACTIVE.set(m, Boolean.TRUE), SetableModifier.containment);
+                                                                                                             }, (t, m, b, a) -> {
+                                                                                                                 if (b.isEmpty() && !a.isEmpty()) {
+                                                                                                                     DModel.ACTIVE.set(m, Boolean.TRUE);
+                                                                                                                 }
+                                                                                                             }, SetableModifier.containment);
 
     protected static final DObserved<DModel, Set<SLanguage>>                                USED_LANGUAGES   = DObserved.of("USED_LANGUAGES", Set.of(), (dModel, pre, post) -> {
                                                                                                                  SModelInternal sModel = (SModelInternal) dModel.original();
@@ -160,7 +164,7 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
                                                                                                                  }
                                                                                                              }, SetableModifier.doNotCheckConsistency);
     @SuppressWarnings({"rawtypes", "unchecked"})
-    protected static final DObserved<DModel, Boolean>                                       LOADED           = DObserved.of("LOADED", Boolean.FALSE, (TriFunction) null);
+    protected static final DObserved<DModel, Boolean>                                       LOADED           = DObserved.of("LOADED", Boolean.FALSE, (TriFunction) null, SetableModifier.doNotCheckConsistency);
 
     private static final Action<DModel>                                                     READ_LOADED      = Action.of("$READ_LOADED", m -> {
                                                                                                                  SModel sModel = m.tryOriginal();
