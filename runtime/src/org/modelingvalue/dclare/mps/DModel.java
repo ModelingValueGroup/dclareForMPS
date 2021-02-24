@@ -36,6 +36,7 @@ import org.jetbrains.mps.openapi.module.SModule;
 import org.jetbrains.mps.openapi.persistence.DataSource;
 import org.jetbrains.mps.openapi.persistence.ModelRoot;
 import org.modelingvalue.collections.Collection;
+import org.modelingvalue.collections.Map;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.collections.util.TriFunction;
@@ -122,7 +123,16 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
                                                                                                                  SModel sModel = m.tryOriginal();
                                                                                                                  if (sModel != null) {
                                                                                                                      MODEL_ROOT.set(m, dClareMPS().read(() -> sModel.getModelRoot()));
-                                                                                                                     ROOTS.set(m, dClareMPS().read(() -> Collection.of(sModel.getRootNodes()).sequential().map(DNode::read).toSet()));
+                                                                                                                     ROOTS.set(m, dClareMPS().read(() -> Collection.of(sModel.getRootNodes()).sequential().map(                                      //
+                                                                                                                             n -> {
+                                                                                                                                 try {
+                                                                                                                                     return DNode.read(n);
+                                                                                                                                 } catch (Exception e) {
+                                                                                                                                     // TODO Auto-generated catch block
+                                                                                                                                     e.printStackTrace();
+                                                                                                                                     return null;
+                                                                                                                                 }
+                                                                                                                             }).toSet()));
                                                                                                                  }
                                                                                                              });
 
@@ -273,7 +283,7 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
     protected SModel create() {
         SModuleBase sModule = (SModuleBase) getModule().original();
         String name = NAME.get(this);
-        name = name == null || Construction.MatchInfo.of(this).hasUnidentifiedSource() ? //
+        name = name == null || Construction.MatchInfo.of(this, Map.of()).hasUnidentifiedSource() ? //
                 "_" + Long.toString(System.currentTimeMillis(), Character.MAX_RADIX) : name;
         return isTemporal() ? new DTempModel(name, sModule) : createFileModel(name, sModule);
     }

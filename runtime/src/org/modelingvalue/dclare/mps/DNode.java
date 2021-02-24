@@ -221,9 +221,6 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                             DNode p = o.getParent();
                                                                                                                                             ROOT.set(o, p != null ? ROOT.get(p) : o);
                                                                                                                                         });
-
-    protected static final Setable<DNode, String>                                                                NAME_OBSERVED          = PROPERTY.get(SNodeUtil.property_INamedConcept_name);
-
     @SuppressWarnings("rawtypes")
     protected static final Constant<SConcept, Set<Observer>>                                                     COPY_CONCEPT_OBSERVERS = Constant.of("COPY_CONCEPT_OBSERVERS", c -> {
                                                                                                                                             Set<Observer> observers = Set.of();
@@ -311,11 +308,11 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
     protected static final Set<Observer>                                                                         OBSERVERS              = DMatchedObject.OBSERVERS.addAll(Set.of(ROOT_RULE, MODEL_RULE, INDEX_RULE));
 
     @SuppressWarnings("rawtypes")
-    protected static final Set<Setable>                                                                          SETABLES               = DMatchedObject.SETABLES.addAll(Set.of(NAME_OBSERVED, ROOT, MODEL, USER_OBJECTS, ALL_MPS_ISSUES, INDEX));
+    protected static final Set<Setable>                                                                          SETABLES               = DMatchedObject.SETABLES.addAll(Set.of(ROOT, MODEL, USER_OBJECTS, ALL_MPS_ISSUES, INDEX));
 
     public static Observer<DNode> copyObserver(DObserved<DNode, ?> observed, TriConsumer<DNode, DNode, DCopy> action) {
         return DCopyObserver.of(observed, t -> {
-            for (Construction c : t.dConstructions()) {
+            for (Construction c : t.dDerivedConstructions()) {
                 if (c.reason() instanceof DCopy && !c.object().dIsObsolete()) {
                     DCopy reason = (DCopy) c.reason();
                     action.accept(t, reason.copied(), reason.root());
@@ -402,7 +399,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
         SConcept concept = original.getConcept();
         DNode dNode = of(concept, original.getReference(), original);
         if (concept.isSubConceptOf(SNodeUtil.concept_INamedConcept)) {
-            NAME_OBSERVED.set(dNode, original.getName());
+            PROPERTY.get(SNodeUtil.property_INamedConcept_name).set(dNode, original.getName());
         }
         INDEX.set(dNode, SNodeOperations.getIndexInParent(original));
         return dNode;
@@ -461,7 +458,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
             }
         }
         if (concept.isSubConceptOf(SNodeUtil.concept_INamedConcept)) {
-            sNode.setProperty(SNodeUtil.property_INamedConcept_name, NAME_OBSERVED.get(this));
+            sNode.setProperty(SNodeUtil.property_INamedConcept_name, PROPERTY.get(SNodeUtil.property_INamedConcept_name).get(this));
         }
         return sNode;
     }
@@ -586,7 +583,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
             }
             return map;
         } else if (concept.isSubConceptOf(SNodeUtil.concept_INamedConcept)) {
-            return NAME_OBSERVED.get(this);
+            return PROPERTY.get(SNodeUtil.property_INamedConcept_name).get(this);
         } else {
             SReferenceLink smart = SMART_REFERENCE.get(concept);
             if (smart != null) {
@@ -653,7 +650,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
 
     @Override
     public String getName() {
-        return NAME_OBSERVED.get(this);
+        return PROPERTY.get(SNodeUtil.property_INamedConcept_name).get(this);
     }
 
     @Override
