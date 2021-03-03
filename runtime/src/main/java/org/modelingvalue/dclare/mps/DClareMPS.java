@@ -51,7 +51,6 @@ import org.modelingvalue.dclare.ImperativeTransaction;
 import org.modelingvalue.dclare.LeafTransaction;
 import org.modelingvalue.dclare.Mutable;
 import org.modelingvalue.dclare.MutableClass;
-import org.modelingvalue.dclare.NonCheckingObserved;
 import org.modelingvalue.dclare.Observed;
 import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.ReusableTransaction;
@@ -72,7 +71,6 @@ import org.modelingvalue.dclare.ex.TooManyObservedException;
 import org.modelingvalue.dclare.ex.TooManyObserversException;
 import org.modelingvalue.dclare.ex.TransactionException;
 import org.modelingvalue.dclare.mps.DRule.DObserver;
-import org.modelingvalue.dclare.mps.DRule.DObserverTransaction;
 import org.modelingvalue.dclare.mps.DclareModelCheckerBuilder.RootItemsToCheck;
 import org.modelingvalue.dclare.sync.NetUtils;
 
@@ -131,7 +129,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
 
     private final ThreadLocal<Boolean>                                                                  COMMITTING           = ThreadLocal.withInitial(() -> false);
 
-    public final static Observed<DClareMPS, Set<SLanguage>>                                             ALL_LANGUAGES        = NonCheckingObserved.of("ALL_LANGAUGES", Set.of(), (tx, d, o, n) -> {
+    public final static Observed<DClareMPS, Set<SLanguage>>                                             ALL_LANGUAGES        = Observed.of("ALL_LANGAUGES", Set.of(), (tx, d, o, n) -> {
                                                                                                                                  Setable.<Set<SLanguage>, SLanguage> diff(o, n,                                                                                                    //
                                                                                                                                          a -> DClareMPS.RULE_SETS.get(a).forEachOrdered(                                                                                           //
                                                                                                                                                  rs -> {
@@ -140,7 +138,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
                                                                                                                                                  }),                                                                                                                               //
                                                                                                                                          r -> {
                                                                                                                                          });
-                                                                                                                             });
+                                                                                                                             }, SetableModifier.doNotCheckConsistency);
 
     public final static Constant<SLanguage, Set<IRuleSet>>                                              RULE_SETS            = Constant.of("RULE_SETS", Set.of(), language -> {
                                                                                                                                  LanguageRuntime rtLang = registry().getLanguage(language);
@@ -161,7 +159,8 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     private final StartStopHandler                                                                      startStopHandler;
     private ImperativeTransaction                                                                       imperativeTransaction;
     private boolean                                                                                     running;
-    protected final Concurrent<ReusableTransaction<DRule.DObserver<?>, DObserverTransaction>>           dObserverTransactions;
+    protected final Concurrent<ReusableTransaction<DRule.DObserver<?>, DRule.DObserverTransaction>>     dObserverTransactions;
+    protected final Concurrent<ReusableTransaction<DNode.DCopyObserver, DNode.DCopyTransaction>>        dCopyObserverTransactions;
     protected Map<DMessageType, QualifiedSet<Triple<DObject, DFeature, String>, DMessage>>              messages             = MESSAGE_QSET_MAP;
     private Thread                                                                                      commandThread;
     protected final DclareForMPSEngine                                                                  engine;
@@ -237,10 +236,8 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
             }
 
             @Override
-            protected void clear(LeafTransaction tx, Mutable orphan) {
-                if (!(orphan instanceof DObject && ((DObject) orphan).isExternal())) {
-                    super.clear(tx, orphan);
-                }
+            protected boolean mustBeCleared(Mutable orphan) {
+                return !(orphan instanceof DObject && ((DObject) orphan).isExternal());
             }
 
             @Override
@@ -258,6 +255,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
         };
         deltaAdapter = NetUtils.isActive() ? new MPSDeltaAdapter("mps-sync", universeTransaction, new MPSSerializationHelper(projectRepository)) : null;
         this.dObserverTransactions = Concurrent.of(() -> new ReusableTransaction<>(universeTransaction));
+        this.dCopyObserverTransactions = Concurrent.of(() -> new ReusableTransaction<>(universeTransaction));
         waitForEndThread = new Thread(() -> {
             State result = universeTransaction.emptyState();
             try {
@@ -287,7 +285,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     public void init() {
         command(() -> start());
         Universe.super.init();
-        imperativeTransaction = universeTransaction.addImperative("$MPS_NATIVE", p -> start(), this, r -> {
+        imperativeTransaction = universeTransaction.addImperative("$MPS_CONNECTOR", p -> start(), this, r -> {
             if (isRunning()) {
                 command(r);
             }
@@ -366,11 +364,16 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     @SuppressWarnings("rawtypes")
     private void addTooManyChangesExceptionMessage(DObject context, DFeature feature, TooManyChangesException tmce) {
         DMessage message = new DMessage(context, feature, DMessageType.error, "TOO_MANY_CHANGES", "Too many changes, running " + feature + " changes=" + tmce.getNrOfChanges());
-        tmce.getLast().trace(message, (m, r) -> m.addSubMessage(new DMessage((DObject) r.mutable(), ((DRule.DObserver) r.observer()).rule(), DMessageType.error, " ", //
-                "run: " + r.mutable() + "." + ((DRule.DObserver) r.observer()).rule() + " nr: " + r.nrOfChanges())), (m, r, s) -> m.addSubMessage(new DMessage((DObject) s.mutable(), (DObserved) s.observed(), DMessageType.error, " ", //
+        tmce.getLast().trace(message, (m, r) -> m.addSubMessage(new DMessage((DObject) r.mutable(), feature(r.observer()), DMessageType.error, " ", //
+                "run: " + r.mutable() + "." + feature(r.observer()) + " nr: " + r.nrOfChanges())), (m, r, s) -> m.addSubMessage(new DMessage((DObject) s.mutable(), (DObserved) s.observed(), DMessageType.error, " ", //
                         "read: " + s.mutable() + "." + s.observed() + "=" + r.read().get(s))), (m, w, s) -> m.subMessages().last().addSubMessage(new DMessage((DObject) s.mutable(), (DObserved) s.observed(), DMessageType.error, " ", //
                                 "write: " + s.mutable() + "." + s.observed() + "=" + w.written().get(s))), m -> m.subMessages().last(), tmce.getState().universeTransaction().stats().maxNrOfChanges());
         addMessage(message);
+    }
+
+    @SuppressWarnings("rawtypes")
+    private DFeature feature(Observer observer) {
+        return observer instanceof DRule.DObserver ? ((DRule.DObserver) observer).rule() : observer instanceof DNode.DCopyObserver ? ((DNode.DCopyObserver) observer).dObserved() : null;
     }
 
     @SuppressWarnings("rawtypes")

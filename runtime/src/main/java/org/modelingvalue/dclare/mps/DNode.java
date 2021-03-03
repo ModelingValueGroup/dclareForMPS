@@ -16,6 +16,8 @@
 package org.modelingvalue.dclare.mps;
 
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import org.jetbrains.mps.openapi.language.SAbstractConcept;
@@ -44,12 +46,16 @@ import org.modelingvalue.collections.util.TriFunction;
 import org.modelingvalue.dclare.Action;
 import org.modelingvalue.dclare.Constant;
 import org.modelingvalue.dclare.Construction;
+import org.modelingvalue.dclare.Direction;
 import org.modelingvalue.dclare.Mutable;
-import org.modelingvalue.dclare.NonCheckingObserved;
+import org.modelingvalue.dclare.MutableTransaction;
 import org.modelingvalue.dclare.Observed;
 import org.modelingvalue.dclare.Observer;
+import org.modelingvalue.dclare.ObserverTransaction;
 import org.modelingvalue.dclare.Setable;
 import org.modelingvalue.dclare.SetableModifier;
+import org.modelingvalue.dclare.Transaction;
+import org.modelingvalue.dclare.UniverseTransaction;
 
 import jetbrains.mps.errors.item.IssueKindReportItem;
 import jetbrains.mps.errors.item.NodeReportItem;
@@ -69,6 +75,8 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                         };
 
     private static final Constant<Quintuple<Set<SLanguage>, SConcept, Set<String>, Boolean, Boolean>, DNodeType> NODE_TYPE              = Constant.of("NODE_TYPE", DNodeType::new);
+
+    private static final Constant<SConcept, AtomicLong>                                                          NODE_COUNTER           = Constant.of("NODE_COUNTER", ac -> new NodeCounter(ac));
 
     protected static final Constant<SAbstractConcept, Set<SAbstractConcept>>                                     SUPER_CONCEPTS         = Constant.of("SUPER_CONCEPTS", ac -> {
                                                                                                                                             if (ac instanceof SInterfaceConcept) {
@@ -94,9 +102,9 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                             c.getReferenceLinks().stream().filter(r -> !SNodeUtil.concept_BaseConcept.getReferenceLinks().contains(r)).findAny().get() : null;
                                                                                                                                         });
 
-    protected static final Observed<DNode, DModel>                                                               MODEL                  = NonCheckingObserved.of("$MODEL", null);
+    protected static final Observed<DNode, DModel>                                                               MODEL                  = Observed.of("$MODEL", null, SetableModifier.doNotCheckConsistency);
 
-    protected static final Observed<DNode, DNode>                                                                ROOT                   = NonCheckingObserved.of("$ROOT", null, (tx, o, pre, post) -> {
+    protected static final Observed<DNode, DNode>                                                                ROOT                   = Observed.of("$ROOT", null, (tx, o, pre, post) -> {
                                                                                                                                             Set<Pair<DObject, IssueKindReportItem>> items = MPS_ISSUES.get(o);
                                                                                                                                             if (pre != null) {
                                                                                                                                                 DNode.ALL_MPS_ISSUES.set(pre, Set::removeAll, items);
@@ -104,7 +112,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                             if (post != null) {
                                                                                                                                                 DNode.ALL_MPS_ISSUES.set(post, Set::addAll, items);
                                                                                                                                             }
-                                                                                                                                        });
+                                                                                                                                        }, SetableModifier.doNotCheckConsistency);
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     protected static final DObserved<DNode, Map<Object, Object>>                                                 USER_OBJECTS           = DObserved.of("USER_OBJECTS", Map.of(), (TriFunction) null);
@@ -213,9 +221,6 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                             DNode p = o.getParent();
                                                                                                                                             ROOT.set(o, p != null ? ROOT.get(p) : o);
                                                                                                                                         });
-
-    protected static final Setable<DNode, String>                                                                NAME_OBSERVED          = PROPERTY.get(SNodeUtil.property_INamedConcept_name);
-
     @SuppressWarnings("rawtypes")
     protected static final Constant<SConcept, Set<Observer>>                                                     COPY_CONCEPT_OBSERVERS = Constant.of("COPY_CONCEPT_OBSERVERS", c -> {
                                                                                                                                             Set<Observer> observers = Set.of();
@@ -290,7 +295,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
             r -> DObject.MPS_ISSUES.set(r.a(), Set::remove, r)));
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    protected static final DObserved<DNode, Integer>                                                             INDEX                  = DObserved.of("INDEX", -1, (TriFunction) null);
+    protected static final DObserved<DNode, Integer>                                                             INDEX                  = DObserved.of("INDEX", -1, (TriFunction) null, SetableModifier.doNotCheckConsistency);
 
     @SuppressWarnings("rawtypes")
     private static final Observer<DNode>                                                                         INDEX_RULE             = DObject.observer(INDEX, o -> {
@@ -303,40 +308,98 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
     protected static final Set<Observer>                                                                         OBSERVERS              = DMatchedObject.OBSERVERS.addAll(Set.of(ROOT_RULE, MODEL_RULE, INDEX_RULE));
 
     @SuppressWarnings("rawtypes")
-    protected static final Set<Setable>                                                                          SETABLES               = DMatchedObject.SETABLES.addAll(Set.of(NAME_OBSERVED, ROOT, MODEL, USER_OBJECTS, ALL_MPS_ISSUES, INDEX));
+    protected static final Set<Setable>                                                                          SETABLES               = DMatchedObject.SETABLES.addAll(Set.of(ROOT, MODEL, USER_OBJECTS, ALL_MPS_ISSUES, INDEX));
 
-    public static Observer<DNode> copyObserver(Observed<DNode, ?> observed, TriConsumer<DNode, DNode, DCopy> action) {
-        return Observer.of(observed, t -> {
-            for (Construction c : t.dConstructions()) {
+    public static Observer<DNode> copyObserver(DObserved<DNode, ?> observed, TriConsumer<DNode, DNode, DCopy> action) {
+        return DCopyObserver.of(observed, t -> {
+            for (Construction c : t.dDerivedConstructions()) {
                 if (c.reason() instanceof DCopy && !c.object().dIsObsolete()) {
                     DCopy reason = (DCopy) c.reason();
                     action.accept(t, reason.copied(), reason.root());
-                    break;
                 }
             }
         });
     }
 
+    static public class DCopyObserver extends Observer<DNode> {
+
+        private static DCopyObserver of(DObserved<DNode, ?> observed, Consumer<DNode> action) {
+            return new DCopyObserver(observed, action);
+        }
+
+        @SuppressWarnings("unchecked")
+        private DCopyObserver(DObserved<DNode, ?> observed, Consumer<DNode> action) {
+            super(observed, action, Direction.forward);
+        }
+
+        @SuppressWarnings("unchecked")
+        public DObserved<DNode, ?> dObserved() {
+            return (DObserved<DNode, ?>) id();
+        }
+
+        @Override
+        public DCopyTransaction openTransaction(MutableTransaction parent) {
+            return ((DClareMPS) parent.universeTransaction().mutable()).dCopyObserverTransactions.get().open(this, parent);
+        }
+
+        @Override
+        public void closeTransaction(Transaction tx) {
+            ((DClareMPS) tx.universeTransaction().mutable()).dCopyObserverTransactions.get().close((DCopyTransaction) tx);
+        }
+
+        @Override
+        public DCopyTransaction newTransaction(UniverseTransaction universeTransaction) {
+            return new DCopyTransaction(universeTransaction);
+        }
+
+    }
+
+    public static class DCopyTransaction extends ObserverTransaction {
+
+        private DCopyTransaction(UniverseTransaction root) {
+            super(root);
+        }
+
+        @Override
+        public DNode mutable() {
+            return (DNode) super.mutable();
+        }
+
+        @Override
+        public DCopyObserver observer() {
+            return (DCopyObserver) super.observer();
+        }
+
+        public DObserved<DNode, ?> dObserved() {
+            return observer().dObserved();
+        }
+
+    }
+
     public static DNode of(SLanguage anonymousLanguage, String anonymousType, Object[] identity, SConcept concept) {
         return quotationConstruct(anonymousLanguage, anonymousType, identity, //
-                () -> new DNode(new Object[]{DClareMPS.uniqueLong(), concept}));
+                () -> new DNode(new Object[]{uniqueLong(concept), concept}));
     }
 
     public DNode copy(String anonymousType, DObject ctx) {
         return copyRootConstruct(anonymousType, ctx, this, //
-                () -> new DNode(new Object[]{DClareMPS.uniqueLong(), getConcept()}));
+                () -> new DNode(new Object[]{uniqueLong(getConcept()), getConcept()}));
     }
 
     private DNode copy(DCopy root) {
         return copyChildConstruct(root, this, //
-                () -> new DNode(new Object[]{DClareMPS.uniqueLong(), getConcept()}));
+                () -> new DNode(new Object[]{uniqueLong(getConcept()), getConcept()}));
+    }
+
+    private static long uniqueLong(SConcept concept) {
+        return NODE_COUNTER.get(concept).getAndIncrement();
     }
 
     protected static DNode read(SNode original) {
         SConcept concept = original.getConcept();
         DNode dNode = of(concept, original.getReference(), original);
         if (concept.isSubConceptOf(SNodeUtil.concept_INamedConcept)) {
-            NAME_OBSERVED.set(dNode, original.getName());
+            PROPERTY.get(SNodeUtil.property_INamedConcept_name).set(dNode, original.getName());
         }
         INDEX.set(dNode, SNodeOperations.getIndexInParent(original));
         return dNode;
@@ -348,7 +411,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
 
     public static DNode of(SConcept concept, SNodeReference ref, SNode original) {
         Objects.requireNonNull(ref.getModelReference(), "DNode of empty SModel reference is most illogical");
-        return readConstruct(ref, () -> new DNode(new Object[]{DClareMPS.uniqueLong(), concept}), original);
+        return readConstruct(ref, () -> new DNode(new Object[]{uniqueLong(concept), concept}), original);
     }
 
     @Override
@@ -371,8 +434,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
 
     @Override
     public boolean isExternal() {
-        SModel sModel = getOriginalModel();
-        return sModel != null && dClareMPS().project.getPath(sModel.getModule()) == null;
+        return DModel.isExternal(getOriginalModel());
     }
 
     @Override
@@ -396,7 +458,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
             }
         }
         if (concept.isSubConceptOf(SNodeUtil.concept_INamedConcept)) {
-            sNode.setProperty(SNodeUtil.property_INamedConcept_name, NAME_OBSERVED.get(this));
+            sNode.setProperty(SNodeUtil.property_INamedConcept_name, PROPERTY.get(SNodeUtil.property_INamedConcept_name).get(this));
         }
         return sNode;
     }
@@ -521,7 +583,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
             }
             return map;
         } else if (concept.isSubConceptOf(SNodeUtil.concept_INamedConcept)) {
-            return NAME_OBSERVED.get(this);
+            return PROPERTY.get(SNodeUtil.property_INamedConcept_name).get(this);
         } else {
             SReferenceLink smart = SMART_REFERENCE.get(concept);
             if (smart != null) {
@@ -588,7 +650,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
 
     @Override
     public String getName() {
-        return NAME_OBSERVED.get(this);
+        return PROPERTY.get(SNodeUtil.property_INamedConcept_name).get(this);
     }
 
     @Override
@@ -989,6 +1051,43 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
     @Override
     public java.util.Set<NodeReportItem> getIssues() {
         return (java.util.Set<NodeReportItem>) super.getIssues();
+    }
+
+    private static final class NodeCounter extends AtomicLong {
+
+        private static final long serialVersionUID = 4263581166804140293L;
+
+        private final SConcept    concept;
+
+        private NodeCounter(SConcept concept) {
+            super(0L);
+            this.concept = concept;
+        }
+
+        @Override
+        public int hashCode() {
+            return concept.hashCode();
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (this == obj) {
+                return true;
+            } else if (obj == null) {
+                return false;
+            } else if (!(obj instanceof NodeCounter)) {
+                return false;
+            } else {
+                NodeCounter other = (NodeCounter) obj;
+                return concept.equals(other.concept);
+            }
+        }
+
+        @Override
+        public String toString() {
+            return concept.getName() + super.toString();
+        }
+
     }
 
 }

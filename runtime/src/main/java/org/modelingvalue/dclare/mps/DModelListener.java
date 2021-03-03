@@ -178,7 +178,7 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
     @Override
     public void importAdded(SModelImportEvent event) {
         b().handleMPSChange(() -> {
-            if (!a().isExternal()) {
+            if (!a().isExternal() && a().isActive()) {
                 DModel dModel = DModel.of(event.getModel());
                 DModel add = DModel.of(event.getModelUID().resolve(null));
                 DModel.USED_MODELS.set(dModel, Set::add, add);
@@ -189,7 +189,7 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
     @Override
     public void importRemoved(SModelImportEvent event) {
         b().handleMPSChange(() -> {
-            if (!a().isExternal()) {
+            if (!a().isExternal() && a().isActive()) {
                 DModel dModel = DModel.of(event.getModel());
                 DModel rem = DModel.of(event.getModelUID().resolve(null));
                 DModel.USED_MODELS.set(dModel, Set::remove, rem);

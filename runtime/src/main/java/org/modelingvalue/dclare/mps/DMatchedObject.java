@@ -57,7 +57,7 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
     @SuppressWarnings("unchecked")
     protected static <D extends DMatchedObject, I, S> D readConstruct(I ref, Supplier<D> supplier, S original) {
         LeafTransaction tx = LeafTransaction.getCurrent();
-        D d = tx.construct(new DRead(ref), supplier);
+        D d = tx.directConstruct(new DRead(ref), supplier);
         if (!(tx instanceof ReadOnlyTransaction)) {
             ORIGINAL.set(d, original);
         }
@@ -85,7 +85,7 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
     }
 
     private Construction getQuotationConstruction(String anonymousType) {
-        for (Construction c : dConstructions()) {
+        for (Construction c : dDerivedConstructions()) {
             if (c.reason() instanceof DQuotation && ((DQuotation) c.reason()).getAnonymousType() == anonymousType && !c.object().dIsObsolete()) {
                 return c;
             }
@@ -108,23 +108,24 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
 
     @SuppressWarnings("unchecked")
     protected final DRead<R> readReason() {
-        return reasons().filter(DRead.class).findFirst().orElse(null);
+        Construction cons = dDirectConstruction();
+        return cons != null && cons.reason() instanceof DRead ? (DRead) cons.reason() : null;
     }
 
-    private Collection<Reason> reasons() {
-        return dConstructions().map(Construction::reason);
+    private Collection<Reason> deriveReasons() {
+        return dDerivedConstructions().map(Construction::reason);
     }
 
     public Set<String> getAnonymousTypes() {
-        return reasons().filter(DQuotation.class).map(DQuotation::getAnonymousType).notNull().toSet();
+        return deriveReasons().filter(DQuotation.class).map(DQuotation::getAnonymousType).notNull().toSet();
     }
 
     public boolean isCopy() {
-        return reasons().anyMatch(c -> c instanceof DCopy);
+        return deriveReasons().anyMatch(c -> c instanceof DCopy);
     }
 
     public Set<SLanguage> getAnonymousLanguages() {
-        return reasons().filter(DQuotation.class).map(DQuotation::getAnonymousLanguage).notNull().toSet();
+        return deriveReasons().filter(DQuotation.class).map(DQuotation::getAnonymousLanguage).notNull().toSet();
     }
 
     public final S tryOriginal() {
