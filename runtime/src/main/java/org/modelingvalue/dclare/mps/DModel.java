@@ -275,7 +275,7 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
     }
 
     @Override
-    protected SModelReference reference(SModel read) {
+    protected SModelReference getReference(SModel read) {
         return read.getReference();
     }
 
@@ -298,7 +298,7 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
     }
 
     @Override
-    protected SModel resolve(SModelReference ref) {
+    protected SModel resolveReference(SModelReference ref) {
         return ref.resolve(null);
     }
 

@@ -130,7 +130,7 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
 
     public final S tryOriginal() {
         R ref = reference();
-        S sObject = ref != null ? dClareMPS().read(() -> resolve(ref)) : null;
+        S sObject = ref != null ? dClareMPS().read(() -> resolveReference(ref)) : null;
         if (sObject != null && !(LeafTransaction.getCurrent() instanceof ReadOnlyTransaction)) {
             ORIGINAL.set(this, sObject);
         }
@@ -145,7 +145,7 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
             if (sObject == null) {
                 sObject = create();
             }
-            readConstruct(reference(sObject), () -> this, sObject);
+            readConstruct(getReference(sObject), () -> this, sObject);
             init(dClareMPS(), sObject);
         }
         return sObject;
@@ -189,9 +189,9 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
 
     protected abstract void read();
 
-    protected abstract R reference(S read);
+    protected abstract R getReference(S read);
 
-    protected abstract S resolve(R ref);
+    protected abstract S resolveReference(R ref);
 
     protected abstract S create();
 
