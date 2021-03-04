@@ -199,7 +199,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
     @SuppressWarnings("deprecation")
     public static final Constant<SReferenceLink, DObserved<DNode, Set<DNode>>>                                   OPPOSITE               = Constant.of("OPPOSITE", sr -> DObserved.of(Pair.of(sr, "OPPOSITE"), Set.of(), () -> {
                                                                                                                                             return DNode.REFERENCE.get(sr);
-                                                                                                                                        }, null, sr::getDeclarationNode));
+                                                                                                                                        }, null, sr::getDeclarationNode, SetableModifier.doNotCheckConsistency));
     @SuppressWarnings("deprecation")
     public static final Constant<SProperty, DObserved<DNode, String>>                                            PROPERTY               = Constant.of("PROPERTY", sp -> DObserved.of(sp, null, (dNode, pre, post) -> {
                                                                                                                                             SNode sNode = dNode.original();
