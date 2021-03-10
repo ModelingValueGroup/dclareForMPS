@@ -207,7 +207,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
         if (TRACE) {
             System.err.println(DCLARE + "START " + this);
         }
-        universeTransaction = new UniverseTransaction(this, thePool, prevState, 100, maxTotalNrOfChanges, maxNrOfChanges, maxNrOfObserved, maxNrOfObservers, 4, null) {
+        universeTransaction = new UniverseTransaction(this, thePool, prevState, 100, maxTotalNrOfChanges, maxNrOfChanges, UniverseTransaction.MAX_NR_OF_FORWARD_CHANGES, maxNrOfObserved, maxNrOfObservers, 4, null) {
 
             @Override
             public void start(Action<Universe> action) {
