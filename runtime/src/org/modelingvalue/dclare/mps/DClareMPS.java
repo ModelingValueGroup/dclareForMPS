@@ -236,11 +236,6 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
             }
 
             @Override
-            protected boolean mustBeCleared(Mutable orphan) {
-                return !(orphan instanceof DObject && ((DObject) orphan).isExternal());
-            }
-
-            @Override
             protected void checkConsistency(Universe universe) {
                 if (isRunning()) {
                     super.checkConsistency(universe);

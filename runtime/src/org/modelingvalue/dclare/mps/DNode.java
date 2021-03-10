@@ -47,6 +47,7 @@ import org.modelingvalue.dclare.Action;
 import org.modelingvalue.dclare.Constant;
 import org.modelingvalue.dclare.Construction;
 import org.modelingvalue.dclare.Direction;
+import org.modelingvalue.dclare.LeafTransaction;
 import org.modelingvalue.dclare.Mutable;
 import org.modelingvalue.dclare.MutableTransaction;
 import org.modelingvalue.dclare.Observed;
@@ -425,7 +426,16 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
     }
 
     public static SNode wrap(SNode original) {
-        return original instanceof DNode ? (DNode) original : of(original.getConcept(), original.getReference(), original);
+        if (original instanceof DNode) {
+            return (DNode) original;
+        } else {
+            LeafTransaction tx = LeafTransaction.getCurrent();
+            if (tx == null) {
+                return DClareMPS.tryGetOnAll(() -> of(original.getConcept(), original.getReference(), original));
+            } else {
+                return of(original.getConcept(), original.getReference(), original);
+            }
+        }
     }
 
     protected DNode(Object[] identity) {
@@ -908,6 +918,12 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
             }
         }
         return result;
+    }
+
+    @SuppressWarnings("rawtypes")
+    @Override
+    public boolean dToBeCleared(Setable setable) {
+        return super.dToBeCleared(setable) && !isExternal();
     }
 
     @Override
