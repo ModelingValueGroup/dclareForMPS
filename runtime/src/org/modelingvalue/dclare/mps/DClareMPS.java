@@ -532,11 +532,13 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
             }
             COMMITTING.set(true);
             try {
-                pre.diff(post, o -> o instanceof DObject && !((DObject) o).isDclareOnly(), p -> p instanceof DObserved && !((DObserved) p).isDclareOnly()).forEachOrdered(e0 -> {
+                pre.diff(post, o -> o instanceof DObject && !((DObject) o).isDclareOnly()).forEachOrdered(e0 -> {
                     DObject dObject = (DObject) e0.getKey();
                     boolean changed = false;
-                    for (Entry<Setable, Pair<Object, Object>> e1 : e0.getValue()) {
-                        changed |= ((DObserved) e1.getKey()).toMPS(dObject, e1.getValue().a(), e1.getValue().b());
+                    DefaultMap<Setable, Object> before = e0.getValue().a();
+                    DefaultMap<Setable, Object> after = e0.getValue().b();
+                    for (DObserved observed : dObject.dClass().dObserveds()) {
+                        changed |= observed.toMPS(dObject, before.get(observed), after.get(observed));
                     }
                     if (changed) {
                         if (dObject instanceof DModel) {
