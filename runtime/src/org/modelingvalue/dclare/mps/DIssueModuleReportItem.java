@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import org.jetbrains.mps.openapi.module.SModule;
@@ -42,6 +43,26 @@ public class DIssueModuleReportItem implements ModuleReportItem, RuleIdFlavoured
         this.module = module.getModuleReference();
         this.message = severity.getPresentation() + ": " + message;
         this.ruleId = ruleId;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(message, module, ruleId, severity);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        DIssueModuleReportItem other = (DIssueModuleReportItem) obj;
+        return Objects.equals(message, other.message) //
+                && Objects.equals(module, other.module) //
+                && Objects.equals(ruleId, other.ruleId) //
+                && severity == other.severity;
     }
 
     @Override

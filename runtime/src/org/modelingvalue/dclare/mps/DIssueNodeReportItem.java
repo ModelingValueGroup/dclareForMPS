@@ -19,6 +19,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import org.jetbrains.mps.openapi.model.SNode;
@@ -42,6 +43,27 @@ public class DIssueNodeReportItem extends NodeReportItemBase implements RuleIdFl
         super(severity, node.getReference(), message);
         this.messageTarget = messageTarget != null ? messageTarget : NODE_MESSAGE_TARGET;
         this.ruleId = ruleId;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(messageTarget, ruleId, getSeverity(), getNode(), getMessage());
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        DIssueNodeReportItem other = (DIssueNodeReportItem) obj;
+        return Objects.equals(messageTarget, other.messageTarget)//
+                && Objects.equals(ruleId, other.ruleId) //
+                && Objects.equals(getSeverity(), other.getSeverity()) //
+                && Objects.equals(getNode(), other.getNode())//
+                && Objects.equals(getMessage(), other.getMessage());
     }
 
     @Override
