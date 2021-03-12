@@ -414,7 +414,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
     }
 
     public static DNode of(SConcept concept, SNodeReference ref, SNode original) {
-        Objects.requireNonNull(ref.getModelReference(), "DNode of empty SModel reference is most illogical");
+        // Objects.requireNonNull(ref.getModelReference(), "DNode of empty SModel reference is most illogical");
         return readConstruct(ref, () -> new DNode(new Object[]{uniqueLong(concept), concept}), original);
     }
 
