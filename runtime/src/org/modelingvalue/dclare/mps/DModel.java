@@ -44,6 +44,7 @@ import org.modelingvalue.collections.util.Triple;
 import org.modelingvalue.dclare.Action;
 import org.modelingvalue.dclare.Constant;
 import org.modelingvalue.dclare.Construction;
+import org.modelingvalue.dclare.Direction;
 import org.modelingvalue.dclare.Observed;
 import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.Setable;
@@ -134,14 +135,14 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
                                                                                                                                  }
                                                                                                                              }).toSet()));
                                                                                                                  }
-                                                                                                             });
+                                                                                                             }, Direction.urgent);
 
     private static final Action<DModel>                                                     READ_NAME        = Action.of("$READ_NAME", m -> {
                                                                                                                  SModel sModel = m.tryOriginal();
                                                                                                                  if (sModel != null) {
                                                                                                                      NAME.set(m, dClareMPS().read(() -> sModel.getName().getLongName()));
                                                                                                                  }
-                                                                                                             });
+                                                                                                             }, Direction.urgent);
 
     private static final Action<DModel>                                                     READ_LANGUAGES   = Action.of("$READ_LANGUAGES", m -> {
                                                                                                                  SModel sModel = m.tryOriginal();
@@ -149,7 +150,7 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
                                                                                                                      Set<SLanguage> ls = dClareMPS().read(() -> Collection.of(((SModelInternal) sModel).importedLanguageIds()).sequential().toSet());
                                                                                                                      USED_LANGUAGES.set(m, ls);
                                                                                                                  }
-                                                                                                             });
+                                                                                                             }, Direction.urgent);
 
     private static final Action<DModel>                                                     READ_USED_MODELS = Action.of("$READ_USED_MODELS", m -> {
                                                                                                                  SModel sModel = m.tryOriginal();
@@ -158,7 +159,7 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
                                                                                                                      map(r -> r.resolve(null)).notNull().map(DModel::of).toSet());
                                                                                                                      USED_MODELS.set(m, ls);
                                                                                                                  }
-                                                                                                             });
+                                                                                                             }, Direction.urgent);
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     protected static final DObserved<DModel, Boolean>                                       ACTIVE           = DObserved.of("ACTIVE", Boolean.FALSE, null, (tx, o, pre, post) -> {
@@ -181,7 +182,7 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
                                                                                                                  if (sModel != null) {
                                                                                                                      LOADED.set(m, dClareMPS().read(() -> sModel.isLoaded()));
                                                                                                                  }
-                                                                                                             });
+                                                                                                             }, Direction.urgent);
 
     private static final Observer<DModel>                                                   REFERENCED_RULE  = DObject.observer("$REFERENCED_RULE", o -> {
                                                                                                                  if (!o.isExternal() && o.isActive()) {

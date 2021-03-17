@@ -257,7 +257,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                                     PROPERTY.get(property).set(n, dClareMPS().read(() -> sNode.getProperty(property)));
                                                                                                                                                 }
                                                                                                                                             }
-                                                                                                                                        });
+                                                                                                                                        }, Direction.urgent);
 
     private static final Action<DNode>                                                                           READ_REFERENCES        = Action.of("$READ_REFERENCES", n -> {
                                                                                                                                             SNode sNode = n.tryOriginal();
@@ -269,7 +269,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                                     REFERENCE.get(link).set(n, reference != null ? of(concept, reference.getTargetNodeReference(), targetNode) : null);
                                                                                                                                                 }
                                                                                                                                             }
-                                                                                                                                        });
+                                                                                                                                        }, Direction.urgent);
 
     private static final Action<DNode>                                                                           READ_CHILDREN          = Action.of("$READ_CHILDREN", n -> {
                                                                                                                                             SNode sNode = n.tryOriginal();
@@ -283,7 +283,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                                     }
                                                                                                                                                 }
                                                                                                                                             }
-                                                                                                                                        });
+                                                                                                                                        }, Direction.urgent);
 
     @SuppressWarnings("rawtypes")
     protected static final Constant<SConcept, Set<? extends Setable>>                                            CONCEPT_SETABLES       = Constant.of("$CONCEPT_SETABLES", c -> Collection.concat(                                                                                                              //
