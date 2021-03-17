@@ -184,9 +184,10 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                             return DObserved.of(sr, null, () -> DNode.OPPOSITE.get(sr),                                                                                                         //
                                                                                                                                                     (dNode, pre, post) -> {
                                                                                                                                                         SNode sNode = dNode.original();
-                                                                                                                                                        SNode ist = sNode.getReferenceTarget(sr);
+                                                                                                                                                        SReference ref = sNode.getReference(sr);
+                                                                                                                                                        SNode ist = ref != null ? ref.getTargetNode() : null;
                                                                                                                                                         SNode soll = post != null ? post.original() : null;
-                                                                                                                                                        if (!Objects.equals(ist, soll)) {
+                                                                                                                                                        if (!Objects.equals(ist, soll) || (ref == null) != (soll == null)) {
                                                                                                                                                             sNode.setReferenceTarget(sr, soll);
                                                                                                                                                             return true;
                                                                                                                                                         } else {
@@ -262,8 +263,10 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                             SNode sNode = n.tryOriginal();
                                                                                                                                             if (sNode != null) {
                                                                                                                                                 for (SReferenceLink link : n.getConcept().getReferenceLinks()) {
-                                                                                                                                                    SNode targetNode = dClareMPS().read(() -> sNode.getReferenceTarget(link));
-                                                                                                                                                    REFERENCE.get(link).set(n, targetNode != null ? of(targetNode) : null);
+                                                                                                                                                    SReference reference = dClareMPS().read(() -> sNode.getReference(link));
+                                                                                                                                                    SNode targetNode = reference != null ? dClareMPS().read(() -> reference.getTargetNode()) : null;
+                                                                                                                                                    SConcept concept = targetNode != null ? targetNode.getConcept() : SNodeUtil.concept_BaseConcept;
+                                                                                                                                                    REFERENCE.get(link).set(n, reference != null ? of(concept, reference.getTargetNodeReference(), targetNode) : null);
                                                                                                                                                 }
                                                                                                                                             }
                                                                                                                                         });
@@ -411,7 +414,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
     }
 
     public static DNode of(SConcept concept, SNodeReference ref, SNode original) {
-        Objects.requireNonNull(ref.getModelReference(), "DNode of empty SModel reference is most illogical");
+        // Objects.requireNonNull(ref.getModelReference(), "DNode of empty SModel reference is most illogical");
         return readConstruct(ref, () -> new DNode(new Object[]{uniqueLong(concept), concept}), original);
     }
 

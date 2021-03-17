@@ -16,6 +16,7 @@
 package org.modelingvalue.dclare.mps;
 
 import java.util.Collections;
+import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -101,7 +102,7 @@ public interface DAttribute<O, T> extends DFeature {
 
         public DObservedAttribute(Object id, String name, boolean indetifying, V def, Class<?> cls, Supplier<Setable<?, ?>> opposite, Supplier<SNode> source, SProperty sProperty, SetableModifier... modifiers) {
             super(id, def, opposite, (o, b, a) -> {
-                if (o instanceof DNode) {
+                if (o instanceof DNode && !Objects.equals(b, a)) {
                     SNode sNode = ((DNode) o).tryOriginal();
                     SModel sModel = sNode != null ? sNode.getModel() : null;
                     if (sNode != null && sModel instanceof EditableSModel) {
