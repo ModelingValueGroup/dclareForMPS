@@ -25,7 +25,7 @@ artifacts=(
 dependencies=(
     "org.modelingvalue   immutable-collections   1.5.0       jar jds"
     "org.modelingvalue   dclare                  1.5.0       jar jds"
-    "org.modelingvalue   mvgjson                 1.1.2       jar jds-"
+    "org.modelingvalue   mvgjson                 1.1.6       jar jds-"
     "jars@mps"
 )
 mps=(
