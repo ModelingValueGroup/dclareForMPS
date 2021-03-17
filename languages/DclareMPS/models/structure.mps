@@ -41,8 +41,15 @@
         <child id="3348158742936976577" name="members" index="25R1y" />
       </concept>
       <concept id="1224240836180" name="jetbrains.mps.lang.structure.structure.DeprecatedNodeAnnotation" flags="ig" index="asaX9" />
+      <concept id="6054523464627964745" name="jetbrains.mps.lang.structure.structure.AttributeInfo_AttributedConcept" flags="ng" index="trNpa">
+        <reference id="6054523464627965081" name="concept" index="trN6q" />
+      </concept>
       <concept id="1082978164218" name="jetbrains.mps.lang.structure.structure.DataTypeDeclaration" flags="ng" index="AxPO6">
         <property id="7791109065626895363" name="datatypeId" index="3F6X1D" />
+      </concept>
+      <concept id="2992811758677295509" name="jetbrains.mps.lang.structure.structure.AttributeInfo" flags="ng" index="M6xJ_">
+        <property id="7588428831955550663" name="role" index="Hh88m" />
+        <child id="7588428831947959310" name="attributed" index="EQaZv" />
       </concept>
       <concept id="1169125787135" name="jetbrains.mps.lang.structure.structure.AbstractConceptDeclaration" flags="ig" index="PkWjJ">
         <property id="6714410169261853888" name="conceptId" index="EcuMT" />
@@ -966,13 +973,6 @@
     <property role="34LRSv" value="languages" />
     <ref role="1TJDcQ" node="lSgC6t_tvD" resolve="ModelBuilderPart" />
   </node>
-  <node concept="1TIwiD" id="2mO6frpBuKw">
-    <property role="EcuMT" value="2716823923703278624" />
-    <property role="3GE5qa" value="models.builder" />
-    <property role="TrG5h" value="ModelBuilderImports" />
-    <property role="34LRSv" value="imports" />
-    <ref role="1TJDcQ" node="lSgC6t_tvD" resolve="ModelBuilderPart" />
-  </node>
   <node concept="1TIwiD" id="36ILQ9yf5gW">
     <property role="EcuMT" value="3580017979174966332" />
     <property role="3GE5qa" value="models" />
@@ -981,6 +981,30 @@
     <ref role="1TJDcQ" to="tpck:gw2VY9q" resolve="BaseConcept" />
     <node concept="PrWs8" id="36ILQ9yf5gX" role="PzmwI">
       <ref role="PrY4T" to="tpee:hqOqG0K" resolve="IOperation" />
+    </node>
+  </node>
+  <node concept="1TIwiD" id="2mO6frpBuKw">
+    <property role="EcuMT" value="2716823923703278624" />
+    <property role="3GE5qa" value="models.builder" />
+    <property role="TrG5h" value="ModelBuilderImports" />
+    <property role="34LRSv" value="imports" />
+    <ref role="1TJDcQ" node="lSgC6t_tvD" resolve="ModelBuilderPart" />
+  </node>
+  <node concept="1TIwiD" id="7EeKZioUq_6">
+    <property role="EcuMT" value="8831211374625007942" />
+    <property role="TrG5h" value="TracingMarker" />
+    <property role="3GE5qa" value="tracing" />
+    <ref role="1TJDcQ" to="tpck:2ULFgo8_XDk" resolve="NodeAttribute" />
+    <node concept="1TJgyi" id="7EeKZioUq_b" role="1TKVEl">
+      <property role="IQ2nx" value="8831211374625007947" />
+      <property role="TrG5h" value="message" />
+      <ref role="AX2Wp" to="tpck:fKAOsGN" resolve="string" />
+    </node>
+    <node concept="M6xJ_" id="7EeKZioUq_7" role="lGtFl">
+      <property role="Hh88m" value="traced" />
+      <node concept="trNpa" id="7EeKZioUq_9" role="EQaZv">
+        <ref role="trN6q" to="tpee:fz3vP1J" resolve="Expression" />
+      </node>
     </node>
   </node>
 </model>

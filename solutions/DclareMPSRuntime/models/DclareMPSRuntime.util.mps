@@ -6,6 +6,7 @@
     <use id="83888646-71ce-4f1c-9c53-c54016f6ad4f" name="jetbrains.mps.baseLanguage.collections" version="1" />
     <use id="fd392034-7849-419d-9071-12563d152375" name="jetbrains.mps.baseLanguage.closures" version="0" />
     <use id="7866978e-a0f0-4cc7-81bc-4d213d9375e1" name="jetbrains.mps.lang.smodel" version="17" />
+    <use id="760a0a8c-eabb-4521-8bfd-65db761a9ba3" name="jetbrains.mps.baseLanguage.logging" version="0" />
   </languages>
   <imports>
     <import index="mhbf" ref="8865b7a8-5271-43d3-884c-6fd1d9cfdd34/java:org.jetbrains.mps.openapi.model(MPS.OpenAPI/)" />
@@ -61,6 +62,9 @@
       <concept id="1070462154015" name="jetbrains.mps.baseLanguage.structure.StaticFieldDeclaration" flags="ig" index="Wx3nA">
         <property id="6468716278899126575" name="isVolatile" index="2dlcS1" />
         <property id="6468716278899125786" name="isTransient" index="2dld4O" />
+      </concept>
+      <concept id="1070475926800" name="jetbrains.mps.baseLanguage.structure.StringLiteral" flags="nn" index="Xl_RD">
+        <property id="1070475926801" name="value" index="Xl_RC" />
       </concept>
       <concept id="1182160077978" name="jetbrains.mps.baseLanguage.structure.AnonymousClassCreator" flags="nn" index="YeOm9">
         <child id="1182160096073" name="cls" index="YeSDq" />
@@ -225,6 +229,12 @@
         <child id="1199569916463" name="body" index="1bW5cS" />
       </concept>
       <concept id="1225797177491" name="jetbrains.mps.baseLanguage.closures.structure.InvokeFunctionOperation" flags="nn" index="1Bd96e" />
+    </language>
+    <language id="760a0a8c-eabb-4521-8bfd-65db761a9ba3" name="jetbrains.mps.baseLanguage.logging">
+      <concept id="2034914114981261497" name="jetbrains.mps.baseLanguage.logging.structure.LogLowLevelStatement" flags="ng" index="RRSsy">
+        <property id="2034914114981261751" name="severity" index="RRSoG" />
+        <child id="2034914114981261753" name="message" index="RRSoy" />
+      </concept>
     </language>
     <language id="7866978e-a0f0-4cc7-81bc-4d213d9375e1" name="jetbrains.mps.lang.smodel">
       <concept id="1143226024141" name="jetbrains.mps.lang.smodel.structure.SModelType" flags="in" index="H_c77" />
@@ -4268,6 +4278,49 @@
     </node>
     <node concept="2tJIrI" id="1GxPEP_bKDJ" role="jymVt" />
     <node concept="3Tm1VV" id="30fQumnG8Av" role="1B3o_S" />
+    <node concept="2YIFZL" id="2$O6I01klgO" role="jymVt">
+      <property role="TrG5h" value="trace" />
+      <node concept="37vLTG" id="2$O6I01klgP" role="3clF46">
+        <property role="TrG5h" value="a" />
+        <node concept="16syzq" id="2$O6I01kp_t" role="1tU5fm">
+          <ref role="16sUi3" node="2$O6I01koJl" resolve="T" />
+        </node>
+      </node>
+      <node concept="37vLTG" id="2$O6I01kDBC" role="3clF46">
+        <property role="TrG5h" value="m" />
+        <node concept="17QB3L" id="2$O6I01kDUT" role="1tU5fm" />
+      </node>
+      <node concept="16syzq" id="2$O6I01kp3k" role="3clF45">
+        <ref role="16sUi3" node="2$O6I01koJl" resolve="T" />
+      </node>
+      <node concept="3Tm1VV" id="2$O6I01klgT" role="1B3o_S" />
+      <node concept="3clFbS" id="2$O6I01klgU" role="3clF47">
+        <node concept="RRSsy" id="2$O6I01k0e3" role="3cqZAp">
+          <property role="RRSoG" value="h1akgim/info" />
+          <node concept="2YIFZM" id="2$O6I04c6wK" role="RRSoy">
+            <ref role="1Pybhc" to="wyt6:~String" resolve="String" />
+            <ref role="37wK5l" to="wyt6:~String.format(java.lang.String,java.lang.Object...)" resolve="format" />
+            <node concept="Xl_RD" id="2$O6I04c6wL" role="37wK5m">
+              <property role="Xl_RC" value="+++++ %s: %s" />
+            </node>
+            <node concept="37vLTw" id="2$O6I04c6wM" role="37wK5m">
+              <ref role="3cqZAo" node="2$O6I01kDBC" resolve="m" />
+            </node>
+            <node concept="37vLTw" id="2$O6I04c6wN" role="37wK5m">
+              <ref role="3cqZAo" node="2$O6I01klgP" resolve="a" />
+            </node>
+          </node>
+        </node>
+        <node concept="3cpWs6" id="2$O6I01kpRX" role="3cqZAp">
+          <node concept="37vLTw" id="2$O6I01kpTh" role="3cqZAk">
+            <ref role="3cqZAo" node="2$O6I01klgP" resolve="a" />
+          </node>
+        </node>
+      </node>
+      <node concept="16euLQ" id="2$O6I01koJl" role="16eVyc">
+        <property role="TrG5h" value="T" />
+      </node>
+    </node>
   </node>
   <node concept="2ABs$o" id="rTfv3HeNOH">
     <property role="TrG5h" value="Synthetic" />
