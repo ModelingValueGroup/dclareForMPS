@@ -451,11 +451,16 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
     }
 
     @Override
-    protected SNode create() {
+    protected SNode create(SNodeReference ref) {
         SConcept concept = getConcept();
         DModel dModel = getModel();
         SModel sModel = dModel.original();
-        SNode sNode = sModel.createNode(concept);
+        return ref != null ? sModel.createNode(concept, ref.getNodeId()) : sModel.createNode(concept);
+    }
+
+    @Override
+    protected void addOriginal(SNode sNode) {
+        SConcept concept = getConcept();
         DObject parent = dObjectParent();
         if (parent instanceof DModel) {
             SModel sParent = ((DModel) parent).original();
@@ -473,7 +478,6 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
         if (concept.isSubConceptOf(SNodeUtil.concept_INamedConcept)) {
             sNode.setProperty(SNodeUtil.property_INamedConcept_name, PROPERTY.get(SNodeUtil.property_INamedConcept_name).get(this));
         }
-        return sNode;
     }
 
     @Override

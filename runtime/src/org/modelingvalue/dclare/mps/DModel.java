@@ -51,6 +51,7 @@ import org.modelingvalue.dclare.Setable;
 import org.modelingvalue.dclare.SetableModifier;
 
 import jetbrains.mps.errors.item.ModelReportItem;
+import jetbrains.mps.extapi.model.SModelBase;
 import jetbrains.mps.extapi.module.SModuleBase;
 import jetbrains.mps.persistence.DefaultModelRoot;
 import jetbrains.mps.persistence.ModelCannotBeCreatedException;
@@ -281,12 +282,20 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
     }
 
     @Override
-    protected SModel create() {
+    protected SModel create(SModelReference ref) {
         SModuleBase sModule = (SModuleBase) getModule().original();
         String name = NAME.get(this);
         name = name == null || Construction.MatchInfo.of(this, Map.of()).hasUnidentifiedSource() ? //
                 "_" + Long.toString(System.currentTimeMillis(), Character.MAX_RADIX) : name;
-        return isTemporal() ? new DTempModel(name, sModule) : createFileModel(name, sModule);
+        if (isTemporal()) {
+            return ref != null ? new DTempModel(ref) : new DTempModel(name, sModule);
+        } else {
+            SModel sModel = createFileModel(name, sModule);
+            if (ref != null) {
+                ((SModelInternal) sModel).changeModelReference(ref);
+            }
+            return sModel;
+        }
     }
 
     private SModel createFileModel(String modelName, SModuleBase sModule) {
@@ -296,6 +305,12 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
         } catch (ModelCannotBeCreatedException e) {
             throw new Error(e);
         }
+    }
+
+    @Override
+    protected void addOriginal(SModel sModel) {
+        SModuleBase sModule = (SModuleBase) getModule().original();
+        sModule.registerModel((SModelBase) sModel);
     }
 
     @Override

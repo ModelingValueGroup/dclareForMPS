@@ -33,8 +33,11 @@ import jetbrains.mps.smodel.loading.ModelLoadingState;
 public class DTempModel extends EditableModelDescriptor implements EditableSModel {
 
     public DTempModel(String name, SModuleBase module) {
-        super(createModelRef(name, module.getModuleReference()), new NullDataSource());
-        module.registerModel(this);
+        this(createModelRef(name, module.getModuleReference()));
+    }
+
+    public DTempModel(SModelReference ref) {
+        super(ref, new NullDataSource());
     }
 
     @Override
