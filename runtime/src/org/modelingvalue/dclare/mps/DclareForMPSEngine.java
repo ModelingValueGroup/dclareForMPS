@@ -21,7 +21,6 @@ import org.jetbrains.mps.openapi.module.SModule;
 import org.jetbrains.mps.openapi.util.ProgressMonitor;
 
 import com.intellij.openapi.application.ApplicationManager;
-
 import jetbrains.mps.classloading.ClassLoaderManager;
 import jetbrains.mps.classloading.DeployListener;
 import jetbrains.mps.ide.MPSCoreComponents;
@@ -31,15 +30,17 @@ import jetbrains.mps.project.ProjectBase;
 @SuppressWarnings("unused")
 public class DclareForMPSEngine implements DeployListener {
 
-    private final ProjectBase          project;
+    private final   ProjectBase        project;
     protected final ClassLoaderManager classLoaderManager;
-    private final StartStopHandler     startStopHandler;
-    private DClareMPS                  dClareMPS;
-    private boolean                    on;
-    private int                        maxTotalNrOfChanges;
-    private int                        maxNrOfChanges;
-    private int                        maxNrOfObserved;
-    private int                        maxNrOfObservers;
+    private final   StartStopHandler   startStopHandler;
+    private         DClareMPS          dClareMPS;
+    //
+    private         boolean            on;
+    private         boolean            devMode;
+    private         int                maxTotalNrOfChanges;
+    private         int                maxNrOfChanges;
+    private         int                maxNrOfObserved;
+    private         int                maxNrOfObservers;
 
     public DclareForMPSEngine(ProjectBase project, StartStopHandler startStopHandler) {
         this.startStopHandler = startStopHandler;
@@ -50,7 +51,7 @@ public class DclareForMPSEngine implements DeployListener {
 
     protected synchronized void startEngine() {
         if (dClareMPS == null || !dClareMPS.isRunning()) {
-            dClareMPS = new DClareMPS(this, project, null, maxTotalNrOfChanges, maxNrOfChanges, maxNrOfObserved, maxNrOfObservers, startStopHandler);
+            dClareMPS = new DClareMPS(this, project, null, devMode, maxTotalNrOfChanges, maxNrOfChanges, maxNrOfObserved, maxNrOfObservers, startStopHandler);
         }
     }
 
@@ -81,6 +82,14 @@ public class DclareForMPSEngine implements DeployListener {
         }
     }
 
+    public boolean isDevMode() {
+        return devMode;
+    }
+
+    public void setDevMode(boolean devMode) {
+        this.devMode = devMode;
+    }
+
     public int getMaxTotalNrOfChanges() {
         return maxTotalNrOfChanges;
     }
@@ -97,19 +106,19 @@ public class DclareForMPSEngine implements DeployListener {
         this.maxNrOfChanges = maxNrOfChanges;
     }
 
-    public int getNrOfObserved() {
+    public int getMaxNrOfObserved() {
         return maxNrOfObserved;
     }
 
-    public void setNrOfObserved(int maxNrOfObserved) {
+    public void setMaxNrOfObserved(int maxNrOfObserved) {
         this.maxNrOfObserved = maxNrOfObserved;
     }
 
-    public int getNrOfObservers() {
+    public int getMaxNrOfObservers() {
         return maxNrOfObservers;
     }
 
-    public void setNrOfObservers(int maxNrOfObservers) {
+    public void setMaxNrOfObservers(int maxNrOfObservers) {
         this.maxNrOfObservers = maxNrOfObservers;
     }
 

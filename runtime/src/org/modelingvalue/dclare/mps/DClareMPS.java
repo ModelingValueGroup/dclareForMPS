@@ -176,7 +176,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     private final          Concurrent<Set<SNode>>                                                          changedRoots         = Concurrent.of(Set.of());
     private final          AtomicLong                                                                      counter              = new AtomicLong(0L);
 
-    protected DClareMPS(DclareForMPSEngine engine, ProjectBase project, State prevState, int maxTotalNrOfChanges, int maxNrOfChanges, int maxNrOfObserved, int maxNrOfObservers, StartStopHandler startStopHandler) {
+    protected DClareMPS(DclareForMPSEngine engine, ProjectBase project, State prevState, boolean devMode, int maxTotalNrOfChanges, int maxNrOfChanges, int maxNrOfObserved, int maxNrOfObservers, StartStopHandler startStopHandler) {
         this.project = project;
         this.engine = engine;
         this.startStopHandler = startStopHandler;
@@ -206,7 +206,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
         if (TRACE) {
             System.err.println(DCLARE + "START " + this);
         }
-        universeTransaction = new UniverseTransaction(this, thePool, prevState, 100, maxTotalNrOfChanges, maxNrOfChanges, UniverseTransaction.MAX_NR_OF_FORWARD_CHANGES, maxNrOfObserved, maxNrOfObservers, 4, null) {
+        universeTransaction = new UniverseTransaction(this, thePool, prevState, 100, devMode, maxTotalNrOfChanges, maxNrOfChanges, UniverseTransaction.MAX_NR_OF_FORWARD_CHANGES, maxNrOfObserved, maxNrOfObservers, 4, null) {
 
             @Override
             public void start(Action<Universe> action) {
@@ -294,6 +294,10 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
             running = true;
             startStopHandler.start(project);
         }
+    }
+
+    public void addTraceMessage(Object node, String msg) {
+        addMessage(new DMessage(getRepository(), DRepository.MODULES, DMessageType.info, Long.toHexString(System.nanoTime()), msg + ": " + node));
     }
 
     protected void addMessage(Throwable throwable) {
@@ -407,18 +411,15 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     }
 
     private void addUnidentifiedExceptionMessage(DObject context, DFeature feature, UnidentifiedException uie) {
-        DMessage message = new DMessage(context, feature, DMessageType.error, "UNIDENTIFIED", uie.getMessage());
-        addMessage(message);
+        addMessage(new DMessage(context, feature, DMessageType.error, "UNIDENTIFIED", uie.getMessage()));
     }
 
     private void addReferencedOrphanExceptionMessage(DObject context, DFeature feature, ReferencedOrphanException roe) {
-        DMessage message = new DMessage(context, feature, DMessageType.error, "REFERENCED_ORPHAN", roe.getMessage());
-        addMessage(message);
+        addMessage(new DMessage(context, feature, DMessageType.error, "REFERENCED_ORPHAN", roe.getMessage()));
     }
 
     private void addEmptyMandatoryExceptionMessage(DObject context, DFeature feature, EmptyMandatoryException eme) {
-        DMessage message = new DMessage(context, feature, DMessageType.error, "EMPTY_MANDATORY", eme.getMessage());
-        addMessage(message);
+        addMessage(new DMessage(context, feature, DMessageType.error, "EMPTY_MANDATORY", eme.getMessage()));
     }
 
     private void addNonDeterministicExceptionMessage(DObject context, DFeature feature, NonDeterministicException nde) {
@@ -430,8 +431,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     }
 
     private void addOutOfScopeExceptionMessage(DObject context, DFeature feature, OutOfScopeException oose) {
-        DMessage message = new DMessage(context, feature, DMessageType.error, "OUT_OF_SCOPE", oose.getMessage());
-        addMessage(message);
+        addMessage(new DMessage(context, feature, DMessageType.error, "OUT_OF_SCOPE", oose.getMessage()));
     }
 
     private void addThrowableMessage(DObject context, DFeature feature, Throwable t) {
