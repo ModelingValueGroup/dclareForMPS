@@ -30,13 +30,13 @@
   <property name="jdk.home" value="${env.JAVA_HOME}" />
   <property name="mps.generator.skipUnmodifiedModels" value="false" />
   <property name="mps.ant.log" value="warn" />
-
+  
   <path id="path.mps.ant.path">
     <pathelement location="${artifacts.mps}/lib/ant/lib/ant-mps.jar" />
     <pathelement location="${artifacts.IDEA}/lib/jdom.jar" />
     <pathelement location="${artifacts.IDEA}/lib/log4j.jar" />
   </path>
-
+  
   <target name="assemble" depends="classes, declare-mps-tasks">
     <mkdir dir="${build.layout}" />
     <mkdir dir="${build.tmp}/default/DclareForMPS.zip" />
@@ -53,8 +53,8 @@
         <depends>jetbrains.mps.ide.devkit</depends>
         <depends>jetbrains.mps.build</depends>
         <depends>com.intellij.modules.mps</depends>
-        <idea-version since-build="202.7660.1015" until-build="202.6397.948" />
-
+        <idea-version since-build="203.7148.1199" until-build="203.8000.0000" />
+        
         <extensions defaultExtensionNs="com.intellij">
           <mps.LanguageLibrary dir="/languages" />
         </extensions>
