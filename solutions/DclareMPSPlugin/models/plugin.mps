@@ -1137,7 +1137,7 @@
               </node>
               <node concept="2ShNRf" id="4FbMPtULEl_" role="33vP2m">
                 <node concept="1pGfFk" id="4FbMPtULF1a" role="2ShVmc">
-                  <ref role="37wK5l" to="dxuu:~JCheckBox.&lt;init&gt;()" resolve="JCheckBox" />
+                  <ref role="37wK5l" to="dxuu:~JCheckBox.&lt;init&gt;(java.lang.String)" resolve="JCheckBox" />
                   <node concept="Xl_RD" id="2HLAWGSiO$V" role="37wK5m">
                     <property role="Xl_RC" value="Colorful Editors" />
                   </node>
@@ -1154,7 +1154,7 @@
               </node>
               <node concept="2ShNRf" id="4FbMPtULIgB" role="33vP2m">
                 <node concept="1pGfFk" id="4FbMPtULIgC" role="2ShVmc">
-                  <ref role="37wK5l" to="dxuu:~JCheckBox.&lt;init&gt;()" resolve="JCheckBox" />
+                  <ref role="37wK5l" to="dxuu:~JCheckBox.&lt;init&gt;(java.lang.String)" resolve="JCheckBox" />
                   <node concept="Xl_RD" id="2HLAWGSiPHh" role="37wK5m">
                     <property role="Xl_RC" value="Dclare Engine On" />
                   </node>
@@ -1171,7 +1171,7 @@
               </node>
               <node concept="2ShNRf" id="4FbMPtUOrVA" role="33vP2m">
                 <node concept="1pGfFk" id="4FbMPtUOrVB" role="2ShVmc">
-                  <ref role="37wK5l" to="dxuu:~JCheckBox.&lt;init&gt;()" resolve="JCheckBox" />
+                  <ref role="37wK5l" to="dxuu:~JCheckBox.&lt;init&gt;(java.lang.String)" resolve="JCheckBox" />
                   <node concept="Xl_RD" id="2HLAWGSiQPB" role="37wK5m">
                     <property role="Xl_RC" value="Developer Mode" />
                   </node>
@@ -1412,7 +1412,7 @@
               </node>
               <node concept="2ShNRf" id="4FbMPtULF1F" role="33vP2m">
                 <node concept="1pGfFk" id="4FbMPtULFHg" role="2ShVmc">
-                  <ref role="37wK5l" to="dxuu:~JLabel.&lt;init&gt;()" resolve="JLabel" />
+                  <ref role="37wK5l" to="dxuu:~JLabel.&lt;init&gt;(java.lang.String)" resolve="JLabel" />
                   <node concept="Xl_RD" id="4FbMPtUM2v_" role="37wK5m">
                     <property role="Xl_RC" value="Maximum number of changes per rule (instance) per transaction" />
                   </node>
@@ -1429,7 +1429,7 @@
               </node>
               <node concept="2ShNRf" id="4FbMPtULFHk" role="33vP2m">
                 <node concept="1pGfFk" id="4FbMPtULFHl" role="2ShVmc">
-                  <ref role="37wK5l" to="dxuu:~JLabel.&lt;init&gt;()" resolve="JLabel" />
+                  <ref role="37wK5l" to="dxuu:~JLabel.&lt;init&gt;(java.lang.String)" resolve="JLabel" />
                   <node concept="Xl_RD" id="4FbMPtUM2Cg" role="37wK5m">
                     <property role="Xl_RC" value="Maximum number of changes per transaction" />
                   </node>
@@ -1446,7 +1446,7 @@
               </node>
               <node concept="2ShNRf" id="4FbMPtUPkk7" role="33vP2m">
                 <node concept="1pGfFk" id="4FbMPtUPkk8" role="2ShVmc">
-                  <ref role="37wK5l" to="dxuu:~JLabel.&lt;init&gt;()" resolve="JLabel" />
+                  <ref role="37wK5l" to="dxuu:~JLabel.&lt;init&gt;(java.lang.String)" resolve="JLabel" />
                   <node concept="Xl_RD" id="4FbMPtUPmiS" role="37wK5m">
                     <property role="Xl_RC" value="Maximum number of observed features (instances) per rule (instance)" />
                   </node>
@@ -1463,7 +1463,7 @@
               </node>
               <node concept="2ShNRf" id="4FbMPtUPkun" role="33vP2m">
                 <node concept="1pGfFk" id="4FbMPtUPkuo" role="2ShVmc">
-                  <ref role="37wK5l" to="dxuu:~JLabel.&lt;init&gt;()" resolve="JLabel" />
+                  <ref role="37wK5l" to="dxuu:~JLabel.&lt;init&gt;(java.lang.String)" resolve="JLabel" />
                   <node concept="Xl_RD" id="4FbMPtUPmti" role="37wK5m">
                     <property role="Xl_RC" value="Maximum number of observing rules (instances) per feature (instance)" />
                   </node>
@@ -1480,7 +1480,7 @@
               </node>
               <node concept="2ShNRf" id="2HLAWGSj8hI" role="33vP2m">
                 <node concept="1pGfFk" id="2HLAWGSj8hJ" role="2ShVmc">
-                  <ref role="37wK5l" to="dxuu:~JLabel.&lt;init&gt;()" resolve="JLabel" />
+                  <ref role="37wK5l" to="dxuu:~JLabel.&lt;init&gt;(java.lang.String)" resolve="JLabel" />
                   <node concept="Xl_RD" id="2HLAWGSj8hK" role="37wK5m">
                     <property role="Xl_RC" value="Presets: " />
                   </node>
@@ -2676,7 +2676,7 @@
                 </node>
                 <node concept="2ShNRf" id="2HLAWGSjjx2" role="37wK5m">
                   <node concept="1pGfFk" id="2HLAWGSjjx3" role="2ShVmc">
-                    <ref role="37wK5l" to="dwmc:~GridConstraints.&lt;init&gt;(int,int,int,int,int,int,int,int,java.awt.Dimension,java.awt.Dimension,java.awt.Dimension,int)" resolve="GridConstraints" />
+                    <ref role="37wK5l" to="dwmc:~GridConstraints.&lt;init&gt;(int,int,int,int,int,int,int,int,java.awt.Dimension,java.awt.Dimension,java.awt.Dimension,int,boolean)" resolve="GridConstraints" />
                     <node concept="3cmrfG" id="2HLAWGSjnhm" role="37wK5m">
                       <property role="3cmrfH" value="4" />
                     </node>
@@ -2730,7 +2730,7 @@
                 </node>
                 <node concept="2ShNRf" id="2HLAWGSjqs0" role="37wK5m">
                   <node concept="1pGfFk" id="2HLAWGSjqs1" role="2ShVmc">
-                    <ref role="37wK5l" to="dwmc:~GridConstraints.&lt;init&gt;(int,int,int,int,int,int,int,int,java.awt.Dimension,java.awt.Dimension,java.awt.Dimension,int)" resolve="GridConstraints" />
+                    <ref role="37wK5l" to="dwmc:~GridConstraints.&lt;init&gt;(int,int,int,int,int,int,int,int,java.awt.Dimension,java.awt.Dimension,java.awt.Dimension,int,boolean)" resolve="GridConstraints" />
                     <node concept="3cmrfG" id="2HLAWGSjwFu" role="37wK5m">
                       <property role="3cmrfH" value="0" />
                     </node>
@@ -2783,7 +2783,7 @@
                 </node>
                 <node concept="2ShNRf" id="2HLAWGSjx7c" role="37wK5m">
                   <node concept="1pGfFk" id="2HLAWGSjx7d" role="2ShVmc">
-                    <ref role="37wK5l" to="dwmc:~GridConstraints.&lt;init&gt;(int,int,int,int,int,int,int,int,java.awt.Dimension,java.awt.Dimension,java.awt.Dimension,int)" resolve="GridConstraints" />
+                    <ref role="37wK5l" to="dwmc:~GridConstraints.&lt;init&gt;(int,int,int,int,int,int,int,int,java.awt.Dimension,java.awt.Dimension,java.awt.Dimension,int,boolean)" resolve="GridConstraints" />
                     <node concept="3cmrfG" id="2HLAWGSjx7e" role="37wK5m">
                       <property role="3cmrfH" value="0" />
                     </node>
@@ -2836,7 +2836,7 @@
                 </node>
                 <node concept="2ShNRf" id="2HLAWGSj$zP" role="37wK5m">
                   <node concept="1pGfFk" id="2HLAWGSj$zQ" role="2ShVmc">
-                    <ref role="37wK5l" to="dwmc:~GridConstraints.&lt;init&gt;(int,int,int,int,int,int,int,int,java.awt.Dimension,java.awt.Dimension,java.awt.Dimension,int)" resolve="GridConstraints" />
+                    <ref role="37wK5l" to="dwmc:~GridConstraints.&lt;init&gt;(int,int,int,int,int,int,int,int,java.awt.Dimension,java.awt.Dimension,java.awt.Dimension,int,boolean)" resolve="GridConstraints" />
                     <node concept="3cmrfG" id="2HLAWGSj$zR" role="37wK5m">
                       <property role="3cmrfH" value="0" />
                     </node>
@@ -2889,7 +2889,7 @@
                 </node>
                 <node concept="2ShNRf" id="2HLAWGSj$KA" role="37wK5m">
                   <node concept="1pGfFk" id="2HLAWGSj$KB" role="2ShVmc">
-                    <ref role="37wK5l" to="dwmc:~GridConstraints.&lt;init&gt;(int,int,int,int,int,int,int,int,java.awt.Dimension,java.awt.Dimension,java.awt.Dimension,int)" resolve="GridConstraints" />
+                    <ref role="37wK5l" to="dwmc:~GridConstraints.&lt;init&gt;(int,int,int,int,int,int,int,int,java.awt.Dimension,java.awt.Dimension,java.awt.Dimension,int,boolean)" resolve="GridConstraints" />
                     <node concept="3cmrfG" id="2HLAWGSj$KC" role="37wK5m">
                       <property role="3cmrfH" value="0" />
                     </node>
@@ -2942,7 +2942,7 @@
                 </node>
                 <node concept="2ShNRf" id="2HLAWGSj$XF" role="37wK5m">
                   <node concept="1pGfFk" id="2HLAWGSj$XG" role="2ShVmc">
-                    <ref role="37wK5l" to="dwmc:~GridConstraints.&lt;init&gt;(int,int,int,int,int,int,int,int,java.awt.Dimension,java.awt.Dimension,java.awt.Dimension,int)" resolve="GridConstraints" />
+                    <ref role="37wK5l" to="dwmc:~GridConstraints.&lt;init&gt;(int,int,int,int,int,int,int,int,java.awt.Dimension,java.awt.Dimension,java.awt.Dimension,int,boolean)" resolve="GridConstraints" />
                     <node concept="3cmrfG" id="2HLAWGSj$XH" role="37wK5m">
                       <property role="3cmrfH" value="0" />
                     </node>
@@ -2995,7 +2995,7 @@
                 </node>
                 <node concept="2ShNRf" id="2HLAWGSj_b4" role="37wK5m">
                   <node concept="1pGfFk" id="2HLAWGSj_b5" role="2ShVmc">
-                    <ref role="37wK5l" to="dwmc:~GridConstraints.&lt;init&gt;(int,int,int,int,int,int,int,int,java.awt.Dimension,java.awt.Dimension,java.awt.Dimension,int)" resolve="GridConstraints" />
+                    <ref role="37wK5l" to="dwmc:~GridConstraints.&lt;init&gt;(int,int,int,int,int,int,int,int,java.awt.Dimension,java.awt.Dimension,java.awt.Dimension,int,boolean)" resolve="GridConstraints" />
                     <node concept="3cmrfG" id="2HLAWGSj_b6" role="37wK5m">
                       <property role="3cmrfH" value="0" />
                     </node>
