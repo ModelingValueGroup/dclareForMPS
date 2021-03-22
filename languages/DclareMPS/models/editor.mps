@@ -1599,7 +1599,7 @@
       </node>
       <node concept="3F0ifn" id="6_R8J$2CqQs" role="3EZMnx">
         <property role="3F0ifm" value="attr" />
-        <ref role="1k5W1q" to="tpen:hFITtyA" resolve="CompactKeyWord" />
+        <ref role="1k5W1q" to="tpen:hgVS8CF" resolve="KeyWord" />
         <node concept="Veino" id="2HLAWGSgvnv" role="3F10Kt">
           <node concept="3ZlJ5R" id="2HLAWGSgvnw" role="VblUZ">
             <node concept="3clFbS" id="2HLAWGSgvnx" role="2VODD2">
