@@ -9,6 +9,7 @@
     <import index="akim" ref="r:36c1ea3b-fbca-41f9-87cc-9bacb8f18c30(DclareMessages.behavior)" />
     <import index="t4tl" ref="55d6b6f5-8095-4cd0-a39b-779da8d12940/java:org.modelingvalue.dclare.mps(DclareMPSRuntime/)" />
     <import index="z60i" ref="6354ebe7-c22a-4a0f-ac54-50b52ab9b065/java:java.awt(JDK/)" />
+    <import index="mbwu" ref="r:484d68ee-91ab-4199-84e9-f43210a9918b(DclareMPSPlugin.plugin)" />
     <import index="wknp" ref="r:9a42e459-6b0e-4c37-8fab-9b46bab588bd(DclareMessages.structure)" implicit="true" />
     <import index="tpen" ref="r:00000000-0000-4000-0000-011c895902c3(jetbrains.mps.baseLanguage.editor)" implicit="true" />
     <import index="mhbf" ref="8865b7a8-5271-43d3-884c-6fd1d9cfdd34/java:org.jetbrains.mps.openapi.model(MPS.OpenAPI/)" implicit="true" />
@@ -930,8 +931,16 @@
                 <ref role="3cqZAo" node="3jy5t$KXxKT" resolve="engine" />
               </node>
               <node concept="liA8E" id="2zQzbHIR_Sp" role="2OqNvi">
-                <ref role="37wK5l" to="t4tl:~DclareForMPSEngine.setOn(boolean)" resolve="setOn" />
+                <ref role="37wK5l" to="t4tl:~DclareForMPSEngine.setModes(boolean,boolean)" resolve="setModes" />
                 <node concept="3clFbT" id="2zQzbHIRASP" role="37wK5m" />
+                <node concept="2OqwBi" id="4KK_HU4jway" role="37wK5m">
+                  <node concept="37vLTw" id="4KK_HU4jvZt" role="2Oq$k0">
+                    <ref role="3cqZAo" node="3jy5t$KXxKT" resolve="engine" />
+                  </node>
+                  <node concept="liA8E" id="4KK_HU4jwnI" role="2OqNvi">
+                    <ref role="37wK5l" to="t4tl:~DclareForMPSEngine.isDevMode()" resolve="isDevMode" />
+                  </node>
+                </node>
               </node>
             </node>
           </node>
@@ -941,13 +950,21 @@
                 <ref role="3cqZAo" node="3jy5t$KXxKT" resolve="engine" />
               </node>
               <node concept="liA8E" id="3jy5t$L4ELr" role="2OqNvi">
-                <ref role="37wK5l" to="t4tl:~DclareForMPSEngine.setOn(boolean)" resolve="setOn" />
+                <ref role="37wK5l" to="t4tl:~DclareForMPSEngine.setModes(boolean,boolean)" resolve="setModes" />
                 <node concept="3fqX7Q" id="3jy5t$L4EU$" role="37wK5m">
                   <node concept="2OqwBi" id="3jy5t$L4EUA" role="3fr31v">
                     <node concept="0IXxy" id="3jy5t$L4EUB" role="2Oq$k0" />
                     <node concept="3TrcHB" id="3jy5t$L4EUC" role="2OqNvi">
                       <ref role="3TsBF5" to="wknp:1DUQ$OwrN1P" resolve="engineActive" />
                     </node>
+                  </node>
+                </node>
+                <node concept="2OqwBi" id="4KK_HU4jwpY" role="37wK5m">
+                  <node concept="37vLTw" id="4KK_HU4jwpZ" role="2Oq$k0">
+                    <ref role="3cqZAo" node="3jy5t$KXxKT" resolve="engine" />
+                  </node>
+                  <node concept="liA8E" id="4KK_HU4jwq0" role="2OqNvi">
+                    <ref role="37wK5l" to="t4tl:~DclareForMPSEngine.isDevMode()" resolve="isDevMode" />
                   </node>
                 </node>
               </node>

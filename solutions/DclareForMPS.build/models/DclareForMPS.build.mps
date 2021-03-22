@@ -717,6 +717,11 @@
             </node>
           </node>
         </node>
+        <node concept="1SiIV0" id="BvxLt0XC6a" role="3bR37C">
+          <node concept="3bR9La" id="BvxLt0XC6b" role="1SiIV1">
+            <ref role="3bR37D" node="5TmHY1kYrb4" resolve="DclareMPSPlugin" />
+          </node>
+        </node>
       </node>
       <node concept="1E1JtA" id="5TmHY1kYraY" role="2G$12L">
         <property role="BnDLt" value="false" />

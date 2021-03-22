@@ -35,7 +35,7 @@ public class DclareForMPSEngine implements DeployListener {
     private final   StartStopHandler   startStopHandler;
     private         DClareMPS          dClareMPS;
     //
-    private         boolean            on;
+    private         boolean            onMode;
     private         boolean            devMode;
     private         int                maxTotalNrOfChanges;
     private         int                maxNrOfChanges;
@@ -50,16 +50,20 @@ public class DclareForMPSEngine implements DeployListener {
     }
 
     protected synchronized void startEngine() {
-        if (dClareMPS == null || !dClareMPS.isRunning()) {
+        if (!isRunning()) {
             dClareMPS = new DClareMPS(this, project, null, devMode, maxTotalNrOfChanges, maxNrOfChanges, maxNrOfObserved, maxNrOfObservers, startStopHandler);
         }
     }
 
     protected synchronized void stopEngine() {
-        if (dClareMPS != null && dClareMPS.isRunning()) {
+        if (isRunning()) {
             dClareMPS.stop();
             dClareMPS = null;
         }
+    }
+
+    private boolean isRunning() {
+        return dClareMPS != null && dClareMPS.isRunning();
     }
 
     public void stop() {
@@ -67,27 +71,27 @@ public class DclareForMPSEngine implements DeployListener {
         stopEngine();
     }
 
-    public boolean isOn() {
-        return on;
-    }
-
-    public void setOn(boolean on) {
-        if (on != this.on) {
-            this.on = on;
-            if (on) {
-                startEngine();
-            } else {
-                stopEngine();
-            }
-        }
+    public boolean isOnMode() {
+        return onMode;
     }
 
     public boolean isDevMode() {
         return devMode;
     }
 
-    public void setDevMode(boolean devMode) {
-        this.devMode = devMode;
+    public void setModes(boolean onMode, boolean devMode) {
+        if (onMode != this.onMode || devMode != this.devMode) {
+            if (devMode != this.devMode) {
+                stopEngine();
+            }
+            this.devMode = devMode;
+            this.onMode = onMode;
+            if (onMode) {
+                startEngine();
+            } else {
+                stopEngine();
+            }
+        }
     }
 
     public int getMaxTotalNrOfChanges() {
@@ -138,7 +142,7 @@ public class DclareForMPSEngine implements DeployListener {
         for (SModule m : project.getProjectModules()) {
             //noinspection SuspiciousMethodCalls
             if (loadedModules.contains(m)) {
-                if (on) {
+                if (onMode) {
                     startEngine();
                 }
                 break;
