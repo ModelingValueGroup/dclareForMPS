@@ -36,7 +36,6 @@ import org.jetbrains.mps.openapi.module.SModule;
 import org.jetbrains.mps.openapi.persistence.DataSource;
 import org.jetbrains.mps.openapi.persistence.ModelRoot;
 import org.modelingvalue.collections.Collection;
-import org.modelingvalue.collections.Map;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.collections.util.TriFunction;
@@ -285,7 +284,7 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
     protected SModel create(SModelReference ref) {
         SModuleBase sModule = (SModuleBase) getModule().original();
         String name = NAME.get(this);
-        name = name == null || Construction.MatchInfo.of(this, Map.of()).hasUnidentifiedSource() ? //
+        name = name == null || Construction.MatchInfo.of(this).hasUnidentifiedSource() ? //
                 "_" + Long.toString(System.currentTimeMillis(), Character.MAX_RADIX) : name;
         if (isTemporal()) {
             return ref != null ? new DTempModel(ref) : new DTempModel(name, sModule);
