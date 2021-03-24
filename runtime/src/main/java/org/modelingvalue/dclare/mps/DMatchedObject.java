@@ -20,24 +20,24 @@ import java.util.function.Supplier;
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
+import org.modelingvalue.dclare.Constant;
 import org.modelingvalue.dclare.Construction;
 import org.modelingvalue.dclare.Construction.Reason;
 import org.modelingvalue.dclare.LeafTransaction;
 import org.modelingvalue.dclare.Newable;
 import org.modelingvalue.dclare.Observer;
-import org.modelingvalue.dclare.ReadOnlyTransaction;
 import org.modelingvalue.dclare.Setable;
 import org.modelingvalue.dclare.mps.DAttribute.DIdentifyingAttribute;
 
 @SuppressWarnings("rawtypes")
 public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DIdentifiedObject implements Newable {
 
-    private static final Setable<DMatchedObject, Object> ORIGINAL  = Setable.of("$ORIGINAL", null);
+    private static final Constant<DMatchedObject, Object> ORIGINAL  = Constant.of("$ORIGINAL", null);
 
     @SuppressWarnings("unchecked")
-    protected static final Set<Observer>                 OBSERVERS = DObject.OBSERVERS;
+    protected static final Set<Observer>                  OBSERVERS = DObject.OBSERVERS;
 
-    protected static final Set<Setable>                  SETABLES  = DObject.SETABLES;
+    protected static final Set<Setable>                   SETABLES  = DObject.SETABLES;
 
     protected static <D extends DMatchedObject> D quotationConstruct(SLanguage anonymousLanguage, String anonymousType, Object[] ctx, Supplier<D> supplier) {
         LeafTransaction tx = LeafTransaction.getCurrent();
@@ -58,9 +58,7 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
     protected static <D extends DMatchedObject, I, S> D readConstruct(I ref, Supplier<D> supplier, S original) {
         LeafTransaction tx = LeafTransaction.getCurrent();
         D d = tx.directConstruct(new DRead(ref), supplier);
-        if (!(tx instanceof ReadOnlyTransaction)) {
-            ORIGINAL.set(d, original);
-        }
+        ORIGINAL.force(d, original);
         return d;
     }
 
@@ -130,9 +128,9 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
 
     public final S tryOriginal() {
         R ref = reference();
-        S sObject = ref != null ? dClareMPS().read(() -> resolveReference(ref)) : null;
-        if (sObject != null && !(LeafTransaction.getCurrent() instanceof ReadOnlyTransaction)) {
-            ORIGINAL.set(this, sObject);
+        S sObject = ref != null ? dClareMPS().read(() -> resolve(ref)) : null;
+        if (sObject != null) {
+            ORIGINAL.force(this, sObject);
         }
         return sObject;
     }
@@ -141,11 +139,12 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
     protected final S original() {
         S sObject = tryOriginal();
         if (sObject == null) {
-            sObject = (S) ORIGINAL.get(this);
+            sObject = ORIGINAL.isSet(this) ? (S) ORIGINAL.get(this) : null;
             if (sObject == null) {
-                sObject = create();
+                sObject = create(reference());
             }
-            readConstruct(getReference(sObject), () -> this, sObject);
+            addOriginal(sObject);
+            readConstruct(reference(sObject), () -> this, sObject);
             init(dClareMPS(), sObject);
         }
         return sObject;
@@ -189,10 +188,12 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
 
     protected abstract void read();
 
-    protected abstract R getReference(S read);
+    protected abstract R reference(S read);
 
-    protected abstract S resolveReference(R ref);
+    protected abstract S resolve(R ref);
 
-    protected abstract S create();
+    protected abstract S create(R ref);
+
+    protected abstract void addOriginal(S sObject);
 
 }

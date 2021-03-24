@@ -21,7 +21,6 @@ import org.jetbrains.mps.openapi.module.SModule;
 import org.jetbrains.mps.openapi.util.ProgressMonitor;
 
 import com.intellij.openapi.application.ApplicationManager;
-
 import jetbrains.mps.classloading.ClassLoaderManager;
 import jetbrains.mps.classloading.DeployListener;
 import jetbrains.mps.ide.MPSCoreComponents;
@@ -31,15 +30,17 @@ import jetbrains.mps.project.ProjectBase;
 @SuppressWarnings("unused")
 public class DclareForMPSEngine implements DeployListener {
 
-    private final ProjectBase          project;
+    private final   ProjectBase        project;
     protected final ClassLoaderManager classLoaderManager;
-    private final StartStopHandler     startStopHandler;
-    private DClareMPS                  dClareMPS;
-    private boolean                    on;
-    private int                        maxTotalNrOfChanges;
-    private int                        maxNrOfChanges;
-    private int                        maxNrOfObserved;
-    private int                        maxNrOfObservers;
+    private final   StartStopHandler   startStopHandler;
+    private         DClareMPS          dClareMPS;
+    //
+    private         boolean            onMode;
+    private         boolean            devMode;
+    private         int                maxTotalNrOfChanges;
+    private         int                maxNrOfChanges;
+    private         int                maxNrOfObserved;
+    private         int                maxNrOfObservers;
 
     public DclareForMPSEngine(ProjectBase project, StartStopHandler startStopHandler) {
         this.startStopHandler = startStopHandler;
@@ -49,16 +50,20 @@ public class DclareForMPSEngine implements DeployListener {
     }
 
     protected synchronized void startEngine() {
-        if (dClareMPS == null || !dClareMPS.isRunning()) {
-            dClareMPS = new DClareMPS(this, project, null, maxTotalNrOfChanges, maxNrOfChanges, maxNrOfObserved, maxNrOfObservers, startStopHandler);
+        if (!isRunning()) {
+            dClareMPS = new DClareMPS(this, project, null, devMode, maxTotalNrOfChanges, maxNrOfChanges, maxNrOfObserved, maxNrOfObservers, startStopHandler);
         }
     }
 
     protected synchronized void stopEngine() {
-        if (dClareMPS != null && dClareMPS.isRunning()) {
+        if (isRunning()) {
             dClareMPS.stop();
             dClareMPS = null;
         }
+    }
+
+    private boolean isRunning() {
+        return dClareMPS != null && dClareMPS.isRunning();
     }
 
     public void stop() {
@@ -66,14 +71,22 @@ public class DclareForMPSEngine implements DeployListener {
         stopEngine();
     }
 
-    public boolean isOn() {
-        return on;
+    public boolean isOnMode() {
+        return onMode;
     }
 
-    public void setOn(boolean on) {
-        if (on != this.on) {
-            this.on = on;
-            if (on) {
+    public boolean isDevMode() {
+        return devMode;
+    }
+
+    public void setModes(boolean onMode, boolean devMode) {
+        if (onMode != this.onMode || devMode != this.devMode) {
+            if (devMode != this.devMode) {
+                stopEngine();
+            }
+            this.devMode = devMode;
+            this.onMode = onMode;
+            if (onMode) {
                 startEngine();
             } else {
                 stopEngine();
@@ -97,19 +110,19 @@ public class DclareForMPSEngine implements DeployListener {
         this.maxNrOfChanges = maxNrOfChanges;
     }
 
-    public int getNrOfObserved() {
+    public int getMaxNrOfObserved() {
         return maxNrOfObserved;
     }
 
-    public void setNrOfObserved(int maxNrOfObserved) {
+    public void setMaxNrOfObserved(int maxNrOfObserved) {
         this.maxNrOfObserved = maxNrOfObserved;
     }
 
-    public int getNrOfObservers() {
+    public int getMaxNrOfObservers() {
         return maxNrOfObservers;
     }
 
-    public void setNrOfObservers(int maxNrOfObservers) {
+    public void setMaxNrOfObservers(int maxNrOfObservers) {
         this.maxNrOfObservers = maxNrOfObservers;
     }
 
@@ -129,7 +142,7 @@ public class DclareForMPSEngine implements DeployListener {
         for (SModule m : project.getProjectModules()) {
             //noinspection SuspiciousMethodCalls
             if (loadedModules.contains(m)) {
-                if (on) {
+                if (onMode) {
                     startEngine();
                 }
                 break;

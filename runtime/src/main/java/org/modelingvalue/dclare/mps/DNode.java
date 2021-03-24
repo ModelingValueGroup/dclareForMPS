@@ -257,7 +257,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                                     PROPERTY.get(property).set(n, dClareMPS().read(() -> sNode.getProperty(property)));
                                                                                                                                                 }
                                                                                                                                             }
-                                                                                                                                        });
+                                                                                                                                        }, Direction.urgent);
 
     private static final Action<DNode>                                                                           READ_REFERENCES        = Action.of("$READ_REFERENCES", n -> {
                                                                                                                                             SNode sNode = n.tryOriginal();
@@ -269,7 +269,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                                     REFERENCE.get(link).set(n, reference != null ? of(concept, reference.getTargetNodeReference(), targetNode) : null);
                                                                                                                                                 }
                                                                                                                                             }
-                                                                                                                                        });
+                                                                                                                                        }, Direction.urgent);
 
     private static final Action<DNode>                                                                           READ_CHILDREN          = Action.of("$READ_CHILDREN", n -> {
                                                                                                                                             SNode sNode = n.tryOriginal();
@@ -283,7 +283,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                                     }
                                                                                                                                                 }
                                                                                                                                             }
-                                                                                                                                        });
+                                                                                                                                        }, Direction.urgent);
 
     @SuppressWarnings("rawtypes")
     protected static final Constant<SConcept, Set<? extends Setable>>                                            CONCEPT_SETABLES       = Constant.of("$CONCEPT_SETABLES", c -> Collection.concat(                                                                                                              //
@@ -451,11 +451,16 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
     }
 
     @Override
-    protected SNode create() {
+    protected SNode create(SNodeReference ref) {
         SConcept concept = getConcept();
         DModel dModel = getModel();
         SModel sModel = dModel.original();
-        SNode sNode = sModel.createNode(concept);
+        return ref != null ? sModel.createNode(concept, ref.getNodeId()) : sModel.createNode(concept);
+    }
+
+    @Override
+    protected void addOriginal(SNode sNode) {
+        SConcept concept = getConcept();
         DObject parent = dObjectParent();
         if (parent instanceof DModel) {
             SModel sParent = ((DModel) parent).original();
@@ -473,7 +478,6 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
         if (concept.isSubConceptOf(SNodeUtil.concept_INamedConcept)) {
             sNode.setProperty(SNodeUtil.property_INamedConcept_name, PROPERTY.get(SNodeUtil.property_INamedConcept_name).get(this));
         }
-        return sNode;
     }
 
     @Override
