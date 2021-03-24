@@ -284,6 +284,14 @@
               </node>
             </node>
           </node>
+          <node concept="28jJK3" id="5RwEXqGyUWo" role="39821P">
+            <node concept="398BVA" id="5RwEXqGyUWR" role="28jJRO">
+              <ref role="398BVh" node="3Lt_N8a$ptU" resolve="dclare_home" />
+              <node concept="2Ry0Ak" id="5RwEXqGyUXb" role="iGT6I">
+                <property role="2Ry0Am" value="forms_rt.jar" />
+              </node>
+            </node>
+          </node>
           <node concept="pUk6x" id="54Mti_OXKCh" role="pUk7w" />
         </node>
       </node>
@@ -931,6 +939,16 @@
             </node>
             <node concept="3qWCbU" id="oVVxO6tTwg" role="3LXTna">
               <property role="3qWCbO" value="**/*.mps, **/*.mpsr, **/.model" />
+            </node>
+          </node>
+        </node>
+        <node concept="1SiIV0" id="5RwEXqGyUV1" role="3bR37C">
+          <node concept="1BurEX" id="5RwEXqGyUV2" role="1SiIV1">
+            <node concept="398BVA" id="5RwEXqGyUUX" role="1BurEY">
+              <ref role="398BVh" node="3Lt_N8a$ptU" resolve="dclare_home" />
+              <node concept="2Ry0Ak" id="5RwEXqGyUUY" role="iGT6I">
+                <property role="2Ry0Am" value="forms_rt.jar" />
+              </node>
             </node>
           </node>
         </node>
