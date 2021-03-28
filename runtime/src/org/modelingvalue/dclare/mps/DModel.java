@@ -122,19 +122,8 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
 
     private static final Action<DModel>                                                     READ_ROOTS       = Action.of("$READ_ROOTS", m -> {
                                                                                                                  SModel sModel = m.tryOriginal();
-                                                                                                                 if (sModel != null) {
-                                                                                                                     MODEL_ROOT.set(m, dClareMPS().read(() -> sModel.getModelRoot()));
-                                                                                                                     ROOTS.set(m, dClareMPS().read(() -> Collection.of(sModel.getRootNodes()).sequential().map(                                      //
-                                                                                                                             n -> {
-                                                                                                                                 try {
-                                                                                                                                     return DNode.read(n);
-                                                                                                                                 } catch (Exception e) {
-                                                                                                                                     // TODO Auto-generated catch block
-                                                                                                                                     e.printStackTrace();
-                                                                                                                                     return null;
-                                                                                                                                 }
-                                                                                                                             }).toSet()));
-                                                                                                                 }
+                                                                                                                 MODEL_ROOT.set(m, dClareMPS().read(() -> sModel.getModelRoot()));
+                                                                                                                 ROOTS.set(m, dClareMPS().read(() -> Collection.of(sModel.getRootNodes()).sequential().map(DNode::read).toSet()));
                                                                                                              }, Direction.urgent);
 
     private static final Action<DModel>                                                     READ_NAME        = Action.of("$READ_NAME", m -> {
@@ -162,16 +151,18 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
                                                                                                              }, Direction.urgent);
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    protected static final DObserved<DModel, Boolean>                                       ACTIVE           = DObserved.of("ACTIVE", Boolean.FALSE, null, (tx, o, pre, post) -> {
+    protected static final DObserved<DModel, Boolean>                                       ACTIVE           = DObserved.of("ACTIVE", Boolean.FALSE, null, (tx, m, pre, post) -> {
                                                                                                                  if (!pre && post) {
-                                                                                                                     SModel or = o.tryOriginal();
-                                                                                                                     if (TRACE_ACTIVATION) {
-                                                                                                                         System.err.println("DCLARE: ACTIVATE " + (or != null ? or.getName() : o) + " (external = " + o.isExternal() + ")");
+                                                                                                                     SModel sModel = m.tryOriginal();
+                                                                                                                     if (sModel != null) {
+                                                                                                                         if (TRACE_ACTIVATION) {
+                                                                                                                             System.err.println("DCLARE: ACTIVATE " + sModel.getName() + " (external = " + m.isExternal() + ")");
+                                                                                                                         }
+                                                                                                                         if (!m.isExternal()) {
+                                                                                                                             READ_USED_MODELS.trigger(m);
+                                                                                                                         }
+                                                                                                                         READ_ROOTS.trigger(m);
                                                                                                                      }
-                                                                                                                     if (!o.isExternal()) {
-                                                                                                                         READ_USED_MODELS.trigger(o);
-                                                                                                                     }
-                                                                                                                     READ_ROOTS.trigger(o);
                                                                                                                  }
                                                                                                              }, SetableModifier.doNotCheckConsistency);
     @SuppressWarnings({"rawtypes", "unchecked"})
