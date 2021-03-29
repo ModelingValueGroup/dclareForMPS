@@ -3949,6 +3949,12 @@
           <ref role="3uigEE" to="wyt6:~Object" resolve="Object" />
         </node>
       </node>
+      <node concept="37vLTG" id="2OH8AaebkQi" role="3clF46">
+        <property role="TrG5h" value="lang" />
+        <node concept="3uibUv" id="2OH8AaeblWz" role="1tU5fm">
+          <ref role="3uigEE" to="c17a:~SLanguage" resolve="SLanguage" />
+        </node>
+      </node>
       <node concept="37vLTG" id="4wJaMXe_PK4" role="3clF46">
         <property role="TrG5h" value="copied" />
         <node concept="16syzq" id="GYgDz1LIhp" role="1tU5fm">
@@ -3977,7 +3983,10 @@
                 </node>
               </node>
               <node concept="liA8E" id="6DGeWnARLaw" role="2OqNvi">
-                <ref role="37wK5l" to="t4tl:~DNode.copy(java.lang.String,org.modelingvalue.dclare.mps.DObject)" resolve="copy" />
+                <ref role="37wK5l" to="t4tl:~DNode.copy(org.jetbrains.mps.openapi.language.SLanguage,java.lang.String,org.modelingvalue.dclare.mps.DObject)" resolve="copy" />
+                <node concept="37vLTw" id="2OH8Aaebobo" role="37wK5m">
+                  <ref role="3cqZAo" node="2OH8AaebkQi" resolve="lang" />
+                </node>
                 <node concept="37vLTw" id="6DGeWnARMn2" role="37wK5m">
                   <ref role="3cqZAo" node="2cgEAjNTkFc" resolve="id" />
                 </node>
