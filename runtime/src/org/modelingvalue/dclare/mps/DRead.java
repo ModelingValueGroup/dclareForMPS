@@ -28,4 +28,9 @@ public class DRead<R> extends Construction.Reason {
         return (R) get(null, 0);
     }
 
+    @Override
+    public Object direction() {
+        return DRead.class;
+    }
+
 }

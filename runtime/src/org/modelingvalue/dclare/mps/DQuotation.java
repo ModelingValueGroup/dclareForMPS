@@ -38,8 +38,14 @@ public class DQuotation extends DDerive {
         return (String) get(null, size() - 1);
     }
 
+    @Override
     public SLanguage getAnonymousLanguage() {
         return (SLanguage) get(null, size() - 2);
+    }
+
+    @Override
+    public Object direction() {
+        return getAnonymousLanguage();
     }
 
 }

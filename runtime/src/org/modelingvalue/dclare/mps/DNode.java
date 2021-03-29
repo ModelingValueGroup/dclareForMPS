@@ -385,8 +385,8 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
                 () -> new DNode(new Object[]{uniqueLong(concept), concept}));
     }
 
-    public DNode copy(String anonymousType, DObject ctx) {
-        return copyRootConstruct(anonymousType, ctx, this, //
+    public DNode copy(SLanguage lang, String anonymousType, DObject ctx) {
+        return copyRootConstruct(lang, anonymousType, ctx, this, //
                 () -> new DNode(new Object[]{uniqueLong(getConcept()), getConcept()}));
     }
 

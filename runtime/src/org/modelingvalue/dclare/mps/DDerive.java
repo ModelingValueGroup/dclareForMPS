@@ -15,6 +15,7 @@
 
 package org.modelingvalue.dclare.mps;
 
+import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.dclare.Construction;
 import org.modelingvalue.dclare.Mutable;
 
@@ -25,5 +26,7 @@ public abstract class DDerive extends Construction.Reason {
     }
 
     public abstract String getAnonymousType();
+
+    public abstract SLanguage getAnonymousLanguage();
 
 }
