@@ -15,6 +15,7 @@
 
 package org.modelingvalue.dclare.mps;
 
+import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -97,7 +98,7 @@ import jetbrains.mps.project.ProjectRepository;
 import jetbrains.mps.smodel.language.LanguageRegistry;
 import jetbrains.mps.smodel.language.LanguageRuntime;
 
-public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
+public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, UncaughtExceptionHandler {
 
     protected static       Setable<DClareMPS, Map<String, DAttribute<?, ?>>>                               ATTRIBUTE_MAP        = Setable.of("ATTRIBUTE_MAP", Map.of());
     //
@@ -149,7 +150,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
     //
     protected static final Set<? extends Setable<? extends Mutable, ?>>                                    SETABLES             = Set.of(REPOSITORY_CONTAINER);
     //
-    private final          ContextPool                                                                     thePool              = ContextThread.createPool();
+    private final          ContextPool                                                                     thePool              = ContextThread.createPool(this);
     protected final        Thread                                                                          waitForEndThread;
     @SuppressWarnings("unused")
     private final          Thread                                                                          statsThread;
@@ -633,6 +634,11 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe {
             }
         }
         return result;
+    }
+
+    @Override
+    public void uncaughtException(Thread thread, Throwable t) {
+        addMessage(t);
     }
 
     private class ModuleChecker extends IChecker.AbstractModuleChecker<ModuleReportItem> {
