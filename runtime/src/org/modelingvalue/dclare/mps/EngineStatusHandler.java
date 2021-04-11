@@ -18,14 +18,16 @@ package org.modelingvalue.dclare.mps;
 import org.jetbrains.mps.openapi.project.Project;
 import org.modelingvalue.dclare.UniverseStatistics;
 
-public interface StartStopHandler {
-    void on(Project project);
-
-    void off(Project project, Getter getter, DClareMPS engine);
-
-    void start(Project project);
-
-    void stop(Project project, Getter getter, DClareMPS engine);
-
+public interface EngineStatusHandler {
     void stats(UniverseStatistics stats);
+
+    void on(Project project, DClareMPS engine);
+
+    void terminating(Project project, DClareMPS engine, Getter getter);
+
+    void off(Project project, DClareMPS engine);
+
+    void active(Project project, DClareMPS engine);
+
+    void idle(Project project, DClareMPS engine, Getter getter);
 }
