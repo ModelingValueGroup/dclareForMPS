@@ -6458,17 +6458,6 @@
             </node>
           </node>
         </node>
-        <node concept="3clFbF" id="3zaVTDehn9s" role="3cqZAp">
-          <node concept="2OqwBi" id="3zaVTDehngA" role="3clFbG">
-            <node concept="2WthIp" id="3zaVTDehn9r" role="2Oq$k0" />
-            <node concept="liA8E" id="3zaVTDehnjT" role="2OqNvi">
-              <ref role="37wK5l" to="71xd:~BaseTool.openTool(boolean)" resolve="openTool" />
-              <node concept="3clFbT" id="3zaVTDehnB_" role="37wK5m">
-                <property role="3clFbU" value="true" />
-              </node>
-            </node>
-          </node>
-        </node>
       </node>
     </node>
     <node concept="2BZ0e9" id="3OqCb4$vqbk" role="2XNbBz">
