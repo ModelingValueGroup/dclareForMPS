@@ -35,7 +35,7 @@ import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.dclare.Action;
 import org.modelingvalue.dclare.Constant;
-import org.modelingvalue.dclare.Direction;
+import org.modelingvalue.dclare.Priority;
 import org.modelingvalue.dclare.Observed;
 import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.Setable;
@@ -82,7 +82,7 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
                                                                                                  if (!m.isExternal()) {
                                                                                                      MODELS.set(m, dClareMPS().read(() -> models(m.original()).sequential().map(DModel::read).toSet()));
                                                                                                  }
-                                                                                             }, Direction.urgent);
+                                                                                             }, Priority.urgent);
     @SuppressWarnings("rawtypes")
     protected static final Set<Observer>                                      OBSERVERS      = DObject.OBSERVERS.add(LANGUAGES_RULE);
 

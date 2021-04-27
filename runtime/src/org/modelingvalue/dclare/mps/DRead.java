@@ -16,8 +16,11 @@
 package org.modelingvalue.dclare.mps;
 
 import org.modelingvalue.dclare.Construction;
+import org.modelingvalue.dclare.Direction;
 
 public class DRead<R> extends Construction.Reason {
+
+    private static final Direction DIRECTION = Direction.of(DRead.class);
 
     protected DRead(R ref) {
         super(null, new Object[]{ref});
@@ -29,8 +32,8 @@ public class DRead<R> extends Construction.Reason {
     }
 
     @Override
-    public Object direction() {
-        return DRead.class;
+    public Direction direction() {
+        return DIRECTION;
     }
 
 }

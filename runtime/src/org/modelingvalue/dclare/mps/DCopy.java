@@ -16,6 +16,7 @@
 package org.modelingvalue.dclare.mps;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
+import org.modelingvalue.dclare.Direction;
 import org.modelingvalue.dclare.Mutable;
 
 public class DCopy extends DDerive {
@@ -52,8 +53,8 @@ public class DCopy extends DDerive {
     }
 
     @Override
-    public Object direction() {
-        return getAnonymousLanguage();
+    public Direction direction() {
+        return Direction.of(getAnonymousLanguage());
     }
 
 }

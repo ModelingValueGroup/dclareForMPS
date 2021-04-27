@@ -24,7 +24,7 @@ import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.dclare.Action;
-import org.modelingvalue.dclare.Direction;
+import org.modelingvalue.dclare.Priority;
 import org.modelingvalue.dclare.Mutable;
 import org.modelingvalue.dclare.NonCheckingObserver;
 import org.modelingvalue.dclare.Observed;
@@ -177,7 +177,7 @@ public abstract class DObject implements Mutable {
     protected abstract DObjectType<?> getType();
 
     public static <O extends DObject> NonCheckingObserver<O> observer(Object id, Consumer<O> action) {
-        return NonCheckingObserver.of(id, action, Direction.forward);
+        return NonCheckingObserver.of(id, action, Priority.forward);
     }
 
     public boolean isDclareOnly() {

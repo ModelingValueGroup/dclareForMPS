@@ -19,14 +19,15 @@ import org.jetbrains.mps.openapi.language.SConcept;
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
+import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.collections.util.Quintuple;
 import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.Setable;
 
 @SuppressWarnings("unused")
-public class DNodeType extends DObjectType<Quintuple<Set<SLanguage>, SConcept, Set<String>, Boolean, Boolean>> {
+public class DNodeType extends DObjectType<Quintuple<Set<SLanguage>, SConcept, Set<String>, Boolean, SLanguage>> {
 
-    public DNodeType(Quintuple<Set<SLanguage>, SConcept, Set<String>, Boolean, Boolean> q) {
+    public DNodeType(Quintuple<Set<SLanguage>, SConcept, Set<String>, Boolean, SLanguage> q) {
         super(q);
     }
 
@@ -60,7 +61,7 @@ public class DNodeType extends DObjectType<Quintuple<Set<SLanguage>, SConcept, S
         return id().c();
     }
 
-    public boolean isCopy() {
+    public SLanguage copyAnonymousLanguage() {
         return id().e();
     }
 
@@ -74,7 +75,8 @@ public class DNodeType extends DObjectType<Quintuple<Set<SLanguage>, SConcept, S
     @Override
     protected Collection<Observer> observers() {
         Set<Observer> conceptObservers = DNode.OBSERVERS.addAll(DNode.CONCEPT_OBSERVERS.get(getConcept()));
-        return isCopy() ? conceptObservers.addAll(DNode.COPY_CONCEPT_OBSERVERS.get(getConcept())) : conceptObservers;
+        SLanguage copyLang = copyAnonymousLanguage();
+        return copyLang != null ? conceptObservers.addAll(DNode.COPY_CONCEPT_OBSERVERS.get(Pair.of(getConcept(), copyLang))) : conceptObservers;
     }
 
 }

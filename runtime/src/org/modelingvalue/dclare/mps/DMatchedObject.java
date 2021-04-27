@@ -118,8 +118,8 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
         return deriveReasons().filter(DQuotation.class).map(DQuotation::getAnonymousType).notNull().toSet();
     }
 
-    public boolean isCopy() {
-        return deriveReasons().anyMatch(c -> c instanceof DCopy);
+    public SLanguage copyAnonymousLanguage() {
+        return deriveReasons().filter(DCopy.class).map(DCopy::getAnonymousLanguage).findFirst().orElse(null);
     }
 
     public Set<SLanguage> getAnonymousLanguages() {
