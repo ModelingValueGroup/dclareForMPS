@@ -30,20 +30,20 @@ import jetbrains.mps.project.ProjectBase;
 @SuppressWarnings("unused")
 public class DclareForMPSEngine implements DeployListener {
 
-    private final   ProjectBase        project;
-    protected final ClassLoaderManager classLoaderManager;
-    private final   StartStopHandler   startStopHandler;
-    private         DClareMPS          dClareMPS;
+    private final   ProjectBase         project;
+    protected final ClassLoaderManager  classLoaderManager;
+    private final   EngineStatusHandler engineStatusHandler;
+    private         DClareMPS           dClareMPS;
     //
-    private         boolean            onMode;
-    private         boolean            devMode;
-    private         int                maxTotalNrOfChanges;
-    private         int                maxNrOfChanges;
-    private         int                maxNrOfObserved;
-    private         int                maxNrOfObservers;
+    private         boolean             onMode;
+    private         boolean             devMode;
+    private         int                 maxTotalNrOfChanges;
+    private         int                 maxNrOfChanges;
+    private         int                 maxNrOfObserved;
+    private         int                 maxNrOfObservers;
 
-    public DclareForMPSEngine(ProjectBase project, StartStopHandler startStopHandler) {
-        this.startStopHandler = startStopHandler;
+    public DclareForMPSEngine(ProjectBase project, EngineStatusHandler engineStatusHandler) {
+        this.engineStatusHandler = engineStatusHandler;
         this.project = project;
         classLoaderManager = ApplicationManager.getApplication().getComponent(MPSCoreComponents.class).getClassLoaderManager();
         classLoaderManager.addListener(this);
@@ -51,7 +51,7 @@ public class DclareForMPSEngine implements DeployListener {
 
     protected synchronized void startEngine() {
         if (!isRunning()) {
-            dClareMPS = new DClareMPS(this, project, null, devMode, maxTotalNrOfChanges, maxNrOfChanges, maxNrOfObserved, maxNrOfObservers, startStopHandler);
+            dClareMPS = new DClareMPS(this, project, null, devMode, maxTotalNrOfChanges, maxNrOfChanges, maxNrOfObserved, maxNrOfObservers, engineStatusHandler);
         }
     }
 
