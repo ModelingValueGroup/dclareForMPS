@@ -345,8 +345,8 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
         }
 
         @Override
-        public DCopyTransaction openTransaction(Direction direction, MutableTransaction parent) {
-            return ((DClareMPS) parent.universeTransaction().mutable()).dCopyObserverTransactions.get().open(direction, this, parent);
+        public DCopyTransaction openTransaction(MutableTransaction parent) {
+            return ((DClareMPS) parent.universeTransaction().mutable()).dCopyObserverTransactions.get().open(this, parent);
         }
 
         @Override

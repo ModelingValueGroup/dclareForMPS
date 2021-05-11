@@ -53,8 +53,8 @@ public interface DRule<O> extends DFeature {
         }
 
         @Override
-        public DRule.DObserverTransaction openTransaction(Direction direction, MutableTransaction parent) {
-            return ((DClareMPS) parent.universeTransaction().mutable()).dObserverTransactions.get().open(direction, this, parent);
+        public DRule.DObserverTransaction openTransaction(MutableTransaction parent) {
+            return ((DClareMPS) parent.universeTransaction().mutable()).dObserverTransactions.get().open(this, parent);
         }
 
         @Override
