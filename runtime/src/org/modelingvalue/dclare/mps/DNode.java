@@ -21,6 +21,7 @@ import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import org.jetbrains.mps.openapi.language.SAbstractConcept;
+import org.jetbrains.mps.openapi.language.SAbstractLink;
 import org.jetbrains.mps.openapi.language.SConcept;
 import org.jetbrains.mps.openapi.language.SConceptFeature;
 import org.jetbrains.mps.openapi.language.SContainmentLink;
@@ -69,13 +70,6 @@ import jetbrains.mps.smodel.SNodeUtil;
 @SuppressWarnings("unused")
 public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implements SNode {
 
-    private static final Object                                                                                    DUMMY_ID               = new Object() {
-                                                                                                                                              @Override
-                                                                                                                                              public String toString() {
-                                                                                                                                                  return "DUMMY_ID";
-                                                                                                                                              }
-                                                                                                                                          };
-
     private static final Constant<Quintuple<Set<SLanguage>, SConcept, Set<String>, Boolean, SLanguage>, DNodeType> NODE_TYPE              = Constant.of("NODE_TYPE", DNodeType::new);
 
     private static final Constant<SConcept, AtomicLong>                                                            NODE_COUNTER           = Constant.of("NODE_COUNTER", ac -> new NodeCounter(ac));
@@ -96,12 +90,15 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                               }
                                                                                                                                           });
 
-    protected static final Constant<SConcept, SReferenceLink>                                                      SMART_REFERENCE        = Constant.of("SMART_REFERENCE", c -> {
-                                                                                                                                              int ps = c.getProperties().size() - SNodeUtil.concept_BaseConcept.getProperties().size();
-                                                                                                                                              int cs = c.getContainmentLinks().size() - SNodeUtil.concept_BaseConcept.getContainmentLinks().size();
-                                                                                                                                              int rs = c.getReferenceLinks().size() - SNodeUtil.concept_BaseConcept.getReferenceLinks().size();
-                                                                                                                                              return ps == 0 && cs == 0 && rs == 1 ?                                                                                                                              //
-                                                                                                                                              c.getReferenceLinks().stream().filter(r -> !SNodeUtil.concept_BaseConcept.getReferenceLinks().contains(r)).findAny().get() : null;
+    protected static final Constant<SConcept, Set<SReferenceLink>>                                                 SINGLE_REFERENCES      = Constant.of("SINGLE_REFERENCES", c -> {
+                                                                                                                                              return Collection.of(c.getReferenceLinks()).exclude(SReferenceLink::isOptional).                                                                                    //
+                                                                                                                                              exclude(SNodeUtil.concept_BaseConcept.getReferenceLinks()::contains).toSet();
+                                                                                                                                          });
+
+    @SuppressWarnings("unlikely-arg-type")
+    protected static final Constant<SConcept, Set<SContainmentLink>>                                               SINGLE_CONTAINMENTS    = Constant.of("SINGLE_CONTAINMENTS", c -> {
+                                                                                                                                              return Collection.of(c.getContainmentLinks()).exclude(SContainmentLink::isMultiple).exclude(SContainmentLink::isOptional).                                          //
+                                                                                                                                              exclude(SNodeUtil.concept_BaseConcept.getReferenceLinks()::contains).toSet();
                                                                                                                                           });
 
     protected static final Observed<DNode, DModel>                                                                 MODEL                  = Observed.of("$MODEL", null, SetableModifier.doNotCheckConsistency);
@@ -487,7 +484,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
     public String toString() {
         SConcept concept = getConcept();
         Object id = dMatchingIdentity();
-        return concept.getName() + (id != null && id != DUMMY_ID ? "#" + identity[0] + ":" + id : "#" + identity[0]);
+        return concept.getName() + (id != null && !id.equals(concept) ? "#" + identity[0] + ":" + id : "#" + identity[0]);
     }
 
     protected SModel getOriginalModel() {
@@ -605,11 +602,31 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
         } else if (concept.isSubConceptOf(SNodeUtil.concept_INamedConcept)) {
             return PROPERTY.get(SNodeUtil.property_INamedConcept_name).get(this);
         } else {
-            SReferenceLink smart = SMART_REFERENCE.get(concept);
-            if (smart != null) {
-                return REFERENCE.get(smart).get(this);
+            Set<SReferenceLink> references = SINGLE_REFERENCES.get(concept);
+            Set<SContainmentLink> containments = SINGLE_CONTAINMENTS.get(concept);
+            if (references.isEmpty() && containments.isEmpty()) {
+                return concept;
             } else {
-                return DUMMY_ID;
+                Map<SAbstractLink, Object> map = Map.of();
+                for (SReferenceLink rl : references) {
+                    DNode referenced = REFERENCE.get(rl).get(this);
+                    Object val = referenced != null ? referenced.dIdentity() : null;
+                    if (val == null) {
+                        return null;
+                    } else {
+                        map = map.put(rl, val);
+                    }
+                }
+                for (SContainmentLink cl : containments) {
+                    DNode child = SINGLE_CONTAINMENT.get(cl).get(this);
+                    Object val = child != null ? child.dIdentity() : null;
+                    if (val == null) {
+                        return null;
+                    } else {
+                        map = map.put(cl, val);
+                    }
+                }
+                return map;
             }
         }
     }
