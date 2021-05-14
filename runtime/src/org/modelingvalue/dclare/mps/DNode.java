@@ -33,6 +33,7 @@ import org.jetbrains.mps.openapi.model.ResolveInfo;
 import org.jetbrains.mps.openapi.model.SModel;
 import org.jetbrains.mps.openapi.model.SModelReference;
 import org.jetbrains.mps.openapi.model.SNode;
+import org.jetbrains.mps.openapi.model.SNodeAccessUtil;
 import org.jetbrains.mps.openapi.model.SNodeId;
 import org.jetbrains.mps.openapi.model.SNodeReference;
 import org.jetbrains.mps.openapi.model.SReference;
@@ -583,7 +584,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
         return getConcept();
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
+    @SuppressWarnings({"rawtypes", "unchecked", "deprecation"})
     @Override
     public Object dIdentity() {
         SConcept concept = getConcept();
@@ -600,7 +601,14 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
             }
             return map;
         } else if (concept.isSubConceptOf(SNodeUtil.concept_INamedConcept)) {
-            return PROPERTY.get(SNodeUtil.property_INamedConcept_name).get(this);
+            String name = SNodeAccessUtil.getProperty(this, SNodeUtil.property_INamedConcept_name);
+            if (name == null) {
+                SNode original = tryOriginal();
+                if (original != null) {
+                    name = dClareMPS().read(() -> SNodeAccessUtil.getProperty(original, SNodeUtil.property_INamedConcept_name));
+                }
+            }
+            return name;
         } else {
             Set<SReferenceLink> references = SINGLE_REFERENCES.get(concept);
             Set<SContainmentLink> containments = SINGLE_CONTAINMENTS.get(concept);
@@ -610,7 +618,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
                 Map<SAbstractLink, Object> map = Map.of();
                 for (SReferenceLink rl : references) {
                     DNode referenced = REFERENCE.get(rl).get(this);
-                    Object val = referenced != null ? referenced.dIdentity() : null;
+                    Object val = referenced != null ? referenced.dMatchingIdentity() : null;
                     if (val == null) {
                         return null;
                     } else {
@@ -619,7 +627,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
                 }
                 for (SContainmentLink cl : containments) {
                     DNode child = SINGLE_CONTAINMENT.get(cl).get(this);
-                    Object val = child != null ? child.dIdentity() : null;
+                    Object val = child != null ? child.dMatchingIdentity() : null;
                     if (val == null) {
                         return null;
                     } else {
