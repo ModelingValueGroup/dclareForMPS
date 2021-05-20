@@ -5,7 +5,7 @@
     <use id="28f9e497-3b42-4291-aeba-0a1039153ab1" name="jetbrains.mps.lang.plugin" version="5" />
     <use id="ef7bf5ac-d06c-4342-b11d-e42104eb9343" name="jetbrains.mps.lang.plugin.standalone" version="0" />
     <use id="f3061a53-9226-4cc5-a443-f952ceaf5816" name="jetbrains.mps.baseLanguage" version="11" />
-    <use id="7866978e-a0f0-4cc7-81bc-4d213d9375e1" name="jetbrains.mps.lang.smodel" version="17" />
+    <use id="7866978e-a0f0-4cc7-81bc-4d213d9375e1" name="jetbrains.mps.lang.smodel" version="18" />
     <use id="69b8a993-9b87-4d96-bf0c-3559f4bb0c63" name="jetbrains.mps.lang.slanguage" version="0" />
     <use id="aee9cad2-acd4-4608-aef2-0004f6a1cdbd" name="jetbrains.mps.lang.actions" version="4" />
     <use id="3ecd7c84-cde3-45de-886c-135ecc69b742" name="jetbrains.mps.lang.refactoring" version="0" />
@@ -54,6 +54,7 @@
     <import index="hyam" ref="6354ebe7-c22a-4a0f-ac54-50b52ab9b065/java:java.awt.event(JDK/)" />
     <import index="r791" ref="6354ebe7-c22a-4a0f-ac54-50b52ab9b065/java:javax.swing.text(JDK/)" />
     <import index="akim" ref="r:36c1ea3b-fbca-41f9-87cc-9bacb8f18c30(DclareMessages.behavior)" />
+    <import index="7e0v" ref="r:afc499bf-658e-47de-983c-b73f835c87e1(jetbrains.mps.ide.devkit.editor)" />
     <import index="7ggn" ref="r:38c3b7db-3776-47fb-ba27-a4f002c4edc7(DclareMPS.structure)" implicit="true" />
     <import index="tpck" ref="r:00000000-0000-4000-0000-011c89590288(jetbrains.mps.lang.core.structure)" implicit="true" />
   </imports>
@@ -4895,44 +4896,44 @@
       </node>
     </node>
     <node concept="2vPdvu" id="7POWRVZLtOx" role="2E2X74">
-      <node concept="2vPdvi" id="7POWRVZLtOy" role="2vPdvg">
-        <ref role="2vPdvl" to="w88:7POWRVZMxkx" resolve="Structure" />
+      <node concept="2vPdvi" id="4kOIfQjJz4B" role="2vPdvg">
+        <ref role="2vPdvl" to="7e0v:7POWRVZMxkx" resolve="Structure" />
       </node>
       <node concept="2vPdvi" id="7POWRVZLtOz" role="2vPdvg">
-        <ref role="2vPdvl" to="w88:2erTeUVF9WV" resolve="Editor" />
+        <ref role="2vPdvl" to="7e0v:2erTeUVF9WV" resolve="Editor" />
       </node>
       <node concept="2vPdvi" id="7POWRVZLtO$" role="2vPdvg">
-        <ref role="2vPdvl" to="w88:2erTeUVFa2t" resolve="Constraints" />
+        <ref role="2vPdvl" to="7e0v:2erTeUVFa2t" resolve="Constraints" />
       </node>
       <node concept="2vPdvi" id="7POWRVZLtO_" role="2vPdvg">
-        <ref role="2vPdvl" to="w88:2erTeUVEQFB" resolve="Behavior" />
+        <ref role="2vPdvl" to="7e0v:2erTeUVEQFB" resolve="Behavior" />
       </node>
       <node concept="2vPdvi" id="7POWRVZLtOA" role="2vPdvg">
-        <ref role="2vPdvl" to="w88:7POWRVZLtP_" resolve="Typesystem" />
+        <ref role="2vPdvl" to="7e0v:7POWRVZLtP_" resolve="Typesystem" />
       </node>
       <node concept="2vPdvi" id="3Qetf3cPeDq" role="2vPdvg">
         <ref role="2vPdvl" node="3E71z7ucbEa" resolve="Rules" />
       </node>
       <node concept="2vPdvi" id="7POWRVZLtOB" role="2vPdvg">
-        <ref role="2vPdvl" to="w88:2$SWsiCu1P0" resolve="Actions" />
+        <ref role="2vPdvl" to="7e0v:2$SWsiCu1P0" resolve="Actions" />
       </node>
       <node concept="2vPdvi" id="7POWRVZLtOC" role="2vPdvg">
-        <ref role="2vPdvl" to="w88:7POWRVZLtD_" resolve="Refactorings" />
+        <ref role="2vPdvl" to="7e0v:7POWRVZLtD_" resolve="Refactorings" />
       </node>
       <node concept="2vPdvi" id="7POWRVZLtOD" role="2vPdvg">
-        <ref role="2vPdvl" to="w88:2erTeUVFcrJ" resolve="Intentions" />
+        <ref role="2vPdvl" to="7e0v:2erTeUVFcrJ" resolve="Intentions" />
       </node>
       <node concept="2vPdvi" id="7POWRVZLtOE" role="2vPdvg">
-        <ref role="2vPdvl" to="w88:2erTeUVFaZh" resolve="Find Usages" />
+        <ref role="2vPdvl" to="7e0v:2erTeUVFaZh" resolve="Find Usages" />
       </node>
       <node concept="2vPdvi" id="7POWRVZLtOF" role="2vPdvg">
-        <ref role="2vPdvl" to="w88:2erTeUVFaEE" resolve="Data Flow" />
+        <ref role="2vPdvl" to="7e0v:2erTeUVFaEE" resolve="Data Flow" />
       </node>
       <node concept="2vPdvi" id="7POWRVZLtOG" role="2vPdvg">
-        <ref role="2vPdvl" to="w88:2erTeUVF2dY" resolve="Generator" />
+        <ref role="2vPdvl" to="7e0v:2erTeUVF2dY" resolve="Generator" />
       </node>
       <node concept="2vPdvi" id="7POWRVZLtOH" role="2vPdvg">
-        <ref role="2vPdvl" to="w88:7POWRVZLtO0" resolve="Textgen" />
+        <ref role="2vPdvl" to="7e0v:7POWRVZLtO0" resolve="Textgen" />
       </node>
     </node>
   </node>

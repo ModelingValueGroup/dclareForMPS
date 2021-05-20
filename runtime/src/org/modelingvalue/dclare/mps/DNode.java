@@ -852,6 +852,12 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
     }
 
     @Override
+    public void setReference(SReferenceLink role, SNodeReference target) {
+        SNode targetNode = dClareMPS().read(() -> target.resolve(null));
+        REFERENCE.get(role).set(this, DNode.of(targetNode.getConcept(), target, targetNode));
+    }
+
+    @Override
     public SReference getReference(SReferenceLink role) {
         DNode target = REFERENCE.get(role).get(this);
         return target != null ? new SReference() {

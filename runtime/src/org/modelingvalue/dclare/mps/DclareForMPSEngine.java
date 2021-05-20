@@ -20,7 +20,6 @@ import java.util.Set;
 import org.jetbrains.mps.openapi.module.SModule;
 import org.jetbrains.mps.openapi.util.ProgressMonitor;
 
-import com.intellij.openapi.application.ApplicationManager;
 import jetbrains.mps.classloading.ClassLoaderManager;
 import jetbrains.mps.classloading.DeployListener;
 import jetbrains.mps.ide.MPSCoreComponents;
@@ -30,22 +29,22 @@ import jetbrains.mps.project.ProjectBase;
 @SuppressWarnings("unused")
 public class DclareForMPSEngine implements DeployListener {
 
-    private final   ProjectBase         project;
-    protected final ClassLoaderManager  classLoaderManager;
-    private final   EngineStatusHandler engineStatusHandler;
-    private         DClareMPS           dClareMPS;
+    private final ProjectBase          project;
+    protected final ClassLoaderManager classLoaderManager;
+    private final EngineStatusHandler  engineStatusHandler;
+    private DClareMPS                  dClareMPS;
     //
-    private         boolean             onMode;
-    private         boolean             devMode;
-    private         int                 maxTotalNrOfChanges;
-    private         int                 maxNrOfChanges;
-    private         int                 maxNrOfObserved;
-    private         int                 maxNrOfObservers;
+    private boolean                    onMode;
+    private boolean                    devMode;
+    private int                        maxTotalNrOfChanges;
+    private int                        maxNrOfChanges;
+    private int                        maxNrOfObserved;
+    private int                        maxNrOfObservers;
 
     public DclareForMPSEngine(ProjectBase project, EngineStatusHandler engineStatusHandler) {
         this.engineStatusHandler = engineStatusHandler;
         this.project = project;
-        classLoaderManager = ApplicationManager.getApplication().getComponent(MPSCoreComponents.class).getClassLoaderManager();
+        classLoaderManager = MPSCoreComponents.getInstance().getPlatform().findComponent(ClassLoaderManager.class);
         classLoaderManager.addListener(this);
     }
 

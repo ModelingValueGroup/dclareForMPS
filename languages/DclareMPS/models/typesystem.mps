@@ -300,7 +300,7 @@
         <reference id="6677504323281689839" name="conceptDeclaraton" index="3bZ5Sy" />
       </concept>
       <concept id="1182511038748" name="jetbrains.mps.lang.smodel.structure.Model_NodesIncludingImportedOperation" flags="nn" index="1j9C0f">
-        <reference id="1182511038750" name="concept" index="1j9C0d" />
+        <child id="6750920497477143623" name="conceptArgument" index="3MHPCF" />
       </concept>
       <concept id="1139613262185" name="jetbrains.mps.lang.smodel.structure.Node_GetParentOperation" flags="nn" index="1mfA1w" />
       <concept id="1139621453865" name="jetbrains.mps.lang.smodel.structure.Node_IsInstanceOfOperation" flags="nn" index="1mIQ4w">
@@ -1108,7 +1108,9 @@
                 </node>
               </node>
               <node concept="1j9C0f" id="29R9$zZ9oKT" role="2OqNvi">
-                <ref role="1j9C0d" to="tpce:f_TJgxE" resolve="LinkDeclaration" />
+                <node concept="chp4Y" id="4xj8D$p0kjr" role="3MHPCF">
+                  <ref role="cht4Q" to="tpce:f_TJgxE" resolve="LinkDeclaration" />
+                </node>
               </node>
             </node>
             <node concept="3zZkjj" id="29R9$zZ9oKU" role="2OqNvi">
