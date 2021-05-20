@@ -25,7 +25,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.jetbrains.mps.openapi.model.SModel;
@@ -49,6 +49,7 @@ import org.modelingvalue.collections.util.TriConsumer;
 import org.modelingvalue.collections.util.Triple;
 import org.modelingvalue.dclare.Action;
 import org.modelingvalue.dclare.Constant;
+import org.modelingvalue.dclare.DclareConfig;
 import org.modelingvalue.dclare.ImperativeTransaction;
 import org.modelingvalue.dclare.LeafTransaction;
 import org.modelingvalue.dclare.Mutable;
@@ -204,7 +205,16 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
         if (TRACE) {
             System.err.println(DCLARE + "START " + this);
         }
-        universeTransaction = new UniverseTransaction(this, thePool, prevState, 100, devMode, maxTotalNrOfChanges, maxNrOfChanges, maxNrOfObserved, maxNrOfObservers, 4, null) {
+        DclareConfig config = new DclareConfig()
+                .withStart(prevState)
+                .withDevMode(devMode)
+                .withMaxInInQueue(100)
+                .withMaxTotalNrOfChanges(maxTotalNrOfChanges)
+                .withMaxNrOfChanges(maxNrOfChanges)
+                .withMaxNrOfObserved(maxNrOfObserved)
+                .withMaxNrOfObservers(maxNrOfObservers)
+                .withMaxNrOfHistory(4);
+        universeTransaction = new UniverseTransaction(this, thePool, config) {
 
             @Override
             public void start(Action<Universe> action) {

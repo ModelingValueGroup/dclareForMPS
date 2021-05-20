@@ -301,7 +301,9 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
     @Override
     protected void addOriginal(SModel sModel) {
         SModuleBase sModule = (SModuleBase) getModule().original();
-        sModule.registerModel((SModelBase) sModel);
+        if (!sModule.getModels().contains(sModel)) {
+            sModule.registerModel((SModelBase) sModel);
+        }
     }
 
     @Override
