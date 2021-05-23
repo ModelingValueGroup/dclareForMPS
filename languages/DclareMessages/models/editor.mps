@@ -45,9 +45,11 @@
       <concept id="1186414536763" name="jetbrains.mps.lang.editor.structure.BooleanStyleSheetItem" flags="ln" index="VOi$J">
         <property id="1186414551515" name="flag" index="VOm3f" />
       </concept>
+      <concept id="1186414976055" name="jetbrains.mps.lang.editor.structure.DrawBorderStyleClassItem" flags="ln" index="VPXOz" />
       <concept id="1186415722038" name="jetbrains.mps.lang.editor.structure.FontSizeStyleClassItem" flags="ln" index="VSNWy">
         <property id="1221209241505" name="value" index="1lJzqX" />
       </concept>
+      <concept id="1214406454886" name="jetbrains.mps.lang.editor.structure.TextBackgroundColorStyleClassItem" flags="ln" index="30gYXW" />
       <concept id="1139535219966" name="jetbrains.mps.lang.editor.structure.CellActionMapDeclaration" flags="ig" index="1h_SRR">
         <reference id="1139535219968" name="applicableConcept" index="1h_SK9" />
         <child id="1139535219969" name="item" index="1h_SK8" />
@@ -132,7 +134,6 @@
         <reference id="1144433057691" name="classifier" index="1PxDUh" />
       </concept>
       <concept id="1070534058343" name="jetbrains.mps.baseLanguage.structure.NullLiteral" flags="nn" index="10Nm6u" />
-      <concept id="1070534644030" name="jetbrains.mps.baseLanguage.structure.BooleanType" flags="in" index="10P_77" />
       <concept id="1070534934090" name="jetbrains.mps.baseLanguage.structure.CastExpression" flags="nn" index="10QFUN">
         <child id="1070534934091" name="type" index="10QFUM" />
         <child id="1070534934092" name="expression" index="10QFUP" />
@@ -251,9 +252,11 @@
         <node concept="3F0A7n" id="3zaVTDewP2f" role="3EZMnx">
           <ref role="1NtTu8" to="wknp:1DUQ$OwrN1P" resolve="engineState" />
           <ref role="1ERwB7" node="3jy5t$Kpvrt" resolve="OnOffAction" />
-          <ref role="1k5W1q" to="tpen:hgVS8CF" resolve="KeyWord" />
-          <node concept="VechU" id="3zaVTDeDWzy" role="3F10Kt">
-            <property role="Vb096" value="g1_qRwE/darkGreen" />
+          <node concept="VPXOz" id="stpt8kgRS0" role="3F10Kt">
+            <property role="VOm3f" value="true" />
+          </node>
+          <node concept="30gYXW" id="stpt8kihYn" role="3F10Kt">
+            <property role="Vb096" value="hEZAO13/white" />
           </node>
         </node>
         <node concept="3F0ifn" id="3zaVTDeDWup" role="3EZMnx">
@@ -960,64 +963,63 @@
               </node>
             </node>
           </node>
-          <node concept="3cpWs8" id="3zaVTDevx$N" role="3cqZAp">
-            <node concept="3cpWsn" id="3zaVTDevx$O" role="3cpWs9">
-              <property role="TrG5h" value="devMode" />
-              <node concept="10P_77" id="3zaVTDevuTS" role="1tU5fm" />
-              <node concept="2OqwBi" id="3zaVTDevx$P" role="33vP2m">
-                <node concept="37vLTw" id="3zaVTDevx$Q" role="2Oq$k0">
-                  <ref role="3cqZAo" node="3jy5t$KXxKT" resolve="engine" />
-                </node>
-                <node concept="liA8E" id="3zaVTDevx$R" role="2OqNvi">
-                  <ref role="37wK5l" to="t4tl:~DclareForMPSEngine.isDevMode()" resolve="isDevMode" />
-                </node>
-              </node>
-            </node>
-          </node>
-          <node concept="3clFbF" id="2zQzbHIR_vM" role="3cqZAp">
-            <node concept="2OqwBi" id="2zQzbHIR_IA" role="3clFbG">
-              <node concept="37vLTw" id="2zQzbHIR_vK" role="2Oq$k0">
+          <node concept="3clFbF" id="2yBFF$$gGTo" role="3cqZAp">
+            <node concept="2OqwBi" id="2yBFF$$gI9I" role="3clFbG">
+              <node concept="37vLTw" id="2yBFF$$gHZW" role="2Oq$k0">
                 <ref role="3cqZAo" node="3jy5t$KXxKT" resolve="engine" />
               </node>
-              <node concept="liA8E" id="2zQzbHIR_Sp" role="2OqNvi">
-                <ref role="37wK5l" to="t4tl:~DclareForMPSEngine.setModes(boolean,boolean)" resolve="setModes" />
-                <node concept="3clFbT" id="2zQzbHIRASP" role="37wK5m" />
-                <node concept="37vLTw" id="3zaVTDevx$S" role="37wK5m">
-                  <ref role="3cqZAo" node="3zaVTDevx$O" resolve="devMode" />
+              <node concept="liA8E" id="2yBFF$$gInu" role="2OqNvi">
+                <ref role="37wK5l" to="t4tl:~DclareForMPSEngine.setConfig(org.modelingvalue.dclare.mps.DclareForMpsConfig)" resolve="setConfig" />
+                <node concept="2OqwBi" id="2yBFF$$gHq5" role="37wK5m">
+                  <node concept="2OqwBi" id="2yBFF$$gH4d" role="2Oq$k0">
+                    <node concept="37vLTw" id="2yBFF$$gGTm" role="2Oq$k0">
+                      <ref role="3cqZAo" node="3jy5t$KXxKT" resolve="engine" />
+                    </node>
+                    <node concept="liA8E" id="2yBFF$$gHhb" role="2OqNvi">
+                      <ref role="37wK5l" to="t4tl:~DclareForMPSEngine.getConfig()" resolve="getConfig" />
+                    </node>
+                  </node>
+                  <node concept="liA8E" id="2yBFF$$gHCY" role="2OqNvi">
+                    <ref role="37wK5l" to="t4tl:~DclareForMpsConfig.withOnMode(boolean)" resolve="withOnMode" />
+                    <node concept="3clFbT" id="2yBFF$$gHDM" role="37wK5m" />
+                  </node>
                 </node>
               </node>
             </node>
           </node>
-          <node concept="3clFbJ" id="3zaVTDevxKm" role="3cqZAp">
-            <node concept="3y3z36" id="3zaVTDevz7G" role="3clFbw">
-              <node concept="2OqwBi" id="3zaVTDevxXt" role="3uHU7B">
-                <node concept="0IXxy" id="3zaVTDevxXu" role="2Oq$k0" />
-                <node concept="3TrcHB" id="3zaVTDevxXv" role="2OqNvi">
-                  <ref role="3TsBF5" to="wknp:1DUQ$OwrN1P" resolve="engineState" />
-                </node>
+          <node concept="3clFbF" id="2yBFF$$gI$L" role="3cqZAp">
+            <node concept="2OqwBi" id="2yBFF$$gI$M" role="3clFbG">
+              <node concept="37vLTw" id="2yBFF$$gI$N" role="2Oq$k0">
+                <ref role="3cqZAo" node="3jy5t$KXxKT" resolve="engine" />
               </node>
-              <node concept="2OqwBi" id="3zaVTDevxXq" role="3uHU7w">
-                <node concept="1XH99k" id="3zaVTDevxXr" role="2Oq$k0">
-                  <ref role="1XH99l" to="wknp:3zaVTDeuva_" resolve="EngineOperationState" />
-                </node>
-                <node concept="2ViDtV" id="3zaVTDevy6X" role="2OqNvi">
-                  <ref role="2ViDtZ" to="wknp:3zaVTDeuvaE" resolve="on" />
-                </node>
-              </node>
-            </node>
-            <node concept="3clFbS" id="3zaVTDevygi" role="3clFbx">
-              <node concept="3clFbF" id="3zaVTDevy_A" role="3cqZAp">
-                <node concept="2OqwBi" id="3zaVTDevy_B" role="3clFbG">
-                  <node concept="37vLTw" id="3zaVTDevy_C" role="2Oq$k0">
-                    <ref role="3cqZAo" node="3jy5t$KXxKT" resolve="engine" />
-                  </node>
-                  <node concept="liA8E" id="3zaVTDevy_D" role="2OqNvi">
-                    <ref role="37wK5l" to="t4tl:~DclareForMPSEngine.setModes(boolean,boolean)" resolve="setModes" />
-                    <node concept="3clFbT" id="3zaVTDevyLn" role="37wK5m">
-                      <property role="3clFbU" value="true" />
+              <node concept="liA8E" id="2yBFF$$gI$O" role="2OqNvi">
+                <ref role="37wK5l" to="t4tl:~DclareForMPSEngine.setConfig(org.modelingvalue.dclare.mps.DclareForMpsConfig)" resolve="setConfig" />
+                <node concept="2OqwBi" id="2yBFF$$gI$P" role="37wK5m">
+                  <node concept="2OqwBi" id="2yBFF$$gI$Q" role="2Oq$k0">
+                    <node concept="37vLTw" id="2yBFF$$gI$R" role="2Oq$k0">
+                      <ref role="3cqZAo" node="3jy5t$KXxKT" resolve="engine" />
                     </node>
-                    <node concept="37vLTw" id="3zaVTDevy_I" role="37wK5m">
-                      <ref role="3cqZAo" node="3zaVTDevx$O" resolve="devMode" />
+                    <node concept="liA8E" id="2yBFF$$gI$S" role="2OqNvi">
+                      <ref role="37wK5l" to="t4tl:~DclareForMPSEngine.getConfig()" resolve="getConfig" />
+                    </node>
+                  </node>
+                  <node concept="liA8E" id="2yBFF$$gI$T" role="2OqNvi">
+                    <ref role="37wK5l" to="t4tl:~DclareForMpsConfig.withOnMode(boolean)" resolve="withOnMode" />
+                    <node concept="3y3z36" id="3zaVTDevz7G" role="37wK5m">
+                      <node concept="2OqwBi" id="3zaVTDevxXt" role="3uHU7B">
+                        <node concept="0IXxy" id="3zaVTDevxXu" role="2Oq$k0" />
+                        <node concept="3TrcHB" id="3zaVTDevxXv" role="2OqNvi">
+                          <ref role="3TsBF5" to="wknp:1DUQ$OwrN1P" resolve="engineState" />
+                        </node>
+                      </node>
+                      <node concept="2OqwBi" id="3zaVTDevxXq" role="3uHU7w">
+                        <node concept="1XH99k" id="3zaVTDevxXr" role="2Oq$k0">
+                          <ref role="1XH99l" to="wknp:3zaVTDeuva_" resolve="EngineOperationState" />
+                        </node>
+                        <node concept="2ViDtV" id="3zaVTDevy6X" role="2OqNvi">
+                          <ref role="2ViDtZ" to="wknp:3zaVTDeuvaE" resolve="on" />
+                        </node>
+                      </node>
                     </node>
                   </node>
                 </node>

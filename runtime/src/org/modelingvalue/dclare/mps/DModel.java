@@ -16,6 +16,7 @@
 package org.modelingvalue.dclare.mps;
 
 import java.util.Collections;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -63,9 +64,8 @@ import jetbrains.mps.smodel.SModelInternal;
 @SuppressWarnings("unused")
 public class DModel extends DMatchedObject<DModel, SModelReference, SModel> implements SModel {
 
-    private static final boolean                                                            TRACE_ACTIVATION = Boolean.getBoolean("TRACE_ACTIVATION");
 
-    private static final Constant<Triple<Set<SLanguage>, Boolean, Set<String>>, DModelType> MODEL_TYPE       = Constant.of("MODEL_TYPE", t -> new DModelType(t));
+    private static final Constant<Triple<Set<SLanguage>, Boolean, Set<String>>, DModelType> MODEL_TYPE = Constant.of("MODEL_TYPE", DModelType::new);
 
     protected static final DObserved<DModel, String>                                        NAME             = DObserved.of("NAME", null, (dModel, pre, post) -> {
                                                                                                                  if (post != null) {
@@ -96,8 +96,8 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
                                                                                                              }, SetableModifier.containment);
 
     protected static final DObserved<DModel, Set<SLanguage>>                                USED_LANGUAGES   = DObserved.of("USED_LANGUAGES", Set.of(), (dModel, pre, post) -> {
-                                                                                                                 SModelInternal sModel = (SModelInternal) dModel.original();
-                                                                                                                 Set<SLanguage> ist = Collection.of(((SModelInternal) sModel).importedLanguageIds()).sequential().toSet();
+        SModelInternal sModel = (SModelInternal) dModel.original();
+        Set<SLanguage> ist    = Collection.of(sModel.importedLanguageIds()).sequential().toSet();
                                                                                                                  if (!post.equals(ist)) {
                                                                                                                      DObserved.map(ist, post, sModel::addLanguage, sModel::deleteLanguageId);
                                                                                                                      return true;
@@ -108,9 +108,9 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
 
     protected static final DObserved<DModel, Set<DModel>>                                   USED_MODELS      = DObserved.of("USED_MODELS", Set.of(), (o, pre, post) -> {
                                                                                                                  if (!o.isExternal() && o.isActive()) {
-                                                                                                                     SModelInternal sModel = (SModelInternal) o.original();
-                                                                                                                     Set<SModelReference> soll = post.map(DModel::reference).notNull().toSet();
-                                                                                                                     Set<SModelReference> ist = Collection.of(((SModelInternal) sModel).getModelImports()).sequential().toSet();
+                                                                                                                     SModelInternal       sModel = (SModelInternal) o.original();
+                                                                                                                     Set<SModelReference> soll   = post.map(DModel::reference).notNull().toSet();
+                                                                                                                     Set<SModelReference> ist    = Collection.of(sModel.getModelImports()).sequential().toSet();
                                                                                                                      if (!soll.equals(ist)) {
                                                                                                                          DObserved.map(ist, soll, sModel::addModelImport, sModel::deleteModelImport);
                                                                                                                          return true;
@@ -122,10 +122,10 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
     protected static final Observed<DModel, ModelRoot>                                      MODEL_ROOT       = Observed.of("MODEL_ROOT", null, SetableModifier.doNotCheckConsistency);
 
     private static final Action<DModel>                                                     READ_ROOTS       = Action.of("$READ_ROOTS", m -> {
-                                                                                                                 SModel sModel = m.tryOriginal();
-                                                                                                                 MODEL_ROOT.set(m, dClareMPS().read(() -> sModel.getModelRoot()));
-                                                                                                                 ROOTS.set(m, dClareMPS().read(() -> Collection.of(sModel.getRootNodes()).sequential().map(DNode::read).toSet()));
-                                                                                                             }, Priority.urgent);
+        SModel sModel = Objects.requireNonNull(m.tryOriginal());
+        MODEL_ROOT.set(m, dClareMPS().read(sModel::getModelRoot));
+        ROOTS.set(m, dClareMPS().read(() -> Collection.of(sModel.getRootNodes()).sequential().map(DNode::read).toSet()));
+    }, Priority.urgent);
 
     private static final Action<DModel>                                                     READ_NAME        = Action.of("$READ_NAME", m -> {
                                                                                                                  SModel sModel = m.tryOriginal();
@@ -151,12 +151,12 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
                                                                                                                  }
                                                                                                              }, Priority.urgent);
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
+    @SuppressWarnings({"rawtypes", "unchecked", "RedundantSuppression"})
     protected static final DObserved<DModel, Boolean>                                       ACTIVE           = DObserved.of("ACTIVE", Boolean.FALSE, null, (tx, m, pre, post) -> {
                                                                                                                  if (!pre && post) {
                                                                                                                      SModel sModel = m.tryOriginal();
                                                                                                                      if (sModel != null) {
-                                                                                                                         if (TRACE_ACTIVATION) {
+                                                                                                                         if (dClareMPS().getConfig().isTraceActivation()) {
                                                                                                                              System.err.println("DCLARE: ACTIVATE " + sModel.getName() + " (external = " + m.isExternal() + ")");
                                                                                                                          }
                                                                                                                          if (!m.isExternal()) {
@@ -172,7 +172,7 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
     private static final Action<DModel>                                                     READ_LOADED      = Action.of("$READ_LOADED", m -> {
                                                                                                                  SModel sModel = m.tryOriginal();
                                                                                                                  if (sModel != null) {
-                                                                                                                     LOADED.set(m, dClareMPS().read(() -> sModel.isLoaded()));
+                                                                                                                     LOADED.set(m, dClareMPS().read(sModel::isLoaded));
                                                                                                                  }
                                                                                                              }, Priority.urgent);
 
@@ -290,7 +290,7 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
     }
 
     private SModel createFileModel(String modelName, SModuleBase sModule) {
-        DefaultModelRoot fbmr = (DefaultModelRoot) StreamSupport.stream(sModule.getModelRoots().spliterator(), false).filter(r -> r instanceof DefaultModelRoot).findAny().get();
+        DefaultModelRoot fbmr = (DefaultModelRoot) StreamSupport.stream(sModule.getModelRoots().spliterator(), false).filter(r -> r instanceof DefaultModelRoot).findAny().orElseThrow();
         try {
             return fbmr.createFileModel(modelName, null);
         } catch (ModelCannotBeCreatedException e) {
@@ -373,6 +373,7 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
     @Override
     public SModelName getName() {
         String name = NAME.get(this);
+        //noinspection ConstantConditions
         return name != null ? new SModelName(name) : null;
     }
 
@@ -386,6 +387,7 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
 
     @Override
     public SModelReference getReference() {
+        //noinspection ConstantConditions
         return reference();
     }
 
@@ -448,6 +450,7 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
     @Override
     public DataSource getSource() {
         SModel sModel = tryOriginal();
+        //noinspection ConstantConditions
         return sModel != null ? sModel.getSource() : null;
     }
 

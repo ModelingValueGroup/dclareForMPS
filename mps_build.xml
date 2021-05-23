@@ -42,17 +42,17 @@
     <mkdir dir="${build.tmp}/default/DclareForMPS.zip/DclareForMPS" />
     <mkdir dir="${build.tmp}/default/DclareForMPS.zip/DclareForMPS/META-INF" />
     <echoxml file="${build.tmp}/default/DclareForMPS.zip/DclareForMPS/META-INF/plugin.xml">
-      <idea-plugin xmlns:xi="http://www.w3.org/2001/XInclude">
-        <id>DclareForMPS</id>
-        <name>DclareForMPS</name>
-        <description>dclare for MPS - rule based programming for MPS </description>
-        <version>${fullVersion}</version>
-        <vendor url="https://www.modelingvalue.nl">Modeling Value Group</vendor>
-        <depends>jetbrains.mps.core</depends>
-        <depends>jetbrains.mps.ide.devkit</depends>
-        <depends>jetbrains.mps.build</depends>
-        <depends>com.intellij.modules.mps</depends>
-        <idea-version since-build="211.0000.0000" until-build="211.7142.1222" />
+        <idea-plugin>
+            <id>DclareForMPS</id>
+            <name>DclareForMPS</name>
+            <description>dclare for MPS - rule based programming for MPS</description>
+            <version>${fullVersion}</version>
+            <vendor url="https://www.modelingvalue.nl">Modeling Value Group</vendor>
+            <depends>jetbrains.mps.core</depends>
+            <depends>jetbrains.mps.ide.devkit</depends>
+            <depends>jetbrains.mps.build</depends>
+            <depends>com.intellij.modules.mps</depends>
+            <idea-version since-build="211.7142.1222" until-build="211.8000.0000"/>
         
         <extensions defaultExtensionNs="com.intellij">
           <mps.LanguageLibrary dir="/languages" />

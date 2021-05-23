@@ -49,7 +49,6 @@ import org.modelingvalue.collections.util.TriConsumer;
 import org.modelingvalue.collections.util.Triple;
 import org.modelingvalue.dclare.Action;
 import org.modelingvalue.dclare.Constant;
-import org.modelingvalue.dclare.DclareConfig;
 import org.modelingvalue.dclare.ImperativeTransaction;
 import org.modelingvalue.dclare.LeafTransaction;
 import org.modelingvalue.dclare.Mutable;
@@ -101,38 +100,26 @@ import jetbrains.mps.smodel.language.LanguageRegistry;
 import jetbrains.mps.smodel.language.LanguageRuntime;
 
 public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, UncaughtExceptionHandler {
+    protected static       Setable<DClareMPS, Map<String, DAttribute<?, ?>>>                               ATTRIBUTE_MAP        = Setable.of("ATTRIBUTE_MAP", Map.of());
+    protected static       Setable<DClareMPS, Map<String, SStructClass>>                                   STRUCT_CLASS_MAP     = Setable.of("STRUCT_CLASS_MAP", Map.of());
+    private static final   CopyOnWriteArrayList<DClareMPS>                                                 ALL                  = new CopyOnWriteArrayList<>();
+    private static final   Set<DMessageType>                                                               MESSAGE_TYPES        = Collection.of(DMessageType.values()).toSet();
+    private static final   QualifiedSet<Triple<DObject, DFeature, String>, DMessage>                       MESSAGE_QSET         = QualifiedSet.of(m -> Triple.of(m.context(), m.feature(), m.id()));
+    protected static final Map<DMessageType, QualifiedSet<Triple<DObject, DFeature, String>, DMessage>>    MESSAGE_QSET_MAP     = MESSAGE_TYPES.sequential().toMap(t -> Entry.of(t, MESSAGE_QSET));
+    private static final   MutableClass                                                                    UNIVERSE_CLASS       = new MutableClass() {
+        @Override
+        public Collection<? extends Observer<?>> dObservers() {
+            return Collection.of();
+        }
 
-    protected static Setable<DClareMPS, Map<String, DAttribute<?, ?>>>                                  ATTRIBUTE_MAP        = Setable.of("ATTRIBUTE_MAP", Map.of());
-    //
-    protected static Setable<DClareMPS, Map<String, SStructClass>>                                      STRUCT_CLASS_MAP     = Setable.of("STRUCT_CLASS_MAP", Map.of());
-    //
-    private static final CopyOnWriteArrayList<DClareMPS>                                                ALL                  = new CopyOnWriteArrayList<>();
-    //
-    private static final Set<DMessageType>                                                              MESSAGE_TYPES        = Collection.of(DMessageType.values()).toSet();
-    //
-    private static final QualifiedSet<Triple<DObject, DFeature, String>, DMessage>                      MESSAGE_QSET         = QualifiedSet.of(m -> Triple.of(m.context(), m.feature(), m.id()));
-    //
-    protected static final Map<DMessageType, QualifiedSet<Triple<DObject, DFeature, String>, DMessage>> MESSAGE_QSET_MAP     = MESSAGE_TYPES.sequential().toMap(t -> Entry.of(t, MESSAGE_QSET));
-    //
-    private static final MutableClass                                                                   UNIVERSE_CLASS       = new MutableClass() {
-                                                                                                                                 @Override
-                                                                                                                                 public Collection<? extends Observer<?>> dObservers() {
-                                                                                                                                     return Collection.of();
-                                                                                                                                 }
-
-                                                                                                                                 @Override
-                                                                                                                                 public Collection<? extends Setable<? extends Mutable, ?>> dSetables() {
-                                                                                                                                     return SETABLES;
-                                                                                                                                 }
-                                                                                                                             };
-    //
-    protected static final boolean                                                                      TRACE                = Boolean.getBoolean("DCLARE_TRACE");
-    //
-    protected static final String                                                                       DCLARE               = "---------> DCLARE ";
-    //
-    private final ThreadLocal<Boolean>                                                                  COMMITTING           = ThreadLocal.withInitial(() -> false);
-    //
-    public final static Observed<DClareMPS, Set<SLanguage>>                                             ALL_LANGUAGES        = Observed.of("ALL_LANGAUGES", Set.of(),                                             //
+        @Override
+        public Collection<? extends Setable<? extends Mutable, ?>> dSetables() {
+            return SETABLES;
+        }
+    };
+    protected static final String                                                                          DCLARE               = "---------> DCLARE ";
+    private final          ThreadLocal<Boolean>                                                            COMMITTING           = ThreadLocal.withInitial(() -> false);
+    public final static    Observed<DClareMPS, Set<SLanguage>>                                             ALL_LANGUAGES        = Observed.of("ALL_LANGAUGES", Set.of(),                                             //
             (tx, d, o, n) -> Setable.<Set<SLanguage>, SLanguage> diff(o, n,                                                                                                                                       //
                     a -> DClareMPS.RULE_SETS.get(a).forEachOrdered(                                                                                                                                               //
                             rs -> {                                                                                                                                                                               //
@@ -141,51 +128,48 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
                             }),                                                                                                                                                                                   //
                     r -> {                                                                                                                                                                                        //
                     }), SetableModifier.doNotCheckConsistency);
+    public final static    Constant<SLanguage, Set<IRuleSet>>                                              RULE_SETS            = Constant.of("RULE_SETS", Set.of(), language -> {
+        LanguageRuntime rtLang = registry().getLanguage(language);
+        IRuleAspect     aspect = rtLang != null ? rtLang.getAspect(IRuleAspect.class) : null;
+        return aspect != null ? Collection.of(aspect.getRuleSets()).toSet() : Set.of();
+    });
+    private final static   Setable<DClareMPS, DRepository>                                                 REPOSITORY_CONTAINER = Setable.of("REPOSITORY_CONTAINER", null, SetableModifier.containment);
+    protected static final Set<? extends Setable<? extends Mutable, ?>>                                    SETABLES             = Set.of(REPOSITORY_CONTAINER);
     //
-    public final static Constant<SLanguage, Set<IRuleSet>>                                              RULE_SETS            = Constant.of("RULE_SETS", Set.of(), language -> {
-                                                                                                                                 LanguageRuntime rtLang = registry().getLanguage(language);
-                                                                                                                                 IRuleAspect aspect = rtLang != null ? rtLang.getAspect(IRuleAspect.class) : null;
-                                                                                                                                 return aspect != null ? Collection.of(aspect.getRuleSets()).toSet() : Set.of();
-                                                                                                                             });
-    //
-    private final static Setable<DClareMPS, DRepository>                                                REPOSITORY_CONTAINER = Setable.of("REPOSITORY_CONTAINER", null, SetableModifier.containment);
-    //
-    protected static final Set<? extends Setable<? extends Mutable, ?>>                                 SETABLES             = Set.of(REPOSITORY_CONTAINER);
-    //
-    private final ContextPool                                                                           thePool              = ContextThread.createPool(this);
-    private final UniverseTransaction                                                                   universeTransaction;
-    protected final ProjectBase                                                                         project;
-    private final ModelAccess                                                                           modelAccess;
-    private final EngineStatusHandler                                                                   engineStatusHandler;
-    private ImperativeTransaction                                                                       imperativeTransaction;
-    private boolean                                                                                     running;
-    protected final Concurrent<ReusableTransaction<DRule.DObserver<?>, DRule.DObserverTransaction>>     dObserverTransactions;
-    protected final Concurrent<ReusableTransaction<DNode.DCopyObserver, DNode.DCopyTransaction>>        dCopyObserverTransactions;
-    protected Map<DMessageType, QualifiedSet<Triple<DObject, DFeature, String>, DMessage>>              messages             = MESSAGE_QSET_MAP;
-    private Thread                                                                                      commandThread;
-    protected final DclareForMPSEngine                                                                  engine;
-    private final DRepository                                                                           dRepository;
-    private final ModuleChecker                                                                         moduleChecker;
-    private final ModelChecker                                                                          modelChecker;
-    private final NodeChecker                                                                           nodeChecker;
-    private final LanguageEditorChecker                                                                 languageEditorChecker;
-    private final IAbstractChecker<ItemsToCheck, IssueKindReportItem>                                   mpsChecker;
-    private final MPSDeltaAdapter                                                                       deltaAdapter;
-    private final Concurrent<Set<SModel>>                                                               changedModels        = Concurrent.of(Set.of());
-    private final Concurrent<Set<SModule>>                                                              changedModules       = Concurrent.of(Set.of());
-    private final Concurrent<Set<SNode>>                                                                changedRoots         = Concurrent.of(Set.of());
-    private final AtomicLong                                                                            counter              = new AtomicLong(0L);
+    private final          ContextPool                                                                     thePool              = ContextThread.createPool(this);
+    private final          UniverseTransaction                                                             universeTransaction;
+    private final          DclareForMpsConfig                                                              config;
+    protected final        ProjectBase                                                                     project;
+    private final          ModelAccess                                                                     modelAccess;
+    private                ImperativeTransaction                                                           imperativeTransaction;
+    private                boolean                                                                         running;
+    protected final        Concurrent<ReusableTransaction<DRule.DObserver<?>, DRule.DObserverTransaction>> dObserverTransactions;
+    protected final        Concurrent<ReusableTransaction<DNode.DCopyObserver, DNode.DCopyTransaction>>    dCopyObserverTransactions;
+    protected              Map<DMessageType, QualifiedSet<Triple<DObject, DFeature, String>, DMessage>>    messages             = MESSAGE_QSET_MAP;
+    private                Thread                                                                          commandThread;
+    protected final        DclareForMPSEngine                                                              engine;
+    private final          DRepository                                                                     dRepository;
+    private final          ModuleChecker                                                                   moduleChecker;
+    private final          ModelChecker                                                                    modelChecker;
+    private final          NodeChecker                                                                     nodeChecker;
+    private final          LanguageEditorChecker                                                           languageEditorChecker;
+    private final          IAbstractChecker<ItemsToCheck, IssueKindReportItem>                             mpsChecker;
+    private final          MPSDeltaAdapter                                                                 deltaAdapter;
+    private final          Concurrent<Set<SModel>>                                                         changedModels        = Concurrent.of(Set.of());
+    private final          Concurrent<Set<SModule>>                                                        changedModules       = Concurrent.of(Set.of());
+    private final          Concurrent<Set<SNode>>                                                          changedRoots         = Concurrent.of(Set.of());
+    private final          AtomicLong                                                                      counter              = new AtomicLong(0L);
 
-    protected DClareMPS(DclareForMPSEngine engine, ProjectBase project, State prevState, boolean devMode, int maxTotalNrOfChanges, int maxNrOfChanges, int maxNrOfObserved, int maxNrOfObservers, EngineStatusHandler engineStatusHandler) {
+    protected DClareMPS(DclareForMPSEngine engine, ProjectBase project, DclareForMpsConfig config) {
+        this.config  = config;
         this.project = project;
-        modelAccess = project.getModelAccess();
-        this.engine = engine;
-        this.engineStatusHandler = engineStatusHandler;
+        modelAccess  = project.getModelAccess();
+        this.engine  = engine;
         ProjectRepository projectRepository = (ProjectRepository) project.getRepository();
-        this.dRepository = new DRepository(projectRepository);
-        this.moduleChecker = new ModuleChecker();
-        this.modelChecker = new ModelChecker();
-        this.nodeChecker = new NodeChecker();
+        this.dRepository           = new DRepository(projectRepository);
+        this.moduleChecker         = new ModuleChecker();
+        this.modelChecker          = new ModelChecker();
+        this.nodeChecker           = new NodeChecker();
         this.languageEditorChecker = new LanguageEditorChecker(projectRepository, Collections.singletonList(new NodeCheckerInEditor()));
         CheckerRegistry checkerRegistry = project.getPlatform().findComponent(CheckerRegistry.class);
         assert checkerRegistry != null;
@@ -200,32 +184,23 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
         highlighter.addChecker(languageEditorChecker);
         modelAccess.executeCommandInEDT(() -> {
             commandThread = Thread.currentThread();
-            this.engineStatusHandler.on(project, this);
+            config.getStatusHandler().on(project, this);
         });
-        if (TRACE) {
+        if (config.isTraceDclare()) {
             System.err.println(DCLARE + "START " + this);
         }
-        DclareConfig config = new DclareConfig()
-                .withStart(prevState)
-                .withDevMode(devMode)
-                .withMaxInInQueue(100)
-                .withMaxTotalNrOfChanges(maxTotalNrOfChanges)
-                .withMaxNrOfChanges(maxNrOfChanges)
-                .withMaxNrOfObserved(maxNrOfObserved)
-                .withMaxNrOfObservers(maxNrOfObservers)
-                .withMaxNrOfHistory(4);
-        universeTransaction = new UniverseTransaction(this, thePool, config) {
+        universeTransaction            = new UniverseTransaction(this, thePool, config.getDclareConfig()) {
 
             @Override
             public void start(Action<Universe> action) {
-                if (TRACE) {
+                if (config.isTraceDclare()) {
                     System.err.println(DCLARE + "START ACTION " + action + "  " + this);
                 }
             }
 
             @Override
             public void end(Action<Universe> action) {
-                if (TRACE) {
+                if (config.isTraceDclare()) {
                     System.err.println(DCLARE + "END ACTION   " + action + "  " + this);
                 }
             }
@@ -256,11 +231,15 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
             }
 
         };
-        deltaAdapter = NetUtils.isActive() ? new MPSDeltaAdapter("mps-sync", universeTransaction, new MPSSerializationHelper(projectRepository)) : null;
-        this.dObserverTransactions = Concurrent.of(() -> new ReusableTransaction<>(universeTransaction));
+        deltaAdapter                   = NetUtils.isActive() ? new MPSDeltaAdapter("mps-sync", universeTransaction, new MPSSerializationHelper(projectRepository)) : null;
+        this.dObserverTransactions     = Concurrent.of(() -> new ReusableTransaction<>(universeTransaction));
         this.dCopyObserverTransactions = Concurrent.of(() -> new ReusableTransaction<>(universeTransaction));
         new ShutdownHelperThread();
         new StatsUpdaterThread();
+    }
+
+    public DclareForMpsConfig getConfig() {
+        return config;
     }
 
     @Override
@@ -280,7 +259,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
     private void start() {
         if (!running) {
             running = true;
-            engineStatusHandler.active(project, this);
+            config.getStatusHandler().active(project, this);
         }
     }
 
@@ -296,7 +275,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
     protected void addMessages(Set<Throwable> throwables) {
         if (!universeTransaction.isKilled()) {
             universeTransaction.currentState().run(() -> {
-                DObject object = getRepository();
+                DObject  object  = getRepository();
                 DFeature feature = DRepository.EXCEPTIONS;
                 for (Throwable t : throwables.sorted(universeTransaction::compareThrowable)) {
                     while (t instanceof TransactionException) {
@@ -518,16 +497,16 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
     @Override
     public void accept(State pre, State post, Boolean last) {
         if (isRunning() && !universeTransaction.isKilled()) {
-            if (TRACE) {
+            if (config.isTraceDclare()) {
                 System.err.println(DCLARE + "    START COMMIT " + this);
             }
             COMMITTING.set(true);
             try {
                 pre.diff(post, o -> o instanceof DObject && !((DObject) o).isDclareOnly()).forEachOrdered(e0 -> {
-                    DObject dObject = (DObject) e0.getKey();
-                    boolean changed = false;
-                    DefaultMap<Setable, Object> before = e0.getValue().a();
-                    DefaultMap<Setable, Object> after = e0.getValue().b();
+                    DObject                     dObject = (DObject) e0.getKey();
+                    boolean                     changed = false;
+                    DefaultMap<Setable, Object> before  = e0.getValue().a();
+                    DefaultMap<Setable, Object> after   = e0.getValue().b();
                     for (DObserved observed : dObject.dClass().dObserveds()) {
                         changed |= observed.toMPS(dObject, before.get(observed), after.get(observed));
                     }
@@ -539,7 +518,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
                             }
                         } else if (dObject instanceof DNode) {
                             SNode original = ((DNode) dObject).tryOriginal();
-                            SNode root = original != null ? original.getContainingRoot() : null;
+                            SNode root     = original != null ? original.getContainingRoot() : null;
                             if (root != null) {
                                 changedRoots.change(s -> s.add(root));
                             }
@@ -550,11 +529,11 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
                 });
                 if (last && !runModelCheck()) {
                     running = false;
-                    engineStatusHandler.idle(project, this, post::get);
+                    config.getStatusHandler().idle(project, this, post::get);
                 }
             } finally {
                 COMMITTING.set(false);
-                if (TRACE) {
+                if (config.isTraceDclare()) {
                     System.err.println(DCLARE + "    END COMMIT " + this);
                 }
             }
@@ -566,7 +545,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
             State state = universeTransaction.lastState();
             ALL.remove(this);
             modelAccess.executeCommandInEDT(() -> {
-                engineStatusHandler.terminating(project, this, state::get);
+                config.getStatusHandler().terminating(project, this, state::get);
                 commandThread = null;
             });
             CheckerRegistry checkerRegistry = project.getPlatform().findComponent(CheckerRegistry.class);
@@ -726,9 +705,9 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
     }
 
     private boolean runModelCheck() {
-        Set<SModel> models = changedModels.result();
+        Set<SModel>  models  = changedModels.result();
         Set<SModule> modules = changedModules.result();
-        Set<SNode> roots = changedRoots.result();
+        Set<SNode>   roots   = changedRoots.result();
         changedModels.init(Set.of());
         changedModules.init(Set.of());
         changedRoots.init(Set.of());
@@ -736,11 +715,11 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
         if (anythingChanged) {
             thePool.execute(() -> {
                 RootItemsToCheck itemsToCheck = new RootItemsToCheck();
-                itemsToCheck.models = models.collect(Collectors.toList());
+                itemsToCheck.models  = models.collect(Collectors.toList());
                 itemsToCheck.modules = modules.collect(Collectors.toList());
-                itemsToCheck.roots = roots.filter(r -> r.getModel() != null).collect(Collectors.toList());
+                itemsToCheck.roots   = roots.filter(r -> r.getModel() != null).collect(Collectors.toList());
                 java.util.List<IssueKindReportItem> reportItems = new ArrayList<>();
-                SRepository repos = getRepository().original();
+                SRepository                         repos       = getRepository().original();
                 mpsChecker.check(itemsToCheck, repos, reportItems::add, new EmptyProgressMonitor());
                 universeTransaction.put(new Object(), () -> {
                     for (SModule sModule : modules) {
@@ -795,22 +774,22 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
                 throw t;
             } finally {
                 thePool.shutdownNow();
-                if (TRACE) {
+                if (config.isTraceDclare()) {
                     System.err.println(DCLARE + "AWAIT TERMINATION   " + this);
                 }
                 try {
                     //noinspection ResultOfMethodCallIgnored
                     thePool.awaitTermination(99, TimeUnit.DAYS);
-                    modelAccess.executeCommandInEDT(() -> engineStatusHandler.off(project, DClareMPS.this));
+                    modelAccess.executeCommandInEDT(() -> config.getStatusHandler().off(project, DClareMPS.this));
                 } catch (InterruptedException e) {
                     System.err.println(DCLARE + "the pool did not terminate in time: " + this + " (Thread " + Thread.currentThread().getName() + " was interrupted)");
                     e.printStackTrace();
                 }
-                if (TRACE) {
+                if (config.isTraceDclare()) {
                     System.err.println(DCLARE + "END   " + this);
                     if (result != null) {
                         for (@SuppressWarnings("rawtypes")
-                        Entry<Setable, Integer> e : result.count()) {
+                                Entry<Setable, Integer> e : result.count()) {
                             System.err.println(DCLARE + "    COUNT " + e.getKey() + " = " + e.getValue());
                         }
                     }
@@ -832,7 +811,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
         @Override
         public void run() {
             try {
-                for (;;) {
+                for (; ; ) {
                     Thread.sleep(300);
                     if (DClareMPS.this.thePool.isShutdown()) {
                         break;
@@ -840,7 +819,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
                     UniverseStatistics stats = DClareMPS.this.universeTransaction.stats();
                     if (prevStats == null || !prevStats.equals(stats)) {
                         prevStats = new UniverseStatistics(stats);
-                        modelAccess.executeCommandInEDT(() -> engineStatusHandler.stats(stats));
+                        modelAccess.executeCommandInEDT(() -> config.getStatusHandler().stats(stats));
                     }
                 }
             } catch (InterruptedException e) {

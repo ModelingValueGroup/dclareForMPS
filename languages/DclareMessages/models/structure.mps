@@ -235,17 +235,17 @@
     <node concept="25R33" id="3zaVTDeuvaA" role="25R1y">
       <property role="3tVfz5" value="4092346657440133798" />
       <property role="TrG5h" value="off" />
-      <property role="1L1pqM" value="OFF" />
+      <property role="1L1pqM" value=" OFF " />
     </node>
     <node concept="25R33" id="3zaVTDeuvaB" role="25R1y">
       <property role="3tVfz5" value="4092346657440133799" />
       <property role="TrG5h" value="terminating" />
-      <property role="1L1pqM" value="..." />
+      <property role="1L1pqM" value=" ... " />
     </node>
     <node concept="25R33" id="3zaVTDeuvaE" role="25R1y">
       <property role="3tVfz5" value="4092346657440133802" />
       <property role="TrG5h" value="on" />
-      <property role="1L1pqM" value="ON " />
+      <property role="1L1pqM" value=" ON  " />
     </node>
   </node>
 </model>
