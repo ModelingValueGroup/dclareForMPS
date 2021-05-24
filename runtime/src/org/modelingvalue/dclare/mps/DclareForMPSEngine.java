@@ -19,7 +19,9 @@ import java.util.Objects;
 import java.util.Set;
 
 import org.jetbrains.mps.openapi.module.SModule;
+import org.jetbrains.mps.openapi.project.Project;
 import org.jetbrains.mps.openapi.util.ProgressMonitor;
+import org.modelingvalue.dclare.UniverseStatistics;
 
 import jetbrains.mps.classloading.ClassLoaderManager;
 import jetbrains.mps.classloading.DeployListener;
@@ -32,7 +34,7 @@ public class DclareForMPSEngine implements DeployListener {
     public static final int                MAX_NR_OF_HISTORY_FOR_MPS = 4;
     //
     private final       ProjectBase        project;
-    protected final     ClassLoaderManager classLoaderManager;
+    private final       ClassLoaderManager classLoaderManager;
     private             DClareMPS          dClareMPS;
     private             DclareForMpsConfig config;
 
@@ -40,17 +42,7 @@ public class DclareForMPSEngine implements DeployListener {
         this.project       = project;
         classLoaderManager = Objects.requireNonNull(MPSCoreComponents.getInstance().getPlatform().findComponent(ClassLoaderManager.class));
         classLoaderManager.addListener(this);
-        config = new DclareForMpsConfig().withMaxNrOfHistory(MAX_NR_OF_HISTORY_FOR_MPS).withStatusHandler(engineStatusHandler);
-    }
-
-    private boolean isRunning() {
-        return dClareMPS != null && dClareMPS.isRunning();
-    }
-
-    protected synchronized void startEngine() {
-        if (!isRunning()) {
-            dClareMPS = new DClareMPS(this, project, config);
-        }
+        config = new DclareForMpsConfig().withMaxNrOfHistory(MAX_NR_OF_HISTORY_FOR_MPS).withStatusHandler(new StaleFilter(engineStatusHandler));
     }
 
     public DclareForMpsConfig getConfig() {
@@ -68,7 +60,17 @@ public class DclareForMPSEngine implements DeployListener {
         }
     }
 
-    protected synchronized void stopEngine() {
+    private boolean isRunning() {
+        return dClareMPS != null && dClareMPS.isRunning();
+    }
+
+    private synchronized void startEngine() {
+        if (!isRunning()) {
+            dClareMPS = new DClareMPS(this, project, config);
+        }
+    }
+
+    synchronized void stopEngine() {
         if (isRunning()) {
             dClareMPS.stop();
             dClareMPS = null;
@@ -111,5 +113,55 @@ public class DclareForMPSEngine implements DeployListener {
     public static <T> T print(Object ctx, T val) {
         System.err.println("!!!!!!!!!! " + ctx + " : " + val);
         return val;
+    }
+
+    private class StaleFilter implements EngineStatusHandler {
+        private final EngineStatusHandler engineStatusHandler;
+
+        public StaleFilter(EngineStatusHandler engineStatusHandler) {
+            this.engineStatusHandler = engineStatusHandler;
+        }
+
+        @Override
+        public void stats(UniverseStatistics stats, DClareMPS engine) {
+            if (dClareMPS == engine || dClareMPS == null) {
+                engineStatusHandler.stats(stats, engine);
+            }
+        }
+
+        @Override
+        public void on(Project project, DClareMPS engine) {
+            if (dClareMPS == engine || dClareMPS == null) {
+                engineStatusHandler.on(project, engine);
+            }
+        }
+
+        @Override
+        public void terminating(Project project, DClareMPS engine, Getter getter) {
+            if (dClareMPS == engine || dClareMPS == null) {
+                engineStatusHandler.terminating(project, engine, getter);
+            }
+        }
+
+        @Override
+        public void off(Project project, DClareMPS engine) {
+            if (dClareMPS == engine || dClareMPS == null) {
+                engineStatusHandler.off(project, engine);
+            }
+        }
+
+        @Override
+        public void active(Project project, DClareMPS engine) {
+            if (dClareMPS == engine || dClareMPS == null) {
+                engineStatusHandler.active(project, engine);
+            }
+        }
+
+        @Override
+        public void idle(Project project, DClareMPS engine, Getter getter) {
+            if (dClareMPS == engine || dClareMPS == null) {
+                engineStatusHandler.idle(project, engine, getter);
+            }
+        }
     }
 }

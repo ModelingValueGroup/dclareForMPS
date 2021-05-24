@@ -118,8 +118,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
         }
     };
     protected static final String                                                                          DCLARE               = "---------> DCLARE ";
-    private final          ThreadLocal<Boolean>                                                            COMMITTING           = ThreadLocal.withInitial(() -> false);
-    public final static    Observed<DClareMPS, Set<SLanguage>>                                             ALL_LANGUAGES        = Observed.of("ALL_LANGAUGES", Set.of(),                                             //
+    public static final    Observed<DClareMPS, Set<SLanguage>>                                             ALL_LANGUAGES        = Observed.of("ALL_LANGAUGES", Set.of(),                                             //
             (tx, d, o, n) -> Setable.<Set<SLanguage>, SLanguage> diff(o, n,                                                                                                                                       //
                     a -> DClareMPS.RULE_SETS.get(a).forEachOrdered(                                                                                                                                               //
                             rs -> {                                                                                                                                                                               //
@@ -128,15 +127,16 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
                             }),                                                                                                                                                                                   //
                     r -> {                                                                                                                                                                                        //
                     }), SetableModifier.doNotCheckConsistency);
-    public final static    Constant<SLanguage, Set<IRuleSet>>                                              RULE_SETS            = Constant.of("RULE_SETS", Set.of(), language -> {
+    public static final    Constant<SLanguage, Set<IRuleSet>>                                              RULE_SETS            = Constant.of("RULE_SETS", Set.of(), language -> {
         LanguageRuntime rtLang = registry().getLanguage(language);
         IRuleAspect     aspect = rtLang != null ? rtLang.getAspect(IRuleAspect.class) : null;
         return aspect != null ? Collection.of(aspect.getRuleSets()).toSet() : Set.of();
     });
-    private final static   Setable<DClareMPS, DRepository>                                                 REPOSITORY_CONTAINER = Setable.of("REPOSITORY_CONTAINER", null, SetableModifier.containment);
+    private static final   Setable<DClareMPS, DRepository>                                                 REPOSITORY_CONTAINER = Setable.of("REPOSITORY_CONTAINER", null, SetableModifier.containment);
     protected static final Set<? extends Setable<? extends Mutable, ?>>                                    SETABLES             = Set.of(REPOSITORY_CONTAINER);
     //
     private final          ContextPool                                                                     thePool              = ContextThread.createPool(this);
+    private final          ThreadLocal<Boolean>                                                            committing           = ThreadLocal.withInitial(() -> false);
     private final          UniverseTransaction                                                             universeTransaction;
     private final          DclareForMpsConfig                                                              config;
     protected final        ProjectBase                                                                     project;
@@ -435,7 +435,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
     public void handleMPSChange(Runnable action) {
         if (isRunning()) {
             if (isRunningCommand()) {
-                if (!COMMITTING.get()) {
+                if (!committing.get()) {
                     try {
                         LeafTransaction.getContext().run(imperativeTransaction, action);
                     } catch (Throwable t) {
@@ -500,7 +500,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
             if (config.isTraceDclare()) {
                 System.err.println(DCLARE + "    START COMMIT " + this);
             }
-            COMMITTING.set(true);
+            committing.set(true);
             try {
                 pre.diff(post, o -> o instanceof DObject && !((DObject) o).isDclareOnly()).forEachOrdered(e0 -> {
                     DObject                     dObject = (DObject) e0.getKey();
@@ -532,7 +532,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
                     config.getStatusHandler().idle(project, this, post::get);
                 }
             } finally {
-                COMMITTING.set(false);
+                committing.set(false);
                 if (config.isTraceDclare()) {
                     System.err.println(DCLARE + "    END COMMIT " + this);
                 }
@@ -819,7 +819,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
                     UniverseStatistics stats = DClareMPS.this.universeTransaction.stats();
                     if (prevStats == null || !prevStats.equals(stats)) {
                         prevStats = new UniverseStatistics(stats);
-                        modelAccess.executeCommandInEDT(() -> config.getStatusHandler().stats(stats));
+                        modelAccess.executeCommandInEDT(() -> config.getStatusHandler().stats(stats, DClareMPS.this));
                     }
                 }
             } catch (InterruptedException e) {
