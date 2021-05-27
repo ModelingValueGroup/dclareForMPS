@@ -15,6 +15,9 @@
 
 package org.modelingvalue.dclare.mps;
 
+import static org.modelingvalue.dclare.CoreSetableModifier.containment;
+import static org.modelingvalue.dclare.CoreSetableModifier.doNotCheckConsistency;
+
 import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
@@ -24,13 +27,12 @@ import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.dclare.Action;
-import org.modelingvalue.dclare.Priority;
 import org.modelingvalue.dclare.Mutable;
 import org.modelingvalue.dclare.NonCheckingObserver;
 import org.modelingvalue.dclare.Observed;
 import org.modelingvalue.dclare.Observer;
+import org.modelingvalue.dclare.Priority;
 import org.modelingvalue.dclare.Setable;
-import org.modelingvalue.dclare.SetableModifier;
 
 import jetbrains.mps.errors.item.IssueKindReportItem;
 
@@ -59,11 +61,11 @@ public abstract class DObject implements Mutable {
                                                                                                                      }
                                                                                                                  };
 
-    public static final Observed<DObject, DObjectType<?>>                              TYPE                      = Observed.of("$TYPE", DUMMY_TYPE, SetableModifier.doNotCheckConsistency);
+    public static final Observed<DObject, DObjectType<?>> TYPE = Observed.of("$TYPE", DUMMY_TYPE, doNotCheckConsistency);
 
     protected static final Observer<DObject>                                           TYPE_RULE                 = observer(TYPE, o -> TYPE.set(o, o.getType()));
 
-    protected static final Observed<DObject, DAttribute>                               CONTAINING_ATTRIBUTE      = Observed.of("$CONTAINING_ATTRIBUTE", null, SetableModifier.doNotCheckConsistency);
+    protected static final Observed<DObject, DAttribute> CONTAINING_ATTRIBUTE = Observed.of("$CONTAINING_ATTRIBUTE", null, doNotCheckConsistency);
 
     protected static final Observer<DObject>                                           CONTAINING_ATTRIBUTE_RULE = observer(CONTAINING_ATTRIBUTE, o -> {
                                                                                                                      Pair<Mutable, Setable<Mutable, ?>> pc = Mutable.D_PARENT_CONTAINING.get(o);
@@ -91,7 +93,7 @@ public abstract class DObject implements Mutable {
                                                                                                                      }
                                                                                                                  });
 
-    protected static final Setable<DObject, Set<DIssue>>                               DRULE_ISSUES              = Setable.of("$DRULE_ISSUES", Set.of(), SetableModifier.containment);
+    protected static final Setable<DObject, Set<DIssue>> DRULE_ISSUES = Setable.of("$DRULE_ISSUES", Set.of(), containment);
 
     protected static final DObserved<DObject, Set<DIssue>>                             DCLARE_ISSUES             = DObserved.of("$DCLARE_ISSUES", Set.of(), () -> DIssue.DOBJECT, (dObject, pre, post) -> !Objects.equals(pre, post), null);
 

@@ -15,6 +15,9 @@
 
 package org.modelingvalue.dclare.mps;
 
+import static org.modelingvalue.dclare.CoreSetableModifier.containment;
+import static org.modelingvalue.dclare.CoreSetableModifier.doNotCheckConsistency;
+
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -57,7 +60,6 @@ import org.modelingvalue.dclare.Observed;
 import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.ReusableTransaction;
 import org.modelingvalue.dclare.Setable;
-import org.modelingvalue.dclare.SetableModifier;
 import org.modelingvalue.dclare.State;
 import org.modelingvalue.dclare.Universe;
 import org.modelingvalue.dclare.UniverseStatistics;
@@ -126,13 +128,13 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
                                 rs.getAllStructClasses().forEach(strc -> STRUCT_CLASS_MAP.set(d, Map::put, Entry.of(strc.id(), strc)));                                                                           //
                             }),                                                                                                                                                                                   //
                     r -> {                                                                                                                                                                                        //
-                    }), SetableModifier.doNotCheckConsistency);
+                    }), doNotCheckConsistency);
     public static final    Constant<SLanguage, Set<IRuleSet>>                                              RULE_SETS            = Constant.of("RULE_SETS", Set.of(), language -> {
         LanguageRuntime rtLang = registry().getLanguage(language);
         IRuleAspect     aspect = rtLang != null ? rtLang.getAspect(IRuleAspect.class) : null;
         return aspect != null ? Collection.of(aspect.getRuleSets()).toSet() : Set.of();
     });
-    private static final   Setable<DClareMPS, DRepository>                                                 REPOSITORY_CONTAINER = Setable.of("REPOSITORY_CONTAINER", null, SetableModifier.containment);
+    private static final   Setable<DClareMPS, DRepository>                                                 REPOSITORY_CONTAINER = Setable.of("REPOSITORY_CONTAINER", null, containment);
     protected static final Set<? extends Setable<? extends Mutable, ?>>                                    SETABLES             = Set.of(REPOSITORY_CONTAINER);
     //
     private final          ContextPool                                                                     thePool              = ContextThread.createPool(this);

@@ -15,6 +15,9 @@
 
 package org.modelingvalue.dclare.mps;
 
+import static org.modelingvalue.dclare.CoreSetableModifier.containment;
+import static org.modelingvalue.dclare.CoreSetableModifier.doNotCheckConsistency;
+
 import java.util.Collections;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -49,7 +52,6 @@ import org.modelingvalue.dclare.Observed;
 import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.Priority;
 import org.modelingvalue.dclare.Setable;
-import org.modelingvalue.dclare.SetableModifier;
 
 import jetbrains.mps.errors.item.ModelReportItem;
 import jetbrains.mps.extapi.model.SModelBase;
@@ -88,12 +90,12 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
                                                                                                                          return true;
                                                                                                                      }
                                                                                                                  }
-                                                                                                                 return false;
-                                                                                                             }, (t, m, b, a) -> {
-                                                                                                                 if (b.isEmpty() && !a.isEmpty()) {
-                                                                                                                     DModel.ACTIVE.set(m, Boolean.TRUE);
-                                                                                                                 }
-                                                                                                             }, SetableModifier.containment);
+        return false;
+    }, (t, m, b, a) -> {
+        if (b.isEmpty() && !a.isEmpty()) {
+            DModel.ACTIVE.set(m, Boolean.TRUE);
+        }
+    }, containment);
 
     protected static final DObserved<DModel, Set<SLanguage>>                                USED_LANGUAGES   = DObserved.of("USED_LANGUAGES", Set.of(), (dModel, pre, post) -> {
         SModelInternal sModel = (SModelInternal) dModel.original();
@@ -119,7 +121,7 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
                                                                                                                  return false;
                                                                                                              });
 
-    protected static final Observed<DModel, ModelRoot>                                      MODEL_ROOT       = Observed.of("MODEL_ROOT", null, SetableModifier.doNotCheckConsistency);
+    protected static final Observed<DModel, ModelRoot> MODEL_ROOT = Observed.of("MODEL_ROOT", null, doNotCheckConsistency);
 
     private static final Action<DModel>                                                     READ_ROOTS       = Action.of("$READ_ROOTS", m -> {
         SModel sModel = Objects.requireNonNull(m.tryOriginal());
@@ -165,9 +167,9 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
                                                                                                                          READ_ROOTS.trigger(m);
                                                                                                                      }
                                                                                                                  }
-                                                                                                             }, SetableModifier.doNotCheckConsistency);
+    }, doNotCheckConsistency);
     @SuppressWarnings({"rawtypes", "unchecked"})
-    protected static final DObserved<DModel, Boolean>                                       LOADED           = DObserved.of("LOADED", Boolean.FALSE, (TriFunction) null, SetableModifier.doNotCheckConsistency);
+    protected static final DObserved<DModel, Boolean>                                       LOADED           = DObserved.of("LOADED", Boolean.FALSE, (TriFunction) null, doNotCheckConsistency);
 
     private static final Action<DModel>                                                     READ_LOADED      = Action.of("$READ_LOADED", m -> {
                                                                                                                  SModel sModel = m.tryOriginal();
