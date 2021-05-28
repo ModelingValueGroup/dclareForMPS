@@ -25,7 +25,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import javax.swing.*;
+import javax.swing.SwingUtilities;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.jetbrains.mps.openapi.model.SModel;
@@ -205,15 +205,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
         if (TRACE) {
             System.err.println(DCLARE + "START " + this);
         }
-        DclareConfig config = new DclareConfig()
-                .withStart(prevState)
-                .withDevMode(devMode)
-                .withMaxInInQueue(100)
-                .withMaxTotalNrOfChanges(maxTotalNrOfChanges)
-                .withMaxNrOfChanges(maxNrOfChanges)
-                .withMaxNrOfObserved(maxNrOfObserved)
-                .withMaxNrOfObservers(maxNrOfObservers)
-                .withMaxNrOfHistory(4);
+        DclareConfig config = new DclareConfig().withStart(prevState).withDevMode(devMode).withMaxInInQueue(100).withMaxTotalNrOfChanges(maxTotalNrOfChanges).withMaxNrOfChanges(maxNrOfChanges).withMaxNrOfObserved(maxNrOfObserved).withMaxNrOfObservers(maxNrOfObservers).withMaxNrOfHistory(4);
         universeTransaction = new UniverseTransaction(this, thePool, config) {
 
             @Override
@@ -252,7 +244,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
 
             @SuppressWarnings("rawtypes")
             @Override
-            protected void checkOrphanState(Entry<Object, Pair<DefaultMap<Setable, Object>, DefaultMap<Setable, Object>>> e0) {
+            protected void checkOrphanState(Mutable mutable, DefaultMap<Setable, Object> values) {
             }
 
         };
