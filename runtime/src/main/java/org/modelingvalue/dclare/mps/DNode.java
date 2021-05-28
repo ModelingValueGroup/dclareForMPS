@@ -625,12 +625,12 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
     }
 
     @Override
-    protected SNodeReference getReference(SNode read) {
+    protected SNodeReference reference(SNode read) {
         return read.getReference();
     }
 
     @Override
-    protected SNode resolveReference(SNodeReference ref) {
+    protected SNode resolve(SNodeReference ref) {
         return ref.resolve(null);
     }
 

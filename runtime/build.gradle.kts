@@ -22,7 +22,6 @@ dependencies {
     implementation("org.modelingvalue:immutable-collections:1.5.0-BRANCHED")
     implementation("org.modelingvalue:dclare:1.5.0-BRANCHED")
 
-    compileOnly(mpsJar("extensions"))
     compileOnly(mpsJar("mps-closures"))
     compileOnly(mpsJar("mps-core"))
     compileOnly(mpsJar("mps-editor"))
