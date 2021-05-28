@@ -19,7 +19,7 @@ import org.jetbrains.mps.openapi.project.Project;
 import org.modelingvalue.dclare.UniverseStatistics;
 
 public interface EngineStatusHandler {
-    void stats(UniverseStatistics stats);
+    void stats(UniverseStatistics stats, DClareMPS engine);
 
     void on(Project project, DClareMPS engine);
 
