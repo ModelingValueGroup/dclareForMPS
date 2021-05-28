@@ -15,12 +15,14 @@
 
 package org.modelingvalue.dclare.mps;
 
+import org.jetbrains.mps.openapi.language.SLanguage;
+import org.modelingvalue.dclare.Direction;
 import org.modelingvalue.dclare.Mutable;
 
 public class DCopy extends DDerive {
 
-    protected DCopy(Mutable thiz, DNode copied, String anonymousType) {
-        this(new Object[]{copied, anonymousType});
+    protected DCopy(Mutable thiz, DNode copied, SLanguage anonymousLanguage, String anonymousType) {
+        this(new Object[]{copied, anonymousLanguage, anonymousType});
     }
 
     protected DCopy(Mutable thiz, DNode copied, DCopy root) {
@@ -42,7 +44,17 @@ public class DCopy extends DDerive {
 
     @Override
     public String getAnonymousType() {
-        return (String) root().get(null, 1);
+        return (String) root().get(null, 2);
+    }
+
+    @Override
+    public SLanguage getAnonymousLanguage() {
+        return (SLanguage) root().get(null, 1);
+    }
+
+    @Override
+    public Direction direction() {
+        return Direction.of(getAnonymousLanguage());
     }
 
 }

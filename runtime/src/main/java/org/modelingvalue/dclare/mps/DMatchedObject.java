@@ -44,9 +44,9 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
         return tx.construct(new DQuotation(tx.mutable(), anonymousLanguage, anonymousType, ctx), supplier);
     }
 
-    protected static <D extends DMatchedObject> D copyRootConstruct(String anonymousType, DObject object, DNode copied, Supplier<D> supplier) {
+    protected static <D extends DMatchedObject> D copyRootConstruct(SLanguage anonymousLanguage, String anonymousType, DObject object, DNode copied, Supplier<D> supplier) {
         LeafTransaction tx = LeafTransaction.getCurrent();
-        return tx.construct(new DCopy(tx.mutable(), copied, anonymousType), supplier);
+        return tx.construct(new DCopy(tx.mutable(), copied, anonymousLanguage, anonymousType), supplier);
     }
 
     protected static <D extends DMatchedObject> D copyChildConstruct(DCopy root, DNode copied, Supplier<D> supplier) {
@@ -118,8 +118,8 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
         return deriveReasons().filter(DQuotation.class).map(DQuotation::getAnonymousType).notNull().toSet();
     }
 
-    public boolean isCopy() {
-        return deriveReasons().anyMatch(c -> c instanceof DCopy);
+    public SLanguage copyAnonymousLanguage() {
+        return deriveReasons().filter(DCopy.class).map(DCopy::getAnonymousLanguage).findFirst().orElse(null);
     }
 
     public Set<SLanguage> getAnonymousLanguages() {

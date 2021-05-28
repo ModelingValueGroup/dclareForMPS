@@ -15,6 +15,9 @@
 
 package org.modelingvalue.dclare.mps;
 
+import static org.modelingvalue.dclare.CoreSetableModifier.containment;
+import static org.modelingvalue.dclare.CoreSetableModifier.doNotCheckConsistency;
+
 import java.util.stream.Collectors;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
@@ -29,23 +32,22 @@ import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.TriFunction;
 import org.modelingvalue.dclare.Action;
 import org.modelingvalue.dclare.Constant;
-import org.modelingvalue.dclare.Direction;
 import org.modelingvalue.dclare.Observed;
 import org.modelingvalue.dclare.Observer;
+import org.modelingvalue.dclare.Priority;
 import org.modelingvalue.dclare.Setable;
-import org.modelingvalue.dclare.SetableModifier;
 
 import jetbrains.mps.project.ProjectRepository;
 
 @SuppressWarnings("deprecation")
 public class DRepository extends DFromOriginalObject<ProjectRepository> implements SRepository {
 
-    private static final Constant<Set<SLanguage>, DRepositoryType> REPOSITORY_TYPE = Constant.of("REPOSITORY_TYPE", ls -> new DRepositoryType(ls));
+    private static final Constant<Set<SLanguage>, DRepositoryType> REPOSITORY_TYPE = Constant.of("REPOSITORY_TYPE", DRepositoryType::new);
 
-    protected static final Observed<DRepository, Set<DModule>>     REFERENCED      = Observed.of("REFERENCED", Set.of(), SetableModifier.doNotCheckConsistency);
+    protected static final Observed<DRepository, Set<DModule>> REFERENCED = Observed.of("REFERENCED", Set.of(), doNotCheckConsistency);
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    protected static final DObserved<DRepository, Set<DModule>>    MODULES         = DObserved.of("MODULES", Set.of(), (TriFunction) null, SetableModifier.containment);
+    protected static final DObserved<DRepository, Set<DModule>> MODULES = DObserved.of("MODULES", Set.of(), (TriFunction) null, containment);
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     protected static final DObserved<DRepository, Set<?>>          EXCEPTIONS      = DObserved.of("EXCEPTIONS", Set.of(), (TriFunction) null);
@@ -55,7 +57,7 @@ public class DRepository extends DFromOriginalObject<ProjectRepository> implemen
                                                                                        MODULES.set(o, Set::addAll, referenced);
                                                                                    });
 
-    private static final Action<DRepository>                       READ_MODULES    = Action.of("$READ_MODULES", r -> MODULES.set(r, dClareMPS().read(DRepository::modules).map(DModule::of).toSet()), Direction.urgent);
+    private static final Action<DRepository>                       READ_MODULES    = Action.of("$READ_MODULES", r -> MODULES.set(r, dClareMPS().read(DRepository::modules).map(DModule::of).toSet()), Priority.urgent);
 
     @SuppressWarnings("rawtypes")
     protected static final Set<Observer>                           OBSERVERS       = DObject.OBSERVERS.add(MODULES_RULE);

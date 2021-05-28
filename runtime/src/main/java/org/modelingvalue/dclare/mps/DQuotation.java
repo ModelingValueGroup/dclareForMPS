@@ -18,6 +18,7 @@ package org.modelingvalue.dclare.mps;
 import java.util.Arrays;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
+import org.modelingvalue.dclare.Direction;
 import org.modelingvalue.dclare.Mutable;
 
 public class DQuotation extends DDerive {
@@ -38,8 +39,14 @@ public class DQuotation extends DDerive {
         return (String) get(null, size() - 1);
     }
 
+    @Override
     public SLanguage getAnonymousLanguage() {
         return (SLanguage) get(null, size() - 2);
+    }
+
+    @Override
+    public Direction direction() {
+        return Direction.of(getAnonymousLanguage());
     }
 
 }

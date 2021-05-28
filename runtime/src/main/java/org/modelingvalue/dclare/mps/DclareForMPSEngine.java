@@ -15,12 +15,14 @@
 
 package org.modelingvalue.dclare.mps;
 
+import java.util.Objects;
 import java.util.Set;
 
 import org.jetbrains.mps.openapi.module.SModule;
+import org.jetbrains.mps.openapi.project.Project;
 import org.jetbrains.mps.openapi.util.ProgressMonitor;
+import org.modelingvalue.dclare.UniverseStatistics;
 
-import com.intellij.openapi.application.ApplicationManager;
 import jetbrains.mps.classloading.ClassLoaderManager;
 import jetbrains.mps.classloading.DeployListener;
 import jetbrains.mps.ide.MPSCoreComponents;
@@ -29,36 +31,32 @@ import jetbrains.mps.project.ProjectBase;
 
 @SuppressWarnings("unused")
 public class DclareForMPSEngine implements DeployListener {
-
-    private final   ProjectBase        project;
-    protected final ClassLoaderManager classLoaderManager;
-    private final   StartStopHandler   startStopHandler;
-    private         DClareMPS          dClareMPS;
+    public static final int                MAX_NR_OF_HISTORY_FOR_MPS = 4;
     //
-    private         boolean            onMode;
-    private         boolean            devMode;
-    private         int                maxTotalNrOfChanges;
-    private         int                maxNrOfChanges;
-    private         int                maxNrOfObserved;
-    private         int                maxNrOfObservers;
+    private final       ProjectBase        project;
+    private final       ClassLoaderManager classLoaderManager;
+    private             DClareMPS          dClareMPS;
+    private             DclareForMpsConfig config;
 
-    public DclareForMPSEngine(ProjectBase project, StartStopHandler startStopHandler) {
-        this.startStopHandler = startStopHandler;
-        this.project = project;
-        classLoaderManager = ApplicationManager.getApplication().getComponent(MPSCoreComponents.class).getClassLoaderManager();
+    public DclareForMPSEngine(ProjectBase project, EngineStatusHandler engineStatusHandler) {
+        this.project       = project;
+        classLoaderManager = Objects.requireNonNull(MPSCoreComponents.getInstance().getPlatform().findComponent(ClassLoaderManager.class));
         classLoaderManager.addListener(this);
+        config = new DclareForMpsConfig().withMaxNrOfHistory(MAX_NR_OF_HISTORY_FOR_MPS).withStatusHandler(new StaleFilter(engineStatusHandler));
     }
 
-    protected synchronized void startEngine() {
-        if (!isRunning()) {
-            dClareMPS = new DClareMPS(this, project, null, devMode, maxTotalNrOfChanges, maxNrOfChanges, maxNrOfObserved, maxNrOfObservers, startStopHandler);
-        }
+    public DclareForMpsConfig getConfig() {
+        return config;
     }
 
-    protected synchronized void stopEngine() {
-        if (isRunning()) {
-            dClareMPS.stop();
-            dClareMPS = null;
+    public void setConfig(DclareForMpsConfig newConfig) {
+        newConfig = newConfig.withMaxNrOfHistory(config.getMaxNrOfHistory()).withStatusHandler(config.getStatusHandler());
+        if (!config.equals(newConfig)) {
+            stopEngine();
+            config = newConfig;
+            if (config.isOnMode()) {
+                startEngine();
+            }
         }
     }
 
@@ -66,64 +64,22 @@ public class DclareForMPSEngine implements DeployListener {
         return dClareMPS != null && dClareMPS.isRunning();
     }
 
-    public void stop() {
-        classLoaderManager.removeListener(this);
-        stopEngine();
-    }
-
-    public boolean isOnMode() {
-        return onMode;
-    }
-
-    public boolean isDevMode() {
-        return devMode;
-    }
-
-    public void setModes(boolean onMode, boolean devMode) {
-        if (onMode != this.onMode || devMode != this.devMode) {
-            if (devMode != this.devMode) {
-                stopEngine();
-            }
-            this.devMode = devMode;
-            this.onMode = onMode;
-            if (onMode) {
-                startEngine();
-            } else {
-                stopEngine();
-            }
+    private synchronized void startEngine() {
+        if (!isRunning()) {
+            dClareMPS = new DClareMPS(this, project, config);
         }
     }
 
-    public int getMaxTotalNrOfChanges() {
-        return maxTotalNrOfChanges;
+    synchronized void stopEngine() {
+        if (isRunning()) {
+            dClareMPS.stop();
+            dClareMPS = null;
+        }
     }
 
-    public void setMaxTotalNrOfChanges(int maxTotalNrOfChanges) {
-        this.maxTotalNrOfChanges = maxTotalNrOfChanges;
-    }
-
-    public int getMaxNrOfChanges() {
-        return maxNrOfChanges;
-    }
-
-    public void setMaxNrOfChanges(int maxNrOfChanges) {
-        this.maxNrOfChanges = maxNrOfChanges;
-    }
-
-    public int getMaxNrOfObserved() {
-        return maxNrOfObserved;
-    }
-
-    public void setMaxNrOfObserved(int maxNrOfObserved) {
-        this.maxNrOfObserved = maxNrOfObserved;
-    }
-
-    public int getMaxNrOfObservers() {
-        return maxNrOfObservers;
-    }
-
-    public void setMaxNrOfObservers(int maxNrOfObservers) {
-        this.maxNrOfObservers = maxNrOfObservers;
+    public void stop() {
+        classLoaderManager.removeListener(this);
+        stopEngine();
     }
 
     @Override
@@ -142,7 +98,7 @@ public class DclareForMPSEngine implements DeployListener {
         for (SModule m : project.getProjectModules()) {
             //noinspection SuspiciousMethodCalls
             if (loadedModules.contains(m)) {
-                if (onMode) {
+                if (config.isOnMode()) {
                     startEngine();
                 }
                 break;
@@ -157,5 +113,55 @@ public class DclareForMPSEngine implements DeployListener {
     public static <T> T print(Object ctx, T val) {
         System.err.println("!!!!!!!!!! " + ctx + " : " + val);
         return val;
+    }
+
+    private class StaleFilter implements EngineStatusHandler {
+        private final EngineStatusHandler engineStatusHandler;
+
+        public StaleFilter(EngineStatusHandler engineStatusHandler) {
+            this.engineStatusHandler = engineStatusHandler;
+        }
+
+        @Override
+        public void stats(UniverseStatistics stats, DClareMPS engine) {
+            if (dClareMPS == engine || dClareMPS == null) {
+                engineStatusHandler.stats(stats, engine);
+            }
+        }
+
+        @Override
+        public void on(Project project, DClareMPS engine) {
+            if (dClareMPS == engine || dClareMPS == null) {
+                engineStatusHandler.on(project, engine);
+            }
+        }
+
+        @Override
+        public void terminating(Project project, DClareMPS engine, Getter getter) {
+            if (dClareMPS == engine || dClareMPS == null) {
+                engineStatusHandler.terminating(project, engine, getter);
+            }
+        }
+
+        @Override
+        public void off(Project project, DClareMPS engine) {
+            if (dClareMPS == engine || dClareMPS == null) {
+                engineStatusHandler.off(project, engine);
+            }
+        }
+
+        @Override
+        public void active(Project project, DClareMPS engine) {
+            if (dClareMPS == engine || dClareMPS == null) {
+                engineStatusHandler.active(project, engine);
+            }
+        }
+
+        @Override
+        public void idle(Project project, DClareMPS engine, Getter getter) {
+            if (dClareMPS == engine || dClareMPS == null) {
+                engineStatusHandler.idle(project, engine, getter);
+            }
+        }
     }
 }

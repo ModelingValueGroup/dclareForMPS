@@ -15,6 +15,7 @@
 
 package org.modelingvalue.dclare.mps;
 
+import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Concurrent;
 import org.modelingvalue.dclare.Constant;
@@ -23,6 +24,7 @@ import org.modelingvalue.dclare.Mutable;
 import org.modelingvalue.dclare.MutableTransaction;
 import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.ObserverTransaction;
+import org.modelingvalue.dclare.Priority;
 import org.modelingvalue.dclare.State;
 import org.modelingvalue.dclare.Transaction;
 import org.modelingvalue.dclare.UniverseTransaction;
@@ -30,18 +32,20 @@ import org.modelingvalue.dclare.UniverseTransaction;
 @SuppressWarnings("rawtypes")
 public interface DRule<O> extends DFeature {
 
-    Constant<DRule, DObserver> OBSERVER = Constant.of("OBSERVER", //
-            r -> DObserver.of(r, r.initialLowPriority() ? Direction.backward : Direction.forward));
+    Constant<DRule, DObserver>     OBSERVER  = Constant.of("OBSERVER",                           //
+            r -> DObserver.of(r, r.initialLowPriority() ? Priority.backward : Priority.forward));
+
+    Constant<SLanguage, Direction> DIRECTION = Constant.of("DIRECTION", l -> Direction.of(l));
 
     class DObserver<O extends Mutable> extends Observer<O> {
 
-        private static <M extends Mutable> DObserver of(DRule rule, Direction initDirection) {
-            return new DObserver<M>(rule, initDirection);
+        private static <M extends Mutable> DObserver of(DRule rule, Priority initPriority) {
+            return new DObserver<M>(rule, initPriority);
         }
 
         @SuppressWarnings("unchecked")
-        private DObserver(DRule rule, Direction initDirection) {
-            super(rule, rule::run, initDirection);
+        private DObserver(DRule rule, Priority initPriority) {
+            super(rule, rule::run, m -> DIRECTION.get(rule.anonymousLanguage()), initPriority);
         }
 
         public DRule rule() {
@@ -107,5 +111,7 @@ public interface DRule<O> extends DFeature {
     boolean initialLowPriority();
 
     String anonymousType();
+
+    SLanguage anonymousLanguage();
 
 }
