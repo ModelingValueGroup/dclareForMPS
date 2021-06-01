@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<solution name="DclareMPSRuntime" uuid="55d6b6f5-8095-4cd0-a39b-779da8d12940" moduleVersion="0" compileInMPS="true">
+<solution name="DclareMPSRuntime" uuid="55d6b6f5-8095-4cd0-a39b-779da8d12940" moduleVersion="0" pluginKind="PLUGIN_OTHER" compileInMPS="true">
   <models>
     <modelRoot contentPath="${module}/models" type="default">
       <sourceRoot location="." />
     </modelRoot>
     <modelRoot contentPath="${module}/lib" type="java_classes">
-      <sourceRoot location="." />
       <sourceRoot location="dclare.jar" />
       <sourceRoot location="DclareMps.jar" />
       <sourceRoot location="immutable-collections.jar" />
@@ -13,10 +12,16 @@
     </modelRoot>
   </models>
   <facets>
-    <facet type="java">
+    <facet type="java" languageLevel="JAVA_8">
       <classes generated="true" path="${module}/classes_gen" />
     </facet>
   </facets>
+  <stubModelEntries>
+    <stubModelEntry path="${module}/lib/dclare.jar" />
+    <stubModelEntry path="${module}/lib/DclareMps.jar" />
+    <stubModelEntry path="${module}/lib/immutable-collections.jar" />
+    <stubModelEntry path="${module}/lib/mvgjson.jar" />
+  </stubModelEntries>
   <sourcePath />
   <dependencies>
     <dependency reexport="true">8865b7a8-5271-43d3-884c-6fd1d9cfdd34(MPS.OpenAPI)</dependency>
