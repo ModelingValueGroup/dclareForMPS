@@ -16,16 +16,13 @@
 defaultTasks(
     "mvgcorrector",
     "test",
-    "mpsant-clean",
-    "mpsant-cleanSources",
-    "mpsant-generate",
     "mpsant-build",
     "mvgtagger",
-    "mvguploader"
+    "mvguploader",
 )
 
 plugins {
-    id("org.modelingvalue.gradle.mvgplugin") version "0.4.29"
+    id("org.modelingvalue.gradle.mvgplugin") version "0.4.30"
 }
 
 // import ant file:
@@ -40,8 +37,14 @@ ant.importBuild("mps_build.xml") {
 tasks.filter {
     it.name.startsWith("mpsant-")
 }.forEach {
-    // the runtime jars should be build and gathered first:
-    it.dependsOn(":runtime:gatherRuntimeJars")
+    if (it.name.equals("mpsant-fetchDependencies")) {
+        // the runtime jars should be build and gathered first:
+        it.dependsOn(":runtime:gatherRuntimeJars")
+    }
+    if (it.name.startsWith("mpsant-java.compile")) {
+        // generation should be triggered before any compilation can take place:
+        it.dependsOn("mpsant-generate")
+    }
     // always set the properties first:
     it.doFirst {
         ant.setProperty("mps_home", mvgmps.mpsInstallDir.toString())
