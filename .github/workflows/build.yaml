@@ -22,4 +22,5 @@ jobs:
 
       ################################################################################
       - name: "build"
-        run: ./gradlew --scan --info
+        run: |
+          ./gradlew --scan --info || find .
