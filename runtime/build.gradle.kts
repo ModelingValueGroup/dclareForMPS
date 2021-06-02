@@ -41,6 +41,7 @@ publishing {
 tasks.register<Copy>("gatherRuntimeJars") {
     into(rootProject.projectDir.toPath().resolve("solutions/DclareMPSRuntime/lib"))
     from(
+        tasks["jar"].outputs,
         configurations.runtimeClasspath,
         configurations.runtimeClasspath.get().allArtifacts.files
     )
@@ -51,3 +52,5 @@ tasks.register<Copy>("gatherRuntimeJars") {
     }
     tasks.findByName("jar")?.finalizedBy(this)
 }
+
+task("createJar").outputs.files.forEach { System.err.println("TOMTOMTOM " + it) }

@@ -6,9 +6,9 @@
     </modelRoot>
     <modelRoot contentPath="${module}/lib" type="java_classes">
       <sourceRoot location="dclare.jar" />
-      <sourceRoot location="DclareMps.jar" />
       <sourceRoot location="immutable-collections.jar" />
       <sourceRoot location="mvgjson.jar" />
+      <sourceRoot location="runtime.jar" />
     </modelRoot>
   </models>
   <facets>
@@ -18,9 +18,9 @@
   </facets>
   <stubModelEntries>
     <stubModelEntry path="${module}/lib/dclare.jar" />
-    <stubModelEntry path="${module}/lib/DclareMps.jar" />
     <stubModelEntry path="${module}/lib/immutable-collections.jar" />
     <stubModelEntry path="${module}/lib/mvgjson.jar" />
+    <stubModelEntry path="${module}/lib/runtime.jar" />
   </stubModelEntries>
   <sourcePath />
   <dependencies>

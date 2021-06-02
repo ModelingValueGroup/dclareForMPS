@@ -317,8 +317,8 @@
                   <property role="2Ry0Am" value="DclareMPSRuntime" />
                   <node concept="2Ry0Ak" id="3Lt_N8a$puS" role="2Ry0An">
                     <property role="2Ry0Am" value="lib" />
-                    <node concept="2Ry0Ak" id="3Lt_N8a$puX" role="2Ry0An">
-                      <property role="2Ry0Am" value="DclareMps.jar" />
+                    <node concept="2Ry0Ak" id="4emHI0rtIAY" role="2Ry0An">
+                      <property role="2Ry0Am" value="runtime.jar" />
                     </node>
                   </node>
                 </node>
@@ -662,11 +662,6 @@
             <ref role="3bR37D" to="ffeo:1ia2VB5guYy" resolve="MPS.IDEA" />
           </node>
         </node>
-        <node concept="1SiIV0" id="4emHI0rqohw" role="3bR37C">
-          <node concept="3bR9La" id="4emHI0rqohx" role="1SiIV1">
-            <ref role="3bR37D" to="ffeo:6xsKswgwdcs" resolve="jetbrains.mps.ide.devkit.editor" />
-          </node>
-        </node>
       </node>
       <node concept="1E1JtD" id="3_CqF4vomJJ" role="2G$12L">
         <property role="TrG5h" value="DclareMessages" />
@@ -871,25 +866,6 @@
             </node>
           </node>
         </node>
-        <node concept="1SiIV0" id="4emHI0rnXfc" role="3bR37C">
-          <node concept="1BurEX" id="4emHI0rnXfd" role="1SiIV1">
-            <node concept="398BVA" id="4emHI0rnXf2" role="1BurEY">
-              <ref role="398BVh" node="3Lt_N8a$ptU" resolve="dclare_home" />
-              <node concept="2Ry0Ak" id="4emHI0rnXf3" role="iGT6I">
-                <property role="2Ry0Am" value="solutions" />
-                <node concept="2Ry0Ak" id="4emHI0rnXf4" role="2Ry0An">
-                  <property role="2Ry0Am" value="DclareMPSRuntime" />
-                  <node concept="2Ry0Ak" id="4emHI0rnXf5" role="2Ry0An">
-                    <property role="2Ry0Am" value="lib" />
-                    <node concept="2Ry0Ak" id="4emHI0rnXf6" role="2Ry0An">
-                      <property role="2Ry0Am" value="DclareMps.jar" />
-                    </node>
-                  </node>
-                </node>
-              </node>
-            </node>
-          </node>
-        </node>
         <node concept="1SiIV0" id="4emHI0rnXfo" role="3bR37C">
           <node concept="1BurEX" id="4emHI0rnXfp" role="1SiIV1">
             <node concept="398BVA" id="4emHI0rnXfe" role="1BurEY">
@@ -928,9 +904,23 @@
             </node>
           </node>
         </node>
-        <node concept="1SiIV0" id="4emHI0rqrwe" role="3bR37C">
-          <node concept="3bR9La" id="4emHI0rqrwf" role="1SiIV1">
-            <ref role="3bR37D" to="ffeo:6xsKswgwdcs" resolve="jetbrains.mps.ide.devkit.editor" />
+        <node concept="1SiIV0" id="4emHI0rtI$E" role="3bR37C">
+          <node concept="1BurEX" id="4emHI0rtI$F" role="1SiIV1">
+            <node concept="398BVA" id="4emHI0rtI$w" role="1BurEY">
+              <ref role="398BVh" node="3Lt_N8a$ptU" resolve="dclare_home" />
+              <node concept="2Ry0Ak" id="4emHI0rtI$x" role="iGT6I">
+                <property role="2Ry0Am" value="solutions" />
+                <node concept="2Ry0Ak" id="4emHI0rtI$y" role="2Ry0An">
+                  <property role="2Ry0Am" value="DclareMPSRuntime" />
+                  <node concept="2Ry0Ak" id="4emHI0rtI$z" role="2Ry0An">
+                    <property role="2Ry0Am" value="lib" />
+                    <node concept="2Ry0Ak" id="4emHI0rtI$$" role="2Ry0An">
+                      <property role="2Ry0Am" value="runtime.jar" />
+                    </node>
+                  </node>
+                </node>
+              </node>
+            </node>
           </node>
         </node>
       </node>
