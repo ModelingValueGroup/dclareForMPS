@@ -405,35 +405,6 @@
         <ref role="3uigEE" to="t4tl:~DclareForMPSEngine" resolve="DclareForMPSEngine" />
       </node>
     </node>
-    <node concept="2tJIrI" id="5YGn40n_lW1" role="jymVt" />
-    <node concept="2YIFZL" id="5YGn40n_HkW" role="jymVt">
-      <property role="TrG5h" value="getConfig" />
-      <node concept="37vLTG" id="5YGn40n_QsG" role="3clF46">
-        <property role="TrG5h" value="project" />
-        <node concept="3uibUv" id="5YGn40n_QsH" role="1tU5fm">
-          <ref role="3uigEE" to="4nm9:~Project" resolve="Project" />
-        </node>
-      </node>
-      <node concept="3clFbS" id="5YGn40n_HkZ" role="3clF47">
-        <node concept="3cpWs6" id="5YGn40n_QW7" role="3cqZAp">
-          <node concept="2OqwBi" id="5YGn40n_StB" role="3cqZAk">
-            <node concept="1rXfSq" id="5YGn40n_Rsq" role="2Oq$k0">
-              <ref role="37wK5l" node="6g03R83sM9t" resolve="getEngine" />
-              <node concept="37vLTw" id="5YGn40n_RYR" role="37wK5m">
-                <ref role="3cqZAo" node="5YGn40n_QsG" resolve="project" />
-              </node>
-            </node>
-            <node concept="liA8E" id="5YGn40n_T8j" role="2OqNvi">
-              <ref role="37wK5l" to="t4tl:~DclareForMPSEngine.getConfig()" resolve="getConfig" />
-            </node>
-          </node>
-        </node>
-      </node>
-      <node concept="3Tm1VV" id="5YGn40n_yIk" role="1B3o_S" />
-      <node concept="3uibUv" id="5YGn40n_GSr" role="3clF45">
-        <ref role="3uigEE" to="t4tl:~DclareForMpsConfig" resolve="DclareForMpsConfig" />
-      </node>
-    </node>
     <node concept="2tJIrI" id="6g03R83sZES" role="jymVt" />
     <node concept="2YIFZL" id="4FbMPtV5fvT" role="jymVt">
       <property role="TrG5h" value="setConfig" />
@@ -454,7 +425,7 @@
         </node>
         <node concept="3cpWs8" id="GCs2xBiEBF" role="3cqZAp">
           <node concept="3cpWsn" id="GCs2xBiEBG" role="3cpWs9">
-            <property role="TrG5h" value="oldConfig" />
+            <property role="TrG5h" value="config" />
             <node concept="3uibUv" id="GCs2xBiE08" role="1tU5fm">
               <ref role="3uigEE" to="t4tl:~DclareForMpsConfig" resolve="DclareForMpsConfig" />
             </node>
@@ -632,7 +603,7 @@
               <ref role="1Pybhc" to="33ny:~Objects" resolve="Objects" />
               <node concept="2OqwBi" id="6g03R83ofSG" role="37wK5m">
                 <node concept="37vLTw" id="6g03R83of9E" role="2Oq$k0">
-                  <ref role="3cqZAo" node="GCs2xBiEBG" resolve="oldConfig" />
+                  <ref role="3cqZAo" node="GCs2xBiEBG" resolve="config" />
                 </node>
                 <node concept="liA8E" id="6g03R83ogDG" role="2OqNvi">
                   <ref role="37wK5l" to="t4tl:~DclareForMpsConfig.isColorfulEditors()" resolve="isColorfulEditors" />
