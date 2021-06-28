@@ -16,7 +16,7 @@
 package org.modelingvalue.dclare.mps;
 
 import static org.modelingvalue.dclare.CoreSetableModifier.containment;
-import static org.modelingvalue.dclare.CoreSetableModifier.doNotCheckConsistency;
+import static org.modelingvalue.dclare.CoreSetableModifier.plumbing;
 
 import java.util.stream.Collectors;
 
@@ -44,7 +44,7 @@ public class DRepository extends DFromOriginalObject<ProjectRepository> implemen
 
     private static final Constant<Set<SLanguage>, DRepositoryType> REPOSITORY_TYPE = Constant.of("REPOSITORY_TYPE", DRepositoryType::new);
 
-    protected static final Observed<DRepository, Set<DModule>> REFERENCED = Observed.of("REFERENCED", Set.of(), doNotCheckConsistency);
+    protected static final Observed<DRepository, Set<DModule>> REFERENCED = Observed.of("REFERENCED", Set.of(), plumbing);
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     protected static final DObserved<DRepository, Set<DModule>> MODULES = DObserved.of("MODULES", Set.of(), (TriFunction) null, containment);

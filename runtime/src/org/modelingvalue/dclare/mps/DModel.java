@@ -16,7 +16,7 @@
 package org.modelingvalue.dclare.mps;
 
 import static org.modelingvalue.dclare.CoreSetableModifier.containment;
-import static org.modelingvalue.dclare.CoreSetableModifier.doNotCheckConsistency;
+import static org.modelingvalue.dclare.CoreSetableModifier.plumbing;
 
 import java.util.Collections;
 import java.util.Objects;
@@ -121,7 +121,7 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
                                                                                                                  return false;
                                                                                                              });
 
-    protected static final Observed<DModel, ModelRoot> MODEL_ROOT = Observed.of("MODEL_ROOT", null, doNotCheckConsistency);
+    protected static final Observed<DModel, ModelRoot> MODEL_ROOT = Observed.of("MODEL_ROOT", null, plumbing);
 
     private static final Action<DModel>                                                     READ_ROOTS       = Action.of("$READ_ROOTS", m -> {
         SModel sModel = Objects.requireNonNull(m.tryOriginal());
@@ -167,9 +167,9 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
                                                                                                                          READ_ROOTS.trigger(m);
                                                                                                                      }
                                                                                                                  }
-    }, doNotCheckConsistency);
+    }, plumbing);
     @SuppressWarnings({"rawtypes", "unchecked"})
-    protected static final DObserved<DModel, Boolean>                                       LOADED           = DObserved.of("LOADED", Boolean.FALSE, (TriFunction) null, doNotCheckConsistency);
+    protected static final DObserved<DModel, Boolean>                                       LOADED           = DObserved.of("LOADED", Boolean.FALSE, (TriFunction) null, plumbing);
 
     private static final Action<DModel>                                                     READ_LOADED      = Action.of("$READ_LOADED", m -> {
                                                                                                                  SModel sModel = m.tryOriginal();

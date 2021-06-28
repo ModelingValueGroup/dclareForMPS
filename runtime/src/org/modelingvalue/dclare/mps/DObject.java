@@ -16,7 +16,7 @@
 package org.modelingvalue.dclare.mps;
 
 import static org.modelingvalue.dclare.CoreSetableModifier.containment;
-import static org.modelingvalue.dclare.CoreSetableModifier.doNotCheckConsistency;
+import static org.modelingvalue.dclare.CoreSetableModifier.plumbing;
 
 import java.util.Objects;
 import java.util.function.Consumer;
@@ -61,11 +61,11 @@ public abstract class DObject implements Mutable {
                                                                                                                      }
                                                                                                                  };
 
-    public static final Observed<DObject, DObjectType<?>> TYPE = Observed.of("$TYPE", DUMMY_TYPE, doNotCheckConsistency);
+    public static final Observed<DObject, DObjectType<?>> TYPE = Observed.of("$TYPE", DUMMY_TYPE, plumbing);
 
     protected static final Observer<DObject>                                           TYPE_RULE                 = observer(TYPE, o -> TYPE.set(o, o.getType()));
 
-    protected static final Observed<DObject, DAttribute> CONTAINING_ATTRIBUTE = Observed.of("$CONTAINING_ATTRIBUTE", null, doNotCheckConsistency);
+    protected static final Observed<DObject, DAttribute> CONTAINING_ATTRIBUTE = Observed.of("$CONTAINING_ATTRIBUTE", null, plumbing);
 
     protected static final Observer<DObject>                                           CONTAINING_ATTRIBUTE_RULE = observer(CONTAINING_ATTRIBUTE, o -> {
                                                                                                                      Pair<Mutable, Setable<Mutable, ?>> pc = Mutable.D_PARENT_CONTAINING.get(o);

@@ -16,7 +16,7 @@
 package org.modelingvalue.dclare.mps;
 
 import static org.modelingvalue.dclare.CoreSetableModifier.containment;
-import static org.modelingvalue.dclare.CoreSetableModifier.doNotCheckConsistency;
+import static org.modelingvalue.dclare.CoreSetableModifier.plumbing;
 
 import java.util.HashSet;
 import java.util.stream.Collectors;
@@ -73,7 +73,7 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
                 a -> DClareMPS.ALL_LANGUAGES.set(dClareMPS(), Set::add, a),                                    //
                 r -> {
                 });
-    }, doNotCheckConsistency);
+    }, plumbing);
 
     private static final Observer<DModule> LANGUAGES_RULE = DObject.observer(LANGUAGES, o ->
             LANGUAGES.set(o, dClareMPS().read(() -> languages(o.original()))                                       //
