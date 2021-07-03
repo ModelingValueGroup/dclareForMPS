@@ -17,8 +17,8 @@ package org.modelingvalue.dclare.mps;
 
 import static org.modelingvalue.dclare.CoreSetableModifier.containment;
 import static org.modelingvalue.dclare.CoreSetableModifier.mandatory;
-import static org.modelingvalue.dclare.CoreSetableModifier.plumbing;
 import static org.modelingvalue.dclare.CoreSetableModifier.softMandatory;
+import static org.modelingvalue.dclare.CoreSetableModifier.synthetic;
 
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
@@ -107,7 +107,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                               exclude(SNodeUtil.concept_BaseConcept.getContainmentLinks()::contains).toSet();
                                                                                                                                           });
 
-    protected static final Observed<DNode, DModel>                                                                 MODEL                  = Observed.of("$MODEL", null, plumbing);
+    protected static final Observed<DNode, DModel>                                                                 MODEL                  = Observed.of("$MODEL", null, synthetic);
 
     protected static final Observed<DNode, DNode>                                                                  ROOT                   = Observed.of("$ROOT", null, (tx, o, pre, post) -> {
                                                                                                                                               Set<Pair<DObject, IssueKindReportItem>> items = MPS_ISSUES.get(o);
@@ -117,7 +117,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                               if (post != null) {
                                                                                                                                                   DNode.ALL_MPS_ISSUES.set(post, Set::addAll, items);
                                                                                                                                               }
-                                                                                                                                          }, plumbing);
+                                                                                                                                          }, synthetic);
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     protected static final DObserved<DNode, Map<Object, Object>>                                                   USER_OBJECTS           = DObserved.of("USER_OBJECTS", Map.of(), (TriFunction) null);
@@ -171,7 +171,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                           }, sr::getDeclarationNode, softMandatory.ifnot(sr.isOptional())));
 
     @SuppressWarnings("deprecation")
-    public static final Constant<SReferenceLink, DObserved<DNode, Set<DNode>>>                                     OPPOSITE               = Constant.of("OPPOSITE", sr -> DObserved.of(Pair.of(sr, "OPPOSITE"), Set.of(), () -> DNode.REFERENCE.get(sr), null, sr::getDeclarationNode, plumbing));
+    public static final Constant<SReferenceLink, DObserved<DNode, Set<DNode>>>                                     OPPOSITE               = Constant.of("OPPOSITE", sr -> DObserved.of(Pair.of(sr, "OPPOSITE"), Set.of(), () -> DNode.REFERENCE.get(sr), null, sr::getDeclarationNode, synthetic));
     @SuppressWarnings("deprecation")
     public static final Constant<SProperty, DObserved<DNode, String>>                                              PROPERTY               = Constant.of("PROPERTY", sp -> DObserved.of(sp, null, (dNode, pre, post) -> {
                                                                                                                                               SNode sNode = dNode.original();
@@ -271,7 +271,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
             r -> DObject.MPS_ISSUES.set(r.a(), Set::remove, r)));
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    protected static final DObserved<DNode, Integer>                                                               INDEX                  = DObserved.of("INDEX", -1, (TriFunction) null, plumbing);
+    protected static final DObserved<DNode, Integer>                                                               INDEX                  = DObserved.of("INDEX", -1, (TriFunction) null, synthetic);
 
     @SuppressWarnings("rawtypes")
     private static final Observer<DNode>                                                                           INDEX_RULE             = DObject.observer(INDEX, o -> {

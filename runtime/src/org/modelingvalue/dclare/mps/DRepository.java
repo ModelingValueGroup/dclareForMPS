@@ -44,10 +44,10 @@ public class DRepository extends DFromOriginalObject<ProjectRepository> implemen
 
     private static final Constant<Set<SLanguage>, DRepositoryType> REPOSITORY_TYPE = Constant.of("REPOSITORY_TYPE", DRepositoryType::new);
 
-    protected static final Observed<DRepository, Set<DModule>> REFERENCED = Observed.of("REFERENCED", Set.of(), plumbing);
+    protected static final Observed<DRepository, Set<DModule>>     REFERENCED      = Observed.of("REFERENCED", Set.of(), plumbing);
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    protected static final DObserved<DRepository, Set<DModule>> MODULES = DObserved.of("MODULES", Set.of(), (TriFunction) null, containment);
+    protected static final DObserved<DRepository, Set<DModule>>    MODULES         = DObserved.of("MODULES", Set.of(), (TriFunction) null, containment);
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     protected static final DObserved<DRepository, Set<?>>          EXCEPTIONS      = DObserved.of("EXCEPTIONS", Set.of(), (TriFunction) null);
