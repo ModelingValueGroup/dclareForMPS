@@ -16,9 +16,9 @@
 package org.modelingvalue.dclare.mps;
 
 import static org.modelingvalue.dclare.CoreSetableModifier.containment;
-import static org.modelingvalue.dclare.CoreSetableModifier.doNotCheckConsistency;
-import static org.modelingvalue.dclare.CoreSetableModifier.doNotCheckMandatory;
 import static org.modelingvalue.dclare.CoreSetableModifier.mandatory;
+import static org.modelingvalue.dclare.CoreSetableModifier.plumbing;
+import static org.modelingvalue.dclare.CoreSetableModifier.softMandatory;
 
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
@@ -107,7 +107,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                               exclude(SNodeUtil.concept_BaseConcept.getContainmentLinks()::contains).toSet();
                                                                                                                                           });
 
-    protected static final Observed<DNode, DModel>                                                                 MODEL                  = Observed.of("$MODEL", null, doNotCheckConsistency);
+    protected static final Observed<DNode, DModel>                                                                 MODEL                  = Observed.of("$MODEL", null, plumbing);
 
     protected static final Observed<DNode, DNode>                                                                  ROOT                   = Observed.of("$ROOT", null, (tx, o, pre, post) -> {
                                                                                                                                               Set<Pair<DObject, IssueKindReportItem>> items = MPS_ISSUES.get(o);
@@ -117,7 +117,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                               if (post != null) {
                                                                                                                                                   DNode.ALL_MPS_ISSUES.set(post, Set::addAll, items);
                                                                                                                                               }
-                                                                                                                                          }, doNotCheckConsistency);
+                                                                                                                                          }, plumbing);
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     protected static final DObserved<DNode, Map<Object, Object>>                                                   USER_OBJECTS           = DObserved.of("USER_OBJECTS", Map.of(), (TriFunction) null);
@@ -137,7 +137,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                               } else {
                                                                                                                                                   return false;
                                                                                                                                               }
-                                                                                                                                          }, mc::getDeclarationNode, containment, mandatory.ifnot(mc.isOptional()), doNotCheckMandatory.ifnot(mc.isOptional())));
+                                                                                                                                          }, mc::getDeclarationNode, containment, softMandatory.ifnot(mc.isOptional())));
 
     @SuppressWarnings("deprecation")
     public static final Constant<SContainmentLink, DObserved<DNode, DNode>>                                        SINGLE_CONTAINMENT     = Constant.of("SINGLE_CONTAINMENT", sc -> DObserved.of(sc, null, (dNode, pre, post) -> {
@@ -154,7 +154,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                               } else {
                                                                                                                                                   return false;
                                                                                                                                               }
-                                                                                                                                          }, sc::getDeclarationNode, containment, mandatory.ifnot(sc.isOptional()), doNotCheckMandatory.ifnot(sc.isOptional())));
+                                                                                                                                          }, sc::getDeclarationNode, containment, softMandatory.ifnot(sc.isOptional())));
 
     @SuppressWarnings("deprecation")
     public static final Constant<SReferenceLink, DObserved<DNode, DNode>>                                          REFERENCE              = Constant.of("REFERENCE", sr -> DObserved.of(sr, null, () -> DNode.OPPOSITE.get(sr), (dNode, pre, post) -> {
@@ -168,10 +168,10 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                               } else {
                                                                                                                                                   return false;
                                                                                                                                               }
-                                                                                                                                          }, sr::getDeclarationNode, mandatory.ifnot(sr.isOptional()), doNotCheckMandatory.ifnot(sr.isOptional())));
+                                                                                                                                          }, sr::getDeclarationNode, softMandatory.ifnot(sr.isOptional())));
 
     @SuppressWarnings("deprecation")
-    public static final Constant<SReferenceLink, DObserved<DNode, Set<DNode>>>                                     OPPOSITE               = Constant.of("OPPOSITE", sr -> DObserved.of(Pair.of(sr, "OPPOSITE"), Set.of(), () -> DNode.REFERENCE.get(sr), null, sr::getDeclarationNode, doNotCheckConsistency));
+    public static final Constant<SReferenceLink, DObserved<DNode, Set<DNode>>>                                     OPPOSITE               = Constant.of("OPPOSITE", sr -> DObserved.of(Pair.of(sr, "OPPOSITE"), Set.of(), () -> DNode.REFERENCE.get(sr), null, sr::getDeclarationNode, plumbing));
     @SuppressWarnings("deprecation")
     public static final Constant<SProperty, DObserved<DNode, String>>                                              PROPERTY               = Constant.of("PROPERTY", sp -> DObserved.of(sp, null, (dNode, pre, post) -> {
                                                                                                                                               SNode sNode = dNode.original();
@@ -182,7 +182,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                               } else {
                                                                                                                                                   return false;
                                                                                                                                               }
-                                                                                                                                          }, sp::getDeclarationNode, mandatory, doNotCheckMandatory));
+                                                                                                                                          }, sp::getDeclarationNode, mandatory, softMandatory));
 
     private static final Observer<DNode>                                                                           MODEL_RULE             = DObject.observer(MODEL, o -> {
                                                                                                                                               DNode p = o.getAncestor(DNode.class);
@@ -271,7 +271,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
             r -> DObject.MPS_ISSUES.set(r.a(), Set::remove, r)));
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    protected static final DObserved<DNode, Integer>                                                               INDEX                  = DObserved.of("INDEX", -1, (TriFunction) null, doNotCheckConsistency);
+    protected static final DObserved<DNode, Integer>                                                               INDEX                  = DObserved.of("INDEX", -1, (TriFunction) null, plumbing);
 
     @SuppressWarnings("rawtypes")
     private static final Observer<DNode>                                                                           INDEX_RULE             = DObject.observer(INDEX, o -> {

@@ -16,7 +16,7 @@
 package org.modelingvalue.dclare.mps;
 
 import static org.modelingvalue.dclare.CoreSetableModifier.containment;
-import static org.modelingvalue.dclare.CoreSetableModifier.doNotCheckConsistency;
+import static org.modelingvalue.dclare.CoreSetableModifier.plumbing;
 
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.ArrayList;
@@ -128,7 +128,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
                                 rs.getAllStructClasses().forEach(strc -> STRUCT_CLASS_MAP.set(d, Map::put, Entry.of(strc.id(), strc)));                                                                           //
                             }),                                                                                                                                                                                   //
                     r -> {                                                                                                                                                                                        //
-                    }), doNotCheckConsistency);
+                    }), plumbing);
     public static final Constant<SLanguage, Set<IRuleSet>>                                              RULE_SETS            = Constant.of("RULE_SETS", Set.of(), language -> {
                                                                                                                                  LanguageRuntime rtLang = registry().getLanguage(language);
                                                                                                                                  IRuleAspect aspect = rtLang != null ? rtLang.getAspect(IRuleAspect.class) : null;
@@ -144,7 +144,6 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
     protected final ProjectBase                                                                         project;
     private final ModelAccess                                                                           modelAccess;
     private ImperativeTransaction                                                                       imperativeTransaction;
-    private boolean                                                                                     running;
     protected final Concurrent<ReusableTransaction<DRule.DObserver<?>, DRule.DObserverTransaction>>     dObserverTransactions;
     protected final Concurrent<ReusableTransaction<DNode.DCopyObserver, DNode.DCopyTransaction>>        dCopyObserverTransactions;
     protected Map<DMessageType, QualifiedSet<Triple<DObject, DFeature, String>, DMessage>>              messages             = MESSAGE_QSET_MAP;
@@ -247,23 +246,17 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
 
     @Override
     public void init() {
-        command(this::start);
         Universe.super.init();
-        imperativeTransaction = universeTransaction.addImperative("$MPS_CONNECTOR", p -> start(), this, r -> {
+        imperativeTransaction = universeTransaction.addImperative("$MPS_CONNECTOR", p -> {
+            config.getStatusHandler().active(project, this);
+        }, this, r -> {
             if (isRunning()) {
                 command(r);
             }
         }, false);
         ALL.add(this);
-        REPOSITORY_CONTAINER.set(this, getRepository());
+        imperativeTransaction.schedule(() -> REPOSITORY_CONTAINER.set(this, getRepository()));
         universeTransaction.put("delta-support-starter", () -> NetUtils.startDeltaSupport(deltaAdapter));
-    }
-
-    private void start() {
-        if (!running) {
-            running = true;
-            config.getStatusHandler().active(project, this);
-        }
     }
 
     public void addTraceMessage(Object node, String msg) {
@@ -513,7 +506,8 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
                     for (DObserved observed : dObject.dClass().dObserveds()) {
                         changed |= observed.toMPS(dObject, before.get(observed), after.get(observed));
                     }
-                    if (changed) {
+                    if (changed || (post.get(dObject, Mutable.D_PARENT_CONTAINING) != null && //
+                    pre.get(dObject, Mutable.D_PARENT_CONTAINING) == null)) {
                         if (dObject instanceof DModel) {
                             SModel sModel = ((DModel) dObject).tryOriginal();
                             if (sModel != null) {
@@ -530,9 +524,9 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
                         }
                     }
                 });
-                if (last && !runModelCheck()) {
-                    running = false;
+                if (last) {
                     config.getStatusHandler().idle(project, this, post::get);
+                    runModelCheck();
                 }
             } finally {
                 committing.set(false);
@@ -707,15 +701,14 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
         }
     }
 
-    private boolean runModelCheck() {
+    private void runModelCheck() {
         Set<SModel> models = changedModels.result();
         Set<SModule> modules = changedModules.result();
         Set<SNode> roots = changedRoots.result();
         changedModels.init(Set.of());
         changedModules.init(Set.of());
         changedRoots.init(Set.of());
-        boolean anythingChanged = !models.isEmpty() || !modules.isEmpty() || !roots.isEmpty();
-        if (anythingChanged) {
+        if (!models.isEmpty() || !modules.isEmpty() || !roots.isEmpty()) {
             thePool.execute(() -> {
                 RootItemsToCheck itemsToCheck = new RootItemsToCheck();
                 itemsToCheck.models = models.collect(Collectors.toList());
@@ -724,7 +717,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
                 java.util.List<IssueKindReportItem> reportItems = new ArrayList<>();
                 SRepository repos = getRepository().original();
                 mpsChecker.check(itemsToCheck, repos, reportItems::add, new EmptyProgressMonitor());
-                universeTransaction.put(new Object(), () -> {
+                imperativeTransaction.schedule(() -> {
                     for (SModule sModule : modules) {
                         DObject.MPS_ISSUES.set(DModule.of(sModule), DObject.MPS_ISSUES.getDefault());
                     }
@@ -743,7 +736,6 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
                 });
             });
         }
-        return anythingChanged;
     }
 
     protected DObject context(ReportItem item) {
