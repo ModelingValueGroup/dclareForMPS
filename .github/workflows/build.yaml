@@ -84,6 +84,10 @@ jobs:
           . project.sh
           pushBackToGithub
 
+      - name: "DEBUG1"
+        run: |
+          find solutions/DclareMPSRuntime -type f -ls
+
       - name: "build"
         run:  ant
 
@@ -99,6 +103,10 @@ jobs:
 
       - name: "generate javadoc"
         run:  ant javadoc
+
+      - name: "DEBUG2"
+        run: |
+          find solutions/DclareMPSRuntime -type f -ls
 
       - name: "dclare-plugin: build"
         run:  |
