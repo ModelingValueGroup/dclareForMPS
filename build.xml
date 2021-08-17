@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="dclareformps" default="all">
-  
-  
   <property file="build.properties"/>
   <!-- Uncomment the following property if no tests compilation is needed -->
   <!-- 
   <property name="skip.tests" value="true"/>
    -->
-  
   <!-- Compiler options -->
-  
   <property name="compiler.debug" value="on"/>
   <property name="compiler.generate.no.warnings" value="off"/>
   <property name="compiler.args" value=""/>
@@ -53,9 +49,7 @@
     <include name="**/?*.tld"/>
     <include name="**/?*.ftl"/>
   </patternset>
-  
   <!-- JDK definitions -->
-  
   <property name="jdk.bin.11" value="${jdk.home.11}/bin"/>
   <path id="jdk.classpath.11">
     <fileset dir="${jdk.home.11}">
@@ -132,22 +126,16 @@
       <include name="../Home!/jdk.zipfs"/>
     </fileset>
   </path>
-  
   <property name="project.jdk.home" value="${jdk.home.11}"/>
   <property name="project.jdk.bin" value="${jdk.bin.11}"/>
   <property name="project.jdk.classpath" value="jdk.classpath.11"/>
-  
-  
   <!-- Project Libraries -->
-  
   <path id="library.gen:_dclare.classpath">
     <pathelement location="${basedir}/lib/dclare.jar"/>
   </path>
-  
   <path id="library.gen:_immutable-collections.classpath">
     <pathelement location="${basedir}/lib/immutable-collections.jar"/>
   </path>
-  
   <path id="library.gen:_mps.classpath">
     <pathelement location="${basedir}/MPS/lib/mps-closures.jar"/>
     <pathelement location="${basedir}/MPS/lib/mps-core.jar"/>
@@ -158,25 +146,22 @@
     <pathelement location="${basedir}/MPS/lib/platform-api.jar"/>
     <pathelement location="${basedir}/MPS/lib/util.jar"/>
   </path>
-  
   <path id="library.gen:_mvg-json.classpath">
     <pathelement location="${basedir}/lib/mvg-json.jar"/>
   </path>
-  
-  
   <!-- Global Libraries -->
-  
   <!-- Modules -->
-  
   <import file="${basedir}/runtime/module_runtime.xml"/>
-  
   <target name="init" description="Build initialization">
     <!-- Perform any build initialization in this target -->
   </target>
-  
   <target name="clean" depends="clean.module.runtime" description="cleanup all"/>
-  
   <target name="build.modules" depends="init, clean, compile.module.runtime" description="build all modules"/>
-  
   <target name="all" depends="build.modules" description="build all"/>
+  <target name="test" depends="">
+    <echo>all done for test</echo>
+  </target>
+  <target name="javadoc" depends="javadoc.module.runtime">
+    <echo>all done for javadoc</echo>
+  </target>
 </project>
