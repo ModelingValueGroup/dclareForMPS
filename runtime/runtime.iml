@@ -10,6 +10,6 @@
     <orderEntry type="library" name="gen: dclare" level="project" />
     <orderEntry type="library" name="gen: immutable-collections" level="project" />
     <orderEntry type="library" name="gen: mps" level="project" />
-    <orderEntry type="library" name="gen: mvgjson" level="project" />
+    <orderEntry type="library" name="gen: mvg-json" level="project" />
   </component>
 </module>

@@ -29,7 +29,6 @@ dependencies=(
     "jars@mps"
 )
 mps=(
-    "$mpsDir/lib/extensions.jar"
     "$mpsDir/lib/mps-closures.jar"
     "$mpsDir/lib/mps-core.jar"
     "$mpsDir/lib/mps-editor.jar"
