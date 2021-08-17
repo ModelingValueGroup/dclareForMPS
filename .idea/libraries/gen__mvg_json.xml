@@ -3,15 +3,15 @@
 <!--          change  project.sh  instead                         -->
 <!--==============================================================-->
 <component name="libraryTable">
-  <library name="gen: mvgjson">
+  <library name="gen: mvg-json">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/lib/mvgjson.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/mvg-json.jar!/" />
     </CLASSES>
     <JAVADOC>
-      <root url="jar://$PROJECT_DIR$/lib/mvgjson-javadoc.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/mvg-json-javadoc.jar!/" />
     </JAVADOC>
     <SOURCES>
-      <root url="jar://$PROJECT_DIR$/lib/mvgjson-sources.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/mvg-json-sources.jar!/" />
     </SOURCES>
   </library>
 </component>
