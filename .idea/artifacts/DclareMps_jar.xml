@@ -1,0 +1,11 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="DclareMps:jar">
+    <output-path>$PROJECT_DIR$/solutions/DclareMPSRuntime/lib</output-path>
+    <root id="archive" name="DclareMps.jar">
+      <element id="module-output" name="runtime" />
+      <element id="library" level="project" name="gen: immutable-collections" />
+      <element id="library" level="project" name="gen: dclare" />
+      <element id="library" level="project" name="gen: mvg-json" />
+    </root>
+  </artifact>
+</component>
