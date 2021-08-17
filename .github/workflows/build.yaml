@@ -65,7 +65,7 @@ jobs:
       - name: "DEBUG0"
         run: |
           find solutions/DclareMPSRuntime -type f -ls
-          [[ -d lib ]] && find lib -type f -ls
+          if [[ -d lib ]]; then find lib -type f -ls; fi
 
       - name: "download dependencies (MPS and jars from pom)"
         run:  |
@@ -92,7 +92,7 @@ jobs:
       - name: "DEBUG1"
         run: |
           find solutions/DclareMPSRuntime -type f -ls
-          [[ -d lib ]] && find lib -type f -ls
+          if [[ -d lib ]]; then find lib -type f -ls; fi
 
       - name: "build"
         run:  ant
@@ -113,7 +113,7 @@ jobs:
       - name: "DEBUG2"
         run: |
           find solutions/DclareMPSRuntime -type f -ls
-          [[ -d lib ]] && find lib -type f -ls
+          if [[ -d lib ]]; then find lib -type f -ls; fi
 
       - name: "dclare-plugin: build"
         run:  |
