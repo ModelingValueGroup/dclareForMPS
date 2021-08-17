@@ -182,19 +182,19 @@
     <property name="artifacts.temp.dir" value="${basedir}/__artifacts_temp"/>
     <property name="artifact.output.dclaremps:jar" value="${basedir}/solutions/DclareMPSRuntime/lib"/>
     <mkdir dir="${artifacts.temp.dir}"/>
-    <property name="temp.jar.path.DclareMps_jar.jar" value="${artifacts.temp.dir}/DclareMps_jar.jar"/>
+    <property name="temp.jar.path.DclareMps.jar" value="${artifacts.temp.dir}/DclareMps.jar"/>
   </target>
   
   <target name="artifact.dclaremps:jar" depends="init.artifacts, compile.module.runtime" description="Build &#39;DclareMps:jar&#39; artifact">
     <property name="artifact.temp.output.dclaremps:jar" value="${artifacts.temp.dir}/DclareMps_jar"/>
     <mkdir dir="${artifact.temp.output.dclaremps:jar}"/>
-    <jar destfile="${temp.jar.path.DclareMps_jar.jar}" duplicate="preserve" filesetmanifest="mergewithoutmain">
+    <jar destfile="${temp.jar.path.DclareMps.jar}" duplicate="preserve" filesetmanifest="mergewithoutmain">
       <zipfileset dir="${runtime.output.dir}"/>
       <zipfileset file="${basedir}/lib/immutable-collections.jar"/>
       <zipfileset file="${basedir}/lib/dclare.jar"/>
       <zipfileset file="${basedir}/lib/mvg-json.jar"/>
     </jar>
-    <copy file="${temp.jar.path.DclareMps_jar.jar}" tofile="${artifact.temp.output.dclaremps:jar}/DclareMps_jar.jar"/>
+    <copy file="${temp.jar.path.DclareMps.jar}" tofile="${artifact.temp.output.dclaremps:jar}/DclareMps.jar"/>
   </target>
   
   <target name="build.all.artifacts" depends="artifact.dclaremps:jar" description="Build all artifacts">
