@@ -62,6 +62,11 @@ jobs:
           correctEols
           correctHeaders header
 
+      - name: "DEBUG0"
+        run: |
+          find solutions/DclareMPSRuntime -type f -ls
+          find lib -type f -ls
+
       - name: "download dependencies (MPS and jars from pom)"
         run:  |
           . <(java -jar ~/buildtools.jar)
@@ -87,6 +92,7 @@ jobs:
       - name: "DEBUG1"
         run: |
           find solutions/DclareMPSRuntime -type f -ls
+          find lib -type f -ls
 
       - name: "build"
         run:  ant
@@ -107,6 +113,7 @@ jobs:
       - name: "DEBUG2"
         run: |
           find solutions/DclareMPSRuntime -type f -ls
+          find lib -type f -ls
 
       - name: "dclare-plugin: build"
         run:  |

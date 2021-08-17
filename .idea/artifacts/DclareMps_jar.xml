@@ -3,9 +3,9 @@
     <output-path>$PROJECT_DIR$/solutions/DclareMPSRuntime/lib</output-path>
     <root id="archive" name="DclareMps.jar">
       <element id="module-output" name="runtime" />
-      <element id="library" level="project" name="gen: immutable-collections" />
-      <element id="library" level="project" name="gen: dclare" />
-      <element id="library" level="project" name="gen: mvg-json" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/dclare.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/immutable-collections.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/mvg-json.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>
