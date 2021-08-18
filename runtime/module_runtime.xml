@@ -15,12 +15,14 @@
     <path refid="library.gen:_dclare.classpath"/>
     <path refid="library.gen:_immutable-collections.classpath"/>
     <path refid="library.gen:_mps.classpath"/>
+    <path refid="library.gen:_mvg-json.classpath"/>
   </path>
   <path id="runtime.runtime.production.module.classpath">
     <pathelement location="${runtime.output.dir}"/>
     <path refid="library.gen:_dclare.classpath"/>
     <path refid="library.gen:_immutable-collections.classpath"/>
     <path refid="library.gen:_mps.classpath"/>
+    <path refid="library.gen:_mvg-json.classpath"/>
   </path>
   <path id="runtime.module.classpath">
     <path refid="${module.jdk.classpath.runtime}"/>
@@ -28,6 +30,7 @@
     <path refid="library.gen:_dclare.classpath"/>
     <path refid="library.gen:_immutable-collections.classpath"/>
     <path refid="library.gen:_mps.classpath"/>
+    <path refid="library.gen:_mvg-json.classpath"/>
   </path>
   <path id="runtime.runtime.module.classpath">
     <pathelement location="${runtime.testoutput.dir}"/>
@@ -35,6 +38,7 @@
     <path refid="library.gen:_dclare.classpath"/>
     <path refid="library.gen:_immutable-collections.classpath"/>
     <path refid="library.gen:_mps.classpath"/>
+    <path refid="library.gen:_mvg-json.classpath"/>
   </path>
   <patternset id="excluded.from.module.runtime">
     <patternset refid="ignored.files"/>

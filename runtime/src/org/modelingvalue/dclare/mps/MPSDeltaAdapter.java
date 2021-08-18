@@ -15,38 +15,48 @@
 
 package org.modelingvalue.dclare.mps;
 
-public abstract class DFromOriginalObject<O> extends DObject {
+import java.io.FileWriter;
+import java.io.IOException;
+import java.util.function.Predicate;
 
-    private final O original;
+import org.modelingvalue.collections.Map;
+import org.modelingvalue.collections.util.Pair;
+import org.modelingvalue.dclare.Setable;
+import org.modelingvalue.dclare.State;
+import org.modelingvalue.dclare.UniverseTransaction;
+import org.modelingvalue.dclare.sync.DeltaAdaptor;
+import org.modelingvalue.dclare.sync.SerializationHelper;
 
-    protected DFromOriginalObject(O original) {
-        this.original = original;
-    }
+public class MPSDeltaAdapter extends DeltaAdaptor<DObjectType<DObject>, DObject, Setable<DObject, Object>> {
 
-    public O original() {
-        return original;
+    public MPSDeltaAdapter(String name, UniverseTransaction tx, SerializationHelper<DObjectType<DObject>, DObject, Setable<DObject, Object>> helper) {
+        super(name, tx, helper);
     }
 
     @Override
-    public int hashCode() {
-        return original.hashCode();
-    }
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    protected void queueDelta(State pre, State post, Boolean last) {
+        Map<Object, Map<Setable, Pair<Object, Object>>> deltaMap = pre.diff(post, getObjectFilter(), (Predicate<Setable>) (Object) helper.setableFilter()).toMap(e1 -> e1);
+        if (!deltaMap.isEmpty()) {
+            try {
+                String delta = ToJsonDeltas.toJson(deltaMap);
+                //System.err.println("SENDING:\n" + Json.pretty(delta));
+                deltaQueue.put(delta);
+                FileWriter w = new FileWriter("f:\\mps.json");
+                w.write(delta);
+                w.flush();
+                w.close();
 
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == this) {
-            return true;
-        } else if (obj instanceof DFromOriginalObject) {
-            DFromOriginalObject<?> other = (DFromOriginalObject<?>) obj;
-            return original.equals(other.original);
-        } else {
-            return false;
+                //read in file, to test al id's are resolvable!
+                //accept(delta);
+            } catch (InterruptedException e) {
+                //e.printStackTrace();//TOMTOMTOM
+                throw new Error(e);
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         }
-    }
-
-    @Override
-    public String toString() {
-        return original.toString();
     }
 
 }

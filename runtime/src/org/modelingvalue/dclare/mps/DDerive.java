@@ -1,5 +1,5 @@
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// (C) Copyright 2018-2020 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
+// (C) Copyright 2018-2021 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
 //                                                                                                                     ~
 // Licensed under the GNU Lesser General Public License v3.0 (the 'License'). You may not use this file except in      ~
 // compliance with the License. You may obtain a copy of the License at: https://choosealicense.com/licenses/lgpl-3.0  ~
@@ -15,43 +15,18 @@
 
 package org.modelingvalue.dclare.mps;
 
-import org.modelingvalue.dclare.Observer;
+import org.jetbrains.mps.openapi.language.SLanguage;
+import org.modelingvalue.dclare.Construction;
+import org.modelingvalue.dclare.Mutable;
 
-public class DCopyConstruction extends DDeriveConstruction {
+public abstract class DDerive extends Construction.Reason {
 
-    protected DCopyConstruction(DObject object, Observer<?> observer, DNode copied, String anonymousType) {
-        super(new Object[]{object, observer, copied, anonymousType});
+    protected DDerive(Mutable thiz, Object[] identity) {
+        super(thiz, identity);
     }
 
-    protected DCopyConstruction(DObject object, Observer<?> observer, DNode copied, DConstruction root) {
-        super(new Object[]{object, observer, copied, root});
-    }
+    public abstract String getAnonymousType();
 
-    private DCopyConstruction(Object[] identity) {
-        super(identity);
-    }
-
-    public DCopyConstruction root() {
-        return identity[3] instanceof DCopyConstruction ? (DCopyConstruction) identity[3] : this;
-    }
-
-    @Override
-    public DObject object() {
-        return (DObject) identity[0];
-    }
-
-    @Override
-    public Observer<?> observer() {
-        return (Observer<?>) identity[1];
-    }
-
-    public DNode copied() {
-        return (DNode) identity[2];
-    }
-
-    @Override
-    public String getAnonymousType() {
-        return (String) root().identity[3];
-    }
+    public abstract SLanguage getAnonymousLanguage();
 
 }

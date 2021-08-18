@@ -1,5 +1,5 @@
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// (C) Copyright 2018-2020 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
+// (C) Copyright 2018-2021 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
 //                                                                                                                     ~
 // Licensed under the GNU Lesser General Public License v3.0 (the 'License'). You may not use this file except in      ~
 // compliance with the License. You may obtain a copy of the License at: https://choosealicense.com/licenses/lgpl-3.0  ~
@@ -30,7 +30,7 @@ public abstract class DIdentifiedObject extends DObject {
 
     @Override
     public int hashCode() {
-        return Arrays.deepHashCode(identity);
+        return Arrays.hashCode(identity);
     }
 
     @Override
@@ -45,7 +45,7 @@ public abstract class DIdentifiedObject extends DObject {
             DIdentifiedObject other = (DIdentifiedObject) obj;
             if (other.identity == identity) {
                 return true;
-            } else if (!Arrays.deepEquals(identity, other.identity)) {
+            } else if (!Arrays.equals(identity, other.identity)) {
                 return false;
             } else {
                 if (Age.age(identity) > Age.age(other.identity)) {

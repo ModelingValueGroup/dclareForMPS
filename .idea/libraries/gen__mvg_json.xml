@@ -1,0 +1,17 @@
+<!--==============================================================-->
+<!-- WARNING: this file will be overwritten by the build scripts! -->
+<!--          change  project.sh  instead                         -->
+<!--==============================================================-->
+<component name="libraryTable">
+  <library name="gen: mvg-json">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/mvg-json.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/lib/mvg-json-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/lib/mvg-json-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

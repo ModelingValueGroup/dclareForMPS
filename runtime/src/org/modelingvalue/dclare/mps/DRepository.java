@@ -1,5 +1,5 @@
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// (C) Copyright 2018-2020 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
+// (C) Copyright 2018-2021 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
 //                                                                                                                     ~
 // Licensed under the GNU Lesser General Public License v3.0 (the 'License'). You may not use this file except in      ~
 // compliance with the License. You may obtain a copy of the License at: https://choosealicense.com/licenses/lgpl-3.0  ~
@@ -15,6 +15,9 @@
 
 package org.modelingvalue.dclare.mps;
 
+import static org.modelingvalue.dclare.CoreSetableModifier.containment;
+import static org.modelingvalue.dclare.CoreSetableModifier.plumbing;
+
 import java.util.stream.Collectors;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
@@ -26,11 +29,12 @@ import org.jetbrains.mps.openapi.module.SRepository;
 import org.jetbrains.mps.openapi.module.SRepositoryListener;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
+import org.modelingvalue.collections.util.TriFunction;
 import org.modelingvalue.dclare.Action;
 import org.modelingvalue.dclare.Constant;
-import org.modelingvalue.dclare.NonCheckingObserved;
 import org.modelingvalue.dclare.Observed;
 import org.modelingvalue.dclare.Observer;
+import org.modelingvalue.dclare.Priority;
 import org.modelingvalue.dclare.Setable;
 
 import jetbrains.mps.project.ProjectRepository;
@@ -38,20 +42,22 @@ import jetbrains.mps.project.ProjectRepository;
 @SuppressWarnings("deprecation")
 public class DRepository extends DFromOriginalObject<ProjectRepository> implements SRepository {
 
-    private static final Constant<Set<SLanguage>, DRepositoryType> REPOSITORY_TYPE = Constant.of("REPOSITORY_TYPE", ls -> new DRepositoryType(ls));
+    private static final Constant<Set<SLanguage>, DRepositoryType> REPOSITORY_TYPE = Constant.of("REPOSITORY_TYPE", DRepositoryType::new);
 
-    protected static final Observed<DRepository, Set<DModule>>     REFERENCED      = NonCheckingObserved.of("REFERENCED", Set.of());
+    protected static final Observed<DRepository, Set<DModule>>     REFERENCED      = Observed.of("REFERENCED", Set.of(), plumbing);
 
-    protected static final DObserved<DRepository, Set<DModule>>    MODULES         = DObserved.of("MODULES", Set.of(), false, true, null, false, null, null);
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    protected static final DObserved<DRepository, Set<DModule>>    MODULES         = DObserved.of("MODULES", Set.of(), (TriFunction) null, containment);
 
-    protected static final DObserved<DRepository, Set<?>>          EXCEPTIONS      = DObserved.of("EXCEPTIONS", Set.of(), false, false, null, false, null, null);
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    protected static final DObserved<DRepository, Set<?>>          EXCEPTIONS      = DObserved.of("EXCEPTIONS", Set.of(), (TriFunction) null);
 
     private static final Observer<DRepository>                     MODULES_RULE    = DObject.observer(MODULES, o -> {
                                                                                        Set<DModule> referenced = REFERENCED.get(o);
                                                                                        MODULES.set(o, Set::addAll, referenced);
                                                                                    });
 
-    private static final Action<DRepository>                       READ_MODULES    = Action.of("$READ_MODULES", r -> MODULES.set(r, dClareMPS().read(DRepository::modules).map(DModule::of).toSet()));
+    private static final Action<DRepository>                       READ_MODULES    = Action.of("$READ_MODULES", r -> MODULES.set(r, dClareMPS().read(DRepository::modules).map(DModule::of).toSet()), Priority.urgent);
 
     @SuppressWarnings("rawtypes")
     protected static final Set<Observer>                           OBSERVERS       = DObject.OBSERVERS.add(MODULES_RULE);

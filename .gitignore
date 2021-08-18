@@ -3,7 +3,6 @@ source_gen
 source_gen.caches
 test_gen.caches
 workspace.xml
-artifacts
 .DS_Store
 
 /build

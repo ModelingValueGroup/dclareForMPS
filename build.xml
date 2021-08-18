@@ -11,7 +11,6 @@
   <property name="compiler.args" value=""/>
   <property name="compiler.max.memory" value="700m"/>
   <patternset id="ignored.files">
-    <exclude name="**/*.hprof/**"/>
     <exclude name="**/*.pyc/**"/>
     <exclude name="**/*.pyo/**"/>
     <exclude name="**/*.rbc/**"/>
@@ -28,14 +27,15 @@
     <exclude name="**/rcs/**"/>
   </patternset>
   <patternset id="library.patterns">
+    <include name="*.apk"/>
+    <include name="*.egg"/>
+    <include name="*.zip"/>
     <include name="*.war"/>
     <include name="*.swc"/>
-    <include name="*.apk"/>
-    <include name="*.zip"/>
-    <include name="*.egg"/>
-    <include name="*.ane"/>
-    <include name="*.jar"/>
     <include name="*.ear"/>
+    <include name="*.jar"/>
+    <include name="*.klib"/>
+    <include name="*.ane"/>
   </patternset>
   <patternset id="compiler.resources">
     <include name="**/?*.properties"/>
@@ -110,6 +110,7 @@
       <include name="../Home!/jdk.management.agent"/>
       <include name="../Home!/jdk.management.jfr"/>
       <include name="../Home!/jdk.naming.dns"/>
+      <include name="../Home!/jdk.naming.ldap"/>
       <include name="../Home!/jdk.naming.rmi"/>
       <include name="../Home!/jdk.net"/>
       <include name="../Home!/jdk.pack"/>
@@ -136,16 +137,19 @@
     <pathelement location="${basedir}/lib/immutable-collections.jar"/>
   </path>
   <path id="library.gen:_mps.classpath">
-    <pathelement location="${path.variable.mps_home}/lib/extensions.jar"/>
-    <pathelement location="${path.variable.mps_home}/lib/mps-closures.jar"/>
-    <pathelement location="${path.variable.mps_home}/lib/mps-core.jar"/>
-    <pathelement location="${path.variable.mps_home}/lib/mps-editor.jar"/>
-    <pathelement location="${path.variable.mps_home}/lib/mps-openapi.jar"/>
-    <pathelement location="${path.variable.mps_home}/lib/mps-platform.jar"/>
-    <pathelement location="${path.variable.mps_home}/lib/mps-project-check.jar"/>
-    <pathelement location="${path.variable.mps_home}/lib/platform-api.jar"/>
-    <pathelement location="${path.variable.mps_home}/lib/util.jar"/>
+    <pathelement location="${basedir}/MPS/lib/mps-closures.jar"/>
+    <pathelement location="${basedir}/MPS/lib/mps-core.jar"/>
+    <pathelement location="${basedir}/MPS/lib/mps-editor.jar"/>
+    <pathelement location="${basedir}/MPS/lib/mps-openapi.jar"/>
+    <pathelement location="${basedir}/MPS/lib/mps-platform.jar"/>
+    <pathelement location="${basedir}/MPS/lib/mps-project-check.jar"/>
+    <pathelement location="${basedir}/MPS/lib/platform-api.jar"/>
+    <pathelement location="${basedir}/MPS/lib/util.jar"/>
   </path>
+  <path id="library.gen:_mvg-json.classpath">
+    <pathelement location="${basedir}/lib/mvg-json.jar"/>
+  </path>
+  <!-- Global Libraries -->
   <!-- Modules -->
   <import file="${basedir}/runtime/module_runtime.xml"/>
   <target name="init" description="Build initialization">
@@ -155,24 +159,25 @@
   <target name="build.modules" depends="init, clean, compile.module.runtime" description="build all modules"/>
   <target name="init.artifacts">
     <property name="artifacts.temp.dir" value="${basedir}/__artifacts_temp"/>
-    <property name="artifact.output.dclaremps" value="${basedir}/solutions/DclareMPSRuntime/lib"/>
+    <property name="artifact.output.dclaremps:jar" value="${basedir}/solutions/DclareMPSRuntime/lib"/>
     <mkdir dir="${artifacts.temp.dir}"/>
     <property name="temp.jar.path.DclareMps.jar" value="${artifacts.temp.dir}/DclareMps.jar"/>
   </target>
-  <target name="artifact.dclaremps" depends="init.artifacts, compile.module.runtime" description="Build 'DclareMps' artifact">
-    <property name="artifact.temp.output.dclaremps" value="${artifacts.temp.dir}/DclareMps"/>
-    <mkdir dir="${artifact.temp.output.dclaremps}"/>
+  <target name="artifact.dclaremps:jar" depends="init.artifacts, compile.module.runtime" description="Build 'DclareMps:jar' artifact">
+    <property name="artifact.temp.output.dclaremps:jar" value="${artifacts.temp.dir}/DclareMps_jar"/>
+    <mkdir dir="${artifact.temp.output.dclaremps:jar}"/>
     <jar destfile="${temp.jar.path.DclareMps.jar}" duplicate="preserve" filesetmanifest="merge">
       <zipfileset dir="${runtime.output.dir}"/>
-      <zipfileset src="${basedir}/lib/immutable-collections.jar"/>
       <zipfileset src="${basedir}/lib/dclare.jar"/>
+      <zipfileset src="${basedir}/lib/immutable-collections.jar"/>
+      <zipfileset src="${basedir}/lib/mvg-json.jar"/>
     </jar>
-    <copy file="${temp.jar.path.DclareMps.jar}" tofile="${artifact.temp.output.dclaremps}/DclareMps.jar"/>
+    <copy file="${temp.jar.path.DclareMps.jar}" tofile="${artifact.temp.output.dclaremps:jar}/DclareMps.jar"/>
   </target>
-  <target name="build.all.artifacts" depends="artifact.dclaremps" description="Build all artifacts">
-    <mkdir dir="${artifact.output.dclaremps}"/>
-    <copy todir="${artifact.output.dclaremps}">
-      <fileset dir="${artifact.temp.output.dclaremps}"/>
+  <target name="build.all.artifacts" depends="artifact.dclaremps:jar" description="Build all artifacts">
+    <mkdir dir="${artifact.output.dclaremps:jar}"/>
+    <copy todir="${artifact.output.dclaremps:jar}">
+      <fileset dir="${artifact.temp.output.dclaremps:jar}"/>
     </copy>
     <!-- Delete temporary files -->
     <delete dir="${artifacts.temp.dir}"/>

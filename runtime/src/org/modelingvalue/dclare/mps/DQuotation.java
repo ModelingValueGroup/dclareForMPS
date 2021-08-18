@@ -1,5 +1,5 @@
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// (C) Copyright 2018-2020 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
+// (C) Copyright 2018-2021 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
 //                                                                                                                     ~
 // Licensed under the GNU Lesser General Public License v3.0 (the 'License'). You may not use this file except in      ~
 // compliance with the License. You may obtain a copy of the License at: https://choosealicense.com/licenses/lgpl-3.0  ~
@@ -17,49 +17,36 @@ package org.modelingvalue.dclare.mps;
 
 import java.util.Arrays;
 
-import org.modelingvalue.collections.util.Age;
+import org.jetbrains.mps.openapi.language.SLanguage;
+import org.modelingvalue.dclare.Direction;
+import org.modelingvalue.dclare.Mutable;
 
-public abstract class DConstruction {
+public class DQuotation extends DDerive {
 
-    protected Object[] identity;
+    protected DQuotation(Mutable thiz, SLanguage anonymousLanguage, String anonymousType, Object[] ctx) {
+        super(thiz, init(ctx, anonymousLanguage, anonymousType));
+    }
 
-    protected DConstruction(Object[] identity) {
-        this.identity = identity;
+    private static Object[] init(Object[] ctx, SLanguage anonymousLanguage, String anonymousType) {
+        Object[] array = Arrays.copyOf(ctx, ctx.length + 2);
+        array[array.length - 2] = anonymousLanguage;
+        array[array.length - 1] = anonymousType;
+        return array;
     }
 
     @Override
-    public int hashCode() {
-        return Arrays.deepHashCode(identity);
+    public String getAnonymousType() {
+        return (String) get(null, size() - 1);
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        } else if (obj == null) {
-            return false;
-        } else if (getClass() != obj.getClass()) {
-            return false;
-        } else {
-            DConstruction other = (DConstruction) obj;
-            if (other.identity == identity) {
-                return true;
-            } else if (!Arrays.deepEquals(identity, other.identity)) {
-                return false;
-            } else {
-                if (Age.age(identity) > Age.age(other.identity)) {
-                    other.identity = identity;
-                } else {
-                    identity = other.identity;
-                }
-                return true;
-            }
-        }
+    public SLanguage getAnonymousLanguage() {
+        return (SLanguage) get(null, size() - 2);
     }
 
     @Override
-    public String toString() {
-        return Arrays.toString(identity);
+    public Direction direction() {
+        return Direction.of(getAnonymousLanguage());
     }
 
 }

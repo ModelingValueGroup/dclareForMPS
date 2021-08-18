@@ -1,5 +1,5 @@
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// (C) Copyright 2018-2020 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
+// (C) Copyright 2018-2021 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
 //                                                                                                                     ~
 // Licensed under the GNU Lesser General Public License v3.0 (the 'License'). You may not use this file except in      ~
 // compliance with the License. You may obtain a copy of the License at: https://choosealicense.com/licenses/lgpl-3.0  ~
@@ -53,33 +53,35 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
     @Override
     public void propertyChanged(SPropertyChangeEvent event) {
         b().handleMPSChange(() -> {
-            DNode.PROPERTY.get(event.getProperty()).set(DNode.of(event.getNode()), event.getNewValue());
+            if (a().isActive()) {
+                DNode.PROPERTY.get(event.getProperty()).set(DNode.of(event.getNode()), event.getNewValue());
+            }
         });
     }
 
     @Override
     public void referenceChanged(SReferenceChangeEvent event) {
         b().handleMPSChange(() -> {
-            SReference newValue = event.getNewValue();
-            SNode targetNode = newValue != null ? newValue.getTargetNode() : null;
-            DNode.REFERENCE.get(event.getAssociationLink()).set(DNode.of(event.getNode()), targetNode != null ? DNode.of(targetNode) : null);
+            if (a().isActive()) {
+                SReference newValue = event.getNewValue();
+                SNode targetNode = newValue != null ? newValue.getTargetNode() : null;
+                DNode.REFERENCE.get(event.getAssociationLink()).set(DNode.of(event.getNode()), targetNode != null ? DNode.of(targetNode) : null);
+            }
         });
     }
 
     @Override
     public void nodeAdded(SNodeAddEvent event) {
         b().handleMPSChange(() -> {
-            SNode sNode = event.getChild();
-            DNode dNode = DNode.of(sNode);
-            DModel dModel = DModel.of(event.getModel());
-            if (event.isRoot()) {
-                DModel.ROOTS.set(dModel, Set::add, dNode);
-            } else {
-                SContainmentLink al = event.getAggregationLink();
-                //noinspection ConstantConditions
-                if (!al.getName().equals("smodelAttribute")) {
+            if (a().isActive()) {
+                SNode sNode = event.getChild();
+                DNode dNode = DNode.of(sNode);
+                DModel dModel = DModel.of(event.getModel());
+                if (event.isRoot()) {
+                    DModel.ROOTS.set(dModel, Set::add, dNode);
+                } else {
+                    SContainmentLink al = event.getAggregationLink();
                     if (al.isMultiple()) {
-                        //noinspection ConstantConditions
                         int index = DNode.children(event.getParent(), al).firstIndexOf(sNode);
                         if (index >= 0) {
                             DNode.MANY_CONTAINMENT.get(al).set(DNode.of(event.getParent()), (l, e) -> {
@@ -98,15 +100,14 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
     @Override
     public void nodeRemoved(SNodeRemoveEvent event) {
         b().handleMPSChange(() -> {
-            SNode child = event.getChild();
-            SNodeReference ref = new jetbrains.mps.smodel.SNodePointer(a().reference(), child.getNodeId());
-            DNode dNode = DNode.of(child.getConcept(), ref, child);
-            if (event.isRoot()) {
-                DModel.ROOTS.set(DModel.of(event.getModel()), Set::remove, dNode);
-            } else {
-                SContainmentLink al = event.getAggregationLink();
-                //noinspection ConstantConditions
-                if (!al.getName().equals("smodelAttribute")) {
+            if (a().isActive()) {
+                SNode sNode = event.getChild();
+                SNodeReference ref = new jetbrains.mps.smodel.SNodePointer(a().reference(), sNode.getNodeId());
+                DNode dNode = DNode.of(sNode.getConcept(), ref, sNode);
+                if (event.isRoot()) {
+                    DModel.ROOTS.set(DModel.of(event.getModel()), Set::remove, dNode);
+                } else {
+                    SContainmentLink al = event.getAggregationLink();
                     if (al.isMultiple()) {
                         DNode.MANY_CONTAINMENT.get(al).set(DNode.of(event.getParent()), List::remove, dNode);
                     } else {
@@ -119,15 +120,23 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
 
     @Override
     public void modelLoaded(SModel model, boolean partially) {
+        b().handleMPSChange(() -> {
+            DModel.LOADED.set(a(), Boolean.TRUE);
+        });
     }
 
     @Override
     public void modelReplaced(SModel model) {
-        b().universeTransaction().put("$REFRESH", () -> DModel.REFRESH.trigger(DModel.of(model)));
+        if (a().isActive()) {
+            b().universeTransaction().put("$REFRESH", () -> DModel.REFRESH.trigger(DModel.of(model)));
+        }
     }
 
     @Override
     public void modelUnloaded(SModel model) {
+        b().handleMPSChange(() -> {
+            DModel.LOADED.set(a(), Boolean.FALSE);
+        });
     }
 
     @Override
@@ -169,18 +178,22 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
     @Override
     public void importAdded(SModelImportEvent event) {
         b().handleMPSChange(() -> {
-            DModel dModel = DModel.of(event.getModel());
-            DModel add = DModel.of(event.getModelUID().resolve(null));
-            DModel.USED_MODELS.set(dModel, Set::add, add);
+            if (!a().isExternal() && a().isActive()) {
+                DModel dModel = DModel.of(event.getModel());
+                DModel add = DModel.of(event.getModelUID().resolve(null));
+                DModel.USED_MODELS.set(dModel, Set::add, add);
+            }
         });
     }
 
     @Override
     public void importRemoved(SModelImportEvent event) {
         b().handleMPSChange(() -> {
-            DModel dModel = DModel.of(event.getModel());
-            DModel rem = DModel.of(event.getModelUID().resolve(null));
-            DModel.USED_MODELS.set(dModel, Set::remove, rem);
+            if (!a().isExternal() && a().isActive()) {
+                DModel dModel = DModel.of(event.getModel());
+                DModel rem = DModel.of(event.getModelUID().resolve(null));
+                DModel.USED_MODELS.set(dModel, Set::remove, rem);
+            }
         });
     }
 

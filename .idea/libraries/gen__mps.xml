@@ -5,7 +5,6 @@
 <component name="libraryTable">
   <library name="gen: mps">
     <CLASSES>
-      <root url="jar://$PROJECT_DIR$/MPS/lib/extensions.jar!/" />
       <root url="jar://$PROJECT_DIR$/MPS/lib/mps-closures.jar!/" />
       <root url="jar://$PROJECT_DIR$/MPS/lib/mps-core.jar!/" />
       <root url="jar://$PROJECT_DIR$/MPS/lib/mps-editor.jar!/" />
