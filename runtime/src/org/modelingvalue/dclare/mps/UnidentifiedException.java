@@ -1,5 +1,9 @@
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+<<<<<<< HEAD:runtime/src/org/modelingvalue/dclare/mps/UnidentifiedException.java
 // (C) Copyright 2018-2021 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
+=======
+// (C) Copyright 2018-2020 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
+>>>>>>> master:runtime/src/org/modelingvalue/dclare/mps/DDeriveConstruction.java
 //                                                                                                                     ~
 // Licensed under the GNU Lesser General Public License v3.0 (the 'License'). You may not use this file except in      ~
 // compliance with the License. You may obtain a copy of the License at: https://choosealicense.com/licenses/lgpl-3.0  ~
@@ -15,6 +19,7 @@
 
 package org.modelingvalue.dclare.mps;
 
+<<<<<<< HEAD:runtime/src/org/modelingvalue/dclare/mps/UnidentifiedException.java
 import org.modelingvalue.dclare.Setable;
 import org.modelingvalue.dclare.ex.ConsistencyError;
 
@@ -31,6 +36,32 @@ public final class UnidentifiedException extends ConsistencyError {
     @SuppressWarnings("rawtypes")
     public UnidentifiedException(Object object, Setable setable, Object value) {
         super(object, setable, 4, "Property '" + setable + "' of object '" + object + "' is assigned with unidentified objects '" + value + "'");
+=======
+import org.modelingvalue.collections.Set;
+import org.modelingvalue.dclare.Observer;
+
+public abstract class DDeriveConstruction extends DConstruction {
+
+    protected DDeriveConstruction(Object[] identity) {
+        super(identity);
+    }
+
+    public abstract Observer<?> observer();
+
+    public abstract DObject object();
+
+    public abstract String getAnonymousType();
+
+    @SuppressWarnings("rawtypes")
+    public Set<DMatchedObject> context() {
+        Set<DMatchedObject> result = Set.of();
+        for (int i = 0; i < identity.length; i++) {
+            if (identity[i] instanceof DMatchedObject) {
+                result = result.add((DMatchedObject) identity[i]);
+            }
+        }
+        return result;
+>>>>>>> master:runtime/src/org/modelingvalue/dclare/mps/DDeriveConstruction.java
     }
 
 }
