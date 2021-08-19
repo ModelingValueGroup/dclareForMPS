@@ -18,9 +18,9 @@ plugins {
     `maven-publish`
 }
 dependencies {
-    implementation("org.modelingvalue:mvgjson:1.5.0-BRANCHED")
-    implementation("org.modelingvalue:immutable-collections:1.5.0-BRANCHED")
-    implementation("org.modelingvalue:dclare:1.5.0-BRANCHED")
+    implementation("org.modelingvalue:mvg-json:1.6.1-BRANCHED")
+    implementation("org.modelingvalue:immutable-collections:1.6.1-BRANCHED")
+    implementation("org.modelingvalue:dclare:1.6.1-BRANCHED")
 
     compileOnly(mpsJar("mps-closures"))
     compileOnly(mpsJar("mps-core"))
@@ -53,4 +53,4 @@ tasks.register<Copy>("gatherRuntimeJars") {
     tasks.findByName("jar")?.finalizedBy(this)
 }
 
-task("createJar").outputs.files.forEach { System.err.println("TOMTOMTOM " + it) }
+task("createJar").outputs.files.forEach { System.err.println("TOMTOMTOM $it") }
