@@ -17,6 +17,7 @@ package org.modelingvalue.dclare.mps;
 
 import static org.modelingvalue.dclare.CoreSetableModifier.containment;
 import static org.modelingvalue.dclare.CoreSetableModifier.plumbing;
+import static org.modelingvalue.dclare.CoreSetableModifier.synthetic;
 
 import java.util.Collections;
 import java.util.Objects;
@@ -66,8 +67,7 @@ import jetbrains.mps.smodel.SModelInternal;
 @SuppressWarnings("unused")
 public class DModel extends DMatchedObject<DModel, SModelReference, SModel> implements SModel {
 
-
-    private static final Constant<Triple<Set<SLanguage>, Boolean, Set<String>>, DModelType> MODEL_TYPE = Constant.of("MODEL_TYPE", DModelType::new);
+    private static final Constant<Triple<Set<SLanguage>, Boolean, Set<String>>, DModelType> MODEL_TYPE       = Constant.of("MODEL_TYPE", DModelType::new);
 
     protected static final DObserved<DModel, String>                                        NAME             = DObserved.of("NAME", null, (dModel, pre, post) -> {
                                                                                                                  if (post != null) {
@@ -90,16 +90,16 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
                                                                                                                          return true;
                                                                                                                      }
                                                                                                                  }
-        return false;
-    }, (t, m, b, a) -> {
-        if (b.isEmpty() && !a.isEmpty()) {
-            DModel.ACTIVE.set(m, Boolean.TRUE);
-        }
-    }, containment);
+                                                                                                                 return false;
+                                                                                                             }, (t, m, b, a) -> {
+                                                                                                                 if (b.isEmpty() && !a.isEmpty()) {
+                                                                                                                     DModel.ACTIVE.set(m, Boolean.TRUE);
+                                                                                                                 }
+                                                                                                             }, containment);
 
     protected static final DObserved<DModel, Set<SLanguage>>                                USED_LANGUAGES   = DObserved.of("USED_LANGUAGES", Set.of(), (dModel, pre, post) -> {
-        SModelInternal sModel = (SModelInternal) dModel.original();
-        Set<SLanguage> ist    = Collection.of(sModel.importedLanguageIds()).sequential().toSet();
+                                                                                                                 SModelInternal sModel = (SModelInternal) dModel.original();
+                                                                                                                 Set<SLanguage> ist = Collection.of(sModel.importedLanguageIds()).sequential().toSet();
                                                                                                                  if (!post.equals(ist)) {
                                                                                                                      DObserved.map(ist, post, sModel::addLanguage, sModel::deleteLanguageId);
                                                                                                                      return true;
@@ -110,9 +110,9 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
 
     protected static final DObserved<DModel, Set<DModel>>                                   USED_MODELS      = DObserved.of("USED_MODELS", Set.of(), (o, pre, post) -> {
                                                                                                                  if (!o.isExternal() && o.isActive()) {
-                                                                                                                     SModelInternal       sModel = (SModelInternal) o.original();
-                                                                                                                     Set<SModelReference> soll   = post.map(DModel::reference).notNull().toSet();
-                                                                                                                     Set<SModelReference> ist    = Collection.of(sModel.getModelImports()).sequential().toSet();
+                                                                                                                     SModelInternal sModel = (SModelInternal) o.original();
+                                                                                                                     Set<SModelReference> soll = post.map(DModel::reference).notNull().toSet();
+                                                                                                                     Set<SModelReference> ist = Collection.of(sModel.getModelImports()).sequential().toSet();
                                                                                                                      if (!soll.equals(ist)) {
                                                                                                                          DObserved.map(ist, soll, sModel::addModelImport, sModel::deleteModelImport);
                                                                                                                          return true;
@@ -121,13 +121,13 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
                                                                                                                  return false;
                                                                                                              });
 
-    protected static final Observed<DModel, ModelRoot> MODEL_ROOT = Observed.of("MODEL_ROOT", null, plumbing);
+    protected static final Observed<DModel, ModelRoot>                                      MODEL_ROOT       = Observed.of("MODEL_ROOT", null, synthetic);
 
     private static final Action<DModel>                                                     READ_ROOTS       = Action.of("$READ_ROOTS", m -> {
-        SModel sModel = Objects.requireNonNull(m.tryOriginal());
-        MODEL_ROOT.set(m, dClareMPS().read(sModel::getModelRoot));
-        ROOTS.set(m, dClareMPS().read(() -> Collection.of(sModel.getRootNodes()).sequential().map(DNode::read).toSet()));
-    }, Priority.urgent);
+                                                                                                                 SModel sModel = Objects.requireNonNull(m.tryOriginal());
+                                                                                                                 MODEL_ROOT.set(m, dClareMPS().read(sModel::getModelRoot));
+                                                                                                                 ROOTS.set(m, dClareMPS().read(() -> Collection.of(sModel.getRootNodes()).sequential().map(DNode::read).toSet()));
+                                                                                                             }, Priority.urgent);
 
     private static final Action<DModel>                                                     READ_NAME        = Action.of("$READ_NAME", m -> {
                                                                                                                  SModel sModel = m.tryOriginal();
@@ -167,7 +167,7 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
                                                                                                                          READ_ROOTS.trigger(m);
                                                                                                                      }
                                                                                                                  }
-    }, plumbing);
+                                                                                                             }, plumbing);
     @SuppressWarnings({"rawtypes", "unchecked"})
     protected static final DObserved<DModel, Boolean>                                       LOADED           = DObserved.of("LOADED", Boolean.FALSE, (TriFunction) null, plumbing);
 

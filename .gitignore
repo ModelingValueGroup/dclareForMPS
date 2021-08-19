@@ -20,9 +20,7 @@
 .idea/**/workspace.xml
 .idea/**/xtextAutoBuilderState.xml
 .idea/*.iml
-.idea/artifacts
 .idea/compiler.xml
-.idea/httpRequests
 .idea/jarRepositories.xml
 .idea/modules
 .idea/modules.xml

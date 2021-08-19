@@ -61,11 +61,11 @@ public abstract class DObject implements Mutable {
                                                                                                                      }
                                                                                                                  };
 
-    public static final Observed<DObject, DObjectType<?>> TYPE = Observed.of("$TYPE", DUMMY_TYPE, plumbing);
+    public static final Observed<DObject, DObjectType<?>>                              TYPE                      = Observed.of("$TYPE", DUMMY_TYPE, plumbing);
 
     protected static final Observer<DObject>                                           TYPE_RULE                 = observer(TYPE, o -> TYPE.set(o, o.getType()));
 
-    protected static final Observed<DObject, DAttribute> CONTAINING_ATTRIBUTE = Observed.of("$CONTAINING_ATTRIBUTE", null, plumbing);
+    protected static final Observed<DObject, DAttribute>                               CONTAINING_ATTRIBUTE      = Observed.of("$CONTAINING_ATTRIBUTE", null, plumbing);
 
     protected static final Observer<DObject>                                           CONTAINING_ATTRIBUTE_RULE = observer(CONTAINING_ATTRIBUTE, o -> {
                                                                                                                      Pair<Mutable, Setable<Mutable, ?>> pc = Mutable.D_PARENT_CONTAINING.get(o);
@@ -93,7 +93,7 @@ public abstract class DObject implements Mutable {
                                                                                                                      }
                                                                                                                  });
 
-    protected static final Setable<DObject, Set<DIssue>> DRULE_ISSUES = Setable.of("$DRULE_ISSUES", Set.of(), containment);
+    protected static final Setable<DObject, Set<DIssue>>                               DRULE_ISSUES              = Setable.of("$DRULE_ISSUES", Set.of(), containment);
 
     protected static final DObserved<DObject, Set<DIssue>>                             DCLARE_ISSUES             = DObserved.of("$DCLARE_ISSUES", Set.of(), () -> DIssue.DOBJECT, (dObject, pre, post) -> !Objects.equals(pre, post), null);
 
