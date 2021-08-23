@@ -39,6 +39,7 @@ publishing {
     }
 }
 tasks.register<Copy>("gatherRuntimeJars") {
+    group = "mvg";
     into(rootProject.projectDir.toPath().resolve("solutions/DclareMPSRuntime/lib"))
     from(
         tasks["jar"].outputs,
