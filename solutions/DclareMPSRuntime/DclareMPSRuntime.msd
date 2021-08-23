@@ -7,8 +7,8 @@
     <modelRoot contentPath="${module}/lib" type="java_classes">
       <sourceRoot location="dclare.jar" />
       <sourceRoot location="immutable-collections.jar" />
-      <sourceRoot location="mvgjson.jar" />
       <sourceRoot location="runtime.jar" />
+      <sourceRoot location="mvg-json.jar" />
     </modelRoot>
   </models>
   <facets>
@@ -19,8 +19,8 @@
   <stubModelEntries>
     <stubModelEntry path="${module}/lib/dclare.jar" />
     <stubModelEntry path="${module}/lib/immutable-collections.jar" />
-    <stubModelEntry path="${module}/lib/mvgjson.jar" />
     <stubModelEntry path="${module}/lib/runtime.jar" />
+    <stubModelEntry path="${module}/lib/mvg-json.jar" />
   </stubModelEntries>
   <sourcePath />
   <dependencies>
