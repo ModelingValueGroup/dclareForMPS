@@ -1,3 +1,7 @@
+# v1.6.1
+
+- release with new gradle base infra (no functional differences)
+
 # v1.6.0
 
 - update to latest MPS version (2021.1)
