@@ -1,8 +1,17 @@
-# v1.5.0
+# v1.6.1
+
+- release with new gradle base infra (no functional differences)
+
+# v1.6.0
 
 - update to latest MPS version (2021.1)
 - a lot of work is done on bidirectional transformations
 - some corner cases in bidi transformations can still cause problems, these will be addressed in a later update
+
+# v1.5.0
+
+- various bugfixes
+- update to MPS 2020.2
 
 # v1.4.1
 

@@ -1,8 +1,0 @@
-<component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="deps" type="CompoundRunConfigurationType">
-    <toRun name="deps to lib folder (doc)" type="MavenRunConfiguration" />
-    <toRun name="deps to lib folder (src)" type="MavenRunConfiguration" />
-    <toRun name="deps to lib folder" type="MavenRunConfiguration" />
-    <method v="2" />
-  </configuration>
-</component>

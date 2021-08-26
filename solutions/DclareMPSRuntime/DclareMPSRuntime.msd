@@ -1,26 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<solution name="DclareMPSRuntime" uuid="55d6b6f5-8095-4cd0-a39b-779da8d12940" moduleVersion="0" compileInMPS="true">
+<solution name="DclareMPSRuntime" uuid="55d6b6f5-8095-4cd0-a39b-779da8d12940" moduleVersion="0" pluginKind="PLUGIN_OTHER" compileInMPS="true">
   <models>
     <modelRoot contentPath="${module}/models" type="default">
       <sourceRoot location="." />
     </modelRoot>
     <modelRoot contentPath="${module}/lib" type="java_classes">
-      <sourceRoot location="DclareMps.jar" />
+      <sourceRoot location="dclare.jar" />
+      <sourceRoot location="immutable-collections.jar" />
+      <sourceRoot location="runtime.jar" />
+      <sourceRoot location="mvg-json.jar" />
     </modelRoot>
   </models>
   <facets>
-    <facet type="java">
+    <facet type="java" languageLevel="JAVA_8">
       <classes generated="true" path="${module}/classes_gen" />
     </facet>
   </facets>
   <stubModelEntries>
-    <stubModelEntry path="${module}/lib/DclareMps.jar" />
+    <stubModelEntry path="${module}/lib/dclare.jar" />
+    <stubModelEntry path="${module}/lib/immutable-collections.jar" />
+    <stubModelEntry path="${module}/lib/runtime.jar" />
+    <stubModelEntry path="${module}/lib/mvg-json.jar" />
   </stubModelEntries>
   <sourcePath />
   <dependencies>
     <dependency reexport="true">8865b7a8-5271-43d3-884c-6fd1d9cfdd34(MPS.OpenAPI)</dependency>
     <dependency reexport="true">6ed54515-acc8-4d1e-a16c-9fd6cfe951ea(MPS.Core)</dependency>
-    <dependency reexport="false">6354ebe7-c22a-4a0f-ac54-50b52ab9b065(JDK)</dependency>
+    <dependency reexport="true">6354ebe7-c22a-4a0f-ac54-50b52ab9b065(JDK)</dependency>
     <dependency reexport="false">498d89d2-c2e9-11e2-ad49-6cf049e62fe5(MPS.IDEA)</dependency>
     <dependency reexport="false">1ed103c3-3aa6-49b7-9c21-6765ee11f224(MPS.Editor)</dependency>
     <dependency reexport="false">18bc6592-03a6-4e29-a83a-7ff23bde13ba(jetbrains.mps.lang.editor)</dependency>

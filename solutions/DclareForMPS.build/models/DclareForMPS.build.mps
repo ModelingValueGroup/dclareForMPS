@@ -226,7 +226,7 @@
     </node>
     <node concept="398rNT" id="3Lt_N8a$ptU" role="1l3spd">
       <property role="TrG5h" value="dclare_home" />
-      <node concept="55IIr" id="3Lt_N8a$pui" role="398pKh" />
+      <node concept="55IIr" id="4emHI0re_o3" role="398pKh" />
     </node>
     <node concept="2sgV4H" id="5TmHY1kYraL" role="1l3spa">
       <ref role="1l3spb" to="ffeo:3IKDaVZmzS6" resolve="mps" />
@@ -257,6 +257,57 @@
               </node>
             </node>
           </node>
+          <node concept="28jJK3" id="4emHI0rnY8d" role="39821P">
+            <node concept="398BVA" id="4emHI0rnY96" role="28jJRO">
+              <ref role="398BVh" node="3Lt_N8a$ptU" resolve="dclare_home" />
+              <node concept="2Ry0Ak" id="4emHI0rnY9O" role="iGT6I">
+                <property role="2Ry0Am" value="solutions" />
+                <node concept="2Ry0Ak" id="4emHI0rnY9T" role="2Ry0An">
+                  <property role="2Ry0Am" value="DclareMPSRuntime" />
+                  <node concept="2Ry0Ak" id="4emHI0rnY9W" role="2Ry0An">
+                    <property role="2Ry0Am" value="lib" />
+                    <node concept="2Ry0Ak" id="4emHI0rnYa1" role="2Ry0An">
+                      <property role="2Ry0Am" value="dclare.jar" />
+                    </node>
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+          <node concept="28jJK3" id="4emHI0rnYaW" role="39821P">
+            <node concept="398BVA" id="4emHI0rnYaX" role="28jJRO">
+              <ref role="398BVh" node="3Lt_N8a$ptU" resolve="dclare_home" />
+              <node concept="2Ry0Ak" id="4emHI0rnYaY" role="iGT6I">
+                <property role="2Ry0Am" value="solutions" />
+                <node concept="2Ry0Ak" id="4emHI0rnYaZ" role="2Ry0An">
+                  <property role="2Ry0Am" value="DclareMPSRuntime" />
+                  <node concept="2Ry0Ak" id="4emHI0rnYb0" role="2Ry0An">
+                    <property role="2Ry0Am" value="lib" />
+                    <node concept="2Ry0Ak" id="4emHI0rnYdc" role="2Ry0An">
+                      <property role="2Ry0Am" value="immutable-collections.jar" />
+                    </node>
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+          <node concept="28jJK3" id="4emHI0rnYc1" role="39821P">
+            <node concept="398BVA" id="4emHI0rnYc2" role="28jJRO">
+              <ref role="398BVh" node="3Lt_N8a$ptU" resolve="dclare_home" />
+              <node concept="2Ry0Ak" id="4emHI0rnYc3" role="iGT6I">
+                <property role="2Ry0Am" value="solutions" />
+                <node concept="2Ry0Ak" id="4emHI0rnYc4" role="2Ry0An">
+                  <property role="2Ry0Am" value="DclareMPSRuntime" />
+                  <node concept="2Ry0Ak" id="4emHI0rnYc5" role="2Ry0An">
+                    <property role="2Ry0Am" value="lib" />
+                    <node concept="2Ry0Ak" id="4emHI0rnYdQ" role="2Ry0An">
+                      <property role="2Ry0Am" value="mvg-json.jar" />
+                    </node>
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
           <node concept="28jJK3" id="3Lt_N8a$ptt" role="39821P">
             <node concept="398BVA" id="3Lt_N8a$puu" role="28jJRO">
               <ref role="398BVh" node="3Lt_N8a$ptU" resolve="dclare_home" />
@@ -266,8 +317,8 @@
                   <property role="2Ry0Am" value="DclareMPSRuntime" />
                   <node concept="2Ry0Ak" id="3Lt_N8a$puS" role="2Ry0An">
                     <property role="2Ry0Am" value="lib" />
-                    <node concept="2Ry0Ak" id="3Lt_N8a$puX" role="2Ry0An">
-                      <property role="2Ry0Am" value="DclareMps.jar" />
+                    <node concept="2Ry0Ak" id="4emHI0rtIAY" role="2Ry0An">
+                      <property role="2Ry0Am" value="runtime.jar" />
                     </node>
                   </node>
                 </node>
@@ -452,23 +503,23 @@
             <property role="3ZfqAx" value="generator/template" />
             <property role="1Hdu6h" value="true" />
             <property role="1HemKv" value="true" />
-            <node concept="3LXTmp" id="oVVxO6tTvn" role="1HemKq">
-              <node concept="398BVA" id="oVVxO6tTvc" role="3LXTmr">
+            <node concept="3LXTmp" id="4emHI0reHQa" role="1HemKq">
+              <node concept="398BVA" id="4emHI0reHQ0" role="3LXTmr">
                 <ref role="398BVh" node="3Lt_N8a$ptU" resolve="dclare_home" />
-                <node concept="2Ry0Ak" id="oVVxO6tTvd" role="iGT6I">
+                <node concept="2Ry0Ak" id="4emHI0reHQ1" role="iGT6I">
                   <property role="2Ry0Am" value="languages" />
-                  <node concept="2Ry0Ak" id="oVVxO6tTve" role="2Ry0An">
+                  <node concept="2Ry0Ak" id="4emHI0reHQ2" role="2Ry0An">
                     <property role="2Ry0Am" value="DclareMPS" />
-                    <node concept="2Ry0Ak" id="oVVxO6tTvf" role="2Ry0An">
+                    <node concept="2Ry0Ak" id="4emHI0reHQ3" role="2Ry0An">
                       <property role="2Ry0Am" value="generator" />
-                      <node concept="2Ry0Ak" id="oVVxO6tTvg" role="2Ry0An">
+                      <node concept="2Ry0Ak" id="4emHI0reHQ4" role="2Ry0An">
                         <property role="2Ry0Am" value="template" />
                       </node>
                     </node>
                   </node>
                 </node>
               </node>
-              <node concept="3qWCbU" id="oVVxO6tTvo" role="3LXTna">
+              <node concept="3qWCbU" id="4emHI0reHQb" role="3LXTna">
                 <property role="3qWCbO" value="**/*.mps, **/*.mpsr, **/.model" />
               </node>
             </node>
@@ -573,20 +624,20 @@
           <property role="3ZfqAx" value="models" />
           <property role="1Hdu6h" value="true" />
           <property role="1HemKv" value="true" />
-          <node concept="3LXTmp" id="oVVxO6tTva" role="1HemKq">
-            <node concept="398BVA" id="oVVxO6tTv1" role="3LXTmr">
+          <node concept="3LXTmp" id="4emHI0reHPY" role="1HemKq">
+            <node concept="398BVA" id="4emHI0reHPQ" role="3LXTmr">
               <ref role="398BVh" node="3Lt_N8a$ptU" resolve="dclare_home" />
-              <node concept="2Ry0Ak" id="oVVxO6tTv2" role="iGT6I">
+              <node concept="2Ry0Ak" id="4emHI0reHPR" role="iGT6I">
                 <property role="2Ry0Am" value="languages" />
-                <node concept="2Ry0Ak" id="oVVxO6tTv3" role="2Ry0An">
+                <node concept="2Ry0Ak" id="4emHI0reHPS" role="2Ry0An">
                   <property role="2Ry0Am" value="DclareMPS" />
-                  <node concept="2Ry0Ak" id="oVVxO6tTv4" role="2Ry0An">
+                  <node concept="2Ry0Ak" id="4emHI0reHPT" role="2Ry0An">
                     <property role="2Ry0Am" value="models" />
                   </node>
                 </node>
               </node>
             </node>
-            <node concept="3qWCbU" id="oVVxO6tTvb" role="3LXTna">
+            <node concept="3qWCbU" id="4emHI0reHPZ" role="3LXTna">
               <property role="3qWCbO" value="**/*.mps, **/*.mpsr, **/.model" />
             </node>
           </node>
@@ -633,23 +684,23 @@
             <property role="3ZfqAx" value="generator/template" />
             <property role="1Hdu6h" value="true" />
             <property role="1HemKv" value="true" />
-            <node concept="3LXTmp" id="oVVxO6tTvJ" role="1HemKq">
-              <node concept="398BVA" id="oVVxO6tTv$" role="3LXTmr">
+            <node concept="3LXTmp" id="4emHI0reHQw" role="1HemKq">
+              <node concept="398BVA" id="4emHI0reHQm" role="3LXTmr">
                 <ref role="398BVh" node="3Lt_N8a$ptU" resolve="dclare_home" />
-                <node concept="2Ry0Ak" id="oVVxO6tTv_" role="iGT6I">
+                <node concept="2Ry0Ak" id="4emHI0reHQn" role="iGT6I">
                   <property role="2Ry0Am" value="languages" />
-                  <node concept="2Ry0Ak" id="oVVxO6tTvA" role="2Ry0An">
+                  <node concept="2Ry0Ak" id="4emHI0reHQo" role="2Ry0An">
                     <property role="2Ry0Am" value="DclareMessages" />
-                    <node concept="2Ry0Ak" id="oVVxO6tTvB" role="2Ry0An">
+                    <node concept="2Ry0Ak" id="4emHI0reHQp" role="2Ry0An">
                       <property role="2Ry0Am" value="generator" />
-                      <node concept="2Ry0Ak" id="oVVxO6tTvC" role="2Ry0An">
+                      <node concept="2Ry0Ak" id="4emHI0reHQq" role="2Ry0An">
                         <property role="2Ry0Am" value="template" />
                       </node>
                     </node>
                   </node>
                 </node>
               </node>
-              <node concept="3qWCbU" id="oVVxO6tTvK" role="3LXTna">
+              <node concept="3qWCbU" id="4emHI0reHQx" role="3LXTna">
                 <property role="3qWCbO" value="**/*.mps, **/*.mpsr, **/.model" />
               </node>
             </node>
@@ -669,20 +720,20 @@
           <property role="3ZfqAx" value="models" />
           <property role="1Hdu6h" value="true" />
           <property role="1HemKv" value="true" />
-          <node concept="3LXTmp" id="oVVxO6tTvy" role="1HemKq">
-            <node concept="398BVA" id="oVVxO6tTvp" role="3LXTmr">
+          <node concept="3LXTmp" id="4emHI0reHQk" role="1HemKq">
+            <node concept="398BVA" id="4emHI0reHQc" role="3LXTmr">
               <ref role="398BVh" node="3Lt_N8a$ptU" resolve="dclare_home" />
-              <node concept="2Ry0Ak" id="oVVxO6tTvq" role="iGT6I">
+              <node concept="2Ry0Ak" id="4emHI0reHQd" role="iGT6I">
                 <property role="2Ry0Am" value="languages" />
-                <node concept="2Ry0Ak" id="oVVxO6tTvr" role="2Ry0An">
+                <node concept="2Ry0Ak" id="4emHI0reHQe" role="2Ry0An">
                   <property role="2Ry0Am" value="DclareMessages" />
-                  <node concept="2Ry0Ak" id="oVVxO6tTvs" role="2Ry0An">
+                  <node concept="2Ry0Ak" id="4emHI0reHQf" role="2Ry0An">
                     <property role="2Ry0Am" value="models" />
                   </node>
                 </node>
               </node>
             </node>
-            <node concept="3qWCbU" id="oVVxO6tTvz" role="3LXTna">
+            <node concept="3qWCbU" id="4emHI0reHQl" role="3LXTna">
               <property role="3qWCbO" value="**/*.mps, **/*.mpsr, **/.model" />
             </node>
           </node>
@@ -755,46 +806,28 @@
         </node>
         <node concept="1SiIV0" id="2s2J4CrwgjP" role="3bR37C">
           <node concept="3bR9La" id="2s2J4CrwgjQ" role="1SiIV1">
+            <property role="3bR36h" value="true" />
             <ref role="3bR37D" to="ffeo:mXGwHwhVPj" resolve="JDK" />
-          </node>
-        </node>
-        <node concept="1SiIV0" id="3Lt_N8a$pEw" role="3bR37C">
-          <node concept="1BurEX" id="3Lt_N8a$pEx" role="1SiIV1">
-            <node concept="398BVA" id="3Lt_N8a$pEm" role="1BurEY">
-              <ref role="398BVh" node="3Lt_N8a$ptU" resolve="dclare_home" />
-              <node concept="2Ry0Ak" id="3Lt_N8a$pEn" role="iGT6I">
-                <property role="2Ry0Am" value="solutions" />
-                <node concept="2Ry0Ak" id="3Lt_N8a$pEo" role="2Ry0An">
-                  <property role="2Ry0Am" value="DclareMPSRuntime" />
-                  <node concept="2Ry0Ak" id="3Lt_N8a$pEp" role="2Ry0An">
-                    <property role="2Ry0Am" value="lib" />
-                    <node concept="2Ry0Ak" id="3Lt_N8a$pEq" role="2Ry0An">
-                      <property role="2Ry0Am" value="DclareMps.jar" />
-                    </node>
-                  </node>
-                </node>
-              </node>
-            </node>
           </node>
         </node>
         <node concept="1BupzO" id="oVVxO6tTw3" role="3bR31x">
           <property role="3ZfqAx" value="models" />
           <property role="1Hdu6h" value="true" />
           <property role="1HemKv" value="true" />
-          <node concept="3LXTmp" id="oVVxO6tTw4" role="1HemKq">
-            <node concept="398BVA" id="oVVxO6tTvV" role="3LXTmr">
+          <node concept="3LXTmp" id="4emHI0reHRq" role="1HemKq">
+            <node concept="398BVA" id="4emHI0reHRi" role="3LXTmr">
               <ref role="398BVh" node="3Lt_N8a$ptU" resolve="dclare_home" />
-              <node concept="2Ry0Ak" id="oVVxO6tTvW" role="iGT6I">
+              <node concept="2Ry0Ak" id="4emHI0reHRj" role="iGT6I">
                 <property role="2Ry0Am" value="solutions" />
-                <node concept="2Ry0Ak" id="oVVxO6tTvX" role="2Ry0An">
+                <node concept="2Ry0Ak" id="4emHI0reHRk" role="2Ry0An">
                   <property role="2Ry0Am" value="DclareMPSRuntime" />
-                  <node concept="2Ry0Ak" id="oVVxO6tTvY" role="2Ry0An">
+                  <node concept="2Ry0Ak" id="4emHI0reHRl" role="2Ry0An">
                     <property role="2Ry0Am" value="models" />
                   </node>
                 </node>
               </node>
             </node>
-            <node concept="3qWCbU" id="oVVxO6tTw5" role="3LXTna">
+            <node concept="3qWCbU" id="4emHI0reHRr" role="3LXTna">
               <property role="3qWCbO" value="**/*.mps, **/*.mpsr, **/.model" />
             </node>
           </node>
@@ -812,6 +845,82 @@
         <node concept="1SiIV0" id="2HLAWGTtnby" role="3bR37C">
           <node concept="3bR9La" id="2HLAWGTtnbz" role="1SiIV1">
             <ref role="3bR37D" to="ffeo:7Kfy9QB6L4X" resolve="jetbrains.mps.lang.editor" />
+          </node>
+        </node>
+        <node concept="1SiIV0" id="4emHI0rnXf0" role="3bR37C">
+          <node concept="1BurEX" id="4emHI0rnXf1" role="1SiIV1">
+            <node concept="398BVA" id="4emHI0rnXeQ" role="1BurEY">
+              <ref role="398BVh" node="3Lt_N8a$ptU" resolve="dclare_home" />
+              <node concept="2Ry0Ak" id="4emHI0rnXeR" role="iGT6I">
+                <property role="2Ry0Am" value="solutions" />
+                <node concept="2Ry0Ak" id="4emHI0rnXeS" role="2Ry0An">
+                  <property role="2Ry0Am" value="DclareMPSRuntime" />
+                  <node concept="2Ry0Ak" id="4emHI0rnXeT" role="2Ry0An">
+                    <property role="2Ry0Am" value="lib" />
+                    <node concept="2Ry0Ak" id="4emHI0rnXeU" role="2Ry0An">
+                      <property role="2Ry0Am" value="dclare.jar" />
+                    </node>
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="1SiIV0" id="4emHI0rnXfo" role="3bR37C">
+          <node concept="1BurEX" id="4emHI0rnXfp" role="1SiIV1">
+            <node concept="398BVA" id="4emHI0rnXfe" role="1BurEY">
+              <ref role="398BVh" node="3Lt_N8a$ptU" resolve="dclare_home" />
+              <node concept="2Ry0Ak" id="4emHI0rnXff" role="iGT6I">
+                <property role="2Ry0Am" value="solutions" />
+                <node concept="2Ry0Ak" id="4emHI0rnXfg" role="2Ry0An">
+                  <property role="2Ry0Am" value="DclareMPSRuntime" />
+                  <node concept="2Ry0Ak" id="4emHI0rnXfh" role="2Ry0An">
+                    <property role="2Ry0Am" value="lib" />
+                    <node concept="2Ry0Ak" id="4emHI0rnXfi" role="2Ry0An">
+                      <property role="2Ry0Am" value="immutable-collections.jar" />
+                    </node>
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="1SiIV0" id="4emHI0rtI$E" role="3bR37C">
+          <node concept="1BurEX" id="4emHI0rtI$F" role="1SiIV1">
+            <node concept="398BVA" id="4emHI0rtI$w" role="1BurEY">
+              <ref role="398BVh" node="3Lt_N8a$ptU" resolve="dclare_home" />
+              <node concept="2Ry0Ak" id="4emHI0rtI$x" role="iGT6I">
+                <property role="2Ry0Am" value="solutions" />
+                <node concept="2Ry0Ak" id="4emHI0rtI$y" role="2Ry0An">
+                  <property role="2Ry0Am" value="DclareMPSRuntime" />
+                  <node concept="2Ry0Ak" id="4emHI0rtI$z" role="2Ry0An">
+                    <property role="2Ry0Am" value="lib" />
+                    <node concept="2Ry0Ak" id="4emHI0rtI$$" role="2Ry0An">
+                      <property role="2Ry0Am" value="runtime.jar" />
+                    </node>
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="1SiIV0" id="6h6bWeSZbOH" role="3bR37C">
+          <node concept="1BurEX" id="6h6bWeSZbOI" role="1SiIV1">
+            <node concept="398BVA" id="6h6bWeSZbOz" role="1BurEY">
+              <ref role="398BVh" node="3Lt_N8a$ptU" resolve="dclare_home" />
+              <node concept="2Ry0Ak" id="6h6bWeSZbO$" role="iGT6I">
+                <property role="2Ry0Am" value="solutions" />
+                <node concept="2Ry0Ak" id="6h6bWeSZbO_" role="2Ry0An">
+                  <property role="2Ry0Am" value="DclareMPSRuntime" />
+                  <node concept="2Ry0Ak" id="6h6bWeSZbOA" role="2Ry0An">
+                    <property role="2Ry0Am" value="lib" />
+                    <node concept="2Ry0Ak" id="6h6bWeSZbOB" role="2Ry0An">
+                      <property role="2Ry0Am" value="mvg-json.jar" />
+                    </node>
+                  </node>
+                </node>
+              </node>
+            </node>
           </node>
         </node>
       </node>
@@ -912,20 +1021,20 @@
           <property role="3ZfqAx" value="models" />
           <property role="1Hdu6h" value="true" />
           <property role="1HemKv" value="true" />
-          <node concept="3LXTmp" id="oVVxO6tTwf" role="1HemKq">
-            <node concept="398BVA" id="oVVxO6tTw6" role="3LXTmr">
+          <node concept="3LXTmp" id="4emHI0reHR$" role="1HemKq">
+            <node concept="398BVA" id="4emHI0reHRs" role="3LXTmr">
               <ref role="398BVh" node="3Lt_N8a$ptU" resolve="dclare_home" />
-              <node concept="2Ry0Ak" id="oVVxO6tTw7" role="iGT6I">
+              <node concept="2Ry0Ak" id="4emHI0reHRt" role="iGT6I">
                 <property role="2Ry0Am" value="solutions" />
-                <node concept="2Ry0Ak" id="oVVxO6tTw8" role="2Ry0An">
+                <node concept="2Ry0Ak" id="4emHI0reHRu" role="2Ry0An">
                   <property role="2Ry0Am" value="DclareMPSPlugin" />
-                  <node concept="2Ry0Ak" id="oVVxO6tTw9" role="2Ry0An">
+                  <node concept="2Ry0Ak" id="4emHI0reHRv" role="2Ry0An">
                     <property role="2Ry0Am" value="models" />
                   </node>
                 </node>
               </node>
             </node>
-            <node concept="3qWCbU" id="oVVxO6tTwg" role="3LXTna">
+            <node concept="3qWCbU" id="4emHI0reHR_" role="3LXTna">
               <property role="3qWCbO" value="**/*.mps, **/*.mpsr, **/.model" />
             </node>
           </node>
@@ -954,20 +1063,20 @@
           <property role="3ZfqAx" value="models" />
           <property role="1Hdu6h" value="true" />
           <property role="1HemKv" value="true" />
-          <node concept="3LXTmp" id="oVVxO6tTwq" role="1HemKq">
-            <node concept="398BVA" id="oVVxO6tTwh" role="3LXTmr">
+          <node concept="3LXTmp" id="4emHI0reHRI" role="1HemKq">
+            <node concept="398BVA" id="4emHI0reHRA" role="3LXTmr">
               <ref role="398BVh" node="3Lt_N8a$ptU" resolve="dclare_home" />
-              <node concept="2Ry0Ak" id="oVVxO6tTwi" role="iGT6I">
+              <node concept="2Ry0Ak" id="4emHI0reHRB" role="iGT6I">
                 <property role="2Ry0Am" value="solutions" />
-                <node concept="2Ry0Ak" id="oVVxO6tTwj" role="2Ry0An">
+                <node concept="2Ry0Ak" id="4emHI0reHRC" role="2Ry0An">
                   <property role="2Ry0Am" value="DclareForMPS.build" />
-                  <node concept="2Ry0Ak" id="oVVxO6tTwk" role="2Ry0An">
+                  <node concept="2Ry0Ak" id="4emHI0reHRD" role="2Ry0An">
                     <property role="2Ry0Am" value="models" />
                   </node>
                 </node>
               </node>
             </node>
-            <node concept="3qWCbU" id="oVVxO6tTwr" role="3LXTna">
+            <node concept="3qWCbU" id="4emHI0reHRJ" role="3LXTna">
               <property role="3qWCbO" value="**/*.mps, **/*.mpsr, **/.model" />
             </node>
           </node>

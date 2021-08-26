@@ -4,9 +4,7 @@
     <modelRoot contentPath="${module}" type="default">
       <sourceRoot location="models" />
     </modelRoot>
-    <modelRoot contentPath="${dclare_home}" type="java_classes">
-      <sourceRoot location="forms_rt.jar" />
-    </modelRoot>
+    <modelRoot contentPath="${dclare_home}" type="java_classes" />
   </models>
   <facets>
     <facet type="java">

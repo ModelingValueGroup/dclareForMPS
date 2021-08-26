@@ -61,24 +61,4 @@ public class DRepositoryListener extends Pair<DRepository, DClareMPS> implements
     @Override
     public void commandFinished(SRepository repository) {
     }
-
-    @Override
-    @Deprecated
-    public void updateStarted(SRepository repository) {
-    }
-
-    @Override
-    @Deprecated
-    public void updateFinished(SRepository repository) {
-    }
-
-    @Override
-    @Deprecated
-    public void repositoryCommandStarted(SRepository repository) {
-    }
-
-    @Override
-    @Deprecated
-    public void repositoryCommandFinished(SRepository repository) {
-    }
 }
