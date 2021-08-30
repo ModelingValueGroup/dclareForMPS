@@ -410,8 +410,8 @@
         </uses>
         <library jar="../../dclare.jar" />
         <library jar="../../immutable-collections.jar" />
-        <library jar="../../mvgjson.jar" />
         <library jar="../../runtime.jar" />
+        <library jar="../../mvg-json.jar" />
         <classpath>
           <entry path="." />
         </classpath>
@@ -555,7 +555,7 @@
       <zipfileset dir="${dclare_home}/languages/DclareMPS/icons" prefix="DclareForMPS" />
       <zipfileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/dclare.jar" prefix="DclareForMPS" />
       <zipfileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/immutable-collections.jar" prefix="DclareForMPS" />
-      <zipfileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/mvgjson.jar" prefix="DclareForMPS" />
+      <zipfileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/mvg-json.jar" prefix="DclareForMPS" />
       <zipfileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/runtime.jar" prefix="DclareForMPS" />
       <fileset dir="${build.tmp}/default/DclareForMPS.zip" />
     </zip>
@@ -773,8 +773,8 @@
         <fileset file="${artifacts.mps}/lib/mps-messages-for-rules.jar" />
         <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/dclare.jar" />
         <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/immutable-collections.jar" />
-        <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/mvgjson.jar" />
         <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/runtime.jar" />
+        <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/mvg-json.jar" />
         <fileset dir="${artifacts.mps}/lib" includes="*.jar" />
         <fileset file="${artifacts.mps}/lib/annotations.jar" />
         <fileset file="${artifacts.mps}/lib/log4j.jar" />
@@ -844,8 +844,8 @@
         <pathelement path="${build.tmp}/java/out/DclareMPSRuntime" />
         <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/dclare.jar" />
         <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/immutable-collections.jar" />
-        <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/mvgjson.jar" />
         <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/runtime.jar" />
+        <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/mvg-json.jar" />
         <fileset file="${artifacts.mps}/lib/annotations.jar" />
         <fileset dir="${artifacts.mps}/lib" includes="*.jar" />
         <fileset file="${artifacts.mps}/lib/log4j.jar" />
@@ -911,8 +911,8 @@
         <fileset file="${artifacts.mps}/lib/mps-messages-for-rules.jar" />
         <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/dclare.jar" />
         <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/immutable-collections.jar" />
-        <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/mvgjson.jar" />
         <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/runtime.jar" />
+        <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/mvg-json.jar" />
         <fileset dir="${artifacts.mps}/lib" includes="*.jar" />
         <fileset file="${artifacts.mps}/lib/annotations.jar" />
         <fileset file="${artifacts.mps}/lib/log4j.jar" />
@@ -980,8 +980,8 @@
         <fileset file="${artifacts.mps}/lib/mps-messages-for-rules.jar" />
         <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/dclare.jar" />
         <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/immutable-collections.jar" />
-        <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/mvgjson.jar" />
         <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/runtime.jar" />
+        <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/mvg-json.jar" />
         <fileset dir="${artifacts.mps}/lib" includes="*.jar" />
         <fileset file="${artifacts.mps}/lib/annotations.jar" />
         <fileset file="${artifacts.mps}/lib/log4j.jar" />
@@ -1081,8 +1081,8 @@
         <fileset file="${artifacts.mps}/lib/mps-textgen.jar" />
         <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/dclare.jar" />
         <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/immutable-collections.jar" />
-        <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/mvgjson.jar" />
         <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/runtime.jar" />
+        <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/mvg-json.jar" />
         <fileset dir="${artifacts.mps}/lib" includes="*.jar" />
         <fileset file="${artifacts.mps}/lib/annotations.jar" />
         <fileset file="${artifacts.mps}/lib/log4j.jar" />
@@ -1147,8 +1147,8 @@
         <fileset file="${artifacts.mps}/lib/mps-workbench.jar" />
         <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/dclare.jar" />
         <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/immutable-collections.jar" />
-        <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/mvgjson.jar" />
         <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/runtime.jar" />
+        <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/mvg-json.jar" />
         <fileset file="${artifacts.mps}/lib/annotations.jar" />
         <fileset dir="${artifacts.mps}/lib" includes="*.jar" />
         <fileset file="${artifacts.mps}/lib/log4j.jar" />
