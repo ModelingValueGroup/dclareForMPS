@@ -57,7 +57,7 @@ public class DRepository extends DFromOriginalObject<ProjectRepository> implemen
                                                                                        MODULES.set(o, Set::addAll, referenced);
                                                                                    });
 
-    private static final Action<DRepository>                       READ_MODULES    = Action.of("$READ_MODULES", r -> MODULES.set(r, dClareMPS().read(DRepository::modules).map(DModule::of).toSet()), Priority.urgent);
+    private static final Action<DRepository>                       READ_MODULES    = Action.of("$READ_MODULES", r -> MODULES.set(r, Set::addAll, dClareMPS().read(DRepository::modules).map(DModule::of).toSet()), Priority.urgent);
 
     @SuppressWarnings("rawtypes")
     protected static final Set<Observer>                           OBSERVERS       = DObject.OBSERVERS.add(MODULES_RULE);

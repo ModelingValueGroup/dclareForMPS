@@ -81,7 +81,7 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
                                                                                                              });
 
     protected static final DObserved<DModel, Set<DNode>>                                    ROOTS            = DObserved.of("ROOTS", Set.of(), (dModel, pre, post) -> {
-                                                                                                                 if (dModel.isActive()) {
+                                                                                                                 if (!dModel.isExternal() && dModel.isActive()) {
                                                                                                                      SModel sModel = dModel.original();
                                                                                                                      Set<SNode> soll = post.map(r -> r.reParent(sModel, null, r.original())).toSet();
                                                                                                                      Set<SNode> ist = DModel.roots(sModel);
@@ -161,9 +161,7 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
                                                                                                                          if (dClareMPS().getConfig().isTraceActivation()) {
                                                                                                                              System.err.println("DCLARE: ACTIVATE " + sModel.getName() + " (external = " + m.isExternal() + ")");
                                                                                                                          }
-                                                                                                                         if (!m.isExternal()) {
-                                                                                                                             READ_USED_MODELS.trigger(m);
-                                                                                                                         }
+                                                                                                                         READ_USED_MODELS.trigger(m);
                                                                                                                          READ_ROOTS.trigger(m);
                                                                                                                      }
                                                                                                                  }
@@ -179,26 +177,21 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
                                                                                                              }, Priority.urgent);
 
     private static final Observer<DModel>                                                   REFERENCED_RULE  = DObject.observer("$REFERENCED_RULE", o -> {
-                                                                                                                 if (!o.isExternal() && o.isActive()) {
+                                                                                                                 if (o.isActive()) {
                                                                                                                      for (DModel mo : USED_MODELS.get(o)) {
                                                                                                                          SModel sModel = mo.tryOriginal();
                                                                                                                          if (sModel instanceof SModelInternal) {
                                                                                                                              DModule dModule = DModule.of(sModel.getModule());
                                                                                                                              DRepository.REFERENCED.set(dClareMPS().getRepository(), Set::add, dModule);
                                                                                                                              DModule.MODELS.set(dModule, Set::add, mo);
-                                                                                                                             ACTIVE.set(mo, Boolean.TRUE);
                                                                                                                          }
                                                                                                                      }
                                                                                                                  }
                                                                                                              });
 
     private static final Observer<DModel>                                                   ACTIVATE_RULE    = DObject.observer("$ACTIVATE_RULE", o -> {
-                                                                                                                 if (!o.isExternal()) {
-                                                                                                                     boolean pre = !TYPE.pre(o).getLanguages().isEmpty() && LOADED.pre(o);
-                                                                                                                     boolean post = !TYPE.get(o).getLanguages().isEmpty() && LOADED.get(o);
-                                                                                                                     if (!pre && post) {
-                                                                                                                         ACTIVE.set(o, Boolean.TRUE);
-                                                                                                                     }
+                                                                                                                 if (!TYPE.get(o).getLanguages().isEmpty() && (o.isExternal() || LOADED.get(o))) {
+                                                                                                                     ACTIVE.set(o, Boolean.TRUE);
                                                                                                                  }
                                                                                                              });
     @SuppressWarnings("rawtypes")
