@@ -24,3 +24,10 @@ jobs:
       ################################################################################
       - name: "build"
         run: ./gradlew --info --scan
+      ################################################################################
+
+      - name: "upload zip"
+        uses: actions/upload-artifact@v2
+        with:
+          name: "DclareForMPS.zip"
+          path: build/artifacts/DclareForMPS/DclareForMPS.zip

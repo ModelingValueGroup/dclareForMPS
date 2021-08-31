@@ -32,6 +32,8 @@ import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
 
+import jetbrains.mps.project.DevKit;
+import jetbrains.mps.smodel.MPSModuleRepository;
 import jetbrains.mps.smodel.event.SModelChildEvent;
 import jetbrains.mps.smodel.event.SModelDevKitEvent;
 import jetbrains.mps.smodel.event.SModelImportEvent;
@@ -199,10 +201,22 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
 
     @Override
     public void devkitAdded(SModelDevKitEvent event) {
+        b().handleMPSChange(() -> {
+            DModel dModel = DModel.of(event.getModel());
+            @SuppressWarnings("deprecation")
+            DevKit devkit = (DevKit) event.getDevkitNamespace().resolve(MPSModuleRepository.getInstance());
+            DModel.USED_DEVKITS.set(dModel, Set::add, devkit);
+        });
     }
 
     @Override
     public void devkitRemoved(SModelDevKitEvent event) {
+        b().handleMPSChange(() -> {
+            DModel dModel = DModel.of(event.getModel());
+            @SuppressWarnings("deprecation")
+            DevKit devkit = (DevKit) event.getDevkitNamespace().resolve(MPSModuleRepository.getInstance());
+            DModel.USED_DEVKITS.set(dModel, Set::remove, devkit);
+        });
     }
 
     @Override

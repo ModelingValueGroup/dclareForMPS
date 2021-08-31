@@ -76,7 +76,7 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
                                                                                              }, synthetic);
 
     private static final Observer<DModule>                                    LANGUAGES_RULE = DObject.observer(LANGUAGES, o -> LANGUAGES.set(o, dClareMPS().read(() -> languages(o.original()))        //
-            .addAll(MODELS.get(o).flatMap(DModel.USED_LANGUAGES::get))));
+            .addAll(MODELS.get(o).flatMap(DModel::allUsedLanguages))));
 
     private static final Action<DModule>                                      READ_MODELS    = Action.of("$READ_MODELS", m -> {
                                                                                                  if (!m.isExternal()) {

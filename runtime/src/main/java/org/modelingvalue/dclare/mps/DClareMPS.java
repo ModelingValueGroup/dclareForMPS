@@ -96,6 +96,7 @@ import jetbrains.mps.errors.item.NodeReportItem;
 import jetbrains.mps.errors.item.ReportItem;
 import jetbrains.mps.nodeEditor.Highlighter;
 import jetbrains.mps.progress.EmptyProgressMonitor;
+import jetbrains.mps.project.DevKit;
 import jetbrains.mps.project.ProjectBase;
 import jetbrains.mps.project.ProjectRepository;
 import jetbrains.mps.smodel.language.LanguageRegistry;
@@ -133,6 +134,9 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
                                                                                                                                  LanguageRuntime rtLang = registry().getLanguage(language);
                                                                                                                                  IRuleAspect aspect = rtLang != null ? rtLang.getAspect(IRuleAspect.class) : null;
                                                                                                                                  return aspect != null ? Collection.of(aspect.getRuleSets()).toSet() : Set.of();
+                                                                                                                             });
+    public static final Constant<DevKit, Set<SLanguage>>                                                DEVKIT_LANGUAGES     = Constant.of("DEVKIT_LANGUAGES", Set.of(), devkit -> {
+                                                                                                                                 return Collection.of(devkit.getAllExportedLanguageIds()).toSet();
                                                                                                                              });
     private static final Setable<DClareMPS, DRepository>                                                REPOSITORY_CONTAINER = Setable.of("REPOSITORY_CONTAINER", null, containment);
     protected static final Set<? extends Setable<? extends Mutable, ?>>                                 SETABLES             = Set.of(REPOSITORY_CONTAINER);
