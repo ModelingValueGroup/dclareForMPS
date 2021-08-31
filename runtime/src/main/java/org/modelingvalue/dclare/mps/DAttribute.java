@@ -47,18 +47,8 @@ public interface DAttribute<O, T> extends DFeature {
     @SuppressWarnings("unchecked")
     static <C, V> DAttribute<C, V> of(String id, String name, String anonymousType, String ruleSetType, boolean syn, boolean optional, boolean composite, int identifyingNr, Object def, Class<?> cls, String opposite, Supplier<SNode> source, Function<C, V> deriver, boolean onlyTemporal) {
         boolean idAttr = identifyingNr >= 0 && ("StructRuleSet".equals(ruleSetType) || anonymousType != null);
-        SetableModifier[] mods = {
-                synthetic.iff(syn),
-                mandatory.iff(idAttr || (!optional && identifyingNr < 0)),
-                containment.iff(composite)
-        };
-        return idAttr
-                ? new DIdentifyingAttribute(id, name, anonymousType, identifyingNr, cls, source, mods)
-                : deriver != null
-                ? new DConstant(id, name, cls, source, deriver, onlyTemporal, mods)
-                : new DObservedAttribute(id, name, identifyingNr >= 0, def, cls, opposite != null
-                ? () -> of(opposite)
-                : null, source, new InvalidProperty(id.toString(), name), mods);
+        SetableModifier[] mods = {synthetic.iff(syn), mandatory.iff(idAttr || (!optional && identifyingNr < 0)), containment.iff(composite)};
+        return idAttr ? new DIdentifyingAttribute(id, name, anonymousType, identifyingNr, cls, source, mods) : deriver != null ? new DConstant(id, name, cls, source, deriver, onlyTemporal, mods) : new DObservedAttribute(id, name, identifyingNr >= 0, def, cls, opposite != null ? () -> of(opposite) : null, source, new InvalidProperty(id.toString(), name), mods);
     }
 
     @SuppressWarnings("unchecked")
@@ -105,9 +95,9 @@ public interface DAttribute<O, T> extends DFeature {
         private final boolean   indetifying;
 
         public DObservedAttribute(Object id, String name, boolean indetifying, V def, Class<?> cls, Supplier<Setable<?, ?>> opposite, Supplier<SNode> source, SProperty sProperty, SetableModifier... modifiers) {
-            super(id, def, opposite, (o, b, a) -> {
+            super(id, def, opposite, null, (o, b, a) -> {
                 if (o instanceof DNode && !Objects.equals(b, a)) {
-                    SNode  sNode  = ((DNode) o).tryOriginal();
+                    SNode sNode = ((DNode) o).tryOriginal();
                     SModel sModel = sNode != null ? sNode.getModel() : null;
                     if (sNode != null && sModel instanceof EditableSModel) {
                         boolean changed = ((EditableSModel) sModel).isChanged();
@@ -119,9 +109,9 @@ public interface DAttribute<O, T> extends DFeature {
                 }
                 return false;
             }, null, source, modifiers);
-            this.name        = name;
-            this.cls         = cls;
-            this.sProperty   = sProperty;
+            this.name = name;
+            this.cls = cls;
+            this.sProperty = sProperty;
             this.indetifying = indetifying;
         }
 
@@ -189,14 +179,14 @@ public interface DAttribute<O, T> extends DFeature {
         private final Class<?>        cls;
 
         public DIdentifyingAttribute(String id, String name, String anonymousType, int index, Class<?> cls, Supplier<SNode> source, SetableModifier... modifiers) {
-            this.id            = id;
-            this.name          = name;
+            this.id = id;
+            this.name = name;
             this.anonymousType = anonymousType;
-            this.composite     = containment.in(modifiers);
-            this.index         = index;
-            this.synthetic     = CoreSetableModifier.synthetic.in(modifiers);
-            this.source        = source;
-            this.cls           = cls;
+            this.composite = containment.in(modifiers);
+            this.index = index;
+            this.synthetic = CoreSetableModifier.synthetic.in(modifiers);
+            this.source = source;
+            this.cls = cls;
         }
 
         @Override
@@ -305,9 +295,9 @@ public interface DAttribute<O, T> extends DFeature {
 
         public DConstant(Object id, String name, Class<?> cls, Supplier<SNode> source, Function<C, V> deriver, boolean onlyTemporal, SetableModifier... modifiers) {
             super(id, null, null, null, deriver, null, modifiers);
-            this.name         = name;
-            this.source       = source;
-            this.cls          = cls;
+            this.name = name;
+            this.source = source;
+            this.cls = cls;
             this.onlyTemporal = onlyTemporal;
         }
 
@@ -368,7 +358,7 @@ public interface DAttribute<O, T> extends DFeature {
 
         @Override
         protected boolean isOrphan(State state, Mutable m) {
-            return m instanceof DObject && super.isOrphan(state, m) && !((DObject) m).isExternal();
+            return m instanceof DObject && !((DObject) m).isExternal() && super.isOrphan(state, m);
         }
 
         @Override

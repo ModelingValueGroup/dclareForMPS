@@ -67,6 +67,8 @@ import jetbrains.mps.smodel.SModelInternal;
 @SuppressWarnings("unused")
 public class DModel extends DMatchedObject<DModel, SModelReference, SModel> implements SModel {
 
+    protected static final Constant<SModel, Boolean>                                        EXTERNAL         = Constant.of("EXTERNAL", DModel::isExternal);
+
     private static final Constant<Triple<Set<SLanguage>, Boolean, Set<String>>, DModelType> MODEL_TYPE       = Constant.of("MODEL_TYPE", DModelType::new);
 
     protected static final DObserved<DModel, String>                                        NAME             = DObserved.of("NAME", null, (dModel, pre, post) -> {
@@ -80,7 +82,10 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
                                                                                                                  return false;
                                                                                                              });
 
-    protected static final DObserved<DModel, Set<DNode>>                                    ROOTS            = DObserved.of("ROOTS", Set.of(), (dModel, pre, post) -> {
+    protected static final DObserved<DModel, Set<DNode>>                                    ROOTS            = DObserved.of("ROOTS", Set.of(), dModel -> {
+                                                                                                                 SModel sModel = dModel.original();
+                                                                                                                 return dClareMPS().read(() -> DModel.roots(sModel).sequential().map(DNode::of).toSet());
+                                                                                                             }, (dModel, pre, post) -> {
                                                                                                                  if (!dModel.isExternal() && dModel.isActive()) {
                                                                                                                      SModel sModel = dModel.original();
                                                                                                                      Set<SNode> soll = post.map(r -> r.reParent(sModel, null, r.original())).toSet();
@@ -108,7 +113,11 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
                                                                                                                  }
                                                                                                              });
 
-    protected static final DObserved<DModel, Set<DModel>>                                   USED_MODELS      = DObserved.of("USED_MODELS", Set.of(), (o, pre, post) -> {
+    protected static final DObserved<DModel, Set<DModel>>                                   USED_MODELS      = DObserved.of("USED_MODELS", Set.of(), dModel -> {
+                                                                                                                 SModel sModel = dModel.original();
+                                                                                                                 return dClareMPS().read(() -> Collection.of(((SModelInternal) sModel).getModelImports()).sequential().                              //
+                                                                                                                 map(r -> r.resolve(null)).notNull().map(DModel::of).toSet());
+                                                                                                             }, (o, pre, post) -> {
                                                                                                                  if (!o.isExternal() && o.isActive()) {
                                                                                                                      SModelInternal sModel = (SModelInternal) o.original();
                                                                                                                      Set<SModelReference> soll = post.map(DModel::reference).notNull().toSet();
@@ -202,7 +211,7 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
 
     public static DModel of(SLanguage anonymousLanguage, String anonymousType, Object[] identity, boolean temporal) {
         return quotationConstruct(anonymousLanguage, anonymousType, identity, //
-                () -> new DModel(new Object[]{DClareMPS.uniqueLong(), temporal}));
+                () -> new DModel(new Object[]{DClareMPS.uniqueLong(), temporal, false}));
     }
 
     protected static DModel read(SModel original) {
@@ -218,7 +227,8 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
     }
 
     public static DModel of(SModelReference ref, SModel original) {
-        return readConstruct(ref, () -> new DModel(new Object[]{DClareMPS.uniqueLong(), false}), original);
+        Boolean external = DModel.EXTERNAL.get(dClareMPS().read(() -> ref.resolve(null)));
+        return readConstruct(ref, () -> new DModel(new Object[]{DClareMPS.uniqueLong(), false, external}), original);
     }
 
     protected DModel(Object[] identity) {
@@ -236,10 +246,10 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
 
     @Override
     public boolean isExternal() {
-        return isExternal(tryOriginal());
+        return (Boolean) identity[2];
     }
 
-    protected static boolean isExternal(SModel sModel) {
+    private static boolean isExternal(SModel sModel) {
         if (sModel != null && dClareMPS().project.getPath(sModel.getModule()) == null) {
             return true;
         } else {
@@ -253,6 +263,7 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
         return isTemporal();
     }
 
+    @Override
     protected boolean isActive() {
         return ACTIVE.get(this);
     }
@@ -399,7 +410,6 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     public Set<SNode> getRootNodes() {
-        ACTIVE.set(this, Boolean.TRUE);
         return (Set) ROOTS.get(this);
     }
 
@@ -431,7 +441,6 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
     }
 
     public java.util.List<SNode> getRootNodes(SAbstractConcept concept) {
-        ACTIVE.set(this, Boolean.TRUE);
         return ROOTS.get(this).filter(r -> r.isInstanceOfConcept(concept)).collect(Collectors.toList());
     }
 

@@ -186,10 +186,19 @@ public abstract class DObject implements Mutable {
         return Mutable.D_PARENT_CONTAINING.get(this) == null || CONTAINING_ATTRIBUTE.get(this) != null;
     }
 
+    @Override
+    public boolean dCheckConsistency() {
+        return !isExternal();
+    }
+
     public abstract boolean isExternal();
 
     protected boolean isObsolete(String anonymousType) {
         return false;
+    }
+
+    protected boolean isActive() {
+        return true;
     }
 
 }

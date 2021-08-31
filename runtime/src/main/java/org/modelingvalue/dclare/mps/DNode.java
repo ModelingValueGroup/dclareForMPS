@@ -123,16 +123,19 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
     protected static final DObserved<DNode, Map<Object, Object>>                                                   USER_OBJECTS           = DObserved.of("USER_OBJECTS", Map.of(), (TriFunction) null);
 
     @SuppressWarnings("deprecation")
-    public static final Constant<SContainmentLink, DObserved<DNode, List<DNode>>>                                  MANY_CONTAINMENT       = Constant.of("MANY_CONTAINMENT", mc -> DObserved.of(mc, List.of(), (dNode, pre, post) -> {
+    public static final Constant<SContainmentLink, DObserved<DNode, List<DNode>>>                                  MANY_CONTAINMENT       = Constant.of("MANY_CONTAINMENT", mc -> DObserved.of(mc, List.of(), dNode -> {
+                                                                                                                                              SNode sNode = dNode.tryOriginal();
+                                                                                                                                              return sNode != null ? dClareMPS().read(() -> Collection.of(sNode.getChildren(mc)).sequential().map(DNode::of).toList()) : null;
+                                                                                                                                          }, (dNode, pre, post) -> {
                                                                                                                                               SNode sNode = dNode.reParent();
                                                                                                                                               List<SNode> soll = post.map(c -> c.reParent(sNode, mc, c.original())).toList();
                                                                                                                                               List<SNode> ist = children(sNode, mc);
                                                                                                                                               if (!soll.equals(ist)) {
                                                                                                                                                   DObserved.map(ist, soll, (n, a) -> {
-                                                                                                                                                                                                                                                                                        }, sNode::removeChild);
+                                                                                                                                                  }, sNode::removeChild);
                                                                                                                                                   ist = children(sNode, mc);
                                                                                                                                                   DObserved.map(ist, soll, (n, a) -> sNode.insertChildAfter(mc, n, a), r -> {
-                                                                                                                                                                                                                                                                                        });
+                                                                                                                                                  });
                                                                                                                                                   return true;
                                                                                                                                               } else {
                                                                                                                                                   return false;
@@ -140,16 +143,20 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                           }, mc::getDeclarationNode, containment, softMandatory.ifnot(mc.isOptional())));
 
     @SuppressWarnings("deprecation")
-    public static final Constant<SContainmentLink, DObserved<DNode, DNode>>                                        SINGLE_CONTAINMENT     = Constant.of("SINGLE_CONTAINMENT", sc -> DObserved.of(sc, null, (dNode, pre, post) -> {
+    public static final Constant<SContainmentLink, DObserved<DNode, DNode>>                                        SINGLE_CONTAINMENT     = Constant.of("SINGLE_CONTAINMENT", sc -> DObserved.of(sc, null, dNode -> {
+                                                                                                                                              SNode sNode = dNode.tryOriginal();
+                                                                                                                                              SNode child = sNode != null ? dClareMPS().read(() -> children(sNode, sc).first()) : null;
+                                                                                                                                              return child != null ? DNode.of(child) : null;
+                                                                                                                                          }, (dNode, pre, post) -> {
                                                                                                                                               SNode sNode = dNode.reParent();
                                                                                                                                               List<SNode> soll = post != null ? List.of(post.reParent(sNode, sc, post.original())) : List.of();
                                                                                                                                               List<SNode> ist = children(sNode, sc);
                                                                                                                                               if (!soll.equals(ist)) {
                                                                                                                                                   DObserved.map(ist, soll, (n, a) -> {
-                                                                                                                                                                                                                                                                                        }, sNode::removeChild);
+                                                                                                                                                  }, sNode::removeChild);
                                                                                                                                                   ist = children(sNode, sc);
                                                                                                                                                   DObserved.map(ist, soll, (n, a) -> sNode.addChild(sc, n), r -> {
-                                                                                                                                                                                                                                                                                        });
+                                                                                                                                                  });
                                                                                                                                                   return true;
                                                                                                                                               } else {
                                                                                                                                                   return false;
@@ -157,7 +164,11 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                           }, sc::getDeclarationNode, containment, softMandatory.ifnot(sc.isOptional())));
 
     @SuppressWarnings("deprecation")
-    public static final Constant<SReferenceLink, DObserved<DNode, DNode>>                                          REFERENCE              = Constant.of("REFERENCE", sr -> DObserved.of(sr, null, () -> DNode.OPPOSITE.get(sr), (dNode, pre, post) -> {
+    public static final Constant<SReferenceLink, DObserved<DNode, DNode>>                                          REFERENCE              = Constant.of("REFERENCE", sr -> DObserved.of(sr, null, () -> DNode.OPPOSITE.get(sr), dNode -> {
+                                                                                                                                              SNode orig = dNode.tryOriginal();
+                                                                                                                                              SNode sNode = orig != null ? readReferenced(sr, orig) : null;
+                                                                                                                                              return sNode != null ? DNode.of(sNode) : null;
+                                                                                                                                          }, (dNode, pre, post) -> {
                                                                                                                                               SNode sNode = dNode.original();
                                                                                                                                               SReference ref = sNode.getReference(sr);
                                                                                                                                               SNode ist = ref != null ? ref.getTargetNode() : null;
@@ -173,7 +184,10 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
     @SuppressWarnings("deprecation")
     public static final Constant<SReferenceLink, DObserved<DNode, Set<DNode>>>                                     OPPOSITE               = Constant.of("OPPOSITE", sr -> DObserved.of(Pair.of(sr, "OPPOSITE"), Set.of(), () -> DNode.REFERENCE.get(sr), null, sr::getDeclarationNode, synthetic));
     @SuppressWarnings("deprecation")
-    public static final Constant<SProperty, DObserved<DNode, String>>                                              PROPERTY               = Constant.of("PROPERTY", sp -> DObserved.of(sp, null, (dNode, pre, post) -> {
+    public static final Constant<SProperty, DObserved<DNode, String>>                                              PROPERTY               = Constant.of("PROPERTY", sp -> DObserved.of(sp, null, dNode -> {
+                                                                                                                                              SNode sNode = dNode.tryOriginal();
+                                                                                                                                              return sNode != null ? dClareMPS().read(() -> sNode.getProperty(sp)) : null;
+                                                                                                                                          }, (dNode, pre, post) -> {
                                                                                                                                               SNode sNode = dNode.original();
                                                                                                                                               String ist = sNode.getProperty(sp);
                                                                                                                                               if (!Objects.equals(ist, post)) {
@@ -355,17 +369,17 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
 
     public static DNode of(SLanguage anonymousLanguage, String anonymousType, Object[] identity, SConcept concept) {
         return quotationConstruct(anonymousLanguage, anonymousType, identity, //
-                () -> new DNode(new Object[]{uniqueLong(concept), concept}));
+                () -> new DNode(new Object[]{uniqueLong(concept), concept, false}));
     }
 
     public DNode copy(SLanguage lang, String anonymousType, DObject ctx) {
         return copyRootConstruct(lang, anonymousType, ctx, this, //
-                () -> new DNode(new Object[]{uniqueLong(getConcept()), getConcept()}));
+                () -> new DNode(new Object[]{uniqueLong(getConcept()), getConcept(), false}));
     }
 
     private DNode copy(DCopy root) {
         return copyChildConstruct(root, this, //
-                () -> new DNode(new Object[]{uniqueLong(getConcept()), getConcept()}));
+                () -> new DNode(new Object[]{uniqueLong(getConcept()), getConcept(), false}));
     }
 
     private static long uniqueLong(SConcept concept) {
@@ -387,8 +401,8 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
     }
 
     public static DNode of(SConcept concept, SNodeReference ref, SNode original) {
-        // Objects.requireNonNull(ref.getModelReference(), "DNode of empty SModel reference is most illogical");
-        return readConstruct(ref, () -> new DNode(new Object[]{uniqueLong(concept), concept}), original);
+        Boolean external = DModel.EXTERNAL.get(dClareMPS().read(() -> ref.getModelReference().resolve(null)));
+        return readConstruct(ref, () -> new DNode(new Object[]{uniqueLong(concept), concept, external}), original);
     }
 
     @Override
@@ -420,7 +434,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
 
     @Override
     public boolean isExternal() {
-        return DModel.isExternal(getOriginalModel());
+        return (Boolean) identity[2];
     }
 
     @Override
@@ -617,7 +631,12 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
 
     @Override
     public DModel getModel() {
-        return MODEL.get(this);
+        if (isExternal() && !isActive()) {
+            SModel model = tryOriginal().getModel();
+            return model != null ? DModel.of(model) : null;
+        } else {
+            return MODEL.get(this);
+        }
     }
 
     @Override
@@ -667,7 +686,11 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
 
     @Override
     public String getName() {
-        return PROPERTY.get(SNodeUtil.property_INamedConcept_name).get(this);
+        if (isExternal() && !isActive()) {
+            return tryOriginal().getName();
+        } else {
+            return PROPERTY.get(SNodeUtil.property_INamedConcept_name).get(this);
+        }
     }
 
     @Override
@@ -740,19 +763,33 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
 
     @Override
     public DNode getParent() {
-        Mutable parent = dParent();
-        return parent instanceof DNode ? (DNode) parent : null;
+        if (isExternal() && !isActive()) {
+            SNode parent = tryOriginal().getParent();
+            return parent != null ? DNode.of(parent) : null;
+        } else {
+            Mutable parent = dParent();
+            return parent instanceof DNode ? (DNode) parent : null;
+        }
     }
 
     @Override
     public DNode getContainingRoot() {
-        return ROOT.get(this);
+        if (isExternal() && !isActive()) {
+            SNode root = tryOriginal().getContainingRoot();
+            return root != null ? DNode.of(root) : null;
+        } else {
+            return ROOT.get(this);
+        }
     }
 
     @Override
     public SContainmentLink getContainmentLink() {
-        Setable<Mutable, ?> containing = dContaining();
-        return containing != null && containing.id() instanceof SContainmentLink ? (SContainmentLink) containing.id() : null;
+        if (isExternal() && !isActive()) {
+            return tryOriginal().getContainmentLink();
+        } else {
+            Setable<Mutable, ?> containing = dContaining();
+            return containing != null && containing.id() instanceof SContainmentLink ? (SContainmentLink) containing.id() : null;
+        }
     }
 
     @Override
@@ -936,7 +973,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
     @SuppressWarnings("rawtypes")
     @Override
     public boolean dToBeCleared(Setable setable) {
-        return super.dToBeCleared(setable) && !isExternal();
+        return !isExternal() && super.dToBeCleared(setable);
     }
 
     @Override
@@ -1122,6 +1159,19 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
     @Override
     public Direction dDirection() {
         return DRule.DIRECTION.get(getConcept().getLanguage());
+    }
+
+    @Override
+    protected boolean isActive() {
+        DModel dModel = MODEL.get(this);
+        return dModel != null && dModel.isActive();
+    }
+
+    protected static SNode readReferenced(SReferenceLink sr, SNode orig) {
+        return dClareMPS().read(() -> {
+            SReference ref = orig.getReference(sr);
+            return ref != null ? ref.getTargetNode() : null;
+        });
     }
 
 }
