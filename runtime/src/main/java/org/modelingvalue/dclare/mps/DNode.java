@@ -1174,4 +1174,9 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
         });
     }
 
+    @Override
+    public boolean isDclareOnly() {
+        return isExternal() || super.isDclareOnly();
+    }
+
 }
