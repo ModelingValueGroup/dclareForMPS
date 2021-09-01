@@ -608,6 +608,12 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
         return isExternal() || super.isDclareOnly();
     }
 
+    @SuppressWarnings("rawtypes")
+    @Override
+    public boolean dToBeCleared(Setable setable) {
+        return !isExternal() && super.dToBeCleared(setable);
+    }
+
     public final static class RootsOfConcept extends Pair<String, SAbstractConcept> {
 
         private static final long serialVersionUID = 7134080093293245921L;
