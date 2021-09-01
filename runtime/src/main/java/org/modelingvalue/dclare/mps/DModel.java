@@ -219,7 +219,7 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
                                                                                                                                  DRepository.REFERENCED.set(dClareMPS().getRepository(), Set::add, dModule);
                                                                                                                                  DModule.MODELS.set(dModule, Set::add, mo);
                                                                                                                              }
-                                                                                                                         } else if (!LOADED.get(o)) {
+                                                                                                                         } else if (!LOADED.get(mo)) {
                                                                                                                              ACTIVE.set(mo, Boolean.TRUE);
                                                                                                                          }
                                                                                                                      }
