@@ -611,7 +611,7 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
     @SuppressWarnings("rawtypes")
     @Override
     public boolean dToBeCleared(Setable setable) {
-        return !isExternal() && super.dToBeCleared(setable);
+        return false;
     }
 
     public final static class RootsOfConcept extends Pair<String, SAbstractConcept> {
