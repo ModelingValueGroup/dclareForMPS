@@ -33,11 +33,9 @@ import org.modelingvalue.collections.ContainingCollection;
 import org.modelingvalue.dclare.Constant;
 import org.modelingvalue.dclare.CoreSetableModifier;
 import org.modelingvalue.dclare.LeafTransaction;
-import org.modelingvalue.dclare.Mutable;
 import org.modelingvalue.dclare.ReadOnlyTransaction;
 import org.modelingvalue.dclare.Setable;
 import org.modelingvalue.dclare.SetableModifier;
-import org.modelingvalue.dclare.State;
 
 import jetbrains.mps.smodel.adapter.structure.property.InvalidProperty;
 
@@ -354,11 +352,6 @@ public interface DAttribute<O, T> extends DFeature {
         @Override
         public SNode getSource() {
             return source != null ? source.get() : null;
-        }
-
-        @Override
-        protected boolean isOrphan(State state, Mutable m) {
-            return m instanceof DObject && !((DObject) m).isExternal() && super.isOrphan(state, m);
         }
 
         @Override

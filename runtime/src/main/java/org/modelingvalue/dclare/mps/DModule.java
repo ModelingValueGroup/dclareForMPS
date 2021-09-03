@@ -57,31 +57,30 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
     private static final Constant<Pair<Boolean, Set<SLanguage>>, DModuleType> MODULE_TYPE    = Constant.of("MODULE_TYPE", DModuleType::new);
 
     protected static final DObserved<DModule, Set<DModel>>                    MODELS         = DObserved.of("MODELS", Set.of(), (dModule, pre, post) -> {
-                                                                                                 Set<DModel> ist = models(dModule.original()).sequential().map(DModel::of).toSet();
-                                                                                                 if (!ist.equals(post)) {
-                                                                                                     Setable.<Set<DModel>, DModel> diff(ist, post,                                                      //
-                                                                                                             DMatchedObject::original,                                                                  //
-                                                                                                             r -> new ModelDeleteHelper(r.tryOriginal()).delete());
-                                                                                                     return true;
-                                                                                                 } else {
-                                                                                                     return false;
+                                                                                                 if (!dModule.isExternal()) {
+                                                                                                     Set<DModel> ist = models(dModule.original()).sequential().map(DModel::of).toSet();
+                                                                                                     if (!ist.equals(post)) {
+                                                                                                         Setable.<Set<DModel>, DModel> diff(ist, post,                                              //
+                                                                                                                 DMatchedObject::original,                                                          //
+                                                                                                                 r -> new ModelDeleteHelper(r.tryOriginal()).delete());
+                                                                                                         return true;
+                                                                                                     }
                                                                                                  }
+                                                                                                 return false;
                                                                                              }, containment);
 
     protected static final Observed<DModule, Set<SLanguage>>                  LANGUAGES      = Observed.of("LANGUAGES", Set.of(), (tx, o, pre, post) -> {
-                                                                                                 Setable.<Set<SLanguage>, SLanguage> diff(pre, post,                                                    //
-                                                                                                         a -> DClareMPS.ALL_LANGUAGES.set(dClareMPS(), Set::add, a),                                    //
+                                                                                                 Setable.<Set<SLanguage>, SLanguage> diff(pre, post,                                                //
+                                                                                                         a -> DClareMPS.ALL_LANGUAGES.set(dClareMPS(), Set::add, a),                                //
                                                                                                          r -> {
                                                                                                          });
                                                                                              }, synthetic);
 
-    private static final Observer<DModule>                                    LANGUAGES_RULE = DObject.observer(LANGUAGES, o -> LANGUAGES.set(o, dClareMPS().read(() -> languages(o.original()))        //
+    private static final Observer<DModule>                                    LANGUAGES_RULE = DObject.observer(LANGUAGES, o -> LANGUAGES.set(o, dClareMPS().read(() -> languages(o.original()))    //
             .addAll(MODELS.get(o).flatMap(DModel::allUsedLanguages))));
 
     private static final Action<DModule>                                      READ_MODELS    = Action.of("$READ_MODELS", m -> {
-                                                                                                 if (!m.isExternal()) {
-                                                                                                     MODELS.set(m, dClareMPS().read(() -> models(m.original()).sequential().map(DModel::read).toSet()));
-                                                                                                 }
+                                                                                                 MODELS.set(m, dClareMPS().read(() -> models(m.original()).sequential().map(DModel::read).toSet()));
                                                                                              }, Priority.urgent);
     @SuppressWarnings("rawtypes")
     protected static final Set<Observer>                                      OBSERVERS      = DObject.OBSERVERS.add(LANGUAGES_RULE);
@@ -130,7 +129,9 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
 
     @Override
     protected void read(DClareMPS dClareMPS) {
-        READ_MODELS.trigger(this);
+        if (!isExternal()) {
+            READ_MODELS.trigger(this);
+        }
     }
 
     @Override
@@ -277,11 +278,6 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
 
     public boolean isSolution() {
         return original() instanceof Solution;
-    }
-
-    @Override
-    public boolean isDclareOnly() {
-        return isExternal() || super.isDclareOnly();
     }
 
 }

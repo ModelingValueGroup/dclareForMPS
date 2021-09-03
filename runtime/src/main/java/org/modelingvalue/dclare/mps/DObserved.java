@@ -28,13 +28,10 @@ import org.modelingvalue.collections.Map;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.QuadConsumer;
 import org.modelingvalue.collections.util.TriFunction;
-import org.modelingvalue.dclare.Constant;
 import org.modelingvalue.dclare.LeafTransaction;
-import org.modelingvalue.dclare.Mutable;
 import org.modelingvalue.dclare.Observed;
 import org.modelingvalue.dclare.Setable;
 import org.modelingvalue.dclare.SetableModifier;
-import org.modelingvalue.dclare.State;
 import org.modelingvalue.dclare.ex.ThrowableError;
 
 @SuppressWarnings("unused")
@@ -80,13 +77,13 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
         return new DObserved<>(id, def, opposite, null, toMPS, changed, source, modifiers);
     }
 
-    private final Constant<O, T>                fromMPS;
+    private final Function<O, T>                fromMPS;
     private final TriFunction<O, T, T, Boolean> toMPS;
     private final Supplier<SNode>               source;
 
     protected DObserved(Object id, T def, Supplier<Setable<?, ?>> opposite, Function<O, T> fromMPS, TriFunction<O, T, T, Boolean> toMPS, QuadConsumer<LeafTransaction, O, T, T> changed, Supplier<SNode> source, SetableModifier... modifiers) {
         super(id, def, opposite, null, changed, modifiers);
-        this.fromMPS = fromMPS != null ? Constant.of(this, fromMPS) : null;
+        this.fromMPS = fromMPS != null ? o -> DObject.dClareMPS().read(() -> fromMPS.apply(o)) : null;
         this.toMPS = toMPS;
         this.source = source;
     }
@@ -116,8 +113,8 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
 
     @Override
     public T get(O object) {
-        if (fromMPS != null && object.isExternal() && !object.isActive()) {
-            return fromMPS.get(object);
+        if (fromMPS != null && !object.isActive()) {
+            return fromMPS.apply(object);
         } else {
             return super.get(object);
         }
@@ -174,11 +171,6 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
     @Override
     public boolean isSynthetic() {
         return synthetic();
-    }
-
-    @Override
-    protected boolean isOrphan(State state, Mutable m) {
-        return m instanceof DObject && !((DObject) m).isExternal() && super.isOrphan(state, m);
     }
 
     @Override

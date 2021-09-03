@@ -502,7 +502,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
             }
             committing.set(true);
             try {
-                pre.diff(post, o -> o instanceof DObject && !((DObject) o).isDclareOnly()).forEachOrdered(e0 -> {
+                pre.diff(post, o -> o instanceof DObject && !((DObject) o).isDclareOnly(post)).forEachOrdered(e0 -> {
                     DObject dObject = (DObject) e0.getKey();
                     boolean changed = false;
                     DefaultMap<Setable, Object> before = e0.getValue().a();
@@ -826,4 +826,5 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
             }
         }
     }
+
 }

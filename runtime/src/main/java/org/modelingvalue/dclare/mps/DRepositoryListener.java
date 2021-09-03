@@ -33,8 +33,8 @@ public class DRepositoryListener extends Pair<DRepository, DClareMPS> implements
     @Override
     public void moduleAdded(SModule sModule) {
         b().handleMPSChange(() -> {
-            if (b().project.getPath(sModule) != null) {
-                DModule dModule = DModule.of(sModule);
+            DModule dModule = DModule.of(sModule);
+            if (!dModule.isExternal()) {
                 DRepository.MODULES.set(a(), Set::add, dModule);
             }
         });
@@ -43,8 +43,8 @@ public class DRepositoryListener extends Pair<DRepository, DClareMPS> implements
     @Override
     public void beforeModuleRemoved(SModule sModule) {
         b().handleMPSChange(() -> {
-            if (b().project.getPath(sModule) != null) {
-                DModule dModule = DModule.of(sModule);
+            DModule dModule = DModule.of(sModule);
+            if (!dModule.isExternal()) {
                 DRepository.MODULES.set(a(), Set::remove, dModule);
             }
         });

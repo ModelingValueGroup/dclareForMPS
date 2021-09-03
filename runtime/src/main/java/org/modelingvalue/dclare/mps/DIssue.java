@@ -22,6 +22,7 @@ import org.modelingvalue.dclare.Constant;
 import org.modelingvalue.dclare.LeafTransaction;
 import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.Setable;
+import org.modelingvalue.dclare.State;
 import org.modelingvalue.dclare.mps.DRule.DObserver;
 import org.modelingvalue.dclare.mps.DRule.DObserverTransaction;
 
@@ -136,7 +137,7 @@ public class DIssue extends DIdentifiedObject {
     }
 
     @Override
-    public boolean isDclareOnly() {
+    public boolean isDclareOnly(State post) {
         return true;
     }
 

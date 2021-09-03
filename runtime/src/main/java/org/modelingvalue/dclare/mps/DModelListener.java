@@ -57,6 +57,8 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
         b().handleMPSChange(() -> {
             if (a().isActive()) {
                 DNode.PROPERTY.get(event.getProperty()).set(DNode.of(event.getNode()), event.getNewValue());
+            } else {
+                a().activateIfUsed();
             }
         });
     }
@@ -68,6 +70,8 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
                 SReference newValue = event.getNewValue();
                 SNode targetNode = newValue != null ? newValue.getTargetNode() : null;
                 DNode.REFERENCE.get(event.getAssociationLink()).set(DNode.of(event.getNode()), targetNode != null ? DNode.of(targetNode) : null);
+            } else {
+                a().activateIfUsed();
             }
         });
     }
@@ -95,6 +99,8 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
                         DNode.SINGLE_CONTAINMENT.get(al).set(DNode.of(event.getParent()), dNode);
                     }
                 }
+            } else {
+                a().activateIfUsed();
             }
         });
     }
@@ -116,6 +122,8 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
                         DNode.SINGLE_CONTAINMENT.get(al).set(DNode.of(event.getParent()), (v, e) -> e.equals(v) ? null : v, dNode);
                     }
                 }
+            } else {
+                a().activateIfUsed();
             }
         });
     }
@@ -129,9 +137,11 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
 
     @Override
     public void modelReplaced(SModel model) {
-        if (a().isActive()) {
-            b().universeTransaction().put("$REFRESH", () -> DModel.REFRESH.trigger(DModel.of(model)));
-        }
+        b().handleMPSChange(() -> {
+            if (a().isActive()) {
+                b().universeTransaction().put("$REFRESH", () -> DModel.REFRESH.trigger(DModel.of(model)));
+            }
+        });
     }
 
     @Override
