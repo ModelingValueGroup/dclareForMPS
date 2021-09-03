@@ -16,17 +16,15 @@
 package org.modelingvalue.dclare.mps;
 
 import java.util.Objects;
-import java.util.function.Consumer;
 
 import org.modelingvalue.dclare.DclareConfig;
 import org.modelingvalue.dclare.State;
-import org.modelingvalue.dclare.UniverseTransaction;
 
 public class DclareForMpsConfig {
-    private static final boolean ON_MODE_DEFAULT          = Boolean.getBoolean("ON_MODE");
-    private static final boolean COLORFUL_EDITORS_DEFAULT = Boolean.getBoolean("COLORFUL_EDITORS");
-    private static final boolean TRACE_DCLARE_DEFAULT     = Boolean.getBoolean("DCLARE_TRACE");
-    private static final boolean TRACE_ACTIVATION_DEFAULT = Boolean.getBoolean("TRACE_ACTIVATION");
+    private static final boolean      ON_MODE_DEFAULT          = Boolean.getBoolean("ON_MODE");
+    private static final boolean      COLORFUL_EDITORS_DEFAULT = Boolean.getBoolean("COLORFUL_EDITORS");
+    private static final boolean      TRACE_DCLARE_DEFAULT     = Boolean.getBoolean("DCLARE_TRACE");
+    private static final boolean      TRACE_ACTIVATION_DEFAULT = Boolean.getBoolean("TRACE_ACTIVATION");
 
     private final DclareConfig        config;
     private final EngineStatusHandler statusHandler;
@@ -37,21 +35,21 @@ public class DclareForMpsConfig {
 
     //============================================================================
     public DclareForMpsConfig() {
-        config          = new DclareConfig();
-        statusHandler   = null;
-        onMode          = ON_MODE_DEFAULT;
+        config = new DclareConfig();
+        statusHandler = null;
+        onMode = ON_MODE_DEFAULT;
         colorfulEditors = COLORFUL_EDITORS_DEFAULT;
-        traceDclare     = TRACE_DCLARE_DEFAULT;
+        traceDclare = TRACE_DCLARE_DEFAULT;
         traceActivation = TRACE_ACTIVATION_DEFAULT;
     }
 
     //============================================================================
     private DclareForMpsConfig(DclareConfig config, EngineStatusHandler statusHandler, boolean onMode, boolean colorfulEditors, boolean traceDclare, boolean dclareActivation) {
-        this.config          = config;
-        this.statusHandler   = statusHandler;
-        this.onMode          = onMode;
+        this.config = config;
+        this.statusHandler = statusHandler;
+        this.onMode = onMode;
         this.colorfulEditors = colorfulEditors;
-        this.traceDclare     = traceDclare;
+        this.traceDclare = traceDclare;
         this.traceActivation = dclareActivation;
     }
 
@@ -101,11 +99,6 @@ public class DclareForMpsConfig {
     //===
     public DclareForMpsConfig withStart(State start) {
         DclareConfig config = this.config.withStart(start);
-        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation);
-    }
-
-    public DclareForMpsConfig withCycle(Consumer<UniverseTransaction> cycle) {
-        DclareConfig config = this.config.withCycle(cycle);
         return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation);
     }
 
@@ -202,10 +195,6 @@ public class DclareForMpsConfig {
 
     public State getStart() {
         return config.getStart();
-    }
-
-    public Consumer<UniverseTransaction> getCycle() {
-        return config.getCycle();
     }
 
     public boolean isDevMode() {
