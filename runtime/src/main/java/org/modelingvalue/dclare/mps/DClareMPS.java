@@ -74,6 +74,7 @@ import org.modelingvalue.dclare.ex.TooManyChangesException;
 import org.modelingvalue.dclare.ex.TooManyObservedException;
 import org.modelingvalue.dclare.ex.TooManyObserversException;
 import org.modelingvalue.dclare.ex.TransactionException;
+import org.modelingvalue.dclare.mps.DAttribute.DObservedAttribute;
 import org.modelingvalue.dclare.mps.DRule.DObserver;
 import org.modelingvalue.dclare.mps.DclareModelCheckerBuilder.RootItemsToCheck;
 import org.modelingvalue.dclare.sync.NetUtils;
@@ -502,16 +503,18 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
             }
             committing.set(true);
             try {
-                pre.diff(post, o -> o instanceof DObject && !((DObject) o).isDclareOnly(post)).forEachOrdered(e0 -> {
+                pre.diff(post, o -> o instanceof DObject && !((DObject) o).isDclareOnly() && ((DObject) o).isActive()).forEachOrdered(e0 -> {
                     DObject dObject = (DObject) e0.getKey();
                     boolean changed = false;
                     DefaultMap<Setable, Object> before = e0.getValue().a();
                     DefaultMap<Setable, Object> after = e0.getValue().b();
                     for (DObserved observed : dObject.dClass().dObserveds()) {
-                        changed |= observed.toMPS(dObject, before.get(observed), after.get(observed));
+                        if (observed instanceof DObservedAttribute || !dObject.isExternal()) {
+                            changed |= observed.toMPS(dObject, before.get(observed), after.get(observed));
+                        }
                     }
-                    if (changed || (post.get(dObject, Mutable.D_PARENT_CONTAINING) != null && //
-                    pre.get(dObject, Mutable.D_PARENT_CONTAINING) == null)) {
+                    if (!dObject.isExternal() && (changed || (post.get(dObject, Mutable.D_PARENT_CONTAINING) != null && //
+                    pre.get(dObject, Mutable.D_PARENT_CONTAINING) == null))) {
                         if (dObject instanceof DModel) {
                             SModel sModel = ((DModel) dObject).tryOriginal();
                             if (sModel != null) {

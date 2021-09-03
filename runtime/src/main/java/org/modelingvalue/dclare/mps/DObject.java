@@ -33,7 +33,6 @@ import org.modelingvalue.dclare.Observed;
 import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.Priority;
 import org.modelingvalue.dclare.Setable;
-import org.modelingvalue.dclare.State;
 
 import jetbrains.mps.errors.item.IssueKindReportItem;
 
@@ -183,8 +182,8 @@ public abstract class DObject implements Mutable {
         return NonCheckingObserver.of(id, action, Priority.forward);
     }
 
-    public boolean isDclareOnly(State post) {
-        return post.get(this, Mutable.D_PARENT_CONTAINING) == null || post.get(this, CONTAINING_ATTRIBUTE) != null;
+    public boolean isDclareOnly() {
+        return Mutable.D_PARENT_CONTAINING.get(this) == null || CONTAINING_ATTRIBUTE.get(this) != null;
     }
 
     @Override

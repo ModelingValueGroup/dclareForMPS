@@ -22,7 +22,6 @@ import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Triple;
 import org.modelingvalue.dclare.Constant;
-import org.modelingvalue.dclare.State;
 
 @SuppressWarnings("unused")
 public class DStructObject extends DIdentifiedObject implements SStructObject {
@@ -73,7 +72,7 @@ public class DStructObject extends DIdentifiedObject implements SStructObject {
     }
 
     @Override
-    public boolean isDclareOnly(State post) {
+    public boolean isDclareOnly() {
         return true;
     }
 

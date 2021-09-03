@@ -92,16 +92,15 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
                                                                                                                  SModel sModel = dModel.original();
                                                                                                                  return DModel.roots(sModel).sequential().map(DNode::of).toSet();
                                                                                                              }, (dModel, pre, post) -> {
-                                                                                                                 if (!dModel.isExternal() && dModel.isActive()) {
-                                                                                                                     SModel sModel = dModel.original();
-                                                                                                                     Set<SNode> soll = post.map(r -> r.reParent(sModel, null, r.original())).toSet();
-                                                                                                                     Set<SNode> ist = DModel.roots(sModel);
-                                                                                                                     if (!soll.equals(ist)) {
-                                                                                                                         DObserved.map(ist, soll, sModel::addRootNode, sModel::removeRootNode);
-                                                                                                                         return true;
-                                                                                                                     }
+                                                                                                                 SModel sModel = dModel.original();
+                                                                                                                 Set<SNode> soll = post.map(r -> r.reParent(sModel, null, r.original())).toSet();
+                                                                                                                 Set<SNode> ist = DModel.roots(sModel);
+                                                                                                                 if (!soll.equals(ist)) {
+                                                                                                                     DObserved.map(ist, soll, sModel::addRootNode, sModel::removeRootNode);
+                                                                                                                     return true;
+                                                                                                                 } else {
+                                                                                                                     return false;
                                                                                                                  }
-                                                                                                                 return false;
                                                                                                              }, (t, m, b, a) -> {
                                                                                                                  if (b.isEmpty() && !a.isEmpty()) {
                                                                                                                      DModel.ACTIVE.set(m, Boolean.TRUE);
@@ -136,16 +135,15 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
                                                                                                                  return Collection.of(((SModelInternal) sModel).getModelImports()).sequential().                                                                                                                           //
                                                                                                                  map(r -> r.resolve(null)).notNull().map(DModel::of).toSet();
                                                                                                              }, (o, pre, post) -> {
-                                                                                                                 if (!o.isExternal() && o.isActive()) {
-                                                                                                                     SModelInternal sModel = (SModelInternal) o.original();
-                                                                                                                     Set<SModelReference> soll = post.map(DModel::reference).notNull().toSet();
-                                                                                                                     Set<SModelReference> ist = Collection.of(sModel.getModelImports()).sequential().toSet();
-                                                                                                                     if (!soll.equals(ist)) {
-                                                                                                                         DObserved.map(ist, soll, sModel::addModelImport, sModel::deleteModelImport);
-                                                                                                                         return true;
-                                                                                                                     }
+                                                                                                                 SModelInternal sModel = (SModelInternal) o.original();
+                                                                                                                 Set<SModelReference> soll = post.map(DModel::reference).notNull().toSet();
+                                                                                                                 Set<SModelReference> ist = Collection.of(sModel.getModelImports()).sequential().toSet();
+                                                                                                                 if (!soll.equals(ist)) {
+                                                                                                                     DObserved.map(ist, soll, sModel::addModelImport, sModel::deleteModelImport);
+                                                                                                                     return true;
+                                                                                                                 } else {
+                                                                                                                     return false;
                                                                                                                  }
-                                                                                                                 return false;
                                                                                                              });
 
     protected static final Observed<DModel, ModelRoot>                                      MODEL_ROOT       = Observed.of("MODEL_ROOT", null, synthetic);
