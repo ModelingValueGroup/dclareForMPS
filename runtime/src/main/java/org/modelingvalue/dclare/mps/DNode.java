@@ -571,7 +571,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
     @Override
     public Object dIdentity() {
         SConcept concept = getConcept();
-        Set<DAttribute> id = TYPE.get(this).getIndetifying();
+        Set<DAttribute> id = TYPE.get(this).getIdentifying();
         if (!id.isEmpty()) {
             Map<DAttribute, Object> map = Map.of();
             for (DAttribute attr : id) {

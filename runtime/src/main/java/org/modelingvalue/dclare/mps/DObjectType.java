@@ -57,7 +57,7 @@ public abstract class DObjectType<I> implements MutableClass {
         return ATTRIBUTES.get(this);
     }
 
-    public Set<DAttribute> getIndetifying() {
+    public Set<DAttribute> getIdentifying() {
         return IDENTIFYING.get(this);
     }
 
