@@ -130,9 +130,11 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
 
     @Override
     public void modelLoaded(SModel model, boolean partially) {
-        b().handleMPSChange(() -> {
-            DModel.LOADED.set(a(), Boolean.TRUE);
-        });
+        if (!partially) {
+            b().handleMPSChange(() -> {
+                DModel.LOADED.set(a(), Boolean.TRUE);
+            });
+        }
     }
 
     @Override
