@@ -36,46 +36,50 @@ public class DclareForMPSEngine implements DeployListener {
     private final ProjectBase        project;
     private final ClassLoaderManager classLoaderManager;
     private DClareMPS                dClareMPS;
-    private DclareForMpsConfig       config;
 
     public DclareForMPSEngine(ProjectBase project, EngineStatusHandler engineStatusHandler) {
         this.project = project;
         classLoaderManager = Objects.requireNonNull(MPSCoreComponents.getInstance().getPlatform().findComponent(ClassLoaderManager.class));
         classLoaderManager.addListener(this);
-        config = new DclareForMpsConfig().withMaxNrOfHistory(MAX_NR_OF_HISTORY_FOR_MPS).withStatusHandler(new StaleFilter(engineStatusHandler));
+        DclareForMpsConfig config = new DclareForMpsConfig().withMaxNrOfHistory(MAX_NR_OF_HISTORY_FOR_MPS).withStatusHandler(new StaleFilter(engineStatusHandler));
+        dClareMPS = new DClareMPS(this, project, config);
+        DClareMPS.ALL.add(dClareMPS);
     }
 
     public DclareForMpsConfig getConfig() {
-        return config;
+        return dClareMPS.getConfig();
     }
 
-    public void setConfig(DclareForMpsConfig newConfig) {
-        newConfig = newConfig.withMaxNrOfHistory(config.getMaxNrOfHistory()).withStatusHandler(config.getStatusHandler());
-        if (!config.equals(newConfig)) {
-            stopEngine();
-            config = newConfig;
+    public void setConfig(DclareForMpsConfig config) {
+        config = config.withMaxNrOfHistory(getConfig().getMaxNrOfHistory()).withStatusHandler(getConfig().getStatusHandler());
+        if (!getConfig().equals(config)) {
+            stopEngine(config);
             if (config.isOnMode()) {
                 startEngine();
             }
         }
     }
 
-    private synchronized void startEngine() {
-        if (dClareMPS == null) {
-            dClareMPS = new DClareMPS(this, project, config);
+    public void startEngine() {
+        synchronized (DClareMPS.ALL) {
+            if (!dClareMPS.isRunning()) {
+                DClareMPS.ALL.remove(dClareMPS);
+                dClareMPS = new DClareMPS(this, project, getConfig());
+                DClareMPS.ALL.add(dClareMPS);
+                dClareMPS.start();
+            }
         }
     }
 
-    synchronized void stopEngine() {
-        if (dClareMPS != null) {
+    public void stopEngine(DclareForMpsConfig config) {
+        synchronized (DClareMPS.ALL) {
             dClareMPS.stop();
-            dClareMPS = null;
         }
     }
 
     public void stop() {
         classLoaderManager.removeListener(this);
-        stopEngine();
+        stopEngine(getConfig());
     }
 
     @Override
@@ -83,7 +87,7 @@ public class DclareForMPSEngine implements DeployListener {
         for (SModule m : project.getProjectModules()) {
             //noinspection SuspiciousMethodCalls
             if (unloadedModules.contains(m)) {
-                stopEngine();
+                stopEngine(getConfig());
                 break;
             }
         }
@@ -94,7 +98,7 @@ public class DclareForMPSEngine implements DeployListener {
         for (SModule m : project.getProjectModules()) {
             //noinspection SuspiciousMethodCalls
             if (loadedModules.contains(m)) {
-                if (config.isOnMode()) {
+                if (getConfig().isOnMode()) {
                     startEngine();
                 }
                 break;
@@ -120,42 +124,42 @@ public class DclareForMPSEngine implements DeployListener {
 
         @Override
         public void stats(UniverseStatistics stats, DClareMPS engine) {
-            if (dClareMPS == engine || dClareMPS == null) {
+            if (dClareMPS == engine) {
                 engineStatusHandler.stats(stats, engine);
             }
         }
 
         @Override
         public void on(Project project, DClareMPS engine) {
-            if (dClareMPS == engine || dClareMPS == null) {
+            if (dClareMPS == engine) {
                 engineStatusHandler.on(project, engine);
             }
         }
 
         @Override
         public void terminating(Project project, DClareMPS engine, Getter getter) {
-            if (dClareMPS == engine || dClareMPS == null) {
+            if (dClareMPS == engine) {
                 engineStatusHandler.terminating(project, engine, getter);
             }
         }
 
         @Override
         public void off(Project project, DClareMPS engine) {
-            if (dClareMPS == engine || dClareMPS == null) {
+            if (dClareMPS == engine) {
                 engineStatusHandler.off(project, engine);
             }
         }
 
         @Override
         public void active(Project project, DClareMPS engine) {
-            if (dClareMPS == engine || dClareMPS == null) {
+            if (dClareMPS == engine) {
                 engineStatusHandler.active(project, engine);
             }
         }
 
         @Override
         public void idle(Project project, DClareMPS engine, Getter getter) {
-            if (dClareMPS == engine || dClareMPS == null) {
+            if (dClareMPS == engine) {
                 engineStatusHandler.idle(project, engine, getter);
             }
         }

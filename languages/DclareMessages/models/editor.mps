@@ -963,61 +963,50 @@
               </node>
             </node>
           </node>
-          <node concept="3clFbF" id="2yBFF$$gGTo" role="3cqZAp">
-            <node concept="2OqwBi" id="2yBFF$$gI9I" role="3clFbG">
-              <node concept="37vLTw" id="2yBFF$$gHZW" role="2Oq$k0">
-                <ref role="3cqZAo" node="3jy5t$KXxKT" resolve="engine" />
-              </node>
-              <node concept="liA8E" id="2yBFF$$gInu" role="2OqNvi">
-                <ref role="37wK5l" to="t4tl:~DclareForMPSEngine.setConfig(org.modelingvalue.dclare.mps.DclareForMpsConfig)" resolve="setConfig" />
-                <node concept="2OqwBi" id="2yBFF$$gHq5" role="37wK5m">
-                  <node concept="2OqwBi" id="2yBFF$$gH4d" role="2Oq$k0">
-                    <node concept="37vLTw" id="2yBFF$$gGTm" role="2Oq$k0">
-                      <ref role="3cqZAo" node="3jy5t$KXxKT" resolve="engine" />
-                    </node>
-                    <node concept="liA8E" id="2yBFF$$gHhb" role="2OqNvi">
-                      <ref role="37wK5l" to="t4tl:~DclareForMPSEngine.getConfig()" resolve="getConfig" />
-                    </node>
+          <node concept="3clFbJ" id="3AqaJRWQj6i" role="3cqZAp">
+            <node concept="3clFbS" id="3AqaJRWQj6k" role="3clFbx">
+              <node concept="3clFbF" id="3AqaJRWQjKP" role="3cqZAp">
+                <node concept="2OqwBi" id="3AqaJRWQjTp" role="3clFbG">
+                  <node concept="37vLTw" id="3AqaJRWQjKN" role="2Oq$k0">
+                    <ref role="3cqZAo" node="3jy5t$KXxKT" resolve="engine" />
                   </node>
-                  <node concept="liA8E" id="2yBFF$$gHCY" role="2OqNvi">
-                    <ref role="37wK5l" to="t4tl:~DclareForMpsConfig.withOnMode(boolean)" resolve="withOnMode" />
-                    <node concept="3clFbT" id="2yBFF$$gHDM" role="37wK5m" />
+                  <node concept="liA8E" id="2mGMux29jVw" role="2OqNvi">
+                    <ref role="37wK5l" to="t4tl:~DclareForMPSEngine.startEngine()" resolve="startEngine" />
                   </node>
                 </node>
               </node>
             </node>
-          </node>
-          <node concept="3clFbF" id="2yBFF$$gI$L" role="3cqZAp">
-            <node concept="2OqwBi" id="2yBFF$$gI$M" role="3clFbG">
-              <node concept="37vLTw" id="2yBFF$$gI$N" role="2Oq$k0">
-                <ref role="3cqZAo" node="3jy5t$KXxKT" resolve="engine" />
+            <node concept="3y3z36" id="25VU9adcZYy" role="3clFbw">
+              <node concept="2OqwBi" id="3AqaJRWQjgf" role="3uHU7B">
+                <node concept="0IXxy" id="3AqaJRWQjgg" role="2Oq$k0" />
+                <node concept="3TrcHB" id="3AqaJRWQjgh" role="2OqNvi">
+                  <ref role="3TsBF5" to="wknp:1DUQ$OwrN1P" resolve="engineState" />
+                </node>
               </node>
-              <node concept="liA8E" id="2yBFF$$gI$O" role="2OqNvi">
-                <ref role="37wK5l" to="t4tl:~DclareForMPSEngine.setConfig(org.modelingvalue.dclare.mps.DclareForMpsConfig)" resolve="setConfig" />
-                <node concept="2OqwBi" id="2yBFF$$gI$P" role="37wK5m">
-                  <node concept="2OqwBi" id="2yBFF$$gI$Q" role="2Oq$k0">
-                    <node concept="37vLTw" id="2yBFF$$gI$R" role="2Oq$k0">
+              <node concept="2OqwBi" id="3AqaJRWQjHB" role="3uHU7w">
+                <node concept="1XH99k" id="3AqaJRWQjHC" role="2Oq$k0">
+                  <ref role="1XH99l" to="wknp:3zaVTDeuva_" resolve="EngineOperationState" />
+                </node>
+                <node concept="2ViDtV" id="3AqaJRWQjHD" role="2OqNvi">
+                  <ref role="2ViDtZ" to="wknp:3zaVTDeuvaE" resolve="on" />
+                </node>
+              </node>
+            </node>
+            <node concept="9aQIb" id="2mGMux29jW8" role="9aQIa">
+              <node concept="3clFbS" id="2mGMux29jW9" role="9aQI4">
+                <node concept="3clFbF" id="2mGMux29kbj" role="3cqZAp">
+                  <node concept="2OqwBi" id="2mGMux29kjK" role="3clFbG">
+                    <node concept="37vLTw" id="2mGMux29kbh" role="2Oq$k0">
                       <ref role="3cqZAo" node="3jy5t$KXxKT" resolve="engine" />
                     </node>
-                    <node concept="liA8E" id="2yBFF$$gI$S" role="2OqNvi">
-                      <ref role="37wK5l" to="t4tl:~DclareForMPSEngine.getConfig()" resolve="getConfig" />
-                    </node>
-                  </node>
-                  <node concept="liA8E" id="2yBFF$$gI$T" role="2OqNvi">
-                    <ref role="37wK5l" to="t4tl:~DclareForMpsConfig.withOnMode(boolean)" resolve="withOnMode" />
-                    <node concept="3y3z36" id="3zaVTDevz7G" role="37wK5m">
-                      <node concept="2OqwBi" id="3zaVTDevxXt" role="3uHU7B">
-                        <node concept="0IXxy" id="3zaVTDevxXu" role="2Oq$k0" />
-                        <node concept="3TrcHB" id="3zaVTDevxXv" role="2OqNvi">
-                          <ref role="3TsBF5" to="wknp:1DUQ$OwrN1P" resolve="engineState" />
+                    <node concept="liA8E" id="2mGMux29klQ" role="2OqNvi">
+                      <ref role="37wK5l" to="t4tl:~DclareForMPSEngine.stopEngine(org.modelingvalue.dclare.mps.DclareForMpsConfig)" resolve="stopEngine" />
+                      <node concept="2OqwBi" id="2mGMux29krb" role="37wK5m">
+                        <node concept="37vLTw" id="2mGMux29koo" role="2Oq$k0">
+                          <ref role="3cqZAo" node="3jy5t$KXxKT" resolve="engine" />
                         </node>
-                      </node>
-                      <node concept="2OqwBi" id="3zaVTDevxXq" role="3uHU7w">
-                        <node concept="1XH99k" id="3zaVTDevxXr" role="2Oq$k0">
-                          <ref role="1XH99l" to="wknp:3zaVTDeuva_" resolve="EngineOperationState" />
-                        </node>
-                        <node concept="2ViDtV" id="3zaVTDevy6X" role="2OqNvi">
-                          <ref role="2ViDtZ" to="wknp:3zaVTDeuvaE" resolve="on" />
+                        <node concept="liA8E" id="2mGMux29kuc" role="2OqNvi">
+                          <ref role="37wK5l" to="t4tl:~DclareForMPSEngine.getConfig()" resolve="getConfig" />
                         </node>
                       </node>
                     </node>

@@ -106,7 +106,7 @@ import jetbrains.mps.smodel.language.LanguageRuntime;
 public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, UncaughtExceptionHandler {
     protected static Constant<SLanguage, Map<String, DAttribute<?, ?>>>                                 ATTRIBUTE_MAP        = Constant.of("ATTRIBUTE_MAP", l -> DClareMPS.RULE_SETS.get(l).flatMap(rs -> Collection.of(rs.getAllAttributes())).toMap(a -> Entry.of(a.id(), a)));
     protected static Constant<SLanguage, Map<String, SStructClass>>                                     STRUCT_CLASS_MAP     = Constant.of("STRUCT_CLASS_MAP", l -> DClareMPS.RULE_SETS.get(l).flatMap(rs -> Collection.of(rs.getAllStructClasses())).toMap(s -> Entry.of(s.id(), s)));
-    private static final CopyOnWriteArrayList<DClareMPS>                                                ALL                  = new CopyOnWriteArrayList<>();
+    protected static final CopyOnWriteArrayList<DClareMPS>                                              ALL                  = new CopyOnWriteArrayList<>();
     private static final Set<DMessageType>                                                              MESSAGE_TYPES        = Collection.of(DMessageType.values()).toSet();
     private static final QualifiedSet<Triple<DObject, DFeature, String>, DMessage>                      MESSAGE_QSET         = QualifiedSet.of(m -> Triple.of(m.context(), m.feature(), m.id()));
     protected static final Map<DMessageType, QualifiedSet<Triple<DObject, DFeature, String>, DMessage>> MESSAGE_QSET_MAP     = MESSAGE_TYPES.sequential().toMap(t -> Entry.of(t, MESSAGE_QSET));
@@ -155,6 +155,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
     private final Concurrent<Set<SModule>>                                                              changedModules       = Concurrent.of(Set.of());
     private final Concurrent<Set<SNode>>                                                                changedRoots         = Concurrent.of(Set.of());
     private final AtomicLong                                                                            counter              = new AtomicLong(0L);
+    private boolean                                                                                     running              = false;
 
     protected DClareMPS(DclareForMPSEngine engine, ProjectBase project, DclareForMpsConfig config) {
         this.config = config;
@@ -178,10 +179,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
         mpsChecker = new DclareModelCheckerBuilder(this, modelExtractor).createChecker(checkers);
         Highlighter highlighter = project.getComponent(Highlighter.class);
         highlighter.addChecker(languageEditorChecker);
-        modelAccess.executeCommandInEDT(() -> {
-            commandThread = Thread.currentThread();
-            config.getStatusHandler().on(project, this);
-        });
+        modelAccess.executeCommandInEDT(() -> commandThread = Thread.currentThread());
         if (config.isTraceDclare()) {
             System.err.println(DCLARE + "START " + this);
         }
@@ -241,15 +239,26 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
 
     @Override
     public void init() {
-        Universe.super.init();
         imperativeTransaction = universeTransaction.addImperative("$MPS_CONNECTOR", p -> config.getStatusHandler().active(project, this), this, r -> {
             if (isRunning()) {
                 command(r);
             }
         }, false);
-        ALL.add(this);
-        imperativeTransaction.schedule(() -> REPOSITORY_CONTAINER.set(this, getRepository()));
-        universeTransaction.put("delta-support-starter", () -> NetUtils.startDeltaSupport(deltaAdapter));
+    }
+
+    protected void start() {
+        if (!isRunning()) {
+            running = true;
+            universeTransaction.put("start", () -> {
+                Universe.super.init();
+                NetUtils.startDeltaSupport(deltaAdapter);
+                imperativeTransaction.schedule(() -> {
+                    REPOSITORY_CONTAINER.set(this, getRepository());
+                    config.getStatusHandler().on(project, this);
+                });
+            });
+
+        }
     }
 
     public void addTraceMessage(Object node, String msg) {
@@ -283,7 +292,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
                     }
                 }
             });
-            engine.stopEngine();
+            engine.stopEngine(getConfig());
         }
     }
 
@@ -532,10 +541,10 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
         }
     }
 
-    protected void stop() {
+    protected boolean stop() {
         if (isRunning()) {
+            running = false;
             State state = universeTransaction.lastState();
-            ALL.remove(this);
             modelAccess.executeCommandInEDT(() -> {
                 config.getStatusHandler().terminating(project, this, state::get);
                 commandThread = null;
@@ -554,6 +563,9 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
             imperativeTransaction = null;
             universeTransaction.kill();
             state.run(() -> getRepository().stop(this));
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -562,7 +574,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
     }
 
     public boolean isRunning() {
-        return imperativeTransaction != null;
+        return running && imperativeTransaction != null;
     }
 
     private static LanguageRegistry registry() {
@@ -583,7 +595,8 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
     }
 
     public <T> T getOrDerive(Supplier<T> supplier) {
-        return imperativeTransaction.state().derive(supplier);
+        ImperativeTransaction it = imperativeTransaction;
+        return (it != null ? it.state() : universeTransaction.lastState()).derive(supplier);
     }
 
     public static DClareMPS dClareForObject(Object sObject) {
@@ -792,7 +805,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
             try {
                 result = universeTransaction.waitForEnd();
             } catch (Throwable t) {
-                engine.stopEngine();
+                engine.stopEngine(getConfig());
                 throw t;
             } finally {
                 thePool.shutdownNow();
