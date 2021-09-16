@@ -60,4 +60,5 @@ public class DIsssueType extends DObjectType<Boolean> {
     protected Collection<Setable> setables() {
         return DIssue.SETABLES;
     }
+
 }

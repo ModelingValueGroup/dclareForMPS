@@ -104,8 +104,8 @@ import jetbrains.mps.smodel.language.LanguageRegistry;
 import jetbrains.mps.smodel.language.LanguageRuntime;
 
 public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, UncaughtExceptionHandler {
-    protected static Setable<DClareMPS, Map<String, DAttribute<?, ?>>>                                  ATTRIBUTE_MAP        = Setable.of("ATTRIBUTE_MAP", Map.of());
-    protected static Setable<DClareMPS, Map<String, SStructClass>>                                      STRUCT_CLASS_MAP     = Setable.of("STRUCT_CLASS_MAP", Map.of());
+    protected static Constant<SLanguage, Map<String, DAttribute<?, ?>>>                                 ATTRIBUTE_MAP        = Constant.of("ATTRIBUTE_MAP", l -> DClareMPS.RULE_SETS.get(l).flatMap(rs -> Collection.of(rs.getAllAttributes())).toMap(a -> Entry.of(a.id(), a)));
+    protected static Constant<SLanguage, Map<String, SStructClass>>                                     STRUCT_CLASS_MAP     = Constant.of("STRUCT_CLASS_MAP", l -> DClareMPS.RULE_SETS.get(l).flatMap(rs -> Collection.of(rs.getAllStructClasses())).toMap(s -> Entry.of(s.id(), s)));
     private static final CopyOnWriteArrayList<DClareMPS>                                                ALL                  = new CopyOnWriteArrayList<>();
     private static final Set<DMessageType>                                                              MESSAGE_TYPES        = Collection.of(DMessageType.values()).toSet();
     private static final QualifiedSet<Triple<DObject, DFeature, String>, DMessage>                      MESSAGE_QSET         = QualifiedSet.of(m -> Triple.of(m.context(), m.feature(), m.id()));
@@ -122,15 +122,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
                                                                                                                                  }
                                                                                                                              };
     protected static final String                                                                       DCLARE               = "---------> DCLARE ";
-    public static final Observed<DClareMPS, Set<SLanguage>>                                             ALL_LANGUAGES        = Observed.of("ALL_LANGAUGES", Set.of(),                                                                         //
-            (tx, d, o, n) -> Setable.<Set<SLanguage>, SLanguage> diff(o, n,                                                                                                                                                                   //
-                    a -> DClareMPS.RULE_SETS.get(a).forEachOrdered(                                                                                                                                                                           //
-                            rs -> {                                                                                                                                                                                                           //
-                                rs.getAllAttributes().forEach(attr -> ATTRIBUTE_MAP.set(d, Map::put, Entry.<String, DAttribute<?, ?>> of(attr.id(), attr)));                                                                                  //
-                                rs.getAllStructClasses().forEach(strc -> STRUCT_CLASS_MAP.set(d, Map::put, Entry.of(strc.id(), strc)));                                                                                                       //
-                            }),                                                                                                                                                                                                               //
-                    r -> {                                                                                                                                                                                                                    //
-                    }), plumbing);
+    public static final Observed<DClareMPS, Set<SLanguage>>                                             ALL_LANGUAGES        = Observed.of("ALL_LANGAUGES", Set.of(), plumbing);
     public static final Constant<SLanguage, Set<IRuleSet>>                                              RULE_SETS            = Constant.of("RULE_SETS", Set.of(), language -> {
                                                                                                                                  LanguageRuntime rtLang = registry().getLanguage(language);
                                                                                                                                  IRuleAspect aspect = rtLang != null ? rtLang.getAspect(IRuleAspect.class) : null;
@@ -590,19 +582,47 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
         return UNIVERSE_CLASS;
     }
 
-    public static <T> T tryGetOnAll(Supplier<T> supplier) {
-        T result = null;
-        for (DClareMPS dClareMPS : ALL) {
-            // Causes deadlocks
-            //            if (!dClareMPS.isRunningCommand()) {
-            //                dClareMPS.universeTransaction().waitForIdle();
-            //            }
-            result = dClareMPS.imperativeTransaction.state().get(supplier);
-            if (result != null) {
-                break;
+    public <T> T getOrDerive(Supplier<T> supplier) {
+        return imperativeTransaction.state().derive(supplier);
+    }
+
+    public static DClareMPS dClareForObject(Object sObject) {
+        if (ALL.isEmpty()) {
+            return null;
+        }
+        if (ALL.size() == 1) {
+            return ALL.get(0);
+        }
+        if (sObject instanceof SNode) {
+            sObject = ((SNode) sObject).getModel();
+        }
+        if (sObject instanceof SModel) {
+            sObject = ((SModel) sObject).getModule();
+        }
+        if (sObject instanceof SModule) {
+            for (DClareMPS dClareMPS : ALL) {
+                if (dClareMPS.project.getPath((SModule) sObject) != null) {
+                    return dClareMPS;
+                }
             }
         }
-        return result;
+        if (sObject instanceof SRepository) {
+            for (DClareMPS dClareMPS : ALL) {
+                if (dClareMPS.dRepository.original().equals((SRepository) sObject)) {
+                    return dClareMPS;
+                }
+            }
+        }
+        if (sObject instanceof SLanguage) {
+            for (DClareMPS dClareMPS : ALL) {
+                for (SModule module : dClareMPS.project.getProjectModules()) {
+                    if (module.getUsedLanguages().contains((SLanguage) sObject)) {
+                        return dClareMPS;
+                    }
+                }
+            }
+        }
+        return ALL.get(0);
     }
 
     @Override

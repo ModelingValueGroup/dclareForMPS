@@ -43,19 +43,19 @@ public class DIssue extends DIdentifiedObject {
 
     private static final Setable<DIssue, String>          MESSAGE          = Setable.of("$MESSAGE", null);
 
-    private static final Observer<DIssue>                 MESSAGE_RULE     = DObject.observer(MESSAGE, o -> MESSAGE.set(o, o.message.get()));
+    private static final Observer<DIssue>                 MESSAGE_RULE     = DObject.observer(MESSAGE, o -> o.message.get());
 
     public static final Setable<DIssue, DObject>          DOBJECT          = Setable.of("$DOBJECT", null, () -> DObject.DCLARE_ISSUES);
 
-    private static final Observer<DIssue>                 DOBJECT_RULE     = DObject.observer(DOBJECT, o -> DOBJECT.set(o, o.dObject.get()));
+    private static final Observer<DIssue>                 DOBJECT_RULE     = DObject.observer(DOBJECT, o -> o.dObject.get());
 
     protected static final Setable<DIssue, MessageStatus> SEVERITY         = Setable.of("$SEVERITY", null);
 
-    private static final Observer<DIssue>                 SEVERITY_RULE    = DObject.observer(SEVERITY, o -> SEVERITY.set(o, o.severity.get()));
+    private static final Observer<DIssue>                 SEVERITY_RULE    = DObject.observer(SEVERITY, o -> o.severity.get());
 
     protected static final Setable<DIssue, MessageTarget> FEATURE          = Setable.of("$FEATURE", null);
 
-    private static final Observer<DIssue>                 FEATURE_RULE     = DObject.observer(FEATURE, o -> FEATURE.set(o, o.feature.get()));
+    private static final Observer<DIssue>                 FEATURE_RULE     = DObject.observer(FEATURE, o -> o.feature.get());
 
     @SuppressWarnings("rawtypes")
     protected static final Set<Observer>                  OBSERVERS        = DObject.OBSERVERS.addAll(Set.of(MESSAGE_RULE, DOBJECT_RULE, SEVERITY_RULE, FEATURE_RULE));

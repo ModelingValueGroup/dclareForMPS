@@ -202,12 +202,12 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
 
     private static final Observer<DNode>                                                                           MODEL_RULE             = DObject.observer(MODEL, o -> {
                                                                                                                                               DNode p = o.getAncestor(DNode.class);
-                                                                                                                                              MODEL.set(o, p != null ? MODEL.get(p) : o.getAncestor(DModel.class));
+                                                                                                                                              return p != null ? MODEL.get(p) : o.getAncestor(DModel.class);
                                                                                                                                           });
 
     private static final Observer<DNode>                                                                           ROOT_RULE              = DObject.observer(ROOT, o -> {
                                                                                                                                               DNode p = o.getParent();
-                                                                                                                                              ROOT.set(o, p != null ? ROOT.get(p) : o);
+                                                                                                                                              return p != null ? ROOT.get(p) : o;
                                                                                                                                           });
     @SuppressWarnings("rawtypes")
     protected static final Constant<Pair<SConcept, SLanguage>, Set<Observer>>                                      COPY_CONCEPT_OBSERVERS = Constant.of("COPY_CONCEPT_OBSERVERS", p -> {
@@ -293,7 +293,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
     private static final Observer<DNode>                                                                           INDEX_RULE             = DObject.observer(INDEX, o -> {
                                                                                                                                               Pair<Mutable, Setable<Mutable, ?>> pc = Mutable.D_PARENT_CONTAINING.get(o);
                                                                                                                                               Object children = pc != null ? pc.b().get(pc.a()) : null;
-                                                                                                                                              INDEX.set(o, o.equals(children) ? 0 : children instanceof List ? ((List) children).firstIndexOf(o) : -1);
+                                                                                                                                              return o.equals(children) ? 0 : children instanceof List ? ((List) children).firstIndexOf(o) : -1;
                                                                                                                                           });
 
     @SuppressWarnings("rawtypes")
@@ -424,7 +424,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
         } else {
             LeafTransaction tx = LeafTransaction.getCurrent();
             if (tx == null) {
-                return DClareMPS.tryGetOnAll(() -> of(original.getConcept(), original.getReference(), original));
+                return DClareMPS.dClareForObject(original).getOrDerive(() -> of(original.getConcept(), original.getReference(), original));
             } else {
                 return of(original.getConcept(), original.getReference(), original);
             }

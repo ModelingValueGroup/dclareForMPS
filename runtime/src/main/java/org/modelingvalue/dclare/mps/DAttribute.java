@@ -25,6 +25,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import org.jetbrains.mps.openapi.language.SLanguage;
 import org.jetbrains.mps.openapi.language.SProperty;
 import org.jetbrains.mps.openapi.model.EditableSModel;
 import org.jetbrains.mps.openapi.model.SModel;
@@ -43,15 +44,15 @@ import jetbrains.mps.smodel.adapter.structure.property.InvalidProperty;
 public interface DAttribute<O, T> extends DFeature {
 
     @SuppressWarnings("unchecked")
-    static <C, V> DAttribute<C, V> of(String id, String name, String anonymousType, String ruleSetType, boolean syn, boolean optional, boolean composite, int identifyingNr, Object def, Class<?> cls, String opposite, Supplier<SNode> source, Function<C, V> deriver, boolean onlyTemporal) {
+    static <C, V> DAttribute<C, V> of(String id, String name, String anonymousType, String ruleSetType, boolean syn, boolean optional, boolean composite, int identifyingNr, Object def, Class<?> cls, SLanguage oppositeLanguage, String opposite, Supplier<SNode> source, Function<C, V> deriver, boolean onlyTemporal) {
         boolean idAttr = identifyingNr >= 0 && ("StructRuleSet".equals(ruleSetType) || anonymousType != null);
         SetableModifier[] mods = {synthetic.iff(syn), mandatory.iff(idAttr || (!optional && identifyingNr < 0)), containment.iff(composite)};
-        return idAttr ? new DIdentifyingAttribute(id, name, anonymousType, identifyingNr, cls, source, mods) : deriver != null ? new DConstant(id, name, cls, source, deriver, onlyTemporal, mods) : new DObservedAttribute(id, name, identifyingNr >= 0, def, cls, opposite != null ? () -> of(opposite) : null, source, new InvalidProperty(id.toString(), name), mods);
+        return idAttr ? new DIdentifyingAttribute(id, name, anonymousType, identifyingNr, cls, source, mods) : deriver != null ? new DConstant(id, name, cls, source, deriver, onlyTemporal, mods) : new DObservedAttribute(id, name, identifyingNr >= 0, def, cls, opposite != null ? () -> of(oppositeLanguage, opposite) : null, source, new InvalidProperty(id.toString(), name), mods);
     }
 
     @SuppressWarnings("unchecked")
-    static <C, V> DAttribute<C, V> of(String id) {
-        return (DAttribute<C, V>) DClareMPS.ATTRIBUTE_MAP.get(DClareMPS.instance()).get(id);
+    static <C, V> DAttribute<C, V> of(SLanguage language, String id) {
+        return (DAttribute<C, V>) DClareMPS.ATTRIBUTE_MAP.get(language).get(id);
     }
 
     String id();

@@ -20,6 +20,7 @@ import static org.modelingvalue.dclare.CoreSetableModifier.plumbing;
 
 import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
@@ -59,18 +60,19 @@ public abstract class DObject implements Mutable {
                                                                                                                      public boolean external() {
                                                                                                                          return false;
                                                                                                                      }
+
                                                                                                                  };
 
     public static final Observed<DObject, DObjectType<?>>                              TYPE                      = Observed.of("$TYPE", DUMMY_TYPE, plumbing);
 
-    protected static final Observer<DObject>                                           TYPE_RULE                 = observer(TYPE, o -> TYPE.set(o, o.getType()));
+    protected static final Observer<DObject>                                           TYPE_RULE                 = observer(TYPE, o -> o.getType());
 
     protected static final Observed<DObject, DAttribute>                               CONTAINING_ATTRIBUTE      = Observed.of("$CONTAINING_ATTRIBUTE", null, plumbing);
 
     protected static final Observer<DObject>                                           CONTAINING_ATTRIBUTE_RULE = observer(CONTAINING_ATTRIBUTE, o -> {
                                                                                                                      Pair<Mutable, Setable<Mutable, ?>> pc = Mutable.D_PARENT_CONTAINING.get(o);
-                                                                                                                     CONTAINING_ATTRIBUTE.set(o, pc == null || pc.a() instanceof DClareMPS ? null :                                         //
-                                                                                                                     pc.b() instanceof DAttribute ? (DAttribute) pc.b() : CONTAINING_ATTRIBUTE.get((DObject) pc.a()));
+                                                                                                                     return pc == null || pc.a() instanceof DClareMPS ? null :                                                              //
+                                                                                                                     pc.b() instanceof DAttribute ? (DAttribute) pc.b() : CONTAINING_ATTRIBUTE.get((DObject) pc.a());
                                                                                                                  });
 
     protected static final Action<DObject>                                             REFRESH_CHILDREN          = Action.of("$REFRESH_CHILDREN", o -> {
@@ -178,8 +180,12 @@ public abstract class DObject implements Mutable {
 
     protected abstract DObjectType<?> getType();
 
-    public static <O extends DObject> NonCheckingObserver<O> observer(Object id, Consumer<O> action) {
+    public static <O extends DObject> NonCheckingObserver<O> observer(String id, Consumer<O> action) {
         return NonCheckingObserver.of(id, action, Priority.forward);
+    }
+
+    public static <O extends DObject, V> NonCheckingObserver<O> observer(Setable<O, V> setable, Function<O, V> value) {
+        return NonCheckingObserver.of(setable, value, Priority.forward);
     }
 
     public boolean isDclareOnly() {

@@ -31,15 +31,15 @@ import jetbrains.mps.project.ProjectBase;
 
 @SuppressWarnings("unused")
 public class DclareForMPSEngine implements DeployListener {
-    public static final int                MAX_NR_OF_HISTORY_FOR_MPS = 4;
+    public static final int          MAX_NR_OF_HISTORY_FOR_MPS = 4;
     //
-    private final       ProjectBase        project;
-    private final       ClassLoaderManager classLoaderManager;
-    private             DClareMPS          dClareMPS;
-    private             DclareForMpsConfig config;
+    private final ProjectBase        project;
+    private final ClassLoaderManager classLoaderManager;
+    private DClareMPS                dClareMPS;
+    private DclareForMpsConfig       config;
 
     public DclareForMPSEngine(ProjectBase project, EngineStatusHandler engineStatusHandler) {
-        this.project       = project;
+        this.project = project;
         classLoaderManager = Objects.requireNonNull(MPSCoreComponents.getInstance().getPlatform().findComponent(ClassLoaderManager.class));
         classLoaderManager.addListener(this);
         config = new DclareForMpsConfig().withMaxNrOfHistory(MAX_NR_OF_HISTORY_FOR_MPS).withStatusHandler(new StaleFilter(engineStatusHandler));
@@ -60,18 +60,14 @@ public class DclareForMPSEngine implements DeployListener {
         }
     }
 
-    private boolean isRunning() {
-        return dClareMPS != null && dClareMPS.isRunning();
-    }
-
     private synchronized void startEngine() {
-        if (!isRunning()) {
+        if (dClareMPS == null) {
             dClareMPS = new DClareMPS(this, project, config);
         }
     }
 
     synchronized void stopEngine() {
-        if (isRunning()) {
+        if (dClareMPS != null) {
             dClareMPS.stop();
             dClareMPS = null;
         }

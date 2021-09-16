@@ -25,8 +25,8 @@ public class SStructClass {
         return new SStructClass(id, name, language, Set.of(supers));
     }
 
-    public static <C, V> SStructClass of(String id) {
-        return DClareMPS.STRUCT_CLASS_MAP.get(DClareMPS.instance()).get(id);
+    public static <C, V> SStructClass of(SLanguage language, String id) {
+        return DClareMPS.STRUCT_CLASS_MAP.get(language).get(id);
     }
 
     private final String            id;

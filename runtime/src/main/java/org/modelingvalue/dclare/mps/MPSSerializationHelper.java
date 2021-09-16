@@ -27,9 +27,7 @@ import org.jetbrains.mps.openapi.module.SModuleId;
 import org.jetbrains.mps.openapi.persistence.PersistenceFacade;
 import org.modelingvalue.collections.Entry;
 import org.modelingvalue.collections.Map;
-import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.impl.ListImpl;
-import org.modelingvalue.collections.util.Triple;
 import org.modelingvalue.dclare.Mutable;
 import org.modelingvalue.dclare.Observed;
 import org.modelingvalue.dclare.Setable;
@@ -50,33 +48,33 @@ public class MPSSerializationHelper implements SerializationHelper<DObjectType<D
 
     private final ProjectRepository    repos;
 
-    private Map<String, Serializer<?>> deserialiseMap = Map.of(                                  //
-            Entry.of(DModuleConverter.MODULE_PREFIX, new DModuleConverter()),                    //
-            Entry.of(DModelConverter.MODEL_PREFIX, new DModelConverter()),                       //
-            Entry.of(DNodeConverter.NODE_PREFIX, new DNodeConverter()),                          //
-            Entry.of(DStructConverter.DSTRUCT_PREFIX, new DStructConverter()),                   //
-            Entry.of(DStructClassConverter.DSTRUCTCLASS_PREFIX, new DStructClassConverter()),    //
-            Entry.of(SStructClassConverter.SSTRUCTCLASS_PREFIX, new SStructClassConverter()),    //
-            Entry.of(IntConverter.INT_PREFIX, new IntConverter()),                               //
-            Entry.of(StringConverter.STRING_PREFIX, new StringConverter()),                      //
-            Entry.of(SNodeReferenceConverter.SNODE_REF_PREFIX, new SNodeReferenceConverter()),   //
-            Entry.of(SConceptConverter.SCONCEPT_PREFIX, new SConceptConverter()),                //
-            Entry.of(SLanguageConverter.SLANGUAGE_PREFIX, new SLanguageConverter())              //
+    private Map<String, Serializer<?>> deserialiseMap = Map.of(                                                //
+            Entry.of(DModuleConverter.MODULE_PREFIX, new DModuleConverter()),                                  //
+            Entry.of(DModelConverter.MODEL_PREFIX, new DModelConverter()),                                     //
+            Entry.of(DNodeConverter.NODE_PREFIX, new DNodeConverter()),                                        //
+            Entry.of(DStructConverter.DSTRUCT_PREFIX, new DStructConverter()),                                 //
+            // Entry.of(DStructClassConverter.DSTRUCTCLASS_PREFIX, new DStructClassConverter()),             //
+            // Entry.of(SStructClassConverter.SSTRUCTCLASS_PREFIX, new SStructClassConverter()),             //
+            Entry.of(IntConverter.INT_PREFIX, new IntConverter()),                                             //
+            Entry.of(StringConverter.STRING_PREFIX, new StringConverter()),                                    //
+            Entry.of(SNodeReferenceConverter.SNODE_REF_PREFIX, new SNodeReferenceConverter()),                 //
+            Entry.of(SConceptConverter.SCONCEPT_PREFIX, new SConceptConverter()),                              //
+            Entry.of(SLanguageConverter.SLANGUAGE_PREFIX, new SLanguageConverter())                            //
     );
 
     @SuppressWarnings("rawtypes")
-    private Map<Class, Serializer<?>>  serializeMap   = Map.of(                                  //
-            Entry.of(DModule.class, new DModuleConverter()),                                     //
-            Entry.of(DModel.class, new DModelConverter()),                                       //
-            Entry.of(DNode.class, new DNodeConverter()),                                         //
-            Entry.of(DStructObject.class, new DStructConverter()),                               //
-            Entry.of(DStructClass.class, new DStructClassConverter()),                           //
-            Entry.of(SStructClass.class, new SStructClassConverter()),                           //
-            Entry.of(Integer.class, new IntConverter()),                                         //
-            Entry.of(String.class, new StringConverter()),                                       //
-            Entry.of(SNodePointer.class, new SNodeReferenceConverter()),                         //
-            Entry.of(SConceptAdapterById.class, new SConceptConverter()),                        //
-            Entry.of(SLanguageAdapterById.class, new SLanguageConverter())                       //
+    private Map<Class, Serializer<?>>  serializeMap   = Map.of(                                                //
+            Entry.of(DModule.class, new DModuleConverter()),                                                   //
+            Entry.of(DModel.class, new DModelConverter()),                                                     //
+            Entry.of(DNode.class, new DNodeConverter()),                                                       //
+            Entry.of(DStructObject.class, new DStructConverter()),                                             //
+            // Entry.of(DStructClass.class, new DStructClassConverter()),                                    //
+            // Entry.of(SStructClass.class, new SStructClassConverter()),                                    //
+            Entry.of(Integer.class, new IntConverter()),                                                       //
+            Entry.of(String.class, new StringConverter()),                                                     //
+            Entry.of(SNodePointer.class, new SNodeReferenceConverter()),                                       //
+            Entry.of(SConceptAdapterById.class, new SConceptConverter()),                                      //
+            Entry.of(SLanguageAdapterById.class, new SLanguageConverter())                                     //
     );
 
     private PersistenceFacade mpsPersist() {
@@ -275,54 +273,54 @@ public class MPSSerializationHelper implements SerializationHelper<DObjectType<D
         }
     }
 
-    private class SStructClassConverter implements Serializer<SStructClass> {
+    //    private class SStructClassConverter implements Serializer<SStructClass> {
+    //
+    //        private static final String SSTRUCTCLASS_PREFIX = "sstructclass-";
+    //
+    //        @Override
+    //        public String serialize(SStructClass t) {
+    //            return SSTRUCTCLASS_PREFIX + t.id();
+    //        }
+    //
+    //        @Override
+    //        public SStructClass deserialize(String s) {
+    //            String id = s.substring(SSTRUCTCLASS_PREFIX.length());
+    //            if (TRACE)
+    //                System.err.println("resolve structclass: " + id);
+    //            return SStructClass.of(id);
+    //        }
+    //
+    //    }
 
-        private static final String SSTRUCTCLASS_PREFIX = "sstructclass-";
-
-        @Override
-        public String serialize(SStructClass t) {
-            return SSTRUCTCLASS_PREFIX + t.id();
-        }
-
-        @Override
-        public SStructClass deserialize(String s) {
-            String id = s.substring(SSTRUCTCLASS_PREFIX.length());
-            if (TRACE)
-                System.err.println("resolve structclass: " + id);
-            return SStructClass.of(id);
-        }
-
-    }
-
-    private class DStructClassConverter implements Serializer<DStructClass> {
-
-        private static final String DSTRUCTCLASS_PREFIX = "dstructclass-";
-
-        @Override
-        public String serialize(DStructClass clz) {
-            Triple<Set<SLanguage>, SStructClass, Boolean> id = clz.id();
-            String lang = Util.encodeWithLength(Integer.toString(id.a().size()), Util.encodeWithLength((String[]) id.a().map(l -> mpsPersist().asString(l)).toArray()));
-            String s = id.b().id();
-            String b = id.c().toString();
-            return Util.encodeWithLength(DSTRUCTCLASS_PREFIX + Util.encodeWithLength(lang, s, b));
-        }
-
-        @Override
-        public DStructClass deserialize(String s) {
-            String[] fields = Util.decodeFromLength(s.substring(DSTRUCTCLASS_PREFIX.length()), 3);
-            String[] languageData = Util.decodeFromLength(fields[0], 2);
-            int nrOfLanguages = Integer.valueOf(languageData[0]);
-            Set<SLanguage> sLanguages = Set.of();
-            String[] strOfLanguags = Util.decodeFromLength(languageData[1], nrOfLanguages);
-            for (int i = 0; i < nrOfLanguages; i++) {
-                sLanguages = sLanguages.add(mpsPersist().createLanguage(strOfLanguags[i]));
-            }
-            SStructClass structClass = SStructClass.of(fields[1]);
-            Boolean bool = Boolean.valueOf(fields[2]);
-            return new DStructClass(Triple.of(sLanguages, structClass, bool));
-        }
-
-    }
+    //    private class DStructClassConverter implements Serializer<DStructClass> {
+    //
+    //        private static final String DSTRUCTCLASS_PREFIX = "dstructclass-";
+    //
+    //        @Override
+    //        public String serialize(DStructClass clz) {
+    //            Triple<Set<SLanguage>, SStructClass, Boolean> id = clz.id();
+    //            String lang = Util.encodeWithLength(Integer.toString(id.a().size()), Util.encodeWithLength((String[]) id.a().map(l -> mpsPersist().asString(l)).toArray()));
+    //            String s = id.b().id();
+    //            String b = id.c().toString();
+    //            return Util.encodeWithLength(DSTRUCTCLASS_PREFIX + Util.encodeWithLength(lang, s, b));
+    //        }
+    //
+    //        @Override
+    //        public DStructClass deserialize(String s) {
+    //            String[] fields = Util.decodeFromLength(s.substring(DSTRUCTCLASS_PREFIX.length()), 3);
+    //            String[] languageData = Util.decodeFromLength(fields[0], 2);
+    //            int nrOfLanguages = Integer.valueOf(languageData[0]);
+    //            Set<SLanguage> sLanguages = Set.of();
+    //            String[] strOfLanguags = Util.decodeFromLength(languageData[1], nrOfLanguages);
+    //            for (int i = 0; i < nrOfLanguages; i++) {
+    //                sLanguages = sLanguages.add(mpsPersist().createLanguage(strOfLanguags[i]));
+    //            }
+    //            SStructClass structClass = SStructClass.of(fields[1]);
+    //            Boolean bool = Boolean.valueOf(fields[2]);
+    //            return new DStructClass(Triple.of(sLanguages, structClass, bool));
+    //        }
+    //
+    //    }
 
     private class SNodeReferenceConverter implements Serializer<SNodeReference> {
 
