@@ -17,6 +17,7 @@ package org.modelingvalue.dclare.mps;
 
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.jetbrains.mps.openapi.module.SModule;
 import org.jetbrains.mps.openapi.project.Project;
@@ -31,11 +32,12 @@ import jetbrains.mps.project.ProjectBase;
 
 @SuppressWarnings("unused")
 public class DclareForMPSEngine implements DeployListener {
-    public static final int          MAX_NR_OF_HISTORY_FOR_MPS = 4;
+    public static final int                                MAX_NR_OF_HISTORY_FOR_MPS = 4;
+    protected static final CopyOnWriteArrayList<DClareMPS> ALL_DCLARE_MPS            = new CopyOnWriteArrayList<>();
     //
-    private final ProjectBase        project;
-    private final ClassLoaderManager classLoaderManager;
-    private DClareMPS                dClareMPS;
+    private final ProjectBase                              project;
+    private final ClassLoaderManager                       classLoaderManager;
+    private DClareMPS                                      dClareMPS;
 
     public DclareForMPSEngine(ProjectBase project, EngineStatusHandler engineStatusHandler) {
         this.project = project;
@@ -43,7 +45,7 @@ public class DclareForMPSEngine implements DeployListener {
         classLoaderManager.addListener(this);
         DclareForMpsConfig config = new DclareForMpsConfig().withMaxNrOfHistory(MAX_NR_OF_HISTORY_FOR_MPS).withStatusHandler(new StaleFilter(engineStatusHandler));
         dClareMPS = new DClareMPS(this, project, config);
-        DClareMPS.ALL.add(dClareMPS);
+        ALL_DCLARE_MPS.add(dClareMPS);
     }
 
     public DclareForMpsConfig getConfig() {
@@ -52,34 +54,39 @@ public class DclareForMPSEngine implements DeployListener {
 
     public void setConfig(DclareForMpsConfig config) {
         config = config.withMaxNrOfHistory(getConfig().getMaxNrOfHistory()).withStatusHandler(getConfig().getStatusHandler());
-        if (!getConfig().equals(config)) {
-            stopEngine(config);
-            if (config.isOnMode()) {
-                startEngine();
+        synchronized (ALL_DCLARE_MPS) {
+            if (!getConfig().equals(config) || config.isOnMode() != dClareMPS.isRunning()) {
+                stopEngine();
+                startEngine(config);
             }
         }
     }
 
-    public void startEngine() {
-        synchronized (DClareMPS.ALL) {
+    private void startEngine(DclareForMpsConfig config) {
+        synchronized (ALL_DCLARE_MPS) {
             if (!dClareMPS.isRunning()) {
-                DClareMPS.ALL.remove(dClareMPS);
-                dClareMPS = new DClareMPS(this, project, getConfig());
-                DClareMPS.ALL.add(dClareMPS);
-                dClareMPS.start();
+                ALL_DCLARE_MPS.remove(dClareMPS);
+                dClareMPS = new DClareMPS(this, project, config);
+                ALL_DCLARE_MPS.add(dClareMPS);
+                if (config.isOnMode()) {
+                    dClareMPS.start();
+                }
             }
         }
     }
 
-    public void stopEngine(DclareForMpsConfig config) {
-        synchronized (DClareMPS.ALL) {
-            dClareMPS.stop();
+    protected void stopEngine() {
+        synchronized (ALL_DCLARE_MPS) {
+            if (dClareMPS.isRunning()) {
+                dClareMPS.stop();
+            }
         }
     }
 
     public void stop() {
         classLoaderManager.removeListener(this);
-        stopEngine(getConfig());
+        stopEngine();
+        ALL_DCLARE_MPS.remove(dClareMPS);
     }
 
     @Override
@@ -87,7 +94,7 @@ public class DclareForMPSEngine implements DeployListener {
         for (SModule m : project.getProjectModules()) {
             //noinspection SuspiciousMethodCalls
             if (unloadedModules.contains(m)) {
-                stopEngine(getConfig());
+                stopEngine();
                 break;
             }
         }
@@ -98,9 +105,7 @@ public class DclareForMPSEngine implements DeployListener {
         for (SModule m : project.getProjectModules()) {
             //noinspection SuspiciousMethodCalls
             if (loadedModules.contains(m)) {
-                if (getConfig().isOnMode()) {
-                    startEngine();
-                }
+                startEngine(getConfig());
                 break;
             }
         }

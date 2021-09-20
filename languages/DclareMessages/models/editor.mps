@@ -971,7 +971,23 @@
                     <ref role="3cqZAo" node="3jy5t$KXxKT" resolve="engine" />
                   </node>
                   <node concept="liA8E" id="2mGMux29jVw" role="2OqNvi">
-                    <ref role="37wK5l" to="t4tl:~DclareForMPSEngine.startEngine()" resolve="startEngine" />
+                    <ref role="37wK5l" to="t4tl:~DclareForMPSEngine.setConfig(org.modelingvalue.dclare.mps.DclareForMpsConfig)" resolve="setConfig" />
+                    <node concept="2OqwBi" id="5qvP6mSW1yY" role="37wK5m">
+                      <node concept="2OqwBi" id="2mGMux29krb" role="2Oq$k0">
+                        <node concept="37vLTw" id="2mGMux29koo" role="2Oq$k0">
+                          <ref role="3cqZAo" node="3jy5t$KXxKT" resolve="engine" />
+                        </node>
+                        <node concept="liA8E" id="2mGMux29kuc" role="2OqNvi">
+                          <ref role="37wK5l" to="t4tl:~DclareForMPSEngine.getConfig()" resolve="getConfig" />
+                        </node>
+                      </node>
+                      <node concept="liA8E" id="5qvP6mSW1GO" role="2OqNvi">
+                        <ref role="37wK5l" to="t4tl:~DclareForMpsConfig.withOnMode(boolean)" resolve="withOnMode" />
+                        <node concept="3clFbT" id="5qvP6mSW5Uc" role="37wK5m">
+                          <property role="3clFbU" value="true" />
+                        </node>
+                      </node>
+                    </node>
                   </node>
                 </node>
               </node>
@@ -995,18 +1011,24 @@
             <node concept="9aQIb" id="2mGMux29jW8" role="9aQIa">
               <node concept="3clFbS" id="2mGMux29jW9" role="9aQI4">
                 <node concept="3clFbF" id="2mGMux29kbj" role="3cqZAp">
-                  <node concept="2OqwBi" id="2mGMux29kjK" role="3clFbG">
-                    <node concept="37vLTw" id="2mGMux29kbh" role="2Oq$k0">
+                  <node concept="2OqwBi" id="5qvP6mSW6cB" role="3clFbG">
+                    <node concept="37vLTw" id="5qvP6mSW6cC" role="2Oq$k0">
                       <ref role="3cqZAo" node="3jy5t$KXxKT" resolve="engine" />
                     </node>
-                    <node concept="liA8E" id="2mGMux29klQ" role="2OqNvi">
-                      <ref role="37wK5l" to="t4tl:~DclareForMPSEngine.stopEngine(org.modelingvalue.dclare.mps.DclareForMpsConfig)" resolve="stopEngine" />
-                      <node concept="2OqwBi" id="2mGMux29krb" role="37wK5m">
-                        <node concept="37vLTw" id="2mGMux29koo" role="2Oq$k0">
-                          <ref role="3cqZAo" node="3jy5t$KXxKT" resolve="engine" />
+                    <node concept="liA8E" id="5qvP6mSW6cD" role="2OqNvi">
+                      <ref role="37wK5l" to="t4tl:~DclareForMPSEngine.setConfig(org.modelingvalue.dclare.mps.DclareForMpsConfig)" resolve="setConfig" />
+                      <node concept="2OqwBi" id="5qvP6mSW6cE" role="37wK5m">
+                        <node concept="2OqwBi" id="5qvP6mSW6cF" role="2Oq$k0">
+                          <node concept="37vLTw" id="5qvP6mSW6cG" role="2Oq$k0">
+                            <ref role="3cqZAo" node="3jy5t$KXxKT" resolve="engine" />
+                          </node>
+                          <node concept="liA8E" id="5qvP6mSW6cH" role="2OqNvi">
+                            <ref role="37wK5l" to="t4tl:~DclareForMPSEngine.getConfig()" resolve="getConfig" />
+                          </node>
                         </node>
-                        <node concept="liA8E" id="2mGMux29kuc" role="2OqNvi">
-                          <ref role="37wK5l" to="t4tl:~DclareForMPSEngine.getConfig()" resolve="getConfig" />
+                        <node concept="liA8E" id="5qvP6mSW6cI" role="2OqNvi">
+                          <ref role="37wK5l" to="t4tl:~DclareForMpsConfig.withOnMode(boolean)" resolve="withOnMode" />
+                          <node concept="3clFbT" id="5qvP6mSWdxR" role="37wK5m" />
                         </node>
                       </node>
                     </node>
