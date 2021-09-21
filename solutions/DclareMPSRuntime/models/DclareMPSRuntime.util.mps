@@ -1276,6 +1276,52 @@
         </node>
       </node>
     </node>
+    <node concept="2tJIrI" id="4xaBPI8cNHW" role="jymVt" />
+    <node concept="2YIFZL" id="4xaBPI8df35" role="jymVt">
+      <property role="TrG5h" value="getAttribute" />
+      <node concept="37vLTG" id="4xaBPI8dvpK" role="3clF46">
+        <property role="TrG5h" value="language" />
+        <property role="3TUv4t" value="true" />
+        <node concept="3uibUv" id="4xaBPI8dvpL" role="1tU5fm">
+          <ref role="3uigEE" to="c17a:~SLanguage" resolve="SLanguage" />
+        </node>
+      </node>
+      <node concept="37vLTG" id="4xaBPI8dvpM" role="3clF46">
+        <property role="TrG5h" value="id" />
+        <property role="3TUv4t" value="true" />
+        <node concept="17QB3L" id="4xaBPI8dvpN" role="1tU5fm" />
+      </node>
+      <node concept="3clFbS" id="4xaBPI8df38" role="3clF47">
+        <node concept="3cpWs6" id="4xaBPI8doIM" role="3cqZAp">
+          <node concept="2YIFZM" id="4xaBPI8dtFL" role="3cqZAk">
+            <ref role="37wK5l" to="t4tl:~DAttribute.of(org.jetbrains.mps.openapi.language.SLanguage,java.lang.String)" resolve="of" />
+            <ref role="1Pybhc" to="t4tl:~DAttribute" resolve="DAttribute" />
+            <node concept="37vLTw" id="4xaBPI8dx64" role="37wK5m">
+              <ref role="3cqZAo" node="4xaBPI8dvpK" resolve="language" />
+            </node>
+            <node concept="37vLTw" id="4xaBPI8dxTH" role="37wK5m">
+              <ref role="3cqZAo" node="4xaBPI8dvpM" resolve="id" />
+            </node>
+          </node>
+        </node>
+      </node>
+      <node concept="3Tm1VV" id="4xaBPI8d1WA" role="1B3o_S" />
+      <node concept="3uibUv" id="4xaBPI8ddqk" role="3clF45">
+        <ref role="3uigEE" to="t4tl:~DAttribute" resolve="DAttribute" />
+        <node concept="16syzq" id="4xaBPI8dqh0" role="11_B2D">
+          <ref role="16sUi3" node="4xaBPI8dp4Q" resolve="O" />
+        </node>
+        <node concept="16syzq" id="4xaBPI8dqBw" role="11_B2D">
+          <ref role="16sUi3" node="4xaBPI8dpqS" resolve="T" />
+        </node>
+      </node>
+      <node concept="16euLQ" id="4xaBPI8dp4Q" role="16eVyc">
+        <property role="TrG5h" value="O" />
+      </node>
+      <node concept="16euLQ" id="4xaBPI8dpqS" role="16eVyc">
+        <property role="TrG5h" value="T" />
+      </node>
+    </node>
     <node concept="2tJIrI" id="1Xoy$rYf$7d" role="jymVt" />
     <node concept="2YIFZL" id="1Xoy$rYfEN7" role="jymVt">
       <property role="TrG5h" value="getAttributeValue" />
