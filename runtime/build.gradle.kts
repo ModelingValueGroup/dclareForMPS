@@ -13,6 +13,8 @@
 //     Arjan Kok, Carel Bast                                                                                           ~
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+val libDir = rootProject.projectDir.toPath().resolve("solutions/DclareMPSRuntime/lib")
+
 plugins {
     `java-library`
     `maven-publish`
@@ -40,7 +42,7 @@ publishing {
 }
 tasks.register<Copy>("gatherRuntimeJars") {
     group = "mvg";
-    into(rootProject.projectDir.toPath().resolve("solutions/DclareMPSRuntime/lib"))
+    into(libDir)
     from(
         tasks["jar"].outputs,
         configurations.runtimeClasspath,
@@ -52,6 +54,12 @@ tasks.register<Copy>("gatherRuntimeJars") {
             .replaceFirst(Regex("-[0-9.]*[.]jar"), ".jar")
     }
     tasks.findByName("jar")?.finalizedBy(this)
+    eachFile {
+        println(String.format("   - GATHER %s\n         => %s/%s", file, destinationDir, relativePath))
+    }
+}
+tasks.getByName<Delete>("clean") {
+    delete.add(libDir)
 }
 
 task("createJar").outputs.files.forEach { System.err.println("TOMTOMTOM $it") }
