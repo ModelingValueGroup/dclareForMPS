@@ -13,7 +13,7 @@
 //     Arjan Kok, Carel Bast                                                                                           ~
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-val libDir = rootProject.projectDir.toPath().resolve("solutions/DclareMPSRuntime/lib")
+val libDir: java.nio.file.Path = rootProject.projectDir.toPath().resolve("solutions/DclareMPSRuntime/lib")
 
 plugins {
     `java-library`
@@ -41,7 +41,7 @@ publishing {
     }
 }
 tasks.register<Copy>("gatherRuntimeJars") {
-    group = "mvg";
+    group = "mvg"
     into(libDir)
     from(
         tasks["jar"].outputs,
