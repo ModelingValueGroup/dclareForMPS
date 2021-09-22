@@ -74,8 +74,8 @@ public interface DRule<O> extends DFeature {
 
         @SuppressWarnings("unchecked")
         @Override
-        public Set<Setable> targets() {
-            return TARGETS.get(rule());
+        public Set<Setable<O, ?>> targets() {
+            return (Set) TARGETS.get(rule());
         }
 
     }
