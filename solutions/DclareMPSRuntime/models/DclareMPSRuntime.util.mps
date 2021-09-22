@@ -4181,6 +4181,38 @@
         </node>
       </node>
     </node>
+    <node concept="2tJIrI" id="4xaBPI8RiQJ" role="jymVt" />
+    <node concept="2YIFZL" id="4xaBPI8RHu3" role="jymVt">
+      <property role="TrG5h" value="sStructClass" />
+      <node concept="3clFbS" id="4xaBPI8RHu6" role="3clF47">
+        <node concept="3cpWs6" id="4xaBPI8RUKS" role="3cqZAp">
+          <node concept="2YIFZM" id="4xaBPI8RWug" role="3cqZAk">
+            <ref role="37wK5l" to="t4tl:~SStructClass.of(org.jetbrains.mps.openapi.language.SLanguage,java.lang.String)" resolve="of" />
+            <ref role="1Pybhc" to="t4tl:~SStructClass" resolve="SStructClass" />
+            <node concept="37vLTw" id="4xaBPI8RWQX" role="37wK5m">
+              <ref role="3cqZAo" node="4xaBPI8RR2E" resolve="lang" />
+            </node>
+            <node concept="37vLTw" id="4xaBPI8RXkA" role="37wK5m">
+              <ref role="3cqZAo" node="4xaBPI8RSXm" resolve="id" />
+            </node>
+          </node>
+        </node>
+      </node>
+      <node concept="3Tm1VV" id="4xaBPI8RzgM" role="1B3o_S" />
+      <node concept="3uibUv" id="4xaBPI8RH8G" role="3clF45">
+        <ref role="3uigEE" to="t4tl:~SStructClass" resolve="SStructClass" />
+      </node>
+      <node concept="37vLTG" id="4xaBPI8RR2E" role="3clF46">
+        <property role="TrG5h" value="lang" />
+        <node concept="3uibUv" id="4xaBPI8RRL_" role="1tU5fm">
+          <ref role="3uigEE" to="c17a:~SLanguage" resolve="SLanguage" />
+        </node>
+      </node>
+      <node concept="37vLTG" id="4xaBPI8RSXm" role="3clF46">
+        <property role="TrG5h" value="id" />
+        <node concept="17QB3L" id="4xaBPI8RTkV" role="1tU5fm" />
+      </node>
+    </node>
     <node concept="2tJIrI" id="7byyZgEomtg" role="jymVt" />
     <node concept="2YIFZL" id="25AJqx2bAkV" role="jymVt">
       <property role="TrG5h" value="dStructObject" />
