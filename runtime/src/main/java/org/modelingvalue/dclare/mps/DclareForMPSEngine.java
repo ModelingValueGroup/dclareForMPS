@@ -19,10 +19,12 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.jetbrains.mps.openapi.module.ModelAccess;
 import org.jetbrains.mps.openapi.module.SModule;
-import org.jetbrains.mps.openapi.project.Project;
 import org.jetbrains.mps.openapi.util.ProgressMonitor;
 import org.modelingvalue.dclare.UniverseStatistics;
+import org.modelingvalue.dclare.UniverseTransaction;
+import org.modelingvalue.dclare.UniverseTransaction.MoodProvider;
 
 import jetbrains.mps.classloading.ClassLoaderManager;
 import jetbrains.mps.classloading.DeployListener;
@@ -37,15 +39,25 @@ public class DclareForMPSEngine implements DeployListener {
     //
     private final ProjectBase                              project;
     private final ClassLoaderManager                       classLoaderManager;
+    private final EngineStatusHandler                      engineStatusHandler;
+    private final ModelAccess                              modelAccess;
+
+    //
     private DClareMPS                                      dClareMPS;
+    private MoodProvider                                   moodProvider;
 
     public DclareForMPSEngine(ProjectBase project, EngineStatusHandler engineStatusHandler) {
         this.project = project;
+        this.modelAccess = project.getModelAccess();
+        this.engineStatusHandler = engineStatusHandler;
         classLoaderManager = Objects.requireNonNull(MPSCoreComponents.getInstance().getPlatform().findComponent(ClassLoaderManager.class));
         classLoaderManager.addListener(this);
-        DclareForMpsConfig config = new DclareForMpsConfig().withMaxNrOfHistory(MAX_NR_OF_HISTORY_FOR_MPS).withStatusHandler(new StaleFilter(engineStatusHandler));
+        DclareForMpsConfig config = new DclareForMpsConfig().withMaxNrOfHistory(MAX_NR_OF_HISTORY_FOR_MPS).withStatusHandler(engineStatusHandler);
         dClareMPS = new DClareMPS(this, project, config);
+        moodProvider = dClareMPS.universeTransaction().moodProvider();
         ALL_DCLARE_MPS.add(dClareMPS);
+        new StatsUpdaterThread();
+        new MoodUpdaterThread();
     }
 
     public DclareForMpsConfig getConfig() {
@@ -64,22 +76,19 @@ public class DclareForMPSEngine implements DeployListener {
 
     private void startEngine(DclareForMpsConfig config) {
         synchronized (ALL_DCLARE_MPS) {
-            if (!dClareMPS.isRunning()) {
-                ALL_DCLARE_MPS.remove(dClareMPS);
-                dClareMPS = new DClareMPS(this, project, config);
-                ALL_DCLARE_MPS.add(dClareMPS);
-                if (config.isOnMode()) {
-                    dClareMPS.start();
-                }
+            ALL_DCLARE_MPS.remove(dClareMPS);
+            dClareMPS = new DClareMPS(this, project, config);
+            moodProvider = dClareMPS.universeTransaction().moodProvider();
+            ALL_DCLARE_MPS.add(dClareMPS);
+            if (config.isOnMode()) {
+                dClareMPS.start();
             }
         }
     }
 
     protected void stopEngine() {
         synchronized (ALL_DCLARE_MPS) {
-            if (dClareMPS.isRunning()) {
-                dClareMPS.stop();
-            }
+            dClareMPS.stop();
         }
     }
 
@@ -87,6 +96,7 @@ public class DclareForMPSEngine implements DeployListener {
         classLoaderManager.removeListener(this);
         stopEngine();
         ALL_DCLARE_MPS.remove(dClareMPS);
+        dClareMPS = null;
     }
 
     @Override
@@ -120,53 +130,86 @@ public class DclareForMPSEngine implements DeployListener {
         return val;
     }
 
-    private class StaleFilter implements EngineStatusHandler {
-        private final EngineStatusHandler engineStatusHandler;
+    private class StatsUpdaterThread extends Thread {
+        private UniverseStatistics prevStats;
 
-        public StaleFilter(EngineStatusHandler engineStatusHandler) {
-            this.engineStatusHandler = engineStatusHandler;
+        public StatsUpdaterThread() {
+            super("dclare-stats-" + project.getName());
+            setDaemon(true);
+            start();
         }
 
+        @SuppressWarnings("BusyWait")
         @Override
-        public void stats(UniverseStatistics stats, DClareMPS engine) {
-            if (dClareMPS == engine) {
-                engineStatusHandler.stats(stats, engine);
-            }
-        }
-
-        @Override
-        public void on(Project project, DClareMPS engine) {
-            if (dClareMPS == engine) {
-                engineStatusHandler.on(project, engine);
-            }
-        }
-
-        @Override
-        public void terminating(Project project, DClareMPS engine, Getter getter) {
-            if (dClareMPS == engine) {
-                engineStatusHandler.terminating(project, engine, getter);
-            }
-        }
-
-        @Override
-        public void off(Project project, DClareMPS engine) {
-            if (dClareMPS == engine) {
-                engineStatusHandler.off(project, engine);
-            }
-        }
-
-        @Override
-        public void active(Project project, DClareMPS engine) {
-            if (dClareMPS == engine) {
-                engineStatusHandler.active(project, engine);
-            }
-        }
-
-        @Override
-        public void idle(Project project, DClareMPS engine, Getter getter) {
-            if (dClareMPS == engine) {
-                engineStatusHandler.idle(project, engine, getter);
+        public void run() {
+            try {
+                for (;;) {
+                    Thread.sleep(300);
+                    DClareMPS engine = dClareMPS;
+                    if (engine == null) {
+                        break;
+                    }
+                    UniverseStatistics stats = engine.universeTransaction().stats();
+                    if (prevStats == null || !prevStats.equals(stats)) {
+                        prevStats = new UniverseStatistics(stats);
+                        modelAccess.executeCommandInEDT(() -> engineStatusHandler.stats(stats, engine));
+                    }
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
     }
+
+    private class MoodUpdaterThread extends Thread {
+
+        public MoodUpdaterThread() {
+            super("dclare-moods-" + project.getName());
+            setDaemon(true);
+            start();
+        }
+
+        @Override
+        public void run() {
+            while (true) {
+                DClareMPS finalEngine;
+                MoodProvider finalMoodProvider;
+                synchronized (ALL_DCLARE_MPS) {
+                    finalEngine = dClareMPS;
+                    finalMoodProvider = moodProvider;
+                    if (finalMoodProvider == null || finalEngine == null) {
+                        break;
+                    } else {
+                        modelAccess.executeCommandInEDT(() -> {
+                            if (!finalEngine.getConfig().isOnMode() || finalMoodProvider.getMood() == UniverseTransaction.Mood.stopped) {
+                                engineStatusHandler.off(project, finalEngine);
+                            } else {
+                                engineStatusHandler.on(project, finalEngine);
+                                if (finalMoodProvider.getMood() == UniverseTransaction.Mood.idle) {
+                                    engineStatusHandler.idle(project, finalEngine, finalMoodProvider.getState()::get);
+                                } else {
+                                    engineStatusHandler.active(project, finalEngine);
+                                }
+                            }
+                        });
+                    }
+                }
+                if (finalMoodProvider.getMood() == UniverseTransaction.Mood.stopped) {
+                    try {
+                        Thread.sleep(300);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    MoodProvider nextMoodProvider = finalMoodProvider.waitForNextMood();
+                    synchronized (ALL_DCLARE_MPS) {
+                        if (finalEngine == dClareMPS) {
+                            moodProvider = nextMoodProvider;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 }

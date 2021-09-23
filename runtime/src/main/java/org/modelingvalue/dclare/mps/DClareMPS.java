@@ -62,7 +62,6 @@ import org.modelingvalue.dclare.ReusableTransaction;
 import org.modelingvalue.dclare.Setable;
 import org.modelingvalue.dclare.State;
 import org.modelingvalue.dclare.Universe;
-import org.modelingvalue.dclare.UniverseStatistics;
 import org.modelingvalue.dclare.UniverseTransaction;
 import org.modelingvalue.dclare.ex.ConsistencyError;
 import org.modelingvalue.dclare.ex.EmptyMandatoryException;
@@ -162,10 +161,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
         this.project = project;
         this.modelAccess = project.getModelAccess();
         this.engine = engine;
-        this.modelAccess.executeCommandInEDT(() -> {
-            commandThread = Thread.currentThread();
-            config.getStatusHandler().off(project, this);
-        });
+        this.modelAccess.executeCommandInEDT(() -> commandThread = Thread.currentThread());
         if (config.isTraceDclare()) {
             System.err.println(DCLARE + "BEGIN " + this);
         }
@@ -216,7 +212,6 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
         this.dObserverTransactions = Concurrent.of(() -> new ReusableTransaction<>(universeTransaction));
         this.dCopyObserverTransactions = Concurrent.of(() -> new ReusableTransaction<>(universeTransaction));
         new ShutdownHelperThread();
-        new StatsUpdaterThread();
     }
 
     public DclareForMpsConfig getConfig() {
@@ -226,15 +221,12 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
     @Override
     public void init() {
         Universe.super.init();
-        imperativeTransaction = universeTransaction.addImperative("$MPS_CONNECTOR", p -> config.getStatusHandler().active(project, this), this, r -> {
+        imperativeTransaction = universeTransaction.addImperative("$MPS_CONNECTOR", null, this, r -> {
             if (isRunning()) {
                 command(r);
             }
         }, false);
-        imperativeTransaction.schedule(() -> {
-            REPOSITORY_CONTAINER.set(this, getRepository());
-            config.getStatusHandler().on(project, this);
-        });
+        imperativeTransaction.schedule(() -> REPOSITORY_CONTAINER.set(this, getRepository()));
         NetUtils.startDeltaSupport(deltaAdapter);
     }
 
@@ -265,6 +257,31 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
         highlighter.addChecker(languageEditorChecker);
         deltaAdapter = NetUtils.isActive() ? new MPSDeltaAdapter("mps-sync", universeTransaction, new MPSSerializationHelper(projectRepository)) : null;
         universeTransaction.put(universeTransaction.initAction());
+    }
+
+    protected void stop() {
+        if (running) {
+            running = false;
+            if (config.isTraceDclare()) {
+                System.err.println(DCLARE + "STOP  " + this);
+            }
+            State state = universeTransaction.lastState();
+            modelAccess.executeCommandInEDT(() -> commandThread = null);
+            CheckerRegistry checkerRegistry = project.getPlatform().findComponent(CheckerRegistry.class);
+            if (checkerRegistry == null) {
+                throw new Error("CheckerRegistry not found in platform");
+            }
+            checkerRegistry.unregisterChecker(moduleChecker);
+            checkerRegistry.unregisterChecker(modelChecker);
+            checkerRegistry.unregisterChecker(nodeChecker);
+            Highlighter highlighter = project.getComponent(Highlighter.class);
+            modelAccess.runReadInEDT(() -> highlighter.removeChecker(languageEditorChecker));
+            ImperativeTransaction it = imperativeTransaction;
+            invokeLater(it::stop);
+            imperativeTransaction = null;
+            state.run(() -> getRepository().stop(this));
+        }
+        universeTransaction.kill();
     }
 
     public void addTraceMessage(Object node, String msg) {
@@ -535,7 +552,6 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
                     }
                 });
                 if (last) {
-                    config.getStatusHandler().idle(project, this, post::get);
                     runModelCheck();
                 }
             } finally {
@@ -545,32 +561,6 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
                 }
             }
         }
-    }
-
-    protected void stop() {
-        running = false;
-        if (config.isTraceDclare()) {
-            System.err.println(DCLARE + "STOP  " + this);
-        }
-        State state = universeTransaction.lastState();
-        modelAccess.executeCommandInEDT(() -> {
-            config.getStatusHandler().terminating(project, this, state::get);
-            commandThread = null;
-        });
-        CheckerRegistry checkerRegistry = project.getPlatform().findComponent(CheckerRegistry.class);
-        if (checkerRegistry == null) {
-            throw new Error("CheckerRegistry not found in platform");
-        }
-        checkerRegistry.unregisterChecker(moduleChecker);
-        checkerRegistry.unregisterChecker(modelChecker);
-        checkerRegistry.unregisterChecker(nodeChecker);
-        Highlighter highlighter = project.getComponent(Highlighter.class);
-        modelAccess.runReadInEDT(() -> highlighter.removeChecker(languageEditorChecker));
-        ImperativeTransaction it = imperativeTransaction;
-        invokeLater(it::stop);
-        imperativeTransaction = null;
-        universeTransaction.kill();
-        state.run(() -> getRepository().stop(this));
     }
 
     public DRepository getRepository() {
@@ -726,6 +716,46 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
         }
     }
 
+    private class ShutdownHelperThread extends Thread {
+        public ShutdownHelperThread() {
+            super("dclare-waitForEnd-" + project.getName());
+            setDaemon(true);
+            start();
+        }
+
+        @Override
+        public void run() {
+            org.modelingvalue.dclare.State result = null;
+            try {
+                result = universeTransaction.waitForEnd();
+            } catch (Throwable t) {
+                engine.stopEngine();
+                throw t;
+            } finally {
+                thePool.shutdownNow();
+                if (config.isTraceDclare()) {
+                    System.err.println(DCLARE + "AWAIT TERMINATION   " + this);
+                }
+                try {
+                    //noinspection ResultOfMethodCallIgnored
+                    thePool.awaitTermination(99, TimeUnit.DAYS);
+                } catch (InterruptedException e) {
+                    System.err.println(DCLARE + "the pool did not terminate in time: " + this + " (Thread " + Thread.currentThread().getName() + " was interrupted)");
+                    e.printStackTrace();
+                }
+                if (config.isTraceDclare()) {
+                    System.err.println(DCLARE + "END   " + this);
+                    if (result != null) {
+                        for (@SuppressWarnings("rawtypes")
+                        Entry<Setable, Integer> e : result.count()) {
+                            System.err.println(DCLARE + "    COUNT " + e.getKey() + " = " + e.getValue());
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     private class NodeCheckerInEditor extends AbstractNodeCheckerInEditor {
 
         @Override
@@ -796,74 +826,4 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
         }
     }
 
-    private class ShutdownHelperThread extends Thread {
-        public ShutdownHelperThread() {
-            super("dclare-waitForEnd-" + project.getName());
-            setDaemon(true);
-            start();
-        }
-
-        @Override
-        public void run() {
-            org.modelingvalue.dclare.State result = null;
-            try {
-                result = universeTransaction.waitForEnd();
-            } catch (Throwable t) {
-                engine.stopEngine();
-                throw t;
-            } finally {
-                thePool.shutdownNow();
-                if (config.isTraceDclare()) {
-                    System.err.println(DCLARE + "AWAIT TERMINATION   " + this);
-                }
-                try {
-                    //noinspection ResultOfMethodCallIgnored
-                    thePool.awaitTermination(99, TimeUnit.DAYS);
-                    modelAccess.executeCommandInEDT(() -> config.getStatusHandler().off(project, DClareMPS.this));
-                } catch (InterruptedException e) {
-                    System.err.println(DCLARE + "the pool did not terminate in time: " + this + " (Thread " + Thread.currentThread().getName() + " was interrupted)");
-                    e.printStackTrace();
-                }
-                if (config.isTraceDclare()) {
-                    System.err.println(DCLARE + "END   " + this);
-                    if (result != null) {
-                        for (@SuppressWarnings("rawtypes")
-                        Entry<Setable, Integer> e : result.count()) {
-                            System.err.println(DCLARE + "    COUNT " + e.getKey() + " = " + e.getValue());
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    private class StatsUpdaterThread extends Thread {
-        private UniverseStatistics prevStats;
-
-        public StatsUpdaterThread() {
-            super("dclare-stats-" + project.getName());
-            setDaemon(true);
-            start();
-        }
-
-        @SuppressWarnings("BusyWait")
-        @Override
-        public void run() {
-            try {
-                for (;;) {
-                    Thread.sleep(300);
-                    if (DClareMPS.this.thePool.isShutdown()) {
-                        break;
-                    }
-                    UniverseStatistics stats = DClareMPS.this.universeTransaction.stats();
-                    if (prevStats == null || !prevStats.equals(stats)) {
-                        prevStats = new UniverseStatistics(stats);
-                        modelAccess.executeCommandInEDT(() -> config.getStatusHandler().stats(stats, DClareMPS.this));
-                    }
-                }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    }
 }
