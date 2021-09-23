@@ -1727,7 +1727,12 @@
                     <node concept="2OqwBi" id="4MlxKpU$aoV" role="3clFbG">
                       <node concept="2OqwBi" id="4MlxKpU$aoW" role="2Oq$k0">
                         <node concept="2JrnkZ" id="4MlxKpU$aoX" role="2Oq$k0">
-                          <node concept="30H73N" id="4MlxKpU$aoY" role="2JrQYb" />
+                          <node concept="2OqwBi" id="5xAv1nLrfRX" role="2JrQYb">
+                            <node concept="1iwH7S" id="5xAv1nLrfju" role="2Oq$k0" />
+                            <node concept="1psM6Z" id="5xAv1nLrg26" role="2OqNvi">
+                              <ref role="1psM6Y" node="4MlxKpUzYRj" resolve="attr" />
+                            </node>
+                          </node>
                         </node>
                         <node concept="liA8E" id="4MlxKpU$aoZ" role="2OqNvi">
                           <ref role="37wK5l" to="mhbf:~SNode.getNodeId()" resolve="getNodeId" />
