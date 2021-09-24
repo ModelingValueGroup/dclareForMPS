@@ -17,7 +17,9 @@ package org.modelingvalue.dclare.mps;
 
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.ExecutionException;
 
 import org.jetbrains.mps.openapi.module.ModelAccess;
 import org.jetbrains.mps.openapi.module.SModule;
@@ -45,6 +47,7 @@ public class DclareForMPSEngine implements DeployListener {
     //
     private DClareMPS                                      dClareMPS;
     private MoodProvider                                   moodProvider;
+    private CompletableFuture<Void>                        nextEngine;
 
     public DclareForMPSEngine(ProjectBase project, EngineStatusHandler engineStatusHandler) {
         this.project = project;
@@ -52,12 +55,16 @@ public class DclareForMPSEngine implements DeployListener {
         this.engineStatusHandler = engineStatusHandler;
         classLoaderManager = Objects.requireNonNull(MPSCoreComponents.getInstance().getPlatform().findComponent(ClassLoaderManager.class));
         classLoaderManager.addListener(this);
-        DclareForMpsConfig config = new DclareForMpsConfig().withMaxNrOfHistory(MAX_NR_OF_HISTORY_FOR_MPS).withStatusHandler(engineStatusHandler);
+        newEngine(project, new DclareForMpsConfig().withMaxNrOfHistory(MAX_NR_OF_HISTORY_FOR_MPS).withStatusHandler(engineStatusHandler));
+        new StatsUpdaterThread();
+        new MoodUpdaterThread();
+    }
+
+    private void newEngine(ProjectBase project, DclareForMpsConfig config) {
+        nextEngine = new CompletableFuture<>();
         dClareMPS = new DClareMPS(this, project, config);
         moodProvider = dClareMPS.universeTransaction().moodProvider();
         ALL_DCLARE_MPS.add(dClareMPS);
-        new StatsUpdaterThread();
-        new MoodUpdaterThread();
     }
 
     public DclareForMpsConfig getConfig() {
@@ -75,15 +82,15 @@ public class DclareForMPSEngine implements DeployListener {
     }
 
     private void startEngine(DclareForMpsConfig config) {
+        CompletableFuture<Void> oldFuture = nextEngine;
         synchronized (ALL_DCLARE_MPS) {
             ALL_DCLARE_MPS.remove(dClareMPS);
-            dClareMPS = new DClareMPS(this, project, config);
-            moodProvider = dClareMPS.universeTransaction().moodProvider();
-            ALL_DCLARE_MPS.add(dClareMPS);
+            newEngine(project, config);
             if (config.isOnMode()) {
                 dClareMPS.start();
             }
         }
+        oldFuture.complete(null);
     }
 
     protected void stopEngine() {
@@ -174,9 +181,11 @@ public class DclareForMPSEngine implements DeployListener {
             while (true) {
                 DClareMPS finalEngine;
                 MoodProvider finalMoodProvider;
+                CompletableFuture<Void> finalFuture;
                 synchronized (ALL_DCLARE_MPS) {
                     finalEngine = dClareMPS;
                     finalMoodProvider = moodProvider;
+                    finalFuture = nextEngine;
                     if (finalMoodProvider == null || finalEngine == null) {
                         break;
                     } else {
@@ -196,8 +205,8 @@ public class DclareForMPSEngine implements DeployListener {
                 }
                 if (finalMoodProvider.getMood() == UniverseTransaction.Mood.stopped) {
                     try {
-                        Thread.sleep(300);
-                    } catch (InterruptedException e) {
+                        finalFuture.get();
+                    } catch (InterruptedException | ExecutionException e) {
                         e.printStackTrace();
                     }
                 } else {
