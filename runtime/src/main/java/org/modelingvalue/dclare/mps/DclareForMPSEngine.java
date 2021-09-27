@@ -24,9 +24,10 @@ import java.util.concurrent.ExecutionException;
 import org.jetbrains.mps.openapi.module.ModelAccess;
 import org.jetbrains.mps.openapi.module.SModule;
 import org.jetbrains.mps.openapi.util.ProgressMonitor;
+import org.modelingvalue.collections.util.StatusProvider.StatusIterator;
 import org.modelingvalue.dclare.UniverseStatistics;
 import org.modelingvalue.dclare.UniverseTransaction;
-import org.modelingvalue.dclare.UniverseTransaction.MoodProvider;
+import org.modelingvalue.dclare.UniverseTransaction.Status;
 
 import jetbrains.mps.classloading.ClassLoaderManager;
 import jetbrains.mps.classloading.DeployListener;
@@ -46,7 +47,7 @@ public class DclareForMPSEngine implements DeployListener {
 
     //
     private DClareMPS                                      dClareMPS;
-    private MoodProvider                                   moodProvider;
+    private StatusIterator<Status>                         statusIterator;
     private CompletableFuture<Void>                        nextEngine;
 
     public DclareForMPSEngine(ProjectBase project, EngineStatusHandler engineStatusHandler) {
@@ -61,10 +62,12 @@ public class DclareForMPSEngine implements DeployListener {
     }
 
     private void newEngine(ProjectBase project, DclareForMpsConfig config) {
-        nextEngine = new CompletableFuture<>();
-        dClareMPS = new DClareMPS(this, project, config);
-        moodProvider = dClareMPS.universeTransaction().moodProvider();
-        ALL_DCLARE_MPS.add(dClareMPS);
+        synchronized (ALL_DCLARE_MPS) {
+            nextEngine = new CompletableFuture<>();
+            dClareMPS = new DClareMPS(this, project, config);
+            statusIterator = dClareMPS.universeTransaction().getStatusIterator();
+            ALL_DCLARE_MPS.add(dClareMPS);
+        }
     }
 
     public DclareForMpsConfig getConfig() {
@@ -104,6 +107,7 @@ public class DclareForMPSEngine implements DeployListener {
         stopEngine();
         ALL_DCLARE_MPS.remove(dClareMPS);
         dClareMPS = null;
+        nextEngine.complete(null);
     }
 
     @Override
@@ -180,41 +184,34 @@ public class DclareForMPSEngine implements DeployListener {
         public void run() {
             while (true) {
                 DClareMPS finalEngine;
-                MoodProvider finalMoodProvider;
-                CompletableFuture<Void> finalFuture;
+                StatusIterator<Status> finalStatusIterator;
+                CompletableFuture<Void> finalNextEngine;
                 synchronized (ALL_DCLARE_MPS) {
                     finalEngine = dClareMPS;
-                    finalMoodProvider = moodProvider;
-                    finalFuture = nextEngine;
-                    if (finalMoodProvider == null || finalEngine == null) {
-                        break;
-                    } else {
-                        modelAccess.executeCommandInEDT(() -> {
-                            if (!finalEngine.getConfig().isOnMode() || finalMoodProvider.getMood() == UniverseTransaction.Mood.stopped) {
-                                engineStatusHandler.off(project, finalEngine);
-                            } else {
-                                engineStatusHandler.on(project, finalEngine);
-                                if (finalMoodProvider.getMood() == UniverseTransaction.Mood.idle) {
-                                    engineStatusHandler.idle(project, finalEngine, finalMoodProvider.getState()::get);
-                                } else {
-                                    engineStatusHandler.active(project, finalEngine);
-                                }
-                            }
-                        });
-                    }
+                    finalStatusIterator = statusIterator;
+                    finalNextEngine = nextEngine;
                 }
-                if (finalMoodProvider.getMood() == UniverseTransaction.Mood.stopped) {
-                    try {
-                        finalFuture.get();
-                    } catch (InterruptedException | ExecutionException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    MoodProvider nextMoodProvider = finalMoodProvider.waitForNextMood();
-                    synchronized (ALL_DCLARE_MPS) {
-                        if (finalEngine == dClareMPS) {
-                            moodProvider = nextMoodProvider;
+                if (finalEngine == null) {
+                    break;
+                } else if (finalStatusIterator.hasNext()) {
+                    Status status = finalStatusIterator.next();
+                    modelAccess.executeCommandInEDT(() -> {
+                        if (!finalEngine.getConfig().isOnMode() || status.mood == UniverseTransaction.Mood.stopped) {
+                            engineStatusHandler.off(project, finalEngine);
+                        } else {
+                            engineStatusHandler.on(project, finalEngine);
+                            if (status.mood == UniverseTransaction.Mood.idle) {
+                                engineStatusHandler.idle(project, finalEngine, status.state::get);
+                            } else {
+                                engineStatusHandler.active(project, finalEngine);
+                            }
                         }
+                    });
+                } else {
+                    try {
+                        finalNextEngine.get();
+                    } catch (InterruptedException | ExecutionException e) {
+                        finalEngine.universeTransaction().handleException(e);
                     }
                 }
             }
