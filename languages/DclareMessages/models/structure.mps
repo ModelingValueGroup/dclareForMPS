@@ -121,13 +121,13 @@
     <ref role="1TJDcQ" to="tpck:gw2VY9q" resolve="BaseConcept" />
     <node concept="1TJgyi" id="1DUQ$OwrN1P" role="1TKVEl">
       <property role="IQ2nx" value="1908077416936321141" />
-      <property role="TrG5h" value="engineState" />
-      <ref role="AX2Wp" node="3zaVTDeuva_" resolve="EngineOperationState" />
+      <property role="TrG5h" value="on" />
+      <ref role="AX2Wp" to="tpck:fKAQMTB" resolve="boolean" />
     </node>
     <node concept="1TJgyi" id="3VwCmlf$VFh" role="1TKVEl">
       <property role="IQ2nx" value="4530798681633569489" />
-      <property role="TrG5h" value="transactionActive" />
-      <ref role="AX2Wp" to="tpck:fKAQMTB" resolve="boolean" />
+      <property role="TrG5h" value="mood" />
+      <ref role="AX2Wp" node="6omEkmwvEXF" resolve="EngineMood" />
     </node>
     <node concept="1TJgyi" id="2TyoUkhlXBM" role="1TKVEl">
       <property role="IQ2nx" value="3342343434074053106" />
@@ -228,24 +228,20 @@
       <ref role="2wpffI" node="5FinwQP4DTD" />
     </node>
   </node>
-  <node concept="25R3W" id="3zaVTDeuva_">
-    <property role="3F6X1D" value="4092346657440133797" />
-    <property role="TrG5h" value="EngineOperationState" />
-    <ref role="1H5jkz" node="3zaVTDeuvaA" resolve="off" />
-    <node concept="25R33" id="3zaVTDeuvaA" role="25R1y">
-      <property role="3tVfz5" value="4092346657440133798" />
-      <property role="TrG5h" value="off" />
-      <property role="1L1pqM" value=" OFF " />
+  <node concept="25R3W" id="6omEkmwvEXF">
+    <property role="3F6X1D" value="7356253157866778475" />
+    <property role="TrG5h" value="EngineMood" />
+    <node concept="25R33" id="6omEkmwvEXG" role="25R1y">
+      <property role="3tVfz5" value="7356253157866778476" />
+      <property role="TrG5h" value="idle" />
     </node>
-    <node concept="25R33" id="3zaVTDeuvaB" role="25R1y">
-      <property role="3tVfz5" value="4092346657440133799" />
-      <property role="TrG5h" value="terminating" />
-      <property role="1L1pqM" value=" ... " />
+    <node concept="25R33" id="6omEkmwvEXH" role="25R1y">
+      <property role="3tVfz5" value="7356253157866778477" />
+      <property role="TrG5h" value="active" />
     </node>
-    <node concept="25R33" id="3zaVTDeuvaE" role="25R1y">
-      <property role="3tVfz5" value="4092346657440133802" />
-      <property role="TrG5h" value="on" />
-      <property role="1L1pqM" value=" ON  " />
+    <node concept="25R33" id="6omEkmwvEXK" role="25R1y">
+      <property role="3tVfz5" value="7356253157866778480" />
+      <property role="TrG5h" value="commiting" />
     </node>
   </node>
 </model>
