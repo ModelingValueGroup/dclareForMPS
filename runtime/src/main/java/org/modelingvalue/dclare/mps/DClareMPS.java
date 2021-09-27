@@ -221,7 +221,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
     @Override
     public void init() {
         Universe.super.init();
-        imperativeTransaction = universeTransaction.addImperative("$MPS_CONNECTOR", null, this, r -> {
+        imperativeTransaction = universeTransaction.addImperative("$MPS_CONNECTOR", this, r -> {
             if (isRunning()) {
                 command(r);
             }
@@ -436,6 +436,10 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
 
     public QualifiedSet<Triple<DObject, DFeature, String>, DMessage> getMessages(DMessageType type) {
         return messages.get(type);
+    }
+
+    public boolean hasMessages() {
+        return messages.size() > 0;
     }
 
     @Override

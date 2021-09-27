@@ -23,7 +23,7 @@ public interface EngineStatusHandler {
 
     void on(Project project, DClareMPS engine);
 
-    void terminating(Project project, DClareMPS engine, Getter getter);
+    void commiting(Project project, DClareMPS engine);
 
     void off(Project project, DClareMPS engine);
 

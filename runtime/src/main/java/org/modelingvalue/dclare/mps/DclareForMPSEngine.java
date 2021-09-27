@@ -25,7 +25,6 @@ import org.jetbrains.mps.openapi.module.ModelAccess;
 import org.jetbrains.mps.openapi.module.SModule;
 import org.jetbrains.mps.openapi.util.ProgressMonitor;
 import org.modelingvalue.collections.util.StatusProvider.StatusIterator;
-import org.modelingvalue.dclare.UniverseStatistics;
 import org.modelingvalue.dclare.UniverseTransaction;
 import org.modelingvalue.dclare.UniverseTransaction.Status;
 
@@ -57,7 +56,6 @@ public class DclareForMPSEngine implements DeployListener {
         classLoaderManager = Objects.requireNonNull(MPSCoreComponents.getInstance().getPlatform().findComponent(ClassLoaderManager.class));
         classLoaderManager.addListener(this);
         newEngine(project, new DclareForMpsConfig().withMaxNrOfHistory(MAX_NR_OF_HISTORY_FOR_MPS).withStatusHandler(engineStatusHandler));
-        new StatsUpdaterThread();
         new MoodUpdaterThread();
     }
 
@@ -141,37 +139,6 @@ public class DclareForMPSEngine implements DeployListener {
         return val;
     }
 
-    private class StatsUpdaterThread extends Thread {
-        private UniverseStatistics prevStats;
-
-        public StatsUpdaterThread() {
-            super("dclare-stats-" + project.getName());
-            setDaemon(true);
-            start();
-        }
-
-        @SuppressWarnings("BusyWait")
-        @Override
-        public void run() {
-            try {
-                for (;;) {
-                    Thread.sleep(300);
-                    DClareMPS engine = dClareMPS;
-                    if (engine == null) {
-                        break;
-                    }
-                    UniverseStatistics stats = engine.universeTransaction().stats();
-                    if (prevStats == null || !prevStats.equals(stats)) {
-                        prevStats = new UniverseStatistics(stats);
-                        modelAccess.executeCommandInEDT(() -> engineStatusHandler.stats(stats, engine));
-                    }
-                }
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     private class MoodUpdaterThread extends Thread {
 
         public MoodUpdaterThread() {
@@ -196,15 +163,22 @@ public class DclareForMPSEngine implements DeployListener {
                 } else if (finalStatusIterator.hasNext()) {
                     Status status = finalStatusIterator.next();
                     modelAccess.executeCommandInEDT(() -> {
+                        if (status.stats != null) {
+                            modelAccess.executeCommandInEDT(() -> engineStatusHandler.stats(status.stats, finalEngine));
+                        }
                         if (!finalEngine.getConfig().isOnMode() || status.mood == UniverseTransaction.Mood.stopped) {
+                            engineStatusHandler.idle(project, finalEngine, status.state::get);
                             engineStatusHandler.off(project, finalEngine);
                         } else {
-                            engineStatusHandler.on(project, finalEngine);
                             if (status.mood == UniverseTransaction.Mood.idle) {
                                 engineStatusHandler.idle(project, finalEngine, status.state::get);
+                                if (!status.active.isEmpty()) {
+                                    engineStatusHandler.commiting(project, finalEngine);
+                                }
                             } else {
                                 engineStatusHandler.active(project, finalEngine);
                             }
+                            engineStatusHandler.on(project, finalEngine);
                         }
                     });
                 } else {
