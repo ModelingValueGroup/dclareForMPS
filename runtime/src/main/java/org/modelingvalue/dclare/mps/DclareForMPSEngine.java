@@ -164,7 +164,7 @@ public class DclareForMPSEngine implements DeployListener {
                     Status status = finalStatusIterator.next();
                     modelAccess.executeCommandInEDT(() -> {
                         if (status.stats != null) {
-                            modelAccess.executeCommandInEDT(() -> engineStatusHandler.stats(status.stats, finalEngine));
+                            engineStatusHandler.stats(status.stats, finalEngine);
                         }
                         if (!finalEngine.getConfig().isOnMode() || status.mood == UniverseTransaction.Mood.stopped) {
                             engineStatusHandler.idle(project, finalEngine, status.state::get);
