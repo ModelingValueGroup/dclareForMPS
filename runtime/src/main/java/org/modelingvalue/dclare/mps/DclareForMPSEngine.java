@@ -47,7 +47,7 @@ public class DclareForMPSEngine implements DeployListener {
     //
     private DClareMPS                                      dClareMPS;
     private StatusIterator<Status>                         statusIterator;
-    private CompletableFuture<Void>                        nextEngine;
+    private CompletableFuture<Void>                        nextDClareMPS;
 
     public DclareForMPSEngine(ProjectBase project, EngineStatusHandler engineStatusHandler) {
         this.project = project;
@@ -55,13 +55,13 @@ public class DclareForMPSEngine implements DeployListener {
         this.engineStatusHandler = engineStatusHandler;
         classLoaderManager = Objects.requireNonNull(MPSCoreComponents.getInstance().getPlatform().findComponent(ClassLoaderManager.class));
         classLoaderManager.addListener(this);
-        newEngine(project, new DclareForMpsConfig().withMaxNrOfHistory(MAX_NR_OF_HISTORY_FOR_MPS).withStatusHandler(engineStatusHandler));
+        newDClareMPS(project, new DclareForMpsConfig().withMaxNrOfHistory(MAX_NR_OF_HISTORY_FOR_MPS).withStatusHandler(engineStatusHandler));
         new MoodUpdaterThread();
     }
 
-    private void newEngine(ProjectBase project, DclareForMpsConfig config) {
+    private void newDClareMPS(ProjectBase project, DclareForMpsConfig config) {
         synchronized (ALL_DCLARE_MPS) {
-            nextEngine = new CompletableFuture<>();
+            nextDClareMPS = new CompletableFuture<>();
             dClareMPS = new DClareMPS(this, project, config);
             statusIterator = dClareMPS.universeTransaction().getStatusIterator();
             ALL_DCLARE_MPS.add(dClareMPS);
@@ -76,17 +76,17 @@ public class DclareForMPSEngine implements DeployListener {
         config = config.withMaxNrOfHistory(getConfig().getMaxNrOfHistory()).withStatusHandler(getConfig().getStatusHandler());
         synchronized (ALL_DCLARE_MPS) {
             if (!getConfig().equals(config) || config.isOnMode() != dClareMPS.isRunning()) {
-                stopEngine();
-                startEngine(config);
+                stopDClareMPS();
+                startDCLareMPS(config);
             }
         }
     }
 
-    private void startEngine(DclareForMpsConfig config) {
-        CompletableFuture<Void> oldFuture = nextEngine;
+    private void startDCLareMPS(DclareForMpsConfig config) {
+        CompletableFuture<Void> oldFuture = nextDClareMPS;
         synchronized (ALL_DCLARE_MPS) {
             ALL_DCLARE_MPS.remove(dClareMPS);
-            newEngine(project, config);
+            newDClareMPS(project, config);
             if (config.isOnMode()) {
                 dClareMPS.start();
             }
@@ -94,7 +94,7 @@ public class DclareForMPSEngine implements DeployListener {
         oldFuture.complete(null);
     }
 
-    protected void stopEngine() {
+    protected void stopDClareMPS() {
         synchronized (ALL_DCLARE_MPS) {
             dClareMPS.stop();
         }
@@ -102,10 +102,10 @@ public class DclareForMPSEngine implements DeployListener {
 
     public void stop() {
         classLoaderManager.removeListener(this);
-        stopEngine();
+        stopDClareMPS();
         ALL_DCLARE_MPS.remove(dClareMPS);
         dClareMPS = null;
-        nextEngine.complete(null);
+        nextDClareMPS.complete(null);
     }
 
     @Override
@@ -113,7 +113,7 @@ public class DclareForMPSEngine implements DeployListener {
         for (SModule m : project.getProjectModules()) {
             //noinspection SuspiciousMethodCalls
             if (unloadedModules.contains(m)) {
-                stopEngine();
+                stopDClareMPS();
                 break;
             }
         }
@@ -124,7 +124,7 @@ public class DclareForMPSEngine implements DeployListener {
         for (SModule m : project.getProjectModules()) {
             //noinspection SuspiciousMethodCalls
             if (loadedModules.contains(m)) {
-                startEngine(getConfig());
+                startDCLareMPS(getConfig());
                 break;
             }
         }
@@ -150,42 +150,42 @@ public class DclareForMPSEngine implements DeployListener {
         @Override
         public void run() {
             while (true) {
-                DClareMPS finalEngine;
+                DClareMPS finalDClareMPS;
                 StatusIterator<Status> finalStatusIterator;
-                CompletableFuture<Void> finalNextEngine;
+                CompletableFuture<Void> finalNextDCLareMPS;
                 synchronized (ALL_DCLARE_MPS) {
-                    finalEngine = dClareMPS;
+                    finalDClareMPS = dClareMPS;
                     finalStatusIterator = statusIterator;
-                    finalNextEngine = nextEngine;
+                    finalNextDCLareMPS = nextDClareMPS;
                 }
-                if (finalEngine == null) {
+                if (finalDClareMPS == null) {
                     break;
                 } else if (finalStatusIterator.hasNext()) {
                     Status status = finalStatusIterator.next();
                     modelAccess.executeCommandInEDT(() -> {
                         if (status.stats != null) {
-                            engineStatusHandler.stats(status.stats, finalEngine);
+                            engineStatusHandler.stats(status.stats, finalDClareMPS);
                         }
-                        if (!finalEngine.getConfig().isOnMode() || status.mood == UniverseTransaction.Mood.stopped) {
-                            engineStatusHandler.idle(project, finalEngine, status.state::get);
-                            engineStatusHandler.off(project, finalEngine);
+                        if (!finalDClareMPS.getConfig().isOnMode() || status.mood == UniverseTransaction.Mood.stopped) {
+                            engineStatusHandler.idle(project, finalDClareMPS, status.state::get);
+                            engineStatusHandler.off(project, finalDClareMPS);
                         } else {
                             if (status.mood == UniverseTransaction.Mood.idle) {
-                                engineStatusHandler.idle(project, finalEngine, status.state::get);
+                                engineStatusHandler.idle(project, finalDClareMPS, status.state::get);
                                 if (!status.active.isEmpty()) {
-                                    engineStatusHandler.commiting(project, finalEngine);
+                                    engineStatusHandler.commiting(project, finalDClareMPS);
                                 }
                             } else {
-                                engineStatusHandler.active(project, finalEngine);
+                                engineStatusHandler.active(project, finalDClareMPS);
                             }
-                            engineStatusHandler.on(project, finalEngine);
+                            engineStatusHandler.on(project, finalDClareMPS);
                         }
                     });
                 } else {
                     try {
-                        finalNextEngine.get();
+                        finalNextDCLareMPS.get();
                     } catch (InterruptedException | ExecutionException e) {
-                        finalEngine.universeTransaction().handleException(e);
+                        finalDClareMPS.universeTransaction().handleException(e);
                     }
                 }
             }

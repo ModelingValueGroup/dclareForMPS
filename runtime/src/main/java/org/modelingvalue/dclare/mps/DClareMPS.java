@@ -315,7 +315,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
                     }
                 }
             });
-            engine.stopEngine();
+            engine.stopDClareMPS();
         }
     }
 
@@ -733,7 +733,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
             try {
                 result = universeTransaction.waitForEnd();
             } catch (Throwable t) {
-                engine.stopEngine();
+                engine.stopDClareMPS();
                 throw t;
             } finally {
                 thePool.shutdownNow();
