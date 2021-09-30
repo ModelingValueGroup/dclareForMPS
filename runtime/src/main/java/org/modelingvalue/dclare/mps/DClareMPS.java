@@ -140,12 +140,12 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
     protected final Concurrent<ReusableTransaction<DNode.DCopyObserver, DNode.DCopyTransaction>>        dCopyObserverTransactions;
     protected final DclareForMPSEngine                                                                  engine;
     private final AtomicLong                                                                            counter              = new AtomicLong(0L);
+    private final DRepository                                                                           dRepository;
     //
     protected Map<DMessageType, QualifiedSet<Triple<DObject, DFeature, String>, DMessage>>              messages             = MESSAGE_QSET_MAP;
     private boolean                                                                                     running              = false;
     private ImperativeTransaction                                                                       imperativeTransaction;
     private Thread                                                                                      commandThread;
-    private DRepository                                                                                 dRepository;
     private ModuleChecker                                                                               moduleChecker;
     private ModelChecker                                                                                modelChecker;
     private NodeChecker                                                                                 nodeChecker;
@@ -161,6 +161,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
         this.project = project;
         this.modelAccess = project.getModelAccess();
         this.engine = engine;
+        this.dRepository = new DRepository((ProjectRepository) project.getRepository());
         this.modelAccess.executeCommandInEDT(() -> commandThread = Thread.currentThread());
         if (config.isTraceDclare()) {
             System.err.println(DCLARE + "BEGIN " + this);
@@ -238,12 +239,10 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
         changedModels = Concurrent.of(Set.of());
         changedModules = Concurrent.of(Set.of());
         changedRoots = Concurrent.of(Set.of());
-        ProjectRepository projectRepository = (ProjectRepository) project.getRepository();
-        dRepository = new DRepository(projectRepository);
         moduleChecker = new ModuleChecker();
         modelChecker = new ModelChecker();
         nodeChecker = new NodeChecker();
-        languageEditorChecker = new LanguageEditorChecker(projectRepository, Collections.singletonList(new NodeCheckerInEditor()));
+        languageEditorChecker = new LanguageEditorChecker(dRepository.original(), Collections.singletonList(new NodeCheckerInEditor()));
         CheckerRegistry checkerRegistry = project.getPlatform().findComponent(CheckerRegistry.class);
         assert checkerRegistry != null;
         checkerRegistry.registerChecker(moduleChecker);
@@ -255,7 +254,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
         mpsChecker = new DclareModelCheckerBuilder(this, modelExtractor).createChecker(checkers);
         Highlighter highlighter = project.getComponent(Highlighter.class);
         highlighter.addChecker(languageEditorChecker);
-        deltaAdapter = NetUtils.isActive() ? new MPSDeltaAdapter("mps-sync", universeTransaction, new MPSSerializationHelper(projectRepository)) : null;
+        deltaAdapter = NetUtils.isActive() ? new MPSDeltaAdapter("mps-sync", universeTransaction, new MPSSerializationHelper(dRepository.original())) : null;
         universeTransaction.put(universeTransaction.initAction());
     }
 
