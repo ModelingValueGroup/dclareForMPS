@@ -94,9 +94,7 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
 
     @Override
     protected final void read(DClareMPS dClareMPS) {
-        if (readReason() != null) {
-            read();
-        }
+        read();
     }
 
     @SuppressWarnings("unchecked")
