@@ -860,6 +860,9 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
     @Override
     public void setReference(SReferenceLink role, SNodeReference target) {
         SNode targetNode = dClareMPS().read(() -> target.resolve(null));
+        if (targetNode == null) {
+            throw new IllegalArgumentException("Setting reference " + this + "." + role + "=" + target + ". where the referenced target is not resolved to a node");
+        }
         REFERENCE.get(role).set(this, DNode.of(targetNode.getConcept(), target, targetNode));
     }
 
