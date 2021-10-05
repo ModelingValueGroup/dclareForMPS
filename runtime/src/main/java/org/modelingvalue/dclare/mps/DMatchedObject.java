@@ -125,18 +125,26 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
         return deriveReasons().filter(DQuotation.class).map(DQuotation::getAnonymousLanguage).notNull().toSet();
     }
 
-    public final S tryOriginal() {
+    private S tryResolve() {
         R ref = reference();
-        S sObject = ref != null ? dClareMPS().read(() -> resolve(ref)) : null;
-        if (sObject != null) {
-            ORIGINAL.force(this, sObject);
+        return ref != null ? dClareMPS().read(() -> resolve(ref)) : null;
+    }
+
+    @SuppressWarnings("unchecked")
+    public final S tryOriginal() {
+        S sObject = ORIGINAL.isSet(this) ? (S) ORIGINAL.get(this) : null;
+        if (sObject == null) {
+            sObject = tryResolve();
+            if (sObject != null) {
+                ORIGINAL.force(this, sObject);
+            }
         }
         return sObject;
     }
 
     @SuppressWarnings("unchecked")
     protected final S original() {
-        S sObject = tryOriginal();
+        S sObject = tryResolve();
         if (sObject == null) {
             sObject = ORIGINAL.isSet(this) ? (S) ORIGINAL.get(this) : null;
             if (sObject == null) {

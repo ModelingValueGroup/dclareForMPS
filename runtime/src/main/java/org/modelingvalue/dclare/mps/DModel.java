@@ -102,7 +102,7 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
                                                                                                                      return false;
                                                                                                                  }
                                                                                                              }, (t, m, b, a) -> {
-                                                                                                                 if (b.isEmpty() && !a.isEmpty()) {
+                                                                                                                 if (!m.isExternal() && b.isEmpty() && !a.isEmpty()) {
                                                                                                                      DModel.ACTIVE.set(m, Boolean.TRUE);
                                                                                                                  }
                                                                                                              }, containment);
@@ -226,7 +226,7 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
                                                                                                              });
 
     private static final Observer<DModel>                                                   ACTIVATE_RULE    = DObject.observer("$ACTIVATE_RULE", o -> {
-                                                                                                                 if ((o.isExternal() || LOADED.get(o)) && !TYPE.get(o).getLanguages().isEmpty()) {
+                                                                                                                 if (!o.isExternal() && LOADED.get(o) && !TYPE.get(o).getLanguages().isEmpty()) {
                                                                                                                      ACTIVE.set(o, Boolean.TRUE);
                                                                                                                  }
                                                                                                              });
@@ -294,7 +294,7 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
 
     @Override
     protected boolean isActive() {
-        return reference() == null || ACTIVE.get(this);
+        return !isExternal() && (reference() == null || ACTIVE.get(this));
     }
 
     protected void activateIfUsed() {
@@ -611,7 +611,7 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
     @SuppressWarnings("rawtypes")
     @Override
     public boolean dIsOrphan(State state) {
-        return !isExternal() && isActive() && super.dIsOrphan(state);
+        return isActive() && super.dIsOrphan(state);
     }
 
     public final static class RootsOfConcept extends Pair<String, SAbstractConcept> {

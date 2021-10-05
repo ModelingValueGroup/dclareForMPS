@@ -975,7 +975,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
     @SuppressWarnings("rawtypes")
     @Override
     public boolean dIsOrphan(State state) {
-        return !isExternal() && isActive() && super.dIsOrphan(state);
+        return isActive() && super.dIsOrphan(state);
     }
 
     @Override
@@ -1165,13 +1165,17 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
 
     @Override
     protected boolean isActive() {
-        SNodeReference ref = reference();
-        if (ref == null) {
-            return true;
+        if (isExternal()) {
+            return false;
         } else {
-            SModelReference mRef = ref.getModelReference();
-            SModel sModel = mRef != null ? dClareMPS().read(() -> mRef.resolve(null)) : null;
-            return sModel != null && DModel.of(sModel).isActive();
+            SNodeReference ref = reference();
+            if (ref == null) {
+                return true;
+            } else {
+                SModelReference mRef = ref.getModelReference();
+                SModel sModel = mRef != null ? dClareMPS().read(() -> mRef.resolve(null)) : null;
+                return sModel != null && DModel.of(sModel).isActive();
+            }
         }
     }
 

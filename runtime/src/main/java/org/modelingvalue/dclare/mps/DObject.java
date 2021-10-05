@@ -194,7 +194,7 @@ public abstract class DObject implements Mutable {
 
     @Override
     public boolean dCheckConsistency() {
-        return !isExternal() && isActive();
+        return isActive();
     }
 
     public abstract boolean isExternal();
