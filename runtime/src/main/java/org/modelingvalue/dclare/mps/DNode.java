@@ -175,7 +175,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                               SReference ref = sNode.getReference(sr);
                                                                                                                                               SNode ist = ref != null ? ref.getTargetNode() : null;
                                                                                                                                               SNode soll = post != null ? post.original() : null;
-                                                                                                                                              if (!Objects.equals(ist, soll) || (ref == null) != (soll == null)) {
+                                                                                                                                              if (!Objects.equals(ist, soll)) {
                                                                                                                                                   sNode.setReferenceTarget(sr, soll);
                                                                                                                                                   return true;
                                                                                                                                               } else {
@@ -253,9 +253,6 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                                   for (SReferenceLink link : n.getConcept().getReferenceLinks()) {
                                                                                                                                                       SReference reference = dClareMPS().read(() -> sNode.getReference(link));
                                                                                                                                                       SNode targetNode = reference != null ? dClareMPS().read(reference::getTargetNode) : null;
-                                                                                                                                                      if (reference != null && targetNode == null) {
-                                                                                                                                                          throw new IllegalArgumentException("Reading an unresolveable reference " + sNode + "." + link + "=" + reference);
-                                                                                                                                                      }
                                                                                                                                                       REFERENCE.get(link).set(n, targetNode != null ? of(targetNode.getConcept(), reference.getTargetNodeReference(), targetNode) : null);
                                                                                                                                                   }
                                                                                                                                               }
