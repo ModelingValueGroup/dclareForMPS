@@ -78,6 +78,10 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
         return new DObserved<>(id, def, opposite, null, toMPS, changed, source, modifiers);
     }
 
+    public static <C extends DObject, V> DObserved<C, V> of(Object id, V def, Supplier<Setable<?, ?>> opposite, Function<C, V> fromPMS, TriFunction<C, V, V, Boolean> toMPS, QuadConsumer<LeafTransaction, C, V, V> changed, Supplier<SNode> source, SetableModifier... modifiers) {
+        return new DObserved<>(id, def, opposite, fromPMS, toMPS, changed, source, modifiers);
+    }
+
     private final Function<O, T>                fromMPS;
     private final TriFunction<O, T, T, Boolean> toMPS;
     private final Supplier<SNode>               source;

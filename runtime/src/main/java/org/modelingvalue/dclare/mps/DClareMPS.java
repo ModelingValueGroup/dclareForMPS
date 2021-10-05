@@ -103,35 +103,38 @@ import jetbrains.mps.smodel.language.LanguageRegistry;
 import jetbrains.mps.smodel.language.LanguageRuntime;
 
 public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, UncaughtExceptionHandler {
-    protected static Constant<SLanguage, Map<String, DAttribute<?, ?>>>                                 ATTRIBUTE_MAP        = Constant.of("ATTRIBUTE_MAP", l -> DClareMPS.RULE_SETS.get(l).flatMap(rs -> Collection.of(rs.getAllAttributes())).toMap(a -> Entry.of(a.id(), a)));
-    protected static Constant<SLanguage, Map<String, SStructClass>>                                     STRUCT_CLASS_MAP     = Constant.of("STRUCT_CLASS_MAP", l -> DClareMPS.RULE_SETS.get(l).flatMap(rs -> Collection.of(rs.getAllStructClasses())).toMap(s -> Entry.of(s.id(), s)));
-    private static final Set<DMessageType>                                                              MESSAGE_TYPES        = Collection.of(DMessageType.values()).toSet();
-    private static final QualifiedSet<Triple<DObject, DFeature, String>, DMessage>                      MESSAGE_QSET         = QualifiedSet.of(m -> Triple.of(m.context(), m.feature(), m.id()));
-    protected static final Map<DMessageType, QualifiedSet<Triple<DObject, DFeature, String>, DMessage>> MESSAGE_QSET_MAP     = MESSAGE_TYPES.sequential().toMap(t -> Entry.of(t, MESSAGE_QSET));
-    private static final MutableClass                                                                   UNIVERSE_CLASS       = new MutableClass() {
-                                                                                                                                 @Override
-                                                                                                                                 public Collection<? extends Observer<?>> dObservers() {
-                                                                                                                                     return Collection.of();
-                                                                                                                                 }
 
-                                                                                                                                 @Override
-                                                                                                                                 public Collection<? extends Setable<? extends Mutable, ?>> dSetables() {
-                                                                                                                                     return SETABLES;
-                                                                                                                                 }
-                                                                                                                             };
-    protected static final String                                                                       DCLARE               = "---------> DCLARE ";
-    public static final Observed<DClareMPS, Set<SLanguage>>                                             ALL_LANGUAGES        = Observed.of("ALL_LANGAUGES", Set.of(), plumbing);
-    public static final Constant<SLanguage, Set<IRuleSet>>                                              RULE_SETS            = Constant.of("RULE_SETS", Set.of(), language -> {
-                                                                                                                                 LanguageRuntime rtLang = registry().getLanguage(language);
-                                                                                                                                 IRuleAspect aspect = rtLang != null ? rtLang.getAspect(IRuleAspect.class) : null;
-                                                                                                                                 return aspect != null ? Collection.of(aspect.getRuleSets()).toSet() : Set.of();
-                                                                                                                             });
-    public static final Constant<DevKit, Set<SLanguage>>                                                DEVKIT_LANGUAGES     = Constant.of("DEVKIT_LANGUAGES", Set.of(), devkit -> Collection.of(devkit.getAllExportedLanguageIds()).toSet());
-    private static final Setable<DClareMPS, DRepository>                                                REPOSITORY_CONTAINER = Setable.of("REPOSITORY_CONTAINER", null, containment);
-    protected static final Set<? extends Setable<? extends Mutable, ?>>                                 SETABLES             = Set.of(REPOSITORY_CONTAINER);
+    private static final boolean                                                                        TRACE_MPS_MODEL_CHANCES = Boolean.getBoolean("TRACE_MPS_MODEL_CHANCES");
+
+    protected static Constant<SLanguage, Map<String, DAttribute<?, ?>>>                                 ATTRIBUTE_MAP           = Constant.of("ATTRIBUTE_MAP", l -> DClareMPS.RULE_SETS.get(l).flatMap(rs -> Collection.of(rs.getAllAttributes())).toMap(a -> Entry.of(a.id(), a)));
+    protected static Constant<SLanguage, Map<String, SStructClass>>                                     STRUCT_CLASS_MAP        = Constant.of("STRUCT_CLASS_MAP", l -> DClareMPS.RULE_SETS.get(l).flatMap(rs -> Collection.of(rs.getAllStructClasses())).toMap(s -> Entry.of(s.id(), s)));
+    private static final Set<DMessageType>                                                              MESSAGE_TYPES           = Collection.of(DMessageType.values()).toSet();
+    private static final QualifiedSet<Triple<DObject, DFeature, String>, DMessage>                      MESSAGE_QSET            = QualifiedSet.of(m -> Triple.of(m.context(), m.feature(), m.id()));
+    protected static final Map<DMessageType, QualifiedSet<Triple<DObject, DFeature, String>, DMessage>> MESSAGE_QSET_MAP        = MESSAGE_TYPES.sequential().toMap(t -> Entry.of(t, MESSAGE_QSET));
+    private static final MutableClass                                                                   UNIVERSE_CLASS          = new MutableClass() {
+                                                                                                                                    @Override
+                                                                                                                                    public Collection<? extends Observer<?>> dObservers() {
+                                                                                                                                        return Collection.of();
+                                                                                                                                    }
+
+                                                                                                                                    @Override
+                                                                                                                                    public Collection<? extends Setable<? extends Mutable, ?>> dSetables() {
+                                                                                                                                        return SETABLES;
+                                                                                                                                    }
+                                                                                                                                };
+    protected static final String                                                                       DCLARE                  = "---------> DCLARE ";
+    public static final Observed<DClareMPS, Set<SLanguage>>                                             ALL_LANGUAGES           = Observed.of("ALL_LANGAUGES", Set.of(), plumbing);
+    public static final Constant<SLanguage, Set<IRuleSet>>                                              RULE_SETS               = Constant.of("RULE_SETS", Set.of(), language -> {
+                                                                                                                                    LanguageRuntime rtLang = registry().getLanguage(language);
+                                                                                                                                    IRuleAspect aspect = rtLang != null ? rtLang.getAspect(IRuleAspect.class) : null;
+                                                                                                                                    return aspect != null ? Collection.of(aspect.getRuleSets()).toSet() : Set.of();
+                                                                                                                                });
+    public static final Constant<DevKit, Set<SLanguage>>                                                DEVKIT_LANGUAGES        = Constant.of("DEVKIT_LANGUAGES", Set.of(), devkit -> Collection.of(devkit.getAllExportedLanguageIds()).toSet());
+    private static final Setable<DClareMPS, DRepository>                                                REPOSITORY_CONTAINER    = Setable.of("REPOSITORY_CONTAINER", null, containment);
+    protected static final Set<? extends Setable<? extends Mutable, ?>>                                 SETABLES                = Set.of(REPOSITORY_CONTAINER);
     //
-    private final ContextPool                                                                           thePool              = ContextThread.createPool(this);
-    private final ThreadLocal<Boolean>                                                                  committing           = ThreadLocal.withInitial(() -> false);
+    private final ContextPool                                                                           thePool                 = ContextThread.createPool(this);
+    private final ThreadLocal<Boolean>                                                                  committing              = ThreadLocal.withInitial(() -> false);
     private final UniverseTransaction                                                                   universeTransaction;
     private final DclareForMpsConfig                                                                    config;
     protected final ProjectBase                                                                         project;
@@ -139,11 +142,11 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
     protected final Concurrent<ReusableTransaction<DRule.DObserver<?>, DRule.DObserverTransaction>>     dObserverTransactions;
     protected final Concurrent<ReusableTransaction<DNode.DCopyObserver, DNode.DCopyTransaction>>        dCopyObserverTransactions;
     protected final DclareForMPSEngine                                                                  engine;
-    private final AtomicLong                                                                            counter              = new AtomicLong(0L);
+    private final AtomicLong                                                                            counter                 = new AtomicLong(0L);
     private final DRepository                                                                           dRepository;
     //
-    protected Map<DMessageType, QualifiedSet<Triple<DObject, DFeature, String>, DMessage>>              messages             = MESSAGE_QSET_MAP;
-    private boolean                                                                                     running              = false;
+    protected Map<DMessageType, QualifiedSet<Triple<DObject, DFeature, String>, DMessage>>              messages                = MESSAGE_QSET_MAP;
+    private boolean                                                                                     running                 = false;
     private ImperativeTransaction                                                                       imperativeTransaction;
     private Thread                                                                                      commandThread;
     private ModuleChecker                                                                               moduleChecker;
@@ -533,7 +536,12 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
                     DefaultMap<Setable, Object> after = e0.getValue().b();
                     for (DObserved observed : dObject.dClass().dObserveds()) {
                         if (observed instanceof DObservedAttribute || !dObject.isExternal()) {
-                            changed |= observed.toMPS(dObject, before.get(observed), after.get(observed));
+                            if (observed.toMPS(dObject, before.get(observed), after.get(observed))) {
+                                changed = true;
+                                if (TRACE_MPS_MODEL_CHANCES && !(observed instanceof DObservedAttribute)) {
+                                    System.err.println(DCLARE + "    MPS MODEL CHANGE: " + dObject + "." + observed + " = " + after.get(observed));
+                                }
+                            }
                         }
                     }
                     if (!dObject.isExternal() && (changed || (post.get(dObject, Mutable.D_PARENT_CONTAINING) != null && //

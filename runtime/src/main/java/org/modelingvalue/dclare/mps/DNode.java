@@ -403,8 +403,14 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
     }
 
     public static DNode of(SConcept concept, SNodeReference ref, SNode original) {
+        if (original == null) {
+            throw new IllegalArgumentException("Creating a DNode of non-resolveable SNode reference " + ref);
+        }
         SModel sModel = dClareMPS().read(() -> ref.getModelReference().resolve(null));
-        Boolean external = sModel != null && DModel.EXTERNAL.get(sModel);
+        if (sModel == null) {
+            throw new IllegalArgumentException("Creating a DNode with a non-resolveable SModel " + original);
+        }
+        Boolean external = DModel.EXTERNAL.get(sModel);
         return readConstruct(ref, () -> new DNode(new Object[]{uniqueLong(concept), concept, external}), original);
     }
 
@@ -845,7 +851,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
 
     @Override
     public void setReferenceTarget(SReferenceLink role, SNode target) {
-        REFERENCE.get(role).set(this, (DNode) target);
+        REFERENCE.get(role).set(this, DNode.of(target));
     }
 
     @Override
@@ -860,9 +866,6 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
     @Override
     public void setReference(SReferenceLink role, SNodeReference target) {
         SNode targetNode = dClareMPS().read(() -> target.resolve(null));
-        if (targetNode == null) {
-            throw new IllegalArgumentException("Setting reference " + this + "." + role + "=" + target + ". where the referenced target is not resolved to a node");
-        }
         REFERENCE.get(role).set(this, DNode.of(targetNode.getConcept(), target, targetNode));
     }
 
@@ -912,7 +915,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
 
     @Override
     public void setReference(SReferenceLink role, SReference reference) {
-        REFERENCE.get(role).set(this, (DNode) reference.getTargetNode());
+        REFERENCE.get(role).set(this, DNode.of(reference.getTargetNode()));
     }
 
     @Override
