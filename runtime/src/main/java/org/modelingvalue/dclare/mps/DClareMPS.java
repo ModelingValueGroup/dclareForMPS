@@ -104,7 +104,7 @@ import jetbrains.mps.smodel.language.LanguageRuntime;
 
 public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, UncaughtExceptionHandler {
 
-    private static final boolean                                                                        TRACE_MPS_MODEL_CHANCES = Boolean.getBoolean("TRACE_MPS_MODEL_CHANCES");
+    private static final boolean                                                                        TRACE_MPS_MODEL_CHANGES = Boolean.getBoolean("TRACE_MPS_MODEL_CHANGES");
 
     protected static Constant<SLanguage, Map<String, DAttribute<?, ?>>>                                 ATTRIBUTE_MAP           = Constant.of("ATTRIBUTE_MAP", l -> DClareMPS.RULE_SETS.get(l).flatMap(rs -> Collection.of(rs.getAllAttributes())).toMap(a -> Entry.of(a.id(), a)));
     protected static Constant<SLanguage, Map<String, SStructClass>>                                     STRUCT_CLASS_MAP        = Constant.of("STRUCT_CLASS_MAP", l -> DClareMPS.RULE_SETS.get(l).flatMap(rs -> Collection.of(rs.getAllStructClasses())).toMap(s -> Entry.of(s.id(), s)));
@@ -538,7 +538,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
                         if (observed instanceof DObservedAttribute || !dObject.isExternal()) {
                             if (observed.toMPS(dObject, before.get(observed), after.get(observed))) {
                                 changed = true;
-                                if (TRACE_MPS_MODEL_CHANCES && !(observed instanceof DObservedAttribute)) {
+                                if (TRACE_MPS_MODEL_CHANGES && !(observed instanceof DObservedAttribute)) {
                                     System.err.println(DCLARE + "    MPS MODEL CHANGE: " + dObject + "." + observed + " = " + after.get(observed));
                                 }
                             }
