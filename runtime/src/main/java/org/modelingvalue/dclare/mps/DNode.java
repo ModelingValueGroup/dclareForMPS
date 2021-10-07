@@ -557,7 +557,7 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
 
     @Override
     public SNodeId getNodeId() {
-        return new Regular((long) identity[0]);
+        return original().getNodeId();
     }
 
     @Override

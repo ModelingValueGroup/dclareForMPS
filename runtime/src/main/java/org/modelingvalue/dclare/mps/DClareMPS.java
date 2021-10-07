@@ -76,7 +76,7 @@ import org.modelingvalue.dclare.ex.TransactionException;
 import org.modelingvalue.dclare.mps.DAttribute.DObservedAttribute;
 import org.modelingvalue.dclare.mps.DRule.DObserver;
 import org.modelingvalue.dclare.mps.DclareModelCheckerBuilder.RootItemsToCheck;
-import org.modelingvalue.dclare.sync.NetUtils;
+import org.modelingvalue.dclare.sync.SyncConnectionHandler;
 
 import jetbrains.mps.checkers.AbstractNodeCheckerInEditor;
 import jetbrains.mps.checkers.IAbstractChecker;
@@ -104,6 +104,7 @@ import jetbrains.mps.smodel.language.LanguageRuntime;
 
 public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, UncaughtExceptionHandler {
 
+    private static final String                                                                         CONNECT_SYNC_HOST_PORT  = System.getProperty("CONNECT_SYNC_HOST_PORT", null);
     private static final boolean                                                                        TRACE_MPS_MODEL_CHANGES = Boolean.getBoolean("TRACE_MPS_MODEL_CHANGES");
 
     protected static Constant<SLanguage, Map<String, DAttribute<?, ?>>>                                 ATTRIBUTE_MAP           = Constant.of("ATTRIBUTE_MAP", l -> DClareMPS.RULE_SETS.get(l).flatMap(rs -> Collection.of(rs.getAllAttributes())).toMap(a -> Entry.of(a.id(), a)));
@@ -155,6 +156,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
     private LanguageEditorChecker                                                                       languageEditorChecker;
     private IAbstractChecker<ItemsToCheck, IssueKindReportItem>                                         mpsChecker;
     private MPSDeltaAdapter                                                                             deltaAdapter;
+    private SyncConnectionHandler                                                                       syncConnectionHandler;
     private Concurrent<Set<SModel>>                                                                     changedModels;
     private Concurrent<Set<SModule>>                                                                    changedModules;
     private Concurrent<Set<SNode>>                                                                      changedRoots;
@@ -231,7 +233,13 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
             }
         }, false);
         imperativeTransaction.schedule(() -> REPOSITORY_CONTAINER.set(this, getRepository()));
-        NetUtils.startDeltaSupport(deltaAdapter);
+        if (CONNECT_SYNC_HOST_PORT != null) {
+            syncConnectionHandler = new SyncConnectionHandler(deltaAdapter);
+            int sep = CONNECT_SYNC_HOST_PORT.indexOf(':');
+            String host = CONNECT_SYNC_HOST_PORT.substring(0, sep);
+            int post = Integer.parseInt(CONNECT_SYNC_HOST_PORT.substring(sep + 1));
+            syncConnectionHandler.connect(host, post);
+        }
     }
 
     protected void start() {
@@ -257,12 +265,15 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
         mpsChecker = new DclareModelCheckerBuilder(this, modelExtractor).createChecker(checkers);
         Highlighter highlighter = project.getComponent(Highlighter.class);
         highlighter.addChecker(languageEditorChecker);
-        deltaAdapter = NetUtils.isActive() ? new MPSDeltaAdapter("mps-sync", universeTransaction, new MPSSerializationHelper(dRepository.original())) : null;
+        deltaAdapter = CONNECT_SYNC_HOST_PORT != null ? new MPSDeltaAdapter("mps-sync", universeTransaction, new MPSSerializationHelper(dRepository.original())) : null;
         universeTransaction.put(universeTransaction.initAction());
     }
 
     protected void stop() {
         if (running) {
+            if (CONNECT_SYNC_HOST_PORT != null) {
+                syncConnectionHandler.disconnect();
+            }
             running = false;
             if (config.isTraceDclare()) {
                 System.err.println(DCLARE + "STOP  " + this);

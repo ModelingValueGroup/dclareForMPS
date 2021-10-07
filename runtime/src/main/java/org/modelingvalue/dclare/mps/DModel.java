@@ -67,7 +67,6 @@ import jetbrains.mps.project.DevKit;
 import jetbrains.mps.project.Solution;
 import jetbrains.mps.smodel.Language;
 import jetbrains.mps.smodel.MPSModuleRepository;
-import jetbrains.mps.smodel.SModelId.IntegerSModelId;
 import jetbrains.mps.smodel.SModelInternal;
 
 @SuppressWarnings("unused")
@@ -413,7 +412,7 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
 
     @Override
     public SModelId getModelId() {
-        return new IntegerSModelId((int) identity[0]);
+        return original().getModelId();
     }
 
     @Override

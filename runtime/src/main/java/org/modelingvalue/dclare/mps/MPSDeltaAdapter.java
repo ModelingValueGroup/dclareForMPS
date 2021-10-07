@@ -15,14 +15,7 @@
 
 package org.modelingvalue.dclare.mps;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.util.function.Predicate;
-
-import org.modelingvalue.collections.Map;
-import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.dclare.Setable;
-import org.modelingvalue.dclare.State;
 import org.modelingvalue.dclare.UniverseTransaction;
 import org.modelingvalue.dclare.sync.DeltaAdaptor;
 import org.modelingvalue.dclare.sync.SerializationHelper;
@@ -31,32 +24,6 @@ public class MPSDeltaAdapter extends DeltaAdaptor<DObjectType<DObject>, DObject,
 
     public MPSDeltaAdapter(String name, UniverseTransaction tx, SerializationHelper<DObjectType<DObject>, DObject, Setable<DObject, Object>> helper) {
         super(name, tx, helper);
-    }
-
-    @Override
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    protected void queueDelta(State pre, State post, Boolean last) {
-        Map<Object, Map<Setable, Pair<Object, Object>>> deltaMap = pre.diff(post, getObjectFilter(), (Predicate<Setable>) (Object) helper.setableFilter()).toMap(e1 -> e1);
-        if (!deltaMap.isEmpty()) {
-            try {
-                String delta = ToJsonDeltas.toJson(deltaMap);
-                //System.err.println("SENDING:\n" + Json.pretty(delta));
-                deltaQueue.put(delta);
-                FileWriter w = new FileWriter("f:\\mps.json");
-                w.write(delta);
-                w.flush();
-                w.close();
-
-                //read in file, to test al id's are resolvable!
-                //accept(delta);
-            } catch (InterruptedException e) {
-                //e.printStackTrace();//TOMTOMTOM
-                throw new Error(e);
-            } catch (IOException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
     }
 
 }
