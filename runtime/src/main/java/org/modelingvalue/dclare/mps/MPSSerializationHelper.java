@@ -17,20 +17,12 @@ package org.modelingvalue.dclare.mps;
 
 import java.util.function.Predicate;
 
-import org.jetbrains.mps.openapi.language.SAbstractConcept;
-import org.jetbrains.mps.openapi.language.SConcept;
-import org.jetbrains.mps.openapi.language.SLanguage;
-import org.jetbrains.mps.openapi.model.SModel;
-import org.jetbrains.mps.openapi.model.SModelId;
-import org.jetbrains.mps.openapi.model.SNode;
-import org.jetbrains.mps.openapi.model.SNodeReference;
+import org.jetbrains.mps.openapi.language.*;
+import org.jetbrains.mps.openapi.model.*;
 import org.jetbrains.mps.openapi.module.SModule;
 import org.jetbrains.mps.openapi.module.SModuleId;
 import org.jetbrains.mps.openapi.persistence.PersistenceFacade;
-import org.modelingvalue.collections.Entry;
-import org.modelingvalue.collections.List;
-import org.modelingvalue.collections.Map;
-import org.modelingvalue.collections.Set;
+import org.modelingvalue.collections.*;
 import org.modelingvalue.dclare.Mutable;
 import org.modelingvalue.dclare.Setable;
 import org.modelingvalue.dclare.mps.DAttribute.DObservedAttribute;
@@ -92,7 +84,7 @@ public class MPSSerializationHelper implements SerializationHelper<DObjectType<D
 
     @Override
     public Predicate<Mutable> mutableFilter() {
-        return m -> (m instanceof DModule || m instanceof DModel || m instanceof DNode) && m.dParentContaining() != null;
+        return m -> (m instanceof DModule || m instanceof DModel || m instanceof DNode) && !((DObject) m).isDclareOnly();
     }
 
     @SuppressWarnings("rawtypes")
