@@ -90,7 +90,7 @@ public class MPSSerializationHelper implements SerializationHelper<DObjectType<D
     @SuppressWarnings("rawtypes")
     @Override
     public Predicate<Setable<DObject, ?>> setableFilter() {
-        return m -> m instanceof DObserved && !(m instanceof DObservedAttribute) && !((DObserved) m).isDclareOnly();
+        return s -> s instanceof DObserved && ((Setable) s) != DModel.USED_DEVKITS && !(s instanceof DObservedAttribute) && !((DObserved) s).isDclareOnly();
     }
 
     @SuppressWarnings("unchecked")
