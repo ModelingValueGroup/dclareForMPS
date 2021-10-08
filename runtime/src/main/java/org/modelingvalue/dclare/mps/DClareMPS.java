@@ -76,6 +76,7 @@ import org.modelingvalue.dclare.ex.TransactionException;
 import org.modelingvalue.dclare.mps.DAttribute.DObservedAttribute;
 import org.modelingvalue.dclare.mps.DRule.DObserver;
 import org.modelingvalue.dclare.mps.DclareModelCheckerBuilder.RootItemsToCheck;
+import org.modelingvalue.dclare.sync.DeltaAdaptor;
 import org.modelingvalue.dclare.sync.SyncConnectionHandler;
 
 import jetbrains.mps.checkers.AbstractNodeCheckerInEditor;
@@ -155,7 +156,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
     private NodeChecker                                                                                 nodeChecker;
     private LanguageEditorChecker                                                                       languageEditorChecker;
     private IAbstractChecker<ItemsToCheck, IssueKindReportItem>                                         mpsChecker;
-    private MPSDeltaAdapter                                                                             deltaAdapter;
+    private DeltaAdaptor<DObjectType<DObject>, DObject, DObserved<DObject, Object>>                     deltaAdaptor;
     private SyncConnectionHandler                                                                       syncConnectionHandler;
     private Concurrent<Set<SModel>>                                                                     changedModels;
     private Concurrent<Set<SModule>>                                                                    changedModules;
@@ -234,11 +235,11 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
         }, false);
         imperativeTransaction.schedule(() -> REPOSITORY_CONTAINER.set(this, getRepository()));
         if (CONNECT_SYNC_HOST_PORT != null) {
-            syncConnectionHandler = new SyncConnectionHandler(deltaAdapter);
+            syncConnectionHandler = new SyncConnectionHandler(deltaAdaptor);
             int sep = CONNECT_SYNC_HOST_PORT.indexOf(':');
             String host = CONNECT_SYNC_HOST_PORT.substring(0, sep);
-            int post = Integer.parseInt(CONNECT_SYNC_HOST_PORT.substring(sep + 1));
-            syncConnectionHandler.connect(host, post);
+            int port = Integer.parseInt(CONNECT_SYNC_HOST_PORT.substring(sep + 1));
+            syncConnectionHandler.connect(host, port);
         }
     }
 
@@ -265,7 +266,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
         mpsChecker = new DclareModelCheckerBuilder(this, modelExtractor).createChecker(checkers);
         Highlighter highlighter = project.getComponent(Highlighter.class);
         highlighter.addChecker(languageEditorChecker);
-        deltaAdapter = CONNECT_SYNC_HOST_PORT != null ? new MPSDeltaAdapter("mps-sync", universeTransaction, new MPSSerializationHelper(dRepository.original())) : null;
+        deltaAdaptor = CONNECT_SYNC_HOST_PORT != null ? new DeltaAdaptor<>("mps-sync", universeTransaction, new MPSSerializationHelper(dRepository.original())) : null;
         universeTransaction.put(universeTransaction.initAction());
     }
 

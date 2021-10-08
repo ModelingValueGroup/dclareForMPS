@@ -30,39 +30,39 @@ import org.modelingvalue.dclare.Setable;
 import org.modelingvalue.dclare.mps.DAttribute.DIdentifyingAttribute;
 
 @SuppressWarnings("rawtypes")
-public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DIdentifiedObject implements Newable {
+public abstract class DNewableObject<T extends DNewableObject, R, S> extends DIdentifiedObject implements Newable {
 
-    private static final Constant<DMatchedObject, Object> ORIGINAL  = Constant.of("$ORIGINAL", null);
+    private static final Constant<DNewableObject, Object> ORIGINAL  = Constant.of("$ORIGINAL", null);
 
     @SuppressWarnings("unchecked")
     protected static final Set<Observer>                  OBSERVERS = DObject.OBSERVERS;
 
     protected static final Set<Setable>                   SETABLES  = DObject.SETABLES;
 
-    protected static <D extends DMatchedObject> D quotationConstruct(SLanguage anonymousLanguage, String anonymousType, Object[] ctx, Supplier<D> supplier) {
+    protected static <D extends DNewableObject> D quotationConstruct(SLanguage anonymousLanguage, String anonymousType, Object[] ctx, Supplier<D> supplier) {
         LeafTransaction tx = LeafTransaction.getCurrent();
         return tx.construct(new DQuotation(tx.mutable(), anonymousLanguage, anonymousType, ctx), supplier);
     }
 
-    protected static <D extends DMatchedObject> D copyRootConstruct(SLanguage anonymousLanguage, String anonymousType, DObject object, DNode copied, Supplier<D> supplier) {
+    protected static <D extends DNewableObject> D copyRootConstruct(SLanguage anonymousLanguage, String anonymousType, DObject object, DNode copied, Supplier<D> supplier) {
         LeafTransaction tx = LeafTransaction.getCurrent();
         return tx.construct(new DCopy(tx.mutable(), copied, anonymousLanguage, anonymousType), supplier);
     }
 
-    protected static <D extends DMatchedObject> D copyChildConstruct(DCopy root, DNode copied, Supplier<D> supplier) {
+    protected static <D extends DNewableObject> D copyChildConstruct(DCopy root, DNode copied, Supplier<D> supplier) {
         LeafTransaction tx = LeafTransaction.getCurrent();
         return tx.construct(new DCopy(tx.mutable(), copied, root), supplier);
     }
 
     @SuppressWarnings("unchecked")
-    protected static <D extends DMatchedObject, I, S> D readConstruct(I ref, Supplier<D> supplier, S original) {
+    protected static <D extends DNewableObject, I, S> D readConstruct(I ref, Supplier<D> supplier, S original) {
         LeafTransaction tx = LeafTransaction.getCurrent();
         D d = tx.directConstruct(new DRead(ref), supplier);
         ORIGINAL.force(d, original);
         return d;
     }
 
-    protected DMatchedObject(Object[] identity) {
+    protected DNewableObject(Object[] identity) {
         super(identity);
     }
 

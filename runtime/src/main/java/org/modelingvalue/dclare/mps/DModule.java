@@ -61,7 +61,7 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
                                                                                                      Set<DModel> ist = m.models().sequential().map(DModel::of).toSet();
                                                                                                      if (!ist.equals(post)) {
                                                                                                          Setable.<Set<DModel>, DModel> diff(ist, post,                                    //
-                                                                                                                 DMatchedObject::original,                                                //
+                                                                                                                 DNewableObject::original,                                                //
                                                                                                                  r -> new ModelDeleteHelper(r.tryOriginal()).delete());
                                                                                                          return true;
                                                                                                      }

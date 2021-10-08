@@ -38,6 +38,7 @@ import org.modelingvalue.dclare.LeafTransaction;
 import org.modelingvalue.dclare.ReadOnlyTransaction;
 import org.modelingvalue.dclare.Setable;
 import org.modelingvalue.dclare.SetableModifier;
+import org.modelingvalue.dclare.mps.DRule.DObserverTransaction;
 
 import jetbrains.mps.smodel.adapter.structure.property.InvalidProperty;
 
@@ -147,6 +148,11 @@ public interface DAttribute<O, T> extends DFeature {
                 SNode original = ((DNode) object).tryOriginal();
                 if (original != null) {
                     original.getProperty(sProperty);
+                }
+            } else if (tx instanceof DObserverTransaction && (object instanceof DModel || object instanceof DNode)) {
+                DModel dModel = object instanceof DModel ? (DModel) object : ((DNode) object).getDModelFromMPS();
+                if (dModel != null && !DModel.TYPE.get(dModel).getLanguages().isEmpty()) {
+                    DModel.ACTIVE.set(dModel, Boolean.TRUE);
                 }
             }
             return super.get(object);

@@ -71,11 +71,10 @@ import jetbrains.mps.errors.item.IssueKindReportItem;
 import jetbrains.mps.errors.item.NodeReportItem;
 import jetbrains.mps.lang.smodel.generator.smodelAdapter.SNodeOperations;
 import jetbrains.mps.smodel.DynamicReference;
-import jetbrains.mps.smodel.SNodeId.Regular;
 import jetbrains.mps.smodel.SNodeUtil;
 
 @SuppressWarnings("unused")
-public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implements SNode {
+public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implements SNode {
 
     private static final Constant<Quintuple<Set<SLanguage>, SConcept, Set<String>, Boolean, SLanguage>, DNodeType> NODE_TYPE              = Constant.of("NODE_TYPE", DNodeType::new);
 
@@ -296,10 +295,10 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                           });
 
     @SuppressWarnings("rawtypes")
-    protected static final Set<Observer>                                                                           OBSERVERS              = DMatchedObject.OBSERVERS.addAll(Set.of(ROOT_RULE, MODEL_RULE, INDEX_RULE));
+    protected static final Set<Observer>                                                                           OBSERVERS              = DNewableObject.OBSERVERS.addAll(Set.of(ROOT_RULE, MODEL_RULE, INDEX_RULE));
 
     @SuppressWarnings("rawtypes")
-    protected static final Set<Setable>                                                                            SETABLES               = DMatchedObject.SETABLES.addAll(Set.of(ROOT, MODEL, USER_OBJECTS, ALL_MPS_ISSUES, INDEX));
+    protected static final Set<Setable>                                                                            SETABLES               = DNewableObject.SETABLES.addAll(Set.of(ROOT, MODEL, USER_OBJECTS, ALL_MPS_ISSUES, INDEX));
 
     public static Observer<DNode> copyObserver(SLanguage copyLang, DObserved<DNode, ?> observed, TriConsumer<DNode, DNode, DCopy> action) {
         return DCopyObserver.of(observed, t -> {
@@ -1165,18 +1164,24 @@ public class DNode extends DMatchedObject<DNode, SNodeReference, SNode> implemen
 
     @Override
     protected boolean isActive() {
-        if (isExternal()) {
-            return false;
+        SNodeReference ref = reference();
+        if (ref == null) {
+            return true;
         } else {
-            SNodeReference ref = reference();
-            if (ref == null) {
-                return true;
-            } else {
-                SModelReference mRef = ref.getModelReference();
-                SModel sModel = mRef != null ? dClareMPS().read(() -> mRef.resolve(null)) : null;
-                return sModel != null && DModel.of(sModel).isActive();
-            }
+            SModel sModel = getModelFromMPS(ref);
+            return sModel != null && DModel.of(sModel).isActive();
         }
+    }
+
+    protected DModel getDModelFromMPS() {
+        SNodeReference ref = reference();
+        SModel sModel = ref != null ? getModelFromMPS(ref) : null;
+        return sModel != null ? DModel.of(sModel) : null;
+    }
+
+    private SModel getModelFromMPS(SNodeReference ref) {
+        SModelReference mRef = ref.getModelReference();
+        return mRef != null ? dClareMPS().read(() -> mRef.resolve(null)) : null;
     }
 
 }

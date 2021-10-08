@@ -51,12 +51,14 @@ import org.modelingvalue.collections.util.Triple;
 import org.modelingvalue.dclare.Action;
 import org.modelingvalue.dclare.Constant;
 import org.modelingvalue.dclare.Construction;
+import org.modelingvalue.dclare.LeafTransaction;
 import org.modelingvalue.dclare.NonCheckingObserver;
 import org.modelingvalue.dclare.Observed;
 import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.Priority;
 import org.modelingvalue.dclare.Setable;
 import org.modelingvalue.dclare.State;
+import org.modelingvalue.dclare.mps.DRule.DObserverTransaction;
 
 import jetbrains.mps.errors.item.ModelReportItem;
 import jetbrains.mps.extapi.model.SModelBase;
@@ -70,7 +72,7 @@ import jetbrains.mps.smodel.MPSModuleRepository;
 import jetbrains.mps.smodel.SModelInternal;
 
 @SuppressWarnings("unused")
-public class DModel extends DMatchedObject<DModel, SModelReference, SModel> implements SModel {
+public class DModel extends DNewableObject<DModel, SModelReference, SModel> implements SModel {
 
     protected static final Constant<SModel, Boolean>                                        EXTERNAL         = Constant.of("EXTERNAL", DModel::isExternal);
 
@@ -88,6 +90,10 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
                                                                                                              });
 
     protected static final DObserved<DModel, Set<DNode>>                                    ROOTS            = DObserved.of("ROOTS", Set.of(), dModel -> {
+                                                                                                                 if (LeafTransaction.getCurrent() instanceof DObserverTransaction &&                                                                                                                                       //
+                                                                                                                 !dModel.isExternal() && !TYPE.get(dModel).getLanguages().isEmpty()) {
+                                                                                                                     DModel.ACTIVE.set(dModel, Boolean.TRUE);
+                                                                                                                 }
                                                                                                                  SModel sModel = dModel.original();
                                                                                                                  return DModel.roots(sModel).sequential().map(DNode::of).toSet();
                                                                                                              }, (dModel, pre, post) -> {
@@ -230,10 +236,10 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
                                                                                                                  }
                                                                                                              });
     @SuppressWarnings("rawtypes")
-    protected static final Set<Observer>                                                    OBSERVERS        = DMatchedObject.OBSERVERS.addAll(Set.of(ACTIVATE_RULE, REFERENCED_RULE));
+    protected static final Set<Observer>                                                    OBSERVERS        = DNewableObject.OBSERVERS.addAll(Set.of(ACTIVATE_RULE, REFERENCED_RULE));
 
     @SuppressWarnings("rawtypes")
-    protected static final Set<Setable>                                                     SETABLES         = DMatchedObject.SETABLES.addAll(Set.of(NAME, ROOTS, MODEL_ROOT, USED_MODELS, USED_LANGUAGES, ACTIVE, LOADED));
+    protected static final Set<Setable>                                                     SETABLES         = DNewableObject.SETABLES.addAll(Set.of(NAME, ROOTS, MODEL_ROOT, USED_MODELS, USED_LANGUAGES, ACTIVE, LOADED));
 
     public static DModel of(SLanguage anonymousLanguage, String anonymousType, Object[] identity, boolean temporal) {
         return quotationConstruct(anonymousLanguage, anonymousType, identity, //
@@ -293,7 +299,7 @@ public class DModel extends DMatchedObject<DModel, SModelReference, SModel> impl
 
     @Override
     protected boolean isActive() {
-        return !isExternal() && (reference() == null || ACTIVE.get(this));
+        return reference() == null || ACTIVE.get(this);
     }
 
     protected void activateIfUsed() {

@@ -39,7 +39,7 @@ import org.modelingvalue.dclare.sync.Util;
 
 import jetbrains.mps.project.ProjectRepository;
 
-public class MPSSerializationHelper implements SerializationHelper<DObjectType<DObject>, DObject, Setable<DObject, Object>> {
+public class MPSSerializationHelper implements SerializationHelper<DObjectType<DObject>, DObject, DObserved<DObject, Object>> {
 
     private static final boolean       TRACE          = Boolean.getBoolean("TRACE_SERIALIZATION");
 
@@ -101,15 +101,17 @@ public class MPSSerializationHelper implements SerializationHelper<DObjectType<D
         return m -> m instanceof DObserved && !(m instanceof DObservedAttribute) && !((DObserved) m).isDclareOnly();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public String serializeClass(DObjectType<DObject> clazz) {
-        throw new UnsupportedOperationException();
+    public DObjectType<DObject> getMutableClass(DObject s) {
+        DObjectType<DObject> type = (DObjectType<DObject>) DObject.TYPE.get(s);
+        return type != DObject.TYPE.getDefault() ? type : (DObjectType<DObject>) s.getType();
     }
 
     @Override
-    public String serializeSetable(Setable<DObject, Object> setable) {
+    public String serializeSetable(DObserved<DObject, Object> setable) {
         if (TRACE)
-            System.err.println("[SERIALIZE] setable " + setable.toString());
+            System.err.println("[SERIALIZE] setable " + setable.id().toString());
         return SETABLE_PREFIX + setable.id().toString();
     }
 
@@ -127,7 +129,7 @@ public class MPSSerializationHelper implements SerializationHelper<DObjectType<D
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
-    public Object serializeValue(Setable<DObject, Object> setable, Object value) {
+    public Object serializeValue(DObserved<DObject, Object> setable, Object value) {
         if (TRACE)
             System.err.println("[SERIALIZE] value: " + (setable != null ? setable.toString() : "null") + " = " + value);
         if (value instanceof List) {
@@ -143,21 +145,16 @@ public class MPSSerializationHelper implements SerializationHelper<DObjectType<D
         return value;
     }
 
-    @Override
-    public DObjectType<DObject> deserializeClass(String s) {
-        throw new UnsupportedOperationException();
-    }
-
     @SuppressWarnings("unchecked")
     @Override
-    public Setable<DObject, Object> deserializeSetable(DObjectType<DObject> clazz, String s) {
+    public DObserved<DObject, Object> deserializeSetable(DObjectType<DObject> clazz, String s) {
         try {
             if (TRACE)
                 System.err.println("[DESERIALIZE] deserializeSetable: " + s);
             String id = s.substring(SETABLE_PREFIX.length());
             if (TRACE)
                 System.err.println("[DESERIALIZE] find settable: " + id);
-            return (Setable<DObject, Object>) clazz.dSetables().filter(x -> x.id().toString().equals(id)).findFirst().get();
+            return (DObserved<DObject, Object>) clazz.dSetables().filter(x -> x.id().toString().equals(id)).findFirst().get();
         } catch (Throwable t) {
             t.printStackTrace();
         }
@@ -178,7 +175,7 @@ public class MPSSerializationHelper implements SerializationHelper<DObjectType<D
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
-    public Object deserializeValue(Setable<DObject, Object> setable, Object value) {
+    public Object deserializeValue(DObserved<DObject, Object> setable, Object value) {
         if (TRACE)
             System.err.println("[DESERIALIZE] deserializeValue: " + value);
         if (value instanceof List && setable.getDefault() instanceof List) {
