@@ -1981,7 +1981,7 @@
                     </node>
                   </node>
                   <node concept="liA8E" id="1HidMk5hqIM" role="2OqNvi">
-                    <ref role="37wK5l" to="t4tl:~DMatchedObject.tryOriginal()" resolve="tryOriginal" />
+                    <ref role="37wK5l" to="t4tl:~DNewableObject.tryOriginal()" resolve="tryOriginal" />
                   </node>
                 </node>
               </node>
@@ -2014,7 +2014,7 @@
                       </node>
                     </node>
                     <node concept="liA8E" id="1HidMk5hu08" role="2OqNvi">
-                      <ref role="37wK5l" to="t4tl:~DMatchedObject.tryOriginal()" resolve="tryOriginal" />
+                      <ref role="37wK5l" to="t4tl:~DNewableObject.tryOriginal()" resolve="tryOriginal" />
                     </node>
                   </node>
                 </node>
