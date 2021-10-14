@@ -16,8 +16,6 @@
 package org.modelingvalue.dclare.mps;
 
 import static org.modelingvalue.dclare.CoreSetableModifier.containment;
-import static org.modelingvalue.dclare.CoreSetableModifier.mandatory;
-import static org.modelingvalue.dclare.CoreSetableModifier.softMandatory;
 import static org.modelingvalue.dclare.CoreSetableModifier.synthetic;
 
 import java.util.Objects;
@@ -25,47 +23,11 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-import org.jetbrains.mps.openapi.language.SAbstractConcept;
-import org.jetbrains.mps.openapi.language.SAbstractLink;
-import org.jetbrains.mps.openapi.language.SConcept;
-import org.jetbrains.mps.openapi.language.SConceptFeature;
-import org.jetbrains.mps.openapi.language.SContainmentLink;
-import org.jetbrains.mps.openapi.language.SInterfaceConcept;
-import org.jetbrains.mps.openapi.language.SLanguage;
-import org.jetbrains.mps.openapi.language.SProperty;
-import org.jetbrains.mps.openapi.language.SReferenceLink;
-import org.jetbrains.mps.openapi.model.ResolveInfo;
-import org.jetbrains.mps.openapi.model.SModel;
-import org.jetbrains.mps.openapi.model.SModelReference;
-import org.jetbrains.mps.openapi.model.SNode;
-import org.jetbrains.mps.openapi.model.SNodeAccessUtil;
-import org.jetbrains.mps.openapi.model.SNodeId;
-import org.jetbrains.mps.openapi.model.SNodeReference;
-import org.jetbrains.mps.openapi.model.SReference;
-import org.modelingvalue.collections.Collection;
-import org.modelingvalue.collections.List;
-import org.modelingvalue.collections.Map;
-import org.modelingvalue.collections.Set;
-import org.modelingvalue.collections.util.Pair;
-import org.modelingvalue.collections.util.Quintuple;
-import org.modelingvalue.collections.util.TriConsumer;
-import org.modelingvalue.collections.util.TriFunction;
-import org.modelingvalue.dclare.Action;
-import org.modelingvalue.dclare.Constant;
-import org.modelingvalue.dclare.Construction;
-import org.modelingvalue.dclare.Direction;
-import org.modelingvalue.dclare.LeafTransaction;
-import org.modelingvalue.dclare.Mutable;
-import org.modelingvalue.dclare.MutableTransaction;
-import org.modelingvalue.dclare.Newable;
-import org.modelingvalue.dclare.Observed;
-import org.modelingvalue.dclare.Observer;
-import org.modelingvalue.dclare.ObserverTransaction;
-import org.modelingvalue.dclare.Priority;
-import org.modelingvalue.dclare.Setable;
-import org.modelingvalue.dclare.State;
-import org.modelingvalue.dclare.Transaction;
-import org.modelingvalue.dclare.UniverseTransaction;
+import org.jetbrains.mps.openapi.language.*;
+import org.jetbrains.mps.openapi.model.*;
+import org.modelingvalue.collections.*;
+import org.modelingvalue.collections.util.*;
+import org.modelingvalue.dclare.*;
 
 import jetbrains.mps.errors.item.IssueKindReportItem;
 import jetbrains.mps.errors.item.NodeReportItem;
@@ -140,7 +102,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                               } else {
                                                                                                                                                   return false;
                                                                                                                                               }
-                                                                                                                                          }, mc::getDeclarationNode, containment, softMandatory.ifnot(mc.isOptional())));
+                                                                                                                                          }, mc::getDeclarationNode, containment));
 
     @SuppressWarnings("deprecation")
     public static final Constant<SContainmentLink, DObserved<DNode, DNode>>                                        SINGLE_CONTAINMENT     = Constant.of("SINGLE_CONTAINMENT", sc -> DObserved.of(sc, null, dNode -> {
@@ -161,7 +123,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                               } else {
                                                                                                                                                   return false;
                                                                                                                                               }
-                                                                                                                                          }, sc::getDeclarationNode, containment, softMandatory.ifnot(sc.isOptional())));
+                                                                                                                                          }, sc::getDeclarationNode, containment));
 
     @SuppressWarnings("deprecation")
     public static final Constant<SReferenceLink, DObserved<DNode, DNode>>                                          REFERENCE              = Constant.of("REFERENCE", sr -> DObserved.of(sr, null, () -> DNode.OPPOSITE.get(sr), dNode -> {
@@ -180,7 +142,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                               } else {
                                                                                                                                                   return false;
                                                                                                                                               }
-                                                                                                                                          }, sr::getDeclarationNode, softMandatory.ifnot(sr.isOptional())));
+                                                                                                                                          }, sr::getDeclarationNode));
 
     @SuppressWarnings("deprecation")
     public static final Constant<SReferenceLink, DObserved<DNode, Set<DNode>>>                                     OPPOSITE               = Constant.of("OPPOSITE", sr -> DObserved.of(Pair.of(sr, "OPPOSITE"), Set.of(), () -> DNode.REFERENCE.get(sr), null, sr::getDeclarationNode, synthetic));
@@ -197,7 +159,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                               } else {
                                                                                                                                                   return false;
                                                                                                                                               }
-                                                                                                                                          }, sp::getDeclarationNode, mandatory, softMandatory));
+                                                                                                                                          }, sp::getDeclarationNode));
 
     private static final Observer<DNode>                                                                           MODEL_RULE             = DObject.observer(MODEL, o -> {
                                                                                                                                               DNode p = o.getAncestor(DNode.class);
@@ -382,7 +344,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
                 () -> new DNode(new Object[]{uniqueLong(getConcept()), getConcept(), false}));
     }
 
-    private static long uniqueLong(SConcept concept) {
+    protected static long uniqueLong(SConcept concept) {
         return NODE_COUNTER.get(concept).getAndIncrement();
     }
 
