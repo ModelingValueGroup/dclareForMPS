@@ -63,3 +63,8 @@ tasks.getByName<Delete>("clean") {
 }
 
 task("createJar").outputs.files.forEach { System.err.println("TOMTOMTOM $it") }
+
+tasks.withType(JavaCompile::class) {
+    options.compilerArgs.add("-Xlint:unchecked")
+    options.compilerArgs.add("-Xlint:deprecation")
+}

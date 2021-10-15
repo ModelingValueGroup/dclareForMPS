@@ -15,93 +15,50 @@
 
 package org.modelingvalue.dclare.mps;
 
-import static org.modelingvalue.dclare.CoreSetableModifier.containment;
-import static org.modelingvalue.dclare.CoreSetableModifier.plumbing;
-import static org.modelingvalue.dclare.mps.DclareForMPSEngine.ALL_DCLARE_MPS;
-
-import java.lang.Thread.UncaughtExceptionHandler;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-
-import javax.swing.SwingUtilities;
-
-import org.jetbrains.mps.openapi.language.SLanguage;
-import org.jetbrains.mps.openapi.model.SModel;
-import org.jetbrains.mps.openapi.model.SNode;
-import org.jetbrains.mps.openapi.module.ModelAccess;
-import org.jetbrains.mps.openapi.module.SModule;
-import org.jetbrains.mps.openapi.module.SRepository;
+import org.jetbrains.mps.openapi.language.*;
+import org.jetbrains.mps.openapi.model.*;
+import org.jetbrains.mps.openapi.module.*;
 import org.jetbrains.mps.openapi.util.Consumer;
 import org.jetbrains.mps.openapi.util.ProgressMonitor;
 import org.modelingvalue.collections.Collection;
-import org.modelingvalue.collections.DefaultMap;
-import org.modelingvalue.collections.Entry;
 import org.modelingvalue.collections.Map;
-import org.modelingvalue.collections.QualifiedSet;
 import org.modelingvalue.collections.Set;
-import org.modelingvalue.collections.util.Concurrent;
-import org.modelingvalue.collections.util.ContextThread;
-import org.modelingvalue.collections.util.ContextThread.ContextPool;
-import org.modelingvalue.collections.util.Pair;
-import org.modelingvalue.collections.util.TriConsumer;
-import org.modelingvalue.collections.util.Triple;
+import org.modelingvalue.collections.*;
+import org.modelingvalue.collections.util.*;
+import org.modelingvalue.collections.util.ContextThread.*;
 import org.modelingvalue.dclare.Action;
-import org.modelingvalue.dclare.Constant;
-import org.modelingvalue.dclare.ImperativeTransaction;
-import org.modelingvalue.dclare.LeafTransaction;
-import org.modelingvalue.dclare.Mutable;
-import org.modelingvalue.dclare.MutableClass;
-import org.modelingvalue.dclare.Observed;
 import org.modelingvalue.dclare.Observer;
-import org.modelingvalue.dclare.ReusableTransaction;
-import org.modelingvalue.dclare.Setable;
 import org.modelingvalue.dclare.State;
-import org.modelingvalue.dclare.Universe;
-import org.modelingvalue.dclare.UniverseTransaction;
-import org.modelingvalue.dclare.ex.ConsistencyError;
-import org.modelingvalue.dclare.ex.EmptyMandatoryException;
-import org.modelingvalue.dclare.ex.NonDeterministicException;
-import org.modelingvalue.dclare.ex.OutOfScopeException;
-import org.modelingvalue.dclare.ex.ReferencedOrphanException;
-import org.modelingvalue.dclare.ex.ThrowableError;
-import org.modelingvalue.dclare.ex.TooManyChangesException;
-import org.modelingvalue.dclare.ex.TooManyObservedException;
-import org.modelingvalue.dclare.ex.TooManyObserversException;
-import org.modelingvalue.dclare.ex.TransactionException;
-import org.modelingvalue.dclare.mps.DAttribute.DObservedAttribute;
-import org.modelingvalue.dclare.mps.DRule.DObserver;
-import org.modelingvalue.dclare.mps.DclareModelCheckerBuilder.RootItemsToCheck;
-import org.modelingvalue.dclare.sync.DeltaAdaptor;
-import org.modelingvalue.dclare.sync.SyncConnectionHandler;
+import org.modelingvalue.dclare.*;
+import org.modelingvalue.dclare.ex.*;
+import org.modelingvalue.dclare.mps.DAttribute.*;
+import org.modelingvalue.dclare.mps.DRule.*;
+import org.modelingvalue.dclare.mps.DclareModelCheckerBuilder.*;
+import org.modelingvalue.dclare.sync.*;
 
-import jetbrains.mps.checkers.AbstractNodeCheckerInEditor;
-import jetbrains.mps.checkers.IAbstractChecker;
-import jetbrains.mps.checkers.IChecker;
-import jetbrains.mps.checkers.ICheckingPostprocessor;
-import jetbrains.mps.checkers.LanguageErrorsCollector;
-import jetbrains.mps.checkers.ModelCheckerBuilder;
-import jetbrains.mps.checkers.ModelCheckerBuilder.ItemsToCheck;
-import jetbrains.mps.checkers.ModelCheckerBuilder.ModelsExtractorImpl;
-import jetbrains.mps.editor.runtime.LanguageEditorChecker;
-import jetbrains.mps.errors.CheckerRegistry;
-import jetbrains.mps.errors.item.IssueKindReportItem;
-import jetbrains.mps.errors.item.IssueKindReportItem.CheckerCategory;
-import jetbrains.mps.errors.item.ModelReportItem;
-import jetbrains.mps.errors.item.ModuleReportItem;
-import jetbrains.mps.errors.item.NodeReportItem;
-import jetbrains.mps.errors.item.ReportItem;
-import jetbrains.mps.nodeEditor.Highlighter;
-import jetbrains.mps.progress.EmptyProgressMonitor;
-import jetbrains.mps.project.DevKit;
-import jetbrains.mps.project.ProjectBase;
-import jetbrains.mps.project.ProjectRepository;
-import jetbrains.mps.smodel.language.LanguageRegistry;
-import jetbrains.mps.smodel.language.LanguageRuntime;
+import java.lang.Thread.*;
+import java.util.List;
+import java.util.*;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.*;
+import java.util.function.*;
+import java.util.stream.*;
+
+import javax.swing.*;
+
+import jetbrains.mps.checkers.*;
+import jetbrains.mps.checkers.ModelCheckerBuilder.*;
+import jetbrains.mps.editor.runtime.*;
+import jetbrains.mps.errors.*;
+import jetbrains.mps.errors.item.*;
+import jetbrains.mps.errors.item.IssueKindReportItem.*;
+import jetbrains.mps.nodeEditor.*;
+import jetbrains.mps.progress.*;
+import jetbrains.mps.project.*;
+import jetbrains.mps.smodel.language.*;
+
+import static org.modelingvalue.dclare.CoreSetableModifier.*;
+import static org.modelingvalue.dclare.mps.DclareForMPSEngine.*;
 
 public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, UncaughtExceptionHandler {
 
@@ -207,7 +164,6 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
                 }
             }
 
-            @SuppressWarnings("rawtypes")
             @Override
             protected void checkOrphanState(Mutable mutable, DefaultMap<Setable, Object> values) {
             }
@@ -261,8 +217,8 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
         checkerRegistry.registerChecker(modelChecker);
         checkerRegistry.registerChecker(nodeChecker);
         ModelsExtractorImpl modelExtractor = new ModelCheckerBuilder.ModelsExtractorImpl().excludeGenerators();
-        //noinspection RedundantCast (cast is needed! javac will fail otherwise)
-        List<? extends IChecker<?, ? extends IssueKindReportItem>> checkers = (List<? extends IChecker<?, ? extends IssueKindReportItem>>) checkerRegistry.getCheckers();
+        @SuppressWarnings("RedundantCast") // strange double cast to satisfy javac
+        List<? extends IChecker<?, ? extends IssueKindReportItem>> checkers = (List<? extends IChecker<?, ? extends IssueKindReportItem>>) (List<IChecker<?, ?>>) checkerRegistry.getCheckers();
         mpsChecker = new DclareModelCheckerBuilder(this, modelExtractor).createChecker(checkers);
         Highlighter highlighter = project.getComponent(Highlighter.class);
         highlighter.addChecker(languageEditorChecker);
@@ -638,7 +594,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
         }
         if (sObject instanceof SRepository) {
             for (DClareMPS dClareMPS : ALL_DCLARE_MPS) {
-                if (dClareMPS.dRepository.original().equals((SRepository) sObject)) {
+                if (dClareMPS.dRepository.original().equals(sObject)) {
                     return dClareMPS;
                 }
             }
