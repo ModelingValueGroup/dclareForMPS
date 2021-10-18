@@ -87,7 +87,9 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
                     DModel.ROOTS.set(dModel, Set::add, dNode);
                 } else {
                     SContainmentLink al = event.getAggregationLink();
+                    assert al != null;
                     if (al.isMultiple()) {
+                        assert event.getParent() != null;
                         int index = DNode.children(event.getParent(), al).firstIndexOf(sNode);
                         if (index >= 0) {
                             DNode.MANY_CONTAINMENT.get(al).set(DNode.of(event.getParent()), (l, e) -> {
@@ -116,6 +118,7 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
                     DModel.ROOTS.set(DModel.of(event.getModel()), Set::remove, dNode);
                 } else {
                     SContainmentLink al = event.getAggregationLink();
+                    assert al != null;
                     if (al.isMultiple()) {
                         DNode.MANY_CONTAINMENT.get(al).set(DNode.of(event.getParent()), List::remove, dNode);
                     } else {
@@ -131,9 +134,7 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
     @Override
     public void modelLoaded(SModel model, boolean partially) {
         if (!partially) {
-            b().handleMPSChange(() -> {
-                DModel.LOADED.set(a(), Boolean.TRUE);
-            });
+            b().handleMPSChange(() -> DModel.LOADED.set(a(), Boolean.TRUE));
         }
     }
 
@@ -148,9 +149,7 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
 
     @Override
     public void modelUnloaded(SModel model) {
-        b().handleMPSChange(() -> {
-            DModel.LOADED.set(a(), Boolean.FALSE);
-        });
+        b().handleMPSChange(() -> DModel.LOADED.set(a(), Boolean.FALSE));
     }
 
     @Override
@@ -231,10 +230,12 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
         });
     }
 
+    @Deprecated
     @Override
     public void rootAdded(SModelRootEvent event) {
     }
 
+    @Deprecated
     @Override
     public void rootRemoved(SModelRootEvent event) {
     }

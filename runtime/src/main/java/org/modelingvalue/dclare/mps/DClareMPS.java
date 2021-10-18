@@ -23,7 +23,7 @@ import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.*;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -221,8 +221,8 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
         checkerRegistry.registerChecker(modelChecker);
         checkerRegistry.registerChecker(nodeChecker);
         ModelsExtractorImpl modelExtractor = new ModelCheckerBuilder.ModelsExtractorImpl().excludeGenerators();
-        //noinspection RedundantCast (cast is needed! javac will fail otherwise)
-        List<? extends IChecker<?, ? extends IssueKindReportItem>> checkers = (List<? extends IChecker<?, ? extends IssueKindReportItem>>) checkerRegistry.getCheckers();
+        @SuppressWarnings("RedundantCast") // strange double cast to satisfy javac
+        List<? extends IChecker<?, ? extends IssueKindReportItem>> checkers = (List<? extends IChecker<?, ? extends IssueKindReportItem>>) (List<IChecker<?, ?>>) checkerRegistry.getCheckers();
         mpsChecker = new DclareModelCheckerBuilder(this, modelExtractor).createChecker(checkers);
         Highlighter highlighter = project.getComponent(Highlighter.class);
         highlighter.addChecker(languageEditorChecker);
@@ -464,17 +464,6 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
         }));
     }
 
-    public <T> T getFromCommand(Supplier<T> supplier) {
-        CompletableFuture<T> future = new CompletableFuture<>();
-        command(() -> future.complete(supplier.get()));
-        try {
-            return future.get();
-        } catch (InterruptedException | ExecutionException e) {
-            universeTransaction.handleException(e);
-            return null;
-        }
-    }
-
     public void read(Runnable runnable) {
         modelAccess.runReadAction(() -> {
             try {
@@ -608,7 +597,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
         }
         if (sObject instanceof SRepository) {
             for (DClareMPS dClareMPS : ALL_DCLARE_MPS) {
-                if (dClareMPS.dRepository.original().equals((SRepository) sObject)) {
+                if (dClareMPS.dRepository.original().equals(sObject)) {
                     return dClareMPS;
                 }
             }
