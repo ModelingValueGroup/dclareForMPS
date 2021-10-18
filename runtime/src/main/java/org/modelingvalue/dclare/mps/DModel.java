@@ -16,48 +16,27 @@
 package org.modelingvalue.dclare.mps;
 
 import static java.lang.Boolean.TRUE;
-import static org.modelingvalue.dclare.CoreSetableModifier.containment;
-import static org.modelingvalue.dclare.CoreSetableModifier.plumbing;
-import static org.modelingvalue.dclare.CoreSetableModifier.synthetic;
+import static org.modelingvalue.dclare.CoreSetableModifier.*;
 
 import java.util.Collections;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import org.jetbrains.mps.openapi.language.SAbstractConcept;
-import org.jetbrains.mps.openapi.language.SConcept;
-import org.jetbrains.mps.openapi.language.SLanguage;
-import org.jetbrains.mps.openapi.model.EditableSModel;
+import org.jetbrains.mps.openapi.language.*;
+import org.jetbrains.mps.openapi.model.*;
 import org.jetbrains.mps.openapi.model.SModel;
 import org.jetbrains.mps.openapi.model.SModelId;
-import org.jetbrains.mps.openapi.model.SModelListener;
-import org.jetbrains.mps.openapi.model.SModelName;
 import org.jetbrains.mps.openapi.model.SModelReference;
 import org.jetbrains.mps.openapi.model.SNode;
-import org.jetbrains.mps.openapi.model.SNodeAccessListener;
-import org.jetbrains.mps.openapi.model.SNodeChangeListener;
 import org.jetbrains.mps.openapi.model.SNodeId;
 import org.jetbrains.mps.openapi.module.SModule;
 import org.jetbrains.mps.openapi.module.SModuleReference;
 import org.jetbrains.mps.openapi.persistence.DataSource;
 import org.jetbrains.mps.openapi.persistence.ModelRoot;
-import org.modelingvalue.collections.Collection;
-import org.modelingvalue.collections.Map;
-import org.modelingvalue.collections.Set;
-import org.modelingvalue.collections.util.Pair;
-import org.modelingvalue.collections.util.TriFunction;
-import org.modelingvalue.collections.util.Triple;
-import org.modelingvalue.dclare.Action;
-import org.modelingvalue.dclare.Constant;
-import org.modelingvalue.dclare.Construction;
-import org.modelingvalue.dclare.LeafTransaction;
-import org.modelingvalue.dclare.NonCheckingObserver;
-import org.modelingvalue.dclare.Observed;
-import org.modelingvalue.dclare.Observer;
-import org.modelingvalue.dclare.Priority;
-import org.modelingvalue.dclare.Setable;
-import org.modelingvalue.dclare.State;
+import org.modelingvalue.collections.*;
+import org.modelingvalue.collections.util.*;
+import org.modelingvalue.dclare.*;
 import org.modelingvalue.dclare.mps.DRule.DObserverTransaction;
 
 import jetbrains.mps.errors.item.ModelReportItem;
@@ -67,9 +46,7 @@ import jetbrains.mps.persistence.DefaultModelRoot;
 import jetbrains.mps.persistence.ModelCannotBeCreatedException;
 import jetbrains.mps.project.DevKit;
 import jetbrains.mps.project.Solution;
-import jetbrains.mps.smodel.Language;
-import jetbrains.mps.smodel.MPSModuleRepository;
-import jetbrains.mps.smodel.SModelInternal;
+import jetbrains.mps.smodel.*;
 
 @SuppressWarnings("unused")
 public class DModel extends DNewableObject<DModel, SModelReference, SModel> implements SModel {
@@ -260,9 +237,16 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
         return original instanceof DModel ? (DModel) original : of(original.getReference(), original);
     }
 
-    public static DModel of(SModelReference ref, SModel original) {
-        Boolean external = DModel.EXTERNAL.get(dClareMPS().read(() -> ref.resolve(null)));
-        return readConstruct(ref, () -> new DModel(new Object[]{DClareMPS.uniqueLong(), false, external}), original);
+    protected static DModel of(SModelReference ref) {
+        return referenceConstruct(ref, () -> new DModel(new Object[]{DClareMPS.uniqueLong(), false, false}));
+    }
+
+    protected static DModel of(SModelReference ref, SModel original) {
+        if (original == null) {
+            throw new IllegalArgumentException("Creating a DModel of non-resolveable SModel reference " + ref);
+        }
+        Boolean external = DModel.EXTERNAL.get(original);
+        return originalConstruct(original, ref, () -> new DModel(new Object[]{DClareMPS.uniqueLong(), false, external}));
     }
 
     protected DModel(Object[] identity) {
@@ -322,25 +306,31 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
     protected SModel create(SModelReference ref) {
         SModuleBase sModule = (SModuleBase) getModule().original();
         String name = NAME.get(this);
-        name = name == null || Construction.MatchInfo.of(this, Map.of()).hasUnidentifiedSource() ? //
-                "_" + Long.toString(System.currentTimeMillis(), Character.MAX_RADIX) : name;
+        if (name == null && ref != null) {
+            name = ref.getModelName();
+        } else if (name == null || Construction.MatchInfo.of(this, Map.of()).hasUnidentifiedSource()) {
+            name = "_" + Long.toString(System.currentTimeMillis(), Character.MAX_RADIX);
+        }
         if (isTemporal()) {
             return ref != null ? new DTempModel(ref) : new DTempModel(name, sModule);
         } else {
-            SModel sModel = createFileModel(name, sModule);
-            if (ref != null) {
-                ((SModelInternal) sModel).changeModelReference(ref);
-            }
-            return sModel;
+            return createFileModel(name, ref, sModule);
         }
     }
 
-    private SModel createFileModel(String modelName, SModuleBase sModule) {
+    private static SModel createFileModel(String modelName, SModelReference ref, SModuleBase sModule) {
         DefaultModelRoot fbmr = (DefaultModelRoot) StreamSupport.stream(sModule.getModelRoots().spliterator(), false).filter(r -> r instanceof DefaultModelRoot).findAny().orElseThrow();
         try {
-            return fbmr.createFileModel(modelName, null);
+            SModel sModel = fbmr.createFileModel(modelName, null);
+            if (ref != null) {
+                sModule.unregisterModel((SModelBase) sModel);
+                ((SModelInternal) sModel).changeModelReference(ref);
+                sModule.registerModel((SModelBase) sModel);
+            }
+            return sModel;
         } catch (ModelCannotBeCreatedException e) {
-            throw new Error(e);
+            LeafTransaction.getCurrent().universeTransaction().handleException(e);
+            return null;
         }
     }
 

@@ -362,7 +362,11 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
         return original instanceof DNode ? (DNode) original : of(original.getConcept(), original.getReference(), original);
     }
 
-    public static DNode of(SConcept concept, SNodeReference ref, SNode original) {
+    protected static DNode of(SConcept concept, SNodeReference ref) {
+        return referenceConstruct(ref, () -> new DNode(new Object[]{uniqueLong(concept), concept, false}));
+    }
+
+    protected static DNode of(SConcept concept, SNodeReference ref, SNode original) {
         if (original == null) {
             throw new IllegalArgumentException("Creating a DNode of non-resolveable SNode reference " + ref);
         }
@@ -371,7 +375,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
             throw new IllegalArgumentException("Creating a DNode with a non-resolveable SModel " + original);
         }
         Boolean external = DModel.EXTERNAL.get(sModel);
-        return readConstruct(ref, () -> new DNode(new Object[]{uniqueLong(concept), concept, external}), original);
+        return originalConstruct(original, ref, () -> new DNode(new Object[]{uniqueLong(concept), concept, external}));
     }
 
     @Override

@@ -18,7 +18,8 @@ package org.modelingvalue.dclare.mps;
 import java.util.function.Predicate;
 
 import org.jetbrains.mps.openapi.language.*;
-import org.jetbrains.mps.openapi.model.*;
+import org.jetbrains.mps.openapi.model.SModelReference;
+import org.jetbrains.mps.openapi.model.SNodeReference;
 import org.jetbrains.mps.openapi.module.SModule;
 import org.jetbrains.mps.openapi.module.SModuleId;
 import org.jetbrains.mps.openapi.persistence.PersistenceFacade;
@@ -43,7 +44,6 @@ public class MPSSerializationHelper implements SerializationHelper<DObjectType<D
             Entry.of(DModuleConverter.MODULE_PREFIX, new DModuleConverter()),                     //
             Entry.of(DModelConverter.MODEL_PREFIX, new DModelConverter()),                        //
             Entry.of(DNodeConverter.NODE_PREFIX, new DNodeConverter()),                           //
-            Entry.of(SNodeReferenceConverter.SNODE_REF_PREFIX, new SNodeReferenceConverter()),    //
             Entry.of(SConceptConverter.SCONCEPT_PREFIX, new SConceptConverter()),                 //
             Entry.of(SLanguageConverter.SLANGUAGE_PREFIX, new SLanguageConverter())               //
     );
@@ -53,7 +53,6 @@ public class MPSSerializationHelper implements SerializationHelper<DObjectType<D
             Entry.of(DModule.class, new DModuleConverter()),                                      //
             Entry.of(DModel.class, new DModelConverter()),                                        //
             Entry.of(DNode.class, new DNodeConverter()),                                          //
-            Entry.of(SNodeReference.class, new SNodeReferenceConverter()),                        //
             Entry.of(SAbstractConcept.class, new SConceptConverter()),                            //
             Entry.of(SLanguage.class, new SLanguageConverter())                                   //
     );
@@ -215,11 +214,10 @@ public class MPSSerializationHelper implements SerializationHelper<DObjectType<D
         @Override
         public DModule deserialize(String s) {
             if (TRACE)
-                System.err.println("[DESERIALIZE] Module: " + s);
-            SModuleId mId = mpsPersist().createModuleId(s.substring(MODULE_PREFIX.length()));
-            SModule module = DObject.dClareMPS().read(() -> repos.getModule(mId));
-            DModule m = DModule.of(module);
-            return m;
+                System.err.println("[DESERIALIZE] module: " + s);
+            SModuleId id = mpsPersist().createModuleId(s.substring(MODULE_PREFIX.length()));
+            SModule module = DObject.dClareMPS().read(() -> repos.getModule(id));
+            return DModule.of(module);
         }
 
     }
@@ -229,7 +227,7 @@ public class MPSSerializationHelper implements SerializationHelper<DObjectType<D
 
         @Override
         public String serialize(DModel m) {
-            String s = MODEL_PREFIX + mpsPersist().asString(m.getModelId());
+            String s = MODEL_PREFIX + mpsPersist().asString(m.reference());
             if (TRACE)
                 System.err.println("[SERIALIZE] model: " + s);
             return s;
@@ -238,66 +236,36 @@ public class MPSSerializationHelper implements SerializationHelper<DObjectType<D
         @Override
         public DModel deserialize(String s) {
             if (TRACE)
-                System.err.println("[DESERIALIZE] Model: " + s);
-            SModelId mId = mpsPersist().createModelId(s.substring(MODEL_PREFIX.length()));
-            SModel model = DObject.dClareMPS().read(() -> repos.getModel(mId));
-            DModel m = DModel.of(model);
-            return m;
+                System.err.println("[DESERIALIZE] model: " + s);
+            SModelReference ref = mpsPersist().createModelReference(s.substring(MODEL_PREFIX.length()));
+            return DModel.of(ref);
         }
+
     }
 
     private class DNodeConverter implements Serializer<DNode> {
 
-        private static final String NODE_PREFIX = "dnode-";
+        private static final String NODE_PREFIX = "node-";
 
         @Override
         @SuppressWarnings({"rawtypes", "unchecked"})
         public String serialize(DNode n) {
             String s = NODE_PREFIX + Util.encodeWithLength(//
-                    serializer(SNodeReference.class).serialize(n.original().getReference()), //
-                    serializer(SConcept.class).serialize(n.getConcept()));
+                    mpsPersist().asString(n.getConcept()), //
+                    mpsPersist().asString(n.original().getReference()));
             if (TRACE)
-                System.err.println("[SERIALIZE] DNode: " + s);
+                System.err.println("[SERIALIZE] node: " + s);
             return s;
         }
 
         @Override
         public DNode deserialize(String s) {
             if (TRACE)
-                System.err.println("[DESERIALIZE] DNode: " + s);
-            String[] refCon = Util.decodeFromLength(s.substring(NODE_PREFIX.length()), 2);
-            SNodeReference ref = serializer(SNodeReference.class).deserialize(refCon[0]);
-            SConcept con = serializer(SConcept.class).deserialize(refCon[1]);
-            return DObject.dClareMPS().read(() -> {
-                SModel sModel = ref.getModelReference().resolve(null);
-                SNode sNode = sModel.getNode(ref.getNodeId());
-                return sNode != null ? DNode.of(sNode) : DNode.of(con, ref, sModel.createNode(con, ref.getNodeId()));
-            });
-        }
-    }
-
-    private class SNodeReferenceConverter implements Serializer<SNodeReference> {
-
-        private static final String SNODE_REF_PREFIX = "ref-";
-
-        @Override
-        public String serialize(SNodeReference ref) {
-            return SNODE_REF_PREFIX + mpsPersist().asString(ref);
-        }
-
-        @Override
-        public SNodeReference deserialize(String s) {
-            if (TRACE)
-                System.err.println("    resolve reference: " + s);
-            try {
-                SNodeReference ref = mpsPersist().createNodeReference(s.substring(SNODE_REF_PREFIX.length()));
-                if (TRACE)
-                    System.err.println("ref: " + ref);
-                return ref;
-            } catch (Throwable t) {
-                t.printStackTrace();
-            }
-            return null;
+                System.err.println("[DESERIALIZE] node: " + s);
+            String[] concRef = Util.decodeFromLength(s.substring(NODE_PREFIX.length()), 2);
+            SConcept con = (SConcept) mpsPersist().createConcept(concRef[0]);
+            SNodeReference ref = mpsPersist().createNodeReference(concRef[1]);
+            return DNode.of(con, ref);
         }
     }
 
@@ -319,7 +287,7 @@ public class MPSSerializationHelper implements SerializationHelper<DObjectType<D
 
     private class SLanguageConverter implements Serializer<SLanguage> {
 
-        private static final String SLANGUAGE_PREFIX = "slanguage-";
+        private static final String SLANGUAGE_PREFIX = "language-";
 
         @Override
         public String serialize(SLanguage lang) {
