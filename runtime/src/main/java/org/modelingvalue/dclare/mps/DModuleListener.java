@@ -18,9 +18,7 @@ package org.modelingvalue.dclare.mps;
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.jetbrains.mps.openapi.model.SModel;
 import org.jetbrains.mps.openapi.model.SModelReference;
-import org.jetbrains.mps.openapi.module.SDependency;
-import org.jetbrains.mps.openapi.module.SModule;
-import org.jetbrains.mps.openapi.module.SModuleListener;
+import org.jetbrains.mps.openapi.module.*;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
 
@@ -71,9 +69,11 @@ public class DModuleListener extends Pair<DModule, DClareMPS> implements SModule
 
     @Override
     public void modelRenamed(SModule module, SModel model, SModelReference oldRef) {
-        if (!a().isExternal() && !DModel.EXTERNAL.get(model)) {
-            b().handleMPSChange(() -> DModel.NAME.set(DModel.of(model), model.getName().getLongName()));
-        }
+        b().handleMPSChange(() -> {
+            if (!a().isExternal() && !DModel.EXTERNAL.get(model)) {
+                DModel.NAME.set(DModel.of(model), model.getName().getLongName());
+            }
+        });
     }
 
     @Override

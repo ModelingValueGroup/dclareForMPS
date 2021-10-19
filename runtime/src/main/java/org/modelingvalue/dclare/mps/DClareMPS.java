@@ -15,50 +15,54 @@
 
 package org.modelingvalue.dclare.mps;
 
-import org.jetbrains.mps.openapi.language.*;
-import org.jetbrains.mps.openapi.model.*;
+import static org.modelingvalue.dclare.CoreSetableModifier.containment;
+import static org.modelingvalue.dclare.CoreSetableModifier.plumbing;
+import static org.modelingvalue.dclare.mps.DclareForMPSEngine.ALL_DCLARE_MPS;
+
+import java.lang.Thread.UncaughtExceptionHandler;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+
+import javax.swing.SwingUtilities;
+
+import org.jetbrains.mps.openapi.language.SLanguage;
+import org.jetbrains.mps.openapi.model.SModel;
+import org.jetbrains.mps.openapi.model.SNode;
 import org.jetbrains.mps.openapi.module.*;
 import org.jetbrains.mps.openapi.util.Consumer;
 import org.jetbrains.mps.openapi.util.ProgressMonitor;
+import org.modelingvalue.collections.*;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Map;
 import org.modelingvalue.collections.Set;
-import org.modelingvalue.collections.*;
 import org.modelingvalue.collections.util.*;
-import org.modelingvalue.collections.util.ContextThread.*;
-import org.modelingvalue.dclare.Action;
-import org.modelingvalue.dclare.Observer;
-import org.modelingvalue.dclare.State;
+import org.modelingvalue.collections.util.ContextThread.ContextPool;
 import org.modelingvalue.dclare.*;
+import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.ex.*;
-import org.modelingvalue.dclare.mps.DAttribute.*;
-import org.modelingvalue.dclare.mps.DRule.*;
-import org.modelingvalue.dclare.mps.DclareModelCheckerBuilder.*;
-import org.modelingvalue.dclare.sync.*;
-
-import java.lang.Thread.*;
-import java.util.List;
-import java.util.*;
-import java.util.concurrent.*;
-import java.util.concurrent.atomic.*;
-import java.util.function.*;
-import java.util.stream.*;
-
-import javax.swing.*;
+import org.modelingvalue.dclare.mps.DAttribute.DObservedAttribute;
+import org.modelingvalue.dclare.mps.DRule.DObserver;
+import org.modelingvalue.dclare.mps.DclareModelCheckerBuilder.RootItemsToCheck;
+import org.modelingvalue.dclare.sync.DeltaAdaptor;
+import org.modelingvalue.dclare.sync.SyncConnectionHandler;
 
 import jetbrains.mps.checkers.*;
-import jetbrains.mps.checkers.ModelCheckerBuilder.*;
-import jetbrains.mps.editor.runtime.*;
-import jetbrains.mps.errors.*;
+import jetbrains.mps.checkers.ModelCheckerBuilder.ItemsToCheck;
+import jetbrains.mps.checkers.ModelCheckerBuilder.ModelsExtractorImpl;
+import jetbrains.mps.editor.runtime.LanguageEditorChecker;
+import jetbrains.mps.errors.CheckerRegistry;
 import jetbrains.mps.errors.item.*;
-import jetbrains.mps.errors.item.IssueKindReportItem.*;
-import jetbrains.mps.nodeEditor.*;
-import jetbrains.mps.progress.*;
+import jetbrains.mps.errors.item.IssueKindReportItem.CheckerCategory;
+import jetbrains.mps.nodeEditor.Highlighter;
+import jetbrains.mps.progress.EmptyProgressMonitor;
 import jetbrains.mps.project.*;
-import jetbrains.mps.smodel.language.*;
-
-import static org.modelingvalue.dclare.CoreSetableModifier.*;
-import static org.modelingvalue.dclare.mps.DclareForMPSEngine.*;
+import jetbrains.mps.smodel.language.LanguageRegistry;
+import jetbrains.mps.smodel.language.LanguageRuntime;
 
 public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, UncaughtExceptionHandler {
 
@@ -113,7 +117,6 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
     private NodeChecker                                                                                 nodeChecker;
     private LanguageEditorChecker                                                                       languageEditorChecker;
     private IAbstractChecker<ItemsToCheck, IssueKindReportItem>                                         mpsChecker;
-    private DeltaAdaptor<DObjectType<DObject>, DObject, DObserved<DObject, Object>>                     deltaAdaptor;
     private SyncConnectionHandler                                                                       syncConnectionHandler;
     private Concurrent<Set<SModel>>                                                                     changedModels;
     private Concurrent<Set<SModule>>                                                                    changedModules;
@@ -164,6 +167,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
                 }
             }
 
+            @SuppressWarnings("rawtypes")
             @Override
             protected void checkOrphanState(Mutable mutable, DefaultMap<Setable, Object> values) {
             }
@@ -184,14 +188,14 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
     @Override
     public void init() {
         Universe.super.init();
-        imperativeTransaction = universeTransaction.addImperative("$toMPS", this, r -> {
+        imperativeTransaction = universeTransaction.addImperative("", this, r -> {
             if (isRunning()) {
                 command(r);
             }
         }, false);
         imperativeTransaction.schedule(() -> REPOSITORY_CONTAINER.set(this, getRepository()));
         if (CONNECT_SYNC_HOST_PORT != null) {
-            syncConnectionHandler = new SyncConnectionHandler(deltaAdaptor);
+            syncConnectionHandler = new SyncConnectionHandler(new DeltaAdaptor<>("mps", universeTransaction, new MPSSerializationHelper(dRepository.original())));
             int sep = CONNECT_SYNC_HOST_PORT.indexOf(':');
             String host = CONNECT_SYNC_HOST_PORT.substring(0, sep);
             int port = Integer.parseInt(CONNECT_SYNC_HOST_PORT.substring(sep + 1));
@@ -222,7 +226,6 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
         mpsChecker = new DclareModelCheckerBuilder(this, modelExtractor).createChecker(checkers);
         Highlighter highlighter = project.getComponent(Highlighter.class);
         highlighter.addChecker(languageEditorChecker);
-        deltaAdaptor = CONNECT_SYNC_HOST_PORT != null ? new DeltaAdaptor<>("mps-sync", universeTransaction, new MPSSerializationHelper(dRepository.original())) : null;
         universeTransaction.put(universeTransaction.initAction());
     }
 

@@ -20,13 +20,8 @@ import java.util.function.Supplier;
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
-import org.modelingvalue.dclare.Constant;
-import org.modelingvalue.dclare.Construction;
+import org.modelingvalue.dclare.*;
 import org.modelingvalue.dclare.Construction.Reason;
-import org.modelingvalue.dclare.LeafTransaction;
-import org.modelingvalue.dclare.Newable;
-import org.modelingvalue.dclare.Observer;
-import org.modelingvalue.dclare.Setable;
 import org.modelingvalue.dclare.mps.DAttribute.DIdentifyingAttribute;
 
 @SuppressWarnings("rawtypes")
@@ -55,11 +50,16 @@ public abstract class DNewableObject<T extends DNewableObject, R, S> extends DId
     }
 
     @SuppressWarnings("unchecked")
-    protected static <D extends DNewableObject, I, S> D readConstruct(I ref, Supplier<D> supplier, S original) {
+    protected static <D extends DNewableObject, I, S> D referenceConstruct(I ref, Supplier<D> supplier) {
         LeafTransaction tx = LeafTransaction.getCurrent();
-        D d = tx.directConstruct(new DRead(ref), supplier);
-        ORIGINAL.force(d, original);
-        return d;
+        return tx.directConstruct(new DRead(ref), supplier);
+    }
+
+    @SuppressWarnings("unchecked")
+    protected static <D extends DNewableObject, I, S> D originalConstruct(S original, I ref, Supplier<D> supplier) {
+        D result = referenceConstruct(ref, supplier);
+        ORIGINAL.force(result, original);
+        return result;
     }
 
     protected DNewableObject(Object[] identity) {
@@ -99,12 +99,12 @@ public abstract class DNewableObject<T extends DNewableObject, R, S> extends DId
 
     @SuppressWarnings("unchecked")
     protected final R reference() {
-        DRead<R> rc = readReason();
+        DRead<R> rc = referenceReason();
         return rc != null ? rc.reference() : null;
     }
 
     @SuppressWarnings("unchecked")
-    protected final DRead<R> readReason() {
+    protected final DRead<R> referenceReason() {
         Construction cons = dDirectConstruction();
         return cons != null && cons.reason() instanceof DRead ? (DRead) cons.reason() : null;
     }
@@ -125,16 +125,12 @@ public abstract class DNewableObject<T extends DNewableObject, R, S> extends DId
         return deriveReasons().filter(DQuotation.class).map(DQuotation::getAnonymousLanguage).notNull().toSet();
     }
 
-    private S tryResolve() {
-        R ref = reference();
-        return ref != null ? dClareMPS().read(() -> resolve(ref)) : null;
-    }
-
     @SuppressWarnings("unchecked")
     public final S tryOriginal() {
         S sObject = ORIGINAL.isSet(this) ? (S) ORIGINAL.get(this) : null;
         if (sObject == null) {
-            sObject = tryResolve();
+            R ref = reference();
+            sObject = ref != null ? dClareMPS().read(() -> resolve(ref)) : null;
             if (sObject != null) {
                 ORIGINAL.force(this, sObject);
             }
@@ -144,14 +140,15 @@ public abstract class DNewableObject<T extends DNewableObject, R, S> extends DId
 
     @SuppressWarnings("unchecked")
     protected final S original() {
-        S sObject = tryResolve();
+        R ref = reference();
+        S sObject = ref != null ? dClareMPS().read(() -> resolve(ref)) : null;
         if (sObject == null) {
             sObject = ORIGINAL.isSet(this) ? (S) ORIGINAL.get(this) : null;
             if (sObject == null) {
-                sObject = create(reference());
+                sObject = create(ref);
             }
             addOriginal(sObject);
-            readConstruct(reference(sObject), () -> this, sObject);
+            originalConstruct(sObject, ref != null ? ref : reference(sObject), () -> this);
             init(dClareMPS(), sObject);
         }
         return sObject;
