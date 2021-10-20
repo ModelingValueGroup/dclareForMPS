@@ -308,7 +308,7 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
         String name = NAME.get(this);
         if (name == null && ref != null) {
             name = ref.getModelName();
-        } else if (name == null || Construction.MatchInfo.of(this, Map.of(), LeafTransaction.getCurrent().state(), new ConstantState()).hasUnidentifiedSource()) {
+        } else if (name == null || Construction.MatchInfo.of(this, Map.of()).hasUnidentifiedSource()) {
             name = "_" + Long.toString(System.currentTimeMillis(), Character.MAX_RADIX);
         }
         if (isTemporal()) {
