@@ -417,6 +417,9 @@
         <reference id="5455284157993910961" name="concept" index="2pJxaS" />
         <child id="5455284157993911099" name="values" index="2pJxcM" />
       </concept>
+      <concept id="6985522012210254362" name="jetbrains.mps.lang.quotation.structure.NodeBuilderPropertyExpression" flags="nn" index="WxPPo">
+        <child id="6985522012210254363" name="expression" index="WxPPp" />
+      </concept>
       <concept id="8182547171709752110" name="jetbrains.mps.lang.quotation.structure.NodeBuilderExpression" flags="nn" index="36biLy">
         <child id="8182547171709752112" name="expression" index="36biLW" />
       </concept>
@@ -1059,7 +1062,7 @@
         </node>
       </node>
       <node concept="10DmGV" id="3Z61ZaMckgx" role="3F10Kt">
-        <property role="10E5iX" value="indented" />
+        <property role="10E5iX" value="hGLCffT/indented" />
       </node>
       <node concept="lj46D" id="3Z61ZaMckgy" role="3F10Kt">
         <property role="VOm3f" value="true" />
@@ -3191,7 +3194,9 @@
                       <ref role="2pJxaS" to="7ggn:7cCgEMkno8j" resolve="SeverityReference" />
                       <node concept="2pJxcG" id="4A0PXFcPhRe" role="2pJxcM">
                         <ref role="2pJxcJ" to="7ggn:7cCgEMkno8k" resolve="severity" />
-                        <node concept="2ZBlsa" id="4A0PXFcPhTK" role="28ntcv" />
+                        <node concept="WxPPo" id="42AmA0B3fVo" role="28ntcv">
+                          <node concept="2ZBlsa" id="4A0PXFcPhTK" role="WxPPp" />
+                        </node>
                       </node>
                     </node>
                   </node>
