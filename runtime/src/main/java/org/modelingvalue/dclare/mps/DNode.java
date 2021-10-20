@@ -877,11 +877,6 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
     }
 
     @Override
-    public void setReference(SReferenceLink role, SReference reference) {
-        REFERENCE.get(role).set(this, DNode.of(reference.getTargetNode()));
-    }
-
-    @Override
     public void dropReference(SReferenceLink role) {
         REFERENCE.get(role).setDefault(this);
     }
@@ -1052,6 +1047,12 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
     @Deprecated
     public Iterable<? extends SNode> getChildren(String role) {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    @Deprecated
+    public void setReference(SReferenceLink role, SReference reference) {
+        REFERENCE.get(role).set(this, DNode.of(reference.getTargetNode()));
     }
 
     protected static List<SNode> children(SNode node, SContainmentLink feature) {
