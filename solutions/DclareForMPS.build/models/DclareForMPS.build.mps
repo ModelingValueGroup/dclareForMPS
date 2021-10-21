@@ -527,6 +527,16 @@
               </node>
             </node>
           </node>
+          <node concept="1SiIV0" id="21fkvY5lWf0" role="3bR37C">
+            <node concept="3bR9La" id="21fkvY5lWf1" role="1SiIV1">
+              <ref role="3bR37D" to="ffeo:7Kfy9QB6KZc" resolve="jetbrains.mps.baseLanguage.checkedDots" />
+            </node>
+          </node>
+          <node concept="1SiIV0" id="21fkvY6z0CA" role="3bR37C">
+            <node concept="3bR9La" id="21fkvY6z0CB" role="1SiIV1">
+              <ref role="3bR37D" to="ffeo:1TaHNgiIbIZ" resolve="MPS.Editor" />
+            </node>
+          </node>
         </node>
         <node concept="1SiIV0" id="5TmHY1l0vf9" role="3bR37C">
           <node concept="3bR9La" id="5TmHY1l0vfa" role="1SiIV1">
@@ -540,11 +550,6 @@
         <node concept="1SiIV0" id="29R9$zZ7tZE" role="3bR37C">
           <node concept="1Busua" id="29R9$zZ7tZF" role="1SiIV1">
             <ref role="1Busuk" to="ffeo:7Kfy9QB6L9O" resolve="jetbrains.mps.lang.smodel" />
-          </node>
-        </node>
-        <node concept="1SiIV0" id="3QNBbOrV1r8" role="3bR37C">
-          <node concept="1Busua" id="3QNBbOrV1r9" role="1SiIV1">
-            <ref role="1Busuk" to="ffeo:7Kfy9QB6LaO" resolve="jetbrains.mps.lang.structure" />
           </node>
         </node>
         <node concept="3rtmxn" id="3QNBbOsArms" role="3bR31x">
@@ -673,6 +678,16 @@
         <node concept="1SiIV0" id="42AmA0B9zgg" role="3bR37C">
           <node concept="Rbm2T" id="42AmA0B9zgh" role="1SiIV1">
             <ref role="1E1Vl2" to="ffeo:7Kfy9QB6L9O" resolve="jetbrains.mps.lang.smodel" />
+          </node>
+        </node>
+        <node concept="1SiIV0" id="21fkvY5lWeY" role="3bR37C">
+          <node concept="1Busua" id="21fkvY5lWeZ" role="1SiIV1">
+            <ref role="1Busuk" to="ffeo:7Kfy9QB6KZc" resolve="jetbrains.mps.baseLanguage.checkedDots" />
+          </node>
+        </node>
+        <node concept="1SiIV0" id="21fkvY6z0C$" role="3bR37C">
+          <node concept="Rbm2T" id="21fkvY6z0C_" role="1SiIV1">
+            <ref role="1E1Vl2" to="ffeo:7Kfy9QB6KZc" resolve="jetbrains.mps.baseLanguage.checkedDots" />
           </node>
         </node>
       </node>

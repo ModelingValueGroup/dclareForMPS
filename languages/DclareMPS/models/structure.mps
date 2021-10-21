@@ -12,6 +12,7 @@
     <import index="tp25" ref="r:00000000-0000-4000-0000-011c89590301(jetbrains.mps.lang.smodel.structure)" />
     <import index="tp3r" ref="r:00000000-0000-4000-0000-011c8959034b(jetbrains.mps.lang.quotation.structure)" />
     <import index="tp2q" ref="r:00000000-0000-4000-0000-011c8959032e(jetbrains.mps.baseLanguage.collections.structure)" />
+    <import index="pxpg" ref="r:5a550369-d6d9-4c89-a89b-1bb748dc20b3(jetbrains.mps.baseLanguage.checkedDots.structure)" />
     <import index="tpck" ref="r:00000000-0000-4000-0000-011c89590288(jetbrains.mps.lang.core.structure)" implicit="true" />
   </imports>
   <registry>
@@ -1006,6 +1007,19 @@
       <node concept="trNpa" id="7EeKZioUq_9" role="EQaZv">
         <ref role="trN6q" to="tpee:fz3vP1J" resolve="Expression" />
       </node>
+    </node>
+  </node>
+  <node concept="1TIwiD" id="21fkvY54Nzw">
+    <property role="EcuMT" value="2328169690264975584" />
+    <property role="3GE5qa" value="expressions" />
+    <property role="TrG5h" value="CheckedDotExpressionWithElse" />
+    <ref role="1TJDcQ" to="pxpg:3ysSjmiKK8V" resolve="CheckedDotExpression" />
+    <node concept="1TJgyj" id="21fkvY551VA" role="1TKVEi">
+      <property role="IQ2ns" value="2328169690265034470" />
+      <property role="20lmBu" value="fLJjDmT/aggregation" />
+      <property role="20kJfa" value="else" />
+      <property role="20lbJX" value="fLJekj4/_1" />
+      <ref role="20lvS9" to="tpee:fz3vP1J" resolve="Expression" />
     </node>
   </node>
 </model>

@@ -10307,5 +10307,12 @@
       <node concept="3clFbS" id="2mO6frpDMZT" role="2VODD2" />
     </node>
   </node>
+  <node concept="13h7C7" id="21fkvY55vgj">
+    <property role="3GE5qa" value="expressions" />
+    <ref role="13h7C2" to="7ggn:21fkvY54Nzw" resolve="CheckedDotExpressionWithElse" />
+    <node concept="13hLZK" id="21fkvY55vgk" role="13h7CW">
+      <node concept="3clFbS" id="21fkvY55vgl" role="2VODD2" />
+    </node>
+  </node>
 </model>
 
