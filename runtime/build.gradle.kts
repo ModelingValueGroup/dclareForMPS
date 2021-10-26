@@ -54,6 +54,7 @@ tasks.register<Copy>("gatherRuntimeJars") {
             .replaceFirst(Regex("-[0-9.]*[.]jar"), ".jar")
     }
     tasks.findByName("jar")?.finalizedBy(this)
+    tasks.findByName("publish")?.finalizedBy(this)
     eachFile {
         println(String.format("   - GATHER %s\n         => %s/%s", file, destinationDir, relativePath))
     }
