@@ -74,12 +74,12 @@ public class MPSSerializationHelper extends SerializationHelperWithPool<DObjectT
         }
 
         @Override
-        public String serialize(Object context, DModule m) {
+        public String serialize(DModule m, Object context) {
             return mpsPersist().asString(m.getModuleId());
         }
 
         @Override
-        public DModule deserialize(Object context, String string) {
+        public DModule deserialize(String string, Object context) {
             SModuleId id     = mpsPersist().createModuleId(string);
             SModule   module = DObject.dClareMPS().read(() -> repos.getModule(id));
             return DModule.of(module);
@@ -92,12 +92,12 @@ public class MPSSerializationHelper extends SerializationHelperWithPool<DObjectT
         }
 
         @Override
-        public String serialize(Object context, DModel m) {
+        public String serialize(DModel m, Object context) {
             return mpsPersist().asString(m.reference());
         }
 
         @Override
-        public DModel deserialize(Object context, String string) {
+        public DModel deserialize(String string, Object context) {
             return DModel.of(mpsPersist().createModelReference(string));
         }
     }
@@ -108,14 +108,14 @@ public class MPSSerializationHelper extends SerializationHelperWithPool<DObjectT
         }
 
         @Override
-        public String serialize(Object context, DNode n) {
+        public String serialize(DNode n, Object context) {
             return Util.encodeWithLength(//
                     mpsPersist().asString(n.getConcept()), //
                     mpsPersist().asString(n.original().getReference()));
         }
 
         @Override
-        public DNode deserialize(Object context, String string) {
+        public DNode deserialize(String string, Object context) {
             String[]       concRef = Util.decodeFromLength(string, 2);
             SConcept       con     = (SConcept) mpsPersist().createConcept(concRef[0]);
             SNodeReference ref     = mpsPersist().createNodeReference(concRef[1]);
@@ -129,12 +129,12 @@ public class MPSSerializationHelper extends SerializationHelperWithPool<DObjectT
         }
 
         @Override
-        public String serialize(Object context, SAbstractConcept concept) {
+        public String serialize(SAbstractConcept concept, Object context) {
             return mpsPersist().asString(concept);
         }
 
         @Override
-        public SAbstractConcept deserialize(Object context, String string) {
+        public SAbstractConcept deserialize(String string, Object context) {
             return mpsPersist().createConcept(string);
         }
     }
@@ -145,12 +145,12 @@ public class MPSSerializationHelper extends SerializationHelperWithPool<DObjectT
         }
 
         @Override
-        public String serialize(Object context, SLanguage lang) {
+        public String serialize(SLanguage lang, Object context) {
             return mpsPersist().asString(lang);
         }
 
         @Override
-        public SLanguage deserialize(Object context, String string) {
+        public SLanguage deserialize(String string, Object context) {
             return mpsPersist().createLanguage(string);
         }
     }
@@ -162,13 +162,13 @@ public class MPSSerializationHelper extends SerializationHelperWithPool<DObjectT
         }
 
         @Override
-        public String serialize(Object context, DObserved<DObject, Object> setable) {
+        public String serialize(DObserved<DObject, Object> setable, Object context) {
             return setable.id().toString();
         }
 
         @SuppressWarnings("unchecked")
         @Override
-        public DObserved<DObject, Object> deserialize(Object context, String string) {
+        public DObserved<DObject, Object> deserialize(String string, Object context) {
             assert context instanceof DObjectType;
 
             DObjectType<DObject> clazz = (DObjectType<DObject>) context;
