@@ -15,70 +15,36 @@
 
 package org.modelingvalue.dclare.mps;
 
-import java.util.function.Predicate;
-
 import org.jetbrains.mps.openapi.language.*;
-import org.jetbrains.mps.openapi.model.SModelReference;
-import org.jetbrains.mps.openapi.model.SNodeReference;
-import org.jetbrains.mps.openapi.module.SModule;
-import org.jetbrains.mps.openapi.module.SModuleId;
-import org.jetbrains.mps.openapi.persistence.PersistenceFacade;
-import org.modelingvalue.collections.*;
-import org.modelingvalue.dclare.Mutable;
-import org.modelingvalue.dclare.Setable;
-import org.modelingvalue.dclare.mps.DAttribute.DObservedAttribute;
-import org.modelingvalue.dclare.sync.SerializationHelper;
-import org.modelingvalue.dclare.sync.Util;
+import org.jetbrains.mps.openapi.model.*;
+import org.jetbrains.mps.openapi.module.*;
+import org.jetbrains.mps.openapi.persistence.*;
+import org.modelingvalue.dclare.*;
+import org.modelingvalue.dclare.mps.DAttribute.*;
+import org.modelingvalue.dclare.sync.Converters.*;
+import org.modelingvalue.dclare.sync.SerialisationPool.*;
+import org.modelingvalue.dclare.sync.*;
 
-import jetbrains.mps.project.ProjectRepository;
+import java.util.function.*;
 
-public class MPSSerializationHelper implements SerializationHelper<DObjectType<DObject>, DObject, DObserved<DObject, Object>> {
+import jetbrains.mps.project.*;
 
-    private static final boolean       TRACE          = Boolean.getBoolean("TRACE_SERIALIZATION");
-
-    private static final String        SETABLE_PREFIX = "setable-";
-
-    private final ProjectRepository    repos;
-
-    private Map<String, Serializer<?>> deserialiseMap = Map.of(                                   //
-            Entry.of(DModuleConverter.MODULE_PREFIX, new DModuleConverter()),                     //
-            Entry.of(DModelConverter.MODEL_PREFIX, new DModelConverter()),                        //
-            Entry.of(DNodeConverter.NODE_PREFIX, new DNodeConverter()),                           //
-            Entry.of(SConceptConverter.SCONCEPT_PREFIX, new SConceptConverter()),                 //
-            Entry.of(SLanguageConverter.SLANGUAGE_PREFIX, new SLanguageConverter())               //
-    );
-
-    @SuppressWarnings("rawtypes")
-    private Map<Class, Serializer<?>>  serializeMap   = Map.of(                                   //
-            Entry.of(DModule.class, new DModuleConverter()),                                      //
-            Entry.of(DModel.class, new DModelConverter()),                                        //
-            Entry.of(DNode.class, new DNodeConverter()),                                          //
-            Entry.of(SAbstractConcept.class, new SConceptConverter()),                            //
-            Entry.of(SLanguage.class, new SLanguageConverter())                                   //
-    );
-
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    private <T> Serializer<T> serializer(Class<T> cls) {
-        Serializer result = serializeMap.get(cls);
-        if (result == null) {
-            Class found = null;
-            for (Entry<Class, Serializer<?>> e : serializeMap) {
-                if (e.getKey().isAssignableFrom(cls) && (found == null || found.isAssignableFrom(e.getKey()))) {
-                    found = e.getKey();
-                    result = e.getValue();
-                }
-            }
-            serializeMap = serializeMap.put(Entry.of(cls, result));
-        }
-        return (Serializer<T>) result;
-    }
-
-    private PersistenceFacade mpsPersist() {
-        return PersistenceFacade.getInstance();
-    }
-
+public class MPSSerializationHelper extends SerializationHelperWithPool<DObjectType<DObject>, DObject, DObserved<DObject, Object>> {
     public MPSSerializationHelper(ProjectRepository repos) {
-        this.repos = repos;
+        super(
+                new DObservedConverter(),
+                new DModuleConverter(repos),
+                new DModelConverter(),
+                new DNodeConverter(),
+                new SConceptConverter(),
+                new SLanguageConverter(),
+                new ImmutableListConverter(),
+                new ImmutableSetConverter()
+        );
+    }
+
+    private static PersistenceFacade mpsPersist() {
+        return PersistenceFacade.getInstance();
     }
 
     @Override
@@ -99,205 +65,114 @@ public class MPSSerializationHelper implements SerializationHelper<DObjectType<D
         return type != DObject.TYPE.getDefault() ? type : (DObjectType<DObject>) s.getType();
     }
 
-    @Override
-    public String serializeSetable(DObserved<DObject, Object> setable) {
-        if (TRACE)
-            System.err.println("[SERIALIZE] setable " + setable.id().toString());
-        return SETABLE_PREFIX + setable.id().toString();
-    }
+    private static class DModuleConverter extends BaseConverter<DModule> {
+        private final ProjectRepository repos;
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    @Override
-    public String serializeMutable(DObject mutable) {
-        Serializer serializer = serializer(mutable.getClass());
-        if (serializer != null) {
-            return serializer.serialize(mutable);
-        }
-        if (TRACE)
-            System.err.println("[SERIALIZE] NO support for type: " + mutable.getClass().getName());
-        return null;
-    }
-
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    @Override
-    public Object serializeValue(DObserved<DObject, Object> setable, Object value) {
-        if (TRACE)
-            System.err.println("[SERIALIZE] value: " + (setable != null ? setable.toString() : "null") + " = " + value);
-        if (value instanceof List) {
-            value = ((List<?>) value).map(e -> serializeValue(setable, e)).toList();
-        } else if (value instanceof Set) {
-            value = ((Set<?>) value).map(e -> serializeValue(setable, e)).toList();
-        } else if (value != null) {
-            Serializer serializer = serializer(value.getClass());
-            if (serializer != null) {
-                value = serializer.serialize(value);
-            }
-        }
-        return value;
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public DObserved<DObject, Object> deserializeSetable(DObjectType<DObject> clazz, String s) {
-        try {
-            if (TRACE)
-                System.err.println("[DESERIALIZE] deserializeSetable: " + s);
-            String id = s.substring(SETABLE_PREFIX.length());
-            if (TRACE)
-                System.err.println("[DESERIALIZE] find settable: " + id);
-            return (DObserved<DObject, Object>) clazz.dSetables().filter(x -> x.id().toString().equals(id)).findFirst().get();
-        } catch (Throwable t) {
-            t.printStackTrace();
-        }
-        return null;
-    }
-
-    @Override
-    public DObject deserializeMutable(String string) {
-        if (TRACE)
-            System.err.println("[DESERIALIZE] deserializeSetable: " + string);
-        try {
-            return (DObject) deserializeString(string, string);
-        } catch (Throwable t) {
-            t.printStackTrace();
-        }
-        return null;
-    }
-
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    @Override
-    public Object deserializeValue(DObserved<DObject, Object> setable, Object value) {
-        if (TRACE)
-            System.err.println("[DESERIALIZE] deserializeValue: " + value);
-        if (value instanceof List && setable.getDefault() instanceof List) {
-            value = ((List<?>) value).map(e -> deserializeValue(setable, e)).toList();
-        } else if (value instanceof List && setable.getDefault() instanceof Set) {
-            value = ((List<?>) value).map(e -> deserializeValue(setable, e)).toSet();
-        } else if (value instanceof String) {
-            value = deserializeString(value, (String) value);
-        }
-        return value;
-    }
-
-    private Object deserializeString(Object value, String string) {
-        int i = string.indexOf('-');
-        if (i > 0) {
-            String objectType = string.substring(0, i + 1);
-            Serializer<?> serializer = deserialiseMap.get(objectType);
-            if (serializer != null) {
-                value = serializer.deserialize(string);
-            }
-        }
-        return value;
-    }
-
-    private interface Serializer<T> {
-
-        String serialize(T t);
-
-        T deserialize(String s);
-
-    }
-
-    private class DModuleConverter implements Serializer<DModule> {
-
-        private static final String MODULE_PREFIX = "module-";
-
-        @Override
-        public String serialize(DModule m) {
-            String s = MODULE_PREFIX + mpsPersist().asString(m.getModuleId());
-            if (TRACE)
-                System.err.println("[SERIALIZE] module: " + s);
-            return s;
+        public DModuleConverter(ProjectRepository repos) {
+            super(DModule.class);
+            this.repos = repos;
         }
 
         @Override
-        public DModule deserialize(String s) {
-            if (TRACE)
-                System.err.println("[DESERIALIZE] module: " + s);
-            SModuleId id = mpsPersist().createModuleId(s.substring(MODULE_PREFIX.length()));
-            SModule module = DObject.dClareMPS().read(() -> repos.getModule(id));
+        public String serialize(DModule m, Object context) {
+            return mpsPersist().asString(m.getModuleId());
+        }
+
+        @Override
+        public DModule deserialize(String string, Object context) {
+            SModuleId id     = mpsPersist().createModuleId(string);
+            SModule   module = DObject.dClareMPS().read(() -> repos.getModule(id));
             return DModule.of(module);
         }
-
     }
 
-    private class DModelConverter implements Serializer<DModel> {
-        private static final String MODEL_PREFIX = "model-";
-
-        @Override
-        public String serialize(DModel m) {
-            String s = MODEL_PREFIX + mpsPersist().asString(m.reference());
-            if (TRACE)
-                System.err.println("[SERIALIZE] model: " + s);
-            return s;
+    private static class DModelConverter extends BaseConverter<DModel> {
+        public DModelConverter() {
+            super(DModel.class);
         }
 
         @Override
-        public DModel deserialize(String s) {
-            if (TRACE)
-                System.err.println("[DESERIALIZE] model: " + s);
-            SModelReference ref = mpsPersist().createModelReference(s.substring(MODEL_PREFIX.length()));
-            return DModel.of(ref);
+        public String serialize(DModel m, Object context) {
+            return mpsPersist().asString(m.reference());
         }
 
+        @Override
+        public DModel deserialize(String string, Object context) {
+            return DModel.of(mpsPersist().createModelReference(string));
+        }
     }
 
-    private class DNodeConverter implements Serializer<DNode> {
-
-        private static final String NODE_PREFIX = "node-";
+    private static class DNodeConverter extends BaseConverter<DNode> {
+        public DNodeConverter() {
+            super(DNode.class);
+        }
 
         @Override
-        @SuppressWarnings({"rawtypes", "unchecked"})
-        public String serialize(DNode n) {
-            String s = NODE_PREFIX + Util.encodeWithLength(//
+        public String serialize(DNode n, Object context) {
+            return Util.encodeWithLength(//
                     mpsPersist().asString(n.getConcept()), //
                     mpsPersist().asString(n.original().getReference()));
-            if (TRACE)
-                System.err.println("[SERIALIZE] node: " + s);
-            return s;
         }
 
         @Override
-        public DNode deserialize(String s) {
-            if (TRACE)
-                System.err.println("[DESERIALIZE] node: " + s);
-            String[] concRef = Util.decodeFromLength(s.substring(NODE_PREFIX.length()), 2);
-            SConcept con = (SConcept) mpsPersist().createConcept(concRef[0]);
-            SNodeReference ref = mpsPersist().createNodeReference(concRef[1]);
+        public DNode deserialize(String string, Object context) {
+            String[]       concRef = Util.decodeFromLength(string, 2);
+            SConcept       con     = (SConcept) mpsPersist().createConcept(concRef[0]);
+            SNodeReference ref     = mpsPersist().createNodeReference(concRef[1]);
             return DNode.of(con, ref);
         }
     }
 
-    private class SConceptConverter implements Serializer<SAbstractConcept> {
-
-        private static final String SCONCEPT_PREFIX = "concept-";
-
-        @Override
-        public String serialize(SAbstractConcept concept) {
-            return SCONCEPT_PREFIX + mpsPersist().asString(concept);
+    private static class SConceptConverter extends BaseConverter<SAbstractConcept> {
+        public SConceptConverter() {
+            super(SAbstractConcept.class);
         }
 
         @Override
-        public SAbstractConcept deserialize(String s) {
-            return mpsPersist().createConcept(s.substring(SCONCEPT_PREFIX.length()));
-        }
-
-    }
-
-    private class SLanguageConverter implements Serializer<SLanguage> {
-
-        private static final String SLANGUAGE_PREFIX = "language-";
-
-        @Override
-        public String serialize(SLanguage lang) {
-            return SLANGUAGE_PREFIX + mpsPersist().asString(lang);
+        public String serialize(SAbstractConcept concept, Object context) {
+            return mpsPersist().asString(concept);
         }
 
         @Override
-        public SLanguage deserialize(String s) {
-            return mpsPersist().createLanguage(s.substring(SLANGUAGE_PREFIX.length()));
+        public SAbstractConcept deserialize(String string, Object context) {
+            return mpsPersist().createConcept(string);
         }
     }
 
+    private static class SLanguageConverter extends BaseConverter<SLanguage> {
+        public SLanguageConverter() {
+            super(SLanguage.class);
+        }
+
+        @Override
+        public String serialize(SLanguage lang, Object context) {
+            return mpsPersist().asString(lang);
+        }
+
+        @Override
+        public SLanguage deserialize(String string, Object context) {
+            return mpsPersist().createLanguage(string);
+        }
+    }
+
+    private static class DObservedConverter extends BaseConverter<DObserved<DObject, Object>> {
+        @SuppressWarnings({"unchecked", "rawtypes"})
+        public DObservedConverter() {
+            super((Class<DObserved<DObject, Object>>) (Class) DObserved.class);
+        }
+
+        @Override
+        public String serialize(DObserved<DObject, Object> setable, Object context) {
+            return setable.id().toString();
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        public DObserved<DObject, Object> deserialize(String string, Object context) {
+            assert context instanceof DObjectType;
+
+            DObjectType<DObject> clazz = (DObjectType<DObject>) context;
+            return (DObserved<DObject, Object>) clazz.dSetables().filter(x -> x.id().toString().equals(string)).findFirst().orElseThrow();
+        }
+    }
 }

@@ -22,7 +22,7 @@ defaultTasks(
 )
 
 plugins {
-    id("org.modelingvalue.gradle.mvgplugin") version "1.0.7"
+    id("org.modelingvalue.gradle.mvgplugin") version "1.0.8"
 }
 
 // import ant file:
