@@ -34,8 +34,7 @@ import org.jetbrains.mps.openapi.module.SModule;
 import org.jetbrains.mps.openapi.module.SModuleReference;
 import org.jetbrains.mps.openapi.persistence.DataSource;
 import org.jetbrains.mps.openapi.persistence.ModelRoot;
-import org.modelingvalue.collections.Collection;
-import org.modelingvalue.collections.Set;
+import org.modelingvalue.collections.*;
 import org.modelingvalue.collections.util.*;
 import org.modelingvalue.dclare.*;
 import org.modelingvalue.dclare.mps.DRule.DObserverTransaction;
@@ -309,7 +308,7 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
         String name = NAME.get(this);
         if (name == null && ref != null) {
             name = ref.getModelName();
-        } else if (name == null) {
+        } else if (name == null || Construction.MatchInfo.of(this, Map.of()).hasUnidentifiedSource()) {
             name = "_" + Long.toString(System.currentTimeMillis(), Character.MAX_RADIX);
         }
         if (isTemporal()) {
