@@ -68,7 +68,7 @@ public class DNodeType extends DObjectType<Quintuple<Set<SLanguage>, SConcept, S
     @SuppressWarnings("rawtypes")
     @Override
     public Collection<Setable> setables() {
-        return Collection.concat(DNode.SETABLES, DNode.CONCEPT_SETABLES.get(getConcept()));
+        return Collection.concat(DNode.SETABLES, DNode.CONCEPT_DOBSERVEDS.get(getConcept()));
     }
 
     @SuppressWarnings("rawtypes")

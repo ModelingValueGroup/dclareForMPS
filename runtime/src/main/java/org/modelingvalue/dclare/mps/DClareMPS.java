@@ -21,10 +21,10 @@ import static org.modelingvalue.dclare.mps.DclareForMPSEngine.ALL_DCLARE_MPS;
 
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -37,13 +37,9 @@ import org.jetbrains.mps.openapi.module.*;
 import org.jetbrains.mps.openapi.util.Consumer;
 import org.jetbrains.mps.openapi.util.ProgressMonitor;
 import org.modelingvalue.collections.*;
-import org.modelingvalue.collections.Collection;
-import org.modelingvalue.collections.Map;
-import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.*;
 import org.modelingvalue.collections.util.ContextThread.ContextPool;
 import org.modelingvalue.dclare.*;
-import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.ex.*;
 import org.modelingvalue.dclare.mps.DAttribute.DObservedAttribute;
 import org.modelingvalue.dclare.mps.DRule.DObserver;
@@ -64,7 +60,7 @@ import jetbrains.mps.project.*;
 import jetbrains.mps.smodel.language.LanguageRegistry;
 import jetbrains.mps.smodel.language.LanguageRuntime;
 
-public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, UncaughtExceptionHandler {
+public class DClareMPS implements Universe, UncaughtExceptionHandler {
 
     private static final String                                                                         CONNECT_SYNC_HOST_PORT  = System.getProperty("CONNECT_SYNC_HOST_PORT", null);
     private static final boolean                                                                        TRACE_MPS_MODEL_CHANGES = Boolean.getBoolean("TRACE_MPS_MODEL_CHANGES");
@@ -118,9 +114,13 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
     private LanguageEditorChecker                                                                       languageEditorChecker;
     private IAbstractChecker<ItemsToCheck, IssueKindReportItem>                                         mpsChecker;
     private SyncConnectionHandler                                                                       syncConnectionHandler;
+    private ObjectChanges                                                                               objectChanges;
     private Concurrent<Set<SModel>>                                                                     changedModels;
     private Concurrent<Set<SModule>>                                                                    changedModules;
     private Concurrent<Set<SNode>>                                                                      changedRoots;
+    private Set<SModel>                                                                                 allChangedModels;
+    private Set<SModule>                                                                                allChangedModules;
+    private Set<SNode>                                                                                  allChangedRoots;
 
     protected DClareMPS(DclareForMPSEngine engine, ProjectBase project, DclareForMpsConfig config) {
         this.config = config;
@@ -188,9 +188,9 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
     @Override
     public void init() {
         Universe.super.init();
-        imperativeTransaction = universeTransaction.addImperative("", this, r -> {
+        imperativeTransaction = universeTransaction.addImperative("", this::preCommit, this::commit, r -> {
             if (isRunning()) {
-                command(r);
+                modelAccess.runWriteInEDT(r);
             }
         }, false);
         imperativeTransaction.schedule(() -> REPOSITORY_CONTAINER.set(this, getRepository()));
@@ -208,13 +208,16 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
         if (config.isTraceDclare()) {
             System.err.println(DCLARE + "START " + this);
         }
+        objectChanges = new ObjectChanges();
         changedModels = Concurrent.of(Set.of());
-        changedModules = Concurrent.of(Set.of());
         changedRoots = Concurrent.of(Set.of());
+        allChangedModels = Set.of();
+        allChangedModules = Set.of();
+        allChangedRoots = Set.of();
         moduleChecker = new ModuleChecker();
         modelChecker = new ModelChecker();
         nodeChecker = new NodeChecker();
-        languageEditorChecker = new LanguageEditorChecker(dRepository.original(), Collections.singletonList(new NodeCheckerInEditor()));
+        languageEditorChecker = new LanguageEditorChecker(dRepository.original(), java.util.Collections.singletonList(new NodeCheckerInEditor()));
         CheckerRegistry checkerRegistry = project.getPlatform().findComponent(CheckerRegistry.class);
         assert checkerRegistry != null;
         checkerRegistry.registerChecker(moduleChecker);
@@ -222,7 +225,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
         checkerRegistry.registerChecker(nodeChecker);
         ModelsExtractorImpl modelExtractor = new ModelCheckerBuilder.ModelsExtractorImpl().excludeGenerators();
         @SuppressWarnings("RedundantCast") // strange double cast to satisfy javac
-        List<? extends IChecker<?, ? extends IssueKindReportItem>> checkers = (List<? extends IChecker<?, ? extends IssueKindReportItem>>) (List<IChecker<?, ?>>) checkerRegistry.getCheckers();
+        java.util.List<? extends IChecker<?, ? extends IssueKindReportItem>> checkers = (java.util.List<? extends IChecker<?, ? extends IssueKindReportItem>>) (java.util.List<IChecker<?, ?>>) checkerRegistry.getCheckers();
         mpsChecker = new DclareModelCheckerBuilder(this, modelExtractor).createChecker(checkers);
         Highlighter highlighter = project.getComponent(Highlighter.class);
         highlighter.addChecker(languageEditorChecker);
@@ -491,57 +494,148 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
         return instance().counter.getAndIncrement();
     }
 
+    private final class ObjectChanges extends Concurrent<List<BiConsumer<State, State>>> {
+
+        private ObjectChanges() {
+            super(List.of());
+        }
+
+        @Override
+        protected List<BiConsumer<State, State>> merge(List<BiConsumer<State, State>> base, List<BiConsumer<State, State>>[] branches, int l) {
+            List<BiConsumer<State, State>> result = base;
+            for (int i = 0; i < branches.length; i++) {
+                result = result.appendList(branches[i]);
+            }
+            return result;
+        }
+    }
+
+    private class CommitInfo {
+        private final List<BiConsumer<State, State>> changes;
+        private final Set<SModel>                    models;
+        private final Set<SModule>                   modules;
+        private final Set<SNode>                     roots;
+
+        public CommitInfo() {
+            this.changes = objectChanges.result();
+            this.models = changedModels.result();
+            this.modules = changedModules.result();
+            this.roots = changedRoots.result();
+            objectChanges.init(List.of());
+            changedModels.init(Set.of());
+            changedModules.init(Set.of());
+            changedRoots.init(Set.of());
+        }
+    }
+
     @SuppressWarnings({"unchecked", "rawtypes"})
-    @Override
-    public void accept(State pre, State post, Boolean last) {
+    private CommitInfo preCommit(State pre, State post, Boolean timeTraveling) {
+        if (isRunning() && !universeTransaction.isKilled()) {
+            pre.diff(post, o -> o instanceof DObject && !((DObject) o).isDclareOnly() && ((DObject) o).isActive()).forEach(e0 -> {
+                DObject dObject = (DObject) e0.getKey();
+                boolean external = dObject.isExternal();
+                boolean changed = false;
+                DefaultMap<Setable, Object> preProps = e0.getValue().a();
+                DefaultMap<Setable, Object> postProps = e0.getValue().b();
+                for (DObserved observed : dObject.dClass().dObserveds()) {
+                    if (observed instanceof DObservedAttribute || !external) {
+                        Object preVal = preProps.get(observed);
+                        Object postVal = postProps.get(observed);
+                        Object readVal = observed.fromMPS(dObject, preVal, postVal);
+                        if (!Objects.equals(readVal, postVal)) {
+                            objectChanges.change(l -> l.add((b, a) -> observed.toMPS(dObject, b.get(dObject, observed), a.get(dObject, observed))));
+                            changed = true;
+                            if (TRACE_MPS_MODEL_CHANGES && !(observed instanceof DObservedAttribute)) {
+                                System.err.println(DCLARE + "    MPS MODEL CHANGE: " + dObject + "." + observed + " = " + postVal);
+                            }
+                        }
+                    }
+                }
+                if (!dObject.isExternal() && (changed || (!isContained(pre, dObject) && isContained(post, dObject)))) {
+                    addChangedToModelCheck(dObject);
+                }
+            });
+        }
+        return new CommitInfo();
+    }
+
+    private static boolean isContained(State state, DObject dObject) {
+        return state.get(dObject, Mutable.D_PARENT_CONTAINING) != null;
+    }
+
+    private void addChangedToModelCheck(DObject dObject) {
+        if (dObject instanceof DModel) {
+            SModel sModel = ((DModel) dObject).tryOriginal();
+            if (sModel != null) {
+                changedModels.change(s -> s.add(sModel));
+            }
+        } else if (dObject instanceof DNode) {
+            DNode cont = ((DNode) dObject).getContainingRoot();
+            SNode root = cont != null ? cont.tryOriginal() : null;
+            if (root != null) {
+                changedRoots.change(s -> s.add(root));
+            }
+        } else if (dObject instanceof DModule) {
+            changedModules.change(s -> s.add(((DModule) dObject).original()));
+        }
+    }
+
+    private void commit(State pre, State post, Boolean last, CommitInfo info) {
         if (isRunning() && !universeTransaction.isKilled()) {
             if (config.isTraceDclare()) {
                 System.err.println(DCLARE + "    START COMMIT " + this);
             }
             committing.set(true);
             try {
-                pre.diff(post, o -> o instanceof DObject && !((DObject) o).isDclareOnly() && ((DObject) o).isActive()).forEachOrdered(e0 -> {
-                    DObject dObject = (DObject) e0.getKey();
-                    boolean changed = false;
-                    DefaultMap<Setable, Object> before = e0.getValue().a();
-                    DefaultMap<Setable, Object> after = e0.getValue().b();
-                    for (DObserved observed : dObject.dClass().dObserveds()) {
-                        if (observed instanceof DObservedAttribute || !dObject.isExternal()) {
-                            if (observed.toMPS(dObject, before.get(observed), after.get(observed))) {
-                                changed = true;
-                                if (TRACE_MPS_MODEL_CHANGES && !(observed instanceof DObservedAttribute)) {
-                                    System.err.println(DCLARE + "    MPS MODEL CHANGE: " + dObject + "." + observed + " = " + after.get(observed));
-                                }
-                            }
-                        }
-                    }
-                    if (!dObject.isExternal() && (changed || (post.get(dObject, Mutable.D_PARENT_CONTAINING) != null && //
-                    pre.get(dObject, Mutable.D_PARENT_CONTAINING) == null))) {
-                        if (dObject instanceof DModel) {
-                            SModel sModel = ((DModel) dObject).tryOriginal();
-                            if (sModel != null) {
-                                changedModels.change(s -> s.add(sModel));
-                            }
-                        } else if (dObject instanceof DNode) {
-                            SNode original = ((DNode) dObject).tryOriginal();
-                            SNode root = original != null ? original.getContainingRoot() : null;
-                            if (root != null) {
-                                changedRoots.change(s -> s.add(root));
-                            }
-                        } else if (dObject instanceof DModule) {
-                            changedModules.change(s -> s.add(((DModule) dObject).original()));
-                        }
-                    }
-                });
+                allChangedModels = allChangedModels.addAll(info.models);
+                allChangedModules = allChangedModules.addAll(info.modules);
+                allChangedRoots = allChangedRoots.addAll(info.roots);
+                info.changes.forEachOrdered(c -> c.accept(pre, post));
                 if (last) {
-                    runModelCheck();
+                    runModelCheck(allChangedModels, allChangedModules, allChangedRoots);
                 }
             } finally {
                 committing.set(false);
+                if (last) {
+                    allChangedModels = Set.of();
+                    allChangedModules = Set.of();
+                    allChangedRoots = Set.of();
+                }
                 if (config.isTraceDclare()) {
                     System.err.println(DCLARE + "    END COMMIT " + this);
                 }
             }
+        }
+    }
+
+    private void runModelCheck(Set<SModel> models, Set<SModule> modules, Set<SNode> roots) {
+        if (!models.isEmpty() || !modules.isEmpty() || !roots.isEmpty()) {
+            thePool.execute(() -> {
+                RootItemsToCheck itemsToCheck = new RootItemsToCheck();
+                itemsToCheck.models = models.collect(Collectors.toList());
+                itemsToCheck.modules = modules.collect(Collectors.toList());
+                itemsToCheck.roots = roots.filter(r -> r.getModel() != null).collect(Collectors.toList());
+                java.util.List<IssueKindReportItem> reportItems = new ArrayList<>();
+                SRepository repos = getRepository().original();
+                mpsChecker.check(itemsToCheck, repos, reportItems::add, new EmptyProgressMonitor());
+                imperativeTransaction.schedule(() -> {
+                    for (SModule sModule : modules) {
+                        DObject.MPS_ISSUES.set(DModule.of(sModule), DObject.MPS_ISSUES.getDefault());
+                    }
+                    for (SModel sModel : models) {
+                        DObject.MPS_ISSUES.set(DModel.of(sModel), DObject.MPS_ISSUES.getDefault());
+                    }
+                    for (SNode root : roots) {
+                        DNode.ALL_MPS_ISSUES.set(DNode.of(root), DNode.ALL_MPS_ISSUES.getDefault());
+                    }
+                    for (IssueKindReportItem item : reportItems) {
+                        DObject d = read(() -> context(item));
+                        if (d != null) {
+                            DObject.MPS_ISSUES.set(d, Set::add, Pair.of(d, item));
+                        }
+                    }
+                });
+            });
         }
     }
 
@@ -754,43 +848,6 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
         @Override
         public CheckerCategory getCategory() {
             return DIssue.CHECKER_CATEGORY;
-        }
-    }
-
-    private void runModelCheck() {
-        Set<SModel> models = changedModels.result();
-        Set<SModule> modules = changedModules.result();
-        Set<SNode> roots = changedRoots.result();
-        changedModels.init(Set.of());
-        changedModules.init(Set.of());
-        changedRoots.init(Set.of());
-        if (!models.isEmpty() || !modules.isEmpty() || !roots.isEmpty()) {
-            thePool.execute(() -> {
-                RootItemsToCheck itemsToCheck = new RootItemsToCheck();
-                itemsToCheck.models = models.collect(Collectors.toList());
-                itemsToCheck.modules = modules.collect(Collectors.toList());
-                itemsToCheck.roots = roots.filter(r -> r.getModel() != null).collect(Collectors.toList());
-                java.util.List<IssueKindReportItem> reportItems = new ArrayList<>();
-                SRepository repos = getRepository().original();
-                mpsChecker.check(itemsToCheck, repos, reportItems::add, new EmptyProgressMonitor());
-                imperativeTransaction.schedule(() -> {
-                    for (SModule sModule : modules) {
-                        DObject.MPS_ISSUES.set(DModule.of(sModule), DObject.MPS_ISSUES.getDefault());
-                    }
-                    for (SModel sModel : models) {
-                        DObject.MPS_ISSUES.set(DModel.of(sModel), DObject.MPS_ISSUES.getDefault());
-                    }
-                    for (SNode root : roots) {
-                        DNode.ALL_MPS_ISSUES.set(DNode.of(root), DNode.ALL_MPS_ISSUES.getDefault());
-                    }
-                    for (IssueKindReportItem item : reportItems) {
-                        DObject d = read(() -> context(item));
-                        if (d != null) {
-                            DObject.MPS_ISSUES.set(d, Set::add, Pair.of(d, item));
-                        }
-                    }
-                });
-            });
         }
     }
 
