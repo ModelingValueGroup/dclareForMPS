@@ -210,6 +210,7 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
         }
         objectChanges = new ObjectChanges();
         changedModels = Concurrent.of(Set.of());
+        changedModules = Concurrent.of(Set.of());
         changedRoots = Concurrent.of(Set.of());
         allChangedModels = Set.of();
         allChangedModules = Set.of();
