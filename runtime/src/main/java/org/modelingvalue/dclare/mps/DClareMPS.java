@@ -190,7 +190,7 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
         Universe.super.init();
         imperativeTransaction = universeTransaction.addImperative("", this::preCommit, this::commit, r -> {
             if (isRunning()) {
-                modelAccess.runWriteInEDT(r);
+                command(r);
             }
         }, false);
         imperativeTransaction.schedule(() -> REPOSITORY_CONTAINER.set(this, getRepository()));
