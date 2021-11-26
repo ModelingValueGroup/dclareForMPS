@@ -74,8 +74,8 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
                                                                                                                 return sModel != null ? DModel.roots(sModel).sequential().map(DNode::of).toSet() : post;
                                                                                                             }, (dModel, pre, post) -> {
                                                                                                                 SModel sModel = dModel.original();
-                                                                                                                Set<SNode> soll = post.map(r -> r.reParent(sModel, null, r.original())).toSet();
-                                                                                                                Set<SNode> ist = pre.map(DNode::original).toSet();
+                                                                                                                Set<SNode> soll = post.sequential().map(r -> r.reParent(sModel, null, r.original())).toSet();
+                                                                                                                Set<SNode> ist = pre.sequential().map(DNode::original).toSet();
                                                                                                                 DObserved.map(ist, soll, sModel::addRootNode, sModel::removeRootNode);
                                                                                                             }, (t, m, b, a) -> {
                                                                                                                 if (!m.isExternal() && b.isEmpty() && !a.isEmpty()) {

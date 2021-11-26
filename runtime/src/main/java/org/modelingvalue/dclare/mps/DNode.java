@@ -99,8 +99,8 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                               return sNode != null ? children(sNode, mc).map(DNode::of).toList() : List.of();
                                                                                                                                           }, (dNode, pre, post) -> {
                                                                                                                                               SNode sNode = dNode.reParent();
-                                                                                                                                              List<SNode> soll = post.map(c -> c.reParent(sNode, mc, c.original())).toList();
-                                                                                                                                              List<SNode> ist = pre.map(c -> c.original()).toList();
+                                                                                                                                              List<SNode> soll = post.sequential().map(c -> c.reParent(sNode, mc, c.original())).toList();
+                                                                                                                                              List<SNode> ist = pre.sequential().map(c -> c.original()).toList();
                                                                                                                                               DObserved.map(ist, soll, (n, a) -> {
                                                                                                                                               }, sNode::removeChild);
                                                                                                                                               DObserved.map(children(sNode, mc), soll, (n, a) -> sNode.insertChildAfter(mc, n, a), r -> {
