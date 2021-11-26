@@ -90,7 +90,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                               return sNode != null ? sNode.getProperty(sp) : null;
                                                                                                                                           }, (dNode, pre, post) -> {
                                                                                                                                               SNode sNode = dNode.original();
-                                                                                                                                              sNode.setProperty(pre, post);
+                                                                                                                                              sNode.setProperty(sp, post);
                                                                                                                                           }, sp::getDeclarationNode));
 
     @SuppressWarnings("deprecation")

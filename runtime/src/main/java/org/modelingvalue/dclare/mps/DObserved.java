@@ -80,7 +80,7 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
 
     protected final void toMPS(O object, T pre, T post) {
         try {
-            toMPS.accept(object, pre, post);
+            toMPS.accept(object, fromMPS.apply(object, pre, post), post);
         } catch (Throwable t) {
             DObject.dClareMPS().addMessage(new ThrowableError(object, this, Instant.now(), t));
         }

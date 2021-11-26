@@ -581,7 +581,7 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
         }
     }
 
-    private void commit(State pre, State post, Boolean last, CommitInfo info) {
+    private void commit(State impr, State dclr, Boolean last, CommitInfo info) {
         if (isRunning() && !universeTransaction.isKilled()) {
             if (config.isTraceDclare()) {
                 System.err.println(DCLARE + "    START COMMIT " + this);
@@ -591,7 +591,7 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
                 allChangedModels = allChangedModels.addAll(info.models);
                 allChangedModules = allChangedModules.addAll(info.modules);
                 allChangedRoots = allChangedRoots.addAll(info.roots);
-                info.changes.forEachOrdered(c -> c.accept(pre, post));
+                info.changes.forEachOrdered(c -> c.accept(impr, dclr));
                 if (last) {
                     runModelCheck(allChangedModels, allChangedModules, allChangedRoots);
                 }
