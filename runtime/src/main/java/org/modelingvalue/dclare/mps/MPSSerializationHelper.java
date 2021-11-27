@@ -15,33 +15,36 @@
 
 package org.modelingvalue.dclare.mps;
 
-import org.jetbrains.mps.openapi.language.*;
-import org.jetbrains.mps.openapi.model.*;
-import org.jetbrains.mps.openapi.module.*;
-import org.jetbrains.mps.openapi.persistence.*;
-import org.modelingvalue.dclare.*;
-import org.modelingvalue.dclare.mps.DAttribute.*;
-import org.modelingvalue.dclare.sync.*;
-import org.modelingvalue.dclare.sync.SerialisationPool.*;
+import org.jetbrains.mps.openapi.language.SAbstractConcept;
+import org.jetbrains.mps.openapi.language.SConcept;
+import org.jetbrains.mps.openapi.language.SLanguage;
+import org.jetbrains.mps.openapi.model.SNodeReference;
+import org.jetbrains.mps.openapi.module.SModule;
+import org.jetbrains.mps.openapi.module.SModuleId;
+import org.jetbrains.mps.openapi.persistence.PersistenceFacade;
+import org.modelingvalue.collections.List;
+import org.modelingvalue.dclare.Mutable;
+import org.modelingvalue.dclare.Setable;
+import org.modelingvalue.dclare.mps.DAttribute.DObservedAttribute;
+import org.modelingvalue.dclare.sync.Converters;
+import org.modelingvalue.dclare.sync.SerialisationPool.BaseConverter;
+import org.modelingvalue.dclare.sync.SerializationHelperWithPool;
+import org.modelingvalue.dclare.sync.Util;
 
-import java.util.function.*;
-import java.util.stream.*;
+import java.util.function.Predicate;
 
-import jetbrains.mps.project.*;
+import jetbrains.mps.project.ProjectRepository;
 
 public class MPSSerializationHelper extends SerializationHelperWithPool<DObjectType<DObject>, DObject, DObserved<DObject, Object>> {
     public MPSSerializationHelper(ProjectRepository repos) {
-        super(Stream.concat(Converters.ALL,
-                        Stream.of(
-                                new DObservedConverter(),
-                                new DModuleConverter(repos),
-                                new DModelConverter(),
-                                new DNodeConverter(),
-                                new SConceptConverter(),
-                                new SLanguageConverter()
-                        )
-                )
-        );
+        super(Converters.ALL.appendList(List.of(
+                new DObservedConverter(),
+                new DModuleConverter(repos),
+                new DModelConverter(),
+                new DNodeConverter(),
+                new SConceptConverter(),
+                new SLanguageConverter()
+        )));
     }
 
     private static PersistenceFacade mpsPersist() {
