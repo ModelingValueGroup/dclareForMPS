@@ -69,18 +69,17 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                               exclude(SNodeUtil.concept_BaseConcept.getContainmentLinks()::contains).toSet();
                                                                                                                                           });
 
-    protected static final Observed<DNode, DModel>                                                                 MODEL                  = Observed.of("$MODEL", null, synthetic);
+    protected static final DObserved<DNode, DModel>                                                                MODEL                  = DObserved.of("$MODEL", null, (dNode, pre, post) -> {
+                                                                                                                                              SNode sNode = dNode.tryOriginal();
+                                                                                                                                              SModel sModel = sNode != null ? sNode.getModel() : null;
+                                                                                                                                              return sModel != null ? DModel.of(sModel) : null;
+                                                                                                                                          }, null, synthetic);
 
-    protected static final Observed<DNode, DNode>                                                                  ROOT                   = Observed.of("$ROOT", null, (tx, o, pre, post) -> {
-                                                                                                                                              Set<Pair<DObject, IssueKindReportItem>> items = MPS_ISSUES.get(o);
-                                                                                                                                              if (pre != null) {
-                                                                                                                                                  DNode.ALL_MPS_ISSUES.set(pre, Set::removeAll, items);
-                                                                                                                                              }
-                                                                                                                                              if (post != null) {
-                                                                                                                                                  DNode.ALL_MPS_ISSUES.set(post, Set::addAll, items);
-                                                                                                                                              }
-                                                                                                                                          }, synthetic);
-
+    protected static final DObserved<DNode, DNode>                                                                 ROOT                   = DObserved.of("$ROOT", null, (dNode, pre, post) -> {
+                                                                                                                                              SNode sNode = dNode.tryOriginal();
+                                                                                                                                              SNode sRoot = sNode != null ? sNode.getContainingRoot() : null;
+                                                                                                                                              return sRoot != null ? DNode.of(sRoot) : null;
+                                                                                                                                          }, null, synthetic);
     @SuppressWarnings({"unchecked", "rawtypes"})
     protected static final DObserved<DNode, Map<Object, Object>>                                                   USER_OBJECTS           = DObserved.of("USER_OBJECTS", Map.of(), (TriFunction) null, (TriConsumer) null);
 

@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -114,7 +113,8 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
     private LanguageEditorChecker                                                                       languageEditorChecker;
     private IAbstractChecker<ItemsToCheck, IssueKindReportItem>                                         mpsChecker;
     private SyncConnectionHandler                                                                       syncConnectionHandler;
-    private ObjectChanges                                                                               objectChanges;
+    @SuppressWarnings("rawtypes")
+    private Concurrent<Set<Pair<DObject, DObserved>>>                                                   objectChanges;
     private Concurrent<Set<SModel>>                                                                     changedModels;
     private Concurrent<Set<SModule>>                                                                    changedModules;
     private Concurrent<Set<SNode>>                                                                      changedRoots;
@@ -208,7 +208,7 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
         if (config.isTraceDclare()) {
             System.err.println(DCLARE + "START " + this);
         }
-        objectChanges = new ObjectChanges();
+        objectChanges = Concurrent.of(Set.of());
         changedModels = Concurrent.of(Set.of());
         changedModules = Concurrent.of(Set.of());
         changedRoots = Concurrent.of(Set.of());
@@ -495,34 +495,19 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
         return instance().counter.getAndIncrement();
     }
 
-    private final class ObjectChanges extends Concurrent<List<BiConsumer<State, State>>> {
-
-        private ObjectChanges() {
-            super(List.of());
-        }
-
-        @Override
-        protected List<BiConsumer<State, State>> merge(List<BiConsumer<State, State>> base, List<BiConsumer<State, State>>[] branches, int l) {
-            List<BiConsumer<State, State>> result = base;
-            for (int i = 0; i < branches.length; i++) {
-                result = result.appendList(branches[i]);
-            }
-            return result;
-        }
-    }
-
     private class CommitInfo {
-        private final List<BiConsumer<State, State>> changes;
-        private final Set<SModel>                    models;
-        private final Set<SModule>                   modules;
-        private final Set<SNode>                     roots;
+        @SuppressWarnings("rawtypes")
+        private final Set<Pair<DObject, DObserved>> changes;
+        private final Set<SModel>                   models;
+        private final Set<SModule>                  modules;
+        private final Set<SNode>                    roots;
 
         public CommitInfo() {
             this.changes = objectChanges.result();
             this.models = changedModels.result();
             this.modules = changedModules.result();
             this.roots = changedRoots.result();
-            objectChanges.init(List.of());
+            objectChanges.init(Set.of());
             changedModels.init(Set.of());
             changedModules.init(Set.of());
             changedRoots.init(Set.of());
@@ -531,56 +516,35 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     private CommitInfo preCommit(State pre, State post, Boolean timeTraveling) {
-        if (isRunning() && !universeTransaction.isKilled()) {
-            pre.diff(post, o -> o instanceof DObject && !((DObject) o).isDclareOnly() && ((DObject) o).isActive()).forEach(e0 -> {
-                DObject dObject = (DObject) e0.getKey();
-                boolean external = dObject.isExternal();
-                boolean changed = false;
-                DefaultMap<Setable, Object> preProps = e0.getValue().a();
-                DefaultMap<Setable, Object> postProps = e0.getValue().b();
-                for (DObserved observed : dObject.dClass().dObserveds()) {
-                    if (observed instanceof DObservedAttribute || !external) {
-                        Object preVal = preProps.get(observed);
-                        Object postVal = postProps.get(observed);
-                        Object readVal = observed.fromMPS(dObject, preVal, postVal);
-                        if (!Objects.equals(readVal, postVal)) {
-                            objectChanges.change(l -> l.add((b, a) -> observed.toMPS(dObject, b.get(dObject, observed), a.get(dObject, observed))));
-                            changed = true;
-                            if (TRACE_MPS_MODEL_CHANGES && !(observed instanceof DObservedAttribute)) {
-                                System.err.println(DCLARE + "    MPS MODEL CHANGE: " + dObject + "." + observed + " = " + postVal);
-                            }
-                        }
-                    }
-                }
-                if (!dObject.isExternal() && (changed || (!isContained(pre, dObject) && isContained(post, dObject)))) {
-                    addChangedToModelCheck(dObject);
-                }
-            });
-        }
         return new CommitInfo();
     }
 
-    private static boolean isContained(State state, DObject dObject) {
-        return state.get(dObject, Mutable.D_PARENT_CONTAINING) != null;
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    protected void addObjectChange(DObject dObject, DObserved observed) {
+        objectChanges.change(l -> l.add(Pair.of(dObject, observed)));
+        addChangedToModelCheck(dObject);
     }
 
-    private void addChangedToModelCheck(DObject dObject) {
-        if (dObject instanceof DModel) {
-            SModel sModel = ((DModel) dObject).tryOriginal();
-            if (sModel != null) {
-                changedModels.change(s -> s.add(sModel));
+    protected void addChangedToModelCheck(DObject dObject) {
+        if (!dObject.isExternal()) {
+            if (dObject instanceof DModel) {
+                SModel sModel = ((DModel) dObject).tryOriginal();
+                if (sModel != null) {
+                    changedModels.change(s -> s.add(sModel));
+                }
+            } else if (dObject instanceof DNode) {
+                DNode cont = ((DNode) dObject).getContainingRoot();
+                SNode root = cont != null ? cont.tryOriginal() : null;
+                if (root != null) {
+                    changedRoots.change(s -> s.add(root));
+                }
+            } else if (dObject instanceof DModule) {
+                changedModules.change(s -> s.add(((DModule) dObject).original()));
             }
-        } else if (dObject instanceof DNode) {
-            DNode cont = ((DNode) dObject).getContainingRoot();
-            SNode root = cont != null ? cont.tryOriginal() : null;
-            if (root != null) {
-                changedRoots.change(s -> s.add(root));
-            }
-        } else if (dObject instanceof DModule) {
-            changedModules.change(s -> s.add(((DModule) dObject).original()));
         }
     }
 
+    @SuppressWarnings("unchecked")
     private void commit(State impr, State dclr, Boolean last, CommitInfo info) {
         if (isRunning() && !universeTransaction.isKilled()) {
             if (config.isTraceDclare()) {
@@ -591,7 +555,16 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
                 allChangedModels = allChangedModels.addAll(info.models);
                 allChangedModules = allChangedModules.addAll(info.modules);
                 allChangedRoots = allChangedRoots.addAll(info.roots);
-                info.changes.forEachOrdered(c -> c.accept(impr, dclr));
+                info.changes.forEachOrdered(c -> {
+                    Object preVal = impr.get(c.a(), c.b());
+                    Object postVal = dclr.get(c.a(), c.b());
+                    if (!Objects.equals(preVal, postVal)) {
+                        c.b().toMPS(c.a(), preVal, postVal);
+                        if (TRACE_MPS_MODEL_CHANGES && !(c.b() instanceof DObservedAttribute)) {
+                            System.err.println(DCLARE + "    MPS MODEL CHANGE: " + c.a() + "." + c.b() + " = " + postVal);
+                        }
+                    }
+                });
                 if (last) {
                     runModelCheck(allChangedModels, allChangedModules, allChangedRoots);
                 }
@@ -667,7 +640,7 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
 
     public <T> T getOrDerive(Supplier<T> supplier) {
         ImperativeTransaction it = imperativeTransaction;
-        return (it != null ? it.state() : universeTransaction.lastState()).derive(supplier);
+        return (it != null ? it.state() : universeTransaction.preState()).derive(supplier);
     }
 
     public static DClareMPS dClareForObject(Object sObject) {

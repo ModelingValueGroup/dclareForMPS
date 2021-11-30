@@ -84,12 +84,14 @@ public interface DAttribute<O, T> extends DFeature {
         private final boolean   indetifying;
 
         public DObservedAttribute(Object id, String name, boolean indetifying, V def, Class<?> cls, Supplier<Setable<?, ?>> opposite, Supplier<SNode> source, SProperty sProperty, SetableModifier... modifiers) {
-            super(id, def, opposite, (o, b, a) -> {
+            super(id, def, opposite, null, source, modifiers);
+            setFromToMPS((o, b, a) -> {
                 if (o instanceof DNode && !Objects.equals(b, a)) {
                     SNode sNode = ((DNode) o).tryOriginal();
                     SModel sModel = sNode != null ? sNode.getModel() : null;
                     if (sModel instanceof EditableSModel) {
-                        return b;
+                        State preState = LeafTransaction.getCurrent().universeTransaction().preState();
+                        return preState.derive(() -> superGet(o));
                     }
                 }
                 return a;
@@ -100,7 +102,7 @@ public interface DAttribute<O, T> extends DFeature {
                 sNode.setProperty(sProperty, "");
                 sNode.setProperty(sProperty, null);
                 ((EditableSModel) sModel).setChanged(changed);
-            }, null, source, modifiers);
+            });
             this.name = name;
             this.cls = cls;
             this.sProperty = sProperty;
@@ -146,7 +148,7 @@ public interface DAttribute<O, T> extends DFeature {
                     DModel.ACTIVE.set(dModel, Boolean.TRUE);
                 }
             }
-            return super.get(object);
+            return superGet(object);
         }
 
         @SuppressWarnings("unchecked")

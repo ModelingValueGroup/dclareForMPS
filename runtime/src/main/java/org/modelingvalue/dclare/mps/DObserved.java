@@ -16,6 +16,7 @@
 package org.modelingvalue.dclare.mps;
 
 import java.time.Instant;
+import java.util.Objects;
 import java.util.function.*;
 
 import org.jetbrains.mps.openapi.model.SNode;
@@ -23,6 +24,7 @@ import org.modelingvalue.collections.*;
 import org.modelingvalue.collections.util.*;
 import org.modelingvalue.dclare.*;
 import org.modelingvalue.dclare.ex.ThrowableError;
+import org.modelingvalue.dclare.mps.DAttribute.DObservedAttribute;
 
 @SuppressWarnings("unused")
 public class DObserved<O extends DObject, T> extends Observed<O, T> implements DFeature {
@@ -51,16 +53,25 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
         return new DObserved<>(id, def, opposite, fromPMS, toMPS, changed, source, modifiers);
     }
 
-    private final TriFunction<O, T, T, T> fromMPS;
-    private final TriConsumer<O, T, T>    toMPS;
-    private final Supplier<SNode>         source;
-    private final Action<O>               readAction;
+    private TriFunction<O, T, T, T> fromMPS;
+    private TriConsumer<O, T, T>    toMPS;
+    private final Supplier<SNode>   source;
+    private Action<O>               readAction;
 
-    protected DObserved(Object id, T def, Supplier<Setable<?, ?>> opposite, TriFunction<O, T, T, T> fromMPS, TriConsumer<O, T, T> toMPS, QuadConsumer<LeafTransaction, O, T, T> changed, Supplier<SNode> source, SetableModifier... modifiers) {
+    private DObserved(Object id, T def, Supplier<Setable<?, ?>> opposite, TriFunction<O, T, T, T> fromMPS, TriConsumer<O, T, T> toMPS, QuadConsumer<LeafTransaction, O, T, T> changed, Supplier<SNode> source, SetableModifier... modifiers) {
         super(id, def, opposite, null, changed, modifiers);
+        this.source = source;
+        setFromToMPS(fromMPS, toMPS);
+    }
+
+    protected DObserved(Object id, T def, Supplier<Setable<?, ?>> opposite, QuadConsumer<LeafTransaction, O, T, T> changed, Supplier<SNode> source, SetableModifier... modifiers) {
+        super(id, def, opposite, null, changed, modifiers);
+        this.source = source;
+    }
+
+    protected final void setFromToMPS(TriFunction<O, T, T, T> fromMPS, TriConsumer<O, T, T> toMPS) {
         this.fromMPS = fromMPS;
         this.toMPS = toMPS;
-        this.source = source;
         this.readAction = fromMPS != null ? Action.of(Pair.of("$READ", id), o -> set(o, fromMPS(o, pre(o), get(o))), Priority.urgent) : null;
     }
 
@@ -109,6 +120,25 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
         } else {
             return super.get(object);
         }
+    }
+
+    protected T superGet(O object) {
+        return super.get(object);
+    }
+
+    @Override
+    public T set(O dObject, T postVal) {
+        T preVal = super.set(dObject, postVal);
+        if (!isDclareOnly() && !Objects.equals(preVal, postVal) && LeafTransaction.getCurrent() instanceof ObserverTransaction && !dObject.isDclareOnly() && dObject.isActive()) {
+            boolean external = dObject.isExternal();
+            if (this instanceof DObservedAttribute || !external) {
+                Object readVal = fromMPS(dObject, preVal, postVal);
+                if (!Objects.equals(readVal, postVal)) {
+                    DClareMPS.instance().addObjectChange(dObject, this);
+                }
+            }
+        }
+        return preVal;
     }
 
     public static <T> void map(Set<T> ist, Set<T> soll, Consumer<T> add, Consumer<T> remove) {
