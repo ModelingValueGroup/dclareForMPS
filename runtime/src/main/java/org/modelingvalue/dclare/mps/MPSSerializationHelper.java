@@ -21,25 +21,26 @@ import org.jetbrains.mps.openapi.module.*;
 import org.jetbrains.mps.openapi.persistence.*;
 import org.modelingvalue.dclare.*;
 import org.modelingvalue.dclare.mps.DAttribute.*;
-import org.modelingvalue.dclare.sync.Converters.*;
-import org.modelingvalue.dclare.sync.SerialisationPool.*;
 import org.modelingvalue.dclare.sync.*;
+import org.modelingvalue.dclare.sync.SerialisationPool.*;
 
 import java.util.function.*;
+import java.util.stream.*;
 
 import jetbrains.mps.project.*;
 
 public class MPSSerializationHelper extends SerializationHelperWithPool<DObjectType<DObject>, DObject, DObserved<DObject, Object>> {
     public MPSSerializationHelper(ProjectRepository repos) {
-        super(
-                new DObservedConverter(),
-                new DModuleConverter(repos),
-                new DModelConverter(),
-                new DNodeConverter(),
-                new SConceptConverter(),
-                new SLanguageConverter(),
-                new ImmutableListConverter(),
-                new ImmutableSetConverter()
+        super(Stream.concat(Converters.ALL,
+                        Stream.of(
+                                new DObservedConverter(),
+                                new DModuleConverter(repos),
+                                new DModelConverter(),
+                                new DNodeConverter(),
+                                new SConceptConverter(),
+                                new SLanguageConverter()
+                        )
+                )
         );
     }
 

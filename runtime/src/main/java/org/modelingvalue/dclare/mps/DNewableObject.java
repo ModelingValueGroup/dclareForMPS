@@ -84,7 +84,8 @@ public abstract class DNewableObject<T extends DNewableObject, R, S> extends DId
 
     private Construction getQuotationConstruction(String anonymousType) {
         for (Construction c : dDerivedConstructions()) {
-            if (c.reason() instanceof DQuotation && ((DQuotation) c.reason()).getAnonymousType() == anonymousType) {
+            if (c.reason() instanceof DQuotation && ((DQuotation) c.reason()).getAnonymousType() == anonymousType && //
+                    !Newable.D_SUPER_POSITION.get(this).contains(c.reason().direction())) {
                 return c;
             }
         }

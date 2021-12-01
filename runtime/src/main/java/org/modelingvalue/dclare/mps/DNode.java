@@ -209,7 +209,8 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
     public static Observer<DNode> copyObserver(SLanguage copyLang, DObserved<DNode, ?> observed, TriConsumer<DNode, DNode, DCopy> action) {
         return DCopyObserver.of(observed, t -> {
             for (Construction c : t.dDerivedConstructions()) {
-                if (c.reason() instanceof DCopy && ((DCopy) c.reason()).getAnonymousLanguage().equals(copyLang)) {
+                if (c.reason() instanceof DCopy && ((DCopy) c.reason()).getAnonymousLanguage().equals(copyLang) && //
+                !Newable.D_SUPER_POSITION.get(t).contains(c.reason().direction())) {
                     DCopy reason = (DCopy) c.reason();
                     action.accept(t, reason.copied(), reason.root());
                 }
