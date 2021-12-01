@@ -15,30 +15,18 @@
 
 package org.modelingvalue.dclare.mps;
 
-import static org.modelingvalue.dclare.CoreSetableModifier.containment;
-import static org.modelingvalue.dclare.CoreSetableModifier.mandatory;
-import static org.modelingvalue.dclare.CoreSetableModifier.synthetic;
+import static org.modelingvalue.dclare.CoreSetableModifier.*;
 
 import java.util.Collections;
 import java.util.Objects;
-import java.util.function.BiFunction;
-import java.util.function.Function;
-import java.util.function.Supplier;
+import java.util.function.*;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.jetbrains.mps.openapi.language.SProperty;
-import org.jetbrains.mps.openapi.model.EditableSModel;
-import org.jetbrains.mps.openapi.model.SModel;
-import org.jetbrains.mps.openapi.model.SNode;
+import org.jetbrains.mps.openapi.model.*;
 import org.modelingvalue.collections.ContainingCollection;
-import org.modelingvalue.dclare.Constant;
-import org.modelingvalue.dclare.CoreSetableModifier;
-import org.modelingvalue.dclare.DerivationTransaction;
-import org.modelingvalue.dclare.LeafTransaction;
-import org.modelingvalue.dclare.ReadOnlyTransaction;
-import org.modelingvalue.dclare.Setable;
-import org.modelingvalue.dclare.SetableModifier;
-import org.modelingvalue.dclare.mps.DRule.DObserverTransaction;
+import org.modelingvalue.dclare.*;
+import org.modelingvalue.dclare.ex.CircularDerivationException;
 
 import jetbrains.mps.smodel.adapter.structure.property.InvalidProperty;
 
@@ -96,7 +84,8 @@ public interface DAttribute<O, T> extends DFeature {
         private final boolean   indetifying;
 
         public DObservedAttribute(Object id, String name, boolean indetifying, V def, Class<?> cls, Supplier<Setable<?, ?>> opposite, Supplier<SNode> source, SProperty sProperty, SetableModifier... modifiers) {
-            super(id, def, opposite, null, (o, b, a) -> {
+            super(id, def, opposite, null, source, modifiers);
+            setFromToMPS(null, (o, b, a) -> {
                 if (o instanceof DNode && !Objects.equals(b, a)) {
                     SNode sNode = ((DNode) o).tryOriginal();
                     SModel sModel = sNode != null ? sNode.getModel() : null;
@@ -109,7 +98,7 @@ public interface DAttribute<O, T> extends DFeature {
                     }
                 }
                 return false;
-            }, null, source, modifiers);
+            });
             this.name = name;
             this.cls = cls;
             this.sProperty = sProperty;
@@ -149,10 +138,17 @@ public interface DAttribute<O, T> extends DFeature {
                 if (original != null) {
                     original.getProperty(sProperty);
                 }
-            } else if (tx instanceof DObserverTransaction && (object instanceof DModel || object instanceof DNode)) {
-                DModel dModel = object instanceof DModel ? (DModel) object : ((DNode) object).getDModelFromMPS();
-                if (dModel != null && !DModel.TYPE.get(dModel).getLanguages().isEmpty()) {
-                    DModel.ACTIVE.set(dModel, Boolean.TRUE);
+            }
+            if (!(tx instanceof DerivationTransaction) && !object.isActive()) {
+                try {
+                    return tx.universeTransaction().emptyState().derive(() -> super.get(object));
+                } catch (CircularDerivationException e) {
+                    if (object instanceof DModel || object instanceof DNode) {
+                        DModel dModel = object instanceof DModel ? (DModel) object : ((DNode) object).getDModelFromMPS();
+                        if (dModel != null && !DModel.TYPE.get(dModel).getLanguages().isEmpty()) {
+                            DModel.ACTIVE.set(dModel, Boolean.TRUE);
+                        }
+                    }
                 }
             }
             return super.get(object);

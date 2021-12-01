@@ -16,23 +16,13 @@
 package org.modelingvalue.dclare.mps;
 
 import java.time.Instant;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Supplier;
+import java.util.function.*;
 
 import org.jetbrains.mps.openapi.model.SNode;
-import org.modelingvalue.collections.Entry;
-import org.modelingvalue.collections.List;
-import org.modelingvalue.collections.Map;
-import org.modelingvalue.collections.Set;
+import org.modelingvalue.collections.*;
 import org.modelingvalue.collections.util.QuadConsumer;
 import org.modelingvalue.collections.util.TriFunction;
-import org.modelingvalue.dclare.DerivationTransaction;
-import org.modelingvalue.dclare.LeafTransaction;
-import org.modelingvalue.dclare.Observed;
-import org.modelingvalue.dclare.Setable;
-import org.modelingvalue.dclare.SetableModifier;
+import org.modelingvalue.dclare.*;
 import org.modelingvalue.dclare.ex.ThrowableError;
 
 @SuppressWarnings("unused")
@@ -82,15 +72,24 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
         return new DObserved<>(id, def, opposite, fromPMS, toMPS, changed, source, modifiers);
     }
 
-    private final Function<O, T>                fromMPS;
-    private final TriFunction<O, T, T, Boolean> toMPS;
-    private final Supplier<SNode>               source;
+    private Function<O, T>                fromMPS;
+    private TriFunction<O, T, T, Boolean> toMPS;
+    private final Supplier<SNode>         source;
 
-    protected DObserved(Object id, T def, Supplier<Setable<?, ?>> opposite, Function<O, T> fromMPS, TriFunction<O, T, T, Boolean> toMPS, QuadConsumer<LeafTransaction, O, T, T> changed, Supplier<SNode> source, SetableModifier... modifiers) {
+    private DObserved(Object id, T def, Supplier<Setable<?, ?>> opposite, Function<O, T> fromMPS, TriFunction<O, T, T, Boolean> toMPS, QuadConsumer<LeafTransaction, O, T, T> changed, Supplier<SNode> source, SetableModifier... modifiers) {
         super(id, def, opposite, null, changed, modifiers);
+        setFromToMPS(fromMPS, toMPS);
+        this.source = source;
+    }
+
+    protected DObserved(Object id, T def, Supplier<Setable<?, ?>> opposite, QuadConsumer<LeafTransaction, O, T, T> changed, Supplier<SNode> source, SetableModifier... modifiers) {
+        super(id, def, opposite, null, changed, modifiers);
+        this.source = source;
+    }
+
+    protected void setFromToMPS(Function<O, T> fromMPS, TriFunction<O, T, T, Boolean> toMPS) {
         this.fromMPS = fromMPS != null ? o -> DObject.dClareMPS().read(() -> fromMPS.apply(o)) : null;
         this.toMPS = toMPS;
-        this.source = source;
     }
 
     public boolean isComposite() {
