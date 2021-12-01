@@ -72,7 +72,9 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
     protected final void setFromToMPS(TriFunction<O, T, T, T> fromMPS, TriConsumer<O, T, T> toMPS) {
         this.fromMPS = fromMPS;
         this.toMPS = toMPS;
-        this.readAction = fromMPS != null ? Action.of(Pair.of("$READ", id), o -> set(o, fromMPS(o, pre(o), get(o))), Priority.urgent) : null;
+        this.readAction = fromMPS != null ? new ReadAction<O>(Pair.of("$READ", id), o -> {
+            set(o, fromMPS(o, pre(o), get(o)));
+        }, Priority.urgent) : null;
     }
 
     public boolean isComposite() {
@@ -127,9 +129,9 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
     }
 
     @Override
-    public T set(O dObject, T postVal) {
-        T preVal = super.set(dObject, postVal);
-        if (!isDclareOnly() && !Objects.equals(preVal, postVal) && LeafTransaction.getCurrent() instanceof ObserverTransaction && !dObject.isDclareOnly() && dObject.isActive()) {
+    protected void changed(LeafTransaction tx, O dObject, T preVal, T postVal) {
+        super.changed(tx, dObject, preVal, postVal);
+        if (!isDclareOnly() && !(tx.leaf() instanceof ReadAction) && !dObject.isDclareOnly() && dObject.isActive()) {
             boolean external = dObject.isExternal();
             if (this instanceof DObservedAttribute || !external) {
                 Object readVal = fromMPS(dObject, preVal, postVal);
@@ -138,7 +140,6 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
                 }
             }
         }
-        return preVal;
     }
 
     public static <T> void map(Set<T> ist, Set<T> soll, Consumer<T> add, Consumer<T> remove) {
@@ -201,6 +202,14 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
 
     public boolean isDclareOnly() {
         return toMPS == null;
+    }
+
+    public static class ReadAction<O extends DObject> extends Action<O> {
+
+        protected ReadAction(Object id, Consumer<O> action, Priority initPriority) {
+            super(id, action, initPriority);
+        }
+
     }
 
 }
