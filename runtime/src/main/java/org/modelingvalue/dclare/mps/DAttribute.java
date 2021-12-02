@@ -26,7 +26,7 @@ import org.jetbrains.mps.openapi.language.SProperty;
 import org.jetbrains.mps.openapi.model.*;
 import org.modelingvalue.collections.ContainingCollection;
 import org.modelingvalue.dclare.*;
-import org.modelingvalue.dclare.mps.DRule.DObserverTransaction;
+import org.modelingvalue.dclare.ex.CircularDerivationException;
 
 import jetbrains.mps.smodel.adapter.structure.property.InvalidProperty;
 
@@ -142,10 +142,18 @@ public interface DAttribute<O, T> extends DFeature {
                 if (original != null) {
                     original.getProperty(sProperty);
                 }
-            } else if (tx instanceof DObserverTransaction && (object instanceof DModel || object instanceof DNode)) {
-                DModel dModel = object instanceof DModel ? (DModel) object : ((DNode) object).getDModelFromMPS();
-                if (dModel != null && !DModel.TYPE.get(dModel).getLanguages().isEmpty()) {
-                    DModel.ACTIVE.set(dModel, Boolean.TRUE);
+            }
+            if (!(tx instanceof DerivationTransaction) && !object.isActive()) {
+                try {
+                    State preState = tx.universeTransaction().preState();
+                    return preState.derive(() -> superGet(object));
+                } catch (CircularDerivationException e) {
+                    if (object instanceof DModel || object instanceof DNode) {
+                        DModel dModel = object instanceof DModel ? (DModel) object : ((DNode) object).getDModelFromMPS();
+                        if (dModel != null && !DModel.TYPE.get(dModel).getLanguages().isEmpty()) {
+                            DModel.ACTIVE.set(dModel, Boolean.TRUE);
+                        }
+                    }
                 }
             }
             return superGet(object);
