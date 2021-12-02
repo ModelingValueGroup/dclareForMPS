@@ -15,20 +15,31 @@
 
 package org.modelingvalue.dclare.mps;
 
-import static org.modelingvalue.dclare.CoreSetableModifier.*;
+import org.jetbrains.mps.openapi.language.SLanguage;
+import org.jetbrains.mps.openapi.language.SProperty;
+import org.jetbrains.mps.openapi.model.EditableSModel;
+import org.jetbrains.mps.openapi.model.SModel;
+import org.jetbrains.mps.openapi.model.SNode;
+import org.modelingvalue.collections.ContainingCollection;
+import org.modelingvalue.dclare.Constant;
+import org.modelingvalue.dclare.CoreSetableModifier;
+import org.modelingvalue.dclare.DerivationTransaction;
+import org.modelingvalue.dclare.LeafTransaction;
+import org.modelingvalue.dclare.ReadOnlyTransaction;
+import org.modelingvalue.dclare.Setable;
+import org.modelingvalue.dclare.SetableModifier;
 
 import java.util.Collections;
 import java.util.Objects;
-import java.util.function.*;
-
-import org.jetbrains.mps.openapi.language.SLanguage;
-import org.jetbrains.mps.openapi.language.SProperty;
-import org.jetbrains.mps.openapi.model.*;
-import org.modelingvalue.collections.ContainingCollection;
-import org.modelingvalue.dclare.*;
-import org.modelingvalue.dclare.ex.CircularDerivationException;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 import jetbrains.mps.smodel.adapter.structure.property.InvalidProperty;
+
+import static org.modelingvalue.dclare.CoreSetableModifier.containment;
+import static org.modelingvalue.dclare.CoreSetableModifier.mandatory;
+import static org.modelingvalue.dclare.CoreSetableModifier.synthetic;
 
 @SuppressWarnings({"rawtypes", "unused"})
 public interface DAttribute<O, T> extends DFeature {
@@ -140,16 +151,7 @@ public interface DAttribute<O, T> extends DFeature {
                 }
             }
             if (!(tx instanceof DerivationTransaction) && !object.isActive()) {
-                try {
-                    return tx.universeTransaction().emptyState().derive(() -> super.get(object));
-                } catch (CircularDerivationException e) {
-                    if (object instanceof DModel || object instanceof DNode) {
-                        DModel dModel = object instanceof DModel ? (DModel) object : ((DNode) object).getDModelFromMPS();
-                        if (dModel != null && !DModel.TYPE.get(dModel).getLanguages().isEmpty()) {
-                            DModel.ACTIVE.set(dModel, Boolean.TRUE);
-                        }
-                    }
-                }
+                return tx.universeTransaction().emptyState().derive(() -> super.get(object));
             }
             return super.get(object);
         }
