@@ -43,7 +43,7 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
 
     private static final Constant<Pair<Boolean, Set<SLanguage>>, DModuleType> MODULE_TYPE    = Constant.of("MODULE_TYPE", DModuleType::new);
 
-    protected static final DObserved<DModule, Set<DModel>>                    MODELS         = DObserved.of("MODELS", Set.of(), (m, pre, post) -> {
+    protected static final DObserved<DModule, Set<DModel>>                    MODELS         = DObserved.of("MODELS", Set.of(), m -> {
                                                                                                  return m.models().sequential().map(DModel::of).toSet();
                                                                                              }, (m, pre, post) -> {
                                                                                                  if (m.isSolution()) {

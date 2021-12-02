@@ -522,25 +522,19 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
     @SuppressWarnings({"rawtypes", "unchecked"})
     protected void addObjectChange(DObject dObject, DObserved observed) {
         objectChanges.change(l -> l.add(Pair.of(dObject, observed)));
-        addChangedToModelCheck(dObject);
-    }
-
-    protected void addChangedToModelCheck(DObject dObject) {
-        if (!dObject.isExternal()) {
-            if (dObject instanceof DModel) {
-                SModel sModel = ((DModel) dObject).tryOriginal();
-                if (sModel != null) {
-                    changedModels.change(s -> s.add(sModel));
-                }
-            } else if (dObject instanceof DNode) {
-                DNode cont = ((DNode) dObject).getContainingRoot();
-                SNode root = cont != null ? cont.tryOriginal() : null;
-                if (root != null) {
-                    changedRoots.change(s -> s.add(root));
-                }
-            } else if (dObject instanceof DModule) {
-                changedModules.change(s -> s.add(((DModule) dObject).original()));
+        if (dObject instanceof DModel) {
+            SModel sModel = ((DModel) dObject).tryOriginal();
+            if (sModel != null) {
+                changedModels.change(s -> s.add(sModel));
             }
+        } else if (dObject instanceof DNode) {
+            DNode cont = ((DNode) dObject).getContainingRoot();
+            SNode root = cont != null ? cont.tryOriginal() : null;
+            if (root != null) {
+                changedRoots.change(s -> s.add(root));
+            }
+        } else if (dObject instanceof DModule) {
+            changedModules.change(s -> s.add(((DModule) dObject).original()));
         }
     }
 

@@ -55,9 +55,9 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
 
     private static final Constant<Triple<Set<SLanguage>, Boolean, Set<String>>, DModelType> MODEL_TYPE      = Constant.of("MODEL_TYPE", DModelType::new);
 
-    protected static final DObserved<DModel, String>                                        NAME            = DObserved.of("NAME", null, (dModel, pre, post) -> {
+    protected static final DObserved<DModel, String>                                        NAME            = DObserved.of("NAME", null, dModel -> {
                                                                                                                 SModel sModel = dModel.tryOriginal();
-                                                                                                                return sModel != null ? sModel.getName().getLongName() : post;
+                                                                                                                return sModel != null ? sModel.getName().getLongName() : null;
                                                                                                             }, (dModel, pre, post) -> {
                                                                                                                 if (post != null) {
                                                                                                                     SModel sModel = dModel.original();
@@ -65,13 +65,13 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
                                                                                                                 }
                                                                                                             });
 
-    protected static final DObserved<DModel, Set<DNode>>                                    ROOTS           = DObserved.of("ROOTS", Set.of(), (dModel, pre, post) -> {
+    protected static final DObserved<DModel, Set<DNode>>                                    ROOTS           = DObserved.of("ROOTS", Set.of(), dModel -> {
                                                                                                                 if (LeafTransaction.getCurrent() instanceof DObserverTransaction &&                                                      //
                                                                                                                 !dModel.isExternal() && !TYPE.get(dModel).getLanguages().isEmpty()) {
                                                                                                                     DModel.ACTIVE.set(dModel, Boolean.TRUE);
                                                                                                                 }
                                                                                                                 SModel sModel = dModel.tryOriginal();
-                                                                                                                return sModel != null ? DModel.roots(sModel).sequential().map(DNode::of).toSet() : post;
+                                                                                                                return sModel != null ? DModel.roots(sModel).sequential().map(DNode::of).toSet() : Set.of();
                                                                                                             }, (dModel, pre, post) -> {
                                                                                                                 SModel sModel = dModel.original();
                                                                                                                 Set<SNode> soll = post.sequential().map(r -> r.reParent(sModel, null, r.original())).toSet();
@@ -83,19 +83,19 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
                                                                                                                 }
                                                                                                             }, containment);
 
-    protected static final DObserved<DModel, Set<SLanguage>>                                USED_LANGUAGES  = DObserved.of("USED_LANGUAGES", Set.of(), (dModel, pre, post) -> {
+    protected static final DObserved<DModel, Set<SLanguage>>                                USED_LANGUAGES  = DObserved.of("USED_LANGUAGES", Set.of(), dModel -> {
                                                                                                                 SModelInternal sModel = (SModelInternal) dModel.tryOriginal();
-                                                                                                                return sModel != null ? Collection.of(sModel.importedLanguageIds()).sequential().toSet() : post;
+                                                                                                                return sModel != null ? Collection.of(sModel.importedLanguageIds()).sequential().toSet() : Set.of();
                                                                                                             }, (dModel, pre, post) -> {
                                                                                                                 SModelInternal sModel = (SModelInternal) dModel.original();
                                                                                                                 DObserved.map(pre, post, sModel::addLanguage, sModel::deleteLanguageId);
                                                                                                             });
 
     @SuppressWarnings("deprecation")
-    protected static final DObserved<DModel, Set<DevKit>>                                   USED_DEVKITS    = DObserved.of("USED_DEVKITS", Set.of(), (dModel, pre, post) -> {
+    protected static final DObserved<DModel, Set<DevKit>>                                   USED_DEVKITS    = DObserved.of("USED_DEVKITS", Set.of(), dModel -> {
                                                                                                                 SModelInternal sModel = (SModelInternal) dModel.tryOriginal();
                                                                                                                 return sModel != null ? Collection.of(sModel.importedDevkits()).                                                         //
-                                                                                                                map(r -> r.resolve(MPSModuleRepository.getInstance())).filter(DevKit.class).toSet() : post;
+                                                                                                                map(r -> r.resolve(MPSModuleRepository.getInstance())).filter(DevKit.class).toSet() : Set.of();
                                                                                                             }, (dModel, pre, post) -> {
                                                                                                                 SModelInternal sModel = (SModelInternal) dModel.original();
                                                                                                                 Set<SModuleReference> soll = post.map(dk -> dk.getModuleReference()).toSet();
@@ -103,10 +103,10 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
                                                                                                                 DObserved.map(ist, soll, sModel::addDevKit, sModel::deleteDevKit);
                                                                                                             });
 
-    protected static final DObserved<DModel, Set<DModel>>                                   USED_MODELS     = DObserved.of("USED_MODELS", Set.of(), (dModel, pre, post) -> {
+    protected static final DObserved<DModel, Set<DModel>>                                   USED_MODELS     = DObserved.of("USED_MODELS", Set.of(), dModel -> {
                                                                                                                 SModelInternal sModel = (SModelInternal) dModel.tryOriginal();
                                                                                                                 return sModel != null ? Collection.of(((SModelInternal) sModel).getModelImports()).sequential().                         //
-                                                                                                                map(r -> r.resolve(null)).notNull().map(DModel::of).toSet() : post;
+                                                                                                                map(r -> r.resolve(null)).notNull().map(DModel::of).toSet() : Set.of();
                                                                                                             }, (o, pre, post) -> {
                                                                                                                 SModelInternal sModel = (SModelInternal) o.original();
                                                                                                                 Set<SModelReference> soll = post.map(DModel::reference).notNull().toSet();
@@ -130,9 +130,9 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
                                                                                                                 }
                                                                                                             }, plumbing);
     @SuppressWarnings({"rawtypes", "unchecked"})
-    protected static final DObserved<DModel, Boolean>                                       LOADED          = DObserved.of("LOADED", Boolean.FALSE, (m, b, a) -> {
+    protected static final DObserved<DModel, Boolean>                                       LOADED          = DObserved.of("LOADED", Boolean.FALSE, m -> {
                                                                                                                 SModel sModel = m.tryOriginal();
-                                                                                                                return sModel != null ? sModel.isLoaded() : a;
+                                                                                                                return sModel != null ? sModel.isLoaded() : Boolean.FALSE;
                                                                                                             }, null, plumbing);
 
     private static final Observer<DModel>                                                   REFERENCED_RULE = DObject.observer("$REFERENCED_RULE", o -> {

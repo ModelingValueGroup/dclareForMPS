@@ -21,6 +21,7 @@ import static org.modelingvalue.dclare.CoreSetableModifier.synthetic;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.jetbrains.mps.openapi.language.*;
@@ -69,22 +70,22 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                               exclude(SNodeUtil.concept_BaseConcept.getContainmentLinks()::contains).toSet();
                                                                                                                                           });
 
-    protected static final DObserved<DNode, DModel>                                                                MODEL                  = DObserved.of("$MODEL", null, (dNode, pre, post) -> {
+    protected static final DObserved<DNode, DModel>                                                                MODEL                  = DObserved.of("$MODEL", null, dNode -> {
                                                                                                                                               SNode sNode = dNode.tryOriginal();
                                                                                                                                               SModel sModel = sNode != null ? sNode.getModel() : null;
                                                                                                                                               return sModel != null ? DModel.of(sModel) : null;
                                                                                                                                           }, null, synthetic);
 
-    protected static final DObserved<DNode, DNode>                                                                 ROOT                   = DObserved.of("$ROOT", null, (dNode, pre, post) -> {
+    protected static final DObserved<DNode, DNode>                                                                 ROOT                   = DObserved.of("$ROOT", null, dNode -> {
                                                                                                                                               SNode sNode = dNode.tryOriginal();
                                                                                                                                               SNode sRoot = sNode != null ? sNode.getContainingRoot() : null;
                                                                                                                                               return sRoot != null ? DNode.of(sRoot) : null;
                                                                                                                                           }, null, synthetic);
     @SuppressWarnings({"unchecked", "rawtypes"})
-    protected static final DObserved<DNode, Map<Object, Object>>                                                   USER_OBJECTS           = DObserved.of("USER_OBJECTS", Map.of(), (TriFunction) null, (TriConsumer) null);
+    protected static final DObserved<DNode, Map<Object, Object>>                                                   USER_OBJECTS           = DObserved.of("USER_OBJECTS", Map.of(), (Function) null, (TriConsumer) null);
 
     @SuppressWarnings("deprecation")
-    public static final Constant<SProperty, DObserved<DNode, String>>                                              PROPERTY               = Constant.of("PROPERTY", sp -> DObserved.of(sp, null, (dNode, pre, post) -> {
+    public static final Constant<SProperty, DObserved<DNode, String>>                                              PROPERTY               = Constant.of("PROPERTY", sp -> DObserved.of(sp, null, dNode -> {
                                                                                                                                               SNode sNode = dNode.tryOriginal();
                                                                                                                                               return sNode != null ? sNode.getProperty(sp) : null;
                                                                                                                                           }, (dNode, pre, post) -> {
@@ -93,7 +94,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                           }, sp::getDeclarationNode));
 
     @SuppressWarnings("deprecation")
-    public static final Constant<SContainmentLink, DObserved<DNode, List<DNode>>>                                  MANY_CONTAINMENT       = Constant.of("MANY_CONTAINMENT", mc -> DObserved.of(mc, List.of(), (dNode, pre, post) -> {
+    public static final Constant<SContainmentLink, DObserved<DNode, List<DNode>>>                                  MANY_CONTAINMENT       = Constant.of("MANY_CONTAINMENT", mc -> DObserved.of(mc, List.of(), dNode -> {
                                                                                                                                               SNode sNode = dNode.tryOriginal();
                                                                                                                                               return sNode != null ? children(sNode, mc).map(DNode::of).toList() : List.of();
                                                                                                                                           }, (dNode, pre, post) -> {
@@ -107,7 +108,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                           }, mc::getDeclarationNode, containment));
 
     @SuppressWarnings("deprecation")
-    public static final Constant<SContainmentLink, DObserved<DNode, DNode>>                                        SINGLE_CONTAINMENT     = Constant.of("SINGLE_CONTAINMENT", sc -> DObserved.of(sc, null, (dNode, pre, post) -> {
+    public static final Constant<SContainmentLink, DObserved<DNode, DNode>>                                        SINGLE_CONTAINMENT     = Constant.of("SINGLE_CONTAINMENT", sc -> DObserved.of(sc, null, dNode -> {
                                                                                                                                               SNode sNode = dNode.tryOriginal();
                                                                                                                                               SNode child = sNode != null ? children(sNode, sc).first() : null;
                                                                                                                                               return child != null ? DNode.of(child) : null;
@@ -122,7 +123,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                           }, sc::getDeclarationNode, containment));
 
     @SuppressWarnings("deprecation")
-    public static final Constant<SReferenceLink, DObserved<DNode, DNode>>                                          REFERENCE              = Constant.of("REFERENCE", sr -> DObserved.of(sr, null, () -> DNode.OPPOSITE.get(sr), (dNode, pre, post) -> {
+    public static final Constant<SReferenceLink, DObserved<DNode, DNode>>                                          REFERENCE              = Constant.of("REFERENCE", sr -> DObserved.of(sr, null, () -> DNode.OPPOSITE.get(sr), dNode -> {
                                                                                                                                               SNode orig = dNode.tryOriginal();
                                                                                                                                               SReference ref = orig != null ? orig.getReference(sr) : null;
                                                                                                                                               SNode sNode = ref != null ? ref.getTargetNode() : null;
@@ -188,9 +189,9 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
             r -> DObject.MPS_ISSUES.set(r.a(), Set::remove, r)));
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    protected static final DObserved<DNode, Integer>                                                               INDEX                  = DObserved.of("INDEX", -1, (dNode, pre, post) -> {
+    protected static final DObserved<DNode, Integer>                                                               INDEX                  = DObserved.of("INDEX", -1, dNode -> {
                                                                                                                                               SNode sNode = dNode.tryOriginal();
-                                                                                                                                              return sNode != null ? SNodeOperations.getIndexInParent(sNode) : post;
+                                                                                                                                              return sNode != null ? SNodeOperations.getIndexInParent(sNode) : -1;
                                                                                                                                           }, null, synthetic);
 
     @SuppressWarnings("rawtypes")

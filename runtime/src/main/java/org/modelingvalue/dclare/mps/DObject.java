@@ -93,8 +93,8 @@ public abstract class DObject implements Mutable {
 
     protected static final Setable<DObject, Set<DIssue>>                               DRULE_ISSUES              = Setable.of("$DRULE_ISSUES", Set.of(), containment);
 
-    protected static final DObserved<DObject, Set<DIssue>>                             DCLARE_ISSUES             = DObserved.of("$DCLARE_ISSUES", Set.of(), () -> DIssue.DOBJECT, (dObject, pre, post) -> {
-                                                                                                                     return pre;
+    protected static final DObserved<DObject, Set<DIssue>>                             DCLARE_ISSUES             = DObserved.of("$DCLARE_ISSUES", Set.of(), () -> DIssue.DOBJECT, dObject -> {
+                                                                                                                     return Set.of();
                                                                                                                  }, (dObject, pre, post) -> {
                                                                                                                  }, null);
 

@@ -18,7 +18,6 @@ package org.modelingvalue.dclare.mps;
 import static org.modelingvalue.dclare.CoreSetableModifier.*;
 
 import java.util.Collections;
-import java.util.Objects;
 import java.util.function.*;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
@@ -84,17 +83,7 @@ public interface DAttribute<O, T> extends DFeature {
 
         public DObservedAttribute(Object id, String name, boolean indetifying, V def, Class<?> cls, Supplier<Setable<?, ?>> opposite, Supplier<SNode> source, SProperty sProperty, SetableModifier... modifiers) {
             super(id, def, opposite, null, source, modifiers);
-            setFromToMPS((o, b, a) -> {
-                if (o instanceof DNode && !Objects.equals(b, a)) {
-                    SNode sNode = ((DNode) o).tryOriginal();
-                    SModel sModel = sNode != null ? sNode.getModel() : null;
-                    if (sModel instanceof EditableSModel) {
-                        State preState = LeafTransaction.getCurrent().universeTransaction().preState();
-                        return preState.derive(() -> superGet(o));
-                    }
-                }
-                return a;
-            }, (o, b, a) -> {
+            setFromToMPS(null, (o, b, a) -> {
                 SNode sNode = ((DNode) o).original();
                 SModel sModel = sNode.getModel();
                 boolean changed = ((EditableSModel) sModel).isChanged();
@@ -143,10 +132,10 @@ public interface DAttribute<O, T> extends DFeature {
                 }
             }
             if (tx instanceof DerivationTransaction || object.isActive()) {
-                return superGet(object);
+                return super.get(object);
             } else {
                 State preState = tx.universeTransaction().preState();
-                return preState.derive(() -> superGet(object));
+                return preState.derive(() -> super.get(object));
             }
         }
 
@@ -158,6 +147,12 @@ public interface DAttribute<O, T> extends DFeature {
                 value = (V) cc.clear().addAll(cc.notNull());
             }
             return super.set(object, value);
+        }
+
+        @Override
+        protected V fromMPS(C object) {
+            State preState = LeafTransaction.getCurrent().universeTransaction().preState();
+            return preState.derive(() -> super.get(object));
         }
 
         @Override
