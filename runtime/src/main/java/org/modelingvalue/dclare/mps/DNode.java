@@ -873,7 +873,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
     @SuppressWarnings("rawtypes")
     @Override
     public boolean dIsOrphan(State state) {
-        return isActive() && super.dIsOrphan(state);
+        return dCheckConsistency() && super.dIsOrphan(state);
     }
 
     @Override
@@ -1066,12 +1066,16 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
 
     @Override
     protected boolean isActive() {
-        SNodeReference ref = reference();
-        if (ref == null) {
-            return true;
+        if (!super.isActive()) {
+            return false;
         } else {
-            SModel sModel = getModelFromMPS(ref);
-            return sModel != null && DModel.of(sModel).isActive();
+            SNode sNode = tryOriginal();
+            if (sNode == null) {
+                return true;
+            } else {
+                SModel sModel = getModelFromMPS(sNode.getReference());
+                return sModel != null && DModel.of(sModel).isActive();
+            }
         }
     }
 

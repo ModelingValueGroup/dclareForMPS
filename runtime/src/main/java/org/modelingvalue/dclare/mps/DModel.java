@@ -221,7 +221,7 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
 
     @Override
     protected boolean isActive() {
-        return reference() == null || ACTIVE.get(this);
+        return super.isActive() && (tryOriginal() == null || ACTIVE.get(this));
     }
 
     protected void activateIfUsed() {
@@ -544,7 +544,7 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
     @SuppressWarnings("rawtypes")
     @Override
     public boolean dIsOrphan(State state) {
-        return isActive() && super.dIsOrphan(state);
+        return dCheckConsistency() && super.dIsOrphan(state);
     }
 
     public final static class RootsOfConcept extends Pair<String, SAbstractConcept> {

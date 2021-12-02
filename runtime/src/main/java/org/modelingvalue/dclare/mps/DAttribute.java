@@ -26,7 +26,6 @@ import org.jetbrains.mps.openapi.language.SProperty;
 import org.jetbrains.mps.openapi.model.*;
 import org.modelingvalue.collections.ContainingCollection;
 import org.modelingvalue.dclare.*;
-import org.modelingvalue.dclare.ex.CircularDerivationException;
 
 import jetbrains.mps.smodel.adapter.structure.property.InvalidProperty;
 
@@ -143,20 +142,12 @@ public interface DAttribute<O, T> extends DFeature {
                     original.getProperty(sProperty);
                 }
             }
-            if (!(tx instanceof DerivationTransaction) && !object.isActive()) {
-                try {
-                    State preState = tx.universeTransaction().preState();
-                    return preState.derive(() -> superGet(object));
-                } catch (CircularDerivationException e) {
-                    if (object instanceof DModel || object instanceof DNode) {
-                        DModel dModel = object instanceof DModel ? (DModel) object : ((DNode) object).getDModelFromMPS();
-                        if (dModel != null && !DModel.TYPE.get(dModel).getLanguages().isEmpty()) {
-                            DModel.ACTIVE.set(dModel, Boolean.TRUE);
-                        }
-                    }
-                }
+            if (tx instanceof DerivationTransaction || object.isActive()) {
+                return superGet(object);
+            } else {
+                State preState = tx.universeTransaction().preState();
+                return preState.derive(() -> superGet(object));
             }
-            return superGet(object);
         }
 
         @SuppressWarnings("unchecked")

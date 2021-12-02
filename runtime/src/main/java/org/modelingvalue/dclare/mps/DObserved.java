@@ -24,7 +24,6 @@ import org.modelingvalue.collections.*;
 import org.modelingvalue.collections.util.*;
 import org.modelingvalue.dclare.*;
 import org.modelingvalue.dclare.ex.ThrowableError;
-import org.modelingvalue.dclare.mps.DAttribute.DObservedAttribute;
 
 @SuppressWarnings("unused")
 public class DObserved<O extends DObject, T> extends Observed<O, T> implements DFeature {
@@ -132,12 +131,9 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
     protected void changed(LeafTransaction tx, O dObject, T preVal, T postVal) {
         super.changed(tx, dObject, preVal, postVal);
         if (!isDclareOnly() && !(tx.leaf() instanceof ReadAction) && !dObject.isDclareOnly() && dObject.isActive()) {
-            boolean external = dObject.isExternal();
-            if (this instanceof DObservedAttribute || !external) {
-                Object readVal = fromMPS(dObject, preVal, postVal);
-                if (!Objects.equals(readVal, postVal)) {
-                    DClareMPS.instance().addObjectChange(dObject, this);
-                }
+            Object readVal = fromMPS(dObject, preVal, postVal);
+            if (!Objects.equals(readVal, postVal)) {
+                DClareMPS.instance().addObjectChange(dObject, this);
             }
         }
     }
