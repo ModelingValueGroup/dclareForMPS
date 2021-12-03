@@ -97,7 +97,7 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
         }
     }
 
-    protected T fromMPS(O object) {
+    protected final T fromMPS(O object) {
         return DObject.dClareMPS().read(() -> {
             try {
                 return fromMPS.apply(object);
@@ -128,11 +128,15 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
     protected void changed(LeafTransaction tx, O dObject, T preVal, T postVal) {
         super.changed(tx, dObject, preVal, postVal);
         if (!isDclareOnly() && !(tx.leaf() instanceof ReadAction) && !dObject.isDclareOnly() && dObject.isActive()) {
-            Object readVal = fromMPS(dObject);
+            Object readVal = read(dObject, preVal, postVal);
             if (!Objects.equals(readVal, postVal) || this == DObject.DCLARE_ISSUES) {
                 DClareMPS.instance().addObjectChange(dObject, this);
             }
         }
+    }
+
+    protected T read(O dObject, T preVal, T postVal) {
+        return fromMPS(dObject);
     }
 
     public static <T> void map(Set<T> ist, Set<T> soll, Consumer<T> add, Consumer<T> remove) {

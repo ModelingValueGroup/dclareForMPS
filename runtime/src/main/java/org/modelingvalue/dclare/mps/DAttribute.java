@@ -150,9 +150,14 @@ public interface DAttribute<O, T> extends DFeature {
         }
 
         @Override
-        protected V fromMPS(C object) {
-            State preState = LeafTransaction.getCurrent().universeTransaction().preState();
-            return preState.derive(() -> super.get(object));
+        protected V read(C dObject, V preVal, V postVal) {
+            if (dObject instanceof DNode) {
+                if (((DNode) dObject).tryOriginal() != null) {
+                    State preState = LeafTransaction.getCurrent().universeTransaction().preState();
+                    return preState.derive(() -> super.get(dObject));
+                }
+            }
+            return postVal;
         }
 
         @Override
