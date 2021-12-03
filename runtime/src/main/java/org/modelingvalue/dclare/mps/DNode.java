@@ -537,7 +537,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
 
     @Override
     public DModel getModel() {
-        if (!isActive()) {
+        if (derive()) {
             SModel model = dClareMPS().read(() -> tryOriginal().getModel());
             return model != null ? DModel.of(model) : null;
         } else {
@@ -592,7 +592,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
 
     @Override
     public String getName() {
-        if (!isActive()) {
+        if (derive()) {
             return dClareMPS().read(() -> tryOriginal().getName());
         } else {
             return PROPERTY.get(SNodeUtil.property_INamedConcept_name).get(this);
@@ -667,9 +667,13 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
         }
     }
 
+    private boolean derive() {
+        return LeafTransaction.getCurrent() instanceof DerivationTransaction || !isActive();
+    }
+
     @Override
     public DNode getParent() {
-        if (!isActive()) {
+        if (derive()) {
             SNode parent = dClareMPS().read(() -> tryOriginal().getParent());
             return parent != null ? DNode.of(parent) : null;
         } else {
@@ -680,7 +684,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
 
     @Override
     public DNode getContainingRoot() {
-        if (!isActive()) {
+        if (derive()) {
             SNode root = dClareMPS().read(() -> tryOriginal().getContainingRoot());
             return root != null ? DNode.of(root) : null;
         } else {
@@ -690,7 +694,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
 
     @Override
     public SContainmentLink getContainmentLink() {
-        if (!isActive()) {
+        if (derive()) {
             return dClareMPS().read(() -> tryOriginal().getContainmentLink());
         } else {
             Setable<Mutable, ?> containing = dContaining();
