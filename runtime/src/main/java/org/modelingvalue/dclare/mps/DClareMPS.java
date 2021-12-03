@@ -532,8 +532,8 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
                 changedModels.change(s -> s.add(sModel));
             }
         } else if (dObject instanceof DNode) {
-            DNode cont = ((DNode) dObject).getContainingRoot();
-            SNode root = cont != null ? cont.tryOriginal() : null;
+            SNode sNode = ((DNode) dObject).tryOriginal();
+            SNode root = sNode != null ? read(() -> sNode.getContainingRoot()) : null;
             if (root != null) {
                 changedRoots.change(s -> s.add(root));
             }
