@@ -164,6 +164,7 @@ public abstract class DObject implements Mutable {
     }
 
     protected final void start(DClareMPS dClareMPS) {
+        dClareMPS.addChangedObject(this);
         init(dClareMPS);
         read(dClareMPS);
     }

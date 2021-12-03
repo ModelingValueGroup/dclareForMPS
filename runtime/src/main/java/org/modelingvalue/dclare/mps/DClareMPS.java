@@ -522,6 +522,10 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
     @SuppressWarnings({"rawtypes", "unchecked"})
     protected void addObjectChange(DObject dObject, DObserved observed) {
         objectChanges.change(l -> l.add(Pair.of(dObject, observed)));
+        addChangedObject(dObject);
+    }
+
+    protected void addChangedObject(DObject dObject) {
         if (dObject instanceof DModel) {
             SModel sModel = ((DModel) dObject).tryOriginal();
             if (sModel != null) {
