@@ -537,12 +537,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
 
     @Override
     public DModel getModel() {
-        if (derive()) {
-            SModel model = dClareMPS().read(() -> tryOriginal().getModel());
-            return model != null ? DModel.of(model) : null;
-        } else {
-            return MODEL.get(this);
-        }
+        return MODEL.get(this);
     }
 
     @Override
@@ -592,11 +587,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
 
     @Override
     public String getName() {
-        if (derive()) {
-            return dClareMPS().read(() -> tryOriginal().getName());
-        } else {
-            return PROPERTY.get(SNodeUtil.property_INamedConcept_name).get(this);
-        }
+        return PROPERTY.get(SNodeUtil.property_INamedConcept_name).get(this);
     }
 
     @Override
@@ -674,7 +665,10 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
     @Override
     public DNode getParent() {
         if (derive()) {
-            SNode parent = dClareMPS().read(() -> tryOriginal().getParent());
+            SNode parent = dClareMPS().read(() -> {
+                SNode sNode = tryOriginal();
+                return sNode != null ? sNode.getParent() : null;
+            });
             return parent != null ? DNode.of(parent) : null;
         } else {
             Mutable parent = dParent();
@@ -683,23 +677,21 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
     }
 
     @Override
-    public DNode getContainingRoot() {
-        if (derive()) {
-            SNode root = dClareMPS().read(() -> tryOriginal().getContainingRoot());
-            return root != null ? DNode.of(root) : null;
-        } else {
-            return ROOT.get(this);
-        }
-    }
-
-    @Override
     public SContainmentLink getContainmentLink() {
         if (derive()) {
-            return dClareMPS().read(() -> tryOriginal().getContainmentLink());
+            return dClareMPS().read(() -> {
+                SNode sNode = tryOriginal();
+                return sNode != null ? sNode.getContainmentLink() : null;
+            });
         } else {
             Setable<Mutable, ?> containing = dContaining();
             return containing != null && containing.id() instanceof SContainmentLink ? (SContainmentLink) containing.id() : null;
         }
+    }
+
+    @Override
+    public DNode getContainingRoot() {
+        return ROOT.get(this);
     }
 
     @Override
