@@ -5100,7 +5100,7 @@
       </node>
       <node concept="2YIFZM" id="5$5iwUxUSLF" role="33vP2m">
         <ref role="1Pybhc" to="t4tl:~DAttribute" resolve="DAttribute" />
-        <ref role="37wK5l" to="t4tl:~DAttribute.of(java.lang.String,java.lang.String,java.lang.String,java.lang.String,boolean,boolean,boolean,int,java.lang.Object,java.lang.Class,org.jetbrains.mps.openapi.language.SLanguage,java.lang.String,java.util.function.Supplier,java.util.function.Function,boolean)" resolve="of" />
+        <ref role="37wK5l" to="t4tl:~DAttribute.of(java.lang.String,java.lang.String,java.lang.String,java.lang.String,boolean,boolean,boolean,boolean,int,java.lang.Object,java.lang.Class,org.jetbrains.mps.openapi.language.SLanguage,java.lang.String,java.util.function.Supplier,java.util.function.Function,boolean)" resolve="of" />
         <node concept="Xl_RD" id="5$5iwUxUSLG" role="37wK5m">
           <property role="Xl_RC" value="attrId" />
           <node concept="17Uvod" id="5$5iwUxUSLH" role="lGtFl">
@@ -5167,6 +5167,24 @@
                     </node>
                     <node concept="liA8E" id="5$5iwUxUSMb" role="2OqNvi">
                       <ref role="37wK5l" to="c17a:~SAbstractConcept.getName()" resolve="getName" />
+                    </node>
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="3clFbT" id="3L6GeDPW51i" role="37wK5m">
+          <node concept="17Uvod" id="3L6GeDPWcXk" role="lGtFl">
+            <property role="2qtEX9" value="value" />
+            <property role="P4ACc" value="f3061a53-9226-4cc5-a443-f952ceaf5816/1068580123137/1068580123138" />
+            <node concept="3zFVjK" id="3L6GeDPWcXl" role="3zH0cK">
+              <node concept="3clFbS" id="3L6GeDPWcXm" role="2VODD2">
+                <node concept="3clFbF" id="3L6GeDPWkso" role="3cqZAp">
+                  <node concept="2OqwBi" id="3L6GeDPWkOm" role="3clFbG">
+                    <node concept="30H73N" id="3L6GeDPWksn" role="2Oq$k0" />
+                    <node concept="3TrcHB" id="3L6GeDPWm6J" role="2OqNvi">
+                      <ref role="3TsBF5" to="7ggn:3L6GeDPU906" resolve="global" />
                     </node>
                   </node>
                 </node>
