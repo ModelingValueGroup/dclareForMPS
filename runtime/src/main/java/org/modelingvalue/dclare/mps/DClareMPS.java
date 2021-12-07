@@ -114,13 +114,11 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
     private IAbstractChecker<ItemsToCheck, IssueKindReportItem>                                         mpsChecker;
     private SyncConnectionHandler                                                                       syncConnectionHandler;
     @SuppressWarnings("rawtypes")
-    private Concurrent<Set<Pair<DObject, DObserved>>>                                                   objectChanges;
-    private Concurrent<Set<SModel>>                                                                     changedModels;
-    private Concurrent<Set<SModule>>                                                                    changedModules;
-    private Concurrent<Set<SNode>>                                                                      changedRoots;
-    private Set<SModel>                                                                                 allChangedModels;
-    private Set<SModule>                                                                                allChangedModules;
-    private Set<SNode>                                                                                  allChangedRoots;
+    private Concurrent<Set<DObject>>                                                                    changedObjects;
+    private Concurrent<Set<SModel>>                                                                     modelsToCheck;
+    private Concurrent<Set<SModule>>                                                                    modulesToCheck;
+    private Concurrent<Set<SNode>>                                                                      rootsToCheck;
+    private Triple<Set<SModel>, Set<SNode>, Set<SModule>>                                               toCheck;
 
     protected DClareMPS(DclareForMPSEngine engine, ProjectBase project, DclareForMpsConfig config) {
         this.config = config;
@@ -208,13 +206,11 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
         if (config.isTraceDclare()) {
             System.err.println(DCLARE + "START " + this);
         }
-        objectChanges = Concurrent.of(Set.of());
-        changedModels = Concurrent.of(Set.of());
-        changedModules = Concurrent.of(Set.of());
-        changedRoots = Concurrent.of(Set.of());
-        allChangedModels = Set.of();
-        allChangedModules = Set.of();
-        allChangedRoots = Set.of();
+        changedObjects = Concurrent.of(Set.of());
+        modelsToCheck = Concurrent.of(Set.of());
+        modulesToCheck = Concurrent.of(Set.of());
+        rootsToCheck = Concurrent.of(Set.of());
+        toCheck = Triple.of(Set.of(), Set.of(), Set.of());
         moduleChecker = new ModuleChecker();
         modelChecker = new ModelChecker();
         nodeChecker = new NodeChecker();
@@ -488,90 +484,109 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
     }
 
     public static DClareMPS instance() {
-        return (DClareMPS) LeafTransaction.getCurrent().universeTransaction().mutable();
+        return instance(LeafTransaction.getCurrent());
+    }
+
+    public static DClareMPS instance(Transaction tx) {
+        return (DClareMPS) tx.universeTransaction().mutable();
     }
 
     public static long uniqueLong() {
         return instance().counter.getAndIncrement();
     }
 
-    private class CommitInfo {
-        @SuppressWarnings("rawtypes")
-        private final Set<Pair<DObject, DObserved>> changes;
-        private final Set<SModel>                   models;
-        private final Set<SModule>                  modules;
-        private final Set<SNode>                    roots;
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    protected void addChangedObject(DObject dObject) {
+        changedObjects.change(c -> c.add(dObject));
+    }
 
-        public CommitInfo() {
-            this.changes = objectChanges.result();
-            this.models = changedModels.result();
-            this.modules = changedModules.result();
-            this.roots = changedRoots.result();
-            objectChanges.init(Set.of());
-            changedModels.init(Set.of());
-            changedModules.init(Set.of());
-            changedRoots.init(Set.of());
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    protected void removeChangedObject(DObject dObject) {
+        changedObjects.change(c -> c.remove(dObject));
+    }
+
+    protected void addToCheckObject(DObject dObject) {
+        if (dObject instanceof DModel) {
+            SModel sModel = ((DModel) dObject).tryOriginal();
+            if (sModel != null) {
+                modelsToCheck.change(c -> c.add(sModel));
+            }
+        } else if (dObject instanceof DNode) {
+            SNode root = ((DNode) dObject).tryOriginal();
+            if (root != null) {
+                rootsToCheck.change(c -> c.add(root));
+            }
+        } else if (dObject instanceof DModule) {
+            SModule sModule = ((DModule) dObject).original();
+            modulesToCheck.change(c -> c.add(sModule));
+        }
+    }
+
+    protected void removeToCheckObject(DObject dObject) {
+        if (dObject instanceof DModel) {
+            SModel sModel = ((DModel) dObject).tryOriginal();
+            if (sModel != null) {
+                modelsToCheck.change(c -> c.remove(sModel));
+            }
+        } else if (dObject instanceof DNode) {
+            SNode root = ((DNode) dObject).tryOriginal();
+            if (root != null) {
+                rootsToCheck.change(c -> c.remove(root));
+            }
+        } else if (dObject instanceof DModule) {
+            SModule sModule = ((DModule) dObject).original();
+            modulesToCheck.change(c -> c.remove(sModule));
         }
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    private CommitInfo preCommit(State pre, State post, Boolean timeTraveling) {
-        return new CommitInfo();
+    private Quadruple<Set<DObject>, Set<SModel>, Set<SNode>, Set<SModule>> preCommit(State pre, State post, Boolean timeTraveling) {
+        Set<DObject> objects = changedObjects.result();
+        Set<SModel> models = modelsToCheck.result();
+        Set<SNode> roots = rootsToCheck.result();
+        Set<SModule> modules = modulesToCheck.result();
+        changedObjects.init(Set.of());
+        modelsToCheck.init(Set.of());
+        rootsToCheck.init(Set.of());
+        modulesToCheck.init(Set.of());
+        return Quadruple.of(objects, models, roots, modules);
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    protected void addObjectChange(DObject dObject, DObserved observed) {
-        objectChanges.change(l -> l.add(Pair.of(dObject, observed)));
-        addChangedObject(dObject);
-    }
-
-    protected void addChangedObject(DObject dObject) {
-        if (dObject instanceof DModel) {
-            SModel sModel = ((DModel) dObject).tryOriginal();
-            if (sModel != null) {
-                changedModels.change(s -> s.add(sModel));
-            }
-        } else if (dObject instanceof DNode) {
-            SNode sNode = ((DNode) dObject).tryOriginal();
-            SNode root = sNode != null ? read(() -> sNode.getContainingRoot()) : null;
-            if (root != null) {
-                changedRoots.change(s -> s.add(root));
-            }
-        } else if (dObject instanceof DModule) {
-            changedModules.change(s -> s.add(((DModule) dObject).original()));
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    private void commit(State impr, State dclr, Boolean last, CommitInfo info) {
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private void commit(State impr, State dclr, Boolean last, Quadruple<Set<DObject>, Set<SModel>, Set<SNode>, Set<SModule>> changes) {
         if (isRunning() && !universeTransaction.isKilled()) {
             if (config.isTraceDclare()) {
                 System.err.println(DCLARE + "    START COMMIT " + this);
             }
             committing.set(true);
             try {
-                allChangedModels = allChangedModels.addAll(info.models);
-                allChangedModules = allChangedModules.addAll(info.modules);
-                allChangedRoots = allChangedRoots.addAll(info.roots);
-                info.changes.forEachOrdered(c -> {
-                    Object preVal = impr.get(c.a(), c.b());
-                    Object postVal = dclr.get(c.a(), c.b());
-                    if (!Objects.equals(preVal, postVal)) {
-                        c.b().toMPS(c.a(), preVal, postVal);
-                        if (TRACE_MPS_MODEL_CHANGES && !(c.b() instanceof DObservedAttribute)) {
-                            System.err.println(DCLARE + "    MPS MODEL CHANGE: " + c.a() + "." + c.b() + " = " + postVal);
+                toCheck = Triple.of(toCheck.a().addAll(changes.b()), toCheck.b().addAll(changes.c()), toCheck.c().addAll(changes.d()));
+                dclr.run(() -> changes.a().forEachOrdered(dObject -> {
+                    DefaultMap<Setable, Object> post = dclr.getProperties(dObject);
+                    if (post.get(Mutable.D_PARENT_CONTAINING) != null) {
+                        DefaultMap<Setable, Object> pre = impr.getProperties(dObject);
+                        if (toMPS(dObject, pre, post)) {
+                            if (dObject instanceof DModel) {
+                                SModel sModel = ((DModel) dObject).original();
+                                toCheck = Triple.of(toCheck.a().add(sModel), toCheck.b(), toCheck.c());
+                            } else if (dObject instanceof DNode) {
+                                SNode sNode = ((DNode) dObject).original();
+                                SNode root = sNode.getContainingRoot();
+                                toCheck = Triple.of(toCheck.a(), toCheck.b().add(root), toCheck.c());
+                            } else if (dObject instanceof DModule) {
+                                SModule sModule = ((DModule) dObject).original();
+                                toCheck = Triple.of(toCheck.a(), toCheck.b(), toCheck.c().add(sModule));
+                            }
                         }
                     }
-                });
+                }));
                 if (last) {
-                    runModelCheck(allChangedModels, allChangedModules, allChangedRoots);
+                    runModelCheck();
                 }
             } finally {
                 committing.set(false);
                 if (last) {
-                    allChangedModels = Set.of();
-                    allChangedModules = Set.of();
-                    allChangedRoots = Set.of();
+                    toCheck = Triple.of(Set.of(), Set.of(), Set.of());
                 }
                 if (config.isTraceDclare()) {
                     System.err.println(DCLARE + "    END COMMIT " + this);
@@ -580,24 +595,44 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
         }
     }
 
-    private void runModelCheck(Set<SModel> models, Set<SModule> modules, Set<SNode> roots) {
-        if (!models.isEmpty() || !modules.isEmpty() || !roots.isEmpty()) {
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private boolean toMPS(DObject dObject, DefaultMap<Setable, Object> pre, DefaultMap<Setable, Object> post) {
+        boolean changed = false;
+        for (DObserved dObserved : dObject.dClass().dObserveds()) {
+            if (dObserved instanceof DObservedAttribute || !dObject.isExternal()) {
+                Object preVal = pre.get(dObserved);
+                Object postVal = post.get(dObserved);
+                Object readVal = dObserved.read(dObject, preVal, postVal);
+                if (!Objects.equals(readVal, postVal)) {
+                    changed = true;
+                    dObserved.toMPS(dObject, readVal, postVal);
+                    if (TRACE_MPS_MODEL_CHANGES && !(dObserved instanceof DObservedAttribute)) {
+                        System.err.println(DCLARE + "    MPS MODEL CHANGE: " + dObject + "." + dObserved + " = " + postVal);
+                    }
+                }
+            }
+        }
+        return changed;
+    }
+
+    private void runModelCheck() {
+        if (!toCheck.a().isEmpty() || !toCheck.b().isEmpty() || !toCheck.c().isEmpty()) {
             thePool.execute(() -> {
                 RootItemsToCheck itemsToCheck = new RootItemsToCheck();
-                itemsToCheck.models = models.collect(Collectors.toList());
-                itemsToCheck.modules = modules.collect(Collectors.toList());
-                itemsToCheck.roots = roots.filter(r -> r.getModel() != null).collect(Collectors.toList());
+                itemsToCheck.models = toCheck.a().collect(Collectors.toList());
+                itemsToCheck.modules = toCheck.c().collect(Collectors.toList());
+                itemsToCheck.roots = toCheck.b().filter(r -> r.getModel() != null).collect(Collectors.toList());
                 java.util.List<IssueKindReportItem> reportItems = new ArrayList<>();
                 SRepository repos = getRepository().original();
                 mpsChecker.check(itemsToCheck, repos, reportItems::add, new EmptyProgressMonitor());
                 imperativeTransaction.schedule(() -> {
-                    for (SModule sModule : modules) {
+                    for (SModule sModule : toCheck.c()) {
                         DObject.MPS_ISSUES.set(DModule.of(sModule), DObject.MPS_ISSUES.getDefault());
                     }
-                    for (SModel sModel : models) {
+                    for (SModel sModel : toCheck.a()) {
                         DObject.MPS_ISSUES.set(DModel.of(sModel), DObject.MPS_ISSUES.getDefault());
                     }
-                    for (SNode root : roots) {
+                    for (SNode root : toCheck.b()) {
                         DNode.ALL_MPS_ISSUES.set(DNode.of(root), DNode.ALL_MPS_ISSUES.getDefault());
                     }
                     for (IssueKindReportItem item : reportItems) {

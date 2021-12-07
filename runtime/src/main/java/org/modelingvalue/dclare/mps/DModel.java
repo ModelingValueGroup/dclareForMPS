@@ -75,12 +75,15 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
                                                                                                             }, (dModel, pre, post) -> {
                                                                                                                 SModel sModel = dModel.original();
                                                                                                                 Set<SNode> soll = post.sequential().map(r -> r.reParent(sModel, null, r.original())).toSet();
-                                                                                                                Set<SNode> ist = pre.sequential().map(DNode::original).toSet();
+                                                                                                                Set<SNode> ist = pre.sequential().map(DNode::tryOriginal).toSet();
                                                                                                                 DObserved.map(ist, soll, sModel::addRootNode, sModel::removeRootNode);
                                                                                                             }, (t, m, b, a) -> {
                                                                                                                 if (!m.isExternal() && b.isEmpty() && !a.isEmpty()) {
                                                                                                                     DModel.ACTIVE.set(m, Boolean.TRUE);
                                                                                                                 }
+                                                                                                                DClareMPS dclareMPS = DClareMPS.instance();
+                                                                                                                Setable.<Set<DNode>, DNode> diff(b, a,                                                                                   //
+                                                                                                                        add -> dclareMPS.addToCheckObject(add), rem -> dclareMPS.removeToCheckObject(rem));
                                                                                                             }, containment);
 
     protected static final DObserved<DModel, Set<SLanguage>>                                USED_LANGUAGES  = DObserved.of("USED_LANGUAGES", Set.of(), dModel -> {
@@ -329,6 +332,7 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
         original.addModelListener(l);
         ((SModelInternal) original).removeModelListener(l);
         ((SModelInternal) original).addModelListener(l);
+        dClareMPS.addToCheckObject(this);
     }
 
     @Override
@@ -337,6 +341,7 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
         original.removeModelListener(l);
         original.removeChangeListener(l);
         ((SModelInternal) original).removeModelListener(l);
+        dClareMPS.removeToCheckObject(this);
     }
 
     @Override

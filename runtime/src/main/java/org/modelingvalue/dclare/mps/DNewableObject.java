@@ -93,7 +93,7 @@ public abstract class DNewableObject<T extends DNewableObject, R, S> extends DId
     }
 
     @Override
-    protected final void read(DClareMPS dClareMPS) {
+    protected void read(DClareMPS dClareMPS) {
         read();
     }
 

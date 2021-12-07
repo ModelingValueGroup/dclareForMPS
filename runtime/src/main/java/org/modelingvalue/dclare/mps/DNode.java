@@ -100,7 +100,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                           }, (dNode, pre, post) -> {
                                                                                                                                               SNode sNode = dNode.reParent();
                                                                                                                                               List<SNode> soll = post.sequential().map(c -> c.reParent(sNode, mc, c.original())).toList();
-                                                                                                                                              List<SNode> ist = pre.sequential().map(c -> c.original()).toList();
+                                                                                                                                              List<SNode> ist = pre.sequential().map(c -> c.tryOriginal()).toList();
                                                                                                                                               DObserved.map(ist, soll, (n, a) -> {
                                                                                                                                               }, sNode::removeChild);
                                                                                                                                               DObserved.map(children(sNode, mc), soll, (n, a) -> sNode.insertChildAfter(mc, n, a), r -> {
@@ -115,7 +115,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                           }, (dNode, pre, post) -> {
                                                                                                                                               SNode sNode = dNode.reParent();
                                                                                                                                               List<SNode> soll = post != null ? List.of(post.reParent(sNode, sc, post.original())) : List.of();
-                                                                                                                                              List<SNode> ist = pre != null ? List.of(pre.original()) : null;
+                                                                                                                                              List<SNode> ist = pre != null ? List.of(pre.tryOriginal()) : null;
                                                                                                                                               DObserved.map(ist, soll, (n, a) -> {
                                                                                                                                               }, sNode::removeChild);
                                                                                                                                               DObserved.map(children(sNode, sc), soll, (n, a) -> sNode.addChild(sc, n), r -> {
@@ -130,7 +130,6 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                               return sNode != null ? DNode.of(sNode) : null;
                                                                                                                                           }, (dNode, pre, post) -> {
                                                                                                                                               SNode sNode = dNode.original();
-                                                                                                                                              SNode ist = pre != null ? pre.original() : null;
                                                                                                                                               SNode soll = post != null ? post.original() : null;
                                                                                                                                               sNode.setReferenceTarget(sr, soll);
                                                                                                                                           }, sr::getDeclarationNode));

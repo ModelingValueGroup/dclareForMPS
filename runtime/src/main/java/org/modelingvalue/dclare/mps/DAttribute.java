@@ -32,9 +32,9 @@ import jetbrains.mps.smodel.adapter.structure.property.InvalidProperty;
 public interface DAttribute<O, T> extends DFeature {
 
     @SuppressWarnings("unchecked")
-    static <C, V> DAttribute<C, V> of(String id, String name, String anonymousType, String ruleSetType, boolean syn, boolean optional, boolean composite, int identifyingNr, Object def, Class<?> cls, SLanguage oppositeLanguage, String opposite, Supplier<SNode> source, Function<C, V> deriver, boolean onlyTemporal) {
+    static <C, V> DAttribute<C, V> of(String id, String name, String anonymousType, String ruleSetType, boolean glob, boolean syn, boolean optional, boolean composite, int identifyingNr, Object def, Class<?> cls, SLanguage oppositeLanguage, String opposite, Supplier<SNode> source, Function<C, V> deriver, boolean onlyTemporal) {
         boolean idAttr = identifyingNr >= 0 && ("StructRuleSet".equals(ruleSetType) || anonymousType != null);
-        SetableModifier[] mods = {synthetic.iff(syn), mandatory.iff(idAttr || (!optional && identifyingNr < 0)), containment.iff(composite)};
+        SetableModifier[] mods = {synthetic.iff(syn), mandatory.iff(idAttr || (!optional && identifyingNr < 0)), containment.iff(composite), MPSSetableModifier.global.iff(glob)};
         return idAttr ? new DIdentifyingAttribute(id, name, anonymousType, identifyingNr, cls, source, mods) : deriver != null ? new DConstant(id, name, cls, source, deriver, onlyTemporal, mods) : new DObservedAttribute(id, name, identifyingNr >= 0, def, cls, opposite != null ? () -> of(oppositeLanguage, opposite) : null, source, new InvalidProperty(id.toString(), name), mods);
     }
 
@@ -80,21 +80,23 @@ public interface DAttribute<O, T> extends DFeature {
         private final Class<?>  cls;
         private final SProperty sProperty;
         private final boolean   indetifying;
+        private final boolean   global;
 
         public DObservedAttribute(Object id, String name, boolean indetifying, V def, Class<?> cls, Supplier<Setable<?, ?>> opposite, Supplier<SNode> source, SProperty sProperty, SetableModifier... modifiers) {
             super(id, def, opposite, null, source, modifiers);
-            setFromToMPS(null, (o, b, a) -> {
+            this.name = name;
+            this.cls = cls;
+            this.sProperty = sProperty;
+            this.indetifying = indetifying;
+            this.global = MPSSetableModifier.global.in(modifiers);
+            setFromToMPS(null, global ? (o, b, a) -> {
                 SNode sNode = ((DNode) o).original();
                 SModel sModel = sNode.getModel();
                 boolean changed = ((EditableSModel) sModel).isChanged();
                 sNode.setProperty(sProperty, "");
                 sNode.setProperty(sProperty, null);
                 ((EditableSModel) sModel).setChanged(changed);
-            });
-            this.name = name;
-            this.cls = cls;
-            this.sProperty = sProperty;
-            this.indetifying = indetifying;
+            } : null);
         }
 
         @Override
@@ -120,6 +122,10 @@ public interface DAttribute<O, T> extends DFeature {
         @Override
         public boolean isMandatory() {
             return mandatory();
+        }
+
+        public boolean isGlobal() {
+            return global;
         }
 
         @Override

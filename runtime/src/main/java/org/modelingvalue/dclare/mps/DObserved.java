@@ -128,9 +128,11 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
     protected void changed(LeafTransaction tx, O dObject, T preVal, T postVal) {
         super.changed(tx, dObject, preVal, postVal);
         if (!isDclareOnly() && !(tx.leaf() instanceof ReadAction) && !dObject.isDclareOnly() && dObject.isActive()) {
-            Object readVal = read(dObject, preVal, postVal);
-            if (!Objects.equals(readVal, postVal) || this == DObject.DCLARE_ISSUES) {
-                DClareMPS.instance().addObjectChange(dObject, this);
+            DClareMPS dclareMPS = DClareMPS.instance(tx);
+            if (this == DObject.DCLARE_ISSUES || !Objects.equals(read(dObject, preVal, postVal), postVal)) {
+                dclareMPS.addChangedObject(dObject);
+            } else {
+                dclareMPS.removeChangedObject(dObject);
             }
         }
     }

@@ -93,12 +93,18 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
     protected void init(DClareMPS dClareMPS) {
         super.init(dClareMPS);
         original().addModuleListener(new DModuleListener(this, dClareMPS));
+        if (!isExternal() && isSolution()) {
+            dClareMPS.addToCheckObject(this);
+        }
     }
 
     @Override
     protected void exit(DClareMPS dClareMPS) {
         super.exit(dClareMPS);
         original().removeModuleListener(new DModuleListener(this, dClareMPS));
+        if (!isExternal() && isSolution()) {
+            dClareMPS.removeToCheckObject(this);
+        }
     }
 
     @Override
