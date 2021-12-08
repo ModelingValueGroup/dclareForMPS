@@ -115,7 +115,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                           }, (dNode, pre, post) -> {
                                                                                                                                               SNode sNode = dNode.reParent();
                                                                                                                                               List<SNode> soll = post != null ? List.of(post.reParent(sNode, sc, post.original())) : List.of();
-                                                                                                                                              List<SNode> ist = pre != null ? List.of(pre.tryOriginal()) : null;
+                                                                                                                                              List<SNode> ist = pre != null ? List.of(pre.tryOriginal()) : List.of();
                                                                                                                                               DObserved.map(ist, soll, (n, a) -> {
                                                                                                                                               }, sNode::removeChild);
                                                                                                                                               DObserved.map(children(sNode, sc), soll, (n, a) -> sNode.addChild(sc, n), r -> {
