@@ -97,12 +97,12 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
     @SuppressWarnings("deprecation")
     protected static final DObserved<DModel, Set<DevKit>>                                   USED_DEVKITS    = DObserved.of("USED_DEVKITS", Set.of(), dModel -> {
                                                                                                                 SModelInternal sModel = (SModelInternal) dModel.tryOriginal();
-                                                                                                                return sModel != null ? Collection.of(sModel.importedDevkits()).                                                         //
+                                                                                                                return sModel != null ? Collection.of(sModel.importedDevkits()).sequential().                                            //
                                                                                                                 map(r -> r.resolve(MPSModuleRepository.getInstance())).filter(DevKit.class).toSet() : Set.of();
                                                                                                             }, (dModel, pre, post) -> {
                                                                                                                 SModelInternal sModel = (SModelInternal) dModel.original();
-                                                                                                                Set<SModuleReference> soll = post.map(dk -> dk.getModuleReference()).toSet();
-                                                                                                                Set<SModuleReference> ist = pre.map(dk -> dk.getModuleReference()).toSet();
+                                                                                                                Set<SModuleReference> soll = post.sequential().map(dk -> dk.getModuleReference()).toSet();
+                                                                                                                Set<SModuleReference> ist = pre.sequential().map(dk -> dk.getModuleReference()).toSet();
                                                                                                                 DObserved.map(ist, soll, sModel::addDevKit, sModel::deleteDevKit);
                                                                                                             });
 
@@ -112,8 +112,8 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
                                                                                                                 map(r -> r.resolve(null)).notNull().map(DModel::of).toSet() : Set.of();
                                                                                                             }, (o, pre, post) -> {
                                                                                                                 SModelInternal sModel = (SModelInternal) o.original();
-                                                                                                                Set<SModelReference> soll = post.map(DModel::reference).notNull().toSet();
-                                                                                                                Set<SModelReference> ist = pre.map(DModel::reference).toSet();
+                                                                                                                Set<SModelReference> soll = post.sequential().map(DModel::reference).notNull().toSet();
+                                                                                                                Set<SModelReference> ist = pre.sequential().map(DModel::reference).toSet();
                                                                                                                 DObserved.map(ist, soll, sModel::addModelImport, sModel::deleteModelImport);
                                                                                                             });
 
