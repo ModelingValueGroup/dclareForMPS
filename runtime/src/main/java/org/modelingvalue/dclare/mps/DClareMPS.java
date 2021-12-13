@@ -562,8 +562,8 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
             try {
                 toCheck = Triple.of(toCheck.a().addAll(changes.b()), toCheck.b().addAll(changes.c()), toCheck.c().addAll(changes.d()));
                 dclr.run(() -> changes.a().forEachOrdered(dObject -> {
-                    DefaultMap<Setable, Object> post = dclr.getProperties(dObject);
-                    if (post.get(Mutable.D_PARENT_CONTAINING) != null) {
+                    if (!dObject.isDclareOnly() && dObject.isActive()) {
+                        DefaultMap<Setable, Object> post = dclr.getProperties(dObject);
                         DefaultMap<Setable, Object> pre = impr.getProperties(dObject);
                         if (toMPS(dObject, pre, post)) {
                             if (dObject instanceof DModel) {
