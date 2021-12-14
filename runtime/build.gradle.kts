@@ -41,7 +41,7 @@ publishing {
     }
 }
 tasks.register<Copy>("gatherRuntimeJars") {
-    group = "mvg"
+    group = "+++gather"
     into(libDir)
     from(
         tasks["jar"].outputs,
