@@ -15,8 +15,7 @@
 
 package org.modelingvalue.dclare.mps;
 
-import static org.modelingvalue.dclare.CoreSetableModifier.containment;
-import static org.modelingvalue.dclare.CoreSetableModifier.synthetic;
+import static org.modelingvalue.dclare.CoreSetableModifier.*;
 
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
@@ -200,11 +199,23 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                               return o.equals(children) ? 0 : children instanceof List ? ((List) children).firstIndexOf(o) : -1;
                                                                                                                                           });
 
-    @SuppressWarnings("rawtypes")
-    protected static final Set<Observer>                                                                           OBSERVERS              = DNewableObject.OBSERVERS.addAll(Set.of(ROOT_RULE, MODEL_RULE, INDEX_RULE));
+    @SuppressWarnings({"rawtypes", "unchecked", "RedundantSuppression"})
+    protected static final DObserved<DNode, Boolean>                                                               ACTIVE                 = DObserved.of("ACTIVE", Boolean.FALSE, (Function) null, (TriConsumer) null, plumbing);
+
+    private static final Observer<DNode>                                                                           ACTIVATE_RULE          = DObject.observer(ACTIVE, o -> {
+                                                                                                                                              if (!o.isExternal()) {
+                                                                                                                                                  Mutable p = o.tryOriginal() != null ? o.dParent() : null;
+                                                                                                                                                  return p instanceof DNode ? ACTIVE.get((DNode) p) : p instanceof DModel ? DModel.ACTIVE.get((DModel) p) : Boolean.FALSE;
+                                                                                                                                              } else {
+                                                                                                                                                  return Boolean.FALSE;
+                                                                                                                                              }
+                                                                                                                                          });
 
     @SuppressWarnings("rawtypes")
-    protected static final Set<Setable>                                                                            SETABLES               = DNewableObject.SETABLES.addAll(Set.of(ROOT, MODEL, USER_OBJECTS, ALL_MPS_ISSUES, INDEX));
+    protected static final Set<Observer>                                                                           OBSERVERS              = DNewableObject.OBSERVERS.addAll(Set.of(ROOT_RULE, MODEL_RULE, INDEX_RULE, ACTIVATE_RULE));
+
+    @SuppressWarnings("rawtypes")
+    protected static final Set<Setable>                                                                            SETABLES               = DNewableObject.SETABLES.addAll(Set.of(ROOT, MODEL, USER_OBJECTS, ALL_MPS_ISSUES, INDEX, ACTIVE));
 
     public static Observer<DNode> copyObserver(SLanguage copyLang, DObserved<DNode, ?> observed, TriConsumer<DNode, DNode, DCopy> action) {
         return DCopyObserver.of(observed, t -> {
@@ -1062,17 +1073,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
 
     @Override
     protected boolean isActive() {
-        if (!super.isActive()) {
-            return false;
-        } else {
-            SNode sNode = tryOriginal();
-            if (sNode == null) {
-                return true;
-            } else {
-                SModel sModel = getModelFromMPS(sNode.getReference());
-                return sModel != null && DModel.of(sModel).isActive();
-            }
-        }
+        return super.isActive() && (tryOriginal() == null || ACTIVE.get(this));
     }
 
     protected DModel getDModelFromMPS() {
