@@ -15,31 +15,19 @@
 
 package org.modelingvalue.dclare.mps;
 
-import org.jetbrains.mps.openapi.language.SLanguage;
-import org.jetbrains.mps.openapi.language.SProperty;
-import org.jetbrains.mps.openapi.model.EditableSModel;
-import org.jetbrains.mps.openapi.model.SModel;
-import org.jetbrains.mps.openapi.model.SNode;
-import org.modelingvalue.collections.ContainingCollection;
-import org.modelingvalue.dclare.Constant;
-import org.modelingvalue.dclare.CoreSetableModifier;
-import org.modelingvalue.dclare.DerivationTransaction;
-import org.modelingvalue.dclare.LeafTransaction;
-import org.modelingvalue.dclare.ReadOnlyTransaction;
-import org.modelingvalue.dclare.Setable;
-import org.modelingvalue.dclare.SetableModifier;
+import static org.modelingvalue.dclare.CoreSetableModifier.*;
 
 import java.util.Collections;
 import java.util.Objects;
-import java.util.function.BiFunction;
-import java.util.function.Function;
-import java.util.function.Supplier;
+import java.util.function.*;
+
+import org.jetbrains.mps.openapi.language.SLanguage;
+import org.jetbrains.mps.openapi.language.SProperty;
+import org.jetbrains.mps.openapi.model.*;
+import org.modelingvalue.collections.ContainingCollection;
+import org.modelingvalue.dclare.*;
 
 import jetbrains.mps.smodel.adapter.structure.property.InvalidProperty;
-
-import static org.modelingvalue.dclare.CoreSetableModifier.containment;
-import static org.modelingvalue.dclare.CoreSetableModifier.mandatory;
-import static org.modelingvalue.dclare.CoreSetableModifier.synthetic;
 
 @SuppressWarnings({"rawtypes", "unused"})
 public interface DAttribute<O, T> extends DFeature {
@@ -144,7 +132,7 @@ public interface DAttribute<O, T> extends DFeature {
         @Override
         public V get(C object) {
             LeafTransaction tx = LeafTransaction.getCurrent();
-            if (object instanceof DNode && tx instanceof ReadOnlyTransaction && !(tx instanceof DerivationTransaction)) {
+            if (object instanceof DNode && tx instanceof ReadOnlyTransaction && DClareMPS.instance(tx).isRunningRead()) {
                 SNode original = ((DNode) object).tryOriginal();
                 if (original != null) {
                     original.getProperty(sProperty);

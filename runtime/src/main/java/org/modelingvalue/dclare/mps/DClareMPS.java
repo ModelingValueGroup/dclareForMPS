@@ -128,7 +128,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
         this.modelAccess = project.getModelAccess();
         this.engine = engine;
         this.dRepository = new DRepository((ProjectRepository) project.getRepository());
-        this.modelAccess.executeCommandInEDT(() -> commandThread = Thread.currentThread());
+        command(() -> commandThread = Thread.currentThread());
         if (config.isTraceDclare()) {
             System.err.println(DCLARE + "BEGIN " + this);
         }
@@ -239,7 +239,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
                 System.err.println(DCLARE + "STOP  " + this);
             }
             State state = universeTransaction.lastState();
-            modelAccess.executeCommandInEDT(() -> commandThread = null);
+            command(() -> commandThread = null);
             CheckerRegistry checkerRegistry = project.getPlatform().findComponent(CheckerRegistry.class);
             if (checkerRegistry == null) {
                 throw new Error("CheckerRegistry not found in platform");
@@ -450,6 +450,10 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
         return Thread.currentThread() == commandThread && dRepository.getModelAccess().isCommandAction();
     }
 
+    protected boolean isRunningRead() {
+        return dRepository.getModelAccess().canRead();
+    }
+
     public void invokeLater(Runnable runnable) {
         SwingUtilities.invokeLater(runnable);
     }
@@ -484,7 +488,11 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
     }
 
     public static DClareMPS instance() {
-        return (DClareMPS) LeafTransaction.getCurrent().universeTransaction().mutable();
+        return instance(LeafTransaction.getCurrent());
+    }
+
+    public static DClareMPS instance(LeafTransaction tx) {
+        return (DClareMPS) tx.universeTransaction().mutable();
     }
 
     public static long uniqueLong() {

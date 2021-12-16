@@ -117,8 +117,11 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
 
     @Override
     public T get(O object) {
-        if (fromMPS != null && (LeafTransaction.getCurrent() instanceof DerivationTransaction || !object.isActive())) {
+        LeafTransaction tx = LeafTransaction.getCurrent();
+        if (fromMPS != null && (tx instanceof DerivationTransaction || !object.isActive())) {
             return fromMPS.apply(object);
+        } else if (tx instanceof DerivationTransaction && object == null) {
+            return getDefault();
         } else {
             return super.get(object);
         }
