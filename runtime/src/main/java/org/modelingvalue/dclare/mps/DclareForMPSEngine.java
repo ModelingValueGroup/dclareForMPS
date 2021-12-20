@@ -17,9 +17,7 @@ package org.modelingvalue.dclare.mps;
 
 import java.util.Objects;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.*;
 
 import org.jetbrains.mps.openapi.module.ModelAccess;
 import org.jetbrains.mps.openapi.module.SModule;
@@ -162,7 +160,7 @@ public class DclareForMPSEngine implements DeployListener {
                     break;
                 } else if (finalStatusIterator.hasNext()) {
                     Status status = finalStatusIterator.next();
-                    modelAccess.executeCommandInEDT(() -> {
+                    modelAccess.runWriteInEDT(() -> {
                         if (status.stats != null) {
                             engineStatusHandler.stats(status.stats, finalDClareMPS);
                         }
