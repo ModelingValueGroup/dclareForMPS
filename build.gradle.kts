@@ -15,29 +15,36 @@
 
 defaultTasks(
     "mvgcorrector",
-    "test",
-    "mpsant-build",
+    "build",
     "mvgtagger",
     "mvguploader",
 )
-
 plugins {
     id("org.modelingvalue.gradle.mvgplugin") version "1.0.8"
+    id("com.dorongold.task-tree") version "2.1.0" // to get a task-tree generation task
 }
 
+///////////////////////////////////////////////////////////////////////////////////////////////
 // import ant file:
 ant.lifecycleLogLevel = AntBuilder.AntMessagePriority.INFO
 ant.setProperty("mps_home", mvgmps.mpsInstallDir.toString())
 ant.setProperty("version", version)
 ant.setProperty("versionExtra", mvgmps.versionExtra)
 ant.setProperty("versionStamp", mvgmps.versionStamp)
+// WORKAROUND START (see https://youtrack.jetbrains.com/issue/MPS-34059)
+// for UTF-8 chars used in MPS: add file.encoding to jvmargs, crude but works for now
+File("mps_build.xml").writeText(File("mps_build.xml").readLines().joinToString(separator = System.lineSeparator()) {
+    it + if (it.matches(Regex(".*<jvmargs>$"))) "<arg value=\"-Dfile.encoding=UTF8\"/>" else ""
+})
+// WORKAROUND END
 ant.importBuild("mps_build.xml") {
     "mpsant-$it"
 }
 tasks.filter {
     it.name.startsWith("mpsant-")
 }.forEach {
-    if (it.name.equals("mpsant-fetchDependencies")) {
+    it.group = "mpsant"
+    if (it.name == "mpsant-fetchDependencies") {
         // the runtime jars should be build and gathered first:
         it.dependsOn(":runtime:gatherRuntimeJars")
     }
@@ -53,7 +60,32 @@ tasks.filter {
         ant.setProperty("versionStamp", mvgmps.versionStamp)
     }
 }
+var clean_gen_dirs = tasks.create("clean_gen_dirs") {
+    group = "build"
+    doLast {
+        listOf("languages", "solutions").forEach {
+            File(it).walkTopDown().filter {
+                it.name.contains("_gen")
+            }.forEach {
+                it.deleteRecursively()
+            }
+        }
+    }
+}
+tasks.create("build") {
+    group = "build"
+    dependsOn(tasks.named("mpsant-build"))
+}
+tasks.create("clean") {
+    group = "build"
+    dependsOn(clean_gen_dirs)
+}
+tasks.create("publish") {
+    group = "publishing"
+    dependsOn(tasks.named("mpsant-assemble"))
+}
 
+///////////////////////////////////////////////////////////////////////////////////////////////
 // upload plugin to jetbrains
 mvguploader {
     pluginId = "13797"

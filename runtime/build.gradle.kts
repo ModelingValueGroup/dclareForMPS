@@ -13,8 +13,6 @@
 //     Arjan Kok, Carel Bast                                                                                           ~
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-val libDir: java.nio.file.Path = rootProject.projectDir.toPath().resolve("solutions/DclareMPSRuntime/lib")
-
 plugins {
     `java-library`
     `maven-publish`
@@ -32,6 +30,7 @@ dependencies {
     compileOnly(mpsJar("mps-project-check"))
     compileOnly(mpsJar("platform-api"))
     compileOnly(mpsJar("util"))
+    compileOnly(mpsJar("mps-behavior-runtime"))
 }
 publishing {
     publications {
@@ -40,7 +39,11 @@ publishing {
         }
     }
 }
-tasks.register<Copy>("gatherRuntimeJars") {
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+// gather jars:
+val libDir = rootProject.projectDir.toPath().resolve("solutions/DclareMPSRuntime/lib")
+val gatherTask = tasks.register<Copy>("gatherRuntimeJars") {
     group = "+++gather"
     into(libDir)
     from(
@@ -53,14 +56,15 @@ tasks.register<Copy>("gatherRuntimeJars") {
             .replaceFirst(Regex("[a-zA-Z_]*-[0-9a-z]*-SNAPSHOT[.]jar"), ".jar")
             .replaceFirst(Regex("-[0-9.]*[.]jar"), ".jar")
     }
-    tasks.findByName("jar")?.finalizedBy(this)
-    tasks.findByName("publish")?.finalizedBy(this)
     eachFile {
-        println(String.format("   - GATHER %s\n         => %s/%s", file, destinationDir, relativePath))
+        println(String.format("   - GATHER %s", relativePath))
+    }
+    doLast {
+        println(String.format("   - TO     %s", destinationDir))
     }
 }
+tasks.getByName("assemble").finalizedBy(gatherTask)
+tasks.getByName("publish").finalizedBy(gatherTask)
 tasks.getByName<Delete>("clean") {
     delete.add(libDir)
 }
-
-task("createJar").outputs.files.forEach { System.err.println("TOMTOMTOM $it") }

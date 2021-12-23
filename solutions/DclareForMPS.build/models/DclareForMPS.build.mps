@@ -71,6 +71,7 @@
         <property id="5204048710541015587" name="internalBaseDirectory" index="2DA0ip" />
         <child id="6647099934206700656" name="plugins" index="10PD9s" />
         <child id="7389400916848080626" name="parts" index="3989C9" />
+        <child id="3542413272732620719" name="aspects" index="1hWBAP" />
         <child id="5617550519002745381" name="dependencies" index="1l3spa" />
         <child id="5617550519002745378" name="macros" index="1l3spd" />
         <child id="5617550519002745372" name="layout" index="1l3spN" />
@@ -99,6 +100,9 @@
       </concept>
     </language>
     <language id="0cf935df-4699-4e9c-a132-fa109541cba3" name="jetbrains.mps.build.mps">
+      <concept id="6503355885715333289" name="jetbrains.mps.build.mps.structure.BuildMpsAspect" flags="ng" index="2igEWh">
+        <property id="7981469545489178349" name="generationMaxHeapSizeInMb" index="3UIfUI" />
+      </concept>
       <concept id="7832771629084799699" name="jetbrains.mps.build.mps.structure.BuildMps_IdeaPluginVendor" flags="ng" index="2iUeEo">
         <property id="7832771629084799702" name="name" index="2iUeEt" />
         <property id="7832771629084799701" name="url" index="2iUeEu" />
@@ -180,6 +184,9 @@
     <property role="TrG5h" value="DclareForMPS" />
     <property role="2DA0ip" value="../../" />
     <property role="turDy" value="mps_build.xml" />
+    <node concept="2igEWh" id="4iy3Um73HnA" role="1hWBAP">
+      <property role="3UIfUI" value="2000" />
+    </node>
     <node concept="2kB4xC" id="ffBaz0wevf" role="1l3spd">
       <property role="TrG5h" value="version" />
       <node concept="aVJcg" id="ffBaz0wevJ" role="aVJcv">

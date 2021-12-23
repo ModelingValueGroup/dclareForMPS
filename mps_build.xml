@@ -754,9 +754,9 @@
         <module file="${basedir}/solutions/DclareMPSRuntime/DclareMPSRuntime.msd" />
         <module file="${basedir}/languages/DclareMessages/DclareMessages.mpl" />
       </chunk>
-      <jvmargs>
+      <jvmargs><arg value="-Dfile.encoding=UTF8"/>
         <arg value="-ea" />
-        <arg value="-Xmx512m" />
+        <arg value="-Xmx2000m" />
       </jvmargs>
       <macro name="mps_home" path="${mps_home}" />
       <macro name="dclare_home" path="${dclare_home}" />
