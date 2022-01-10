@@ -33,7 +33,8 @@ ant.setProperty("versionExtra", mvgmps.versionExtra)
 ant.setProperty("versionStamp", mvgmps.versionStamp)
 // WORKAROUND START (see https://youtrack.jetbrains.com/issue/MPS-34059)
 // for UTF-8 chars used in MPS: add file.encoding to jvmargs, crude but works for now
-File("mps_build.xml").writeText(File("mps_build.xml").readLines().joinToString(separator = System.lineSeparator()) {
+val mps_build = gradle.rootProject.projectDir.resolve("mps_build.xml")
+mps_build.writeText(mps_build.readLines().joinToString(separator = System.lineSeparator()) {
     it + if (it.matches(Regex(".*<jvmargs>$"))) "<arg value=\"-Dfile.encoding=UTF8\"/>" else ""
 })
 // WORKAROUND END
