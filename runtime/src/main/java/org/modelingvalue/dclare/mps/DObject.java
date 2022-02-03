@@ -27,13 +27,7 @@ import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
-import org.modelingvalue.dclare.Action;
-import org.modelingvalue.dclare.Mutable;
-import org.modelingvalue.dclare.NonCheckingObserver;
-import org.modelingvalue.dclare.Observed;
-import org.modelingvalue.dclare.Observer;
-import org.modelingvalue.dclare.Priority;
-import org.modelingvalue.dclare.Setable;
+import org.modelingvalue.dclare.*;
 
 import jetbrains.mps.errors.item.IssueKindReportItem;
 
@@ -71,7 +65,7 @@ public abstract class DObject implements Mutable {
 
     protected static final Observer<DObject>                                           CONTAINING_ATTRIBUTE_RULE = observer(CONTAINING_ATTRIBUTE, o -> {
                                                                                                                      Pair<Mutable, Setable<Mutable, ?>> pc = Mutable.D_PARENT_CONTAINING.get(o);
-                                                                                                                     return pc == null || pc.a() instanceof DClareMPS ? null :                                                              //
+                                                                                                                     return pc == null || pc.a() instanceof DClareMPS ? null :                                                   //
                                                                                                                      pc.b() instanceof DAttribute ? (DAttribute) pc.b() : CONTAINING_ATTRIBUTE.get((DObject) pc.a());
                                                                                                                  });
 
@@ -89,15 +83,15 @@ public abstract class DObject implements Mutable {
     protected static final DObserved<DObject, Set<Pair<DObject, IssueKindReportItem>>> MPS_ISSUES                = DObserved.of("$MPS_ISSUES", Set.of(), null, (tx, o, pre, post) -> {
                                                                                                                      DNode root = o instanceof DNode ? ((DNode) o).getContainingRoot() : null;
                                                                                                                      if (root != null) {
-                                                                                                                         Setable.<Set<Pair<DObject, IssueKindReportItem>>, Pair<DObject, IssueKindReportItem>> diff(pre, post,              //
-                                                                                                                                 a -> DNode.ALL_MPS_ISSUES.set(root, Set::add, a),                                                          //
+                                                                                                                         Setable.<Set<Pair<DObject, IssueKindReportItem>>, Pair<DObject, IssueKindReportItem>> diff(pre, post,   //
+                                                                                                                                 a -> DNode.ALL_MPS_ISSUES.set(root, Set::add, a),                                               //
                                                                                                                                  r -> DNode.ALL_MPS_ISSUES.set(root, Set::remove, r));
                                                                                                                      }
                                                                                                                  });
 
     protected static final Setable<DObject, Set<DIssue>>                               DRULE_ISSUES              = Setable.of("$DRULE_ISSUES", Set.of(), containment);
 
-    protected static final DObserved<DObject, Set<DIssue>>                             DCLARE_ISSUES             = DObserved.of("$DCLARE_ISSUES", Set.of(), () -> DIssue.DOBJECT, (dObject, pre, post) -> !Objects.equals(pre, post), null);
+    protected static final DObserved<DObject, Set<DIssue>>                             DCLARE_ISSUES             = DObserved.of("$DCLARE_ISSUES", Set.of(), (dObject, pre, post) -> !Objects.equals(pre, post), containment);
 
     protected static final Set<Observer>                                               OBSERVERS                 = Set.of(TYPE_RULE, CONTAINING_ATTRIBUTE_RULE);
 

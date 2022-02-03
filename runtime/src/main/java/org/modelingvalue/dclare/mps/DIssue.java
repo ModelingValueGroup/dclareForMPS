@@ -18,18 +18,13 @@ package org.modelingvalue.dclare.mps;
 import java.util.function.Supplier;
 
 import org.modelingvalue.collections.Set;
-import org.modelingvalue.dclare.Constant;
-import org.modelingvalue.dclare.LeafTransaction;
-import org.modelingvalue.dclare.Observer;
-import org.modelingvalue.dclare.Setable;
+import org.modelingvalue.dclare.*;
 import org.modelingvalue.dclare.mps.DRule.DObserver;
 import org.modelingvalue.dclare.mps.DRule.DObserverTransaction;
 
 import jetbrains.mps.errors.MessageStatus;
 import jetbrains.mps.errors.item.IssueKindReportItem;
-import jetbrains.mps.errors.item.IssueKindReportItem.CheckerCategory;
-import jetbrains.mps.errors.item.IssueKindReportItem.ItemKind;
-import jetbrains.mps.errors.item.IssueKindReportItem.KindLevel;
+import jetbrains.mps.errors.item.IssueKindReportItem.*;
 import jetbrains.mps.errors.item.RuleIdFlavouredItem.TypesystemRuleId;
 import jetbrains.mps.errors.messageTargets.MessageTarget;
 
@@ -45,7 +40,7 @@ public class DIssue extends DIdentifiedObject {
 
     private static final Observer<DIssue>                 MESSAGE_RULE     = DObject.observer(MESSAGE, o -> o.message.get());
 
-    public static final Setable<DIssue, DObject>          DOBJECT          = Setable.of("$DOBJECT", null, () -> DObject.DCLARE_ISSUES);
+    public static final Setable<DIssue, DObject>          DOBJECT          = Setable.of("$DOBJECT", null);
 
     private static final Observer<DIssue>                 DOBJECT_RULE     = DObject.observer(DOBJECT, o -> o.dObject.get());
 
