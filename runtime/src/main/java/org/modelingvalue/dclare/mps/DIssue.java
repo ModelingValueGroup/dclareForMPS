@@ -15,6 +15,7 @@
 
 package org.modelingvalue.dclare.mps;
 
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import org.modelingvalue.collections.Set;
@@ -106,14 +107,14 @@ public class DIssue extends DIdentifiedObject {
         return MESSAGE.get(this);
     }
 
-    public IssueKindReportItem getItem() {
+    public void getItem(Consumer<IssueKindReportItem> consumer) {
         DObject o = getObject();
         if (o instanceof DModule) {
-            return new DIssueModuleReportItem(getSeverity(), ((DModule) o).original(), getMessage(), ruleId());
+            consumer.accept(new DIssueModuleReportItem(getSeverity(), ((DModule) o).original(), getMessage(), ruleId()));
         } else if (o instanceof DModel) {
-            return new DIssueModelReportItem(getSeverity(), ((DModel) o).original(), getMessage(), ruleId());
-        } else {
-            return new DIssueNodeReportItem(getSeverity(), ((DNode) o).original(), getFeature(), getMessage(), ruleId());
+            consumer.accept(new DIssueModelReportItem(getSeverity(), ((DModel) o).original(), getMessage(), ruleId()));
+        } else if (o instanceof DNode) {
+            consumer.accept(new DIssueNodeReportItem(getSeverity(), ((DNode) o).original(), getFeature(), getMessage(), ruleId()));
         }
     }
 
