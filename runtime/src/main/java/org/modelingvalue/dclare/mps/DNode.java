@@ -371,8 +371,14 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
             throw new IllegalArgumentException("Creating a DNode of non-resolveable SNode reference " + ref);
         }
         SModelReference mRef = ref.getModelReference();
-        SModel sModel = mRef != null ? dClareMPS().read(() -> mRef.resolve(null)) : null;
-        Boolean external = sModel != null && DModel.EXTERNAL.get(sModel);
+        SModel sModel = null;
+        if (mRef != null) {
+            sModel = dClareMPS().read(() -> mRef.resolve(null));
+            if (sModel == null) {
+                throw new IllegalArgumentException("Creating a DNode with a non-resolveable SModel " + original);
+            }
+        }
+        Boolean external = sModel != null ? DModel.EXTERNAL.get(sModel) : false;
         return originalConstruct(original, ref, () -> new DNode(new Object[]{uniqueLong(concept), concept, external}));
     }
 
