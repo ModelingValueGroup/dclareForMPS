@@ -22,26 +22,13 @@ import java.util.HashSet;
 import java.util.stream.Collectors;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
-import org.jetbrains.mps.openapi.model.EditableSModel;
-import org.jetbrains.mps.openapi.model.SModel;
-import org.jetbrains.mps.openapi.model.SModelId;
-import org.jetbrains.mps.openapi.module.SDependency;
-import org.jetbrains.mps.openapi.module.SModule;
-import org.jetbrains.mps.openapi.module.SModuleFacet;
-import org.jetbrains.mps.openapi.module.SModuleId;
-import org.jetbrains.mps.openapi.module.SModuleListener;
-import org.jetbrains.mps.openapi.module.SModuleReference;
-import org.jetbrains.mps.openapi.module.SRepository;
+import org.jetbrains.mps.openapi.model.*;
+import org.jetbrains.mps.openapi.module.*;
 import org.jetbrains.mps.openapi.persistence.ModelRoot;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
-import org.modelingvalue.dclare.Action;
-import org.modelingvalue.dclare.Constant;
-import org.modelingvalue.dclare.Observed;
-import org.modelingvalue.dclare.Observer;
-import org.modelingvalue.dclare.Priority;
-import org.modelingvalue.dclare.Setable;
+import org.modelingvalue.dclare.*;
 
 import jetbrains.mps.errors.item.ModuleReportItem;
 import jetbrains.mps.model.ModelDeleteHelper;
@@ -245,9 +232,11 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
 
     protected Set<SModel> models() {
         Set<SModel> ist = Set.of();
-        for (SModel child : isLanguage() ? ((Language) original()).getAccessoryModels() : isSolution() ? original().getModels() : Set.<SModel> of()) {
-            if (child instanceof EditableSModel) {
-                ist = ist.add(child);
+        if (isLanguage() || isSolution()) {
+            for (SModel child : original().getModels()) {
+                if (child instanceof EditableSModel) {
+                    ist = ist.add(child);
+                }
             }
         }
         return ist;
