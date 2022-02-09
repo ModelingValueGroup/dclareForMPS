@@ -1145,7 +1145,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
             return true;
         } else {
             SModel sModel = getModelFromMPS(sNode.getReference());
-            return sModel != null && DModel.of(sModel).isActive();
+            return sModel == null || DModel.of(sModel).isActive();
         }
     }
 
