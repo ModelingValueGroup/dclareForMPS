@@ -148,7 +148,7 @@ public abstract class DNewableObject<T extends DNewableObject, R, S> extends DId
                 sObject = create(ref);
             }
             addOriginal(sObject);
-            originalConstruct(sObject, ref != null ? ref : reference(sObject), () -> this);
+            originalConstruct(sObject, reference(sObject), () -> this);
             init(dClareMPS(), sObject);
         }
         return sObject;

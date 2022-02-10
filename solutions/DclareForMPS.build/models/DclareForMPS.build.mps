@@ -44,6 +44,9 @@
         <reference id="5617550519002745380" name="script" index="1l3spb" />
         <child id="4129895186893471026" name="artifacts" index="2JcizS" />
       </concept>
+      <concept id="927724900262033858" name="jetbrains.mps.build.structure.BuildSource_JavaOptions" flags="ng" index="2_Ic$z">
+        <property id="6998860900671147996" name="javaLevel" index="TZNOO" />
+      </concept>
       <concept id="2750015747481074431" name="jetbrains.mps.build.structure.BuildLayout_Files" flags="ng" index="2HvfSZ">
         <child id="2750015747481074432" name="path" index="2HvfZ0" />
       </concept>
@@ -184,6 +187,9 @@
     <property role="TrG5h" value="DclareForMPS" />
     <property role="2DA0ip" value="../../" />
     <property role="turDy" value="mps_build.xml" />
+    <node concept="2_Ic$z" id="2r1c5JFeAkV" role="3989C9">
+      <property role="TZNOO" value="11" />
+    </node>
     <node concept="2igEWh" id="4iy3Um73HnA" role="1hWBAP">
       <property role="3UIfUI" value="2000" />
     </node>
@@ -956,6 +962,11 @@
                 </node>
               </node>
             </node>
+          </node>
+        </node>
+        <node concept="1SiIV0" id="5_D06SY8rPw" role="3bR37C">
+          <node concept="3bR9La" id="5_D06SY8rPx" role="1SiIV1">
+            <ref role="3bR37D" to="ffeo:7Kfy9QB6LaO" resolve="jetbrains.mps.lang.structure" />
           </node>
         </node>
       </node>

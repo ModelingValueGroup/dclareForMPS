@@ -15,61 +15,25 @@
 
 package org.modelingvalue.dclare.mps;
 
-import org.jetbrains.mps.openapi.language.SAbstractConcept;
-import org.jetbrains.mps.openapi.language.SAbstractLink;
-import org.jetbrains.mps.openapi.language.SConcept;
-import org.jetbrains.mps.openapi.language.SConceptFeature;
-import org.jetbrains.mps.openapi.language.SContainmentLink;
-import org.jetbrains.mps.openapi.language.SInterfaceConcept;
-import org.jetbrains.mps.openapi.language.SLanguage;
-import org.jetbrains.mps.openapi.language.SProperty;
-import org.jetbrains.mps.openapi.language.SReferenceLink;
-import org.jetbrains.mps.openapi.model.ResolveInfo;
-import org.jetbrains.mps.openapi.model.SModel;
-import org.jetbrains.mps.openapi.model.SModelReference;
-import org.jetbrains.mps.openapi.model.SNode;
-import org.jetbrains.mps.openapi.model.SNodeAccessUtil;
-import org.jetbrains.mps.openapi.model.SNodeId;
-import org.jetbrains.mps.openapi.model.SNodeReference;
-import org.jetbrains.mps.openapi.model.SReference;
-import org.modelingvalue.collections.Collection;
-import org.modelingvalue.collections.List;
-import org.modelingvalue.collections.Map;
-import org.modelingvalue.collections.Set;
-import org.modelingvalue.collections.util.Pair;
-import org.modelingvalue.collections.util.Quintuple;
-import org.modelingvalue.collections.util.TriConsumer;
-import org.modelingvalue.collections.util.TriFunction;
-import org.modelingvalue.dclare.Action;
-import org.modelingvalue.dclare.Constant;
-import org.modelingvalue.dclare.Construction;
-import org.modelingvalue.dclare.Direction;
-import org.modelingvalue.dclare.LeafTransaction;
-import org.modelingvalue.dclare.Mutable;
-import org.modelingvalue.dclare.MutableTransaction;
-import org.modelingvalue.dclare.Newable;
-import org.modelingvalue.dclare.Observed;
-import org.modelingvalue.dclare.Observer;
-import org.modelingvalue.dclare.ObserverTransaction;
-import org.modelingvalue.dclare.Priority;
-import org.modelingvalue.dclare.Setable;
-import org.modelingvalue.dclare.State;
-import org.modelingvalue.dclare.Transaction;
-import org.modelingvalue.dclare.UniverseTransaction;
+import static org.modelingvalue.dclare.CoreSetableModifier.containment;
+import static org.modelingvalue.dclare.CoreSetableModifier.synthetic;
 
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+import org.jetbrains.mps.openapi.language.*;
+import org.jetbrains.mps.openapi.model.*;
+import org.modelingvalue.collections.*;
+import org.modelingvalue.collections.util.*;
+import org.modelingvalue.dclare.*;
+
 import jetbrains.mps.errors.item.IssueKindReportItem;
 import jetbrains.mps.errors.item.NodeReportItem;
 import jetbrains.mps.lang.smodel.generator.smodelAdapter.SNodeOperations;
 import jetbrains.mps.smodel.DynamicReference;
 import jetbrains.mps.smodel.SNodeUtil;
-
-import static org.modelingvalue.dclare.CoreSetableModifier.containment;
-import static org.modelingvalue.dclare.CoreSetableModifier.synthetic;
 
 @SuppressWarnings("unused")
 public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implements SNode {
@@ -406,11 +370,15 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
         if (original == null) {
             throw new IllegalArgumentException("Creating a DNode of non-resolveable SNode reference " + ref);
         }
-        SModel sModel = dClareMPS().read(() -> ref.getModelReference().resolve(null));
-        if (sModel == null) {
-            throw new IllegalArgumentException("Creating a DNode with a non-resolveable SModel " + original);
+        SModelReference mRef = ref.getModelReference();
+        SModel sModel = null;
+        if (mRef != null) {
+            sModel = dClareMPS().read(() -> mRef.resolve(null));
+            if (sModel == null) {
+                throw new IllegalArgumentException("Creating a DNode with a non-resolveable SModel " + original);
+            }
         }
-        Boolean external = DModel.EXTERNAL.get(sModel);
+        Boolean external = sModel != null ? DModel.EXTERNAL.get(sModel) : false;
         return originalConstruct(original, ref, () -> new DNode(new Object[]{uniqueLong(concept), concept, external}));
     }
 
@@ -468,7 +436,8 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
             SNode sParent = ((DNode) parent).original();
             //noinspection ConstantConditions
             if (sNode.getParent() == null) {
-                sParent.addChild(getContainmentLink(), sNode);
+                Setable<Mutable, ?> containing = dContaining();
+                sParent.addChild(containing != null && containing.id() instanceof SContainmentLink ? (SContainmentLink) containing.id() : null, sNode);
             }
         }
         if (concept.isSubConceptOf(SNodeUtil.concept_INamedConcept)) {
@@ -712,7 +681,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
         if (role.isMultiple()) {
             MANY_CONTAINMENT.get(role).set(this, (l, e) -> {
                 List<DNode> r = l.remove(e);
-                return r.insert(r.firstIndexOf(anchor), e);
+                return r.insert(anchor == null ? r.size() : r.firstIndexOf(anchor), e);
             }, dNode);
         } else {
             SINGLE_CONTAINMENT.get(role).set(this, dNode);
@@ -725,7 +694,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
         if (role.isMultiple()) {
             MANY_CONTAINMENT.get(role).set(this, (l, e) -> {
                 List<DNode> r = l.remove(e);
-                return r.insert(r.firstIndexOf(anchor) + 1, e);
+                return r.insert(anchor == null ? 0 : (r.firstIndexOf(anchor) + 1), e);
             }, dNode);
         } else {
             SINGLE_CONTAINMENT.get(role).set(this, dNode);
@@ -737,6 +706,10 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
         DNode dNode = of(child);
         SContainmentLink link = dNode.getContainmentLink();
         if (link != null) {
+            if (dNode.getConcept().isAbstract()) {
+                Newable.D_DERIVED_CONSTRUCTIONS.setDefault(dNode);
+                Newable.D_DIRECT_CONSTRUCTION.setDefault(dNode);
+            }
             if (link.isMultiple()) {
                 MANY_CONTAINMENT.get(link).set(this, List::remove, dNode);
             } else {
@@ -1172,7 +1145,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
             return true;
         } else {
             SModel sModel = getModelFromMPS(sNode.getReference());
-            return sModel != null && DModel.of(sModel).isActive();
+            return sModel == null || DModel.of(sModel).isActive();
         }
     }
 
