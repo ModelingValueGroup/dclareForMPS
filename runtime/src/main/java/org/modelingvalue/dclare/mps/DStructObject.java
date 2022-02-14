@@ -53,8 +53,9 @@ public class DStructObject extends DIdentifiedObject implements SStructObject {
 
     @Override
     protected DStructClass getType() {
-        DObjectType<?> dType = TYPE.get(dObjectParent());
-        return CLASS_OBJECT_TYPE.get(Triple.of(Set.of(getSClass().getLanguage()), getSClass(), dType.external()));
+        DObject parent = dObjectParent();
+        boolean external = parent != null ? TYPE.get(parent).external() : isExternal();
+        return CLASS_OBJECT_TYPE.get(Triple.of(Set.of(getSClass().getLanguage()), getSClass(), external));
     }
 
     @Override
