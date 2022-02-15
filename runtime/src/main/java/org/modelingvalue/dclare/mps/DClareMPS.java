@@ -636,7 +636,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
                 imperativeTransaction.state().run(() -> {
                     DModule dModule = DModule.of(sModule);
                     for (DIssue issue : DObject.DCLARE_ISSUES.get(dModule)) {
-                        consumer.consume((ModuleReportItem) issue.getItem());
+                        issue.getItem(i -> consumer.consume((ModuleReportItem) i));
                     }
                 });
             }
@@ -654,7 +654,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
             if (isRunning()) {
                 imperativeTransaction.state().run(() -> {
                     for (DIssue issue : DObject.DCLARE_ISSUES.get(DModel.of(sModel))) {
-                        consumer.consume((ModelReportItem) issue.getItem());
+                        issue.getItem(i -> consumer.consume((ModelReportItem) i));
                     }
                 });
             }
@@ -698,7 +698,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
         @Override
         public void check(SNode sNode, SRepository repository, Consumer<? super NodeReportItem> consumer, ProgressMonitor monitor) {
             for (DIssue issue : DObject.DCLARE_ISSUES.get(DNode.of(sNode))) {
-                consumer.consume((NodeReportItem) issue.getItem());
+                issue.getItem(i -> consumer.consume((NodeReportItem) i));
             }
         }
 
@@ -755,7 +755,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
             if (isRunning()) {
                 imperativeTransaction.state().run(() -> {
                     for (DIssue issue : DObject.DCLARE_ISSUES.get(DNode.of(sNode))) {
-                        errorsCollector.addError((NodeReportItem) issue.getItem());
+                        issue.getItem(i -> errorsCollector.addError((NodeReportItem) i));
                     }
                 });
             }

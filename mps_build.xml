@@ -1112,7 +1112,7 @@
       </classpath>
     </javac>
   </target>
-  
+
   <target name="java.compile.DclareTrace.generator" depends="java.compile.DclareTrace, fetchDependencies">
     <mkdir dir="${dclare_home}/languages/DclareTrace/generator/source_gen" />
     <mkdir dir="${build.tmp}/java/out/DclareTrace.generator" />
@@ -1160,7 +1160,7 @@
       </classpath>
     </javac>
   </target>
-  
+
   <target name="java.compile.java.modules.cycle.1" depends="java.compile.DclareMPSRuntime, java.compile.DclareMPS, java.compile.DclareTrace, fetchDependencies">
     <mkdir dir="${build.tmp}/java.modules.cycle.1" />
     <javac destdir="${build.tmp}/java.modules.cycle.1" fork="true" encoding="utf8" nowarn="true" includeantruntime="false">
