@@ -4,6 +4,7 @@
     <projectModules>
       <modulePath path="$PROJECT_DIR$/languages/DclareMPS/DclareMPS.mpl" folder="" />
       <modulePath path="$PROJECT_DIR$/languages/DclareMessages/DclareMessages.mpl" folder="" />
+      <modulePath path="$PROJECT_DIR$/languages/DclareTrace/DclareTrace.mpl" folder="" />
       <modulePath path="$PROJECT_DIR$/solutions/DclareForMPS.build/DclareForMPS.build.msd" folder="" />
       <modulePath path="$PROJECT_DIR$/solutions/DclareMPSPlugin/DclareMPSPlugin.msd" folder="" />
       <modulePath path="$PROJECT_DIR$/solutions/DclareMPSRuntime/DclareMPSRuntime.msd" folder="" />

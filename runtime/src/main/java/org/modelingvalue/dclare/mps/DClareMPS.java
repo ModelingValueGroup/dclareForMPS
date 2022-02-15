@@ -85,7 +85,9 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
     public static final Constant<SLanguage, Set<IRuleSet>>                                              RULE_SETS               = Constant.of("RULE_SETS", Set.of(), language -> {
                                                                                                                                     LanguageRuntime rtLang = registry().getLanguage(language);
                                                                                                                                     IRuleAspect aspect = rtLang != null ? rtLang.getAspect(IRuleAspect.class) : null;
-                                                                                                                                    return aspect != null ? Collection.of(aspect.getRuleSets()).toSet() : Set.of();
+                                                                                                                                    Set<IRuleSet> ruleSets = aspect != null ? Collection.of(aspect.getRuleSets()).toSet() : Set.of();
+                                                                                                                                    DclareTraceBroadcaster.onRuleSetActive(ruleSets);
+                                                                                                                                    return ruleSets;
                                                                                                                                 });
     public static final Constant<DevKit, Set<SLanguage>>                                                DEVKIT_LANGUAGES        = Constant.of("DEVKIT_LANGUAGES", Set.of(), devkit -> Collection.of(devkit.getAllExportedLanguageIds()).toSet());
     private static final Setable<DClareMPS, DRepository>                                                REPOSITORY_CONTAINER    = Setable.of("REPOSITORY_CONTAINER", null, containment);

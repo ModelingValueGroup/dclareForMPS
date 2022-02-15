@@ -703,6 +703,88 @@
           </node>
         </node>
       </node>
+      <node concept="1E1JtD" id="4rPXX8f$WTL" role="2G$12L">
+        <property role="BnDLt" value="true" />
+        <property role="TrG5h" value="DclareTrace" />
+        <property role="3LESm3" value="49ab02a1-40fa-4a23-af69-4944ff38ae30" />
+        <node concept="55IIr" id="4rPXX8f$WZn" role="3LF7KH">
+          <node concept="2Ry0Ak" id="4rPXX8f$X0H" role="iGT6I">
+            <property role="2Ry0Am" value="languages" />
+            <node concept="2Ry0Ak" id="4rPXX8f$X22" role="2Ry0An">
+              <property role="2Ry0Am" value="DclareTrace" />
+              <node concept="2Ry0Ak" id="4rPXX8f$X3n" role="2Ry0An">
+                <property role="2Ry0Am" value="DclareTrace.mpl" />
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="1SiIV0" id="4rPXX8f$X4j" role="3bR37C">
+          <node concept="3bR9La" id="4rPXX8f$X4k" role="1SiIV1">
+            <ref role="3bR37D" node="5TmHY1kYraS" resolve="DclareMPS" />
+          </node>
+        </node>
+        <node concept="1SiIV0" id="4rPXX8f$X4l" role="3bR37C">
+          <node concept="3bR9La" id="4rPXX8f$X4m" role="1SiIV1">
+            <ref role="3bR37D" to="ffeo:1TaHNgiIbJb" resolve="MPS.Platform" />
+          </node>
+        </node>
+        <node concept="1SiIV0" id="4rPXX8f$X4n" role="3bR37C">
+          <node concept="3bR9La" id="4rPXX8f$X4o" role="1SiIV1">
+            <ref role="3bR37D" to="ffeo:1TaHNgiIbIQ" resolve="MPS.Core" />
+          </node>
+        </node>
+        <node concept="1BupzO" id="4rPXX8f$X4x" role="3bR31x">
+          <property role="3ZfqAx" value="models" />
+          <property role="1Hdu6h" value="true" />
+          <property role="1HemKv" value="true" />
+          <node concept="3LXTmp" id="4rPXX8f$X4y" role="1HemKq">
+            <node concept="398BVA" id="4rPXX8f$X4p" role="3LXTmr">
+              <ref role="398BVh" node="3Lt_N8a$ptU" resolve="dclare_home" />
+              <node concept="2Ry0Ak" id="4rPXX8f$X4q" role="iGT6I">
+                <property role="2Ry0Am" value="languages" />
+                <node concept="2Ry0Ak" id="4rPXX8f$X4r" role="2Ry0An">
+                  <property role="2Ry0Am" value="DclareTrace" />
+                  <node concept="2Ry0Ak" id="4rPXX8f$X4s" role="2Ry0An">
+                    <property role="2Ry0Am" value="models" />
+                  </node>
+                </node>
+              </node>
+            </node>
+            <node concept="3qWCbU" id="4rPXX8f$X4z" role="3LXTna">
+              <property role="3qWCbO" value="**/*.mps, **/*.mpsr, **/.model" />
+            </node>
+          </node>
+        </node>
+        <node concept="1yeLz9" id="4rPXX8f$X4$" role="1TViLv">
+          <property role="TrG5h" value="DclareTrace.generator" />
+          <property role="3LESm3" value="ae796ca4-167d-4e3f-ac93-affa9e6d5e2f" />
+          <node concept="1BupzO" id="4rPXX8f$X4J" role="3bR31x">
+            <property role="3ZfqAx" value="generator/templates" />
+            <property role="1Hdu6h" value="true" />
+            <property role="1HemKv" value="true" />
+            <node concept="3LXTmp" id="4rPXX8f$X4K" role="1HemKq">
+              <node concept="398BVA" id="4rPXX8f$X4_" role="3LXTmr">
+                <ref role="398BVh" node="3Lt_N8a$ptU" resolve="dclare_home" />
+                <node concept="2Ry0Ak" id="4rPXX8f$X4A" role="iGT6I">
+                  <property role="2Ry0Am" value="languages" />
+                  <node concept="2Ry0Ak" id="4rPXX8f$X4B" role="2Ry0An">
+                    <property role="2Ry0Am" value="DclareTrace" />
+                    <node concept="2Ry0Ak" id="4rPXX8f$X4C" role="2Ry0An">
+                      <property role="2Ry0Am" value="generator" />
+                      <node concept="2Ry0Ak" id="4rPXX8f$X4D" role="2Ry0An">
+                        <property role="2Ry0Am" value="templates" />
+                      </node>
+                    </node>
+                  </node>
+                </node>
+              </node>
+              <node concept="3qWCbU" id="4rPXX8f$X4L" role="3LXTna">
+                <property role="3qWCbO" value="**/*.mps, **/*.mpsr, **/.model" />
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
       <node concept="1E1JtD" id="3_CqF4vomJJ" role="2G$12L">
         <property role="TrG5h" value="DclareMessages" />
         <property role="3LESm3" value="15ef76ea-e875-4ecb-ba93-f3d16cc9b71a" />
@@ -1077,6 +1159,16 @@
             <node concept="3qWCbU" id="4emHI0reHR_" role="3LXTna">
               <property role="3qWCbO" value="**/*.mps, **/*.mpsr, **/.model" />
             </node>
+          </node>
+        </node>
+        <node concept="1SiIV0" id="4rPXX8f$X98" role="3bR37C">
+          <node concept="3bR9La" id="4rPXX8f$X99" role="1SiIV1">
+            <ref role="3bR37D" node="4rPXX8f$WTL" resolve="DclareTrace" />
+          </node>
+        </node>
+        <node concept="1SiIV0" id="4rPXX8gx_7E" role="3bR37C">
+          <node concept="3bR9La" id="4rPXX8gx_7F" role="1SiIV1">
+            <ref role="3bR37D" to="ffeo:4SM2EuqHUPF" resolve="jetbrains.mps.lang.modelapi" />
           </node>
         </node>
       </node>
