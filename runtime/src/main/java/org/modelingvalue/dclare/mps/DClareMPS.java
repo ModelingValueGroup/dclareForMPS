@@ -46,6 +46,8 @@ import org.modelingvalue.dclare.mps.DclareModelCheckerBuilder.RootItemsToCheck;
 import org.modelingvalue.dclare.sync.DeltaAdaptor;
 import org.modelingvalue.dclare.sync.SyncConnectionHandler;
 
+import com.intellij.openapi.application.PathManager;
+
 import jetbrains.mps.checkers.*;
 import jetbrains.mps.checkers.ModelCheckerBuilder.ItemsToCheck;
 import jetbrains.mps.checkers.ModelCheckerBuilder.ModelsExtractorImpl;
@@ -816,6 +818,10 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
             SModule s = ((ModuleReportItem) item).getModule().resolve(repos);
             return s != null ? DModule.of(s) : null;
         }
+    }
+    
+    public static String getPluginPath() {
+    	return PathManager.getPluginsPath();
     }
 
 }
