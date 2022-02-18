@@ -18,18 +18,23 @@ package org.modelingvalue.dclare.mps;
 import org.modelingvalue.collections.Set;
 
 public class DclareTraceBroadcaster {
-	
-	private static DclareTracer tracer;
-	public static void setTracer(DclareTracer tracer) {
-		DclareTraceBroadcaster.tracer = tracer;
-	}
-	
-	public static void onModelActive(DModel m) {
-		tracer.onModelActive(m);
-	}
-	
-	public static void onRuleSetActive(Set<IRuleSet> r) {
-		r.forEach(i-> tracer.onRuleSetActive(i));		
-	}
+
+    private static DclareTracer tracer;
+
+    public static void setTracer(DclareTracer tracer) {
+        DclareTraceBroadcaster.tracer = tracer;
+    }
+
+    public static void onModelActive(DModel m) {
+        if (tracer != null) {
+            tracer.onModelActive(m);
+        }
+    }
+
+    public static void onRuleSetActive(Set<IRuleSet> r) {
+        if (tracer != null) {
+            r.forEachOrdered(i -> tracer.onRuleSetActive(i));
+        }
+    }
 
 }

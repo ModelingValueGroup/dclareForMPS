@@ -710,7 +710,6 @@
         </node>
       </node>
       <node concept="1E1JtD" id="4rPXX8f$WTL" role="2G$12L">
-        <property role="BnDLt" value="true" />
         <property role="TrG5h" value="DclareTrace" />
         <property role="3LESm3" value="49ab02a1-40fa-4a23-af69-4944ff38ae30" />
         <node concept="55IIr" id="4rPXX8f$WZn" role="3LF7KH">
@@ -1165,11 +1164,6 @@
         <node concept="1SiIV0" id="4rPXX8f$X98" role="3bR37C">
           <node concept="3bR9La" id="4rPXX8f$X99" role="1SiIV1">
             <ref role="3bR37D" node="4rPXX8f$WTL" resolve="DclareTrace" />
-          </node>
-        </node>
-        <node concept="1SiIV0" id="4rPXX8gx_7E" role="3bR37C">
-          <node concept="3bR9La" id="4rPXX8gx_7F" role="1SiIV1">
-            <ref role="3bR37D" to="ffeo:4SM2EuqHUPF" resolve="jetbrains.mps.lang.modelapi" />
           </node>
         </node>
       </node>
