@@ -4,7 +4,7 @@
   <languages>
     <use id="28f9e497-3b42-4291-aeba-0a1039153ab1" name="jetbrains.mps.lang.plugin" version="5" />
     <use id="ef7bf5ac-d06c-4342-b11d-e42104eb9343" name="jetbrains.mps.lang.plugin.standalone" version="0" />
-    <use id="f3061a53-9226-4cc5-a443-f952ceaf5816" name="jetbrains.mps.baseLanguage" version="11" />
+    <use id="f3061a53-9226-4cc5-a443-f952ceaf5816" name="jetbrains.mps.baseLanguage" version="12" />
     <use id="7866978e-a0f0-4cc7-81bc-4d213d9375e1" name="jetbrains.mps.lang.smodel" version="19" />
     <use id="69b8a993-9b87-4d96-bf0c-3559f4bb0c63" name="jetbrains.mps.lang.slanguage" version="0" />
     <use id="aee9cad2-acd4-4608-aef2-0004f6a1cdbd" name="jetbrains.mps.lang.actions" version="4" />
@@ -53,9 +53,9 @@
     <import index="hyam" ref="6354ebe7-c22a-4a0f-ac54-50b52ab9b065/java:java.awt.event(JDK/)" />
     <import index="r791" ref="6354ebe7-c22a-4a0f-ac54-50b52ab9b065/java:javax.swing.text(JDK/)" />
     <import index="akim" ref="r:36c1ea3b-fbca-41f9-87cc-9bacb8f18c30(DclareMessages.behavior)" />
-    <import index="7e0v" ref="r:afc499bf-658e-47de-983c-b73f835c87e1(jetbrains.mps.ide.devkit.editor)" />
     <import index="sbtp" ref="r:ab4a727d-863f-4cd6-83d6-c3322f012644(DclareTrace.structure)" />
     <import index="dvox" ref="r:9dfd3567-3b1f-4edb-85a0-3981ca2bfd8c(jetbrains.mps.lang.modelapi.structure)" />
+    <import index="7e0v" ref="r:afc499bf-658e-47de-983c-b73f835c87e1(jetbrains.mps.ide.devkit.editor)" />
     <import index="7ggn" ref="r:38c3b7db-3776-47fb-ba27-a4f002c4edc7(DclareMPS.structure)" implicit="true" />
     <import index="tpck" ref="r:00000000-0000-4000-0000-011c89590288(jetbrains.mps.lang.core.structure)" implicit="true" />
     <import index="1m72" ref="498d89d2-c2e9-11e2-ad49-6cf049e62fe5/java:com.intellij.openapi.components(MPS.IDEA/)" implicit="true" />
@@ -8967,7 +8967,7 @@
                   <property role="2bfB8j" value="true" />
                   <property role="373rjd" value="true" />
                   <ref role="1Y3XeK" to="t4tl:~DclareTracer" resolve="DclareTracer" />
-                  <ref role="37wK5l" to="wyt6:~Object.&lt;init&gt;()" />
+                  <ref role="37wK5l" to="wyt6:~Object.&lt;init&gt;()" resolve="Object" />
                   <node concept="3Tm1VV" id="5csmg0tHRSM" role="1B3o_S" />
                   <node concept="3clFb_" id="5csmg0tHRT0" role="jymVt">
                     <property role="TrG5h" value="onModelActive" />
@@ -9177,7 +9177,7 @@
                       <node concept="3clFbH" id="5csmg0uiz2V" role="3cqZAp" />
                     </node>
                     <node concept="2AHcQZ" id="5csmg0tHRT8" role="2AJF6D">
-                      <ref role="2AI5Lk" to="wyt6:~Override" />
+                      <ref role="2AI5Lk" to="wyt6:~Override" resolve="Override" />
                     </node>
                   </node>
                   <node concept="3clFb_" id="4rPXX8gDtPD" role="jymVt">
@@ -9194,8 +9194,8 @@
                       <node concept="3clFbF" id="3A_IU4jsfcB" role="3cqZAp">
                         <node concept="2OqwBi" id="3A_IU4jsfc$" role="3clFbG">
                           <node concept="10M0yZ" id="3A_IU4jsfc_" role="2Oq$k0">
-                            <ref role="1PxDUh" to="wyt6:~System" />
-                            <ref role="3cqZAo" to="wyt6:~System.err" />
+                            <ref role="1PxDUh" to="wyt6:~System" resolve="System" />
+                            <ref role="3cqZAo" to="wyt6:~System.err" resolve="err" />
                           </node>
                           <node concept="liA8E" id="3A_IU4jsfcA" role="2OqNvi">
                             <ref role="37wK5l" to="guwi:~PrintStream.println(java.lang.String)" resolve="println" />
@@ -9246,8 +9246,8 @@
                                 <node concept="3clFbF" id="3A_IU4jDbJV" role="3cqZAp">
                                   <node concept="2OqwBi" id="3A_IU4jDbJS" role="3clFbG">
                                     <node concept="10M0yZ" id="3A_IU4jDbJT" role="2Oq$k0">
-                                      <ref role="1PxDUh" to="wyt6:~System" />
-                                      <ref role="3cqZAo" to="wyt6:~System.err" />
+                                      <ref role="1PxDUh" to="wyt6:~System" resolve="System" />
+                                      <ref role="3cqZAo" to="wyt6:~System.err" resolve="err" />
                                     </node>
                                     <node concept="liA8E" id="3A_IU4jDbJU" role="2OqNvi">
                                       <ref role="37wK5l" to="guwi:~PrintStream.println(java.lang.String)" resolve="println" />
@@ -9372,7 +9372,7 @@
                                   <node concept="3fqX7Q" id="4rPXX8gVB7p" role="3clFbw">
                                     <node concept="2OqwBi" id="4rPXX8gVB7r" role="3fr31v">
                                       <node concept="37vLTw" id="4rPXX8heex2" role="2Oq$k0">
-                                        <ref role="3cqZAo" node="4rPXX8heewU" resolve="name" />
+                                        <ref role="3cqZAo" node="4rPXX8heewU" resolve="rulesetName" />
                                       </node>
                                       <node concept="liA8E" id="4rPXX8gVB7x" role="2OqNvi">
                                         <ref role="37wK5l" to="wyt6:~String.contains(java.lang.CharSequence)" resolve="contains" />
@@ -9390,7 +9390,7 @@
                       </node>
                     </node>
                     <node concept="2AHcQZ" id="4rPXX8gDtPL" role="2AJF6D">
-                      <ref role="2AI5Lk" to="wyt6:~Override" />
+                      <ref role="2AI5Lk" to="wyt6:~Override" resolve="Override" />
                     </node>
                   </node>
                   <node concept="3clFb_" id="4rPXX8hfOGR" role="jymVt">
@@ -9552,8 +9552,8 @@
                                               <node concept="3clFbF" id="3A_IU4jnsLT" role="3cqZAp">
                                                 <node concept="2OqwBi" id="3A_IU4jnsLQ" role="3clFbG">
                                                   <node concept="10M0yZ" id="3A_IU4jnsLR" role="2Oq$k0">
-                                                    <ref role="1PxDUh" to="wyt6:~System" />
-                                                    <ref role="3cqZAo" to="wyt6:~System.err" />
+                                                    <ref role="1PxDUh" to="wyt6:~System" resolve="System" />
+                                                    <ref role="3cqZAo" to="wyt6:~System.err" resolve="err" />
                                                   </node>
                                                   <node concept="liA8E" id="3A_IU4jnsLS" role="2OqNvi">
                                                     <ref role="37wK5l" to="guwi:~PrintStream.println(java.lang.String)" resolve="println" />
@@ -9915,7 +9915,7 @@
                 <node concept="2ShNRf" id="76$5hx$c8oE" role="37vLTx">
                   <node concept="1pGfFk" id="76$5hx$c8oF" role="2ShVmc">
                     <property role="373rjd" value="true" />
-                    <ref role="37wK5l" node="26TvwnxWAoZ" resolve="DClareTrace" />
+                    <ref role="37wK5l" node="26TvwnxWAoZ" resolve="DClareTracePanel" />
                     <node concept="37vLTw" id="76$5hx$c8oG" role="37wK5m">
                       <ref role="3cqZAo" node="76$5hx$c8ot" resolve="repos" />
                     </node>
