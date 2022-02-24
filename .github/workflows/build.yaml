@@ -37,6 +37,9 @@ jobs:
           distribution: zulu
 
       ################################################################################
+      - name: "bootstrap"
+        run: ./gradlew --build-file bootstrap.gradle.kts
+
       - name: "build"
         run: ./gradlew --info --scan
 

@@ -26,19 +26,21 @@ plugins {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // import ant file:
+if (!mvgmps.mpsInstallDir.isDirectory)
+    throw GradleException("You need to first run './gradlew --build-file bootstrap.gradle.kts' to download MPS");
+
 ant.lifecycleLogLevel = AntBuilder.AntMessagePriority.INFO
 ant.setProperty("mps_home", mvgmps.mpsInstallDir.toString())
 ant.setProperty("version", version)
 ant.setProperty("versionExtra", mvgmps.versionExtra)
 ant.setProperty("versionStamp", mvgmps.versionStamp)
 // WORKAROUND START (see https://youtrack.jetbrains.com/issue/MPS-34059)
-// for UTF-8 chars used in MPS: add file.encoding to jvmargs, crude but works for now
-val mps_build = gradle.rootProject.projectDir.resolve("mps_build.xml")
-mps_build.writeText(mps_build.readLines().joinToString(separator = System.lineSeparator()) {
+//     for UTF-8 chars used in MPS: add file.encoding to jvmargs, crude but works for now
+val antScript = resources.text.fromString(gradle.rootProject.projectDir.resolve("mps_build.xml").readLines().joinToString(separator = System.lineSeparator()) {
     it + if (it.matches(Regex(".*<jvmargs>$"))) "<arg value=\"-Dfile.encoding=UTF8\"/>" else ""
 })
 // WORKAROUND END
-ant.importBuild("mps_build.xml") {
+ant.importBuild(antScript) {
     "mpsant-$it"
 }
 tasks.filter {
@@ -61,7 +63,7 @@ tasks.filter {
         ant.setProperty("versionStamp", mvgmps.versionStamp)
     }
 }
-var clean_gen_dirs = tasks.create("clean_gen_dirs") {
+val clean_gen_dirs = tasks.create("clean_gen_dirs") {
     group = "build"
     doLast {
         listOf("languages", "solutions").forEach {
@@ -85,7 +87,6 @@ tasks.create("publish") {
     group = "publishing"
     dependsOn(tasks.named("mpsant-assemble"))
 }
-
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // upload plugin to jetbrains
 mvguploader {
