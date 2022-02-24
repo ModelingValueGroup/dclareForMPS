@@ -38,7 +38,9 @@ jobs:
 
       ################################################################################
       - name: "build"
-        run: ./gradlew --info --scan
+        run: |
+          ./gradlew --info --scan download-MPS
+          ./gradlew --info --scan
 
       - name: "upload zip"
         uses: actions/upload-artifact@v2
