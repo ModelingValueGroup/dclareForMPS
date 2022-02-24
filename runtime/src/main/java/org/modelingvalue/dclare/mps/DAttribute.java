@@ -77,15 +77,18 @@ public interface DAttribute<O, T> extends DFeature {
 
     final class DObservedAttribute<C extends DObject, V> extends DObserved<C, V> implements DAttribute<C, V> {
 
-        private final String    name;
-        private final Class<?>  cls;
-        private final SProperty sProperty;
-        private final boolean   indetifying;
+        private final String     name;
+        private final Class<?>   cls;
+        private final SProperty  sProperty;
+        private final boolean    indetifying;
+
+        private volatile boolean isRead = false;
+        // private volatile boolean changed = false;
 
         public DObservedAttribute(Object id, String name, boolean indetifying, V def, Class<?> cls, Supplier<Setable<?, ?>> opposite, Supplier<SNode> source, SProperty sProperty, SetableModifier... modifiers) {
             super(id, def, opposite, null, source, modifiers);
             setFromToMPS(null, (o, b, a) -> {
-                if (o instanceof DNode && !Objects.equals(b, a)) {
+                if (o instanceof DNode && !Objects.equals(b, a) && isRead) {
                     SNode sNode = ((DNode) o).tryOriginal();
                     SModel sModel = sNode != null ? sNode.getModel() : null;
                     if (sNode != null && sModel instanceof EditableSModel) {
@@ -93,6 +96,10 @@ public interface DAttribute<O, T> extends DFeature {
                         sNode.setProperty(sProperty, "");
                         sNode.setProperty(sProperty, null);
                         ((EditableSModel) sModel).setChanged(changed);
+                        //                        if (!changed) {
+                        //                            changed = true;
+                        //                            System.err.println("!!!!!!!!!!! FIRST CHANGED !!!!!!!!! attribute=" + name);
+                        //                        }
                         return true;
                     }
                 }
@@ -133,9 +140,15 @@ public interface DAttribute<O, T> extends DFeature {
         public V get(C object) {
             LeafTransaction tx = LeafTransaction.getCurrent();
             if (object instanceof DNode && tx instanceof ReadOnlyTransaction && DClareMPS.instance(tx).isRunningRead()) {
-                SNode original = ((DNode) object).tryOriginal();
-                if (original != null) {
-                    original.getProperty(sProperty);
+                if (!(tx instanceof DerivationTransaction) || !((DerivationTransaction) tx).isDeriving()) {
+                    SNode original = ((DNode) object).tryOriginal();
+                    if (original != null) {
+                        if (!isRead) {
+                            isRead = true;
+                            // System.err.println("!!!!!!! FIRST READ !!!!!!!!! attribute=" + name + ", thread=" + Thread.currentThread() + ", transaction=" + tx.universeTransaction());
+                        }
+                        original.getProperty(sProperty);
+                    }
                 }
             }
             if (!(tx instanceof DerivationTransaction) && !object.isActive()) {

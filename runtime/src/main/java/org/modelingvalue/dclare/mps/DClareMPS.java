@@ -588,12 +588,6 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
     }
 
     public static DClareMPS dClareForObject(Object sObject) {
-        if (ALL_DCLARE_MPS.isEmpty()) {
-            return null;
-        }
-        if (ALL_DCLARE_MPS.size() == 1) {
-            return ALL_DCLARE_MPS.get(0);
-        }
         if (sObject instanceof SNode) {
             sObject = ((SNode) sObject).getModel();
         }
@@ -623,7 +617,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
                 }
             }
         }
-        return ALL_DCLARE_MPS.get(0);
+        return null;
     }
 
     @Override
@@ -819,9 +813,9 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
             return s != null ? DModule.of(s) : null;
         }
     }
-    
+
     public static String getPluginPath() {
-    	return PathManager.getPluginsPath();
+        return PathManager.getPluginsPath();
     }
 
 }

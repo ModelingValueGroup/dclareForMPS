@@ -63,6 +63,7 @@ public class DclareForMPSEngine implements DeployListener {
             dClareMPS = new DClareMPS(this, project, config);
             statusIterator = dClareMPS.universeTransaction().getStatusIterator();
             ALL_DCLARE_MPS.add(dClareMPS);
+            // System.err.println("!!!!!!!!!!!!!!!!!!!!!! " + ALL_DCLARE_MPS);
         }
     }
 
@@ -84,6 +85,7 @@ public class DclareForMPSEngine implements DeployListener {
         CompletableFuture<Void> oldFuture = nextDClareMPS;
         synchronized (ALL_DCLARE_MPS) {
             ALL_DCLARE_MPS.remove(dClareMPS);
+            // System.err.println("!!!!!!!!!!!!!!!!!!!!!! " + ALL_DCLARE_MPS);
             newDClareMPS(project, config);
             if (config.isOnMode()) {
                 dClareMPS.start();
@@ -101,7 +103,10 @@ public class DclareForMPSEngine implements DeployListener {
     public void stop() {
         classLoaderManager.removeListener(this);
         stopDClareMPS();
-        ALL_DCLARE_MPS.remove(dClareMPS);
+        synchronized (ALL_DCLARE_MPS) {
+            ALL_DCLARE_MPS.remove(dClareMPS);
+            // System.err.println("!!!!!!!!!!!!!!!!!!!!!! " + ALL_DCLARE_MPS);
+        }
         dClareMPS = null;
         nextDClareMPS.complete(null);
     }
