@@ -584,7 +584,14 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
 
     public <T> T getOrDerive(Supplier<T> supplier) {
         ImperativeTransaction it = imperativeTransaction;
-        return (it != null ? it.state() : universeTransaction.lastState()).derive(supplier);
+        State state = it != null ? it.state() : universeTransaction.lastState();
+        return state.derive(() -> {
+            try {
+                return supplier.get();
+            } catch (NullPointerException npe) {
+                return null;
+            }
+        });
     }
 
     public static DClareMPS dClareForObject(Object sObject) {

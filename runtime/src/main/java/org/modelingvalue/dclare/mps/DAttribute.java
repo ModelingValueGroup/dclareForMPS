@@ -36,7 +36,7 @@ public interface DAttribute<O, T> extends DFeature {
     static <C, V> DAttribute<C, V> of(String id, String name, String anonymousType, String ruleSetType, boolean syn, boolean optional, boolean composite, int identifyingNr, Object def, Class<?> cls, SLanguage oppositeLanguage, String opposite, Supplier<SNode> source, Function<C, V> deriver, boolean onlyTemporal) {
         boolean idAttr = identifyingNr >= 0 && ("StructRuleSet".equals(ruleSetType) || anonymousType != null);
         SetableModifier[] mods = {synthetic.iff(syn), mandatory.iff(idAttr || (!optional && identifyingNr < 0)), containment.iff(composite)};
-        return idAttr ? new DIdentifyingAttribute(id, name, anonymousType, identifyingNr, cls, source, mods) : deriver != null ? new DConstant(id, name, cls, source, deriver, onlyTemporal, mods) : new DObservedAttribute(id, name, identifyingNr >= 0, def, cls, opposite != null ? () -> of(oppositeLanguage, opposite) : null, source, new InvalidProperty(id.toString(), name), mods);
+        return idAttr ? new DIdentifyingAttribute(id, name, anonymousType, identifyingNr, cls, source, mods) : deriver != null ? new DConstant(id, name, cls, source, deriver, onlyTemporal, mods) : new DObservedAttribute(id, name, identifyingNr >= 0, def, cls, opposite != null ? () -> of(oppositeLanguage, opposite) : null, source, mods);
     }
 
     @SuppressWarnings("unchecked")
@@ -83,10 +83,10 @@ public interface DAttribute<O, T> extends DFeature {
         private final boolean    indetifying;
 
         private volatile boolean isRead = false;
-        // private volatile boolean changed = false;
 
-        public DObservedAttribute(Object id, String name, boolean indetifying, V def, Class<?> cls, Supplier<Setable<?, ?>> opposite, Supplier<SNode> source, SProperty sProperty, SetableModifier... modifiers) {
+        public DObservedAttribute(Object id, String name, boolean indetifying, V def, Class<?> cls, Supplier<Setable<?, ?>> opposite, Supplier<SNode> source, SetableModifier... modifiers) {
             super(id, def, opposite, null, source, modifiers);
+            SProperty sProperty = new InvalidProperty(id.toString(), name);
             setFromToMPS(null, (o, b, a) -> {
                 if (o instanceof DNode && !Objects.equals(b, a) && isRead) {
                     SNode sNode = ((DNode) o).tryOriginal();
@@ -96,10 +96,7 @@ public interface DAttribute<O, T> extends DFeature {
                         sNode.setProperty(sProperty, "");
                         sNode.setProperty(sProperty, null);
                         ((EditableSModel) sModel).setChanged(changed);
-                        //                        if (!changed) {
-                        //                            changed = true;
-                        //                            System.err.println("!!!!!!!!!!! FIRST CHANGED !!!!!!!!! attribute=" + name);
-                        //                        }
+                        // System.err.println("!!!!!!!!!!! CHANGED !!!!!!!!! node=" + sNode + ", attribute=" + name + "#" + id);
                         return true;
                     }
                 }
@@ -141,13 +138,13 @@ public interface DAttribute<O, T> extends DFeature {
             LeafTransaction tx = LeafTransaction.getCurrent();
             if (object instanceof DNode && tx instanceof ReadOnlyTransaction && DClareMPS.instance(tx).isRunningRead()) {
                 if (!(tx instanceof DerivationTransaction) || !((DerivationTransaction) tx).isDeriving()) {
-                    SNode original = ((DNode) object).tryOriginal();
-                    if (original != null) {
+                    SNode sNode = ((DNode) object).tryOriginal();
+                    if (sNode != null) {
                         if (!isRead) {
                             isRead = true;
-                            // System.err.println("!!!!!!! FIRST READ !!!!!!!!! attribute=" + name + ", thread=" + Thread.currentThread() + ", transaction=" + tx.universeTransaction());
                         }
-                        original.getProperty(sProperty);
+                        // System.err.println("!!!!!!! READ !!!!!!!!! node=" + sNode + ", attribute=" + name + "#" + id + ", thread=" + Thread.currentThread() + ", transaction=" + tx.universeTransaction());
+                        sNode.getProperty(sProperty);
                     }
                 }
             }

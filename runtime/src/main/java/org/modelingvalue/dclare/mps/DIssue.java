@@ -18,6 +18,9 @@ package org.modelingvalue.dclare.mps;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import org.jetbrains.mps.openapi.model.SModel;
+import org.jetbrains.mps.openapi.model.SNode;
+import org.jetbrains.mps.openapi.module.SModule;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.dclare.*;
 import org.modelingvalue.dclare.mps.DRule.DObserver;
@@ -110,11 +113,20 @@ public class DIssue extends DIdentifiedObject {
     public void getItem(Consumer<IssueKindReportItem> consumer) {
         DObject o = getObject();
         if (o instanceof DModule) {
-            consumer.accept(new DIssueModuleReportItem(getSeverity(), ((DModule) o).original(), getMessage(), ruleId()));
+            SModule original = ((DModule) o).original();
+            if (original != null) {
+                consumer.accept(new DIssueModuleReportItem(getSeverity(), original, getMessage(), ruleId()));
+            }
         } else if (o instanceof DModel) {
-            consumer.accept(new DIssueModelReportItem(getSeverity(), ((DModel) o).original(), getMessage(), ruleId()));
+            SModel original = ((DModel) o).tryOriginal();
+            if (original != null) {
+                consumer.accept(new DIssueModelReportItem(getSeverity(), original, getMessage(), ruleId()));
+            }
         } else if (o instanceof DNode) {
-            consumer.accept(new DIssueNodeReportItem(getSeverity(), ((DNode) o).original(), getFeature(), getMessage(), ruleId()));
+            SNode original = ((DNode) o).tryOriginal();
+            if (original != null) {
+                consumer.accept(new DIssueNodeReportItem(getSeverity(), original, getFeature(), getMessage(), ruleId()));
+            }
         }
     }
 
