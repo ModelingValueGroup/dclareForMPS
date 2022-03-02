@@ -26,66 +26,70 @@ plugins {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // import ant file:
-if (!mvgmps.mpsInstallDir.isDirectory)
-    throw GradleException("You need to first run './gradlew --build-file bootstrap.gradle.kts' to download MPS");
+try {
+    if (!mvgmps.mpsInstallDir.isDirectory)
+        throw GradleException("You need to first run './gradlew --build-file bootstrap.gradle.kts' to download MPS");
 
-ant.lifecycleLogLevel = AntBuilder.AntMessagePriority.INFO
-ant.setProperty("mps_home", mvgmps.mpsInstallDir.toString())
-ant.setProperty("version", version)
-ant.setProperty("versionExtra", mvgmps.versionExtra)
-ant.setProperty("versionStamp", mvgmps.versionStamp)
+    ant.lifecycleLogLevel = AntBuilder.AntMessagePriority.INFO
+    ant.setProperty("mps_home", mvgmps.mpsInstallDir.toString())
+    ant.setProperty("version", version)
+    ant.setProperty("versionExtra", mvgmps.versionExtra)
+    ant.setProperty("versionStamp", mvgmps.versionStamp)
 // WORKAROUND START (see https://youtrack.jetbrains.com/issue/MPS-34059)
 //     for UTF-8 chars used in MPS: add file.encoding to jvmargs, crude but works for now
-val antScript = resources.text.fromString(gradle.rootProject.projectDir.resolve("mps_build.xml").readLines().joinToString(separator = System.lineSeparator()) {
-    it + if (it.matches(Regex(".*<jvmargs>$"))) "<arg value=\"-Dfile.encoding=UTF8\"/>" else ""
-})
+    val antScript = resources.text.fromString(gradle.rootProject.projectDir.resolve("mps_build.xml").readLines().joinToString(separator = System.lineSeparator()) {
+        it + if (it.matches(Regex(".*<jvmargs>$"))) "<arg value=\"-Dfile.encoding=UTF8\"/>" else ""
+    })
 // WORKAROUND END
-ant.importBuild(antScript) {
-    "mpsant-$it"
-}
-tasks.filter {
-    it.name.startsWith("mpsant-")
-}.forEach {
-    it.group = "mpsant"
-    if (it.name == "mpsant-fetchDependencies") {
-        // the runtime jars should be build and gathered first:
-        it.dependsOn(":runtime:gatherRuntimeJars")
+    ant.importBuild(antScript, gradle.rootProject.projectDir.absolutePath) {
+        "mpsant-$it"
     }
-    if (it.name.startsWith("mpsant-java.compile")) {
-        // generation should be triggered before any compilation can take place:
-        it.dependsOn("mpsant-generate")
+    tasks.filter {
+        it.name.startsWith("mpsant-")
+    }.forEach {
+        it.group = "mpsant"
+        if (it.name == "mpsant-fetchDependencies") {
+            // the runtime jars should be build and gathered first:
+            it.dependsOn(":runtime:gatherRuntimeJars")
+        }
+        if (it.name.startsWith("mpsant-java.compile")) {
+            // generation should be triggered before any compilation can take place:
+            it.dependsOn("mpsant-generate")
+        }
+        // always set the properties first:
+        it.doFirst {
+            ant.setProperty("mps_home", mvgmps.mpsInstallDir.toString())
+            ant.setProperty("version", version)
+            ant.setProperty("versionExtra", mvgmps.versionExtra)
+            ant.setProperty("versionStamp", mvgmps.versionStamp)
+        }
     }
-    // always set the properties first:
-    it.doFirst {
-        ant.setProperty("mps_home", mvgmps.mpsInstallDir.toString())
-        ant.setProperty("version", version)
-        ant.setProperty("versionExtra", mvgmps.versionExtra)
-        ant.setProperty("versionStamp", mvgmps.versionStamp)
-    }
-}
-val clean_gen_dirs = tasks.create("clean_gen_dirs") {
-    group = "build"
-    doLast {
-        listOf("languages", "solutions").forEach {
-            File(it).walkTopDown().filter {
-                it.name.contains("_gen")
-            }.forEach {
-                it.deleteRecursively()
+    val clean_gen_dirs = tasks.create("clean_gen_dirs") {
+        group = "build"
+        doLast {
+            listOf("languages", "solutions").forEach {
+                File(it).walkTopDown().filter {
+                    it.name.contains("_gen")
+                }.forEach {
+                    it.deleteRecursively()
+                }
             }
         }
     }
-}
-tasks.create("build") {
-    group = "build"
-    dependsOn(tasks.named("mpsant-build"))
-}
-tasks.create("clean") {
-    group = "build"
-    dependsOn(clean_gen_dirs)
-}
-tasks.create("publish") {
-    group = "publishing"
-    dependsOn(tasks.named("mpsant-assemble"))
+    tasks.create("build") {
+        group = "build"
+        dependsOn(tasks.named("mpsant-build"))
+    }
+    tasks.create("clean") {
+        group = "build"
+        dependsOn(clean_gen_dirs)
+    }
+    tasks.create("publish") {
+        group = "publishing"
+        dependsOn(tasks.named("mpsant-assemble"))
+    }
+} catch (e: Exception) {
+    println("problem with importing ant: " + e);
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // upload plugin to jetbrains
