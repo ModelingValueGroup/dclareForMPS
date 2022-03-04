@@ -32,6 +32,8 @@ import jetbrains.mps.smodel.adapter.structure.property.InvalidProperty;
 @SuppressWarnings({"rawtypes", "unused"})
 public interface DAttribute<O, T> extends DFeature {
 
+    Constant<DObservedAttribute, Boolean> IS_PUBLIC = Constant.of("$IS_PUBLIC", Boolean.FALSE, durable);
+
     @SuppressWarnings("unchecked")
     static <C, V> DAttribute<C, V> of(String id, String name, String anonymousType, String ruleSetType, boolean syn, boolean optional, boolean composite, int identifyingNr, Object def, Class<?> cls, SLanguage oppositeLanguage, String opposite, Supplier<SNode> source, Function<C, V> deriver, boolean onlyTemporal) {
         boolean idAttr = identifyingNr >= 0 && ("StructRuleSet".equals(ruleSetType) || anonymousType != null);
@@ -77,18 +79,16 @@ public interface DAttribute<O, T> extends DFeature {
 
     final class DObservedAttribute<C extends DObject, V> extends DObserved<C, V> implements DAttribute<C, V> {
 
-        private final String     name;
-        private final Class<?>   cls;
-        private final SProperty  sProperty;
-        private final boolean    indetifying;
-
-        private volatile boolean isRead = false;
+        private final String    name;
+        private final Class<?>  cls;
+        private final SProperty sProperty;
+        private final boolean   indetifying;
 
         public DObservedAttribute(Object id, String name, boolean indetifying, V def, Class<?> cls, Supplier<Setable<?, ?>> opposite, Supplier<SNode> source, SetableModifier... modifiers) {
             super(id, def, opposite, null, source, modifiers);
             SProperty sProperty = new InvalidProperty(id.toString(), name);
             setFromToMPS(null, (o, b, a) -> {
-                if (o instanceof DNode && !Objects.equals(b, a) && isRead) {
+                if (o instanceof DNode && !Objects.equals(b, a) && IS_PUBLIC.isSet(this)) {
                     SNode sNode = ((DNode) o).tryOriginal();
                     SModel sModel = sNode != null ? sNode.getModel() : null;
                     if (sNode != null && sModel instanceof EditableSModel) {
@@ -140,8 +140,8 @@ public interface DAttribute<O, T> extends DFeature {
                 if (!(tx instanceof DerivationTransaction) || !((DerivationTransaction) tx).isDeriving()) {
                     SNode sNode = ((DNode) object).tryOriginal();
                     if (sNode != null) {
-                        if (!isRead) {
-                            isRead = true;
+                        if (!IS_PUBLIC.isSet(this)) {
+                            IS_PUBLIC.set(this, Boolean.TRUE);
                         }
                         // System.err.println("!!!!!!! READ !!!!!!!!! node=" + sNode + ", attribute=" + name + "#" + id + ", thread=" + Thread.currentThread() + ", transaction=" + tx.universeTransaction());
                         sNode.getProperty(sProperty);

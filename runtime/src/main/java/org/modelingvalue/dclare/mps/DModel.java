@@ -174,9 +174,9 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
                                                                                                                  if (!pre && post) {
                                                                                                                      SModel sModel = m.tryOriginal();
                                                                                                                      if (sModel != null) {
-                                                                                                                    	 DclareTraceBroadcaster.onModelActive(m);                                                                                                                       
-                                                                                                                    	 if (dClareMPS().getConfig().isTraceActivation()) {
-                                                                                                                        	 System.err.println("DCLARE: ACTIVATE " + sModel.getName() + " (external = " + m.isExternal() + ")" + sModel + " " + System.identityHashCode(sModel));
+                                                                                                                         DclareTraceBroadcaster.onModelActive(m);
+                                                                                                                         if (dClareMPS().getConfig().isTraceActivation()) {
+                                                                                                                             System.err.println("DCLARE: ACTIVATE " + sModel.getName() + " (external = " + m.isExternal() + ")" + sModel + " " + System.identityHashCode(sModel));
                                                                                                                          }
                                                                                                                          READ_USED_MODELS.trigger(m);
                                                                                                                          READ_ROOTS.trigger(m);

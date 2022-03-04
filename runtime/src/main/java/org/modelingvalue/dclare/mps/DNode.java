@@ -15,8 +15,7 @@
 
 package org.modelingvalue.dclare.mps;
 
-import static org.modelingvalue.dclare.CoreSetableModifier.containment;
-import static org.modelingvalue.dclare.CoreSetableModifier.synthetic;
+import static org.modelingvalue.dclare.CoreSetableModifier.*;
 
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
@@ -40,7 +39,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
 
     private static final Constant<Quintuple<Set<SLanguage>, SConcept, Set<String>, Boolean, SLanguage>, DNodeType> NODE_TYPE              = Constant.of("NODE_TYPE", DNodeType::new);
 
-    private static final Constant<SConcept, AtomicLong>                                                            NODE_COUNTER           = Constant.of("NODE_COUNTER", NodeCounter::new);
+    private static final Constant<SConcept, AtomicLong>                                                            NODE_COUNTER           = Constant.of("NODE_COUNTER", NodeCounter::new, durable);
 
     protected static final Constant<SAbstractConcept, Set<SAbstractConcept>>                                       SUPER_CONCEPTS         = Constant.of("SUPER_CONCEPTS", ac -> {
                                                                                                                                               if (ac instanceof SInterfaceConcept) {
