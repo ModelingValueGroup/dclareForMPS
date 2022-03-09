@@ -369,6 +369,9 @@
       <node concept="m$_yC" id="13bz6S$OL82" role="m$_yJ">
         <ref role="m$_y1" to="ffeo:4k71ibbLe59" resolve="com.intellij.modules.mps" />
       </node>
+      <node concept="m$_yC" id="4fajGPAMj3f" role="m$_yJ">
+        <ref role="m$_y1" to="ffeo:5lGJ4Taqfsl" resolve="jetbrains.mps.ide.modelchecker" />
+      </node>
       <node concept="3_J27D" id="5TmHY1kYrbd" role="m_cZH">
         <node concept="3Mxwew" id="5TmHY1kYrbe" role="3MwsjC">
           <property role="3MwjfP" value="DclareForMPS" />
@@ -1174,6 +1177,16 @@
         <node concept="1SiIV0" id="78KS257jBYa" role="3bR37C">
           <node concept="3bR9La" id="78KS257jBYb" role="1SiIV1">
             <ref role="3bR37D" to="ffeo:6xsKswgwdcs" resolve="jetbrains.mps.ide.devkit.editor" />
+          </node>
+        </node>
+        <node concept="1SiIV0" id="4fajGPAMiWJ" role="3bR37C">
+          <node concept="3bR9La" id="4fajGPAMiWK" role="1SiIV1">
+            <ref role="3bR37D" to="ffeo:7Kfy9QB6Lfd" resolve="jetbrains.mps.findUsages.runtime" />
+          </node>
+        </node>
+        <node concept="1SiIV0" id="4fajGPAMiWL" role="3bR37C">
+          <node concept="3bR9La" id="4fajGPAMiWM" role="1SiIV1">
+            <ref role="3bR37D" to="ffeo:4IP11oWmB07" resolve="jetbrains.mps.ide.modelchecker.platform" />
           </node>
         </node>
       </node>
