@@ -183,7 +183,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
     public DclareForMpsConfig getConfig() {
         return config;
     }
-
+       
     @Override
     public void init() {
         Universe.super.init();
@@ -802,6 +802,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
                             DObject.MPS_ISSUES.set(d, Set::add, Pair.of(d, item));
                         }
                     }
+                    engine.issuesChanged(reportItems);
                 });
             });
         }

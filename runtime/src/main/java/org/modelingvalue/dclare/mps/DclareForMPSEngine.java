@@ -28,6 +28,7 @@ import org.modelingvalue.dclare.UniverseTransaction.Status;
 
 import jetbrains.mps.classloading.ClassLoaderManager;
 import jetbrains.mps.classloading.DeployListener;
+import jetbrains.mps.errors.item.IssueKindReportItem;
 import jetbrains.mps.ide.MPSCoreComponents;
 import jetbrains.mps.module.ReloadableModule;
 import jetbrains.mps.project.ProjectBase;
@@ -79,6 +80,21 @@ public class DclareForMPSEngine implements DeployListener {
                 startDCLareMPS(config);
             }
         }
+    }
+    
+    private IssuesChangeListener issueChangeListener = null;
+    public interface IssuesChangeListener {
+    	public void issuesChanges(java.util.List<IssueKindReportItem> issues);
+    }
+    
+    public void setIssuesChangeListener(IssuesChangeListener  listener) {
+    	this.issueChangeListener = listener;
+    }
+    
+    void issuesChanged(java.util.List<IssueKindReportItem> issues) {
+    	if (issueChangeListener!=null) {
+    		issueChangeListener.issuesChanges(issues);
+    	}
     }
 
     private void startDCLareMPS(DclareForMpsConfig config) {
