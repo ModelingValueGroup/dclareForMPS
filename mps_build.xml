@@ -58,6 +58,7 @@
         <depends>jetbrains.mps.build</depends>
         <depends>jetbrains.mps.ide.devkit</depends>
         <depends>com.intellij.modules.mps</depends>
+        <depends>jetbrains.mps.ide.modelchecker</depends>
         <idea-version since-build="213.5000.0000" until-build="213.9000.0000" />
         
         <extensions defaultExtensionNs="com.intellij">
@@ -79,6 +80,7 @@
         <depends>jetbrains.mps.build</depends>
         <depends>jetbrains.mps.ide.devkit</depends>
         <depends>com.intellij.modules.mps</depends>
+        <depends>jetbrains.mps.ide.modelchecker</depends>
         <idea-version since-build="213.5000.0000" until-build="213.9000.0000" />
         
         <extensions defaultExtensionNs="com.intellij">
@@ -640,7 +642,9 @@
           <module ref="498d89d2-c2e9-11e2-ad49-6cf049e62fe5(MPS.IDEA)" kind="cl" />
           <module ref="8865b7a8-5271-43d3-884c-6fd1d9cfdd34(MPS.OpenAPI)" kind="cl" />
           <module ref="742f6602-5a2f-4313-aa6e-ae1cd4ffdc61(MPS.Platform)" kind="cl" />
+          <module ref="bfbdd672-7ff5-403f-af4f-16da5226f34c(jetbrains.mps.findUsages.runtime)" kind="cl" />
           <module ref="cae9c33a-938f-42e8-8f0f-26f001c0af63(jetbrains.mps.ide.devkit.editor)" kind="cl" />
+          <module ref="a381759b-acec-4e2e-8745-7bf905520fca(jetbrains.mps.ide.modelchecker.platform)" kind="cl" />
           <module ref="25092e07-e655-497c-92fb-558a8e3080ed(jetbrains.mps.ide.ui)" kind="cl" />
           <module ref="b401a680-8325-4110-8fd3-84331ff25bef(jetbrains.mps.lang.generator)" kind="cl" />
           <module ref="c72da2b9-7cce-4447-8389-f407dc1158b7(jetbrains.mps.lang.structure)" kind="cl" />
@@ -761,6 +765,7 @@
       <settings refid="m2m-defaults" />
       <plugin path="${artifacts.mps}/plugins/mps-build" />
       <plugin path="${artifacts.mps}/plugins/mps-core" />
+      <plugin path="${artifacts.mps}/plugins/mps-modelchecker" />
       <library file="${artifacts.mps}/languages/baseLanguage/closures.runtime.jar" />
       <library file="${artifacts.mps}/languages/baseLanguage/collections.runtime.jar" />
       <library file="${artifacts.mps}/languages/baseLanguage/jetbrains.mps.baseLanguage.blTypes.jar" />
@@ -1365,6 +1370,7 @@
         <pathelement path="${build.tmp}/java/out/DclareMPSRuntime" />
         <pathelement path="${build.tmp}/java/out/DclareMessages" />
         <pathelement path="${build.tmp}/java/out/DclareTrace" />
+        <fileset file="${artifacts.mps}/plugins/mps-modelchecker/lib/modelchecker.jar" />
         <fileset file="${artifacts.mps}/lib/mps-icons.jar" />
         <fileset file="${artifacts.mps}/lib/mps-workbench.jar" />
         <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/dclare.jar" />
