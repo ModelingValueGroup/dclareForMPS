@@ -183,7 +183,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
     public DclareForMpsConfig getConfig() {
         return config;
     }
-       
+
     @Override
     public void init() {
         Universe.super.init();
@@ -778,7 +778,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
         changedModules.init(Set.of());
         changedRoots.init(Set.of());
         if (!models.isEmpty() || !modules.isEmpty() || !roots.isEmpty()) {
-            thePool.execute(() -> {
+            invokeLater(() -> thePool.execute(() -> {
                 RootItemsToCheck itemsToCheck = new RootItemsToCheck();
                 itemsToCheck.models = models.collect(Collectors.toList());
                 itemsToCheck.modules = modules.collect(Collectors.toList());
@@ -804,7 +804,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
                     }
                     engine.issuesChanged(reportItems);
                 });
-            });
+            }));
         }
     }
 
