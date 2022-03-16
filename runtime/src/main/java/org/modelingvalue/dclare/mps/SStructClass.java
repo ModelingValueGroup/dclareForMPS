@@ -16,30 +16,34 @@
 package org.modelingvalue.dclare.mps;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
+import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.Set;
 
 @SuppressWarnings("unused")
 public class SStructClass {
 
-    public static SStructClass of(String id, String name, SLanguage language, SStructClass... supers) {
-        return new SStructClass(id, name, language, Set.of(supers));
+    @SuppressWarnings("rawtypes")
+    public static SStructClass of(String id, String name, SLanguage language, DAttribute[] identity, SStructClass[] supers) {
+        return new SStructClass(id, name, language, List.of(identity), Set.of(supers));
     }
 
     public static <C, V> SStructClass of(SLanguage language, String id) {
         return DClareMPS.STRUCT_CLASS_MAP.get(language).get(id);
     }
 
-    private final String            id;
-    private final String            name;
-    private final Set<SStructClass> supers;
-    private final SLanguage         language;
+    private final String                 id;
+    private final String                 name;
+    private final List<DAttribute<?, ?>> identity;
+    private final Set<SStructClass>      supers;
+    private final SLanguage              language;
 
-    private SStructClass(String id, String name, SLanguage language, Set<SStructClass> supers) {
+    private SStructClass(String id, String name, SLanguage language, List<DAttribute<?, ?>> identity, Set<SStructClass> supers) {
         super();
         this.id = id;
         this.name = name;
         this.language = language;
         this.supers = supers;
+        this.identity = identity;
     }
 
     @Override
@@ -76,6 +80,14 @@ public class SStructClass {
 
     public SLanguage getLanguage() {
         return language;
+    }
+
+    public List<DAttribute<?, ?>> getIdentity() {
+        return identity;
+    }
+
+    public Set<SStructClass> getSupers() {
+        return supers;
     }
 
 }

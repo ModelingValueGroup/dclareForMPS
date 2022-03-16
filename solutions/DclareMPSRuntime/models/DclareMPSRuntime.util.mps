@@ -4630,8 +4630,8 @@
       <node concept="3clFbS" id="3Qetf3dBkK$" role="3clF47">
         <node concept="3clFbF" id="3Qetf3dBlui" role="3cqZAp">
           <node concept="2YIFZM" id="25AJqx1X2r1" role="3clFbG">
-            <ref role="37wK5l" to="t4tl:~SStructClass.of(java.lang.String,java.lang.String,org.jetbrains.mps.openapi.language.SLanguage,org.modelingvalue.dclare.mps.SStructClass...)" resolve="of" />
             <ref role="1Pybhc" to="t4tl:~SStructClass" resolve="SStructClass" />
+            <ref role="37wK5l" to="t4tl:~SStructClass.of(java.lang.String,java.lang.String,org.jetbrains.mps.openapi.language.SLanguage,org.modelingvalue.dclare.mps.DAttribute[],org.modelingvalue.dclare.mps.SStructClass[])" resolve="of" />
             <node concept="37vLTw" id="25AJqx1X2r2" role="37wK5m">
               <ref role="3cqZAo" node="3Qetf3dBlad" resolve="classId" />
             </node>
@@ -4640,6 +4640,9 @@
             </node>
             <node concept="37vLTw" id="25AJqx1X2r4" role="37wK5m">
               <ref role="3cqZAo" node="23rj$OmSJTR" resolve="lang" />
+            </node>
+            <node concept="37vLTw" id="5DIHqRLkJ3s" role="37wK5m">
+              <ref role="3cqZAo" node="5DIHqRLkEun" resolve="identity" />
             </node>
             <node concept="37vLTw" id="25AJqx1X2r5" role="37wK5m">
               <ref role="3cqZAo" node="3Qetf3dBljs" resolve="supers" />
@@ -4664,6 +4667,14 @@
       <node concept="37vLTG" id="3Qetf3dBlcn" role="3clF46">
         <property role="TrG5h" value="name" />
         <node concept="17QB3L" id="3Qetf3dBloA" role="1tU5fm" />
+      </node>
+      <node concept="37vLTG" id="5DIHqRLkEun" role="3clF46">
+        <property role="TrG5h" value="identity" />
+        <node concept="10Q1$e" id="5DIHqRLkGq8" role="1tU5fm">
+          <node concept="3uibUv" id="5DIHqRLkF6q" role="10Q1$1">
+            <ref role="3uigEE" to="t4tl:~DAttribute" resolve="DAttribute" />
+          </node>
+        </node>
       </node>
       <node concept="37vLTG" id="3Qetf3dBljs" role="3clF46">
         <property role="TrG5h" value="supers" />

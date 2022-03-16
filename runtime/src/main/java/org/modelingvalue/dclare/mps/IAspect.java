@@ -17,12 +17,10 @@ package org.modelingvalue.dclare.mps;
 
 import java.util.List;
 
-import jetbrains.mps.smodel.runtime.ILanguageAspect;
+public interface IAspect {
 
-public interface IRuleAspect extends ILanguageAspect {
-    List<IRuleSet> getRuleSets();
+    String getName();
 
-    List<IAspect> getAspects();
+    List<IAspect> getDependencies();
 
-    List<SStructClass> getStructClasses();
 }
