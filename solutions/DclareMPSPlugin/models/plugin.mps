@@ -67,6 +67,7 @@
     <import index="guwi" ref="6354ebe7-c22a-4a0f-ac54-50b52ab9b065/java:java.io(JDK/)" implicit="true" />
     <import index="1ctc" ref="6354ebe7-c22a-4a0f-ac54-50b52ab9b065/java:java.util.stream(JDK/)" implicit="true" />
     <import index="7bx7" ref="742f6602-5a2f-4313-aa6e-ae1cd4ffdc61/java:jetbrains.mps.workbench.action(MPS.Platform/)" implicit="true" />
+    <import index="us1s" ref="r:e7d7a1fa-fb58-4cf6-bc1d-e5ed722e0c61(DclareMPS.behavior)" implicit="true" />
   </imports>
   <registry>
     <language id="982eb8df-2c96-4bd7-9963-11712ea622e5" name="jetbrains.mps.lang.resources">
@@ -474,6 +475,7 @@
         <child id="1144104376918" name="parameter" index="1xVPHs" />
       </concept>
       <concept id="1179409122411" name="jetbrains.mps.lang.smodel.structure.Node_ConceptMethodCall" flags="nn" index="2qgKlT" />
+      <concept id="7453996997717780434" name="jetbrains.mps.lang.smodel.structure.Node_GetSConceptOperation" flags="nn" index="2yIwOk" />
       <concept id="2396822768958367367" name="jetbrains.mps.lang.smodel.structure.AbstractTypeCastExpression" flags="nn" index="$5XWr">
         <child id="6733348108486823193" name="leftExpression" index="1m5AlR" />
         <child id="3906496115198199033" name="conceptArgument" index="3oSUPX" />
@@ -6889,6 +6891,42 @@
                   </node>
                 </node>
               </node>
+              <node concept="3clFbJ" id="4kJ$pn8w2BP" role="3cqZAp">
+                <node concept="3clFbS" id="4kJ$pn8w2BR" role="3clFbx">
+                  <node concept="2JFkCU" id="4kJ$pn8w2yE" role="3cqZAp">
+                    <node concept="tCFHf" id="4kJ$pn8w2zj" role="2JFLmv">
+                      <ref role="tCJdB" node="4kJ$pn8loKF" resolve="MoveToAspectRuleSet" />
+                      <node concept="37vLTw" id="4kJ$pn8w2zz" role="2J__8u">
+                        <ref role="3cqZAo" node="6aMI9gHDZEA" resolve="ruleSet" />
+                      </node>
+                    </node>
+                  </node>
+                </node>
+                <node concept="3fqX7Q" id="4kJ$pn8w2WF" role="3clFbw">
+                  <node concept="2OqwBi" id="4kJ$pn8w2WH" role="3fr31v">
+                    <node concept="37vLTw" id="4kJ$pn8w2WI" role="2Oq$k0">
+                      <ref role="3cqZAo" node="6aMI9gHDZEA" resolve="ruleSet" />
+                    </node>
+                    <node concept="1mIQ4w" id="4kJ$pn8w2WJ" role="2OqNvi">
+                      <node concept="chp4Y" id="4kJ$pn8w2WK" role="cj9EA">
+                        <ref role="cht4Q" to="7ggn:4kJ$pn77AZT" resolve="AspectRuleSet" />
+                      </node>
+                    </node>
+                  </node>
+                </node>
+                <node concept="9aQIb" id="4kJ$pn8xtg8" role="9aQIa">
+                  <node concept="3clFbS" id="4kJ$pn8xtg9" role="9aQI4">
+                    <node concept="2JFkCU" id="4kJ$pn8xtu_" role="3cqZAp">
+                      <node concept="tCFHf" id="4kJ$pn8xtuQ" role="2JFLmv">
+                        <ref role="tCJdB" node="4kJ$pn8x9SW" resolve="MoveToRuleSet" />
+                        <node concept="37vLTw" id="4kJ$pn8xtv6" role="2J__8u">
+                          <ref role="3cqZAo" node="6aMI9gHDZEA" resolve="ruleSet" />
+                        </node>
+                      </node>
+                    </node>
+                  </node>
+                </node>
+              </node>
             </node>
             <node concept="3y3z36" id="6aMI9gHE0b6" role="3clFbw">
               <node concept="10Nm6u" id="6aMI9gHE0hu" role="3uHU7w" />
@@ -10834,33 +10872,40 @@
             </node>
           </node>
         </node>
-        <node concept="3clFbF" id="5GUyf6onmh9" role="3cqZAp">
-          <node concept="2OqwBi" id="5GUyf6onmA4" role="3clFbG">
-            <node concept="2OqwBi" id="5GUyf6onmna" role="2Oq$k0">
-              <node concept="tl45R" id="5GUyf6onmh7" role="2Oq$k0" />
-              <node concept="liA8E" id="5GUyf6onm$S" role="2OqNvi">
-                <ref role="37wK5l" to="qkt:~AnActionEvent.getPresentation()" resolve="getPresentation" />
-              </node>
-            </node>
-            <node concept="liA8E" id="5GUyf6onmFb" role="2OqNvi">
-              <ref role="37wK5l" to="qkt:~Presentation.setText(java.lang.String)" resolve="setText" />
-              <node concept="3cpWs3" id="5GUyf6onmVl" role="37wK5m">
-                <node concept="2OqwBi" id="5GUyf6onne2" role="3uHU7w">
-                  <node concept="2OqwBi" id="5cgilv1EgoL" role="2Oq$k0">
-                    <node concept="2WthIp" id="5cgilv1EgoO" role="2Oq$k0" />
-                    <node concept="2BZ7hE" id="5cgilv1EgoQ" role="2OqNvi">
-                      <ref role="2WH_rO" node="5cgilv1DQxD" resolve="aspect" />
+        <node concept="3clFbJ" id="4kJ$pn8xrL5" role="3cqZAp">
+          <node concept="3clFbS" id="4kJ$pn8xrL7" role="3clFbx">
+            <node concept="3clFbF" id="5GUyf6onmh9" role="3cqZAp">
+              <node concept="2OqwBi" id="5GUyf6onmA4" role="3clFbG">
+                <node concept="2OqwBi" id="5GUyf6onmna" role="2Oq$k0">
+                  <node concept="tl45R" id="5GUyf6onmh7" role="2Oq$k0" />
+                  <node concept="liA8E" id="5GUyf6onm$S" role="2OqNvi">
+                    <ref role="37wK5l" to="qkt:~AnActionEvent.getPresentation()" resolve="getPresentation" />
+                  </node>
+                </node>
+                <node concept="liA8E" id="5GUyf6onmFb" role="2OqNvi">
+                  <ref role="37wK5l" to="qkt:~Presentation.setText(java.lang.String)" resolve="setText" />
+                  <node concept="3cpWs3" id="5GUyf6onmVl" role="37wK5m">
+                    <node concept="2OqwBi" id="5GUyf6onne2" role="3uHU7w">
+                      <node concept="2OqwBi" id="5cgilv1EgoL" role="2Oq$k0">
+                        <node concept="2WthIp" id="5cgilv1EgoO" role="2Oq$k0" />
+                        <node concept="2BZ7hE" id="5cgilv1EgoQ" role="2OqNvi">
+                          <ref role="2WH_rO" node="5cgilv1DQxD" resolve="aspect" />
+                        </node>
+                      </node>
+                      <node concept="3TrcHB" id="5GUyf6onnt5" role="2OqNvi">
+                        <ref role="3TsBF5" to="tpck:h0TrG11" resolve="name" />
+                      </node>
+                    </node>
+                    <node concept="Xl_RD" id="5GUyf6onmFY" role="3uHU7B">
+                      <property role="Xl_RC" value="Move To " />
                     </node>
                   </node>
-                  <node concept="3TrcHB" id="5GUyf6onnt5" role="2OqNvi">
-                    <ref role="3TsBF5" to="tpck:h0TrG11" resolve="name" />
-                  </node>
-                </node>
-                <node concept="Xl_RD" id="5GUyf6onmFY" role="3uHU7B">
-                  <property role="Xl_RC" value="Move To " />
                 </node>
               </node>
             </node>
+          </node>
+          <node concept="37vLTw" id="4kJ$pn8xsj4" role="3clFbw">
+            <ref role="3cqZAo" node="5cgilv1EcRD" resolve="applicable" />
           </node>
         </node>
       </node>
@@ -10884,6 +10929,360 @@
       <node concept="3clFbS" id="4kJ$pn781Mf" role="2VODD2">
         <node concept="3clFbF" id="4kJ$pn781Mg" role="3cqZAp">
           <node concept="10Nm6u" id="4kJ$pn781Mh" role="3clFbG" />
+        </node>
+      </node>
+    </node>
+  </node>
+  <node concept="sE7Ow" id="4kJ$pn8loKF">
+    <property role="TrG5h" value="MoveToAspectRuleSet" />
+    <property role="72QZ$" value="true" />
+    <property role="2uzpH1" value="Move To Aspect RuleSet" />
+    <node concept="2S4$dB" id="4kJ$pn8lpGd" role="1NuT2Z">
+      <property role="TrG5h" value="moved" />
+      <node concept="3Tm6S6" id="4kJ$pn8lpGe" role="1B3o_S" />
+      <node concept="1oajcY" id="4kJ$pn8lpGf" role="1oa70y" />
+      <node concept="3Tqbb2" id="4kJ$pn8lpGg" role="1tU5fm" />
+    </node>
+    <node concept="1DS2jV" id="4kJ$pn8lqai" role="1NuT2Z">
+      <property role="TrG5h" value="project" />
+      <ref role="1DUlNI" to="qq03:~MPSCommonDataKeys.MPS_PROJECT" resolve="MPS_PROJECT" />
+      <node concept="1oajcY" id="4kJ$pn8lqaj" role="1oa70y" />
+    </node>
+    <node concept="2JriF1" id="4kJ$pn8lpzE" role="2JrayB">
+      <property role="TrG5h" value="ruleSet" />
+      <node concept="15s5l7" id="4kJ$pn8lpzF" role="lGtFl">
+        <property role="1eyWvh" value="FLAVOUR_ISSUE_KIND=&quot;typesystem (typesystem)&quot;;FLAVOUR_MESSAGE=&quot;Error: toString should be specified for parameters of non-primitive type&quot;;FLAVOUR_RULE_ID=&quot;[r:00000000-0000-4000-0000-011c89590364(jetbrains.mps.lang.plugin.typesystem)/1227020617850]&quot;;" />
+        <property role="huDt6" value="Error: toString should be specified for parameters of non-primitive type" />
+      </node>
+      <node concept="3Tm6S6" id="4kJ$pn8lpzG" role="1B3o_S" />
+      <node concept="3Tqbb2" id="4kJ$pn8lpzH" role="1tU5fm">
+        <ref role="ehGHo" to="7ggn:29R9$zZUovD" resolve="RuleSet" />
+      </node>
+    </node>
+    <node concept="tnohg" id="4kJ$pn8loKG" role="tncku">
+      <node concept="3clFbS" id="4kJ$pn8loKH" role="2VODD2">
+        <node concept="3clFbF" id="4kJ$pn8m4N6" role="3cqZAp">
+          <node concept="2OqwBi" id="4kJ$pn8m4N7" role="3clFbG">
+            <node concept="liA8E" id="4kJ$pn8m4N8" role="2OqNvi">
+              <ref role="37wK5l" to="lui2:~ModelAccess.runReadInEDT(java.lang.Runnable)" resolve="runReadInEDT" />
+              <node concept="2ShNRf" id="4kJ$pn8m4N9" role="37wK5m">
+                <node concept="YeOm9" id="4kJ$pn8m4Na" role="2ShVmc">
+                  <node concept="1Y3b0j" id="4kJ$pn8m4Nb" role="YeSDq">
+                    <property role="2bfB8j" value="true" />
+                    <ref role="37wK5l" to="wyt6:~Object.&lt;init&gt;()" resolve="Object" />
+                    <ref role="1Y3XeK" to="wyt6:~Runnable" resolve="Runnable" />
+                    <node concept="3Tm1VV" id="4kJ$pn8m4Nc" role="1B3o_S" />
+                    <node concept="3clFb_" id="4kJ$pn8m4Nd" role="jymVt">
+                      <property role="1EzhhJ" value="false" />
+                      <property role="TrG5h" value="run" />
+                      <property role="DiZV1" value="false" />
+                      <node concept="3Tm1VV" id="4kJ$pn8m4Ne" role="1B3o_S" />
+                      <node concept="3cqZAl" id="4kJ$pn8m4Nf" role="3clF45" />
+                      <node concept="3clFbS" id="4kJ$pn8m4Ng" role="3clF47">
+                        <node concept="3clFbJ" id="4kJ$pn8m4Nh" role="3cqZAp">
+                          <node concept="3fqX7Q" id="4kJ$pn8m4Ni" role="3clFbw">
+                            <node concept="2YIFZM" id="4kJ$pn8m4Nj" role="3fr31v">
+                              <ref role="1Pybhc" to="mhbf:~SNodeUtil" resolve="SNodeUtil" />
+                              <ref role="37wK5l" to="mhbf:~SNodeUtil.isAccessible(org.jetbrains.mps.openapi.model.SNode,org.jetbrains.mps.openapi.module.SRepository)" resolve="isAccessible" />
+                              <node concept="2OqwBi" id="4kJ$pn8m4Nk" role="37wK5m">
+                                <node concept="2WthIp" id="4kJ$pn8m4Nl" role="2Oq$k0">
+                                  <ref role="32nkFo" node="4kJ$pn8loKF" resolve="MoveToAspectRuleSet" />
+                                </node>
+                                <node concept="3gHZIF" id="4kJ$pn8m4Nm" role="2OqNvi">
+                                  <ref role="2WH_rO" node="4kJ$pn8lpGd" resolve="moved" />
+                                </node>
+                              </node>
+                              <node concept="2OqwBi" id="4kJ$pn8m4Nn" role="37wK5m">
+                                <node concept="2OqwBi" id="4kJ$pn8m4No" role="2Oq$k0">
+                                  <node concept="2WthIp" id="4kJ$pn8m4Np" role="2Oq$k0">
+                                    <ref role="32nkFo" node="4kJ$pn8loKF" resolve="MoveToAspectRuleSet" />
+                                  </node>
+                                  <node concept="1DTwFV" id="4kJ$pn8m4Nq" role="2OqNvi">
+                                    <ref role="2WH_rO" node="4kJ$pn8lqai" resolve="project" />
+                                  </node>
+                                </node>
+                                <node concept="liA8E" id="4kJ$pn8m4Nr" role="2OqNvi">
+                                  <ref role="37wK5l" to="z1c4:~Project.getRepository()" resolve="getRepository" />
+                                </node>
+                              </node>
+                            </node>
+                          </node>
+                          <node concept="3clFbS" id="4kJ$pn8m4Ns" role="3clFbx">
+                            <node concept="3cpWs6" id="4kJ$pn8m4Nt" role="3cqZAp" />
+                          </node>
+                        </node>
+                        <node concept="1Xdei3" id="4kJ$pn8m4Nu" role="3cqZAp">
+                          <ref role="1Xdeis" to="8a6h:4kJ$pn8jKVy" resolve="MoveToAspectRuleSet" />
+                          <node concept="2OqwBi" id="4kJ$pn8m4Nv" role="1Xdeiv">
+                            <node concept="2WthIp" id="4kJ$pn8m4Nw" role="2Oq$k0" />
+                            <node concept="3gHZIF" id="4kJ$pn8m4Nx" role="2OqNvi">
+                              <ref role="2WH_rO" node="4kJ$pn8lpGd" resolve="moved" />
+                            </node>
+                          </node>
+                          <node concept="2OqwBi" id="4kJ$pn8m4Ny" role="1Xdeit">
+                            <node concept="2WthIp" id="4kJ$pn8m4Nz" role="2Oq$k0" />
+                            <node concept="1DTwFV" id="4kJ$pn8m4N$" role="2OqNvi">
+                              <ref role="2WH_rO" node="4kJ$pn8lqai" resolve="project" />
+                            </node>
+                          </node>
+                          <node concept="2OqwBi" id="4kJ$pn8m4NC" role="1Xdeiu">
+                            <node concept="2WthIp" id="4kJ$pn8m4ND" role="2Oq$k0">
+                              <ref role="32nkFo" node="4kJ$pn8loKF" resolve="MoveToAspectRuleSet" />
+                            </node>
+                            <node concept="2BZ7hE" id="4kJ$pn8m4NE" role="2OqNvi">
+                              <ref role="2WH_rO" node="4kJ$pn8lpzE" resolve="ruleSet" />
+                            </node>
+                          </node>
+                        </node>
+                      </node>
+                      <node concept="2AHcQZ" id="4kJ$pn8m4NF" role="2AJF6D">
+                        <ref role="2AI5Lk" to="wyt6:~Override" resolve="Override" />
+                      </node>
+                    </node>
+                  </node>
+                </node>
+              </node>
+            </node>
+            <node concept="2OqwBi" id="4kJ$pn8m4NG" role="2Oq$k0">
+              <node concept="2OqwBi" id="4kJ$pn8m4NH" role="2Oq$k0">
+                <node concept="2WthIp" id="4kJ$pn8m4NI" role="2Oq$k0" />
+                <node concept="1DTwFV" id="4kJ$pn8m4NJ" role="2OqNvi">
+                  <ref role="2WH_rO" node="4kJ$pn8lqai" resolve="project" />
+                </node>
+              </node>
+              <node concept="liA8E" id="4kJ$pn8m4NK" role="2OqNvi">
+                <ref role="37wK5l" to="z1c4:~Project.getModelAccess()" resolve="getModelAccess" />
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+    <node concept="2ScWuX" id="4kJ$pn8lCg4" role="tmbBb">
+      <node concept="3clFbS" id="4kJ$pn8lCg5" role="2VODD2">
+        <node concept="3clFbF" id="4kJ$pn8lCg6" role="3cqZAp">
+          <node concept="3trCAK" id="4kJ$pn8lCg7" role="3clFbG">
+            <ref role="3trCAN" to="8a6h:4kJ$pn8jKVy" resolve="MoveToAspectRuleSet" />
+            <node concept="2OqwBi" id="4kJ$pn8lDuo" role="3trCLF">
+              <node concept="2WthIp" id="4kJ$pn8lCg9" role="2Oq$k0" />
+              <node concept="3gHZIF" id="4kJ$pn8lSQ1" role="2OqNvi">
+                <ref role="2WH_rO" node="4kJ$pn8lpGd" resolve="moved" />
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+  </node>
+  <node concept="sE7Ow" id="4kJ$pn8x9SW">
+    <property role="TrG5h" value="MoveToRuleSet" />
+    <property role="72QZ$" value="true" />
+    <property role="2uzpH1" value="Move To RuleSet" />
+    <node concept="2S4$dB" id="4kJ$pn8xb1h" role="1NuT2Z">
+      <property role="TrG5h" value="moved" />
+      <node concept="3Tm6S6" id="4kJ$pn8xb1i" role="1B3o_S" />
+      <node concept="1oajcY" id="4kJ$pn8xb1j" role="1oa70y" />
+      <node concept="3Tqbb2" id="4kJ$pn8xb1k" role="1tU5fm" />
+    </node>
+    <node concept="1DS2jV" id="4kJ$pn8xbbc" role="1NuT2Z">
+      <property role="TrG5h" value="project" />
+      <ref role="1DUlNI" to="qq03:~MPSCommonDataKeys.MPS_PROJECT" resolve="MPS_PROJECT" />
+      <node concept="1oajcY" id="4kJ$pn8xbbd" role="1oa70y" />
+    </node>
+    <node concept="2JriF1" id="4kJ$pn8xaR$" role="2JrayB">
+      <property role="TrG5h" value="ruleSet" />
+      <node concept="15s5l7" id="4kJ$pn8xaR_" role="lGtFl">
+        <property role="1eyWvh" value="FLAVOUR_ISSUE_KIND=&quot;typesystem (typesystem)&quot;;FLAVOUR_MESSAGE=&quot;Error: toString should be specified for parameters of non-primitive type&quot;;FLAVOUR_RULE_ID=&quot;[r:00000000-0000-4000-0000-011c89590364(jetbrains.mps.lang.plugin.typesystem)/1227020617850]&quot;;" />
+        <property role="huDt6" value="Error: toString should be specified for parameters of non-primitive type" />
+      </node>
+      <node concept="3Tm6S6" id="4kJ$pn8xaRA" role="1B3o_S" />
+      <node concept="3Tqbb2" id="4kJ$pn8xaRB" role="1tU5fm">
+        <ref role="ehGHo" to="7ggn:29R9$zZUovD" resolve="RuleSet" />
+      </node>
+    </node>
+    <node concept="tnohg" id="4kJ$pn8x9SX" role="tncku">
+      <node concept="3clFbS" id="4kJ$pn8x9SY" role="2VODD2">
+        <node concept="3clFbF" id="4kJ$pn8xkGS" role="3cqZAp">
+          <node concept="2OqwBi" id="4kJ$pn8xkGT" role="3clFbG">
+            <node concept="liA8E" id="4kJ$pn8xkGU" role="2OqNvi">
+              <ref role="37wK5l" to="lui2:~ModelAccess.runReadInEDT(java.lang.Runnable)" resolve="runReadInEDT" />
+              <node concept="2ShNRf" id="4kJ$pn8xkGV" role="37wK5m">
+                <node concept="YeOm9" id="4kJ$pn8xkGW" role="2ShVmc">
+                  <node concept="1Y3b0j" id="4kJ$pn8xkGX" role="YeSDq">
+                    <property role="2bfB8j" value="true" />
+                    <ref role="37wK5l" to="wyt6:~Object.&lt;init&gt;()" resolve="Object" />
+                    <ref role="1Y3XeK" to="wyt6:~Runnable" resolve="Runnable" />
+                    <node concept="3Tm1VV" id="4kJ$pn8xkGY" role="1B3o_S" />
+                    <node concept="3clFb_" id="4kJ$pn8xkGZ" role="jymVt">
+                      <property role="1EzhhJ" value="false" />
+                      <property role="TrG5h" value="run" />
+                      <property role="DiZV1" value="false" />
+                      <node concept="3Tm1VV" id="4kJ$pn8xkH0" role="1B3o_S" />
+                      <node concept="3cqZAl" id="4kJ$pn8xkH1" role="3clF45" />
+                      <node concept="3clFbS" id="4kJ$pn8xkH2" role="3clF47">
+                        <node concept="3clFbJ" id="4kJ$pn8xkH3" role="3cqZAp">
+                          <node concept="3fqX7Q" id="4kJ$pn8xkH4" role="3clFbw">
+                            <node concept="2YIFZM" id="4kJ$pn8xkH5" role="3fr31v">
+                              <ref role="1Pybhc" to="mhbf:~SNodeUtil" resolve="SNodeUtil" />
+                              <ref role="37wK5l" to="mhbf:~SNodeUtil.isAccessible(org.jetbrains.mps.openapi.model.SNode,org.jetbrains.mps.openapi.module.SRepository)" resolve="isAccessible" />
+                              <node concept="2OqwBi" id="4kJ$pn8xkH6" role="37wK5m">
+                                <node concept="2WthIp" id="4kJ$pn8xkH7" role="2Oq$k0">
+                                  <ref role="32nkFo" node="4kJ$pn8x9SW" resolve="MoveToRuleSet" />
+                                </node>
+                                <node concept="3gHZIF" id="4kJ$pn8xkH8" role="2OqNvi">
+                                  <ref role="2WH_rO" node="4kJ$pn8xb1h" resolve="moved" />
+                                </node>
+                              </node>
+                              <node concept="2OqwBi" id="4kJ$pn8xkH9" role="37wK5m">
+                                <node concept="2OqwBi" id="4kJ$pn8xkHa" role="2Oq$k0">
+                                  <node concept="2WthIp" id="4kJ$pn8xkHb" role="2Oq$k0">
+                                    <ref role="32nkFo" node="4kJ$pn8x9SW" resolve="MoveToRuleSet" />
+                                  </node>
+                                  <node concept="1DTwFV" id="4kJ$pn8xkHc" role="2OqNvi">
+                                    <ref role="2WH_rO" node="4kJ$pn8xbbc" resolve="project" />
+                                  </node>
+                                </node>
+                                <node concept="liA8E" id="4kJ$pn8xkHd" role="2OqNvi">
+                                  <ref role="37wK5l" to="z1c4:~Project.getRepository()" resolve="getRepository" />
+                                </node>
+                              </node>
+                            </node>
+                          </node>
+                          <node concept="3clFbS" id="4kJ$pn8xkHe" role="3clFbx">
+                            <node concept="3cpWs6" id="4kJ$pn8xkHf" role="3cqZAp" />
+                          </node>
+                        </node>
+                        <node concept="1Xdei3" id="4kJ$pn8xkHg" role="3cqZAp">
+                          <ref role="1Xdeis" to="8a6h:4kJ$pn8wBUs" resolve="MoveToRuleSet" />
+                          <node concept="2OqwBi" id="4kJ$pn8xkHh" role="1Xdeiv">
+                            <node concept="2WthIp" id="4kJ$pn8xkHi" role="2Oq$k0" />
+                            <node concept="3gHZIF" id="4kJ$pn8xkHj" role="2OqNvi">
+                              <ref role="2WH_rO" node="4kJ$pn8xb1h" resolve="moved" />
+                            </node>
+                          </node>
+                          <node concept="2OqwBi" id="4kJ$pn8xkHk" role="1Xdeit">
+                            <node concept="2WthIp" id="4kJ$pn8xkHl" role="2Oq$k0" />
+                            <node concept="1DTwFV" id="4kJ$pn8xkHm" role="2OqNvi">
+                              <ref role="2WH_rO" node="4kJ$pn8xbbc" resolve="project" />
+                            </node>
+                          </node>
+                          <node concept="2OqwBi" id="4kJ$pn8xkHn" role="1Xdeiu">
+                            <node concept="2WthIp" id="4kJ$pn8xkHo" role="2Oq$k0">
+                              <ref role="32nkFo" node="4kJ$pn8x9SW" resolve="MoveToRuleSet" />
+                            </node>
+                            <node concept="2BZ7hE" id="4kJ$pn8xkHp" role="2OqNvi">
+                              <ref role="2WH_rO" node="4kJ$pn8xaR$" resolve="ruleSet" />
+                            </node>
+                          </node>
+                        </node>
+                      </node>
+                      <node concept="2AHcQZ" id="4kJ$pn8xkHq" role="2AJF6D">
+                        <ref role="2AI5Lk" to="wyt6:~Override" resolve="Override" />
+                      </node>
+                    </node>
+                  </node>
+                </node>
+              </node>
+            </node>
+            <node concept="2OqwBi" id="4kJ$pn8xkHr" role="2Oq$k0">
+              <node concept="2OqwBi" id="4kJ$pn8xkHs" role="2Oq$k0">
+                <node concept="2WthIp" id="4kJ$pn8xkHt" role="2Oq$k0" />
+                <node concept="1DTwFV" id="4kJ$pn8xkHu" role="2OqNvi">
+                  <ref role="2WH_rO" node="4kJ$pn8xbbc" resolve="project" />
+                </node>
+              </node>
+              <node concept="liA8E" id="4kJ$pn8xkHv" role="2OqNvi">
+                <ref role="37wK5l" to="z1c4:~Project.getModelAccess()" resolve="getModelAccess" />
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+    <node concept="tkhdA" id="4kJ$pn8xbT9" role="tmbBb">
+      <node concept="3clFbS" id="4kJ$pn8xbTa" role="2VODD2">
+        <node concept="3cpWs8" id="4kJ$pn8xbTb" role="3cqZAp">
+          <node concept="3cpWsn" id="4kJ$pn8xbTc" role="3cpWs9">
+            <property role="TrG5h" value="applicable" />
+            <node concept="10P_77" id="4kJ$pn8xbTd" role="1tU5fm" />
+            <node concept="3trCAK" id="4kJ$pn8xbTe" role="33vP2m">
+              <ref role="3trCAN" to="8a6h:4kJ$pn8wBUs" resolve="MoveToRuleSet" />
+              <node concept="2OqwBi" id="4kJ$pn8xbTf" role="3trCLF">
+                <node concept="2WthIp" id="4kJ$pn8xbTg" role="2Oq$k0" />
+                <node concept="3gHZIF" id="4kJ$pn8xbTh" role="2OqNvi">
+                  <ref role="2WH_rO" node="4kJ$pn8xb1h" resolve="moved" />
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="3clFbF" id="4kJ$pn8xbTi" role="3cqZAp">
+          <node concept="1rXfSq" id="4kJ$pn8xbTj" role="3clFbG">
+            <ref role="37wK5l" to="7bx7:~BaseAction.setEnabledState(com.intellij.openapi.actionSystem.Presentation,boolean)" resolve="setEnabledState" />
+            <node concept="2OqwBi" id="4kJ$pn8xbTk" role="37wK5m">
+              <node concept="tl45R" id="4kJ$pn8xbTl" role="2Oq$k0" />
+              <node concept="liA8E" id="4kJ$pn8xbTm" role="2OqNvi">
+                <ref role="37wK5l" to="qkt:~AnActionEvent.getPresentation()" resolve="getPresentation" />
+              </node>
+            </node>
+            <node concept="37vLTw" id="4kJ$pn8xbTn" role="37wK5m">
+              <ref role="3cqZAo" node="4kJ$pn8xbTc" resolve="applicable" />
+            </node>
+          </node>
+        </node>
+        <node concept="3clFbJ" id="4kJ$pn8xgmr" role="3cqZAp">
+          <node concept="3clFbS" id="4kJ$pn8xgmt" role="3clFbx">
+            <node concept="3clFbF" id="4kJ$pn8xbTo" role="3cqZAp">
+              <node concept="2OqwBi" id="4kJ$pn8xbTp" role="3clFbG">
+                <node concept="2OqwBi" id="4kJ$pn8xbTq" role="2Oq$k0">
+                  <node concept="tl45R" id="4kJ$pn8xbTr" role="2Oq$k0" />
+                  <node concept="liA8E" id="4kJ$pn8xbTs" role="2OqNvi">
+                    <ref role="37wK5l" to="qkt:~AnActionEvent.getPresentation()" resolve="getPresentation" />
+                  </node>
+                </node>
+                <node concept="liA8E" id="4kJ$pn8xbTt" role="2OqNvi">
+                  <ref role="37wK5l" to="qkt:~Presentation.setText(java.lang.String)" resolve="setText" />
+                  <node concept="3cpWs3" id="4kJ$pn8xbTu" role="37wK5m">
+                    <node concept="Xl_RD" id="4kJ$pn8xbT$" role="3uHU7B">
+                      <property role="Xl_RC" value="Move To " />
+                    </node>
+                    <node concept="2OqwBi" id="4kJ$pn8xjvx" role="3uHU7w">
+                      <node concept="2OqwBi" id="4kJ$pn8xi$G" role="2Oq$k0">
+                        <node concept="2OqwBi" id="4kJ$pn8$MnF" role="2Oq$k0">
+                          <node concept="2OqwBi" id="4kJ$pn8xhNW" role="2Oq$k0">
+                            <node concept="1PxgMI" id="4kJ$pn8xhwi" role="2Oq$k0">
+                              <node concept="chp4Y" id="4kJ$pn8xhyv" role="3oSUPX">
+                                <ref role="cht4Q" to="7ggn:4WFClUM1rSw" resolve="Feature" />
+                              </node>
+                              <node concept="2OqwBi" id="4kJ$pn8xfi4" role="1m5AlR">
+                                <node concept="2WthIp" id="4kJ$pn8xfi7" role="2Oq$k0" />
+                                <node concept="3gHZIF" id="4kJ$pn8xfi9" role="2OqNvi">
+                                  <ref role="2WH_rO" node="4kJ$pn8xb1h" resolve="moved" />
+                                </node>
+                              </node>
+                            </node>
+                            <node concept="3TrEf2" id="4kJ$pn8$LUO" role="2OqNvi">
+                              <ref role="3Tt5mk" to="7ggn:4kJ$pn7gUEE" resolve="contextType" />
+                            </node>
+                          </node>
+                          <node concept="2qgKlT" id="4kJ$pn8$MDd" role="2OqNvi">
+                            <ref role="37wK5l" to="us1s:4kJ$pn89CEa" resolve="createRuleSet" />
+                          </node>
+                        </node>
+                        <node concept="2yIwOk" id="4kJ$pn8xiTO" role="2OqNvi" />
+                      </node>
+                      <node concept="liA8E" id="4kJ$pn8xjZe" role="2OqNvi">
+                        <ref role="37wK5l" to="c17a:~SAbstractConcept.getName()" resolve="getName" />
+                      </node>
+                    </node>
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+          <node concept="37vLTw" id="4kJ$pn8xg_O" role="3clFbw">
+            <ref role="3cqZAo" node="4kJ$pn8xbTc" resolve="applicable" />
+          </node>
         </node>
       </node>
     </node>
