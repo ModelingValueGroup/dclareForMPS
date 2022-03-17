@@ -4669,5 +4669,75 @@
       <ref role="1YaFvo" to="7ggn:29R9$zZUovD" resolve="RuleSet" />
     </node>
   </node>
+  <node concept="18kY7G" id="4kJ$pn7gXWl">
+    <property role="TrG5h" value="check_Feature" />
+    <property role="3GE5qa" value="members" />
+    <node concept="3clFbS" id="4kJ$pn7gXWm" role="18ibNy">
+      <node concept="3clFbJ" id="4kJ$pn7gXWs" role="3cqZAp">
+        <node concept="1Wc70l" id="4kJ$pn7gYId" role="3clFbw">
+          <node concept="2OqwBi" id="4kJ$pn7gYrC" role="3uHU7B">
+            <node concept="2OqwBi" id="4kJ$pn7gY7U" role="2Oq$k0">
+              <node concept="1YBJjd" id="4kJ$pn7gXWC" role="2Oq$k0">
+                <ref role="1YBMHb" node="4kJ$pn7gXWo" resolve="feature" />
+              </node>
+              <node concept="1mfA1w" id="4kJ$pn7gYj7" role="2OqNvi" />
+            </node>
+            <node concept="1mIQ4w" id="4kJ$pn7gYxN" role="2OqNvi">
+              <node concept="chp4Y" id="4kJ$pn7gYzQ" role="cj9EA">
+                <ref role="cht4Q" to="7ggn:4kJ$pn77AZT" resolve="AspectRuleSet" />
+              </node>
+            </node>
+          </node>
+          <node concept="1eOMI4" id="4kJ$pn7h2k$" role="3uHU7w">
+            <node concept="22lmx$" id="4kJ$pn7gZMP" role="1eOMHV">
+              <node concept="2OqwBi" id="4kJ$pn7gZxk" role="3uHU7B">
+                <node concept="2OqwBi" id="4kJ$pn7gZ2J" role="2Oq$k0">
+                  <node concept="1YBJjd" id="4kJ$pn7gYQU" role="2Oq$k0">
+                    <ref role="1YBMHb" node="4kJ$pn7gXWo" resolve="feature" />
+                  </node>
+                  <node concept="3TrEf2" id="4kJ$pn7gZi$" role="2OqNvi">
+                    <ref role="3Tt5mk" to="7ggn:4kJ$pn7gUEE" resolve="contextType" />
+                  </node>
+                </node>
+                <node concept="3w_OXm" id="4kJ$pn7gZEP" role="2OqNvi" />
+              </node>
+              <node concept="2OqwBi" id="4kJ$pn7h1w1" role="3uHU7w">
+                <node concept="2OqwBi" id="4kJ$pn7h12B" role="2Oq$k0">
+                  <node concept="2OqwBi" id="4kJ$pn7h0k_" role="2Oq$k0">
+                    <node concept="1YBJjd" id="4kJ$pn7gZYY" role="2Oq$k0">
+                      <ref role="1YBMHb" node="4kJ$pn7gXWo" resolve="feature" />
+                    </node>
+                    <node concept="3TrEf2" id="4kJ$pn7h0E4" role="2OqNvi">
+                      <ref role="3Tt5mk" to="7ggn:4kJ$pn7gUEE" resolve="contextType" />
+                    </node>
+                  </node>
+                  <node concept="2yIwOk" id="4kJ$pn7h1cu" role="2OqNvi" />
+                </node>
+                <node concept="3O6GUB" id="4kJ$pn7h1V5" role="2OqNvi">
+                  <node concept="chp4Y" id="4kJ$pn7h20S" role="3QVz_e">
+                    <ref role="cht4Q" to="7ggn:4kJ$pn7gUED" resolve="ContextType" />
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="3clFbS" id="4kJ$pn7gXWu" role="3clFbx">
+          <node concept="2MkqsV" id="4kJ$pn7h2n8" role="3cqZAp">
+            <node concept="Xl_RD" id="4kJ$pn7h3Gy" role="2MkJ7o">
+              <property role="Xl_RC" value="A Feature in a ApsectRuleSet should have a ContextType defined" />
+            </node>
+            <node concept="1YBJjd" id="4kJ$pn7h2nk" role="1urrMF">
+              <ref role="1YBMHb" node="4kJ$pn7gXWo" resolve="feature" />
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+    <node concept="1YaCAy" id="4kJ$pn7gXWo" role="1YuTPh">
+      <property role="TrG5h" value="feature" />
+      <ref role="1YaFvo" to="7ggn:4WFClUM1rSw" resolve="Feature" />
+    </node>
+  </node>
 </model>
 

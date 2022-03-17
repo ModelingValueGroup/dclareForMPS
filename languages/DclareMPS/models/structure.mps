@@ -213,6 +213,7 @@
   <node concept="PlHQZ" id="61p65V8x$6I">
     <property role="EcuMT" value="6942607095938564526" />
     <property role="TrG5h" value="ThisContext" />
+    <property role="3GE5qa" value="context" />
     <node concept="PrWs8" id="4WFClUM1rSP" role="PrDN$">
       <ref role="PrY4T" to="tpck:h0TrEE$" resolve="INamedConcept" />
     </node>
@@ -690,6 +691,12 @@
       <property role="IQ2ns" value="5704830781088143907" />
       <property role="20kJfa" value="source" />
       <ref role="20lvS9" to="tpck:gw2VY9q" resolve="BaseConcept" />
+    </node>
+    <node concept="1TJgyj" id="4kJ$pn7gUEE" role="1TKVEi">
+      <property role="IQ2ns" value="4985363385001683626" />
+      <property role="20lmBu" value="fLJjDmT/aggregation" />
+      <property role="20kJfa" value="contextType" />
+      <ref role="20lvS9" node="4kJ$pn7gUED" resolve="ContextType" />
     </node>
   </node>
   <node concept="1TIwiD" id="rTfv3GWr7J">
@@ -1179,6 +1186,82 @@
     <node concept="PrWs8" id="4$bpWrPoTAi" role="PrDN$">
       <ref role="PrY4T" node="61p65V8x$6I" resolve="ThisContext" />
     </node>
+  </node>
+  <node concept="1TIwiD" id="4kJ$pn77AZT">
+    <property role="EcuMT" value="4985363384999243769" />
+    <property role="3GE5qa" value="aspects" />
+    <property role="TrG5h" value="AspectRuleSet" />
+    <property role="34LRSv" value="Aspect RuleSet" />
+    <property role="19KtqR" value="true" />
+    <ref role="1TJDcQ" node="29R9$zZUovD" resolve="RuleSet" />
+    <node concept="1irR5M" id="4kJ$pn77AZW" role="rwd14">
+      <property role="2$rrk2" value="4" />
+      <node concept="1irR9n" id="4kJ$pn77B01" role="1irR9h">
+        <node concept="3PKj8D" id="4kJ$pn77B02" role="3PKjn_">
+          <property role="3PKj8l" value="00ddff" />
+        </node>
+      </node>
+      <node concept="1irPie" id="4kJ$pn77B09" role="1irR9h">
+        <property role="1irPi9" value="A" />
+        <node concept="3PKj8D" id="4kJ$pn77B0a" role="3PKjny">
+          <property role="3PKj8l" value="ffffff" />
+        </node>
+      </node>
+    </node>
+  </node>
+  <node concept="1TIwiD" id="4kJ$pn7gUED">
+    <property role="EcuMT" value="4985363385001683625" />
+    <property role="3GE5qa" value="context" />
+    <property role="R5$K7" value="true" />
+    <property role="TrG5h" value="ContextType" />
+    <ref role="1TJDcQ" to="tpck:gw2VY9q" />
+  </node>
+  <node concept="1TIwiD" id="4kJ$pn7ha2D">
+    <property role="EcuMT" value="4985363385001746601" />
+    <property role="3GE5qa" value="context" />
+    <property role="TrG5h" value="ModelContextType" />
+    <property role="34LRSv" value="model" />
+    <ref role="1TJDcQ" node="4kJ$pn7gUED" resolve="ContextType" />
+  </node>
+  <node concept="1TIwiD" id="4kJ$pn7ha2E">
+    <property role="EcuMT" value="4985363385001746602" />
+    <property role="3GE5qa" value="context" />
+    <property role="TrG5h" value="NodeContextType" />
+    <property role="34LRSv" value="node" />
+    <ref role="1TJDcQ" node="4kJ$pn7gUED" resolve="ContextType" />
+    <node concept="1TJgyj" id="4kJ$pn7hasm" role="1TKVEi">
+      <property role="IQ2ns" value="4985363385001748246" />
+      <property role="20kJfa" value="concept" />
+      <property role="20lbJX" value="fLJekj4/_1" />
+      <ref role="20lvS9" to="tpce:h0PkWnZ" resolve="AbstractConceptDeclaration" />
+    </node>
+  </node>
+  <node concept="1TIwiD" id="4kJ$pn7ha2F">
+    <property role="EcuMT" value="4985363385001746603" />
+    <property role="3GE5qa" value="context" />
+    <property role="TrG5h" value="StructContextType" />
+    <property role="34LRSv" value="struct" />
+    <ref role="1TJDcQ" node="4kJ$pn7gUED" resolve="ContextType" />
+    <node concept="1TJgyj" id="4kJ$pn7hask" role="1TKVEi">
+      <property role="IQ2ns" value="4985363385001748244" />
+      <property role="20kJfa" value="structClass" />
+      <property role="20lbJX" value="fLJekj4/_1" />
+      <ref role="20lvS9" node="4$bpWrNHO7E" resolve="StructClass" />
+    </node>
+  </node>
+  <node concept="1TIwiD" id="4kJ$pn7ha2G">
+    <property role="EcuMT" value="4985363385001746604" />
+    <property role="3GE5qa" value="context" />
+    <property role="TrG5h" value="ModuleContextType" />
+    <property role="34LRSv" value="module" />
+    <ref role="1TJDcQ" node="4kJ$pn7gUED" resolve="ContextType" />
+  </node>
+  <node concept="1TIwiD" id="4kJ$pn7ha2H">
+    <property role="EcuMT" value="4985363385001746605" />
+    <property role="3GE5qa" value="context" />
+    <property role="TrG5h" value="RepositoryContextType" />
+    <property role="34LRSv" value="repository" />
+    <ref role="1TJDcQ" node="4kJ$pn7gUED" resolve="ContextType" />
   </node>
 </model>
 
