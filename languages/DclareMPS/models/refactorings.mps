@@ -71,10 +71,6 @@
       <concept id="1068580123136" name="jetbrains.mps.baseLanguage.structure.StatementList" flags="sn" stub="5293379017992965193" index="3clFbS">
         <child id="1068581517665" name="statement" index="3cqZAp" />
       </concept>
-      <concept id="1068580320020" name="jetbrains.mps.baseLanguage.structure.IntegerConstant" flags="nn" index="3cmrfG">
-        <property id="1068580320021" name="value" index="3cmrfH" />
-      </concept>
-      <concept id="1068581242875" name="jetbrains.mps.baseLanguage.structure.PlusExpression" flags="nn" index="3cpWs3" />
       <concept id="1068581242864" name="jetbrains.mps.baseLanguage.structure.LocalVariableDeclarationStatement" flags="nn" index="3cpWs8">
         <child id="1068581242865" name="localVariableDeclaration" index="3cpWs9" />
       </concept>
@@ -795,49 +791,10 @@
                   <node concept="2pJPED" id="4kJ$pn8k128" role="2pJPEn">
                     <ref role="2pJxaS" to="7ggn:4kJ$pn77AZT" resolve="AspectRuleSet" />
                     <node concept="2pJxcG" id="4kJ$pn8kS2S" role="2pJxcM">
-                      <ref role="2pJxcJ" to="tpck:h0TrG11" resolve="name" />
-                      <node concept="WxPPo" id="4kJ$pn8kS8N" role="28ntcv">
-                        <node concept="3cpWs3" id="4kJ$pn8kV1b" role="WxPPp">
-                          <node concept="Xl_RD" id="4kJ$pn8kV6L" role="3uHU7w">
-                            <property role="Xl_RC" value="RuleSet" />
-                          </node>
-                          <node concept="3cpWs3" id="4kJ$pn8kVD3" role="3uHU7B">
-                            <node concept="2OqwBi" id="4kJ$pn8l00Q" role="3uHU7B">
-                              <node concept="2OqwBi" id="4kJ$pn8kY$G" role="2Oq$k0">
-                                <node concept="37vLTw" id="4kJ$pn8kXso" role="2Oq$k0">
-                                  <ref role="3cqZAo" node="4kJ$pn8kVPu" resolve="aspectName" />
-                                </node>
-                                <node concept="liA8E" id="4kJ$pn8kYZl" role="2OqNvi">
-                                  <ref role="37wK5l" to="wyt6:~String.substring(int,int)" resolve="substring" />
-                                  <node concept="3cmrfG" id="4kJ$pn8kZ3V" role="37wK5m">
-                                    <property role="3cmrfH" value="0" />
-                                  </node>
-                                  <node concept="3cmrfG" id="4kJ$pn8kZvF" role="37wK5m">
-                                    <property role="3cmrfH" value="1" />
-                                  </node>
-                                </node>
-                              </node>
-                              <node concept="liA8E" id="4kJ$pn8l0Bx" role="2OqNvi">
-                                <ref role="37wK5l" to="wyt6:~String.toUpperCase()" resolve="toUpperCase" />
-                              </node>
-                            </node>
-                            <node concept="2OqwBi" id="4kJ$pn8kWDn" role="3uHU7w">
-                              <node concept="2OqwBi" id="4kJ$pn8kTC5" role="2Oq$k0">
-                                <node concept="37vLTw" id="4kJ$pn8kVP$" role="2Oq$k0">
-                                  <ref role="3cqZAo" node="4kJ$pn8kVPu" resolve="aspectName" />
-                                </node>
-                                <node concept="liA8E" id="4kJ$pn8kTRI" role="2OqNvi">
-                                  <ref role="37wK5l" to="wyt6:~String.toLowerCase()" resolve="toLowerCase" />
-                                </node>
-                              </node>
-                              <node concept="liA8E" id="4kJ$pn8kX2G" role="2OqNvi">
-                                <ref role="37wK5l" to="wyt6:~String.substring(int)" resolve="substring" />
-                                <node concept="3cmrfG" id="4kJ$pn8kXhP" role="37wK5m">
-                                  <property role="3cmrfH" value="1" />
-                                </node>
-                              </node>
-                            </node>
-                          </node>
+                      <ref role="2pJxcJ" to="7ggn:3N4RhEWNE63" resolve="ruleSetName" />
+                      <node concept="WxPPo" id="3N4RhEWPujm" role="28ntcv">
+                        <node concept="Xl_RD" id="3N4RhEWPujl" role="WxPPp">
+                          <property role="Xl_RC" value="All" />
                         </node>
                       </node>
                     </node>

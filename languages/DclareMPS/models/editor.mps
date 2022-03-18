@@ -4405,8 +4405,8 @@
         </node>
       </node>
       <node concept="3F0A7n" id="4kJ$pn79KBi" role="3EZMnx">
-        <ref role="1NtTu8" to="tpck:h0TrG11" resolve="name" />
         <ref role="1k5W1q" to="tpd3:hwSE21y" resolve="ReferenceOnConcept" />
+        <ref role="1NtTu8" to="7ggn:3N4RhEWNE63" resolve="ruleSetName" />
       </node>
       <node concept="PMmxH" id="4kJ$pn79K3X" role="3EZMnx">
         <ref role="PMmxG" node="55f2HNAp6uS" resolve="AspectEditor" />
