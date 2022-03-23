@@ -7167,6 +7167,14 @@
                   </node>
                 </node>
               </node>
+              <node concept="2JFkCU" id="3m__5a1Z84q" role="3cqZAp">
+                <node concept="tCFHf" id="3m__5a1ZDl$" role="2JFLmv">
+                  <ref role="tCJdB" node="3m__5a1Zn1S" resolve="FormatRulesets" />
+                  <node concept="37vLTw" id="3m__5a2uNsf" role="2J__8u">
+                    <ref role="3cqZAo" node="6aMI9gHDZEA" resolve="ruleSet" />
+                  </node>
+                </node>
+              </node>
             </node>
             <node concept="3y3z36" id="6aMI9gHE0b6" role="3clFbw">
               <node concept="10Nm6u" id="6aMI9gHE0hu" role="3uHU7w" />
@@ -11522,6 +11530,109 @@
           </node>
           <node concept="37vLTw" id="4kJ$pn8xg_O" role="3clFbw">
             <ref role="3cqZAo" node="4kJ$pn8xbTc" resolve="applicable" />
+          </node>
+        </node>
+      </node>
+    </node>
+  </node>
+  <node concept="sE7Ow" id="3m__5a1Zn1S">
+    <property role="TrG5h" value="FormatRuleset" />
+    <property role="72QZ$" value="true" />
+    <property role="2uzpH1" value="Format RuleSets" />
+    <node concept="2JriF1" id="3m__5a2nwl$" role="2JrayB">
+      <property role="TrG5h" value="ruleSet" />
+      <node concept="15s5l7" id="3m__5a2nwl_" role="lGtFl">
+        <property role="1eyWvh" value="FLAVOUR_ISSUE_KIND=&quot;typesystem (typesystem)&quot;;FLAVOUR_MESSAGE=&quot;Error: toString should be specified for parameters of non-primitive type&quot;;FLAVOUR_RULE_ID=&quot;[r:00000000-0000-4000-0000-011c89590364(jetbrains.mps.lang.plugin.typesystem)/1227020617850]&quot;;" />
+        <property role="huDt6" value="Error: toString should be specified for parameters of non-primitive type" />
+      </node>
+      <node concept="3Tm6S6" id="3m__5a2nwlA" role="1B3o_S" />
+      <node concept="3Tqbb2" id="3m__5a2nwlB" role="1tU5fm">
+        <ref role="ehGHo" to="7ggn:29R9$zZUovD" resolve="RuleSet" />
+      </node>
+    </node>
+    <node concept="2S4$dB" id="3m__5a2cy5u" role="1NuT2Z">
+      <property role="TrG5h" value="node" />
+      <node concept="3Tm6S6" id="3m__5a2cy5v" role="1B3o_S" />
+      <node concept="1oajcY" id="3m__5a2cy5w" role="1oa70y" />
+      <node concept="3Tqbb2" id="3m__5a2cxNY" role="1tU5fm" />
+    </node>
+    <node concept="1DS2jV" id="3m__5a1Zoqv" role="1NuT2Z">
+      <property role="TrG5h" value="project" />
+      <ref role="1DUlNI" to="qq03:~MPSCommonDataKeys.MPS_PROJECT" resolve="MPS_PROJECT" />
+      <node concept="1oajcY" id="3m__5a1Zoqw" role="1oa70y" />
+    </node>
+    <node concept="tnohg" id="3m__5a1Zn1T" role="tncku">
+      <node concept="3clFbS" id="3m__5a1Zn1U" role="2VODD2">
+        <node concept="3clFbF" id="3m__5a1ZEOq" role="3cqZAp">
+          <node concept="2OqwBi" id="3m__5a1ZEOs" role="3clFbG">
+            <node concept="liA8E" id="3m__5a1ZEOt" role="2OqNvi">
+              <ref role="37wK5l" to="lui2:~ModelAccess.runReadInEDT(java.lang.Runnable)" resolve="runReadInEDT" />
+              <node concept="2ShNRf" id="3m__5a1ZEOu" role="37wK5m">
+                <node concept="YeOm9" id="3m__5a1ZEOv" role="2ShVmc">
+                  <node concept="1Y3b0j" id="3m__5a1ZEOw" role="YeSDq">
+                    <property role="2bfB8j" value="true" />
+                    <ref role="37wK5l" to="wyt6:~Object.&lt;init&gt;()" resolve="Object" />
+                    <ref role="1Y3XeK" to="wyt6:~Runnable" resolve="Runnable" />
+                    <node concept="3Tm1VV" id="3m__5a1ZEOx" role="1B3o_S" />
+                    <node concept="3clFb_" id="3m__5a1ZEOy" role="jymVt">
+                      <property role="1EzhhJ" value="false" />
+                      <property role="TrG5h" value="run" />
+                      <property role="DiZV1" value="false" />
+                      <node concept="3Tm1VV" id="3m__5a1ZEOz" role="1B3o_S" />
+                      <node concept="3cqZAl" id="3m__5a1ZEO$" role="3clF45" />
+                      <node concept="3clFbS" id="3m__5a1ZEO_" role="3clF47">
+                        <node concept="1Xdei3" id="3m__5a1ZEON" role="3cqZAp">
+                          <ref role="1Xdeis" to="8a6h:3m__5a1XZWU" resolve="FormatRuleSets" />
+                          <node concept="2OqwBi" id="3m__5a1ZEOR" role="1Xdeit">
+                            <node concept="2WthIp" id="3m__5a1ZEOS" role="2Oq$k0" />
+                            <node concept="1DTwFV" id="3m__5a1ZEOT" role="2OqNvi">
+                              <ref role="2WH_rO" node="3m__5a1Zoqv" resolve="project" />
+                            </node>
+                          </node>
+                          <node concept="2OqwBi" id="3m__5a2ny4V" role="1Xdeiv">
+                            <node concept="2WthIp" id="3m__5a2ny4Y" role="2Oq$k0">
+                              <ref role="32nkFo" node="3m__5a1Zn1S" resolve="FormatRuleset" />
+                            </node>
+                            <node concept="2BZ7hE" id="3m__5a2ny50" role="2OqNvi">
+                              <ref role="2WH_rO" node="3m__5a2nwl$" resolve="ruleSet" />
+                            </node>
+                          </node>
+                        </node>
+                      </node>
+                      <node concept="2AHcQZ" id="3m__5a1ZEOX" role="2AJF6D">
+                        <ref role="2AI5Lk" to="wyt6:~Override" resolve="Override" />
+                      </node>
+                    </node>
+                  </node>
+                </node>
+              </node>
+            </node>
+            <node concept="2OqwBi" id="3m__5a1ZEOY" role="2Oq$k0">
+              <node concept="2OqwBi" id="3m__5a1ZEOZ" role="2Oq$k0">
+                <node concept="2WthIp" id="3m__5a1ZEP0" role="2Oq$k0" />
+                <node concept="1DTwFV" id="3m__5a1ZEP1" role="2OqNvi">
+                  <ref role="2WH_rO" node="3m__5a1Zoqv" resolve="project" />
+                </node>
+              </node>
+              <node concept="liA8E" id="3m__5a1ZEP2" role="2OqNvi">
+                <ref role="37wK5l" to="z1c4:~Project.getModelAccess()" resolve="getModelAccess" />
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+    <node concept="2ScWuX" id="3m__5a1ZDEQ" role="tmbBb">
+      <node concept="3clFbS" id="3m__5a1ZDER" role="2VODD2">
+        <node concept="3clFbF" id="3m__5a1ZDES" role="3cqZAp">
+          <node concept="3trCAK" id="3m__5a1ZDET" role="3clFbG">
+            <ref role="3trCAN" to="8a6h:3m__5a1XZWU" resolve="FormatRuleSets" />
+            <node concept="2OqwBi" id="3m__5a2cys5" role="3trCLF">
+              <node concept="2WthIp" id="3m__5a2cys8" role="2Oq$k0" />
+              <node concept="2BZ7hE" id="3m__5a2nx16" role="2OqNvi">
+                <ref role="2WH_rO" node="3m__5a2nwl$" resolve="ruleSet" />
+              </node>
+            </node>
           </node>
         </node>
       </node>
