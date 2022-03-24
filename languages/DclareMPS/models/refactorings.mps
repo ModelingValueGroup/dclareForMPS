@@ -865,7 +865,7 @@
                   </node>
                   <node concept="10Nm6u" id="4kJ$pn8k37E" role="37wK5m" />
                   <node concept="37vLTw" id="4kJ$pn8kVP_" role="37wK5m">
-                    <ref role="3cqZAo" node="4kJ$pn8kVPu" resolve="name" />
+                    <ref role="3cqZAo" node="4kJ$pn8kVPu" resolve="aspectName" />
                   </node>
                 </node>
               </node>
@@ -884,7 +884,7 @@
             <node concept="3Tqbb2" id="55f2HNAzpJk" role="1tU5fm" />
             <node concept="2OqwBi" id="4kJ$pn8kQQ4" role="33vP2m">
               <node concept="37vLTw" id="4kJ$pn8l1T$" role="2Oq$k0">
-                <ref role="3cqZAo" node="4kJ$pn8l1Tw" resolve="node" />
+                <ref role="3cqZAo" node="4kJ$pn8l1Tw" resolve="moved" />
               </node>
               <node concept="YBYNd" id="4kJ$pn8kQWh" role="2OqNvi" />
             </node>

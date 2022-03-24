@@ -513,9 +513,9 @@
   </node>
   <node concept="1TIwiD" id="3Qetf3d9slq">
     <property role="EcuMT" value="4435611260589294938" />
-    <property role="TrG5h" value="StructInstance" />
+    <property role="TrG5h" value="StructBuilder" />
     <property role="3GE5qa" value="structs" />
-    <property role="34LRSv" value="struct" />
+    <property role="34LRSv" value="&lt;struct&gt;" />
     <ref role="1TJDcQ" to="tpee:fz3vP1J" resolve="Expression" />
     <node concept="1TJgyj" id="3Qetf3d9slr" role="1TKVEi">
       <property role="IQ2ns" value="4435611260589294939" />
@@ -532,9 +532,17 @@
     <node concept="1TJgyj" id="745HIYNPcqg" role="1TKVEi">
       <property role="IQ2ns" value="8144116641799915152" />
       <property role="20lmBu" value="fLJjDmT/aggregation" />
-      <property role="20kJfa" value="identity" />
+      <property role="20kJfa" value="identity_old" />
       <property role="20lbJX" value="fLJekj5/_0__n" />
       <ref role="20lvS9" to="tpee:fz3vP1J" resolve="Expression" />
+      <node concept="asaX9" id="4fD99RQo2bl" role="lGtFl" />
+    </node>
+    <node concept="1TJgyj" id="4fD99RQo2bn" role="1TKVEi">
+      <property role="IQ2ns" value="4893482730976715479" />
+      <property role="20lmBu" value="fLJjDmT/aggregation" />
+      <property role="20kJfa" value="parts" />
+      <property role="20lbJX" value="fLJekj5/_0__n" />
+      <ref role="20lvS9" node="4fD99RQo2bS" resolve="StructBuilderInitAttribute" />
     </node>
     <node concept="RPilO" id="67uyCwD0$6o" role="lGtFl">
       <ref role="RPilL" node="4$bpWrNHOXa" resolve="class" />
@@ -1219,7 +1227,7 @@
     <property role="3GE5qa" value="context" />
     <property role="R5$K7" value="true" />
     <property role="TrG5h" value="ContextType" />
-    <ref role="1TJDcQ" to="tpck:gw2VY9q" />
+    <ref role="1TJDcQ" to="tpck:gw2VY9q" resolve="BaseConcept" />
   </node>
   <node concept="1TIwiD" id="4kJ$pn7ha2D">
     <property role="EcuMT" value="4985363385001746601" />
@@ -1267,6 +1275,27 @@
     <property role="TrG5h" value="RepositoryContextType" />
     <property role="34LRSv" value="repository" />
     <ref role="1TJDcQ" node="4kJ$pn7gUED" resolve="ContextType" />
+  </node>
+  <node concept="1TIwiD" id="4fD99RQo2bS">
+    <property role="EcuMT" value="4893482730976715512" />
+    <property role="3GE5qa" value="structs" />
+    <property role="TrG5h" value="StructBuilderInitAttribute" />
+    <ref role="1TJDcQ" to="tpck:gw2VY9q" resolve="BaseConcept" />
+    <node concept="1TJgyj" id="4fD99RQo2bX" role="1TKVEi">
+      <property role="IQ2ns" value="4893482730976715517" />
+      <property role="20kJfa" value="attribute" />
+      <property role="20lbJX" value="fLJekj4/_1" />
+      <ref role="20lvS9" node="4$MeK2bmw9s" resolve="Attribute" />
+    </node>
+    <node concept="1TJgyj" id="4fD99RQo2bV" role="1TKVEi">
+      <property role="IQ2ns" value="4893482730976715515" />
+      <property role="20lmBu" value="fLJjDmT/aggregation" />
+      <property role="20kJfa" value="initValue" />
+      <ref role="20lvS9" to="tpee:fz3vP1J" resolve="Expression" />
+    </node>
+    <node concept="PrWs8" id="4fD99RQo2bT" role="PzmwI">
+      <ref role="PrY4T" node="6aMI9gI2yLt" resolve="IAttributeTarget" />
+    </node>
   </node>
 </model>
 
