@@ -1492,7 +1492,7 @@
   </node>
   <node concept="1YbPZF" id="3Qetf3d9sml">
     <property role="TrG5h" value="typeof_StructInstance" />
-    <property role="3GE5qa" value="structs" />
+    <property role="3GE5qa" value="structs.builder" />
     <node concept="3clFbS" id="3Qetf3d9smm" role="18ibNy">
       <node concept="1Z5TYs" id="3Qetf3d9sUc" role="3cqZAp">
         <node concept="mw_s8" id="3Qetf3d9sUu" role="1ZfhKB">
@@ -4584,7 +4584,7 @@
   </node>
   <node concept="1YbPZF" id="4fD99RQwBBK">
     <property role="TrG5h" value="typeof_StructBuilderInitAttribute" />
-    <property role="3GE5qa" value="structs" />
+    <property role="3GE5qa" value="structs.builder" />
     <node concept="3clFbS" id="4fD99RQwBBL" role="18ibNy">
       <node concept="1ZobV4" id="4fD99RQwToI" role="3cqZAp">
         <property role="3wDh2S" value="true" />
@@ -4623,7 +4623,7 @@
     </node>
   </node>
   <node concept="18kY7G" id="4fD99RQwQGU">
-    <property role="3GE5qa" value="structs" />
+    <property role="3GE5qa" value="structs.builder" />
     <property role="TrG5h" value="check_StructInstanceArguments" />
     <node concept="3clFbS" id="4fD99RQwQGV" role="18ibNy">
       <node concept="3cpWs8" id="4fD99RQwQH6" role="3cqZAp">

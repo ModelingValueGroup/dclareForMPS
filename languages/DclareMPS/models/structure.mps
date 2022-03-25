@@ -514,7 +514,7 @@
   <node concept="1TIwiD" id="3Qetf3d9slq">
     <property role="EcuMT" value="4435611260589294938" />
     <property role="TrG5h" value="StructBuilder" />
-    <property role="3GE5qa" value="structs" />
+    <property role="3GE5qa" value="structs.builder" />
     <property role="34LRSv" value="&lt;struct&gt;" />
     <ref role="1TJDcQ" to="tpee:fz3vP1J" resolve="Expression" />
     <node concept="1TJgyj" id="3Qetf3d9slr" role="1TKVEi">
@@ -1278,7 +1278,7 @@
   </node>
   <node concept="1TIwiD" id="4fD99RQo2bS">
     <property role="EcuMT" value="4893482730976715512" />
-    <property role="3GE5qa" value="structs" />
+    <property role="3GE5qa" value="structs.builder" />
     <property role="TrG5h" value="StructBuilderInitAttribute" />
     <ref role="1TJDcQ" to="tpck:gw2VY9q" resolve="BaseConcept" />
     <node concept="1TJgyj" id="4fD99RQo2bX" role="1TKVEi">

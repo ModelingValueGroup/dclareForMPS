@@ -3983,7 +3983,7 @@
     </node>
   </node>
   <node concept="1M2fIO" id="4fD99RQwVlk">
-    <property role="3GE5qa" value="structs" />
+    <property role="3GE5qa" value="structs.builder" />
     <ref role="1M2myG" to="7ggn:4fD99RQo2bS" resolve="StructBuilderInitAttribute" />
     <node concept="1N5Pfh" id="4fD99RQwUrl" role="1Mr941">
       <ref role="1N5Vy1" to="7ggn:4fD99RQo2bX" resolve="attribute" />

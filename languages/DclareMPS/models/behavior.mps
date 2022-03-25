@@ -9946,7 +9946,7 @@
     </node>
   </node>
   <node concept="13h7C7" id="7J3S7H6FuyP">
-    <property role="3GE5qa" value="structs" />
+    <property role="3GE5qa" value="structs.builder" />
     <ref role="13h7C2" to="7ggn:3Qetf3d9slq" resolve="StructBuilder" />
     <node concept="13i0hz" id="7J3S7H6Fuz0" role="13h7CS">
       <property role="TrG5h" value="getPresentation" />
@@ -14007,7 +14007,7 @@
     </node>
   </node>
   <node concept="13h7C7" id="4fD99RQwTCF">
-    <property role="3GE5qa" value="structs" />
+    <property role="3GE5qa" value="structs.builder" />
     <ref role="13h7C2" to="7ggn:4fD99RQo2bS" resolve="StructBuilderInitAttribute" />
     <node concept="13i0hz" id="4fD99RQwTCQ" role="13h7CS">
       <property role="TrG5h" value="target" />
