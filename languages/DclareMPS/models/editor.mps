@@ -4764,8 +4764,10 @@
         <node concept="3vyZuw" id="3m__5a3bTFT" role="3F10Kt">
           <property role="VOm3f" value="true" />
         </node>
-        <node concept="VLuvy" id="3m__5a3cSUU" role="3F10Kt">
-          <property role="Vb096" value="fLwANPt/cyan" />
+        <node concept="VLuvy" id="2JtLodko3nE" role="3F10Kt">
+          <node concept="1iSF2X" id="2JtLodko3nF" role="VblUZ">
+            <property role="1iTho6" value="ddbbaa" />
+          </node>
         </node>
         <node concept="Veino" id="3m__5a398g4" role="3F10Kt">
           <property role="Vb096" value="fLwANPq/yellow" />
