@@ -11538,7 +11538,7 @@
   <node concept="sE7Ow" id="3m__5a1Zn1S">
     <property role="TrG5h" value="FormatRuleset" />
     <property role="72QZ$" value="true" />
-    <property role="2uzpH1" value="Format RuleSets" />
+    <property role="2uzpH1" value="Format RuleSet" />
     <node concept="2JriF1" id="3m__5a2nwl$" role="2JrayB">
       <property role="TrG5h" value="ruleSet" />
       <node concept="15s5l7" id="3m__5a2nwl_" role="lGtFl">
