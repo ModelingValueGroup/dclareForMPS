@@ -16,9 +16,12 @@
 package org.modelingvalue.dclare.mps;
 
 import org.jetbrains.mps.openapi.project.Project;
+import org.modelingvalue.collections.List;
 import org.modelingvalue.dclare.UniverseStatistics;
 
 public interface EngineStatusHandler {
+    void aspects(List<IAspect> apects, DClareMPS engine);
+
     void stats(UniverseStatistics stats, DClareMPS engine);
 
     void on(Project project, DClareMPS engine);

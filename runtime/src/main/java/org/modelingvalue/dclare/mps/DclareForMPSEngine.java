@@ -22,6 +22,7 @@ import java.util.concurrent.*;
 import org.jetbrains.mps.openapi.module.ModelAccess;
 import org.jetbrains.mps.openapi.module.SModule;
 import org.jetbrains.mps.openapi.util.ProgressMonitor;
+import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.util.StatusProvider.StatusIterator;
 import org.modelingvalue.dclare.UniverseTransaction;
 import org.modelingvalue.dclare.UniverseTransaction.Status;
@@ -81,20 +82,21 @@ public class DclareForMPSEngine implements DeployListener {
             }
         }
     }
-    
+
     private IssuesChangeListener issueChangeListener = null;
+
     public interface IssuesChangeListener {
-    	public void issuesChanges(java.util.List<IssueKindReportItem> issues);
+        public void issuesChanges(java.util.List<IssueKindReportItem> issues);
     }
-    
-    public void setIssuesChangeListener(IssuesChangeListener  listener) {
-    	this.issueChangeListener = listener;
+
+    public void setIssuesChangeListener(IssuesChangeListener listener) {
+        this.issueChangeListener = listener;
     }
-    
+
     void issuesChanged(java.util.List<IssueKindReportItem> issues) {
-    	if (issueChangeListener!=null) {
-    		issueChangeListener.issuesChanges(issues);
-    	}
+        if (issueChangeListener != null) {
+            issueChangeListener.issuesChanges(issues);
+        }
     }
 
     private void startDCLareMPS(DclareForMpsConfig config) {
@@ -181,10 +183,12 @@ public class DclareForMPSEngine implements DeployListener {
                     break;
                 } else if (finalStatusIterator.hasNext()) {
                     Status status = finalStatusIterator.next();
+                    List<IAspect> apects = status.state.get(() -> DClareMPS.ALL_LANGUAGES.get(finalDClareMPS).flatMap(l -> DClareMPS.ASPECTS.get(l)).distinct().sortedBy(IAspect::getName).toList());
                     modelAccess.runWriteInEDT(() -> {
                         if (status.stats != null) {
                             engineStatusHandler.stats(status.stats, finalDClareMPS);
                         }
+                        engineStatusHandler.aspects(apects, finalDClareMPS);
                         if (!finalDClareMPS.getConfig().isOnMode() || status.mood == UniverseTransaction.Mood.stopped) {
                             engineStatusHandler.idle(project, finalDClareMPS, status.state::get);
                             engineStatusHandler.off(project, finalDClareMPS);

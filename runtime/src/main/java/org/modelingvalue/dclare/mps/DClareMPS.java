@@ -97,8 +97,10 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
     protected static final String                                                                       DCLARE                  = "---------> DCLARE ";
     public static final Observed<DClareMPS, Set<SLanguage>>                                             ALL_LANGUAGES           = Observed.of("ALL_LANGAUGES", Set.of(), plumbing);
     public static final Constant<SLanguage, Set<IRuleSet>>                                              RULE_SETS               = Constant.of("RULE_SETS", Set.of(), l -> {
+                                                                                                                                    DClareMPS dclareMPS = DClareMPS.instance();
                                                                                                                                     IRuleAspect aspect = RULE_ASPECT.get(l);
-                                                                                                                                    Set<IRuleSet> ruleSets = aspect != null ? Collection.of(aspect.getRuleSets()).toSet() : Set.of();
+                                                                                                                                    Set<IRuleSet> ruleSets = aspect != null ? Collection.of(aspect.getRuleSets()).                                       //
+                                                                                                                                            filter(a -> dclareMPS.isActiveAspect(a.getAspect().getName())).toSet() : Set.of();
                                                                                                                                     DclareTraceBroadcaster.onRuleSetActive(ruleSets);
                                                                                                                                     return ruleSets;
                                                                                                                                 });
@@ -197,6 +199,16 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
 
     public DclareForMpsConfig getConfig() {
         return config;
+    }
+
+    protected boolean isActiveAspect(String aspectName) {
+        String[] inactiveAspects = config.getInactiveAspects();
+        for (int i = 0; i < inactiveAspects.length; i++) {
+            if (inactiveAspects[i].equals(aspectName)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
@@ -541,7 +553,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
                                 }
                             }
                             if (!dObject.isExternal() && (changed || (post.get(dObject, Mutable.D_PARENT_CONTAINING) != null && //
-                            pre.get(dObject, Mutable.D_PARENT_CONTAINING) == null))) {
+                                    pre.get(dObject, Mutable.D_PARENT_CONTAINING) == null))) {
                                 if (dObject instanceof DModel) {
                                     SModel sModel = ((DModel) dObject).tryOriginal();
                                     if (sModel != null) {
