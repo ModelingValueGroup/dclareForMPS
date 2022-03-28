@@ -903,6 +903,11 @@
             </node>
           </node>
         </node>
+        <node concept="1SiIV0" id="22ExA6fVOGt" role="3bR37C">
+          <node concept="3bR9La" id="22ExA6fVOGu" role="1SiIV1">
+            <ref role="3bR37D" to="ffeo:1TaHNgiIbIZ" resolve="MPS.Editor" />
+          </node>
+        </node>
       </node>
       <node concept="1E1JtA" id="5TmHY1kYraY" role="2G$12L">
         <property role="BnDLt" value="false" />
@@ -1138,6 +1143,7 @@
         </node>
         <node concept="1SiIV0" id="3_CqF4vomNe" role="3bR37C">
           <node concept="3bR9La" id="3_CqF4vomNf" role="1SiIV1">
+            <property role="3bR36h" value="true" />
             <ref role="3bR37D" node="3_CqF4vomJJ" resolve="DclareMessages" />
           </node>
         </node>

@@ -59,6 +59,10 @@
       </concept>
       <concept id="1070534058343" name="jetbrains.mps.baseLanguage.structure.NullLiteral" flags="nn" index="10Nm6u" />
       <concept id="1070534370425" name="jetbrains.mps.baseLanguage.structure.IntegerType" flags="in" index="10Oyi0" />
+      <concept id="1070534644030" name="jetbrains.mps.baseLanguage.structure.BooleanType" flags="in" index="10P_77" />
+      <concept id="1070534760951" name="jetbrains.mps.baseLanguage.structure.ArrayType" flags="in" index="10Q1$e">
+        <child id="1070534760952" name="componentType" index="10Q1$1" />
+      </concept>
       <concept id="1070534934090" name="jetbrains.mps.baseLanguage.structure.CastExpression" flags="nn" index="10QFUN">
         <child id="1070534934091" name="type" index="10QFUM" />
         <child id="1070534934092" name="expression" index="10QFUP" />
@@ -83,6 +87,7 @@
         <child id="1068580123134" name="parameter" index="3clF46" />
         <child id="1068580123135" name="body" index="3clF47" />
       </concept>
+      <concept id="1068580123165" name="jetbrains.mps.baseLanguage.structure.InstanceMethodDeclaration" flags="ig" index="3clFb_" />
       <concept id="1068580123155" name="jetbrains.mps.baseLanguage.structure.ExpressionStatement" flags="nn" index="3clFbF">
         <child id="1068580123156" name="expression" index="3clFbG" />
       </concept>
@@ -128,6 +133,7 @@
       <concept id="1178549954367" name="jetbrains.mps.baseLanguage.structure.IVisible" flags="ng" index="1B3ioH">
         <child id="1178549979242" name="visibility" index="1B3o_S" />
       </concept>
+      <concept id="1107796713796" name="jetbrains.mps.baseLanguage.structure.Interface" flags="ig" index="3HP615" />
       <concept id="1163668896201" name="jetbrains.mps.baseLanguage.structure.TernaryOperatorExpression" flags="nn" index="3K4zz7">
         <child id="1163668914799" name="condition" index="3K4Cdx" />
         <child id="1163668922816" name="ifTrue" index="3K4E3e" />
@@ -847,6 +853,15 @@
         <property role="Xl_RC" value="ENGINE" />
       </node>
     </node>
+    <node concept="Wx3nA" id="22ExA6fJynW" role="jymVt">
+      <property role="TrG5h" value="IPREFS_IN_ROOT_KEY" />
+      <property role="3TUv4t" value="true" />
+      <node concept="3Tm1VV" id="22ExA6fJynX" role="1B3o_S" />
+      <node concept="17QB3L" id="22ExA6fJynY" role="1tU5fm" />
+      <node concept="Xl_RD" id="22ExA6fJynZ" role="33vP2m">
+        <property role="Xl_RC" value="PROJECT" />
+      </node>
+    </node>
     <node concept="Wx3nA" id="12jv95xk_qy" role="jymVt">
       <property role="TrG5h" value="maxDigitsInEngineState" />
       <node concept="3Tm1VV" id="12jv95xk_pV" role="1B3o_S" />
@@ -1033,6 +1048,42 @@
     <node concept="13hLZK" id="12jv95xewui" role="13h7CW">
       <node concept="3clFbS" id="12jv95xewuj" role="2VODD2" />
     </node>
+  </node>
+  <node concept="3HP615" id="22ExA6fKnVF">
+    <property role="TrG5h" value="IPrefs" />
+    <node concept="3clFb_" id="22ExA6fKnWO" role="jymVt">
+      <property role="TrG5h" value="getActive" />
+      <node concept="37vLTG" id="22ExA6fKnXv" role="3clF46">
+        <property role="TrG5h" value="aspect" />
+        <node concept="17QB3L" id="22ExA6fKnXQ" role="1tU5fm" />
+      </node>
+      <node concept="3clFbS" id="22ExA6fKnWR" role="3clF47" />
+      <node concept="3Tm1VV" id="22ExA6fKnWS" role="1B3o_S" />
+      <node concept="10P_77" id="22ExA6fKnWB" role="3clF45" />
+    </node>
+    <node concept="3clFb_" id="22ExA6fKnZs" role="jymVt">
+      <property role="TrG5h" value="setActive" />
+      <node concept="37vLTG" id="22ExA6fKo2p" role="3clF46">
+        <property role="TrG5h" value="aspect" />
+        <node concept="17QB3L" id="22ExA6fKo2W" role="1tU5fm" />
+      </node>
+      <node concept="37vLTG" id="22ExA6fKo44" role="3clF46">
+        <property role="TrG5h" value="active" />
+        <node concept="10P_77" id="22ExA6fKo56" role="1tU5fm" />
+      </node>
+      <node concept="3clFbS" id="22ExA6fKnZv" role="3clF47" />
+      <node concept="3Tm1VV" id="22ExA6fKnZw" role="1B3o_S" />
+      <node concept="3cqZAl" id="22ExA6fKnYX" role="3clF45" />
+    </node>
+    <node concept="3clFb_" id="69vWBEqgka3" role="jymVt">
+      <property role="TrG5h" value="getInactiveAspects" />
+      <node concept="3clFbS" id="69vWBEqgka6" role="3clF47" />
+      <node concept="3Tm1VV" id="69vWBEqgka7" role="1B3o_S" />
+      <node concept="10Q1$e" id="69vWBEqgk9b" role="3clF45">
+        <node concept="17QB3L" id="69vWBEqgkfU" role="10Q1$1" />
+      </node>
+    </node>
+    <node concept="3Tm1VV" id="22ExA6fKnVG" role="1B3o_S" />
   </node>
 </model>
 
