@@ -11,7 +11,6 @@
     <import index="zrbp" ref="55d6b6f5-8095-4cd0-a39b-779da8d12940/java:org.modelingvalue.collections(DclareMPSRuntime/)" />
     <import index="wyt6" ref="6354ebe7-c22a-4a0f-ac54-50b52ab9b065/java:java.lang(JDK/)" />
     <import index="mhbf" ref="8865b7a8-5271-43d3-884c-6fd1d9cfdd34/java:org.jetbrains.mps.openapi.model(MPS.OpenAPI/)" implicit="true" />
-    <import index="tpck" ref="r:00000000-0000-4000-0000-011c89590288(jetbrains.mps.lang.core.structure)" implicit="true" />
   </imports>
   <registry>
     <language id="af65afd8-f0dd-4942-87d9-63a55f2a9db1" name="jetbrains.mps.lang.behavior">
@@ -1102,10 +1101,6 @@
         <property role="TrG5h" value="aspectId" />
         <node concept="17QB3L" id="yC2uzckEZl" role="1tU5fm" />
       </node>
-      <node concept="37vLTG" id="22ExA6fKnXv" role="3clF46">
-        <property role="TrG5h" value="aspectName" />
-        <node concept="17QB3L" id="22ExA6fKnXQ" role="1tU5fm" />
-      </node>
       <node concept="3clFbS" id="22ExA6fKnWR" role="3clF47" />
       <node concept="3Tm1VV" id="22ExA6fKnWS" role="1B3o_S" />
       <node concept="10P_77" id="22ExA6fKnWB" role="3clF45" />
@@ -1115,10 +1110,6 @@
       <node concept="37vLTG" id="yC2uzckEVu" role="3clF46">
         <property role="TrG5h" value="aspectId" />
         <node concept="17QB3L" id="yC2uzckEWx" role="1tU5fm" />
-      </node>
-      <node concept="37vLTG" id="22ExA6fKo2p" role="3clF46">
-        <property role="TrG5h" value="aspectName" />
-        <node concept="17QB3L" id="22ExA6fKo2W" role="1tU5fm" />
       </node>
       <node concept="37vLTG" id="22ExA6fKo44" role="3clF46">
         <property role="TrG5h" value="active" />
@@ -1179,12 +1170,6 @@
                 <node concept="13iPFW" id="3_wkb9eG_p7" role="2Oq$k0" />
                 <node concept="3TrcHB" id="yC2uzd1gfD" role="2OqNvi">
                   <ref role="3TsBF5" to="wknp:yC2uzcPUIs" resolve="id" />
-                </node>
-              </node>
-              <node concept="2OqwBi" id="22ExA6g7dbg" role="37wK5m">
-                <node concept="13iPFW" id="3_wkb9eG_wI" role="2Oq$k0" />
-                <node concept="3TrcHB" id="22ExA6g7dm_" role="2OqNvi">
-                  <ref role="3TsBF5" to="tpck:h0TrG11" resolve="name" />
                 </node>
               </node>
               <node concept="37vLTw" id="3_wkb9eG_DO" role="37wK5m">
