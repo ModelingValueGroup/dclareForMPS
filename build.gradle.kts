@@ -20,7 +20,7 @@ defaultTasks(
     "mvguploader",
 )
 plugins {
-    id("org.modelingvalue.gradle.mvgplugin") version "1.0.8"
+    id("org.modelingvalue.gradle.mvgplugin") version "1.1.1"
     id("com.dorongold.task-tree") version "2.1.0" // to get a task-tree generation task
 }
 
