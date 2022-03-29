@@ -272,6 +272,24 @@
     <node concept="PrWs8" id="3gm2YTwH79F" role="PzmwI">
       <ref role="PrY4T" to="tpck:h0TrEE$" resolve="INamedConcept" />
     </node>
+    <node concept="1TJgyj" id="3_wkb9eGAzO" role="1TKVEi">
+      <property role="IQ2ns" value="4134393184680831220" />
+      <property role="20lmBu" value="fLJjDmT/aggregation" />
+      <property role="20kJfa" value="dependencies" />
+      <property role="20lbJX" value="fLJekj5/_0__n" />
+      <ref role="20lvS9" node="3_wkb9eGwqx" resolve="AspectSettingDependency" />
+    </node>
+  </node>
+  <node concept="1TIwiD" id="3_wkb9eGwqx">
+    <property role="EcuMT" value="4134393184680806049" />
+    <property role="TrG5h" value="AspectSettingDependency" />
+    <ref role="1TJDcQ" to="tpck:gw2VY9q" />
+    <node concept="1TJgyj" id="3_wkb9eGwqy" role="1TKVEi">
+      <property role="IQ2ns" value="4134393184680806050" />
+      <property role="20kJfa" value="aspect" />
+      <property role="20lbJX" value="fLJekj4/_1" />
+      <ref role="20lvS9" node="3gm2YTwH79_" resolve="AspectSettings" />
+    </node>
   </node>
 </model>
 
