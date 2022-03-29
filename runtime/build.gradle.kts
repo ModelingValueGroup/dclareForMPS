@@ -18,9 +18,9 @@ plugins {
     `maven-publish`
 }
 dependencies {
-    implementation("org.modelingvalue:mvg-json:1.6.1-BRANCHED")
-    implementation("org.modelingvalue:immutable-collections:1.6.1-BRANCHED")
-    implementation("org.modelingvalue:dclare:1.6.1-BRANCHED")
+    implementation("org.modelingvalue:mvg-json:1.7.0-BRANCHED")
+    implementation("org.modelingvalue:immutable-collections:1.7.0-BRANCHED")
+    implementation("org.modelingvalue:dclare:1.7.0-BRANCHED")
 
     compileOnly(mpsJar("mps-closures"))
     compileOnly(mpsJar("mps-core"))
