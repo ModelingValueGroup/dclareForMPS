@@ -47,8 +47,8 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
                                                                                                  if (m.isSolution()) {
                                                                                                      Set<DModel> ist = m.models().sequential().map(DModel::of).toSet();
                                                                                                      if (!ist.equals(post)) {
-                                                                                                         Setable.<Set<DModel>, DModel> diff(ist, post,                                    //
-                                                                                                                 DNewableObject::original,                                                //
+                                                                                                         Setable.<Set<DModel>, DModel> diff(ist, post,                                     //
+                                                                                                                 DNewableObject::original,                                                 //
                                                                                                                  r -> new ModelDeleteHelper(r.tryOriginal()).delete());
                                                                                                          return true;
                                                                                                      }
@@ -57,13 +57,16 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
                                                                                              }, containment);
 
     protected static final Observed<DModule, Set<SLanguage>>                  LANGUAGES      = Observed.of("LANGUAGES", Set.of(), (tx, o, pre, post) -> {
-                                                                                                 Setable.<Set<SLanguage>, SLanguage> diff(pre, post,                                      //
-                                                                                                         a -> DClareMPS.ALL_LANGUAGES.set(dClareMPS(), Set::add, a),                      //
+                                                                                                 Setable.<Set<SLanguage>, SLanguage> diff(pre, post,                                       //
+                                                                                                         a -> {
+                                                                                                             DClareMPS.ALL_LANGUAGES.set(dClareMPS(), Set::add, a);
+                                                                                                             DClareMPS.ALL_ASPECTS.set(dClareMPS(), Set::addAll, DClareMPS.ASPECTS.get(a));
+                                                                                                         },                                                                                //
                                                                                                          r -> {
                                                                                                          });
                                                                                              }, synthetic);
 
-    private static final Observer<DModule>                                    LANGUAGES_RULE = DObject.observer(LANGUAGES, o -> dClareMPS().read(() -> languages(o.original()))           //
+    private static final Observer<DModule>                                    LANGUAGES_RULE = DObject.observer(LANGUAGES, o -> dClareMPS().read(() -> languages(o.original()))            //
             .addAll(MODELS.get(o).flatMap(DModel::allUsedLanguages)));
 
     private static final Action<DModule>                                      READ_MODELS    = Action.of("$READ_MODELS", m -> {

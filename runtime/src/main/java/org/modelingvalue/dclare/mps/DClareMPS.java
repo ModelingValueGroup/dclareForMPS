@@ -96,11 +96,14 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
                                                                                                                                 };
     protected static final String                                                                       DCLARE                  = "---------> DCLARE ";
     public static final Observed<DClareMPS, Set<SLanguage>>                                             ALL_LANGUAGES           = Observed.of("ALL_LANGAUGES", Set.of(), plumbing);
+    public static final Observed<DClareMPS, Set<IAspect>>                                               ALL_ASPECTS             = Observed.of("ALL_ASPECTS", Set.of(), (t, o, b, a) -> {
+                                                                                                                                    o.allAspects.update(Set::addAll, a);
+                                                                                                                                }, plumbing);
     public static final Constant<SLanguage, Set<IRuleSet>>                                              RULE_SETS               = Constant.of("RULE_SETS", Set.of(), l -> {
                                                                                                                                     DClareMPS dclareMPS = DClareMPS.instance();
                                                                                                                                     IRuleAspect aspect = RULE_ASPECT.get(l);
                                                                                                                                     Set<IRuleSet> ruleSets = aspect != null ? Collection.of(aspect.getRuleSets()).                                       //
-                                                                                                                                            filter(a -> dclareMPS.isActiveAspect(a.getAspect().getName())).toSet() : Set.of();
+                                                                                                                                            filter(a -> dclareMPS.isActiveAspect(a.getAspect())).toSet() : Set.of();
                                                                                                                                     DclareTraceBroadcaster.onRuleSetActive(ruleSets);
                                                                                                                                     return ruleSets;
                                                                                                                                 });
@@ -123,6 +126,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
     protected final DclareForMPSEngine                                                                  engine;
     private final AtomicLong                                                                            counter                 = new AtomicLong(0L);
     private final DRepository                                                                           dRepository;
+    private final MutationWrapper<Set<IAspect>>                                                         allAspects              = new MutationWrapper<>(Set.of());
     //
     protected Map<DMessageType, QualifiedSet<Triple<DObject, DFeature, String>, DMessage>>              messages                = MESSAGE_QSET_MAP;
     private boolean                                                                                     running                 = false;
@@ -201,10 +205,14 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
         return config;
     }
 
-    protected boolean isActiveAspect(String aspectName) {
+    protected Set<IAspect> getAllAspects() {
+        return allAspects.get();
+    }
+
+    protected boolean isActiveAspect(IAspect aspect) {
         String[] inactiveAspects = config.getInactiveAspects();
         for (int i = 0; i < inactiveAspects.length; i++) {
-            if (inactiveAspects[i].equals(aspectName)) {
+            if (inactiveAspects[i].equals(aspect.getId())) {
                 return false;
             }
         }

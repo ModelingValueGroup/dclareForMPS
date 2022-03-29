@@ -1053,8 +1053,12 @@
     <property role="TrG5h" value="IPrefs" />
     <node concept="3clFb_" id="22ExA6fKnWO" role="jymVt">
       <property role="TrG5h" value="getActive" />
+      <node concept="37vLTG" id="yC2uzckEY5" role="3clF46">
+        <property role="TrG5h" value="aspectId" />
+        <node concept="17QB3L" id="yC2uzckEZl" role="1tU5fm" />
+      </node>
       <node concept="37vLTG" id="22ExA6fKnXv" role="3clF46">
-        <property role="TrG5h" value="aspect" />
+        <property role="TrG5h" value="aspectName" />
         <node concept="17QB3L" id="22ExA6fKnXQ" role="1tU5fm" />
       </node>
       <node concept="3clFbS" id="22ExA6fKnWR" role="3clF47" />
@@ -1063,8 +1067,12 @@
     </node>
     <node concept="3clFb_" id="22ExA6fKnZs" role="jymVt">
       <property role="TrG5h" value="setActive" />
+      <node concept="37vLTG" id="yC2uzckEVu" role="3clF46">
+        <property role="TrG5h" value="aspectId" />
+        <node concept="17QB3L" id="yC2uzckEWx" role="1tU5fm" />
+      </node>
       <node concept="37vLTG" id="22ExA6fKo2p" role="3clF46">
-        <property role="TrG5h" value="aspect" />
+        <property role="TrG5h" value="aspectName" />
         <node concept="17QB3L" id="22ExA6fKo2W" role="1tU5fm" />
       </node>
       <node concept="37vLTG" id="22ExA6fKo44" role="3clF46">
@@ -1076,7 +1084,7 @@
       <node concept="3cqZAl" id="22ExA6fKnYX" role="3clF45" />
     </node>
     <node concept="3clFb_" id="69vWBEqgka3" role="jymVt">
-      <property role="TrG5h" value="getInactiveAspects" />
+      <property role="TrG5h" value="getInactiveAspectIds" />
       <node concept="3clFbS" id="69vWBEqgka6" role="3clF47" />
       <node concept="3Tm1VV" id="69vWBEqgka7" role="1B3o_S" />
       <node concept="10Q1$e" id="69vWBEqgk9b" role="3clF45">

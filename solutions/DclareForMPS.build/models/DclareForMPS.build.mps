@@ -763,35 +763,6 @@
             </node>
           </node>
         </node>
-        <node concept="1yeLz9" id="4rPXX8f$X4$" role="1TViLv">
-          <property role="TrG5h" value="DclareTrace.generator" />
-          <property role="3LESm3" value="ae796ca4-167d-4e3f-ac93-affa9e6d5e2f" />
-          <node concept="1BupzO" id="4rPXX8f$X4J" role="3bR31x">
-            <property role="3ZfqAx" value="generator/templates" />
-            <property role="1Hdu6h" value="true" />
-            <property role="1HemKv" value="true" />
-            <node concept="3LXTmp" id="4rPXX8f$X4K" role="1HemKq">
-              <node concept="398BVA" id="4rPXX8f$X4_" role="3LXTmr">
-                <ref role="398BVh" node="3Lt_N8a$ptU" resolve="dclare_home" />
-                <node concept="2Ry0Ak" id="4rPXX8f$X4A" role="iGT6I">
-                  <property role="2Ry0Am" value="languages" />
-                  <node concept="2Ry0Ak" id="4rPXX8f$X4B" role="2Ry0An">
-                    <property role="2Ry0Am" value="DclareTrace" />
-                    <node concept="2Ry0Ak" id="4rPXX8f$X4C" role="2Ry0An">
-                      <property role="2Ry0Am" value="generator" />
-                      <node concept="2Ry0Ak" id="4rPXX8f$X4D" role="2Ry0An">
-                        <property role="2Ry0Am" value="templates" />
-                      </node>
-                    </node>
-                  </node>
-                </node>
-              </node>
-              <node concept="3qWCbU" id="4rPXX8f$X4L" role="3LXTna">
-                <property role="3qWCbO" value="**/*.mps, **/*.mpsr, **/.model" />
-              </node>
-            </node>
-          </node>
-        </node>
         <node concept="3rtmxn" id="78KS2572QFo" role="3bR31x">
           <node concept="3LXTmp" id="78KS2572QFp" role="3rtmxm">
             <node concept="55IIr" id="78KS2572QFq" role="3LXTmr">
@@ -818,35 +789,6 @@
               <property role="2Ry0Am" value="DclareMessages" />
               <node concept="2Ry0Ak" id="3_CqF4vomMQ" role="2Ry0An">
                 <property role="2Ry0Am" value="DclareMessages.mpl" />
-              </node>
-            </node>
-          </node>
-        </node>
-        <node concept="1yeLz9" id="3_CqF4vomMX" role="1TViLv">
-          <property role="TrG5h" value="DclareMessages#01" />
-          <property role="3LESm3" value="850ebde7-f10c-4286-9b25-cb26dbd75285" />
-          <node concept="1BupzO" id="oVVxO6tTvI" role="3bR31x">
-            <property role="3ZfqAx" value="generator/template" />
-            <property role="1Hdu6h" value="true" />
-            <property role="1HemKv" value="true" />
-            <node concept="3LXTmp" id="4emHI0reHQw" role="1HemKq">
-              <node concept="398BVA" id="4emHI0reHQm" role="3LXTmr">
-                <ref role="398BVh" node="3Lt_N8a$ptU" resolve="dclare_home" />
-                <node concept="2Ry0Ak" id="4emHI0reHQn" role="iGT6I">
-                  <property role="2Ry0Am" value="languages" />
-                  <node concept="2Ry0Ak" id="4emHI0reHQo" role="2Ry0An">
-                    <property role="2Ry0Am" value="DclareMessages" />
-                    <node concept="2Ry0Ak" id="4emHI0reHQp" role="2Ry0An">
-                      <property role="2Ry0Am" value="generator" />
-                      <node concept="2Ry0Ak" id="4emHI0reHQq" role="2Ry0An">
-                        <property role="2Ry0Am" value="template" />
-                      </node>
-                    </node>
-                  </node>
-                </node>
-              </node>
-              <node concept="3qWCbU" id="4emHI0reHQx" role="3LXTna">
-                <property role="3qWCbO" value="**/*.mps, **/*.mpsr, **/.model" />
               </node>
             </node>
           </node>

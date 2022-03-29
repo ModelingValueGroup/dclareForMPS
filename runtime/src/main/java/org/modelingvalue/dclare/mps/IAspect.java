@@ -19,6 +19,8 @@ import java.util.List;
 
 public interface IAspect {
 
+    String getId();
+
     String getName();
 
     List<IAspect> getDependencies();
