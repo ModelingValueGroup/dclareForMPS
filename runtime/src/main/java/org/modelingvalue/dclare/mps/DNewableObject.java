@@ -20,49 +20,49 @@ import java.util.function.Supplier;
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
-import org.modelingvalue.dclare.Constant;
-import org.modelingvalue.dclare.Construction;
+import org.modelingvalue.dclare.*;
 import org.modelingvalue.dclare.Construction.Reason;
-import org.modelingvalue.dclare.LeafTransaction;
-import org.modelingvalue.dclare.Newable;
-import org.modelingvalue.dclare.Observer;
-import org.modelingvalue.dclare.Setable;
 import org.modelingvalue.dclare.mps.DAttribute.DIdentifyingAttribute;
 
 @SuppressWarnings("rawtypes")
-public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DIdentifiedObject implements Newable {
+public abstract class DNewableObject<T extends DNewableObject, R, S> extends DIdentifiedObject implements Newable {
 
-    private static final Constant<DMatchedObject, Object> ORIGINAL  = Constant.of("$ORIGINAL", null);
+    private static final Constant<DNewableObject, Object> ORIGINAL  = Constant.of("$ORIGINAL", null);
 
     @SuppressWarnings("unchecked")
     protected static final Set<Observer>                  OBSERVERS = DObject.OBSERVERS;
 
     protected static final Set<Setable>                   SETABLES  = DObject.SETABLES;
 
-    protected static <D extends DMatchedObject> D quotationConstruct(SLanguage anonymousLanguage, String anonymousType, Object[] ctx, Supplier<D> supplier) {
+    protected static <D extends DNewableObject> D quotationConstruct(SLanguage anonymousLanguage, String anonymousType, Object[] ctx, Supplier<D> supplier) {
         LeafTransaction tx = LeafTransaction.getCurrent();
         return tx.construct(new DQuotation(tx.mutable(), anonymousLanguage, anonymousType, ctx), supplier);
     }
 
-    protected static <D extends DMatchedObject> D copyRootConstruct(SLanguage anonymousLanguage, String anonymousType, DObject object, DNode copied, Supplier<D> supplier) {
+    protected static <D extends DNewableObject> D copyRootConstruct(SLanguage anonymousLanguage, String anonymousType, DObject object, DNode copied, Supplier<D> supplier) {
         LeafTransaction tx = LeafTransaction.getCurrent();
         return tx.construct(new DCopy(tx.mutable(), copied, anonymousLanguage, anonymousType), supplier);
     }
 
-    protected static <D extends DMatchedObject> D copyChildConstruct(DCopy root, DNode copied, Supplier<D> supplier) {
+    protected static <D extends DNewableObject> D copyChildConstruct(DCopy root, DNode copied, Supplier<D> supplier) {
         LeafTransaction tx = LeafTransaction.getCurrent();
         return tx.construct(new DCopy(tx.mutable(), copied, root), supplier);
     }
 
     @SuppressWarnings("unchecked")
-    protected static <D extends DMatchedObject, I, S> D readConstruct(I ref, Supplier<D> supplier, S original) {
+    protected static <D extends DNewableObject, I, S> D referenceConstruct(I ref, Supplier<D> supplier) {
         LeafTransaction tx = LeafTransaction.getCurrent();
-        D d = tx.directConstruct(new DRead(ref), supplier);
-        ORIGINAL.force(d, original);
-        return d;
+        return tx.directConstruct(new DRead(ref), supplier);
     }
 
-    protected DMatchedObject(Object[] identity) {
+    @SuppressWarnings("unchecked")
+    protected static <D extends DNewableObject, I, S> D originalConstruct(S original, I ref, Supplier<D> supplier) {
+        D result = referenceConstruct(ref, supplier);
+        ORIGINAL.force(result, original);
+        return result;
+    }
+
+    protected DNewableObject(Object[] identity) {
         super(identity);
     }
 
@@ -94,19 +94,17 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
 
     @Override
     protected final void read(DClareMPS dClareMPS) {
-        if (readReason() != null) {
-            read();
-        }
+        read();
     }
 
     @SuppressWarnings("unchecked")
     protected final R reference() {
-        DRead<R> rc = readReason();
+        DRead<R> rc = referenceReason();
         return rc != null ? rc.reference() : null;
     }
 
     @SuppressWarnings("unchecked")
-    protected final DRead<R> readReason() {
+    protected final DRead<R> referenceReason() {
         Construction cons = dDirectConstruction();
         return cons != null && cons.reason() instanceof DRead ? (DRead) cons.reason() : null;
     }
@@ -127,25 +125,30 @@ public abstract class DMatchedObject<T extends DMatchedObject, R, S> extends DId
         return deriveReasons().filter(DQuotation.class).map(DQuotation::getAnonymousLanguage).notNull().toSet();
     }
 
+    @SuppressWarnings("unchecked")
     public final S tryOriginal() {
-        R ref = reference();
-        S sObject = ref != null ? dClareMPS().read(() -> resolve(ref)) : null;
-        if (sObject != null) {
-            ORIGINAL.force(this, sObject);
+        S sObject = ORIGINAL.isSet(this) ? (S) ORIGINAL.get(this) : null;
+        if (sObject == null) {
+            R ref = reference();
+            sObject = ref != null ? dClareMPS().read(() -> resolve(ref)) : null;
+            if (sObject != null) {
+                ORIGINAL.force(this, sObject);
+            }
         }
         return sObject;
     }
 
     @SuppressWarnings("unchecked")
     protected final S original() {
-        S sObject = tryOriginal();
+        R ref = reference();
+        S sObject = ref != null ? dClareMPS().read(() -> resolve(ref)) : null;
         if (sObject == null) {
             sObject = ORIGINAL.isSet(this) ? (S) ORIGINAL.get(this) : null;
             if (sObject == null) {
-                sObject = create(reference());
+                sObject = create(ref);
             }
             addOriginal(sObject);
-            readConstruct(reference(sObject), () -> this, sObject);
+            originalConstruct(sObject, reference(sObject), () -> this);
             init(dClareMPS(), sObject);
         }
         return sObject;

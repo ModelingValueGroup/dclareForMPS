@@ -15,55 +15,35 @@
 
 package org.modelingvalue.dclare.mps;
 
-import static org.modelingvalue.dclare.CoreSetableModifier.containment;
-import static org.modelingvalue.dclare.CoreSetableModifier.mandatory;
-import static org.modelingvalue.dclare.CoreSetableModifier.synthetic;
+import static org.modelingvalue.dclare.CoreSetableModifier.*;
 
 import java.util.Collections;
 import java.util.Objects;
-import java.util.function.BiFunction;
-import java.util.function.Function;
-import java.util.function.Supplier;
+import java.util.function.*;
 
+import org.jetbrains.mps.openapi.language.SLanguage;
 import org.jetbrains.mps.openapi.language.SProperty;
-import org.jetbrains.mps.openapi.model.EditableSModel;
-import org.jetbrains.mps.openapi.model.SModel;
-import org.jetbrains.mps.openapi.model.SNode;
+import org.jetbrains.mps.openapi.model.*;
 import org.modelingvalue.collections.ContainingCollection;
-import org.modelingvalue.dclare.Constant;
-import org.modelingvalue.dclare.CoreSetableModifier;
-import org.modelingvalue.dclare.LeafTransaction;
-import org.modelingvalue.dclare.Mutable;
-import org.modelingvalue.dclare.ReadOnlyTransaction;
-import org.modelingvalue.dclare.Setable;
-import org.modelingvalue.dclare.SetableModifier;
-import org.modelingvalue.dclare.State;
+import org.modelingvalue.dclare.*;
 
 import jetbrains.mps.smodel.adapter.structure.property.InvalidProperty;
 
 @SuppressWarnings({"rawtypes", "unused"})
 public interface DAttribute<O, T> extends DFeature {
 
+    Constant<DObservedAttribute, Boolean> IS_PUBLIC = Constant.of("$IS_PUBLIC", Boolean.FALSE, durable);
+
     @SuppressWarnings("unchecked")
-    static <C, V> DAttribute<C, V> of(String id, String name, String anonymousType, String ruleSetType, boolean syn, boolean optional, boolean composite, int identifyingNr, Object def, Class<?> cls, String opposite, Supplier<SNode> source, Function<C, V> deriver, boolean onlyTemporal) {
-        boolean idAttr = identifyingNr >= 0 && ("StructRuleSet".equals(ruleSetType) || anonymousType != null);
-        SetableModifier[] mods = {
-                synthetic.iff(syn),
-                mandatory.iff(idAttr || (!optional && identifyingNr < 0)),
-                containment.iff(composite)
-        };
-        return idAttr
-                ? new DIdentifyingAttribute(id, name, anonymousType, identifyingNr, cls, source, mods)
-                : deriver != null
-                ? new DConstant(id, name, cls, source, deriver, onlyTemporal, mods)
-                : new DObservedAttribute(id, name, identifyingNr >= 0, def, cls, opposite != null
-                ? () -> of(opposite)
-                : null, source, new InvalidProperty(id.toString(), name), mods);
+    static <C, V> DAttribute<C, V> of(String id, String name, String anonymousType, String ruleSetType, boolean syn, boolean optional, boolean composite, int identifyingNr, Object def, Class<?> cls, SLanguage oppositeLanguage, String opposite, Supplier<SNode> source, Function<C, V> deriver, boolean onlyTemporal) {
+        boolean idAttr = identifyingNr >= 0 && ("StructClass".equals(ruleSetType) || anonymousType != null);
+        SetableModifier[] mods = {synthetic.iff(syn), mandatory.iff(idAttr || (!optional && identifyingNr < 0)), containment.iff(composite)};
+        return idAttr ? new DIdentifyingAttribute(id, name, anonymousType, identifyingNr, cls, source, mods) : deriver != null ? new DConstant(id, name, cls, source, deriver, onlyTemporal, mods) : new DObservedAttribute(id, name, identifyingNr >= 0, def, cls, opposite != null ? () -> of(oppositeLanguage, opposite) : null, source, mods);
     }
 
     @SuppressWarnings("unchecked")
-    static <C, V> DAttribute<C, V> of(String id) {
-        return (DAttribute<C, V>) DClareMPS.ATTRIBUTE_MAP.get(DClareMPS.instance()).get(id);
+    static <C, V> DAttribute<C, V> of(SLanguage language, String id) {
+        return (DAttribute<C, V>) DClareMPS.ATTRIBUTE_MAP.get(language).get(id);
     }
 
     String id();
@@ -104,24 +84,27 @@ public interface DAttribute<O, T> extends DFeature {
         private final SProperty sProperty;
         private final boolean   indetifying;
 
-        public DObservedAttribute(Object id, String name, boolean indetifying, V def, Class<?> cls, Supplier<Setable<?, ?>> opposite, Supplier<SNode> source, SProperty sProperty, SetableModifier... modifiers) {
-            super(id, def, opposite, (o, b, a) -> {
-                if (o instanceof DNode && !Objects.equals(b, a)) {
-                    SNode  sNode  = ((DNode) o).tryOriginal();
+        public DObservedAttribute(Object id, String name, boolean indetifying, V def, Class<?> cls, Supplier<Setable<?, ?>> opposite, Supplier<SNode> source, SetableModifier... modifiers) {
+            super(id, def, opposite, null, source, modifiers);
+            SProperty sProperty = new InvalidProperty(id.toString(), name);
+            setFromToMPS(null, (o, b, a) -> {
+                if (o instanceof DNode && !Objects.equals(b, a) && IS_PUBLIC.isSet(this)) {
+                    SNode sNode = ((DNode) o).tryOriginal();
                     SModel sModel = sNode != null ? sNode.getModel() : null;
                     if (sNode != null && sModel instanceof EditableSModel) {
                         boolean changed = ((EditableSModel) sModel).isChanged();
                         sNode.setProperty(sProperty, "");
                         sNode.setProperty(sProperty, null);
                         ((EditableSModel) sModel).setChanged(changed);
+                        // System.err.println("!!!!!!!!!!! CHANGED !!!!!!!!! node=" + sNode + ", attribute=" + name + "#" + id);
                         return true;
                     }
                 }
                 return false;
-            }, null, source, modifiers);
-            this.name        = name;
-            this.cls         = cls;
-            this.sProperty   = sProperty;
+            });
+            this.name = name;
+            this.cls = cls;
+            this.sProperty = sProperty;
             this.indetifying = indetifying;
         }
 
@@ -152,11 +135,21 @@ public interface DAttribute<O, T> extends DFeature {
 
         @Override
         public V get(C object) {
-            if (object instanceof DNode && LeafTransaction.getCurrent() instanceof ReadOnlyTransaction) {
-                SNode original = ((DNode) object).tryOriginal();
-                if (original != null) {
-                    original.getProperty(sProperty);
+            LeafTransaction tx = LeafTransaction.getCurrent();
+            if (object instanceof DNode && tx instanceof ReadOnlyTransaction && DClareMPS.instance(tx).isRunningRead()) {
+                if (!(tx instanceof DerivationTransaction) || !((DerivationTransaction) tx).isDeriving()) {
+                    SNode sNode = ((DNode) object).tryOriginal();
+                    if (sNode != null) {
+                        if (!IS_PUBLIC.isSet(this)) {
+                            IS_PUBLIC.set(this, Boolean.TRUE);
+                        }
+                        // System.err.println("!!!!!!! READ !!!!!!!!! node=" + sNode + ", attribute=" + name + "#" + id + ", thread=" + Thread.currentThread() + ", transaction=" + tx.universeTransaction());
+                        sNode.getProperty(sProperty);
+                    }
                 }
+            }
+            if (!(tx instanceof DerivationTransaction) && !object.isActive()) {
+                return tx.universeTransaction().emptyState().derive(() -> super.get(object));
             }
             return super.get(object);
         }
@@ -189,14 +182,14 @@ public interface DAttribute<O, T> extends DFeature {
         private final Class<?>        cls;
 
         public DIdentifyingAttribute(String id, String name, String anonymousType, int index, Class<?> cls, Supplier<SNode> source, SetableModifier... modifiers) {
-            this.id            = id;
-            this.name          = name;
+            this.id = id;
+            this.name = name;
             this.anonymousType = anonymousType;
-            this.composite     = containment.in(modifiers);
-            this.index         = index;
-            this.synthetic     = CoreSetableModifier.synthetic.in(modifiers);
-            this.source        = source;
-            this.cls           = cls;
+            this.composite = containment.in(modifiers);
+            this.index = index;
+            this.synthetic = CoreSetableModifier.synthetic.in(modifiers);
+            this.source = source;
+            this.cls = cls;
         }
 
         @Override
@@ -305,9 +298,9 @@ public interface DAttribute<O, T> extends DFeature {
 
         public DConstant(Object id, String name, Class<?> cls, Supplier<SNode> source, Function<C, V> deriver, boolean onlyTemporal, SetableModifier... modifiers) {
             super(id, null, null, null, deriver, null, modifiers);
-            this.name         = name;
-            this.source       = source;
-            this.cls          = cls;
+            this.name = name;
+            this.source = source;
+            this.cls = cls;
             this.onlyTemporal = onlyTemporal;
         }
 
@@ -364,11 +357,6 @@ public interface DAttribute<O, T> extends DFeature {
         @Override
         public SNode getSource() {
             return source != null ? source.get() : null;
-        }
-
-        @Override
-        protected boolean isOrphan(State state, Mutable m) {
-            return m instanceof DObject && super.isOrphan(state, m) && !((DObject) m).isExternal();
         }
 
         @Override

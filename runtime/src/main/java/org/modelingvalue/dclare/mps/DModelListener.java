@@ -32,6 +32,8 @@ import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
 
+import jetbrains.mps.project.DevKit;
+import jetbrains.mps.smodel.MPSModuleRepository;
 import jetbrains.mps.smodel.event.SModelChildEvent;
 import jetbrains.mps.smodel.event.SModelDevKitEvent;
 import jetbrains.mps.smodel.event.SModelImportEvent;
@@ -55,6 +57,8 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
         b().handleMPSChange(() -> {
             if (a().isActive()) {
                 DNode.PROPERTY.get(event.getProperty()).set(DNode.of(event.getNode()), event.getNewValue());
+            } else {
+                a().activateIfUsed();
             }
         });
     }
@@ -66,6 +70,8 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
                 SReference newValue = event.getNewValue();
                 SNode targetNode = newValue != null ? newValue.getTargetNode() : null;
                 DNode.REFERENCE.get(event.getAssociationLink()).set(DNode.of(event.getNode()), targetNode != null ? DNode.of(targetNode) : null);
+            } else {
+                a().activateIfUsed();
             }
         });
     }
@@ -81,7 +87,9 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
                     DModel.ROOTS.set(dModel, Set::add, dNode);
                 } else {
                     SContainmentLink al = event.getAggregationLink();
+                    assert al != null;
                     if (al.isMultiple()) {
+                        assert event.getParent() != null;
                         int index = DNode.children(event.getParent(), al).firstIndexOf(sNode);
                         if (index >= 0) {
                             DNode.MANY_CONTAINMENT.get(al).set(DNode.of(event.getParent()), (l, e) -> {
@@ -93,6 +101,8 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
                         DNode.SINGLE_CONTAINMENT.get(al).set(DNode.of(event.getParent()), dNode);
                     }
                 }
+            } else {
+                a().activateIfUsed();
             }
         });
     }
@@ -108,35 +118,38 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
                     DModel.ROOTS.set(DModel.of(event.getModel()), Set::remove, dNode);
                 } else {
                     SContainmentLink al = event.getAggregationLink();
+                    assert al != null;
                     if (al.isMultiple()) {
                         DNode.MANY_CONTAINMENT.get(al).set(DNode.of(event.getParent()), List::remove, dNode);
                     } else {
                         DNode.SINGLE_CONTAINMENT.get(al).set(DNode.of(event.getParent()), (v, e) -> e.equals(v) ? null : v, dNode);
                     }
                 }
+            } else {
+                a().activateIfUsed();
             }
         });
     }
 
     @Override
     public void modelLoaded(SModel model, boolean partially) {
-        b().handleMPSChange(() -> {
-            DModel.LOADED.set(a(), Boolean.TRUE);
-        });
-    }
-
-    @Override
-    public void modelReplaced(SModel model) {
-        if (a().isActive()) {
-            b().universeTransaction().put("$REFRESH", () -> DModel.REFRESH.trigger(DModel.of(model)));
+        if (!partially) {
+            b().handleMPSChange(() -> DModel.LOADED.set(a(), Boolean.TRUE));
         }
     }
 
     @Override
-    public void modelUnloaded(SModel model) {
+    public void modelReplaced(SModel model) {
         b().handleMPSChange(() -> {
-            DModel.LOADED.set(a(), Boolean.FALSE);
+            if (a().isActive()) {
+                b().universeTransaction().put("$REFRESH", () -> DModel.REFRESH.trigger(DModel.of(model)));
+            }
         });
+    }
+
+    @Override
+    public void modelUnloaded(SModel model) {
+        b().handleMPSChange(() -> DModel.LOADED.set(a(), Boolean.FALSE));
     }
 
     @Override
@@ -178,7 +191,7 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
     @Override
     public void importAdded(SModelImportEvent event) {
         b().handleMPSChange(() -> {
-            if (!a().isExternal() && a().isActive()) {
+            if (a().isActive()) {
                 DModel dModel = DModel.of(event.getModel());
                 DModel add = DModel.of(event.getModelUID().resolve(null));
                 DModel.USED_MODELS.set(dModel, Set::add, add);
@@ -189,7 +202,7 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
     @Override
     public void importRemoved(SModelImportEvent event) {
         b().handleMPSChange(() -> {
-            if (!a().isExternal() && a().isActive()) {
+            if (a().isActive()) {
                 DModel dModel = DModel.of(event.getModel());
                 DModel rem = DModel.of(event.getModelUID().resolve(null));
                 DModel.USED_MODELS.set(dModel, Set::remove, rem);
@@ -199,16 +212,30 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
 
     @Override
     public void devkitAdded(SModelDevKitEvent event) {
+        b().handleMPSChange(() -> {
+            DModel dModel = DModel.of(event.getModel());
+            @SuppressWarnings("deprecation")
+            DevKit devkit = (DevKit) event.getDevkitNamespace().resolve(MPSModuleRepository.getInstance());
+            DModel.USED_DEVKITS.set(dModel, Set::add, devkit);
+        });
     }
 
     @Override
     public void devkitRemoved(SModelDevKitEvent event) {
+        b().handleMPSChange(() -> {
+            DModel dModel = DModel.of(event.getModel());
+            @SuppressWarnings("deprecation")
+            DevKit devkit = (DevKit) event.getDevkitNamespace().resolve(MPSModuleRepository.getInstance());
+            DModel.USED_DEVKITS.set(dModel, Set::remove, devkit);
+        });
     }
 
+    @Deprecated
     @Override
     public void rootAdded(SModelRootEvent event) {
     }
 
+    @Deprecated
     @Override
     public void rootRemoved(SModelRootEvent event) {
     }

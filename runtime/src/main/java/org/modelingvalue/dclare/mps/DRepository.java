@@ -16,7 +16,6 @@
 package org.modelingvalue.dclare.mps;
 
 import static org.modelingvalue.dclare.CoreSetableModifier.containment;
-import static org.modelingvalue.dclare.CoreSetableModifier.plumbing;
 
 import java.util.stream.Collectors;
 
@@ -32,7 +31,6 @@ import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.TriFunction;
 import org.modelingvalue.dclare.Action;
 import org.modelingvalue.dclare.Constant;
-import org.modelingvalue.dclare.Observed;
 import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.Priority;
 import org.modelingvalue.dclare.Setable;
@@ -44,26 +42,19 @@ public class DRepository extends DFromOriginalObject<ProjectRepository> implemen
 
     private static final Constant<Set<SLanguage>, DRepositoryType> REPOSITORY_TYPE = Constant.of("REPOSITORY_TYPE", DRepositoryType::new);
 
-    protected static final Observed<DRepository, Set<DModule>>     REFERENCED      = Observed.of("REFERENCED", Set.of(), plumbing);
-
     @SuppressWarnings({"unchecked", "rawtypes"})
     protected static final DObserved<DRepository, Set<DModule>>    MODULES         = DObserved.of("MODULES", Set.of(), (TriFunction) null, containment);
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     protected static final DObserved<DRepository, Set<?>>          EXCEPTIONS      = DObserved.of("EXCEPTIONS", Set.of(), (TriFunction) null);
 
-    private static final Observer<DRepository>                     MODULES_RULE    = DObject.observer(MODULES, o -> {
-                                                                                       Set<DModule> referenced = REFERENCED.get(o);
-                                                                                       MODULES.set(o, Set::addAll, referenced);
-                                                                                   });
-
-    private static final Action<DRepository>                       READ_MODULES    = Action.of("$READ_MODULES", r -> MODULES.set(r, dClareMPS().read(DRepository::modules).map(DModule::of).toSet()), Priority.urgent);
+    private static final Action<DRepository>                       READ_MODULES    = Action.of("$READ_MODULES", r -> MODULES.set(r, Set::addAll, dClareMPS().read(DRepository::modules).map(DModule::of).toSet()), Priority.urgent);
 
     @SuppressWarnings("rawtypes")
-    protected static final Set<Observer>                           OBSERVERS       = DObject.OBSERVERS.add(MODULES_RULE);
+    protected static final Set<Observer>                           OBSERVERS       = DObject.OBSERVERS;
 
     @SuppressWarnings("rawtypes")
-    protected static final Set<Setable>                            SETABLES        = DObject.SETABLES.addAll(Set.of(MODULES, REFERENCED));
+    protected static final Set<Setable>                            SETABLES        = DObject.SETABLES.addAll(Set.of(MODULES));
 
     protected DRepository(ProjectRepository original) {
         super(original);

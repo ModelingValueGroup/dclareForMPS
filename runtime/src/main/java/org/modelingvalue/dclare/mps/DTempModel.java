@@ -41,6 +41,7 @@ public class DTempModel extends EditableModelDescriptor implements EditableSMode
     }
 
     @Override
+    @Deprecated
     public void updateTimestamp() {
     }
 

@@ -18,9 +18,9 @@ plugins {
     `maven-publish`
 }
 dependencies {
-    implementation("org.modelingvalue:mvg-json:1.6.1-BRANCHED")
-    implementation("org.modelingvalue:immutable-collections:1.6.1-BRANCHED")
-    implementation("org.modelingvalue:dclare:1.6.1-BRANCHED")
+    implementation("org.modelingvalue:mvg-json:1.7.0-BRANCHED")
+    implementation("org.modelingvalue:immutable-collections:1.7.0-BRANCHED")
+    implementation("org.modelingvalue:dclare:1.7.0-BRANCHED")
 
     compileOnly(mpsJar("mps-closures"))
     compileOnly(mpsJar("mps-core"))
@@ -30,6 +30,7 @@ dependencies {
     compileOnly(mpsJar("mps-project-check"))
     compileOnly(mpsJar("platform-api"))
     compileOnly(mpsJar("util"))
+    compileOnly(mpsJar("mps-behavior-runtime"))
 }
 publishing {
     publications {
@@ -38,9 +39,13 @@ publishing {
         }
     }
 }
-tasks.register<Copy>("gatherRuntimeJars") {
-    group = "mvg";
-    into(rootProject.projectDir.toPath().resolve("solutions/DclareMPSRuntime/lib"))
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+// gather jars:
+val libDir = rootProject.projectDir.toPath().resolve("solutions/DclareMPSRuntime/lib")
+val gatherTask = tasks.register<Copy>("gatherRuntimeJars") {
+    group = "+++gather"
+    into(libDir)
     from(
         tasks["jar"].outputs,
         configurations.runtimeClasspath,
@@ -51,7 +56,15 @@ tasks.register<Copy>("gatherRuntimeJars") {
             .replaceFirst(Regex("[a-zA-Z_]*-[0-9a-z]*-SNAPSHOT[.]jar"), ".jar")
             .replaceFirst(Regex("-[0-9.]*[.]jar"), ".jar")
     }
-    tasks.findByName("jar")?.finalizedBy(this)
+    eachFile {
+        println(String.format("   - GATHER %s", relativePath))
+    }
+    doLast {
+        println(String.format("   - TO     %s", destinationDir))
+    }
 }
-
-task("createJar").outputs.files.forEach { System.err.println("TOMTOMTOM $it") }
+tasks.getByName("assemble").finalizedBy(gatherTask)
+tasks.getByName("publish").finalizedBy(gatherTask)
+tasks.getByName<Delete>("clean") {
+    delete.add(libDir)
+}

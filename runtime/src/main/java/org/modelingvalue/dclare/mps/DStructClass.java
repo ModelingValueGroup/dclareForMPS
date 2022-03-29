@@ -29,13 +29,13 @@ public class DStructClass extends DObjectType<Triple<Set<SLanguage>, SStructClas
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
     public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
-        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getClassRules(id().b()))).toSet();
+        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getStructRules(id().b()))).toSet();
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
     public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
-        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getClassAttributes(id().b()))).toSet();
+        return (Set) Collection.concat(id().b().getIdentity(), ruleSets.flatMap(rs -> Collection.of(rs.getStructAttributes(id().b())))).toSet();
     }
 
     @Override

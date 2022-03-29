@@ -16,26 +16,21 @@
 package org.modelingvalue.dclare.mps;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
+import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Concurrent;
-import org.modelingvalue.dclare.Constant;
-import org.modelingvalue.dclare.Direction;
-import org.modelingvalue.dclare.Mutable;
-import org.modelingvalue.dclare.MutableTransaction;
-import org.modelingvalue.dclare.Observer;
-import org.modelingvalue.dclare.ObserverTransaction;
-import org.modelingvalue.dclare.Priority;
-import org.modelingvalue.dclare.State;
-import org.modelingvalue.dclare.Transaction;
-import org.modelingvalue.dclare.UniverseTransaction;
+import org.modelingvalue.dclare.*;
 
 @SuppressWarnings("rawtypes")
 public interface DRule<O> extends DFeature {
 
-    Constant<DRule, DObserver>     OBSERVER  = Constant.of("OBSERVER",                           //
+    Constant<DRule, DObserver>     OBSERVER  = Constant.of("OBSERVER",                                         //
             r -> DObserver.of(r, r.initialLowPriority() ? Priority.backward : Priority.forward));
 
     Constant<SLanguage, Direction> DIRECTION = Constant.of("DIRECTION", l -> Direction.of(l));
+
+    @SuppressWarnings("unchecked")
+    Constant<DRule, Set<Setable>>  TARGETS   = Constant.of("TARGETS", r -> Collection.of(r.targets()).toSet());
 
     class DObserver<O extends Mutable> extends Observer<O> {
 
@@ -67,6 +62,12 @@ public interface DRule<O> extends DFeature {
             return new DRule.DObserverTransaction(universeTransaction);
         }
 
+        @SuppressWarnings("unchecked")
+        @Override
+        public Set<Setable<O, ?>> targets() {
+            return (Set) TARGETS.get(rule());
+        }
+
     }
 
     class DObserverTransaction extends ObserverTransaction {
@@ -86,7 +87,7 @@ public interface DRule<O> extends DFeature {
                     super.doRun(pre, universeTransaction);
                 }
             } finally {
-                DObject.DRULE_ISSUES.set(dObject, (b, a) -> a.addAll(b.filter(i -> !i.getRule().equals(rule()))), issues.result());
+                DObject.DCLARE_ISSUES.set(dObject, (b, a) -> a.addAll(b.exclude(i -> i.getRule().equals(rule()))), issues.result());
             }
         }
 
@@ -113,5 +114,7 @@ public interface DRule<O> extends DFeature {
     String anonymousType();
 
     SLanguage anonymousLanguage();
+
+    java.util.List<DAttribute> targets();
 
 }

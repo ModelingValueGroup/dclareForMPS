@@ -18,13 +18,9 @@ package org.modelingvalue.dclare.mps;
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.jetbrains.mps.openapi.model.SModel;
 import org.jetbrains.mps.openapi.model.SModelReference;
-import org.jetbrains.mps.openapi.module.SDependency;
-import org.jetbrains.mps.openapi.module.SModule;
-import org.jetbrains.mps.openapi.module.SModuleListener;
+import org.jetbrains.mps.openapi.module.*;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
-
-import jetbrains.mps.smodel.Language;
 
 public class DModuleListener extends Pair<DModule, DClareMPS> implements SModuleListener {
 
@@ -37,23 +33,20 @@ public class DModuleListener extends Pair<DModule, DClareMPS> implements SModule
     @Override
     public void modelAdded(SModule module, SModel sModel) {
         b().handleMPSChange(() -> {
-            if (!a().isExternal() && DModule.hasRuleSets(DModule.LANGUAGES.get(a()))) {
-                if (!(module instanceof Language) || ((Language) module).isAccessoryModel(sModel.getReference())) {
-                    DModel dModel = DModel.of(sModel);
-                    DModule.MODELS.set(a(), Set::add, dModel);
-                }
+            if (!a().isExternal() && !DModel.EXTERNAL.get(sModel)) {
+                DModel dModel = DModel.of(sModel);
+                DModule.MODELS.set(a(), Set::add, dModel);
             }
         });
+
     }
 
     @Override
     public void beforeModelRemoved(SModule module, SModel sModel) {
         b().handleMPSChange(() -> {
-            if (!a().isExternal() && DModule.hasRuleSets(DModule.LANGUAGES.get(a()))) {
-                if (!(module instanceof Language) || ((Language) module).isAccessoryModel(sModel.getReference())) {
-                    DModel dModel = DModel.of(sModel);
-                    DModule.MODELS.set(a(), Set::remove, dModel);
-                }
+            if (!a().isExternal() && !DModel.EXTERNAL.get(sModel)) {
+                DModel dModel = DModel.of(sModel);
+                DModule.MODELS.set(a(), Set::remove, dModel);
             }
         });
     }
@@ -76,7 +69,11 @@ public class DModuleListener extends Pair<DModule, DClareMPS> implements SModule
 
     @Override
     public void modelRenamed(SModule module, SModel model, SModelReference oldRef) {
-        b().handleMPSChange(() -> DModel.NAME.set(DModel.of(model), model.getName().getLongName()));
+        b().handleMPSChange(() -> {
+            if (!a().isExternal() && !DModel.EXTERNAL.get(model)) {
+                DModel.NAME.set(DModel.of(model), model.getName().getLongName());
+            }
+        });
     }
 
     @Override

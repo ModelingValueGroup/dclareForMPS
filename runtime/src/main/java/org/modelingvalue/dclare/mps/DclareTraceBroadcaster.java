@@ -15,22 +15,26 @@
 
 package org.modelingvalue.dclare.mps;
 
-import org.jetbrains.mps.openapi.project.Project;
-import org.modelingvalue.collections.List;
-import org.modelingvalue.dclare.UniverseStatistics;
+import org.modelingvalue.collections.Set;
 
-public interface EngineStatusHandler {
-    void aspects(List<IAspect> apects, DClareMPS engine);
+public class DclareTraceBroadcaster {
 
-    void stats(UniverseStatistics stats, DClareMPS engine);
+    private static DclareTracer tracer;
 
-    void on(Project project, DClareMPS engine);
+    public static void setTracer(DclareTracer tracer) {
+        DclareTraceBroadcaster.tracer = tracer;
+    }
 
-    void commiting(Project project, DClareMPS engine);
+    public static void onModelActive(DModel m) {
+        if (tracer != null) {
+            tracer.onModelActive(m);
+        }
+    }
 
-    void off(Project project, DClareMPS engine);
+    public static void onRuleSetActive(Set<IRuleSet> r) {
+        if (tracer != null) {
+            r.forEachOrdered(i -> tracer.onRuleSetActive(i));
+        }
+    }
 
-    void active(Project project, DClareMPS engine);
-
-    void idle(Project project, DClareMPS engine, Getter getter);
 }

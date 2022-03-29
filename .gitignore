@@ -89,3 +89,4 @@ gradle-app.setting
 **/*_gen
 **/*_gen.caches
 .mps/workspace.xml
+/.mps-caches/**
