@@ -97,7 +97,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
     protected static final String                                                                       DCLARE                  = "---------> DCLARE ";
     public static final Observed<DClareMPS, Set<SLanguage>>                                             ALL_LANGUAGES           = Observed.of("ALL_LANGAUGES", Set.of(), plumbing);
     public static final Observed<DClareMPS, Set<IAspect>>                                               ALL_ASPECTS             = Observed.of("ALL_ASPECTS", Set.of(), (t, o, b, a) -> {
-                                                                                                                                    o.allAspects.update(Set::addAll, a);
+                                                                                                                                    o.allAspects.set(a.sortedBy(IAspect::getName).toList());
                                                                                                                                 }, plumbing);
     public static final Constant<SLanguage, Set<IRuleSet>>                                              RULE_SETS               = Constant.of("RULE_SETS", Set.of(), l -> {
                                                                                                                                     DClareMPS dclareMPS = DClareMPS.instance();
@@ -126,7 +126,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
     protected final DclareForMPSEngine                                                                  engine;
     private final AtomicLong                                                                            counter                 = new AtomicLong(0L);
     private final DRepository                                                                           dRepository;
-    private final MutationWrapper<Set<IAspect>>                                                         allAspects              = new MutationWrapper<>(Set.of());
+    private final MutationWrapper<List<IAspect>>                                                        allAspects              = new MutationWrapper<>(List.of());
     //
     protected Map<DMessageType, QualifiedSet<Triple<DObject, DFeature, String>, DMessage>>              messages                = MESSAGE_QSET_MAP;
     private boolean                                                                                     running                 = false;
@@ -205,7 +205,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
         return config;
     }
 
-    protected Set<IAspect> getAllAspects() {
+    protected List<IAspect> getAllAspects() {
         return allAspects.get();
     }
 

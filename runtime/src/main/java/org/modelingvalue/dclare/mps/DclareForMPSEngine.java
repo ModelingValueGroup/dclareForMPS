@@ -183,7 +183,7 @@ public class DclareForMPSEngine implements DeployListener {
                     break;
                 } else if (finalStatusIterator.hasNext()) {
                     Status status = finalStatusIterator.next();
-                    List<IAspect> apects = finalDClareMPS.getAllAspects().sortedBy(IAspect::getName).toList();
+                    List<IAspect> apects = finalDClareMPS.getAllAspects();
                     modelAccess.runWriteInEDT(() -> {
                         if (status.stats != null) {
                             engineStatusHandler.stats(status.stats, finalDClareMPS);
