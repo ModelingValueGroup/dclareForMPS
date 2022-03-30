@@ -66,8 +66,20 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
     private static final String                                                                         CONNECT_SYNC_HOST_PORT  = System.getProperty("CONNECT_SYNC_HOST_PORT", null);
     private static final boolean                                                                        TRACE_MPS_MODEL_CHANGES = Boolean.getBoolean("TRACE_MPS_MODEL_CHANGES");
 
-    protected static Constant<SLanguage, Map<String, DAttribute<?, ?>>>                                 ATTRIBUTE_MAP           = Constant.of("ATTRIBUTE_MAP", l -> DClareMPS.RULE_SETS.get(l).flatMap(rs -> Collection.of(rs.getAllAttributes())).toMap(a -> Entry.of(a.id(), a)));
-    protected static Constant<SLanguage, Map<String, SStructClass>>                                     STRUCT_CLASS_MAP        = Constant.of("STRUCT_CLASS_MAP", l -> DClareMPS.RULE_SETS.get(l).flatMap(rs -> Collection.of(rs.getAllStructClasses())).toMap(s -> Entry.of(s.id(), s)));
+    protected static Constant<SLanguage, IRuleAspect>                                                   RULE_ASPECT             = Constant.of("RULE_ASPECT", l -> {
+                                                                                                                                    LanguageRuntime rtLang = registry().getLanguage(l);
+                                                                                                                                    return rtLang != null ? rtLang.getAspect(IRuleAspect.class) : null;
+                                                                                                                                });
+    protected static Constant<SLanguage, Map<String, DAttribute<?, ?>>>                                 ATTRIBUTE_MAP           = Constant.of("ATTRIBUTE_MAP", l -> {
+                                                                                                                                    Collection<DAttribute<?, ?>> attrs1 = DClareMPS.STRUCT_CLASS_MAP.get(l).flatMap(e -> e.getValue().getIdentity());
+                                                                                                                                    Collection<DAttribute<?, ?>> attrs2 = DClareMPS.RULE_SETS.get(l).flatMap(rs -> Collection.of(rs.getAllAttributes()));
+                                                                                                                                    return Collection.concat(attrs1, attrs2).toMap(a -> Entry.of(a.id(), a));
+                                                                                                                                });
+    protected static Constant<SLanguage, Map<String, SStructClass>>                                     STRUCT_CLASS_MAP        = Constant.of("STRUCT_CLASS_MAP", l -> {
+                                                                                                                                    IRuleAspect aspect = RULE_ASPECT.get(l);
+                                                                                                                                    Set<SStructClass> structClasses = aspect != null ? Collection.of(aspect.getStructClasses()).toSet() : Set.of();
+                                                                                                                                    return structClasses.toMap(s -> Entry.of(s.id(), s));
+                                                                                                                                });
     private static final Set<DMessageType>                                                              MESSAGE_TYPES           = Collection.of(DMessageType.values()).toSet();
     private static final QualifiedSet<Triple<DObject, DFeature, String>, DMessage>                      MESSAGE_QSET            = QualifiedSet.of(m -> Triple.of(m.context(), m.feature(), m.id()));
     protected static final Map<DMessageType, QualifiedSet<Triple<DObject, DFeature, String>, DMessage>> MESSAGE_QSET_MAP        = MESSAGE_TYPES.sequential().toMap(t -> Entry.of(t, MESSAGE_QSET));
@@ -84,11 +96,19 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
                                                                                                                                 };
     protected static final String                                                                       DCLARE                  = "---------> DCLARE ";
     public static final Observed<DClareMPS, Set<SLanguage>>                                             ALL_LANGUAGES           = Observed.of("ALL_LANGAUGES", Set.of(), plumbing);
-    public static final Constant<SLanguage, Set<IRuleSet>>                                              RULE_SETS               = Constant.of("RULE_SETS", Set.of(), language -> {
-                                                                                                                                    LanguageRuntime rtLang = registry().getLanguage(language);
-                                                                                                                                    IRuleAspect aspect = rtLang != null ? rtLang.getAspect(IRuleAspect.class) : null;
-                                                                                                                                    Set<IRuleSet> ruleSets = aspect != null ? Collection.of(aspect.getRuleSets()).toSet() : Set.of();                                                                                                                                    
+    public static final Observed<DClareMPS, Set<IAspect>>                                               ALL_ASPECTS             = Observed.of("ALL_ASPECTS", Set.of(), (t, o, b, a) -> {
+                                                                                                                                    o.allAspects.set(a.sortedBy(IAspect::getName).toList());
+                                                                                                                                }, plumbing);
+    public static final Constant<SLanguage, Set<IRuleSet>>                                              RULE_SETS               = Constant.of("RULE_SETS", Set.of(), l -> {
+                                                                                                                                    DClareMPS dclareMPS = DClareMPS.instance();
+                                                                                                                                    IRuleAspect aspect = RULE_ASPECT.get(l);
+                                                                                                                                    Set<IRuleSet> ruleSets = aspect != null ? Collection.of(aspect.getRuleSets()).                                       //
+                                                                                                                                            filter(a -> dclareMPS.isActiveAspect(a.getAspect())).toSet() : Set.of();
                                                                                                                                     return ruleSets;
+                                                                                                                                });
+    public static final Constant<SLanguage, Set<IAspect>>                                               ASPECTS                 = Constant.of("ASPECTS", Set.of(), l -> {
+                                                                                                                                    IRuleAspect aspect = RULE_ASPECT.get(l);
+                                                                                                                                    return aspect != null ? Collection.of(aspect.getAspects()).toSet() : Set.of();
                                                                                                                                 });
     public static final Constant<DevKit, Set<SLanguage>>                                                DEVKIT_LANGUAGES        = Constant.of("DEVKIT_LANGUAGES", Set.of(), devkit -> Collection.of(devkit.getAllExportedLanguageIds()).toSet());
     private static final Setable<DClareMPS, DRepository>                                                REPOSITORY_CONTAINER    = Setable.of("REPOSITORY_CONTAINER", null, containment);
@@ -107,6 +127,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
     private final AtomicLong                                                                            counter                 = new AtomicLong(0L);
     private final DRepository                                                                           dRepository;
     private final DServerMetaData                                                                       dServerMetaData;
+    private final MutationWrapper<List<IAspect>>                                                        allAspects              = new MutationWrapper<>(List.of());
     //
     protected Map<DMessageType, QualifiedSet<Triple<DObject, DFeature, String>, DMessage>>              messages                = MESSAGE_QSET_MAP;
     private boolean                                                                                     running                 = false;
@@ -185,6 +206,20 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
 
     public DclareForMpsConfig getConfig() {
         return config;
+    }
+
+    protected List<IAspect> getAllAspects() {
+        return allAspects.get();
+    }
+
+    protected boolean isActiveAspect(IAspect aspect) {
+        String[] inactiveAspects = config.getInactiveAspects();
+        for (int i = 0; i < inactiveAspects.length; i++) {
+            if (inactiveAspects[i].equals(aspect.getId())) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
@@ -538,7 +573,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
                                 }
                             }
                             if (!dObject.isExternal() && (changed || (post.get(dObject, Mutable.D_PARENT_CONTAINING) != null && //
-                            pre.get(dObject, Mutable.D_PARENT_CONTAINING) == null))) {
+                                    pre.get(dObject, Mutable.D_PARENT_CONTAINING) == null))) {
                                 if (dObject instanceof DModel) {
                                     SModel sModel = ((DModel) dObject).tryOriginal();
                                     if (sModel != null) {

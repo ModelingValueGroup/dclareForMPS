@@ -22,6 +22,7 @@ import java.util.concurrent.*;
 import org.jetbrains.mps.openapi.module.ModelAccess;
 import org.jetbrains.mps.openapi.module.SModule;
 import org.jetbrains.mps.openapi.util.ProgressMonitor;
+import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.util.StatusProvider.StatusIterator;
 import org.modelingvalue.dclare.UniverseTransaction;
 import org.modelingvalue.dclare.UniverseTransaction.Status;
@@ -200,10 +201,12 @@ public class DclareForMPSEngine implements DeployListener {
 					break;
 				} else if (finalStatusIterator.hasNext()) {
 					Status status = finalStatusIterator.next();
+                    List<IAspect> apects = finalDClareMPS.getAllAspects();
 					modelAccess.runWriteInEDT(() -> {
 						if (status.stats != null) {
 							engineStatusHandler.stats(status.stats, finalDClareMPS);
 						}
+                        engineStatusHandler.aspects(apects, finalDClareMPS);
 						if (!finalDClareMPS.getConfig().isOnMode() || status.mood == UniverseTransaction.Mood.stopped) {
 							engineStatusHandler.idle(project, finalDClareMPS, status.state::get);
 							engineStatusHandler.off(project, finalDClareMPS);

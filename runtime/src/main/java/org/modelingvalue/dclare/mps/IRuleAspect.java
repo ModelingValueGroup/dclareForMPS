@@ -21,4 +21,8 @@ import jetbrains.mps.smodel.runtime.ILanguageAspect;
 
 public interface IRuleAspect extends ILanguageAspect {
     List<IRuleSet> getRuleSets();
+
+    List<IAspect> getAspects();
+
+    List<SStructClass> getStructClasses();
 }

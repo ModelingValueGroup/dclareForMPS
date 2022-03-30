@@ -273,6 +273,13 @@
         <property id="8575328350543493365" name="message" index="huDt6" />
         <property id="2423417345669755629" name="filter" index="1eyWvh" />
       </concept>
+      <concept id="709746936026466394" name="jetbrains.mps.lang.core.structure.ChildAttribute" flags="ng" index="3VBwX9">
+        <property id="709746936026609031" name="linkId" index="3V$3ak" />
+        <property id="709746936026609029" name="role_DebugInfo" index="3V$3am" />
+      </concept>
+      <concept id="4452961908202556907" name="jetbrains.mps.lang.core.structure.BaseCommentAttribute" flags="ng" index="1X3_iC">
+        <child id="3078666699043039389" name="commentedNode" index="8Wnug" />
+      </concept>
     </language>
     <language id="c7fb639f-be78-4307-89b0-b5959c3fa8c8" name="jetbrains.mps.lang.text">
       <concept id="155656958578482948" name="jetbrains.mps.lang.text.structure.Word" flags="nn" index="3oM_SD">
@@ -4630,8 +4637,8 @@
       <node concept="3clFbS" id="3Qetf3dBkK$" role="3clF47">
         <node concept="3clFbF" id="3Qetf3dBlui" role="3cqZAp">
           <node concept="2YIFZM" id="25AJqx1X2r1" role="3clFbG">
-            <ref role="37wK5l" to="t4tl:~SStructClass.of(java.lang.String,java.lang.String,org.jetbrains.mps.openapi.language.SLanguage,org.modelingvalue.dclare.mps.SStructClass...)" resolve="of" />
             <ref role="1Pybhc" to="t4tl:~SStructClass" resolve="SStructClass" />
+            <ref role="37wK5l" to="t4tl:~SStructClass.of(java.lang.String,java.lang.String,org.jetbrains.mps.openapi.language.SLanguage,org.modelingvalue.dclare.mps.DAttribute[],org.modelingvalue.dclare.mps.SStructClass[])" resolve="of" />
             <node concept="37vLTw" id="25AJqx1X2r2" role="37wK5m">
               <ref role="3cqZAo" node="3Qetf3dBlad" resolve="classId" />
             </node>
@@ -4640,6 +4647,9 @@
             </node>
             <node concept="37vLTw" id="25AJqx1X2r4" role="37wK5m">
               <ref role="3cqZAo" node="23rj$OmSJTR" resolve="lang" />
+            </node>
+            <node concept="37vLTw" id="5DIHqRLkJ3s" role="37wK5m">
+              <ref role="3cqZAo" node="5DIHqRLkEun" resolve="identity" />
             </node>
             <node concept="37vLTw" id="25AJqx1X2r5" role="37wK5m">
               <ref role="3cqZAo" node="3Qetf3dBljs" resolve="supers" />
@@ -4664,6 +4674,14 @@
       <node concept="37vLTG" id="3Qetf3dBlcn" role="3clF46">
         <property role="TrG5h" value="name" />
         <node concept="17QB3L" id="3Qetf3dBloA" role="1tU5fm" />
+      </node>
+      <node concept="37vLTG" id="5DIHqRLkEun" role="3clF46">
+        <property role="TrG5h" value="identity" />
+        <node concept="10Q1$e" id="5DIHqRLkGq8" role="1tU5fm">
+          <node concept="3uibUv" id="5DIHqRLkF6q" role="10Q1$1">
+            <ref role="3uigEE" to="t4tl:~DAttribute" resolve="DAttribute" />
+          </node>
+        </node>
       </node>
       <node concept="37vLTG" id="3Qetf3dBljs" role="3clF46">
         <property role="TrG5h" value="supers" />
@@ -4902,6 +4920,68 @@
       </node>
     </node>
     <node concept="2tJIrI" id="7S$pNDLb5pd" role="jymVt" />
+    <node concept="1X3_iC" id="369NrSx7jW1" role="lGtFl">
+      <property role="3V$3am" value="member" />
+      <property role="3V$3ak" value="f3061a53-9226-4cc5-a443-f952ceaf5816/1107461130800/5375687026011219971" />
+      <node concept="2YIFZL" id="369NrSvTt$F" role="8Wnug">
+        <property role="TrG5h" value="dStructObject" />
+        <node concept="37vLTG" id="369NrSvTHq2" role="3clF46">
+          <property role="3TUv4t" value="true" />
+          <property role="TrG5h" value="cls" />
+          <node concept="3uibUv" id="369NrSvTKOe" role="1tU5fm">
+            <ref role="3uigEE" to="t4tl:~SStructClass" resolve="SStructClass" />
+          </node>
+        </node>
+        <node concept="37vLTG" id="369NrSvTSJJ" role="3clF46">
+          <property role="TrG5h" value="ctx" />
+          <node concept="10Q1$e" id="369NrSvU1nn" role="1tU5fm">
+            <node concept="3uibUv" id="369NrSvTVBZ" role="10Q1$1">
+              <ref role="3uigEE" to="wyt6:~Object" resolve="Object" />
+            </node>
+          </node>
+        </node>
+        <node concept="37vLTG" id="369NrSvU770" role="3clF46">
+          <property role="TrG5h" value="anon" />
+          <node concept="17QB3L" id="369NrSvU7NB" role="1tU5fm" />
+        </node>
+        <node concept="37vLTG" id="369NrSvTMrK" role="3clF46">
+          <property role="TrG5h" value="identity" />
+          <property role="3TUv4t" value="true" />
+          <node concept="10Q1$e" id="369NrSvTMrL" role="1tU5fm">
+            <node concept="3uibUv" id="369NrSvTMrM" role="10Q1$1">
+              <ref role="3uigEE" to="wyt6:~Object" resolve="Object" />
+            </node>
+          </node>
+        </node>
+        <node concept="3clFbS" id="369NrSvTt$I" role="3clF47">
+          <node concept="3clFbF" id="369NrSwgvYR" role="3cqZAp">
+            <node concept="1rXfSq" id="369NrSwgvYS" role="3clFbG">
+              <ref role="37wK5l" node="7qx2SEVuLBV" resolve="toNonMutable" />
+              <node concept="37vLTw" id="369NrSwgvYT" role="37wK5m">
+                <ref role="3cqZAo" node="369NrSvTMrK" resolve="identity" />
+              </node>
+            </node>
+          </node>
+          <node concept="3clFbF" id="369NrSwh3KV" role="3cqZAp">
+            <node concept="2YIFZM" id="369NrSwh3KW" role="3clFbG">
+              <ref role="1Pybhc" to="t4tl:~DStructObject" resolve="DStructObject" />
+              <ref role="37wK5l" to="t4tl:~DStructObject.of(org.modelingvalue.dclare.mps.SStructClass,java.lang.Object[])" resolve="of" />
+              <node concept="37vLTw" id="369NrSwh3KX" role="37wK5m">
+                <ref role="3cqZAo" node="369NrSvTHq2" resolve="cls" />
+              </node>
+              <node concept="37vLTw" id="369NrSwh3KY" role="37wK5m">
+                <ref role="3cqZAo" node="369NrSvTMrK" resolve="identity" />
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="3Tm1VV" id="369NrSx7jli" role="1B3o_S" />
+        <node concept="3uibUv" id="369NrSvTt1_" role="3clF45">
+          <ref role="3uigEE" to="t4tl:~SStructObject" resolve="SStructObject" />
+        </node>
+      </node>
+    </node>
+    <node concept="2tJIrI" id="369NrSwgwB4" role="jymVt" />
     <node concept="2YIFZL" id="7S$pNDLb3TY" role="jymVt">
       <property role="TrG5h" value="getRepository" />
       <property role="od$2w" value="false" />
