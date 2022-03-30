@@ -174,7 +174,6 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
                                                                                                                  if (!pre && post) {
                                                                                                                      SModel sModel = m.tryOriginal();
                                                                                                                      if (sModel != null) {
-                                                                                                                         DclareTraceBroadcaster.onModelActive(m);
                                                                                                                          if (dClareMPS().getConfig().isTraceActivation()) {
                                                                                                                              System.err.println("DCLARE: ACTIVATE " + sModel.getName() + " (external = " + m.isExternal() + ")" + sModel + " " + System.identityHashCode(sModel));
                                                                                                                          }
@@ -185,6 +184,9 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
                                                                                                              }, plumbing);
     @SuppressWarnings({"rawtypes", "unchecked"})
     protected static final DObserved<DModel, Boolean>                                       LOADED           = DObserved.of("LOADED", Boolean.FALSE, (TriFunction) null, plumbing);
+    
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    private static final DObserved<DModel, Boolean>                                         SHARED           = DObserved.of("SHARED", Boolean.FALSE, (TriFunction) null, synthetic);
 
     private static final Action<DModel>                                                     READ_LOADED      = Action.of("$READ_LOADED", m -> {
                                                                                                                  SModel sModel = m.tryOriginal();
@@ -217,7 +219,7 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
     protected static final Set<Observer>                                                    OBSERVERS        = DNewableObject.OBSERVERS.addAll(Set.of(ACTIVATE_RULE, REFERENCED_RULE));
 
     @SuppressWarnings("rawtypes")
-    protected static final Set<Setable>                                                     SETABLES         = DNewableObject.SETABLES.addAll(Set.of(NAME, ROOTS, MODEL_ROOT, USED_MODELS, USED_LANGUAGES, ACTIVE, LOADED));
+    protected static final Set<Setable>                                                     SETABLES         = DNewableObject.SETABLES.addAll(Set.of(NAME, ROOTS, MODEL_ROOT, USED_MODELS, USED_LANGUAGES, ACTIVE, LOADED, SHARED));
 
     public static DModel of(SLanguage anonymousLanguage, String anonymousType, Object[] identity, boolean temporal) {
         return quotationConstruct(anonymousLanguage, anonymousType, identity, //
@@ -425,6 +427,14 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
 
     public String getNameString() {
         return NAME.get(this);
+    }
+    
+    public void shareModel(boolean b) {    	
+    	SHARED.set(this, b);    	
+    }
+    
+    public boolean isShared() {
+    	return SHARED.get(this);
     }
 
     @Override

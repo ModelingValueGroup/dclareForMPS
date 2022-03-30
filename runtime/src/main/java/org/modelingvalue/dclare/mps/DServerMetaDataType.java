@@ -15,26 +15,46 @@
 
 package org.modelingvalue.dclare.mps;
 
+import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
+import org.modelingvalue.dclare.Observer;
+import org.modelingvalue.dclare.Setable;
 
-public class DclareTraceBroadcaster {
+public class DServerMetaDataType extends DObjectType<Boolean> {
 
-    private static DclareTracer tracer;
+	protected DServerMetaDataType(Boolean s) {
+		super(s);
+	}
 
-    public static void setTracer(DclareTracer tracer) {
-        DclareTraceBroadcaster.tracer = tracer;
-    }
+	@Override
+	public Set getRules(Set ruleSets) {
+		return Set.of();
+	}
 
-    public static void onModelActive(DModel m) {
-        if (tracer != null) {
-            tracer.onModelActive(m);
-        }
-    }
+	@Override
+	public Set getAttributes(Set ruleSets) {
+		return Set.of();
+	}
 
-    public static void onRuleSetActive(Set<IRuleSet> r) {
-        if (tracer != null) {
-            r.forEachOrdered(i -> tracer.onRuleSetActive(i));
-        }
-    }
+	@Override
+	public Set getLanguages() {
+		return Set.of();
+	}
 
+	@Override
+	public boolean external() {
+		return false;
+	}
+
+	@SuppressWarnings("rawtypes")
+	@Override
+	protected Collection<Observer> observers() {
+		return DServerMetaData.OBSERVERS;
+	}
+
+	@SuppressWarnings("rawtypes")
+	@Override
+	public Collection<Setable> setables() {
+		return DServerMetaData.SETABLES;
+	}
 }
