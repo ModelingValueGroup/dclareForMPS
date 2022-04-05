@@ -104,7 +104,6 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
                                                                                                                                     IRuleAspect aspect = RULE_ASPECT.get(l);
                                                                                                                                     Set<IRuleSet> ruleSets = aspect != null ? Collection.of(aspect.getRuleSets()).                                       //
                                                                                                                                             filter(a -> dclareMPS.isActiveAspect(a.getAspect())).toSet() : Set.of();
-                                                                                                                                    DclareTraceBroadcaster.onRuleSetActive(ruleSets);
                                                                                                                                     return ruleSets;
                                                                                                                                 });
     public static final Constant<SLanguage, Set<IAspect>>                                               ASPECTS                 = Constant.of("ASPECTS", Set.of(), l -> {
@@ -113,7 +112,8 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
                                                                                                                                 });
     public static final Constant<DevKit, Set<SLanguage>>                                                DEVKIT_LANGUAGES        = Constant.of("DEVKIT_LANGUAGES", Set.of(), devkit -> Collection.of(devkit.getAllExportedLanguageIds()).toSet());
     private static final Setable<DClareMPS, DRepository>                                                REPOSITORY_CONTAINER    = Setable.of("REPOSITORY_CONTAINER", null, containment);
-    protected static final Set<? extends Setable<? extends Mutable, ?>>                                 SETABLES                = Set.of(REPOSITORY_CONTAINER);
+    private static final Setable<DClareMPS, DServerMetaData>                                            DSERVER_METADATA        = Setable.of("SERVER_METADATA", null, containment);
+    protected static final Set<? extends Setable<? extends Mutable, ?>>                                 SETABLES                = Set.of(REPOSITORY_CONTAINER, DSERVER_METADATA);
     //
     private final ContextPool                                                                           thePool                 = ContextThread.createPool(this);
     private final ThreadLocal<Boolean>                                                                  committing              = ThreadLocal.withInitial(() -> false);
@@ -126,6 +126,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
     protected final DclareForMPSEngine                                                                  engine;
     private final AtomicLong                                                                            counter                 = new AtomicLong(0L);
     private final DRepository                                                                           dRepository;
+    private final DServerMetaData                                                                       dServerMetaData;
     private final MutationWrapper<List<IAspect>>                                                        allAspects              = new MutationWrapper<>(List.of());
     //
     protected Map<DMessageType, QualifiedSet<Triple<DObject, DFeature, String>, DMessage>>              messages                = MESSAGE_QSET_MAP;
@@ -148,6 +149,8 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
         this.modelAccess = project.getModelAccess();
         this.engine = engine;
         this.dRepository = new DRepository((ProjectRepository) project.getRepository());
+      
+        this.dServerMetaData = new DServerMetaData();
         invokeLater(() -> commandThread = Thread.currentThread());
         if (config.isTraceDclare()) {
             System.err.println(DCLARE + "BEGIN " + this);
@@ -227,13 +230,22 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
                 invokeLater(r);
             }
         }, false);
-        imperativeTransaction.schedule(() -> REPOSITORY_CONTAINER.set(this, getRepository()));
+        
+        imperativeTransaction.schedule(()->{ 
+        	REPOSITORY_CONTAINER.set(this, getRepository()); 
+        });
+        
+        imperativeTransaction.schedule(()->{ 
+        	DSERVER_METADATA.set(this, dServerMetaData);
+        });
+        
         if (CONNECT_SYNC_HOST_PORT != null) {
             syncConnectionHandler = new SyncConnectionHandler(new DeltaAdaptor<>("mps", universeTransaction, new MPSSerializationHelper(dRepository.original())));
+            System.err.println("connecting at " + CONNECT_SYNC_HOST_PORT);
             int sep = CONNECT_SYNC_HOST_PORT.indexOf(':');
             String host = CONNECT_SYNC_HOST_PORT.substring(0, sep);
             int port = Integer.parseInt(CONNECT_SYNC_HOST_PORT.substring(sep + 1));
-            syncConnectionHandler.connect(host, port);
+            syncConnectionHandler.connect(host, port);           
         }
     }
 

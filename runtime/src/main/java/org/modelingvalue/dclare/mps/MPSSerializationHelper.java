@@ -42,6 +42,7 @@ public class MPSSerializationHelper extends SerializationHelperWithPool<DObjectT
                 new DModuleConverter(repos),
                 new DModelConverter(),
                 new DNodeConverter(),
+                new DServceMetaDataConverter(),
                 new SConceptConverter(),
                 new SLanguageConverter()
         )));
@@ -53,13 +54,22 @@ public class MPSSerializationHelper extends SerializationHelperWithPool<DObjectT
 
     @Override
     public Predicate<Mutable> mutableFilter() {
-        return m -> (m instanceof DModule || m instanceof DModel || m instanceof DNode) && !((DObject) m).isDclareOnly();
+        return m -> { 
+        	boolean ret=false;
+        	DModel model = m.dAncestor(DModel.class);
+        	if (model==null || model.isShared()) {
+        		ret = (m instanceof DModule || m instanceof DModel || m instanceof DNode || m instanceof DServerMetaData) && !((DObject) m).isDclareOnly();
+            }
+        	return ret;
+        };        
     }
 
     @SuppressWarnings("rawtypes")
     @Override
     public Predicate<Setable<DObject, ?>> setableFilter() {
-        return s -> s instanceof DObserved && ((Setable) s) != DModel.USED_DEVKITS && !(s instanceof DObservedAttribute) && !((DObserved) s).isDclareOnly();
+        return s -> {
+        	return s instanceof DObserved && ((Setable) s) != DModel.USED_DEVKITS && !(s instanceof DObservedAttribute) && !((DObserved) s).isDclareOnly();        	
+        };
     }
 
     @SuppressWarnings("unchecked")
@@ -124,6 +134,23 @@ public class MPSSerializationHelper extends SerializationHelperWithPool<DObjectT
             SConcept       con     = (SConcept) mpsPersist().createConcept(concRef[0]);
             SNodeReference ref     = mpsPersist().createNodeReference(concRef[1]);
             return DNode.of(con, ref);
+        }
+    }
+    
+    private static class DServceMetaDataConverter extends BaseConverter<DServerMetaData> {
+        public DServceMetaDataConverter() {
+            super(DServerMetaData.class);
+        }
+
+        @Override
+        public String serialize(DServerMetaData n, Object context) {
+            return Util.encodeWithLength("ServerData");
+        }
+
+        @Override
+        public DServerMetaData deserialize(String string, Object context) {
+           //should never happen
+           return null;
         }
     }
 

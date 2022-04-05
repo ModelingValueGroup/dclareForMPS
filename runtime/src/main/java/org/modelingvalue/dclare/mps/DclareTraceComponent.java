@@ -15,12 +15,29 @@
 
 package org.modelingvalue.dclare.mps;
 
-public interface DclareTracer {
-	
-	public void onModelActive(DModel m);
-	
-	public void onRuleSetActive(IRuleSet r);
-	
-	public void notifyTraceComponent(DclareTraceComponent c);
+import org.jetbrains.mps.openapi.language.SLanguage;
+import org.modelingvalue.collections.Set;
+
+public class DclareTraceComponent {
+
+   private final DclareForMPSEngine engine;
+   private final DClareMPS          universe; 
+   
+   public DclareTraceComponent(DclareForMPSEngine engine, DClareMPS universe) {
+	this.engine = engine;
+	this.universe = universe;
+}
+
+   public Set<IRuleSet> getRuleSets(SLanguage l) {
+	   return universe.RULE_SETS.get(l);
+   }
+   
+   public Set<DModule> getModules() {
+	   return universe.getOrDerive(()-> {
+		   return DRepository.MODULES.get(universe.getRepository());
+	   });	
+   }
+   
+   
 
 }
