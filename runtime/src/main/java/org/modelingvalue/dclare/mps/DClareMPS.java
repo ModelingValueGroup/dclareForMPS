@@ -234,7 +234,6 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
                 invokeLater(r);
             }
         }, false);
-
         imperativeTransaction.schedule(() -> {
             REPOSITORY_CONTAINER.set(this, getRepository());
         });
@@ -242,7 +241,6 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
         imperativeTransaction.schedule(() -> {
             DSERVER_METADATA.set(this, dServerMetaData);
         });
-
         if (CONNECT_SYNC_HOST_PORT != null) {
             syncConnectionHandler = new SyncConnectionHandler(new DeltaAdaptor<>("mps", universeTransaction, new MPSSerializationHelper(dRepository.original())));
             System.err.println("connecting at " + CONNECT_SYNC_HOST_PORT);
