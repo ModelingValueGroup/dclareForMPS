@@ -53,7 +53,8 @@ val gatherTask = tasks.register<Copy>("gatherRuntimeJars") {
     )
     rename {
         it
-            .replaceFirst(Regex("[a-zA-Z_]*-[0-9a-z]*-SNAPSHOT[.]jar"), ".jar")
+            .replaceFirst(Regex("[a-zA-Z_]*-[0-9a-z]*-SNAPSHOT[.]jar"), ".jar") // for backwards compat.... remove later
+            .replaceFirst(Regex("[0-9a-zA-Z_]*-[0-9a-zA-Z_]*-[0-9a-zA-Z_]*-SNAPSHOT[.]jar"), ".jar")
             .replaceFirst(Regex("-[0-9.]*[.]jar"), ".jar")
     }
     eachFile {
