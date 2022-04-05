@@ -184,7 +184,7 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
                                                                                                              }, plumbing);
     @SuppressWarnings({"rawtypes", "unchecked"})
     protected static final DObserved<DModel, Boolean>                                       LOADED           = DObserved.of("LOADED", Boolean.FALSE, (TriFunction) null, plumbing);
-    
+
     @SuppressWarnings({"rawtypes", "unchecked"})
     private static final DObserved<DModel, Boolean>                                         SHARED           = DObserved.of("SHARED", Boolean.FALSE, (TriFunction) null, synthetic);
 
@@ -215,8 +215,15 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
                                                                                                                      ACTIVE.set(o, Boolean.TRUE);
                                                                                                                  }
                                                                                                              });
+
+    private static final Observer<DModel>                                                   SHARED_RULE      = DObject.observer("$ACTIVATE_SHARED_MODEL", o -> {
+                                                                                                                 if (SHARED.get(o)) {
+                                                                                                                     ACTIVE.set(o, TRUE);
+                                                                                                                 }
+                                                                                                             });
+
     @SuppressWarnings("rawtypes")
-    protected static final Set<Observer>                                                    OBSERVERS        = DNewableObject.OBSERVERS.addAll(Set.of(ACTIVATE_RULE, REFERENCED_RULE));
+    protected static final Set<Observer>                                                    OBSERVERS        = DNewableObject.OBSERVERS.addAll(Set.of(ACTIVATE_RULE, REFERENCED_RULE, SHARED_RULE));
 
     @SuppressWarnings("rawtypes")
     protected static final Set<Setable>                                                     SETABLES         = DNewableObject.SETABLES.addAll(Set.of(NAME, ROOTS, MODEL_ROOT, USED_MODELS, USED_LANGUAGES, ACTIVE, LOADED, SHARED));
@@ -428,11 +435,11 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
     public String getNameString() {
         return NAME.get(this);
     }
-    
-    public void shareModel(boolean b) {    	
-    	SHARED.set(this, b);    	
+
+    public void shareModel(boolean b) {
+    	SHARED.set(this, b);
     }
-    
+
     public boolean isShared() {
     	return SHARED.get(this);
     }
