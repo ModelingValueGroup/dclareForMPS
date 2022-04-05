@@ -22,6 +22,7 @@ import static org.modelingvalue.dclare.mps.DclareForMPSEngine.ALL_DCLARE_MPS;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Supplier;
@@ -32,12 +33,25 @@ import javax.swing.SwingUtilities;
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.jetbrains.mps.openapi.model.SModel;
 import org.jetbrains.mps.openapi.model.SNode;
-import org.jetbrains.mps.openapi.module.*;
+import org.jetbrains.mps.openapi.module.ModelAccess;
+import org.jetbrains.mps.openapi.module.SModule;
+import org.jetbrains.mps.openapi.module.SRepository;
 import org.jetbrains.mps.openapi.util.Consumer;
 import org.jetbrains.mps.openapi.util.ProgressMonitor;
-import org.modelingvalue.collections.*;
-import org.modelingvalue.collections.util.*;
+import org.modelingvalue.collections.Collection;
+import org.modelingvalue.collections.DefaultMap;
+import org.modelingvalue.collections.Entry;
+import org.modelingvalue.collections.List;
+import org.modelingvalue.collections.Map;
+import org.modelingvalue.collections.QualifiedSet;
+import org.modelingvalue.collections.Set;
+import org.modelingvalue.collections.util.Concurrent;
+import org.modelingvalue.collections.util.ContextThread;
 import org.modelingvalue.collections.util.ContextThread.ContextPool;
+import org.modelingvalue.collections.util.MutationWrapper;
+import org.modelingvalue.collections.util.Pair;
+import org.modelingvalue.collections.util.TriConsumer;
+import org.modelingvalue.collections.util.Triple;
 import org.modelingvalue.dclare.*;
 import org.modelingvalue.dclare.ex.*;
 import org.modelingvalue.dclare.mps.DAttribute.DObservedAttribute;
@@ -48,16 +62,27 @@ import org.modelingvalue.dclare.sync.SyncConnectionHandler;
 
 import com.intellij.openapi.application.PathManager;
 
-import jetbrains.mps.checkers.*;
+import jetbrains.mps.checkers.AbstractNodeCheckerInEditor;
+import jetbrains.mps.checkers.IAbstractChecker;
+import jetbrains.mps.checkers.IChecker;
+import jetbrains.mps.checkers.ICheckingPostprocessor;
+import jetbrains.mps.checkers.LanguageErrorsCollector;
+import jetbrains.mps.checkers.ModelCheckerBuilder;
 import jetbrains.mps.checkers.ModelCheckerBuilder.ItemsToCheck;
 import jetbrains.mps.checkers.ModelCheckerBuilder.ModelsExtractorImpl;
 import jetbrains.mps.editor.runtime.LanguageEditorChecker;
 import jetbrains.mps.errors.CheckerRegistry;
-import jetbrains.mps.errors.item.*;
+import jetbrains.mps.errors.item.IssueKindReportItem;
 import jetbrains.mps.errors.item.IssueKindReportItem.CheckerCategory;
+import jetbrains.mps.errors.item.ModelReportItem;
+import jetbrains.mps.errors.item.ModuleReportItem;
+import jetbrains.mps.errors.item.NodeReportItem;
+import jetbrains.mps.errors.item.ReportItem;
 import jetbrains.mps.nodeEditor.Highlighter;
 import jetbrains.mps.progress.EmptyProgressMonitor;
-import jetbrains.mps.project.*;
+import jetbrains.mps.project.DevKit;
+import jetbrains.mps.project.ProjectBase;
+import jetbrains.mps.project.ProjectRepository;
 import jetbrains.mps.smodel.language.LanguageRegistry;
 import jetbrains.mps.smodel.language.LanguageRuntime;
 
@@ -566,11 +591,15 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
                             DefaultMap<Setable, Object> after = e0.getValue().b();
                             for (DObserved observed : dObject.dClass().dObserveds()) {
                                 if (observed instanceof DObservedAttribute || !dObject.isExternal()) {
-                                    if (observed.toMPS(dObject, before.get(observed), after.get(observed))) {
+                                    Object preVal = before.get(observed);
+                                    Object postVal = after.get(observed);
+                                    if (observed.toMPS(dObject, preVal, postVal)) {
                                         changed = true;
                                         if (TRACE_MPS_MODEL_CHANGES && !(observed instanceof DObservedAttribute)) {
                                             System.err.println(DCLARE + "    MPS MODEL CHANGE: " + dObject + "." + observed + " = " + after.get(observed));
                                         }
+                                    } else if (!Objects.equals(preVal, postVal)) {
+                                        changed = true;
                                     }
                                 }
                             }
