@@ -58,14 +58,14 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                           });
 
     protected static final Constant<SConcept, Set<SReferenceLink>>                                                 SINGLE_REFERENCES      = Constant.of("SINGLE_REFERENCES", c -> {
-                                                                                                                                              return Collection.of(c.getReferenceLinks()).exclude(SReferenceLink::isOptional).                                                                                    //
-                                                                                                                                              exclude(SNodeUtil.concept_BaseConcept.getReferenceLinks()::contains).toSet();
+                                                                                                                                              return Collection.of(c.getReferenceLinks()).exclude(SReferenceLink::isOptional).                                                                     //
+                                                                                                                                                      exclude(SNodeUtil.concept_BaseConcept.getReferenceLinks()::contains).toSet();
                                                                                                                                           });
 
     @SuppressWarnings("unlikely-arg-type")
     protected static final Constant<SConcept, Set<SContainmentLink>>                                               SINGLE_CONTAINMENTS    = Constant.of("SINGLE_CONTAINMENTS", c -> {
-                                                                                                                                              return Collection.of(c.getContainmentLinks()).exclude(SContainmentLink::isMultiple).exclude(SContainmentLink::isOptional).                                          //
-                                                                                                                                              exclude(SNodeUtil.concept_BaseConcept.getContainmentLinks()::contains).toSet();
+                                                                                                                                              return Collection.of(c.getContainmentLinks()).exclude(SContainmentLink::isMultiple).exclude(SContainmentLink::isOptional).                           //
+                                                                                                                                                      exclude(SNodeUtil.concept_BaseConcept.getContainmentLinks()::contains).toSet();
                                                                                                                                           });
 
     protected static final Observed<DNode, DModel>                                                                 MODEL                  = Observed.of("$MODEL", null, synthetic);
@@ -176,23 +176,23 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                               Set<Observer> observers = Set.of();
                                                                                                                                               for (SProperty property : c.getProperties()) {
                                                                                                                                                   DObserved<DNode, String> observed = PROPERTY.get(property);
-                                                                                                                                                  observers = observers.add(copyObserver(l, observed,                                                                                                             //
+                                                                                                                                                  observers = observers.add(copyObserver(l, observed,                                                                                              //
                                                                                                                                                           (t, s, r) -> observed.set(t, observed.get(s))));
                                                                                                                                               }
                                                                                                                                               for (SContainmentLink containment : c.getContainmentLinks()) {
                                                                                                                                                   if (containment.isMultiple()) {
                                                                                                                                                       DObserved<DNode, List<DNode>> observed = MANY_CONTAINMENT.get(containment);
-                                                                                                                                                      observers = observers.add(copyObserver(l, observed,                                                                                                         //
+                                                                                                                                                      observers = observers.add(copyObserver(l, observed,                                                                                          //
                                                                                                                                                               (t, s, r) -> observed.set(t, copy(observed.get(s), r))));
                                                                                                                                                   } else {
                                                                                                                                                       DObserved<DNode, DNode> observed = SINGLE_CONTAINMENT.get(containment);
-                                                                                                                                                      observers = observers.add(copyObserver(l, observed,                                                                                                         //
+                                                                                                                                                      observers = observers.add(copyObserver(l, observed,                                                                                          //
                                                                                                                                                               (t, s, r) -> observed.set(t, copy(observed.get(s), r))));
                                                                                                                                                   }
                                                                                                                                               }
                                                                                                                                               for (SReferenceLink reference : c.getReferenceLinks()) {
                                                                                                                                                   DObserved<DNode, DNode> observed = REFERENCE.get(reference);
-                                                                                                                                                  observers = observers.add(copyObserver(l, observed,                                                                                                             //
+                                                                                                                                                  observers = observers.add(copyObserver(l, observed,                                                                                              //
                                                                                                                                                           (t, s, r) -> observed.set(t, map(t, s, observed.get(s), r.copied()))));
                                                                                                                                               }
                                                                                                                                               return observers;
@@ -233,17 +233,26 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                           }, Priority.urgent);
 
     @SuppressWarnings("rawtypes")
-    protected static final Constant<SConcept, Set<? extends Setable>>                                              CONCEPT_SETABLES       = Constant.of("$CONCEPT_SETABLES", c -> Collection.concat(                                                                                                              //
-            Collection.of(c.getProperties()),                                                                                                                                                                                                                                                                     //
-            Collection.of(c.getContainmentLinks()),                                                                                                                                                                                                                                                               //
+    protected static final Constant<SConcept, Set<? extends Setable>>                                              CONCEPT_SETABLES       = Constant.of("$CONCEPT_SETABLES", c -> Collection.concat(                                                                                               //
+            Collection.of(c.getProperties()),                                                                                                                                                                                                                                                      //
+            Collection.of(c.getContainmentLinks()),                                                                                                                                                                                                                                                //
             Collection.of(c.getReferenceLinks())).map(DNode::setable).toSet());
 
     @SuppressWarnings("rawtypes")
     protected static final Constant<SConcept, Set<Observer>>                                                       CONCEPT_OBSERVERS      = Constant.of("$CONCEPT_OBSERVERS", c -> Set.of());
 
-    protected static final Setable<DNode, Set<Pair<DObject, IssueKindReportItem>>>                                 ALL_MPS_ISSUES         = Setable.of("$ALL_MPS_ISSUES", Set.of(), (tx, o, pre, post) -> Setable.<Set<Pair<DObject, IssueKindReportItem>>, Pair<DObject, IssueKindReportItem>> diff(pre, post,   //
-            a -> DObject.MPS_ISSUES.set(a.a(), Set::add, a),                                                                                                                                                                                                                                                      //
-            r -> DObject.MPS_ISSUES.set(r.a(), Set::remove, r)));
+    protected static final Setable<DNode, Set<Pair<DObject, IssueKindReportItem>>>                                 ALL_MPS_ISSUES         = Setable.of("$ALL_MPS_ISSUES", Set.of(), (tx, o, pre, post) -> {
+                                                                                                                                              DRepository repos = DClareMPS.instance().getRepository();
+                                                                                                                                              Setable.<Set<Pair<DObject, IssueKindReportItem>>, Pair<DObject, IssueKindReportItem>> diff(pre, post,                                                //
+                                                                                                                                                      a -> {
+                                                                                                                                                          DObject.MPS_ISSUES.set(a.a(), Set::add, a);
+                                                                                                                                                          DRepository.ALL_MPS_ISSUES.set(repos, Set::add, a.b());
+                                                                                                                                                      },                                                                                                                                           //
+                                                                                                                                                      r -> {
+                                                                                                                                                          DObject.MPS_ISSUES.set(r.a(), Set::remove, r);
+                                                                                                                                                          DRepository.ALL_MPS_ISSUES.set(repos, Set::remove, r.b());
+                                                                                                                                                      });
+                                                                                                                                          });
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     protected static final DObserved<DNode, Integer>                                                               INDEX                  = DObserved.of("INDEX", -1, (TriFunction) null, synthetic);
@@ -265,7 +274,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
         return DCopyObserver.of(observed, t -> {
             for (Construction c : t.dDerivedConstructions()) {
                 if (c.reason() instanceof DCopy && ((DCopy) c.reason()).getAnonymousLanguage().equals(copyLang) && //
-                !Newable.D_SUPER_POSITION.get(t).contains(c.reason().direction())) {
+                        !Newable.D_SUPER_POSITION.get(t).contains(c.reason().direction())) {
                     DCopy reason = (DCopy) c.reason();
                     action.accept(t, reason.copied(), reason.root());
                 }

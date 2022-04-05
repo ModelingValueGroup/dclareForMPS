@@ -149,7 +149,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
         this.modelAccess = project.getModelAccess();
         this.engine = engine;
         this.dRepository = new DRepository((ProjectRepository) project.getRepository());
-      
+
         this.dServerMetaData = new DServerMetaData();
         invokeLater(() -> commandThread = Thread.currentThread());
         if (config.isTraceDclare()) {
@@ -230,22 +230,22 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
                 invokeLater(r);
             }
         }, false);
-        
-        imperativeTransaction.schedule(()->{ 
-        	REPOSITORY_CONTAINER.set(this, getRepository()); 
+
+        imperativeTransaction.schedule(() -> {
+            REPOSITORY_CONTAINER.set(this, getRepository());
         });
-        
-        imperativeTransaction.schedule(()->{ 
-        	DSERVER_METADATA.set(this, dServerMetaData);
+
+        imperativeTransaction.schedule(() -> {
+            DSERVER_METADATA.set(this, dServerMetaData);
         });
-        
+
         if (CONNECT_SYNC_HOST_PORT != null) {
             syncConnectionHandler = new SyncConnectionHandler(new DeltaAdaptor<>("mps", universeTransaction, new MPSSerializationHelper(dRepository.original())));
             System.err.println("connecting at " + CONNECT_SYNC_HOST_PORT);
             int sep = CONNECT_SYNC_HOST_PORT.indexOf(':');
             String host = CONNECT_SYNC_HOST_PORT.substring(0, sep);
             int port = Integer.parseInt(CONNECT_SYNC_HOST_PORT.substring(sep + 1));
-            syncConnectionHandler.connect(host, port);           
+            syncConnectionHandler.connect(host, port);
         }
     }
 
@@ -824,8 +824,10 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
         changedModels.init(Set.of());
         changedModules.init(Set.of());
         changedRoots.init(Set.of());
-        if (!models.isEmpty() || !modules.isEmpty() || !roots.isEmpty()) {
-            invokeLater(() -> thePool.execute(() -> {
+        Set<IssueKindReportItem> allIssues = DRepository.ALL_MPS_ISSUES.get(dRepository);
+        invokeLater(() -> thePool.execute(() -> {
+            engine.issuesChanged(allIssues.collect(Collectors.toList()));
+            if (!models.isEmpty() || !modules.isEmpty() || !roots.isEmpty()) {
                 RootItemsToCheck itemsToCheck = new RootItemsToCheck();
                 itemsToCheck.models = models.collect(Collectors.toList());
                 itemsToCheck.modules = modules.collect(Collectors.toList());
@@ -849,10 +851,9 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
                             DObject.MPS_ISSUES.set(d, Set::add, Pair.of(d, item));
                         }
                     }
-                    engine.issuesChanged(reportItems);
                 });
-            }));
-        }
+            }
+        }));
     }
 
     protected DObject context(ReportItem item) {

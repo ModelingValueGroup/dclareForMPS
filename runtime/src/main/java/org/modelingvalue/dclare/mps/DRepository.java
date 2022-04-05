@@ -20,41 +20,35 @@ import static org.modelingvalue.dclare.CoreSetableModifier.containment;
 import java.util.stream.Collectors;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
-import org.jetbrains.mps.openapi.module.ModelAccess;
-import org.jetbrains.mps.openapi.module.RepositoryAccess;
-import org.jetbrains.mps.openapi.module.SModule;
-import org.jetbrains.mps.openapi.module.SModuleId;
-import org.jetbrains.mps.openapi.module.SRepository;
-import org.jetbrains.mps.openapi.module.SRepositoryListener;
+import org.jetbrains.mps.openapi.module.*;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.TriFunction;
-import org.modelingvalue.dclare.Action;
-import org.modelingvalue.dclare.Constant;
-import org.modelingvalue.dclare.Observer;
-import org.modelingvalue.dclare.Priority;
-import org.modelingvalue.dclare.Setable;
+import org.modelingvalue.dclare.*;
 
+import jetbrains.mps.errors.item.IssueKindReportItem;
 import jetbrains.mps.project.ProjectRepository;
 
 @SuppressWarnings("deprecation")
 public class DRepository extends DFromOriginalObject<ProjectRepository> implements SRepository {
 
-    private static final Constant<Set<SLanguage>, DRepositoryType> REPOSITORY_TYPE = Constant.of("REPOSITORY_TYPE", DRepositoryType::new);
+    private static final Constant<Set<SLanguage>, DRepositoryType>        REPOSITORY_TYPE = Constant.of("REPOSITORY_TYPE", DRepositoryType::new);
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    protected static final DObserved<DRepository, Set<DModule>>    MODULES         = DObserved.of("MODULES", Set.of(), (TriFunction) null, containment);
+    protected static final DObserved<DRepository, Set<DModule>>           MODULES         = DObserved.of("MODULES", Set.of(), (TriFunction) null, containment);
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    protected static final DObserved<DRepository, Set<?>>          EXCEPTIONS      = DObserved.of("EXCEPTIONS", Set.of(), (TriFunction) null);
+    protected static final DObserved<DRepository, Set<?>>                 EXCEPTIONS      = DObserved.of("EXCEPTIONS", Set.of(), (TriFunction) null);
 
-    private static final Action<DRepository>                       READ_MODULES    = Action.of("$READ_MODULES", r -> MODULES.set(r, Set::addAll, dClareMPS().read(DRepository::modules).map(DModule::of).toSet()), Priority.urgent);
+    protected static final Setable<DRepository, Set<IssueKindReportItem>> ALL_MPS_ISSUES  = Setable.of("$ALL_MPS_ISSUES", Set.of());
+
+    private static final Action<DRepository>                              READ_MODULES    = Action.of("$READ_MODULES", r -> MODULES.set(r, Set::addAll, dClareMPS().read(DRepository::modules).map(DModule::of).toSet()), Priority.urgent);
 
     @SuppressWarnings("rawtypes")
-    protected static final Set<Observer>                           OBSERVERS       = DObject.OBSERVERS;
+    protected static final Set<Observer>                                  OBSERVERS       = DObject.OBSERVERS;
 
     @SuppressWarnings("rawtypes")
-    protected static final Set<Setable>                            SETABLES        = DObject.SETABLES.addAll(Set.of(MODULES));
+    protected static final Set<Setable>                                   SETABLES        = DObject.SETABLES.addAll(Set.of(MODULES, ALL_MPS_ISSUES));
 
     protected DRepository(ProjectRepository original) {
         super(original);

@@ -65,8 +65,8 @@ public abstract class DObject implements Mutable {
 
     protected static final Observer<DObject>                                           CONTAINING_ATTRIBUTE_RULE = observer(CONTAINING_ATTRIBUTE, o -> {
                                                                                                                      Pair<Mutable, Setable<Mutable, ?>> pc = Mutable.D_PARENT_CONTAINING.get(o);
-                                                                                                                     return pc == null || pc.a() instanceof DClareMPS ? null :                                                   //
-                                                                                                                     pc.b() instanceof DAttribute ? (DAttribute) pc.b() : CONTAINING_ATTRIBUTE.get((DObject) pc.a());
+                                                                                                                     return pc == null || pc.a() instanceof DClareMPS ? null :                                                       //
+                                                                                                                             pc.b() instanceof DAttribute ? (DAttribute) pc.b() : CONTAINING_ATTRIBUTE.get((DObject) pc.a());
                                                                                                                  });
 
     protected static final Action<DObject>                                             REFRESH_CHILDREN          = Action.of("$REFRESH_CHILDREN", o -> {
@@ -81,11 +81,18 @@ public abstract class DObject implements Mutable {
                                                                                                                  });
 
     protected static final DObserved<DObject, Set<Pair<DObject, IssueKindReportItem>>> MPS_ISSUES                = DObserved.of("$MPS_ISSUES", Set.of(), null, (tx, o, pre, post) -> {
-                                                                                                                     DNode root = o instanceof DNode ? ((DNode) o).getContainingRoot() : null;
-                                                                                                                     if (root != null) {
-                                                                                                                         Setable.<Set<Pair<DObject, IssueKindReportItem>>, Pair<DObject, IssueKindReportItem>> diff(pre, post,   //
-                                                                                                                                 a -> DNode.ALL_MPS_ISSUES.set(root, Set::add, a),                                               //
-                                                                                                                                 r -> DNode.ALL_MPS_ISSUES.set(root, Set::remove, r));
+                                                                                                                     if (o instanceof DNode) {
+                                                                                                                         DNode root = ((DNode) o).getContainingRoot();
+                                                                                                                         if (root != null) {
+                                                                                                                             Setable.<Set<Pair<DObject, IssueKindReportItem>>, Pair<DObject, IssueKindReportItem>> diff(pre, post,   //
+                                                                                                                                     a -> DNode.ALL_MPS_ISSUES.set(root, Set::add, a),                                               //
+                                                                                                                                     r -> DNode.ALL_MPS_ISSUES.set(root, Set::remove, r));
+                                                                                                                         }
+                                                                                                                     } else {
+                                                                                                                         DRepository repos = DClareMPS.instance().getRepository();
+                                                                                                                         Setable.<Set<Pair<DObject, IssueKindReportItem>>, Pair<DObject, IssueKindReportItem>> diff(pre, post,       //
+                                                                                                                                 a -> DRepository.ALL_MPS_ISSUES.set(repos, Set::add, a.b()),                                        //
+                                                                                                                                 r -> DRepository.ALL_MPS_ISSUES.set(repos, Set::remove, r.b()));
                                                                                                                      }
                                                                                                                  });
 
