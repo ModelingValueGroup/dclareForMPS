@@ -222,6 +222,10 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
         return true;
     }
 
+    public static boolean isCollaberationEnabled() {
+        return DClareMPS.CONNECT_SYNC_HOST_PORT != null;
+    }
+
     @Override
     public void init() {
         Universe.super.init();
