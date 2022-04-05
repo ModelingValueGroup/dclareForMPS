@@ -211,19 +211,13 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
                                                                                                              });
 
     private static final Observer<DModel>                                                   ACTIVATE_RULE    = DObject.observer("$ACTIVATE_RULE", o -> {
-                                                                                                                 if (!o.isExternal() && LOADED.get(o) && !TYPE.get(o).getLanguages().isEmpty()) {
+                                                                                                                 if (SHARED.get(o) || (!o.isExternal() && LOADED.get(o) && !TYPE.get(o).getLanguages().isEmpty())) {
                                                                                                                      ACTIVE.set(o, Boolean.TRUE);
                                                                                                                  }
                                                                                                              });
 
-    private static final Observer<DModel>                                                   SHARED_RULE      = DObject.observer("$ACTIVATE_SHARED_MODEL", o -> {
-                                                                                                                 if (SHARED.get(o)) {
-                                                                                                                     ACTIVE.set(o, TRUE);
-                                                                                                                 }
-                                                                                                             });
-
     @SuppressWarnings("rawtypes")
-    protected static final Set<Observer>                                                    OBSERVERS        = DNewableObject.OBSERVERS.addAll(Set.of(ACTIVATE_RULE, REFERENCED_RULE, SHARED_RULE));
+    protected static final Set<Observer>                                                    OBSERVERS        = DNewableObject.OBSERVERS.addAll(Set.of(ACTIVATE_RULE, REFERENCED_RULE));
 
     @SuppressWarnings("rawtypes")
     protected static final Set<Setable>                                                     SETABLES         = DNewableObject.SETABLES.addAll(Set.of(NAME, ROOTS, MODEL_ROOT, USED_MODELS, USED_LANGUAGES, ACTIVE, LOADED, SHARED));
