@@ -547,7 +547,8 @@
     <node concept="RPilO" id="67uyCwD0$6o" role="lGtFl">
       <ref role="RPilL" node="4$bpWrNHOXa" resolve="class" />
       <node concept="ROjv2" id="67uyCwD0$6r" role="ROhUF">
-        <property role="1W_73K" value="()" />
+        <property role="1W_73K" value="]" />
+        <property role="1W_73P" value="[" />
       </node>
     </node>
   </node>
