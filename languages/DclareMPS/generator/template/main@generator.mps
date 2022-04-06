@@ -891,7 +891,7 @@
       </node>
       <node concept="2YIFZM" id="5DIHqRLb7aa" role="33vP2m">
         <ref role="1Pybhc" to="t4tl:~DAttribute" resolve="DAttribute" />
-        <ref role="37wK5l" to="t4tl:~DAttribute.of(java.lang.String,java.lang.String,java.lang.String,java.lang.String,boolean,boolean,boolean,int,java.lang.Object,java.lang.Class,org.jetbrains.mps.openapi.language.SLanguage,java.lang.String,java.util.function.Supplier,java.util.function.Function,boolean)" resolve="of" />
+        <ref role="37wK5l" to="t4tl:~DAttribute.of(java.lang.String,java.lang.String,java.lang.String,java.lang.String,boolean,boolean,boolean,int,boolean,java.lang.Object,java.lang.Class,org.jetbrains.mps.openapi.language.SLanguage,java.lang.String,java.util.function.Supplier,java.util.function.Function,boolean)" resolve="of" />
         <node concept="Xl_RD" id="5DIHqRLb7ab" role="37wK5m">
           <property role="Xl_RC" value="attrId" />
           <node concept="17Uvod" id="5DIHqRLb7ac" role="lGtFl">
@@ -996,6 +996,24 @@
                     <node concept="30H73N" id="5DIHqRLb7b8" role="2Oq$k0" />
                     <node concept="2qgKlT" id="5DIHqRLb7b9" role="2OqNvi">
                       <ref role="37wK5l" to="us1s:2UEyDf6sP6m" resolve="getIdentityNr" />
+                    </node>
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="3clFbT" id="EC8HMhk4$J" role="37wK5m">
+          <node concept="17Uvod" id="EC8HMhk7Av" role="lGtFl">
+            <property role="2qtEX9" value="value" />
+            <property role="P4ACc" value="f3061a53-9226-4cc5-a443-f952ceaf5816/1068580123137/1068580123138" />
+            <node concept="3zFVjK" id="EC8HMhk7Aw" role="3zH0cK">
+              <node concept="3clFbS" id="EC8HMhk7Ax" role="2VODD2">
+                <node concept="3clFbF" id="EC8HMhk9Dg" role="3cqZAp">
+                  <node concept="2OqwBi" id="EC8HMhka26" role="3clFbG">
+                    <node concept="30H73N" id="EC8HMhk9Df" role="2Oq$k0" />
+                    <node concept="3TrcHB" id="EC8HMhkd16" role="2OqNvi">
+                      <ref role="3TsBF5" to="7ggn:6aMI9gKVBbh" resolve="public" />
                     </node>
                   </node>
                 </node>
@@ -5912,7 +5930,7 @@
       </node>
       <node concept="2YIFZM" id="5$5iwUxUSLF" role="33vP2m">
         <ref role="1Pybhc" to="t4tl:~DAttribute" resolve="DAttribute" />
-        <ref role="37wK5l" to="t4tl:~DAttribute.of(java.lang.String,java.lang.String,java.lang.String,java.lang.String,boolean,boolean,boolean,int,java.lang.Object,java.lang.Class,org.jetbrains.mps.openapi.language.SLanguage,java.lang.String,java.util.function.Supplier,java.util.function.Function,boolean)" resolve="of" />
+        <ref role="37wK5l" to="t4tl:~DAttribute.of(java.lang.String,java.lang.String,java.lang.String,java.lang.String,boolean,boolean,boolean,int,boolean,java.lang.Object,java.lang.Class,org.jetbrains.mps.openapi.language.SLanguage,java.lang.String,java.util.function.Supplier,java.util.function.Function,boolean)" resolve="of" />
         <node concept="Xl_RD" id="5$5iwUxUSLG" role="37wK5m">
           <property role="Xl_RC" value="attrId" />
           <node concept="17Uvod" id="5$5iwUxUSLH" role="lGtFl">
@@ -6055,6 +6073,24 @@
                     <node concept="30H73N" id="5$5iwUxUSME" role="2Oq$k0" />
                     <node concept="2qgKlT" id="5$5iwUxUSMF" role="2OqNvi">
                       <ref role="37wK5l" to="us1s:2UEyDf6sP6m" resolve="getIdentityNr" />
+                    </node>
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="3clFbT" id="EC8HMhkEcJ" role="37wK5m">
+          <node concept="17Uvod" id="EC8HMhkMvz" role="lGtFl">
+            <property role="2qtEX9" value="value" />
+            <property role="P4ACc" value="f3061a53-9226-4cc5-a443-f952ceaf5816/1068580123137/1068580123138" />
+            <node concept="3zFVjK" id="EC8HMhkMv$" role="3zH0cK">
+              <node concept="3clFbS" id="EC8HMhkMv_" role="2VODD2">
+                <node concept="3clFbF" id="EC8HMhkT$t" role="3cqZAp">
+                  <node concept="2OqwBi" id="EC8HMhkTXd" role="3clFbG">
+                    <node concept="30H73N" id="EC8HMhkT$s" role="2Oq$k0" />
+                    <node concept="3TrcHB" id="EC8HMhkVuk" role="2OqNvi">
+                      <ref role="3TsBF5" to="7ggn:6aMI9gKVBbh" resolve="public" />
                     </node>
                   </node>
                 </node>
