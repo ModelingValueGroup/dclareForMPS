@@ -11386,7 +11386,7 @@
   </node>
   <node concept="sEfby" id="76$5hx$c86E">
     <property role="TrG5h" value="DClareTrace" />
-    <property role="2XNbzY" value="dclare trace" />
+    <property role="2XNbzY" value="DClare Sharing" />
     <node concept="2XrIbr" id="76$5hx$cdTb" role="2XNbBy">
       <property role="TrG5h" value="on" />
       <node concept="3cqZAl" id="76$5hx$cdTc" role="3clF45" />
@@ -11673,6 +11673,9 @@
           </node>
         </node>
       </node>
+    </node>
+    <node concept="1QGGSu" id="7q8MvY73wDg" role="1nVCmq">
+      <property role="1iqoE4" value="${module}/icons/Dclare.png" />
     </node>
   </node>
   <node concept="sEfby" id="cEL$G_Lser">
@@ -12547,7 +12550,7 @@
                                                         </node>
                                                       </node>
                                                       <node concept="Xl_RD" id="1zZpoCaD_DU" role="3uHU7w">
-                                                        <property role="Xl_RC" value="(" />
+                                                        <property role="Xl_RC" value=" (" />
                                                       </node>
                                                     </node>
                                                     <node concept="37vLTw" id="5O6f$ttXytn" role="3uHU7w">
