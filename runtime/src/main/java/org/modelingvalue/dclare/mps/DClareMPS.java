@@ -22,7 +22,6 @@ import static org.modelingvalue.dclare.mps.DclareForMPSEngine.ALL_DCLARE_MPS;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Supplier;
@@ -50,7 +49,6 @@ import org.modelingvalue.collections.util.ContextThread;
 import org.modelingvalue.collections.util.ContextThread.ContextPool;
 import org.modelingvalue.collections.util.MutationWrapper;
 import org.modelingvalue.collections.util.Pair;
-import org.modelingvalue.collections.util.TriConsumer;
 import org.modelingvalue.collections.util.Triple;
 import org.modelingvalue.dclare.*;
 import org.modelingvalue.dclare.ex.*;
@@ -72,12 +70,8 @@ import jetbrains.mps.checkers.ModelCheckerBuilder.ItemsToCheck;
 import jetbrains.mps.checkers.ModelCheckerBuilder.ModelsExtractorImpl;
 import jetbrains.mps.editor.runtime.LanguageEditorChecker;
 import jetbrains.mps.errors.CheckerRegistry;
-import jetbrains.mps.errors.item.IssueKindReportItem;
+import jetbrains.mps.errors.item.*;
 import jetbrains.mps.errors.item.IssueKindReportItem.CheckerCategory;
-import jetbrains.mps.errors.item.ModelReportItem;
-import jetbrains.mps.errors.item.ModuleReportItem;
-import jetbrains.mps.errors.item.NodeReportItem;
-import jetbrains.mps.errors.item.ReportItem;
 import jetbrains.mps.nodeEditor.Highlighter;
 import jetbrains.mps.progress.EmptyProgressMonitor;
 import jetbrains.mps.project.DevKit;
@@ -86,7 +80,7 @@ import jetbrains.mps.project.ProjectRepository;
 import jetbrains.mps.smodel.language.LanguageRegistry;
 import jetbrains.mps.smodel.language.LanguageRuntime;
 
-public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, UncaughtExceptionHandler {
+public class DClareMPS implements StateDeltaHandler, Universe, UncaughtExceptionHandler {
 
     private static final String                                                                         CONNECT_SYNC_HOST_PORT  = System.getProperty("CONNECT_SYNC_HOST_PORT", null);
     private static final boolean                                                                        TRACE_MPS_MODEL_CHANGES = Boolean.getBoolean("TRACE_MPS_MODEL_CHANGES");
@@ -574,7 +568,7 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
-    public void accept(State pre, State post, Boolean last) {
+    public void handleDelta(State pre, State post, boolean last, DefaultMap<Object, Set<Setable>> setted) {
         if (isRunning() && !universeTransaction.isKilled()) {
             if (config.isTraceDclare()) {
                 System.err.println(DCLARE + "    START COMMIT " + this);
@@ -591,39 +585,29 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
                             DefaultMap<Setable, Object> after = e0.getValue().b();
                             for (DObserved observed : dObject.dClass().dObserveds()) {
                                 if (observed instanceof DObservedAttribute || !dObject.isExternal()) {
-                                    Object preVal = before.get(observed);
-                                    Object postVal = after.get(observed);
-                                    if (observed.toMPS(dObject, preVal, postVal)) {
+                                    if (observed.toMPS(dObject, before.get(observed), after.get(observed))) {
                                         changed = true;
                                         if (TRACE_MPS_MODEL_CHANGES && !(observed instanceof DObservedAttribute)) {
                                             System.err.println(DCLARE + "    MPS MODEL CHANGE: " + dObject + "." + observed + " = " + after.get(observed));
                                         }
-                                    } else if (!Objects.equals(preVal, postVal)) {
-                                        changed = true;
                                     }
                                 }
                             }
                             if (!dObject.isExternal() && (changed || (post.get(dObject, Mutable.D_PARENT_CONTAINING) != null && //
                                     pre.get(dObject, Mutable.D_PARENT_CONTAINING) == null))) {
-                                if (dObject instanceof DModel) {
-                                    SModel sModel = ((DModel) dObject).tryOriginal();
-                                    if (sModel != null) {
-                                        changedModels.change(s -> s.add(sModel));
-                                    }
-                                } else if (dObject instanceof DNode) {
-                                    SNode original = ((DNode) dObject).tryOriginal();
-                                    SNode root = original != null ? original.getContainingRoot() : null;
-                                    if (root != null) {
-                                        changedRoots.change(s -> s.add(root));
-                                    }
-                                } else if (dObject instanceof DModule) {
-                                    changedModules.change(s -> s.add(((DModule) dObject).original()));
-                                }
+                                addToChanged(dObject);
                             }
                         });
                     });
                 }
                 if (last) {
+                    if (!setted.isEmpty()) {
+                        read(() -> {
+                            for (DObject dObject : setted.filter(e -> e.getValue().anyMatch(s -> s instanceof DObserved && !((DObserved) s).isDclareOnly())).map(Entry::getKey).filter(DObject.class)) {
+                                addToChanged(dObject);
+                            }
+                        });
+                    }
                     runModelCheck();
                 }
             } finally {
@@ -632,6 +616,23 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
                     System.err.println(DCLARE + "    END COMMIT " + this);
                 }
             }
+        }
+    }
+
+    private void addToChanged(DObject dObject) {
+        if (dObject instanceof DModel) {
+            SModel sModel = ((DModel) dObject).tryOriginal();
+            if (sModel != null) {
+                changedModels.change(s -> s.add(sModel));
+            }
+        } else if (dObject instanceof DNode) {
+            SNode original = ((DNode) dObject).tryOriginal();
+            SNode root = original != null ? original.getContainingRoot() : null;
+            if (root != null) {
+                changedRoots.change(s -> s.add(root));
+            }
+        } else if (dObject instanceof DModule) {
+            changedModules.change(s -> s.add(((DModule) dObject).original()));
         }
     }
 
@@ -856,48 +857,67 @@ public class DClareMPS implements TriConsumer<State, State, Boolean>, Universe, 
         changedModules.init(Set.of());
         changedRoots.init(Set.of());
         Set<IssueKindReportItem> allIssues = DRepository.ALL_MPS_ISSUES.get(dRepository);
-        invokeLater(() -> thePool.execute(() -> {
-            engine.issuesChanged(allIssues.collect(Collectors.toList()));
-            if (!models.isEmpty() || !modules.isEmpty() || !roots.isEmpty()) {
-                RootItemsToCheck itemsToCheck = new RootItemsToCheck();
-                itemsToCheck.models = models.collect(Collectors.toList());
-                itemsToCheck.modules = modules.collect(Collectors.toList());
-                itemsToCheck.roots = roots.filter(r -> r.getModel() != null).collect(Collectors.toList());
-                java.util.List<IssueKindReportItem> reportItems = new ArrayList<>();
-                SRepository repos = getRepository().original();
-                mpsChecker.check(itemsToCheck, repos, reportItems::add, new EmptyProgressMonitor());
-                imperativeTransaction.schedule(() -> {
-                    for (SModule sModule : modules) {
-                        DObject.MPS_ISSUES.set(DModule.of(sModule), DObject.MPS_ISSUES.getDefault());
-                    }
-                    for (SModel sModel : models) {
-                        DObject.MPS_ISSUES.set(DModel.of(sModel), DObject.MPS_ISSUES.getDefault());
-                    }
-                    for (SNode root : roots) {
-                        DNode.ALL_MPS_ISSUES.set(DNode.of(root), DNode.ALL_MPS_ISSUES.getDefault());
-                    }
-                    for (IssueKindReportItem item : reportItems) {
-                        DObject d = read(() -> context(item));
-                        if (d != null) {
-                            DObject.MPS_ISSUES.set(d, Set::add, Pair.of(d, item));
+        invokeLater(() -> {
+            thePool.execute(() -> {
+                engine.issuesChanged(allIssues.collect(Collectors.toList()));
+                if (!models.isEmpty() || !modules.isEmpty() || !roots.isEmpty()) {
+                    RootItemsToCheck itemsToCheck = new RootItemsToCheck();
+                    itemsToCheck.models = models.collect(Collectors.toList());
+                    itemsToCheck.modules = modules.collect(Collectors.toList());
+                    itemsToCheck.roots = roots.filter(r -> r.getModel() != null).collect(Collectors.toList());
+                    java.util.List<IssueKindReportItem> reportItems = new ArrayList<>();
+                    SRepository repos = getRepository().original();
+                    mpsChecker.check(itemsToCheck, repos, reportItems::add, new EmptyProgressMonitor());
+                    imperativeTransaction.schedule(() -> {
+                        for (SModule sModule : modules) {
+                            DObject.MPS_ISSUES.set(DModule.of(sModule), DObject.MPS_ISSUES.getDefault());
                         }
-                    }
-                });
-            }
-        }));
+                        for (SModel sModel : models) {
+                            DObject.MPS_ISSUES.set(DModel.of(sModel), DObject.MPS_ISSUES.getDefault());
+                        }
+                        for (SNode root : roots) {
+                            DNode.ALL_MPS_ISSUES.set(DNode.of(root), DNode.ALL_MPS_ISSUES.getDefault());
+                        }
+                        for (IssueKindReportItem item : reportItems) {
+                            DObject d = read(() -> context(item));
+                            if (d != null) {
+                                if (item instanceof NodeFlavouredItem) {
+                                    DNode root = root(repos, (NodeFlavouredItem) item);
+                                    if (root != null) {
+                                        DNode.ALL_MPS_ISSUES.set(root, Set::add, Pair.of(d, item));
+                                    }
+                                } else {
+                                    DObject.MPS_ISSUES.set(d, Set::add, Pair.of(d, item));
+                                }
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    }
+
+    private DNode root(SRepository repos, NodeFlavouredItem item) {
+        return read(() -> {
+            SNode s = item.getNode().resolve(repos);
+            SNode r = s != null ? s.getContainingRoot() : null;
+            return r != null ? DNode.of(r) : null;
+        });
     }
 
     protected DObject context(ReportItem item) {
         SRepository repos = getRepository().original();
-        if (item instanceof NodeReportItem) {
-            SNode s = ((NodeReportItem) item).getNode().resolve(repos);
+        if (item instanceof NodeFlavouredItem) {
+            SNode s = ((NodeFlavouredItem) item).getNode().resolve(repos);
             return s != null ? DNode.of(s) : null;
-        } else if (item instanceof ModelReportItem) {
-            SModel s = ((ModelReportItem) item).getModel().resolve(repos);
+        } else if (item instanceof ModelFlavouredItem) {
+            SModel s = ((ModelFlavouredItem) item).getModel().resolve(repos);
             return s != null ? DModel.of(s) : null;
-        } else {
-            SModule s = ((ModuleReportItem) item).getModule().resolve(repos);
+        } else if (item instanceof ModuleFlavouredItem) {
+            SModule s = ((ModuleFlavouredItem) item).getModule().resolve(repos);
             return s != null ? DModule.of(s) : null;
+        } else {
+            return null;
         }
     }
 

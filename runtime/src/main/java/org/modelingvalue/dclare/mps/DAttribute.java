@@ -19,26 +19,34 @@ import static org.modelingvalue.dclare.CoreSetableModifier.*;
 
 import java.util.Collections;
 import java.util.Objects;
-import java.util.function.*;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.jetbrains.mps.openapi.language.SProperty;
-import org.jetbrains.mps.openapi.model.*;
+import org.jetbrains.mps.openapi.model.EditableSModel;
+import org.jetbrains.mps.openapi.model.SModel;
+import org.jetbrains.mps.openapi.model.SNode;
 import org.modelingvalue.collections.ContainingCollection;
-import org.modelingvalue.dclare.*;
+import org.modelingvalue.dclare.Constant;
+import org.modelingvalue.dclare.CoreSetableModifier;
+import org.modelingvalue.dclare.DerivationTransaction;
+import org.modelingvalue.dclare.LeafTransaction;
+import org.modelingvalue.dclare.ReadOnlyTransaction;
+import org.modelingvalue.dclare.Setable;
+import org.modelingvalue.dclare.SetableModifier;
 
 import jetbrains.mps.smodel.adapter.structure.property.InvalidProperty;
 
 @SuppressWarnings({"rawtypes", "unused"})
 public interface DAttribute<O, T> extends DFeature {
 
-    Constant<DObservedAttribute, Boolean> IS_PUBLIC = Constant.of("$IS_PUBLIC", Boolean.FALSE, durable);
-
     @SuppressWarnings("unchecked")
-    static <C, V> DAttribute<C, V> of(String id, String name, String anonymousType, String ruleSetType, boolean syn, boolean optional, boolean composite, int identifyingNr, Object def, Class<?> cls, SLanguage oppositeLanguage, String opposite, Supplier<SNode> source, Function<C, V> deriver, boolean onlyTemporal) {
+    static <C, V> DAttribute<C, V> of(String id, String name, String anonymousType, String ruleSetType, boolean syn, boolean optional, boolean composite, int identifyingNr, boolean isPublic, Object def, Class<?> cls, SLanguage oppositeLanguage, String opposite, Supplier<SNode> source, Function<C, V> deriver, boolean onlyTemporal) {
         boolean idAttr = identifyingNr >= 0 && ("StructClass".equals(ruleSetType) || anonymousType != null);
         SetableModifier[] mods = {synthetic.iff(syn), mandatory.iff(idAttr || (!optional && identifyingNr < 0)), containment.iff(composite)};
-        return idAttr ? new DIdentifyingAttribute(id, name, anonymousType, identifyingNr, cls, source, mods) : deriver != null ? new DConstant(id, name, cls, source, deriver, onlyTemporal, mods) : new DObservedAttribute(id, name, identifyingNr >= 0, def, cls, opposite != null ? () -> of(oppositeLanguage, opposite) : null, source, mods);
+        return idAttr ? new DIdentifyingAttribute(id, name, anonymousType, identifyingNr, cls, source, mods) : deriver != null ? new DConstant(id, name, cls, source, deriver, onlyTemporal, mods) : new DObservedAttribute(id, name, identifyingNr >= 0, isPublic, def, cls, opposite != null ? () -> of(oppositeLanguage, opposite) : null, source, mods);
     }
 
     @SuppressWarnings("unchecked")
@@ -84,24 +92,26 @@ public interface DAttribute<O, T> extends DFeature {
         private final SProperty sProperty;
         private final boolean   indetifying;
 
-        public DObservedAttribute(Object id, String name, boolean indetifying, V def, Class<?> cls, Supplier<Setable<?, ?>> opposite, Supplier<SNode> source, SetableModifier... modifiers) {
+        public DObservedAttribute(Object id, String name, boolean indetifying, boolean isPublic, V def, Class<?> cls, Supplier<Setable<?, ?>> opposite, Supplier<SNode> source, SetableModifier... modifiers) {
             super(id, def, opposite, null, source, modifiers);
             SProperty sProperty = new InvalidProperty(id.toString(), name);
-            setFromToMPS(null, (o, b, a) -> {
-                if (o instanceof DNode && !Objects.equals(b, a) && IS_PUBLIC.isSet(this)) {
-                    SNode sNode = ((DNode) o).tryOriginal();
-                    SModel sModel = sNode != null ? sNode.getModel() : null;
-                    if (sNode != null && sModel instanceof EditableSModel) {
-                        boolean changed = ((EditableSModel) sModel).isChanged();
-                        sNode.setProperty(sProperty, "");
-                        sNode.setProperty(sProperty, null);
-                        ((EditableSModel) sModel).setChanged(changed);
-                        // System.err.println("!!!!!!!!!!! CHANGED !!!!!!!!! node=" + sNode + ", attribute=" + name + "#" + id);
-                        return true;
+            if (isPublic) {
+                setFromToMPS(null, (o, b, a) -> {
+                    if (o instanceof DNode && !Objects.equals(b, a)) {
+                        SNode sNode = ((DNode) o).tryOriginal();
+                        SModel sModel = sNode != null ? sNode.getModel() : null;
+                        if (sNode != null && sModel instanceof EditableSModel) {
+                            boolean changed = ((EditableSModel) sModel).isChanged();
+                            sNode.setProperty(sProperty, "");
+                            sNode.setProperty(sProperty, null);
+                            ((EditableSModel) sModel).setChanged(changed);
+                            // System.err.println("!!!!!!!!!!! CHANGED !!!!!!!!! node=" + sNode + ", attribute=" + name + "#" + id);
+                            return true;
+                        }
                     }
-                }
-                return false;
-            });
+                    return false;
+                });
+            }
             this.name = name;
             this.cls = cls;
             this.sProperty = sProperty;
@@ -140,9 +150,6 @@ public interface DAttribute<O, T> extends DFeature {
                 if (!(tx instanceof DerivationTransaction) || !((DerivationTransaction) tx).isDeriving()) {
                     SNode sNode = ((DNode) object).tryOriginal();
                     if (sNode != null) {
-                        if (!IS_PUBLIC.isSet(this)) {
-                            IS_PUBLIC.set(this, Boolean.TRUE);
-                        }
                         // System.err.println("!!!!!!! READ !!!!!!!!! node=" + sNode + ", attribute=" + name + "#" + id + ", thread=" + Thread.currentThread() + ", transaction=" + tx.universeTransaction());
                         sNode.getProperty(sProperty);
                     }
