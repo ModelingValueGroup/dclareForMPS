@@ -15,6 +15,8 @@
 
 package org.modelingvalue.dclare.mps;
 
+import java.util.function.Predicate;
+
 import org.jetbrains.mps.openapi.language.SAbstractConcept;
 import org.jetbrains.mps.openapi.language.SConcept;
 import org.jetbrains.mps.openapi.language.SLanguage;
@@ -31,21 +33,11 @@ import org.modelingvalue.dclare.sync.SerialisationPool.BaseConverter;
 import org.modelingvalue.dclare.sync.SerializationHelperWithPool;
 import org.modelingvalue.dclare.sync.Util;
 
-import java.util.function.Predicate;
-
 import jetbrains.mps.project.ProjectRepository;
 
 public class MPSSerializationHelper extends SerializationHelperWithPool<DObjectType<DObject>, DObject, DObserved<DObject, Object>> {
     public MPSSerializationHelper(ProjectRepository repos) {
-        super(Converters.ALL.appendList(List.of(
-                new DObservedConverter(),
-                new DModuleConverter(repos),
-                new DModelConverter(),
-                new DNodeConverter(),
-                new DServceMetaDataConverter(),
-                new SConceptConverter(),
-                new SLanguageConverter()
-        )));
+        super(Converters.ALL.appendList(List.of(new DObservedConverter(), new DModuleConverter(repos), new DModelConverter(), new DNodeConverter(), new DServceMetaDataConverter(), new SConceptConverter(), new SLanguageConverter())));
     }
 
     private static PersistenceFacade mpsPersist() {
@@ -54,21 +46,21 @@ public class MPSSerializationHelper extends SerializationHelperWithPool<DObjectT
 
     @Override
     public Predicate<Mutable> mutableFilter() {
-        return m -> { 
-        	boolean ret=false;
-        	DModel model = m.dAncestor(DModel.class);
-        	if (model==null || model.isShared()) {
-        		ret = (m instanceof DModule || m instanceof DModel || m instanceof DNode || m instanceof DServerMetaData) && !((DObject) m).isDclareOnly();
+        return m -> {
+            boolean ret = false;
+            DModel model = m.dAncestor(DModel.class);
+            if (model == null || model.isShared()) {
+                ret = (m instanceof DModule || m instanceof DModel || m instanceof DNode || m instanceof DServerMetaData) && !((DObject) m).isDclareOnly();
             }
-        	return ret;
-        };        
+            return ret;
+        };
     }
 
     @SuppressWarnings("rawtypes")
     @Override
     public Predicate<Setable<DObject, ?>> setableFilter() {
         return s -> {
-        	return s instanceof DObserved && ((Setable) s) != DModel.USED_DEVKITS && !(s instanceof DObservedAttribute) && !((DObserved) s).isDclareOnly();        	
+            return s instanceof DObserved && ((Setable) s) != DModel.USED_DEVKITS && ((Setable) s) != DObject.DCLARE_ISSUES && !(s instanceof DObservedAttribute) && !((DObserved) s).isDclareOnly();
         };
     }
 
@@ -94,8 +86,8 @@ public class MPSSerializationHelper extends SerializationHelperWithPool<DObjectT
 
         @Override
         public DModule deserialize(String string, Object context) {
-            SModuleId id     = mpsPersist().createModuleId(string);
-            SModule   module = DObject.dClareMPS().read(() -> repos.getModule(id));
+            SModuleId id = mpsPersist().createModuleId(string);
+            SModule module = DObject.dClareMPS().read(() -> repos.getModule(id));
             return DModule.of(module);
         }
     }
@@ -130,13 +122,13 @@ public class MPSSerializationHelper extends SerializationHelperWithPool<DObjectT
 
         @Override
         public DNode deserialize(String string, Object context) {
-            String[]       concRef = Util.decodeFromLength(string, 2);
-            SConcept       con     = (SConcept) mpsPersist().createConcept(concRef[0]);
-            SNodeReference ref     = mpsPersist().createNodeReference(concRef[1]);
+            String[] concRef = Util.decodeFromLength(string, 2);
+            SConcept con = (SConcept) mpsPersist().createConcept(concRef[0]);
+            SNodeReference ref = mpsPersist().createNodeReference(concRef[1]);
             return DNode.of(con, ref);
         }
     }
-    
+
     private static class DServceMetaDataConverter extends BaseConverter<DServerMetaData> {
         public DServceMetaDataConverter() {
             super(DServerMetaData.class);
@@ -149,8 +141,8 @@ public class MPSSerializationHelper extends SerializationHelperWithPool<DObjectT
 
         @Override
         public DServerMetaData deserialize(String string, Object context) {
-           //should never happen
-           return null;
+            //should never happen
+            return null;
         }
     }
 
