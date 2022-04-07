@@ -290,7 +290,7 @@
   <node concept="1TIwiD" id="30GBB6Y$vTM">
     <property role="EcuMT" value="3471323624161541746" />
     <property role="TrG5h" value="NodeBuilderInitAttribute" />
-    <property role="3GE5qa" value="attributes" />
+    <property role="3GE5qa" value="attributes.builder" />
     <ref role="1TJDcQ" to="tp3r:4IP40Bi2KcT" resolve="NodeBuilderInitPart" />
     <node concept="1TJgyj" id="7$u7SPnnZ5x" role="1TKVEi">
       <property role="IQ2ns" value="8727447819807355233" />
@@ -515,7 +515,7 @@
     <property role="EcuMT" value="4435611260589294938" />
     <property role="TrG5h" value="StructBuilder" />
     <property role="3GE5qa" value="structs.builder" />
-    <property role="34LRSv" value="&lt;struct&gt;" />
+    <property role="34LRSv" value="[struct]" />
     <ref role="1TJDcQ" to="tpee:fz3vP1J" resolve="Expression" />
     <node concept="1TJgyj" id="3Qetf3d9slr" role="1TKVEi">
       <property role="IQ2ns" value="4435611260589294939" />
@@ -543,13 +543,6 @@
       <property role="20kJfa" value="parts" />
       <property role="20lbJX" value="fLJekj5/_0__n" />
       <ref role="20lvS9" node="4fD99RQo2bS" resolve="StructBuilderInitAttribute" />
-    </node>
-    <node concept="RPilO" id="67uyCwD0$6o" role="lGtFl">
-      <ref role="RPilL" node="4$bpWrNHOXa" resolve="class" />
-      <node concept="ROjv2" id="67uyCwD0$6r" role="ROhUF">
-        <property role="1W_73K" value="]" />
-        <property role="1W_73P" value="[" />
-      </node>
     </node>
   </node>
   <node concept="1TIwiD" id="3Qetf3dC4N5">
@@ -782,7 +775,7 @@
     <property role="EcuMT" value="2643921241704843759" />
     <property role="3GE5qa" value="issues" />
     <property role="TrG5h" value="NodeIssue" />
-    <property role="34LRSv" value="&lt;node issue&gt;" />
+    <property role="34LRSv" value="[node issue]" />
     <ref role="1TJDcQ" node="41CotWWrJg$" resolve="Issue" />
     <node concept="1irR5M" id="rktk3X5CfR" role="rwd14">
       <property role="2$rrk2" value="1" />
@@ -804,7 +797,7 @@
     <property role="EcuMT" value="2643921241704844352" />
     <property role="3GE5qa" value="issues" />
     <property role="TrG5h" value="ModelIssue" />
-    <property role="34LRSv" value="&lt;model issue&gt;" />
+    <property role="34LRSv" value="[model issue]" />
     <ref role="1TJDcQ" node="41CotWWrJg$" resolve="Issue" />
     <node concept="1irR5M" id="rktk3X5Cgb" role="rwd14">
       <property role="2$rrk2" value="3" />
@@ -820,7 +813,7 @@
     <property role="EcuMT" value="2643921241704844353" />
     <property role="3GE5qa" value="issues" />
     <property role="TrG5h" value="ModuleIssue" />
-    <property role="34LRSv" value="&lt;module issue&gt;" />
+    <property role="34LRSv" value="[module issue]" />
     <ref role="1TJDcQ" node="41CotWWrJg$" resolve="Issue" />
     <node concept="1irR5M" id="rktk3X5Cg3" role="rwd14">
       <property role="2$rrk2" value="2" />
@@ -931,7 +924,7 @@
     <property role="EcuMT" value="8665521623231527539" />
     <property role="3GE5qa" value="models.builder" />
     <property role="TrG5h" value="ModelBuilder" />
-    <property role="34LRSv" value="&lt;model&gt;" />
+    <property role="34LRSv" value="[model]" />
     <ref role="1TJDcQ" to="tpee:fz3vP1J" resolve="Expression" />
     <node concept="1TJgyj" id="7x27w4ybBDU" role="1TKVEi">
       <property role="IQ2ns" value="8665521623231527546" />

@@ -12938,7 +12938,7 @@
     </node>
   </node>
   <node concept="13h7C7" id="6aMI9gI2xRJ">
-    <property role="3GE5qa" value="attributes" />
+    <property role="3GE5qa" value="attributes.builder" />
     <ref role="13h7C2" to="7ggn:30GBB6Y$vTM" resolve="NodeBuilderInitAttribute" />
     <node concept="13hLZK" id="6aMI9gI2xRK" role="13h7CW">
       <node concept="3clFbS" id="6aMI9gI2xRL" role="2VODD2" />

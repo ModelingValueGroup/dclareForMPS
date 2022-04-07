@@ -706,7 +706,7 @@
     </node>
   </node>
   <node concept="1M2fIO" id="30GBB6YIYg6">
-    <property role="3GE5qa" value="attributes" />
+    <property role="3GE5qa" value="attributes.builder" />
     <ref role="1M2myG" to="7ggn:30GBB6Y$vTM" resolve="NodeBuilderInitAttribute" />
     <node concept="1N5Pfh" id="30GBB6YIYg7" role="1Mr941">
       <ref role="1N5Vy1" to="7ggn:30GBB6Y$wtJ" resolve="attribute" />

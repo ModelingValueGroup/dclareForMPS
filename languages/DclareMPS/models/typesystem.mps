@@ -1203,7 +1203,7 @@
   </node>
   <node concept="1YbPZF" id="30GBB6Y$wDB">
     <property role="TrG5h" value="typeof_NodeBuilderInitAttribute" />
-    <property role="3GE5qa" value="attributes" />
+    <property role="3GE5qa" value="attributes.builder" />
     <node concept="3clFbS" id="30GBB6Y$wDC" role="18ibNy">
       <node concept="1ZobV4" id="76efOMRBDoH" role="3cqZAp">
         <property role="3wDh2S" value="true" />
