@@ -85,6 +85,8 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
     private static final String                                                                         CONNECT_SYNC_HOST_PORT  = System.getProperty("CONNECT_SYNC_HOST_PORT", null);
     private static final boolean                                                                        TRACE_MPS_MODEL_CHANGES = Boolean.getBoolean("TRACE_MPS_MODEL_CHANGES");
 
+    protected static Constant<SLanguage, Direction>                                                     DIRECTION               = Constant.of("DIRECTION", Direction::of);
+
     protected static Constant<SLanguage, IRuleAspect>                                                   RULE_ASPECT             = Constant.of("RULE_ASPECT", l -> {
                                                                                                                                     LanguageRuntime rtLang = registry().getLanguage(l);
                                                                                                                                     return rtLang != null ? rtLang.getAspect(IRuleAspect.class) : null;
@@ -122,7 +124,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
                                                                                                                                     DClareMPS dclareMPS = DClareMPS.instance();
                                                                                                                                     IRuleAspect aspect = RULE_ASPECT.get(l);
                                                                                                                                     Set<IRuleSet> ruleSets = aspect != null ? Collection.of(aspect.getRuleSets()).                                       //
-                                                                                                                                            filter(a -> dclareMPS.isActiveAspect(a.getAspect())).toSet() : Set.of();
+                                                                                                                                            filter(rs -> dclareMPS.isActiveAspect(rs.getAspect())).toSet() : Set.of();
                                                                                                                                     return ruleSets;
                                                                                                                                 });
     public static final Constant<SLanguage, Set<IAspect>>                                               ASPECTS                 = Constant.of("ASPECTS", Set.of(), l -> {

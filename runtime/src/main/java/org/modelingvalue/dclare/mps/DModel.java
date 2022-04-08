@@ -23,19 +23,20 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import org.jetbrains.mps.openapi.language.*;
+import org.jetbrains.mps.openapi.language.SAbstractConcept;
+import org.jetbrains.mps.openapi.language.SConcept;
+import org.jetbrains.mps.openapi.language.SLanguage;
 import org.jetbrains.mps.openapi.model.*;
-import org.jetbrains.mps.openapi.model.SModel;
-import org.jetbrains.mps.openapi.model.SModelId;
-import org.jetbrains.mps.openapi.model.SModelReference;
-import org.jetbrains.mps.openapi.model.SNode;
-import org.jetbrains.mps.openapi.model.SNodeId;
 import org.jetbrains.mps.openapi.module.SModule;
 import org.jetbrains.mps.openapi.module.SModuleReference;
 import org.jetbrains.mps.openapi.persistence.DataSource;
 import org.jetbrains.mps.openapi.persistence.ModelRoot;
-import org.modelingvalue.collections.*;
-import org.modelingvalue.collections.util.*;
+import org.modelingvalue.collections.Collection;
+import org.modelingvalue.collections.Map;
+import org.modelingvalue.collections.Set;
+import org.modelingvalue.collections.util.Pair;
+import org.modelingvalue.collections.util.TriFunction;
+import org.modelingvalue.collections.util.Triple;
 import org.modelingvalue.dclare.*;
 import org.modelingvalue.dclare.mps.DRule.DObserverTransaction;
 
@@ -46,7 +47,9 @@ import jetbrains.mps.persistence.DefaultModelRoot;
 import jetbrains.mps.persistence.ModelCannotBeCreatedException;
 import jetbrains.mps.project.DevKit;
 import jetbrains.mps.project.Solution;
-import jetbrains.mps.smodel.*;
+import jetbrains.mps.smodel.Language;
+import jetbrains.mps.smodel.MPSModuleRepository;
+import jetbrains.mps.smodel.SModelInternal;
 
 @SuppressWarnings("unused")
 public class DModel extends DNewableObject<DModel, SModelReference, SModel> implements SModel {
@@ -68,7 +71,7 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
 
     protected static final DObserved<DModel, Set<DNode>>                                    ROOTS            = DObserved.of("ROOTS", Set.of(), dModel -> {
                                                                                                                  if (LeafTransaction.getCurrent() instanceof DObserverTransaction &&                                                                                                                                       //
-                                                                                                                 !dModel.isExternal() && !TYPE.get(dModel).getLanguages().isEmpty()) {
+                                                                                                                         !dModel.isExternal() && !TYPE.get(dModel).getLanguages().isEmpty()) {
                                                                                                                      DModel.ACTIVE.set(dModel, Boolean.TRUE);
                                                                                                                  }
                                                                                                                  SModel sModel = dModel.original();
@@ -115,7 +118,7 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
     protected static final DObserved<DModel, Set<DModel>>                                   USED_MODELS      = DObserved.of("USED_MODELS", Set.of(), dModel -> {
                                                                                                                  SModel sModel = dModel.original();
                                                                                                                  return Collection.of(((SModelInternal) sModel).getModelImports()).sequential().                                                                                                                           //
-                                                                                                                 map(r -> r.resolve(null)).notNull().map(DModel::of).toSet();
+                                                                                                                         map(r -> r.resolve(null)).notNull().map(DModel::of).toSet();
                                                                                                              }, (o, pre, post) -> {
                                                                                                                  SModelInternal sModel = (SModelInternal) o.original();
                                                                                                                  Set<SModelReference> soll = post.map(DModel::reference).notNull().toSet();
@@ -164,7 +167,7 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
                                                                                                                  SModel sModel = m.tryOriginal();
                                                                                                                  if (sModel instanceof SModelInternal) {
                                                                                                                      Set<DModel> ls = dClareMPS().read(() -> Collection.of(((SModelInternal) sModel).getModelImports()).sequential().                                                                                      //
-                                                                                                                     map(r -> r.resolve(null)).notNull().map(DModel::of).toSet());
+                                                                                                                             map(r -> r.resolve(null)).notNull().map(DModel::of).toSet());
                                                                                                                      USED_MODELS.set(m, ls);
                                                                                                                  }
                                                                                                              }, Priority.urgent);
@@ -222,8 +225,8 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
     @SuppressWarnings("rawtypes")
     protected static final Set<Setable>                                                     SETABLES         = DNewableObject.SETABLES.addAll(Set.of(NAME, ROOTS, MODEL_ROOT, USED_MODELS, USED_LANGUAGES, ACTIVE, LOADED, SHARED));
 
-    public static DModel of(SLanguage anonymousLanguage, String anonymousType, Object[] identity, boolean temporal) {
-        return quotationConstruct(anonymousLanguage, anonymousType, identity, //
+    public static DModel of(IRuleSet ruleSet, String anonymousType, Object[] identity, boolean temporal) {
+        return quotationConstruct(ruleSet, anonymousType, identity, //
                 () -> new DModel(new Object[]{DClareMPS.uniqueLong(), temporal, false}));
     }
 
@@ -431,11 +434,11 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
     }
 
     public void shareModel(boolean b) {
-    	SHARED.set(this, b);
+        SHARED.set(this, b);
     }
 
     public boolean isShared() {
-    	return SHARED.get(this);
+        return SHARED.get(this);
     }
 
     @Override

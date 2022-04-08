@@ -258,7 +258,7 @@
   <node concept="1TIwiD" id="3gm2YTwH79_">
     <property role="EcuMT" value="3753200457912447589" />
     <property role="TrG5h" value="AspectSettings" />
-    <ref role="1TJDcQ" to="tpck:gw2VY9q" />
+    <ref role="1TJDcQ" to="tpck:gw2VY9q" resolve="BaseConcept" />
     <node concept="1TJgyi" id="3gm2YTwH79H" role="1TKVEl">
       <property role="IQ2nx" value="3753200457912447597" />
       <property role="TrG5h" value="active" />
@@ -283,7 +283,7 @@
   <node concept="1TIwiD" id="3_wkb9eGwqx">
     <property role="EcuMT" value="4134393184680806049" />
     <property role="TrG5h" value="AspectSettingDependency" />
-    <ref role="1TJDcQ" to="tpck:gw2VY9q" />
+    <ref role="1TJDcQ" to="tpck:gw2VY9q" resolve="BaseConcept" />
     <node concept="1TJgyj" id="3_wkb9eGwqy" role="1TKVEi">
       <property role="IQ2ns" value="4134393184680806050" />
       <property role="20kJfa" value="aspect" />

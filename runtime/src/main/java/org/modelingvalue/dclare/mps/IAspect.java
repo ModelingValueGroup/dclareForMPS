@@ -17,7 +17,12 @@ package org.modelingvalue.dclare.mps;
 
 import java.util.List;
 
+import org.modelingvalue.dclare.Constant;
+import org.modelingvalue.dclare.Direction;
+
 public interface IAspect {
+
+    Constant<IAspect, Direction> DIRECTION = Constant.of("DIRECTION", Direction::of);
 
     String getId();
 

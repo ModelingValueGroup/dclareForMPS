@@ -14,7 +14,6 @@
     <import index="wknp" ref="r:9a42e459-6b0e-4c37-8fab-9b46bab588bd(DclareMessages.structure)" implicit="true" />
     <import index="tpen" ref="r:00000000-0000-4000-0000-011c895902c3(jetbrains.mps.baseLanguage.editor)" implicit="true" />
     <import index="tpck" ref="r:00000000-0000-4000-0000-011c89590288(jetbrains.mps.lang.core.structure)" implicit="true" />
-    <import index="wyt6" ref="6354ebe7-c22a-4a0f-ac54-50b52ab9b065/java:java.lang(JDK/)" implicit="true" />
   </imports>
   <registry>
     <language id="18bc6592-03a6-4e29-a83a-7ff23bde13ba" name="jetbrains.mps.lang.editor">
@@ -1119,15 +1118,10 @@
           <node concept="3TQlhw" id="22ExA6gDwxz" role="1Hhtcw">
             <node concept="3clFbS" id="22ExA6gDwx_" role="2VODD2">
               <node concept="3clFbF" id="22ExA6gDwz4" role="3cqZAp">
-                <node concept="2OqwBi" id="22ExA6gDx$d" role="3clFbG">
-                  <node concept="2OqwBi" id="22ExA6gDwQ2" role="2Oq$k0">
-                    <node concept="pncrf" id="22ExA6gDwz3" role="2Oq$k0" />
-                    <node concept="3TrcHB" id="22ExA6gDxaF" role="2OqNvi">
-                      <ref role="3TsBF5" to="tpck:h0TrG11" resolve="name" />
-                    </node>
-                  </node>
-                  <node concept="liA8E" id="22ExA6gDy9n" role="2OqNvi">
-                    <ref role="37wK5l" to="wyt6:~String.toLowerCase()" resolve="toLowerCase" />
+                <node concept="2OqwBi" id="22ExA6gDwQ2" role="3clFbG">
+                  <node concept="pncrf" id="22ExA6gDwz3" role="2Oq$k0" />
+                  <node concept="3TrcHB" id="22ExA6gDxaF" role="2OqNvi">
+                    <ref role="3TsBF5" to="tpck:h0TrG11" resolve="name" />
                   </node>
                 </node>
               </node>

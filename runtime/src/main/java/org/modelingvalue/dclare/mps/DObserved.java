@@ -16,13 +16,23 @@
 package org.modelingvalue.dclare.mps;
 
 import java.time.Instant;
-import java.util.function.*;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 import org.jetbrains.mps.openapi.model.SNode;
-import org.modelingvalue.collections.*;
+import org.modelingvalue.collections.Entry;
+import org.modelingvalue.collections.List;
+import org.modelingvalue.collections.Map;
+import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.QuadConsumer;
 import org.modelingvalue.collections.util.TriFunction;
-import org.modelingvalue.dclare.*;
+import org.modelingvalue.dclare.DerivationTransaction;
+import org.modelingvalue.dclare.LeafTransaction;
+import org.modelingvalue.dclare.Observed;
+import org.modelingvalue.dclare.Setable;
+import org.modelingvalue.dclare.SetableModifier;
 import org.modelingvalue.dclare.ex.ThrowableError;
 
 @SuppressWarnings("unused")
@@ -187,6 +197,11 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
 
     public boolean isDclareOnly() {
         return toMPS == null;
+    }
+
+    @Override
+    public IRuleSet ruleSet() {
+        return null;
     }
 
 }

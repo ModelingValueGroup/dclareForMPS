@@ -17,36 +17,29 @@ package org.modelingvalue.dclare.mps;
 
 import java.util.Arrays;
 
-import org.jetbrains.mps.openapi.language.SLanguage;
-import org.modelingvalue.dclare.Direction;
 import org.modelingvalue.dclare.Mutable;
 
 public class DQuotation extends DDerive {
 
-    protected DQuotation(Mutable thiz, SLanguage anonymousLanguage, String anonymousType, Object[] ctx) {
-        super(thiz, init(ctx, anonymousLanguage, anonymousType));
+    protected DQuotation(Mutable thiz, IRuleSet ruleSet, String anonymousType, Object[] ctx) {
+        super(thiz, init(ctx, ruleSet, anonymousType));
     }
 
-    private static Object[] init(Object[] ctx, SLanguage anonymousLanguage, String anonymousType) {
+    private static Object[] init(Object[] ctx, IRuleSet ruleSet, String anonymousType) {
         Object[] array = Arrays.copyOf(ctx, ctx.length + 2);
-        array[array.length - 2] = anonymousLanguage;
+        array[array.length - 2] = ruleSet;
         array[array.length - 1] = anonymousType;
         return array;
     }
 
     @Override
-    public String getAnonymousType() {
+    public String anonymousType() {
         return (String) get(null, size() - 1);
     }
 
     @Override
-    public SLanguage getAnonymousLanguage() {
-        return (SLanguage) get(null, size() - 2);
-    }
-
-    @Override
-    public Direction direction() {
-        return Direction.of(getAnonymousLanguage());
+    public IRuleSet ruleSet() {
+        return (IRuleSet) get(null, size() - 2);
     }
 
 }

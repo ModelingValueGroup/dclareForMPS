@@ -4727,5 +4727,37 @@
       <ref role="1YaFvo" to="7ggn:3Qetf3d9slq" resolve="StructBuilder" />
     </node>
   </node>
+  <node concept="1YbPZF" id="F_kCLyp86n">
+    <property role="TrG5h" value="typeof_RuleSetReference" />
+    <property role="3GE5qa" value="expressions" />
+    <node concept="3clFbS" id="F_kCLyp86o" role="18ibNy">
+      <node concept="1Z5TYs" id="F_kCLyp86u" role="3cqZAp">
+        <node concept="mw_s8" id="F_kCLyp86v" role="1ZfhK$">
+          <node concept="1Z2H0r" id="F_kCLyp86w" role="mwGJk">
+            <node concept="1YBJjd" id="F_kCLyp86x" role="1Z2MuG">
+              <ref role="1YBMHb" node="F_kCLyp86q" resolve="ruleSetReference" />
+            </node>
+          </node>
+        </node>
+        <node concept="mw_s8" id="F_kCLyp8h8" role="1ZfhKB">
+          <node concept="2pJPEk" id="F_kCLyp8h4" role="mwGJk">
+            <node concept="2pJPED" id="F_kCLyp8h6" role="2pJPEn">
+              <ref role="2pJxaS" to="tpee:g7uibYu" resolve="ClassifierType" />
+              <node concept="2pIpSj" id="F_kCLyp8hF" role="2pJxcM">
+                <ref role="2pIpSl" to="tpee:g7uigIF" resolve="classifier" />
+                <node concept="36bGnv" id="F_kCLyp8hU" role="28nt2d">
+                  <ref role="36bGnp" to="t4tl:~IRuleSet" resolve="IRuleSet" />
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+    <node concept="1YaCAy" id="F_kCLyp86q" role="1YuTPh">
+      <property role="TrG5h" value="ruleSetReference" />
+      <ref role="1YaFvo" to="7ggn:F_kCLyp1WG" resolve="RuleSetReference" />
+    </node>
+  </node>
 </model>
 

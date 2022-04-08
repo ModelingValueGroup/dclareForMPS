@@ -18,6 +18,7 @@ package org.modelingvalue.dclare.mps;
 import java.util.List;
 
 import org.jetbrains.mps.openapi.language.SAbstractConcept;
+import org.jetbrains.mps.openapi.language.SLanguage;
 import org.jetbrains.mps.openapi.model.SModel;
 import org.jetbrains.mps.openapi.model.SNode;
 import org.modelingvalue.collections.Set;
@@ -47,5 +48,9 @@ public interface IRuleSet {
     List<DAttribute<?, ?>> getAllAttributes();
 
     IAspect getAspect();
+
+    String getAnonymousType();
+
+    SLanguage getLanguage();
 
 }

@@ -599,9 +599,9 @@
               <ref role="3uigEE" to="t4tl:~DclareForMPSEngine" resolve="DclareForMPSEngine" />
             </node>
             <node concept="1rXfSq" id="6g03R83tKD_" role="33vP2m">
-              <ref role="37wK5l" node="3z4syYQMRSX" resolve="getEngine" />
+              <ref role="37wK5l" node="3z4syYQMRSX" resolve="getDCl1" />
               <node concept="37vLTw" id="6g03R83tLkV" role="37wK5m">
-                <ref role="3cqZAo" node="4FbMPtV5owi" resolve="engine" />
+                <ref role="3cqZAo" node="4FbMPtV5owi" resolve="project" />
               </node>
             </node>
           </node>
@@ -4549,9 +4549,9 @@
         </node>
       </node>
       <node concept="37vLTG" id="2OH8AaebkQi" role="3clF46">
-        <property role="TrG5h" value="lang" />
+        <property role="TrG5h" value="ruleSet" />
         <node concept="3uibUv" id="2OH8AaeblWz" role="1tU5fm">
-          <ref role="3uigEE" to="c17a:~SLanguage" resolve="SLanguage" />
+          <ref role="3uigEE" to="t4tl:~IRuleSet" resolve="IRuleSet" />
         </node>
       </node>
       <node concept="37vLTG" id="4wJaMXe_PK4" role="3clF46">
@@ -4582,7 +4582,7 @@
                 </node>
               </node>
               <node concept="liA8E" id="6DGeWnARLaw" role="2OqNvi">
-                <ref role="37wK5l" to="t4tl:~DNode.copy(org.jetbrains.mps.openapi.language.SLanguage,java.lang.String,org.modelingvalue.dclare.mps.DObject)" resolve="copy" />
+                <ref role="37wK5l" to="t4tl:~DNode.copy(org.modelingvalue.dclare.mps.IRuleSet,java.lang.String,org.modelingvalue.dclare.mps.DObject)" resolve="copy" />
                 <node concept="37vLTw" id="2OH8Aaebobo" role="37wK5m">
                   <ref role="3cqZAo" node="2OH8AaebkQi" resolve="lang" />
                 </node>
@@ -4627,7 +4627,7 @@
         <node concept="3cpWs6" id="7x27w4ygFp$" role="3cqZAp">
           <node concept="2YIFZM" id="7x27w4ygFpB" role="3cqZAk">
             <ref role="1Pybhc" to="t4tl:~DModel" resolve="DModel" />
-            <ref role="37wK5l" to="t4tl:~DModel.of(org.jetbrains.mps.openapi.language.SLanguage,java.lang.String,java.lang.Object[],boolean)" resolve="of" />
+            <ref role="37wK5l" to="t4tl:~DModel.of(org.modelingvalue.dclare.mps.IRuleSet,java.lang.String,java.lang.Object[],boolean)" resolve="of" />
             <node concept="37vLTw" id="23rj$OmToy9" role="37wK5m">
               <ref role="3cqZAo" node="23rj$OmTmGi" resolve="lang" />
             </node>
@@ -4653,9 +4653,9 @@
         </node>
       </node>
       <node concept="37vLTG" id="23rj$OmTmGi" role="3clF46">
-        <property role="TrG5h" value="lang" />
+        <property role="TrG5h" value="ruleSet" />
         <node concept="3uibUv" id="23rj$OmTn3R" role="1tU5fm">
-          <ref role="3uigEE" to="c17a:~SLanguage" resolve="SLanguage" />
+          <ref role="3uigEE" to="t4tl:~IRuleSet" resolve="IRuleSet" />
         </node>
       </node>
       <node concept="37vLTG" id="7x27w4ygFpN" role="3clF46">
@@ -4687,7 +4687,7 @@
             </node>
             <node concept="2YIFZM" id="70QPEjRB4Ny" role="10QFUP">
               <ref role="1Pybhc" to="t4tl:~DNode" resolve="DNode" />
-              <ref role="37wK5l" to="t4tl:~DNode.of(org.jetbrains.mps.openapi.language.SLanguage,java.lang.String,java.lang.Object[],org.jetbrains.mps.openapi.language.SConcept)" resolve="of" />
+              <ref role="37wK5l" to="t4tl:~DNode.of(org.modelingvalue.dclare.mps.IRuleSet,java.lang.String,java.lang.Object[],org.jetbrains.mps.openapi.language.SConcept)" resolve="of" />
               <node concept="37vLTw" id="23rj$OmTfu1" role="37wK5m">
                 <ref role="3cqZAo" node="23rj$OmTdSc" resolve="lang" />
               </node>
@@ -4720,9 +4720,9 @@
         </node>
       </node>
       <node concept="37vLTG" id="23rj$OmTdSc" role="3clF46">
-        <property role="TrG5h" value="lang" />
+        <property role="TrG5h" value="ruleSet" />
         <node concept="3uibUv" id="23rj$OmTecJ" role="1tU5fm">
-          <ref role="3uigEE" to="c17a:~SLanguage" resolve="SLanguage" />
+          <ref role="3uigEE" to="t4tl:~IRuleSet" resolve="IRuleSet" />
         </node>
       </node>
       <node concept="37vLTG" id="2cgEAjNTmkt" role="3clF46">

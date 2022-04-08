@@ -20,8 +20,13 @@ import java.util.function.Supplier;
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
-import org.modelingvalue.dclare.*;
+import org.modelingvalue.dclare.Constant;
+import org.modelingvalue.dclare.Construction;
 import org.modelingvalue.dclare.Construction.Reason;
+import org.modelingvalue.dclare.LeafTransaction;
+import org.modelingvalue.dclare.Newable;
+import org.modelingvalue.dclare.Observer;
+import org.modelingvalue.dclare.Setable;
 import org.modelingvalue.dclare.mps.DAttribute.DIdentifyingAttribute;
 
 @SuppressWarnings("rawtypes")
@@ -34,14 +39,14 @@ public abstract class DNewableObject<T extends DNewableObject, R, S> extends DId
 
     protected static final Set<Setable>                   SETABLES  = DObject.SETABLES;
 
-    protected static <D extends DNewableObject> D quotationConstruct(SLanguage anonymousLanguage, String anonymousType, Object[] ctx, Supplier<D> supplier) {
+    protected static <D extends DNewableObject> D quotationConstruct(IRuleSet ruleSet, String anonymousType, Object[] ctx, Supplier<D> supplier) {
         LeafTransaction tx = LeafTransaction.getCurrent();
-        return tx.construct(new DQuotation(tx.mutable(), anonymousLanguage, anonymousType, ctx), supplier);
+        return tx.construct(new DQuotation(tx.mutable(), ruleSet, anonymousType, ctx), supplier);
     }
 
-    protected static <D extends DNewableObject> D copyRootConstruct(SLanguage anonymousLanguage, String anonymousType, DObject object, DNode copied, Supplier<D> supplier) {
+    protected static <D extends DNewableObject> D copyRootConstruct(IRuleSet ruleSet, String anonymousType, DObject object, DNode copied, Supplier<D> supplier) {
         LeafTransaction tx = LeafTransaction.getCurrent();
-        return tx.construct(new DCopy(tx.mutable(), copied, anonymousLanguage, anonymousType), supplier);
+        return tx.construct(new DCopy(tx.mutable(), copied, ruleSet, anonymousType), supplier);
     }
 
     protected static <D extends DNewableObject> D copyChildConstruct(DCopy root, DNode copied, Supplier<D> supplier) {
@@ -84,7 +89,7 @@ public abstract class DNewableObject<T extends DNewableObject, R, S> extends DId
 
     private Construction getQuotationConstruction(String anonymousType) {
         for (Construction c : dDerivedConstructions()) {
-            if (c.reason() instanceof DQuotation && ((DQuotation) c.reason()).getAnonymousType() == anonymousType && //
+            if (c.reason() instanceof DQuotation && ((DQuotation) c.reason()).anonymousType() == anonymousType && //
                     !Newable.D_SUPER_POSITION.get(this).contains(c.reason().direction())) {
                 return c;
             }
@@ -114,15 +119,15 @@ public abstract class DNewableObject<T extends DNewableObject, R, S> extends DId
     }
 
     public Set<String> getAnonymousTypes() {
-        return deriveReasons().filter(DQuotation.class).map(DQuotation::getAnonymousType).notNull().toSet();
+        return deriveReasons().filter(DQuotation.class).map(DDerive::anonymousType).notNull().toSet();
     }
 
-    public SLanguage copyAnonymousLanguage() {
-        return deriveReasons().filter(DCopy.class).map(DCopy::getAnonymousLanguage).findFirst().orElse(null);
+    public IAspect getCopyAspect() {
+        return deriveReasons().filter(DCopy.class).map(DDerive::aspect).findFirst().orElse(null);
     }
 
     public Set<SLanguage> getAnonymousLanguages() {
-        return deriveReasons().filter(DQuotation.class).map(DQuotation::getAnonymousLanguage).notNull().toSet();
+        return deriveReasons().filter(DQuotation.class).map(DDerive::language).notNull().toSet();
     }
 
     @SuppressWarnings("unchecked")

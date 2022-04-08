@@ -1686,7 +1686,7 @@
                     </node>
                   </node>
                   <node concept="3SN95M" id="3gm2YTuAGKt" role="3uHU7w">
-                    <ref role="3SN95N" node="3gm2YTu_aVd" resolve="sup" />
+                    <ref role="3SN95N" node="3gm2YTu_aVd" resolve="target" />
                   </node>
                 </node>
               </node>
@@ -1736,7 +1736,7 @@
                       <ref role="2pIpSl" to="7ggn:6HWpSUEuarY" resolve="concept" />
                       <node concept="36biLy" id="3gm2YTuB1nh" role="28nt2d">
                         <node concept="3SN95M" id="3gm2YTuB1q0" role="36biLW">
-                          <ref role="3SN95N" node="3gm2YTu_aVd" resolve="sup" />
+                          <ref role="3SN95N" node="3gm2YTu_aVd" resolve="target" />
                         </node>
                       </node>
                     </node>
