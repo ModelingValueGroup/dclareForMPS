@@ -11695,7 +11695,7 @@
   </node>
   <node concept="sEfby" id="cEL$G_Lser">
     <property role="TrG5h" value="DClareModelChecks" />
-    <property role="2XNbzY" value="Model Checker" />
+    <property role="2XNbzY" value="Checker" />
     <node concept="2BZ0e9" id="cEL$G_Lwnu" role="2XNbBz">
       <property role="TrG5h" value="viewer" />
       <node concept="3Tm6S6" id="cEL$G_Lwnv" role="1B3o_S" />
