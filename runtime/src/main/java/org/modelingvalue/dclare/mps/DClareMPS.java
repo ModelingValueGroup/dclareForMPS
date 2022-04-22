@@ -250,7 +250,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
     @Override
     public void init() {
         Universe.super.init();
-        imperativeTransaction = universeTransaction.addImperative("", this, r -> {
+        imperativeTransaction = universeTransaction.addImperative("MPS", this, r -> {
             if (isRunning()) {
                 invokeLater(r);
             }

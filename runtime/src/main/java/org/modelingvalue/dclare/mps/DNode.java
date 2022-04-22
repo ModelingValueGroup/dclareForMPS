@@ -279,8 +279,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
     public static Observer<DNode> copyObserver(IAspect aspect, DObserved<DNode, ?> observed, TriConsumer<DNode, DNode, DCopy> action) {
         return DCopyObserver.of(observed, t -> {
             for (Construction c : t.dDerivedConstructions()) {
-                if (c.reason() instanceof DCopy && ((DCopy) c.reason()).aspect().equals(aspect) && //
-                        !Newable.D_SUPER_POSITION.get(t).contains(c.reason().direction())) {
+                if (c.reason() instanceof DCopy && ((DCopy) c.reason()).aspect().equals(aspect)) {
                     DCopy reason = (DCopy) c.reason();
                     action.accept(t, reason.copied(), reason.root());
                 }
