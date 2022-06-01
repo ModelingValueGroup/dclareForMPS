@@ -284,7 +284,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
                     action.accept(t, reason.copied(), reason.root());
                 }
             }
-        }, m -> IAspect.DIRECTION.get(aspect));
+        }, IAspect.DIRECTION.get(aspect));
     }
 
     static public class DCopyObserver extends Observer<DNode> {
@@ -1144,11 +1144,6 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
             return concept.getName() + super.toString();
         }
 
-    }
-
-    @Override
-    public Direction dDirection() {
-        return DClareMPS.DIRECTION.get(getConcept().getLanguage());
     }
 
     @Override

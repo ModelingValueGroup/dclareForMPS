@@ -37,7 +37,7 @@ public interface DRule<O> extends DFeature {
 
         @SuppressWarnings("unchecked")
         private DObserver(DRule rule, Priority initPriority) {
-            super(rule, rule::run, m -> IAspect.DIRECTION.get(rule.ruleSet().getAspect()), initPriority);
+            super(rule, rule::run, IAspect.DIRECTION.get(rule.ruleSet().getAspect()), initPriority);
         }
 
         public DRule rule() {
