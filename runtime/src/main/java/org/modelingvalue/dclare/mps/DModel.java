@@ -46,7 +46,9 @@ import jetbrains.mps.persistence.DefaultModelRoot;
 import jetbrains.mps.persistence.ModelCannotBeCreatedException;
 import jetbrains.mps.project.DevKit;
 import jetbrains.mps.project.Solution;
-import jetbrains.mps.smodel.*;
+import jetbrains.mps.smodel.Language;
+import jetbrains.mps.smodel.MPSModuleRepository;
+import jetbrains.mps.smodel.SModelInternal;
 
 @SuppressWarnings("unused")
 public class DModel extends DNewableObject<DModel, SModelReference, SModel> implements SModel {
@@ -137,6 +139,8 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
                                                                                                                 SModel sModel = m.tryOriginal();
                                                                                                                 return sModel != null ? sModel.isLoaded() : Boolean.FALSE;
                                                                                                             }, null, plumbing);
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    private static final DObserved<DModel, Boolean>                                         SHARED           = DObserved.of("SHARED", Boolean.FALSE, (TriFunction) null, synthetic);
 
     private static final Observer<DModel>                                                   REFERENCED_RULE = DObject.observer("$REFERENCED_RULE", o -> {
                                                                                                                 if (o.isActive()) {
@@ -153,19 +157,20 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
                                                                                                                 }
                                                                                                             });
 
-    private static final Observer<DModel>                                                   ACTIVATE_RULE   = DObject.observer("$ACTIVATE_RULE", o -> {
-                                                                                                                if (!o.isExternal() && LOADED.get(o) && !TYPE.get(o).getLanguages().isEmpty()) {
-                                                                                                                    ACTIVE.set(o, Boolean.TRUE);
-                                                                                                                }
-                                                                                                            });
+    private static final Observer<DModel>                                                   ACTIVATE_RULE    = DObject.observer("$ACTIVATE_RULE", o -> {
+                                                                                                                 if (SHARED.get(o) || (!o.isExternal() && LOADED.get(o) && !TYPE.get(o).getLanguages().isEmpty())) {
+                                                                                                                     ACTIVE.set(o, Boolean.TRUE);
+                                                                                                                 }
+                                                                                                             });
+
     @SuppressWarnings("rawtypes")
     protected static final Set<Observer>                                                    OBSERVERS       = DNewableObject.OBSERVERS.addAll(Set.of(ACTIVATE_RULE, REFERENCED_RULE));
 
     @SuppressWarnings("rawtypes")
-    protected static final Set<Setable>                                                     SETABLES        = DNewableObject.SETABLES.addAll(Set.of(NAME, ROOTS, MODEL_ROOT, USED_MODELS, USED_LANGUAGES, USED_DEVKITS, ACTIVE, LOADED));
+    protected static final Set<Setable>                                                     SETABLES         = DNewableObject.SETABLES.addAll(Set.of(NAME, ROOTS, MODEL_ROOT, USED_MODELS, USED_LANGUAGES, USED_DEVKITS, ACTIVE, LOADED, SHARED));
 
-    public static DModel of(SLanguage anonymousLanguage, String anonymousType, Object[] identity, boolean temporal) {
-        return quotationConstruct(anonymousLanguage, anonymousType, identity, //
+    public static DModel of(IRuleSet ruleSet, String anonymousType, Object[] identity, boolean temporal) {
+        return quotationConstruct(ruleSet, anonymousType, identity, //
                 () -> new DModel(new Object[]{DClareMPS.uniqueLong(), temporal, false}));
     }
 
@@ -213,7 +218,7 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
             return true;
         } else {
             SModule sModule = sModel.getModule();
-            return !(sModule instanceof Language ? ((Language) sModule).getAccessoryModels().contains(sModel) : sModule instanceof Solution);
+            return !(sModule instanceof Language || sModule instanceof Solution);
         }
     }
 
@@ -249,7 +254,7 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
         String name = NAME.get(this);
         if (name == null && ref != null) {
             name = ref.getModelName();
-        } else if (name == null || Construction.MatchInfo.of(this, Map.of()).hasUnidentifiedSource()) {
+        } else if (name == null) {
             name = "_" + Long.toString(System.currentTimeMillis(), Character.MAX_RADIX);
         }
         if (isTemporal()) {
@@ -367,6 +372,14 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
 
     public String getNameString() {
         return NAME.get(this);
+    }
+
+    public void shareModel(boolean b) {
+        SHARED.set(this, b);
+    }
+
+    public boolean isShared() {
+        return SHARED.get(this);
     }
 
     @Override

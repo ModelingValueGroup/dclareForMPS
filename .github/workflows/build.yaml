@@ -1,5 +1,5 @@
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-## (C) Copyright 2018-2021 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
+## (C) Copyright 2018-2022 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
 ##                                                                                                                     ~
 ## Licensed under the GNU Lesser General Public License v3.0 (the 'License'). You may not use this file except in      ~
 ## compliance with the License. You may obtain a copy of the License at: https://choosealicense.com/licenses/lgpl-3.0  ~
@@ -27,21 +27,24 @@ jobs:
       JETBRAINS_PUBLISH_TOKEN: "${{secrets.JETBRAINS_PUBLISH_TOKEN}}"
       CI: "true"
     steps:
-      - uses: actions/checkout@v2.4.0
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-java@v2
+      - uses: actions/setup-java@v3
         with:
           java-version: 11
           distribution: zulu
 
       ################################################################################
+      - name: "bootstrap"
+        run: ./gradlew --build-file bootstrap.gradle.kts
+
       - name: "build"
         run: ./gradlew --info --scan
 
       - name: "upload zip"
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: "DclareForMPS.zip"
           path: build/artifacts/DclareForMPS/DclareForMPS.zip

@@ -15,10 +15,7 @@
 
 package org.modelingvalue.dclare.mps;
 
-import org.jetbrains.mps.openapi.module.SModule;
-import org.jetbrains.mps.openapi.module.SModuleReference;
-import org.jetbrains.mps.openapi.module.SRepository;
-import org.jetbrains.mps.openapi.module.SRepositoryListener;
+import org.jetbrains.mps.openapi.module.*;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
 

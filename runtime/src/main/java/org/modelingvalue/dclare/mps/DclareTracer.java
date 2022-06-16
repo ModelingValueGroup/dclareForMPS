@@ -15,22 +15,12 @@
 
 package org.modelingvalue.dclare.mps;
 
-import org.jetbrains.mps.openapi.project.Project;
-import org.modelingvalue.collections.List;
-import org.modelingvalue.dclare.UniverseStatistics;
+public interface DclareTracer {
+	
+	public void onModelActive(DModel m);
+	
+	public void onRuleSetActive(IRuleSet r);
+	
+	public void notifyTraceComponent(DclareTraceComponent c);
 
-public interface EngineStatusHandler {
-    void aspects(List<IAspect> apects, DClareMPS engine);
-
-    void stats(UniverseStatistics stats, DClareMPS engine);
-
-    void on(Project project, DClareMPS engine);
-
-    void commiting(Project project, DClareMPS engine);
-
-    void off(Project project, DClareMPS engine);
-
-    void active(Project project, DClareMPS engine);
-
-    void idle(Project project, DClareMPS engine, Getter getter);
 }

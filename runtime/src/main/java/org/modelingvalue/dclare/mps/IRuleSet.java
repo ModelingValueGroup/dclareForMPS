@@ -18,6 +18,7 @@ package org.modelingvalue.dclare.mps;
 import java.util.List;
 
 import org.jetbrains.mps.openapi.language.SAbstractConcept;
+import org.jetbrains.mps.openapi.language.SLanguage;
 import org.jetbrains.mps.openapi.model.SModel;
 import org.jetbrains.mps.openapi.model.SNode;
 import org.modelingvalue.collections.Set;
@@ -32,7 +33,7 @@ public interface IRuleSet {
 
     List<DAttribute<DRepository, ?>> getRepositoryAttributes();
 
-    List<DAttribute<SStructObject, ?>> getClassAttributes(SStructClass cls);
+    List<DAttribute<SStructObject, ?>> getStructAttributes(SStructClass cls);
 
     List<DRule<SNode>> getNodeRules(SAbstractConcept concept, Set<String> anonymousTypes);
 
@@ -42,10 +43,14 @@ public interface IRuleSet {
 
     List<DRule<DRepository>> getRepositoryRules();
 
-    List<DRule<SStructObject>> getClassRules(SStructClass cls);
+    List<DRule<SStructObject>> getStructRules(SStructClass cls);
 
     List<DAttribute<?, ?>> getAllAttributes();
 
-    List<SStructClass> getAllStructClasses();
+    IAspect getAspect();
+
+    String getAnonymousType();
+
+    SLanguage getLanguage();
 
 }

@@ -15,66 +15,51 @@
 
 package org.modelingvalue.dclare.mps;
 
-import java.util.Arrays;
-import java.util.Objects;
-
-import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.Set;
-import org.modelingvalue.collections.util.Triple;
+import org.modelingvalue.collections.util.TriFunction;
 import org.modelingvalue.dclare.Constant;
+import org.modelingvalue.dclare.Observed;
+import org.modelingvalue.dclare.Observer;
+import org.modelingvalue.dclare.Setable;
 
-@SuppressWarnings("unused")
-public class DStructObject extends DIdentifiedObject implements SStructObject {
+public class DServerMetaData extends DObject {
 
-    private static final Constant<Triple<Set<SLanguage>, SStructClass, Boolean>, DStructClass> CLASS_OBJECT_TYPE = Constant.of("CLASS_OBJECT_TYPE", p -> new DStructClass(p));
 
-    public static DStructObject of(SStructClass cls, Object[] identity) {
-        for (int i = 0; i < identity.length; i++) {
-            Objects.requireNonNull(identity[i]);
-        }
-        identity = Arrays.copyOf(identity, identity.length + 1);
-        identity[identity.length - 1] = cls;
-        return new DStructObject(identity);
-    }
+	protected static final Constant<Boolean, DServerMetaDataType>                       SERVER_METADATA_TYPE      = Constant.of("SERVER_METADATA_TYPE", p -> new DServerMetaDataType(p));
 
-    protected DStructObject(Object[] identity) {
-        super(identity);
-    }
+	protected static final DObserved<DServerMetaData, Set<DModel>>                      SHARED_MODELS             = DObserved.of("SHARED_MODELS", Set.of(), (m,pre,post)->false);
 
-    @Override
-    public boolean isExternal() {
-        return false;
-    }
+	protected static final Observer<DServerMetaData>                                    MODELS_RULE               = DObject.observer("$SHARED_MODELS", o-> {
+																														 Set<DModel> sharedModels = DRepository.MODULES.get(dClareMPS().getRepository()).filter(m -> !m.isExternal()).flatMap(m-> DModule.MODELS.get(m)).filter(m->m.isShared()).toSet();
+																														 SHARED_MODELS.set(o, sharedModels);
+																													 });
 
-    @Override
-    public String toString() {
-        return getSClass() + Arrays.toString(Arrays.copyOf(identity, identity.length - 1));
-    }
+	@SuppressWarnings("rawtypes")
+	protected static final Set<Observer>                                              OBSERVERS                 = DObject.OBSERVERS.add(MODELS_RULE);
 
-    @Override
-    protected DStructClass getType() {
-        DObject parent = dObjectParent();
-        boolean external = parent != null ? TYPE.get(parent).external() : isExternal();
-        return CLASS_OBJECT_TYPE.get(Triple.of(Set.of(getSClass().getLanguage()), getSClass(), external));
-    }
+    @SuppressWarnings("rawtypes")
+    protected static final Set<Setable>                                               SETABLES                  = DObject.SETABLES.addAll(Set.of(SHARED_MODELS));
 
-    @Override
-    public SStructClass getSClass() {
-        return (SStructClass) identity[identity.length - 1];
-    }
 
-    @Override
-    public Object[] getIdentity() {
-        return identity;
-    }
+    public DServerMetaData() {
+	}
 
-    @Override
-    protected void read(DClareMPS dClareMPS) {
-    }
+	@Override
+	protected void read(DClareMPS dClareMPS) {
+		// TODO Auto-generated method stub
 
-    @Override
-    public boolean isDclareOnly() {
-        return true;
-    }
+	}
+
+	@Override
+	protected DObjectType<?> getType() {
+		// TODO Auto-generated method stub
+		return SERVER_METADATA_TYPE.get(true);
+	}
+
+	@Override
+	public boolean isExternal() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
 }

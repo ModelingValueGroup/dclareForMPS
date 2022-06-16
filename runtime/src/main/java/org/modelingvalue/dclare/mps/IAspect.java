@@ -15,22 +15,19 @@
 
 package org.modelingvalue.dclare.mps;
 
-import org.jetbrains.mps.openapi.project.Project;
-import org.modelingvalue.collections.List;
-import org.modelingvalue.dclare.UniverseStatistics;
+import java.util.List;
 
-public interface EngineStatusHandler {
-    void aspects(List<IAspect> apects, DClareMPS engine);
+import org.modelingvalue.dclare.Constant;
+import org.modelingvalue.dclare.Direction;
 
-    void stats(UniverseStatistics stats, DClareMPS engine);
+public interface IAspect {
 
-    void on(Project project, DClareMPS engine);
+    Constant<IAspect, Direction> DIRECTION = Constant.of("DIRECTION", Direction::of);
 
-    void commiting(Project project, DClareMPS engine);
+    String getId();
 
-    void off(Project project, DClareMPS engine);
+    String getName();
 
-    void active(Project project, DClareMPS engine);
+    List<IAspect> getDependencies();
 
-    void idle(Project project, DClareMPS engine, Getter getter);
 }

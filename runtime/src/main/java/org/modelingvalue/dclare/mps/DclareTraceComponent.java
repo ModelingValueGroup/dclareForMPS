@@ -15,22 +15,29 @@
 
 package org.modelingvalue.dclare.mps;
 
-import org.jetbrains.mps.openapi.project.Project;
-import org.modelingvalue.collections.List;
-import org.modelingvalue.dclare.UniverseStatistics;
+import org.jetbrains.mps.openapi.language.SLanguage;
+import org.modelingvalue.collections.Set;
 
-public interface EngineStatusHandler {
-    void aspects(List<IAspect> apects, DClareMPS engine);
+public class DclareTraceComponent {
 
-    void stats(UniverseStatistics stats, DClareMPS engine);
+   private final DclareForMPSEngine engine;
+   private final DClareMPS          universe; 
+   
+   public DclareTraceComponent(DclareForMPSEngine engine, DClareMPS universe) {
+	this.engine = engine;
+	this.universe = universe;
+}
 
-    void on(Project project, DClareMPS engine);
+   public Set<IRuleSet> getRuleSets(SLanguage l) {
+	   return universe.RULE_SETS.get(l);
+   }
+   
+   public Set<DModule> getModules() {
+	   return universe.getOrDerive(()-> {
+		   return DRepository.MODULES.get(universe.getRepository());
+	   });	
+   }
+   
+   
 
-    void commiting(Project project, DClareMPS engine);
-
-    void off(Project project, DClareMPS engine);
-
-    void active(Project project, DClareMPS engine);
-
-    void idle(Project project, DClareMPS engine, Getter getter);
 }

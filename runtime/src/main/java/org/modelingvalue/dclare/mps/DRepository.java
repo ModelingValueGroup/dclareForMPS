@@ -27,12 +27,13 @@ import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.TriConsumer;
 import org.modelingvalue.dclare.*;
 
+import jetbrains.mps.errors.item.IssueKindReportItem;
 import jetbrains.mps.project.ProjectRepository;
 
 @SuppressWarnings("deprecation")
 public class DRepository extends DFromOriginalObject<ProjectRepository> implements SRepository {
 
-    private static final Constant<Set<SLanguage>, DRepositoryType> REPOSITORY_TYPE = Constant.of("REPOSITORY_TYPE", DRepositoryType::new);
+    private static final Constant<Set<SLanguage>, DRepositoryType>        REPOSITORY_TYPE = Constant.of("REPOSITORY_TYPE", DRepositoryType::new);
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     protected static final DObserved<DRepository, Set<DModule>>    MODULES         = DObserved.of("MODULES", Set.of(), r -> {
@@ -42,11 +43,13 @@ public class DRepository extends DFromOriginalObject<ProjectRepository> implemen
     @SuppressWarnings({"rawtypes", "unchecked"})
     protected static final DObserved<DRepository, Set<?>>          EXCEPTIONS      = DObserved.of("EXCEPTIONS", Set.of(), (Function) null, (TriConsumer) null);
 
-    @SuppressWarnings("rawtypes")
-    protected static final Set<Observer>                           OBSERVERS       = DObject.OBSERVERS;
+    protected static final Setable<DRepository, Set<IssueKindReportItem>> ALL_MPS_ISSUES  = Setable.of("$ALL_MPS_ISSUES", Set.of());
 
     @SuppressWarnings("rawtypes")
-    protected static final Set<Setable>                            SETABLES        = DObject.SETABLES.addAll(Set.of(MODULES));
+    protected static final Set<Observer>                                  OBSERVERS       = DObject.OBSERVERS;
+
+    @SuppressWarnings("rawtypes")
+    protected static final Set<Setable>                                   SETABLES        = DObject.SETABLES.addAll(Set.of(MODULES, ALL_MPS_ISSUES));
 
     protected DRepository(ProjectRepository original) {
         super(original);

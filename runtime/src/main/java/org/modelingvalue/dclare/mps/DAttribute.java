@@ -32,10 +32,12 @@ import jetbrains.mps.smodel.adapter.structure.property.InvalidProperty;
 public interface DAttribute<O, T> extends DFeature {
 
     @SuppressWarnings("unchecked")
-    static <C, V> DAttribute<C, V> of(String id, String name, String anonymousType, String ruleSetType, boolean glob, boolean syn, boolean optional, boolean composite, int identifyingNr, Object def, Class<?> cls, SLanguage oppositeLanguage, String opposite, Supplier<SNode> source, Function<C, V> deriver, boolean onlyTemporal) {
-        boolean idAttr = identifyingNr >= 0 && ("StructRuleSet".equals(ruleSetType) || anonymousType != null);
-        SetableModifier[] mods = {synthetic.iff(syn), mandatory.iff(idAttr || (!optional && identifyingNr < 0)), containment.iff(composite), MPSSetableModifier.global.iff(glob)};
-        return idAttr ? new DIdentifyingAttribute(id, name, anonymousType, identifyingNr, cls, source, mods) : deriver != null ? new DConstant(id, name, cls, source, deriver, onlyTemporal, mods) : new DObservedAttribute(id, name, identifyingNr >= 0, def, cls, opposite != null ? () -> of(oppositeLanguage, opposite) : null, source, new InvalidProperty(id.toString(), name), mods);
+    static <C, V> DAttribute<C, V> of(String id, String name, IRuleSet ruleSet, boolean syn, boolean optional, boolean composite, int identifyingNr, boolean isPublic, Object def, Class<?> cls, SLanguage oppositeLanguage, String opposite, Supplier<SNode> source, Function<C, V> deriver, boolean onlyTemporal) {
+        boolean idAttr = identifyingNr >= 0 && (ruleSet == null || ruleSet.getAnonymousType() != null);
+        SetableModifier[] mods = {synthetic.iff(syn), mandatory.iff(idAttr || (!optional && identifyingNr < 0)), containment.iff(composite)};
+        return idAttr ? new DIdentifyingAttribute(id, name, ruleSet, identifyingNr, cls, source, mods) : //
+                deriver != null ? new DConstant(id, name, ruleSet, cls, source, deriver, onlyTemporal, mods) : //
+                        new DObservedAttribute(id, name, ruleSet, identifyingNr >= 0, isPublic, def, cls, opposite != null ? () -> of(oppositeLanguage, opposite) : null, source, mods);
     }
 
     @SuppressWarnings("unchecked")
@@ -80,23 +82,33 @@ public interface DAttribute<O, T> extends DFeature {
         private final Class<?>  cls;
         private final SProperty sProperty;
         private final boolean   indetifying;
-        private final boolean   global;
+        private final IRuleSet  ruleSet;
 
-        public DObservedAttribute(Object id, String name, boolean indetifying, V def, Class<?> cls, Supplier<Setable<?, ?>> opposite, Supplier<SNode> source, SProperty sProperty, SetableModifier... modifiers) {
+        public DObservedAttribute(Object id, String name, IRuleSet ruleSet, boolean indetifying, boolean isPublic, V def, Class<?> cls, Supplier<Setable<?, ?>> opposite, Supplier<SNode> source, SetableModifier... modifiers) {
             super(id, def, opposite, null, source, modifiers);
+            SProperty sProperty = new InvalidProperty(id.toString(), name);
+            if (isPublic) {
+                setFromToMPS(null, (o, b, a) -> {
+                    if (o instanceof DNode && !Objects.equals(b, a)) {
+                        SNode sNode = ((DNode) o).tryOriginal();
+                        SModel sModel = sNode != null ? sNode.getModel() : null;
+                        if (sNode != null && sModel instanceof EditableSModel) {
+                            boolean changed = ((EditableSModel) sModel).isChanged();
+                            sNode.setProperty(sProperty, "");
+                            sNode.setProperty(sProperty, null);
+                            ((EditableSModel) sModel).setChanged(changed);
+                            // System.err.println("!!!!!!!!!!! CHANGED !!!!!!!!! node=" + sNode + ", attribute=" + name + "#" + id);
+                            return true;
+                        }
+                    }
+                    return false;
+                });
+            }
             this.name = name;
             this.cls = cls;
             this.sProperty = sProperty;
             this.indetifying = indetifying;
-            this.global = MPSSetableModifier.global.in(modifiers);
-            setFromToMPS(null, global ? (o, b, a) -> {
-                SNode sNode = ((DNode) o).original();
-                SModel sModel = sNode.getModel();
-                boolean changed = ((EditableSModel) sModel).isChanged();
-                sNode.setProperty(sProperty, "");
-                sNode.setProperty(sProperty, null);
-                ((EditableSModel) sModel).setChanged(changed);
-            } : null);
+            this.ruleSet = ruleSet;
         }
 
         @Override
@@ -131,10 +143,13 @@ public interface DAttribute<O, T> extends DFeature {
         @Override
         public V get(C object) {
             LeafTransaction tx = LeafTransaction.getCurrent();
-            if (object instanceof DNode && tx instanceof ReadOnlyTransaction && !(tx instanceof DerivationTransaction)) {
-                SNode original = ((DNode) object).tryOriginal();
-                if (original != null) {
-                    original.getProperty(sProperty);
+            if (object instanceof DNode && tx instanceof ReadOnlyTransaction && DClareMPS.instance(tx).isRunningRead()) {
+                if (!(tx instanceof DerivationTransaction) || !((DerivationTransaction) tx).isDeriving()) {
+                    SNode sNode = ((DNode) object).tryOriginal();
+                    if (sNode != null) {
+                        // System.err.println("!!!!!!! READ !!!!!!!!! node=" + sNode + ", attribute=" + name + "#" + id + ", thread=" + Thread.currentThread() + ", transaction=" + tx.universeTransaction());
+                        sNode.getProperty(sProperty);
+                    }
                 }
             }
             if (tx instanceof DerivationTransaction || object.isActive()) {
@@ -171,27 +186,32 @@ public interface DAttribute<O, T> extends DFeature {
             return cls;
         }
 
+        @Override
+        public IRuleSet ruleSet() {
+            return ruleSet;
+        }
+
     }
 
     final class DIdentifyingAttribute<C extends DIdentifiedObject, V> implements DAttribute<C, V> {
         private final String          id;
         private final String          name;
-        private final String          anonymousType;
         private final boolean         composite;
         private final int             index;
         private final boolean         synthetic;
         private final Supplier<SNode> source;
         private final Class<?>        cls;
+        private final IRuleSet        ruleSet;
 
-        public DIdentifyingAttribute(String id, String name, String anonymousType, int index, Class<?> cls, Supplier<SNode> source, SetableModifier... modifiers) {
+        public DIdentifyingAttribute(String id, String name, IRuleSet ruleSet, int index, Class<?> cls, Supplier<SNode> source, SetableModifier... modifiers) {
             this.id = id;
             this.name = name;
-            this.anonymousType = anonymousType;
             this.composite = containment.in(modifiers);
             this.index = index;
             this.synthetic = CoreSetableModifier.synthetic.in(modifiers);
             this.source = source;
             this.cls = cls;
+            this.ruleSet = ruleSet;
         }
 
         @Override
@@ -207,10 +227,6 @@ public interface DAttribute<O, T> extends DFeature {
         @Override
         public String id() {
             return id;
-        }
-
-        public String anonymousType() {
-            return anonymousType;
         }
 
         @Override
@@ -289,6 +305,15 @@ public interface DAttribute<O, T> extends DFeature {
             return cls;
         }
 
+        @Override
+        public IRuleSet ruleSet() {
+            return ruleSet;
+        }
+
+        public String anonymousType() {
+            return ruleSet != null ? ruleSet.getAnonymousType() : null;
+        }
+
     }
 
     class DConstant<C extends DObject, V> extends Constant<C, V> implements DAttribute<C, V> {
@@ -297,13 +322,15 @@ public interface DAttribute<O, T> extends DFeature {
         private final Supplier<SNode> source;
         private final Class<?>        cls;
         private final boolean         onlyTemporal;
+        private final IRuleSet        ruleSet;
 
-        public DConstant(Object id, String name, Class<?> cls, Supplier<SNode> source, Function<C, V> deriver, boolean onlyTemporal, SetableModifier... modifiers) {
+        public DConstant(Object id, String name, IRuleSet ruleSet, Class<?> cls, Supplier<SNode> source, Function<C, V> deriver, boolean onlyTemporal, SetableModifier... modifiers) {
             super(id, null, null, null, deriver, null, modifiers);
             this.name = name;
             this.source = source;
             this.cls = cls;
             this.onlyTemporal = onlyTemporal;
+            this.ruleSet = ruleSet;
         }
 
         @Override
@@ -364,6 +391,11 @@ public interface DAttribute<O, T> extends DFeature {
         @Override
         public Class<?> cls() {
             return cls;
+        }
+
+        @Override
+        public IRuleSet ruleSet() {
+            return ruleSet;
         }
 
     }

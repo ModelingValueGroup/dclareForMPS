@@ -13,24 +13,15 @@
 //     Arjan Kok, Carel Bast                                                                                           ~
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-package org.modelingvalue.dclare.mps;
-
-import org.jetbrains.mps.openapi.project.Project;
-import org.modelingvalue.collections.List;
-import org.modelingvalue.dclare.UniverseStatistics;
-
-public interface EngineStatusHandler {
-    void aspects(List<IAspect> apects, DClareMPS engine);
-
-    void stats(UniverseStatistics stats, DClareMPS engine);
-
-    void on(Project project, DClareMPS engine);
-
-    void commiting(Project project, DClareMPS engine);
-
-    void off(Project project, DClareMPS engine);
-
-    void active(Project project, DClareMPS engine);
-
-    void idle(Project project, DClareMPS engine, Getter getter);
+defaultTasks(
+    "download-MPS",
+)
+plugins {
+    id("org.modelingvalue.gradle.mvgplugin") version "1.1.3"
+}
+tasks.register<DefaultTask>("download-MPS") {
+    group = "modelingvaluegroup"
+    doLast {
+        org.modelingvalue.gradle.mvgplugin.MvgPlugin.singleton.resolveMpsDependency("mps-boot")
+    }
 }

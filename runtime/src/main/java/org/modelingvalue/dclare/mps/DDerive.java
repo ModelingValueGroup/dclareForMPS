@@ -17,6 +17,7 @@ package org.modelingvalue.dclare.mps;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.dclare.Construction;
+import org.modelingvalue.dclare.Direction;
 import org.modelingvalue.dclare.Mutable;
 
 public abstract class DDerive extends Construction.Reason {
@@ -25,8 +26,21 @@ public abstract class DDerive extends Construction.Reason {
         super(thiz, identity);
     }
 
-    public abstract String getAnonymousType();
+    public abstract String anonymousType();
 
-    public abstract SLanguage getAnonymousLanguage();
+    public abstract IRuleSet ruleSet();
+
+    @Override
+    public Direction direction() {
+        return IAspect.DIRECTION.get(ruleSet().getAspect());
+    }
+
+    public SLanguage language() {
+        return ruleSet().getLanguage();
+    }
+
+    public IAspect aspect() {
+        return ruleSet().getAspect();
+    }
 
 }

@@ -13,16 +13,14 @@
 //     Arjan Kok, Carel Bast                                                                                           ~
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-val libDir: java.nio.file.Path = rootProject.projectDir.toPath().resolve("solutions/DclareMPSRuntime/lib")
-
 plugins {
     `java-library`
     `maven-publish`
 }
 dependencies {
-    implementation("org.modelingvalue:mvg-json:1.6.1-BRANCHED")
-    implementation("org.modelingvalue:immutable-collections:1.6.1-BRANCHED")
-    implementation("org.modelingvalue:dclare:1.6.1-BRANCHED")
+    implementation("org.modelingvalue:mvg-json:1.7.0-BRANCHED")
+    implementation("org.modelingvalue:immutable-collections:1.7.0-BRANCHED")
+    implementation("org.modelingvalue:dclare:1.7.0-BRANCHED")
 
     compileOnly(mpsJar("mps-closures"))
     compileOnly(mpsJar("mps-core"))
@@ -32,6 +30,7 @@ dependencies {
     compileOnly(mpsJar("mps-project-check"))
     compileOnly(mpsJar("platform-api"))
     compileOnly(mpsJar("util"))
+    compileOnly(mpsJar("mps-behavior-runtime"))
 }
 publishing {
     publications {
@@ -40,8 +39,12 @@ publishing {
         }
     }
 }
-tasks.register<Copy>("gatherRuntimeJars") {
-    group = "mvg"
+
+///////////////////////////////////////////////////////////////////////////////////////////////
+// gather jars:
+val libDir = rootProject.projectDir.toPath().resolve("solutions/DclareMPSRuntime/lib")
+val gatherTask = tasks.register<Copy>("gatherRuntimeJars") {
+    group = "+++gather"
     into(libDir)
     from(
         tasks["jar"].outputs,
@@ -50,17 +53,19 @@ tasks.register<Copy>("gatherRuntimeJars") {
     )
     rename {
         it
-            .replaceFirst(Regex("[a-zA-Z_]*-[0-9a-z]*-SNAPSHOT[.]jar"), ".jar")
+            .replaceFirst(Regex("[a-zA-Z_]*-[0-9a-z]*-SNAPSHOT[.]jar"), ".jar") // for backwards compat.... remove later
+            .replaceFirst(Regex("[0-9a-zA-Z_]*-[0-9a-zA-Z_]*-[0-9a-zA-Z_]*-SNAPSHOT[.]jar"), ".jar")
             .replaceFirst(Regex("-[0-9.]*[.]jar"), ".jar")
     }
-    tasks.findByName("jar")?.finalizedBy(this)
-    tasks.findByName("publish")?.finalizedBy(this)
     eachFile {
-        println(String.format("   - GATHER %s\n         => %s/%s", file, destinationDir, relativePath))
+        println(String.format("   - GATHER %s", relativePath))
+    }
+    doLast {
+        println(String.format("   - TO     %s", destinationDir))
     }
 }
+tasks.getByName("assemble").finalizedBy(gatherTask)
+tasks.getByName("publish").finalizedBy(gatherTask)
 tasks.getByName<Delete>("clean") {
     delete.add(libDir)
 }
-
-task("createJar").outputs.files.forEach { System.err.println("TOMTOMTOM $it") }

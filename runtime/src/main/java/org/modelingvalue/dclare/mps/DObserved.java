@@ -203,6 +203,11 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
         return toMPS == null;
     }
 
+    @Override
+    public IRuleSet ruleSet() {
+        return null;
+    }
+
     public static class ReadAction<O extends DObject> extends Action<O> {
 
         protected ReadAction(Object id, Consumer<O> action, Priority initPriority) {

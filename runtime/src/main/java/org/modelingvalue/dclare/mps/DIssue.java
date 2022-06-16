@@ -15,8 +15,12 @@
 
 package org.modelingvalue.dclare.mps;
 
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import org.jetbrains.mps.openapi.model.SModel;
+import org.jetbrains.mps.openapi.model.SNode;
+import org.jetbrains.mps.openapi.module.SModule;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.dclare.*;
 import org.modelingvalue.dclare.mps.DRule.DObserver;
@@ -40,7 +44,7 @@ public class DIssue extends DIdentifiedObject {
 
     private static final Observer<DIssue>                 MESSAGE_RULE     = DObject.observer(MESSAGE, o -> o.message.get());
 
-    public static final Setable<DIssue, DObject>          DOBJECT          = Setable.of("$DOBJECT", null, () -> DObject.DCLARE_ISSUES);
+    public static final Setable<DIssue, DObject>          DOBJECT          = Setable.of("$DOBJECT", null);
 
     private static final Observer<DIssue>                 DOBJECT_RULE     = DObject.observer(DOBJECT, o -> o.dObject.get());
 
@@ -106,14 +110,23 @@ public class DIssue extends DIdentifiedObject {
         return MESSAGE.get(this);
     }
 
-    public IssueKindReportItem getItem() {
+    public void getItem(Consumer<IssueKindReportItem> consumer) {
         DObject o = getObject();
         if (o instanceof DModule) {
-            return new DIssueModuleReportItem(getSeverity(), ((DModule) o).original(), getMessage(), ruleId());
+            SModule original = ((DModule) o).original();
+            if (original != null) {
+                consumer.accept(new DIssueModuleReportItem(getSeverity(), original, getMessage(), ruleId()));
+            }
         } else if (o instanceof DModel) {
-            return new DIssueModelReportItem(getSeverity(), ((DModel) o).original(), getMessage(), ruleId());
-        } else {
-            return new DIssueNodeReportItem(getSeverity(), ((DNode) o).original(), getFeature(), getMessage(), ruleId());
+            SModel original = ((DModel) o).tryOriginal();
+            if (original != null) {
+                consumer.accept(new DIssueModelReportItem(getSeverity(), original, getMessage(), ruleId()));
+            }
+        } else if (o instanceof DNode) {
+            SNode original = ((DNode) o).tryOriginal();
+            if (original != null) {
+                consumer.accept(new DIssueNodeReportItem(getSeverity(), original, getFeature(), getMessage(), ruleId()));
+            }
         }
     }
 

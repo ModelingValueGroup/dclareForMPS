@@ -15,22 +15,46 @@
 
 package org.modelingvalue.dclare.mps;
 
-import org.jetbrains.mps.openapi.project.Project;
-import org.modelingvalue.collections.List;
-import org.modelingvalue.dclare.UniverseStatistics;
+import org.modelingvalue.collections.Collection;
+import org.modelingvalue.collections.Set;
+import org.modelingvalue.dclare.Observer;
+import org.modelingvalue.dclare.Setable;
 
-public interface EngineStatusHandler {
-    void aspects(List<IAspect> apects, DClareMPS engine);
+public class DServerMetaDataType extends DObjectType<Boolean> {
 
-    void stats(UniverseStatistics stats, DClareMPS engine);
+	protected DServerMetaDataType(Boolean s) {
+		super(s);
+	}
 
-    void on(Project project, DClareMPS engine);
+	@Override
+	public Set getRules(Set ruleSets) {
+		return Set.of();
+	}
 
-    void commiting(Project project, DClareMPS engine);
+	@Override
+	public Set getAttributes(Set ruleSets) {
+		return Set.of();
+	}
 
-    void off(Project project, DClareMPS engine);
+	@Override
+	public Set getLanguages() {
+		return Set.of();
+	}
 
-    void active(Project project, DClareMPS engine);
+	@Override
+	public boolean external() {
+		return false;
+	}
 
-    void idle(Project project, DClareMPS engine, Getter getter);
+	@SuppressWarnings("rawtypes")
+	@Override
+	protected Collection<Observer> observers() {
+		return DServerMetaData.OBSERVERS;
+	}
+
+	@SuppressWarnings("rawtypes")
+	@Override
+	public Collection<Setable> setables() {
+		return DServerMetaData.SETABLES;
+	}
 }

@@ -25,9 +25,9 @@ import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.Setable;
 
 @SuppressWarnings("unused")
-public class DNodeType extends DObjectType<Quintuple<Set<SLanguage>, SConcept, Set<String>, Boolean, SLanguage>> {
+public class DNodeType extends DObjectType<Quintuple<Set<SLanguage>, SConcept, Set<String>, Boolean, IAspect>> {
 
-    public DNodeType(Quintuple<Set<SLanguage>, SConcept, Set<String>, Boolean, SLanguage> q) {
+    public DNodeType(Quintuple<Set<SLanguage>, SConcept, Set<String>, Boolean, IAspect> q) {
         super(q);
     }
 
@@ -61,7 +61,7 @@ public class DNodeType extends DObjectType<Quintuple<Set<SLanguage>, SConcept, S
         return id().c();
     }
 
-    public SLanguage copyAnonymousLanguage() {
+    public IAspect copyAspect() {
         return id().e();
     }
 
@@ -75,8 +75,8 @@ public class DNodeType extends DObjectType<Quintuple<Set<SLanguage>, SConcept, S
     @Override
     protected Collection<Observer> observers() {
         Set<Observer> conceptObservers = DNode.OBSERVERS.addAll(DNode.CONCEPT_OBSERVERS.get(getConcept()));
-        SLanguage copyLang = copyAnonymousLanguage();
-        return copyLang != null ? conceptObservers.addAll(DNode.COPY_CONCEPT_OBSERVERS.get(Pair.of(getConcept(), copyLang))) : conceptObservers;
+        IAspect aspect = copyAspect();
+        return aspect != null ? conceptObservers.addAll(DNode.COPY_CONCEPT_OBSERVERS.get(Pair.of(getConcept(), aspect))) : conceptObservers;
     }
 
 }
