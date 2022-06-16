@@ -16,50 +16,47 @@
 package org.modelingvalue.dclare.mps;
 
 import org.modelingvalue.collections.Set;
-import org.modelingvalue.collections.util.TriFunction;
 import org.modelingvalue.dclare.Constant;
-import org.modelingvalue.dclare.Observed;
 import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.Setable;
 
 public class DServerMetaData extends DObject {
 
+    protected static final Constant<Boolean, DServerMetaDataType>  SERVER_METADATA_TYPE = Constant.of("SERVER_METADATA_TYPE", p -> new DServerMetaDataType(p));
 
-	protected static final Constant<Boolean, DServerMetaDataType>                       SERVER_METADATA_TYPE      = Constant.of("SERVER_METADATA_TYPE", p -> new DServerMetaDataType(p));
+    protected static final DObserved<DServerMetaData, Set<DModel>> SHARED_MODELS        = DObserved.of("SHARED_MODELS", Set.of(), null, (m, pre, post) -> {
+                                                                                        });
 
-	protected static final DObserved<DServerMetaData, Set<DModel>>                      SHARED_MODELS             = DObserved.of("SHARED_MODELS", Set.of(), (m,pre,post)->false);
-
-	protected static final Observer<DServerMetaData>                                    MODELS_RULE               = DObject.observer("$SHARED_MODELS", o-> {
-																														 Set<DModel> sharedModels = DRepository.MODULES.get(dClareMPS().getRepository()).filter(m -> !m.isExternal()).flatMap(m-> DModule.MODELS.get(m)).filter(m->m.isShared()).toSet();
-																														 SHARED_MODELS.set(o, sharedModels);
-																													 });
-
-	@SuppressWarnings("rawtypes")
-	protected static final Set<Observer>                                              OBSERVERS                 = DObject.OBSERVERS.add(MODELS_RULE);
+    protected static final Observer<DServerMetaData>               MODELS_RULE          = DObject.observer("$SHARED_MODELS", o -> {
+                                                                                            Set<DModel> sharedModels = DRepository.MODULES.get(dClareMPS().getRepository()).filter(m -> !m.isExternal()).flatMap(m -> DModule.MODELS.get(m)).filter(m -> m.isShared()).toSet();
+                                                                                            SHARED_MODELS.set(o, sharedModels);
+                                                                                        });
 
     @SuppressWarnings("rawtypes")
-    protected static final Set<Setable>                                               SETABLES                  = DObject.SETABLES.addAll(Set.of(SHARED_MODELS));
+    protected static final Set<Observer>                           OBSERVERS            = DObject.OBSERVERS.add(MODELS_RULE);
 
+    @SuppressWarnings("rawtypes")
+    protected static final Set<Setable>                            SETABLES             = DObject.SETABLES.addAll(Set.of(SHARED_MODELS));
 
     public DServerMetaData() {
-	}
+    }
 
-	@Override
-	protected void read(DClareMPS dClareMPS) {
-		// TODO Auto-generated method stub
+    @Override
+    protected void read(DClareMPS dClareMPS) {
+        // TODO Auto-generated method stub
 
-	}
+    }
 
-	@Override
-	protected DObjectType<?> getType() {
-		// TODO Auto-generated method stub
-		return SERVER_METADATA_TYPE.get(true);
-	}
+    @Override
+    protected DObjectType<?> getType() {
+        // TODO Auto-generated method stub
+        return SERVER_METADATA_TYPE.get(true);
+    }
 
-	@Override
-	public boolean isExternal() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    @Override
+    public boolean isExternal() {
+        // TODO Auto-generated method stub
+        return false;
+    }
 
 }

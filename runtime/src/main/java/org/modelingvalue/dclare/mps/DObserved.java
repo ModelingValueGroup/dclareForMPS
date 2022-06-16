@@ -16,13 +16,26 @@
 package org.modelingvalue.dclare.mps;
 
 import java.time.Instant;
-import java.util.Objects;
-import java.util.function.*;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 import org.jetbrains.mps.openapi.model.SNode;
-import org.modelingvalue.collections.*;
-import org.modelingvalue.collections.util.*;
-import org.modelingvalue.dclare.*;
+import org.modelingvalue.collections.Entry;
+import org.modelingvalue.collections.List;
+import org.modelingvalue.collections.Map;
+import org.modelingvalue.collections.Set;
+import org.modelingvalue.collections.util.Pair;
+import org.modelingvalue.collections.util.QuadConsumer;
+import org.modelingvalue.collections.util.TriConsumer;
+import org.modelingvalue.dclare.Action;
+import org.modelingvalue.dclare.DerivationTransaction;
+import org.modelingvalue.dclare.LeafTransaction;
+import org.modelingvalue.dclare.Observed;
+import org.modelingvalue.dclare.Priority;
+import org.modelingvalue.dclare.Setable;
+import org.modelingvalue.dclare.SetableModifier;
 import org.modelingvalue.dclare.ex.ThrowableError;
 
 @SuppressWarnings("unused")
@@ -121,19 +134,6 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
             return fromMPS(object);
         } else {
             return super.get(object);
-        }
-    }
-
-    @Override
-    protected void changed(LeafTransaction tx, O dObject, T preVal, T postVal) {
-        super.changed(tx, dObject, preVal, postVal);
-        if (!isDclareOnly() && !(tx.leaf() instanceof ReadAction)) {
-            DClareMPS dclareMPS = DClareMPS.instance(tx);
-            if (this == DObject.DCLARE_ISSUES || !Objects.equals(read(dObject, preVal, postVal), postVal)) {
-                dclareMPS.addChangedObject(dObject);
-            } else {
-                dclareMPS.removeChangedObject(dObject);
-            }
         }
     }
 

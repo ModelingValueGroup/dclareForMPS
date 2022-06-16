@@ -18,11 +18,16 @@ package org.modelingvalue.dclare.mps;
 import static org.modelingvalue.dclare.CoreSetableModifier.*;
 
 import java.util.Collections;
-import java.util.function.*;
+import java.util.Objects;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.jetbrains.mps.openapi.language.SProperty;
-import org.jetbrains.mps.openapi.model.*;
+import org.jetbrains.mps.openapi.model.EditableSModel;
+import org.jetbrains.mps.openapi.model.SModel;
+import org.jetbrains.mps.openapi.model.SNode;
 import org.modelingvalue.collections.ContainingCollection;
 import org.modelingvalue.dclare.*;
 
@@ -98,10 +103,8 @@ public interface DAttribute<O, T> extends DFeature {
                             sNode.setProperty(sProperty, null);
                             ((EditableSModel) sModel).setChanged(changed);
                             // System.err.println("!!!!!!!!!!! CHANGED !!!!!!!!! node=" + sNode + ", attribute=" + name + "#" + id);
-                            return true;
                         }
                     }
-                    return false;
                 });
             }
             this.name = name;
@@ -134,10 +137,6 @@ public interface DAttribute<O, T> extends DFeature {
         @Override
         public boolean isMandatory() {
             return mandatory();
-        }
-
-        public boolean isGlobal() {
-            return global;
         }
 
         @Override

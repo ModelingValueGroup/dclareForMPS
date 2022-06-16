@@ -22,13 +22,24 @@ import java.util.HashSet;
 import java.util.stream.Collectors;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
-import org.jetbrains.mps.openapi.model.*;
-import org.jetbrains.mps.openapi.module.*;
+import org.jetbrains.mps.openapi.model.EditableSModel;
+import org.jetbrains.mps.openapi.model.SModel;
+import org.jetbrains.mps.openapi.model.SModelId;
+import org.jetbrains.mps.openapi.module.SDependency;
+import org.jetbrains.mps.openapi.module.SModule;
+import org.jetbrains.mps.openapi.module.SModuleFacet;
+import org.jetbrains.mps.openapi.module.SModuleId;
+import org.jetbrains.mps.openapi.module.SModuleListener;
+import org.jetbrains.mps.openapi.module.SModuleReference;
+import org.jetbrains.mps.openapi.module.SRepository;
 import org.jetbrains.mps.openapi.persistence.ModelRoot;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
-import org.modelingvalue.dclare.*;
+import org.modelingvalue.dclare.Constant;
+import org.modelingvalue.dclare.Observed;
+import org.modelingvalue.dclare.Observer;
+import org.modelingvalue.dclare.Setable;
 
 import jetbrains.mps.errors.item.ModuleReportItem;
 import jetbrains.mps.model.ModelDeleteHelper;
@@ -47,8 +58,8 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
                                                                                                  return m.models().sequential().map(DModel::of).toSet();
                                                                                              }, (m, pre, post) -> {
                                                                                                  if (m.isSolution()) {
-                                                                                                     Setable.<Set<DModel>, DModel> diff(pre, post,                          //
-                                                                                                             DNewableObject::original,                                      //
+                                                                                                     Setable.<Set<DModel>, DModel> diff(pre, post,                                         //
+                                                                                                             DNewableObject::original,                                                     //
                                                                                                              r -> new ModelDeleteHelper(r.tryOriginal()).delete());
                                                                                                  }
                                                                                              }, containment);
@@ -85,6 +96,10 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
         return dClareMPS().project.getPath(original()) == null;
     }
 
+    protected static Set<SLanguage> languages(SModule module) {
+        return Collection.of(module.getUsedLanguages()).sequential().toSet();
+    }
+
     @Override
     protected DModuleType getType() {
         Set<SLanguage> languages = LANGUAGES.get(this).filter(l -> !DClareMPS.RULE_SETS.get(l).isEmpty()).toSet();
@@ -95,18 +110,12 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
     protected void init(DClareMPS dClareMPS) {
         super.init(dClareMPS);
         original().addModuleListener(new DModuleListener(this, dClareMPS));
-        if (!isExternal() && isSolution()) {
-            dClareMPS.addToCheckObject(this);
-        }
     }
 
     @Override
     protected void exit(DClareMPS dClareMPS) {
         super.exit(dClareMPS);
         original().removeModuleListener(new DModuleListener(this, dClareMPS));
-        if (!isExternal() && isSolution()) {
-            dClareMPS.removeToCheckObject(this);
-        }
     }
 
     @Override

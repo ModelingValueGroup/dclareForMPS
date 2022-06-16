@@ -21,8 +21,8 @@ import static org.modelingvalue.dclare.mps.DclareForMPSEngine.ALL_DCLARE_MPS;
 
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.Collections;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Supplier;
@@ -38,8 +38,6 @@ import org.jetbrains.mps.openapi.module.SModule;
 import org.jetbrains.mps.openapi.module.SRepository;
 import org.jetbrains.mps.openapi.util.Consumer;
 import org.jetbrains.mps.openapi.util.ProgressMonitor;
-import org.modelingvalue.collections.*;
-import org.modelingvalue.collections.util.*;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.DefaultMap;
 import org.modelingvalue.collections.Entry;
@@ -163,12 +161,9 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
     private LanguageEditorChecker                                                                       languageEditorChecker;
     private IAbstractChecker<ItemsToCheck, IssueKindReportItem>                                         mpsChecker;
     private SyncConnectionHandler                                                                       syncConnectionHandler;
-    @SuppressWarnings("rawtypes")
-    private Concurrent<Set<DObject>>                                                                    changedObjects;
-    private Concurrent<Set<SModel>>                                                                     modelsToCheck;
-    private Concurrent<Set<SModule>>                                                                    modulesToCheck;
-    private Concurrent<Set<SNode>>                                                                      rootsToCheck;
-    private Triple<Set<SModel>, Set<SNode>, Set<SModule>>                                               toCheck;
+    private Concurrent<Set<SModel>>                                                                     changedModels;
+    private Concurrent<Set<SModule>>                                                                    changedModules;
+    private Concurrent<Set<SNode>>                                                                      changedRoots;
 
     protected DClareMPS(DclareForMPSEngine engine, ProjectBase project, DclareForMpsConfig config) {
         this.config = config;
@@ -283,15 +278,13 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
         if (config.isTraceDclare()) {
             System.err.println(DCLARE + "START " + this);
         }
-        changedObjects = Concurrent.of(Set.of());
-        modelsToCheck = Concurrent.of(Set.of());
-        modulesToCheck = Concurrent.of(Set.of());
-        rootsToCheck = Concurrent.of(Set.of());
-        toCheck = Triple.of(Set.of(), Set.of(), Set.of());
+        changedModels = Concurrent.of(Set.of());
+        changedModules = Concurrent.of(Set.of());
+        changedRoots = Concurrent.of(Set.of());
         moduleChecker = new ModuleChecker();
         modelChecker = new ModelChecker();
         nodeChecker = new NodeChecker();
-        languageEditorChecker = new LanguageEditorChecker(dRepository.original(), java.util.Collections.singletonList(new NodeCheckerInEditor()));
+        languageEditorChecker = new LanguageEditorChecker(dRepository.original(), Collections.singletonList(new NodeCheckerInEditor()));
         CheckerRegistry checkerRegistry = project.getPlatform().findComponent(CheckerRegistry.class);
         assert checkerRegistry != null;
         checkerRegistry.registerChecker(moduleChecker);
@@ -576,50 +569,6 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
         return instance().counter.getAndIncrement();
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    protected void addChangedObject(DObject dObject) {
-        changedObjects.change(c -> c.add(dObject));
-    }
-
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    protected void removeChangedObject(DObject dObject) {
-        changedObjects.change(c -> c.remove(dObject));
-    }
-
-    protected void addToCheckObject(DObject dObject) {
-        if (dObject instanceof DModel) {
-            SModel sModel = ((DModel) dObject).tryOriginal();
-            if (sModel != null) {
-                modelsToCheck.change(c -> c.add(sModel));
-            }
-        } else if (dObject instanceof DNode) {
-            SNode root = ((DNode) dObject).tryOriginal();
-            if (root != null) {
-                rootsToCheck.change(c -> c.add(root));
-            }
-        } else if (dObject instanceof DModule) {
-            SModule sModule = ((DModule) dObject).original();
-            modulesToCheck.change(c -> c.add(sModule));
-        }
-    }
-
-    protected void removeToCheckObject(DObject dObject) {
-        if (dObject instanceof DModel) {
-            SModel sModel = ((DModel) dObject).tryOriginal();
-            if (sModel != null) {
-                modelsToCheck.change(c -> c.remove(sModel));
-            }
-        } else if (dObject instanceof DNode) {
-            SNode root = ((DNode) dObject).tryOriginal();
-            if (root != null) {
-                rootsToCheck.change(c -> c.remove(root));
-            }
-        } else if (dObject instanceof DModule) {
-            SModule sModule = ((DModule) dObject).original();
-            modulesToCheck.change(c -> c.remove(sModule));
-        }
-    }
-
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     public void handleDelta(State pre, State post, boolean last, DefaultMap<Object, Set<Setable>> setted) {
@@ -634,19 +583,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
                     modelAccess.executeUndoTransparentCommand(() -> {
                         diff.forEachOrdered(e0 -> {
                             DObject dObject = (DObject) e0.getKey();
-                            boolean changed = false;
-                            DefaultMap<Setable, Object> before = e0.getValue().a();
-                            DefaultMap<Setable, Object> after = e0.getValue().b();
-                            for (DObserved observed : dObject.dClass().dObserveds()) {
-                                if (observed instanceof DObservedAttribute || !dObject.isExternal()) {
-                                    if (observed.toMPS(dObject, before.get(observed), after.get(observed))) {
-                                        changed = true;
-                                        if (TRACE_MPS_MODEL_CHANGES && !(observed instanceof DObservedAttribute)) {
-                                            System.err.println(DCLARE + "    MPS MODEL CHANGE: " + dObject + "." + observed + " = " + after.get(observed));
-                                        }
-                                    }
-                                }
-                            }
+                            boolean changed = toMPS(dObject, e0.getValue().a(), e0.getValue().b());
                             if (!dObject.isExternal() && (changed || (post.get(dObject, Mutable.D_PARENT_CONTAINING) != null && //
                                     pre.get(dObject, Mutable.D_PARENT_CONTAINING) == null))) {
                                 addToChanged(dObject);
@@ -666,55 +603,6 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
                 }
             } finally {
                 committing.set(false);
-                if (config.isTraceDclare()) {
-                    System.err.println(DCLARE + "    END COMMIT " + this);
-                }
-            }
-        }
-    }
-
-    private void addToChanged(DObject dObject) {
-        if (dObject instanceof DModel) {
-            SModel sModel = ((DModel) dObject).tryOriginal();
-            if (sModel != null) {
-                changedModels.change(s -> s.add(sModel));
-            }
-        } else if (dObject instanceof DNode) {
-            SNode original = ((DNode) dObject).tryOriginal();
-            SNode root = original != null ? original.getContainingRoot() : null;
-            if (root != null) {
-                changedRoots.change(s -> s.add(root));
-            }
-        } else if (dObject instanceof DModule) {
-            changedModules.change(s -> s.add(((DModule) dObject).original()));
-                toCheck = Triple.of(toCheck.a().addAll(changes.b()), toCheck.b().addAll(changes.c()), toCheck.c().addAll(changes.d()));
-                dclr.run(() -> changes.a().forEachOrdered(dObject -> {
-                    if (!dObject.isDclareOnly() && dObject.isActive()) {
-                        DefaultMap<Setable, Object> post = dclr.getProperties(dObject);
-                        DefaultMap<Setable, Object> pre = impr.getProperties(dObject);
-                        if (toMPS(dObject, pre, post)) {
-                            if (dObject instanceof DModel) {
-                                SModel sModel = ((DModel) dObject).original();
-                                toCheck = Triple.of(toCheck.a().add(sModel), toCheck.b(), toCheck.c());
-                            } else if (dObject instanceof DNode) {
-                                SNode sNode = ((DNode) dObject).original();
-                                SNode root = sNode.getContainingRoot();
-                                toCheck = Triple.of(toCheck.a(), toCheck.b().add(root), toCheck.c());
-                            } else if (dObject instanceof DModule) {
-                                SModule sModule = ((DModule) dObject).original();
-                                toCheck = Triple.of(toCheck.a(), toCheck.b(), toCheck.c().add(sModule));
-                            }
-                        }
-                    }
-                }));
-                if (last) {
-                    runModelCheck();
-                }
-            } finally {
-                committing.set(false);
-                if (last) {
-                    toCheck = Triple.of(Set.of(), Set.of(), Set.of());
-                }
                 if (config.isTraceDclare()) {
                     System.err.println(DCLARE + "    END COMMIT " + this);
                 }
@@ -742,34 +630,20 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
         return changed;
     }
 
-    private void runModelCheck() {
-        if (!toCheck.a().isEmpty() || !toCheck.b().isEmpty() || !toCheck.c().isEmpty()) {
-            thePool.execute(() -> {
-                RootItemsToCheck itemsToCheck = new RootItemsToCheck();
-                itemsToCheck.models = toCheck.a().collect(Collectors.toList());
-                itemsToCheck.modules = toCheck.c().collect(Collectors.toList());
-                itemsToCheck.roots = toCheck.b().filter(r -> r.getModel() != null).collect(Collectors.toList());
-                java.util.List<IssueKindReportItem> reportItems = new ArrayList<>();
-                SRepository repos = getRepository().original();
-                mpsChecker.check(itemsToCheck, repos, reportItems::add, new EmptyProgressMonitor());
-                imperativeTransaction.schedule(() -> {
-                    for (SModule sModule : toCheck.c()) {
-                        DObject.MPS_ISSUES.set(DModule.of(sModule), DObject.MPS_ISSUES.getDefault());
-                    }
-                    for (SModel sModel : toCheck.a()) {
-                        DObject.MPS_ISSUES.set(DModel.of(sModel), DObject.MPS_ISSUES.getDefault());
-                    }
-                    for (SNode root : toCheck.b()) {
-                        DNode.ALL_MPS_ISSUES.set(DNode.of(root), DNode.ALL_MPS_ISSUES.getDefault());
-                    }
-                    for (IssueKindReportItem item : reportItems) {
-                        DObject d = read(() -> context(item));
-                        if (d != null) {
-                            DObject.MPS_ISSUES.set(d, Set::add, Pair.of(d, item));
-                        }
-                    }
-                });
-            });
+    private void addToChanged(DObject dObject) {
+        if (dObject instanceof DModel) {
+            SModel sModel = ((DModel) dObject).tryOriginal();
+            if (sModel != null) {
+                changedModels.change(s -> s.add(sModel));
+            }
+        } else if (dObject instanceof DNode) {
+            SNode original = ((DNode) dObject).tryOriginal();
+            SNode root = original != null ? original.getContainingRoot() : null;
+            if (root != null) {
+                changedRoots.change(s -> s.add(root));
+            }
+        } else if (dObject instanceof DModule) {
+            changedModules.change(s -> s.add(((DModule) dObject).original()));
         }
     }
 
