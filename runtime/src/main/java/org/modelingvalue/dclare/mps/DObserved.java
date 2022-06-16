@@ -138,7 +138,7 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
     }
 
     protected T read(O dObject, T preVal, T postVal) {
-        return fromMPS(dObject);
+        return fromMPS != null ? fromMPS(dObject) : postVal;
     }
 
     public static <T> void map(Set<T> ist, Set<T> soll, Consumer<T> add, Consumer<T> remove) {

@@ -104,7 +104,7 @@ public abstract class DObject implements Mutable {
                                                                                                                      }
                                                                                                                  });
 
-    protected static final DObserved<DObject, Set<DIssue>>                             DCLARE_ISSUES             = DObserved.of("$DCLARE_ISSUES", Set.of(), null, (dObject, pre, post) -> {
+    protected static final DObserved<DObject, Set<DIssue>>                             DCLARE_ISSUES             = DObserved.of("$DCLARE_ISSUES", Set.of(), dObject -> null, (dObject, pre, post) -> {
                                                                                                                  }, containment);
 
     protected static final Set<Observer>                                               OBSERVERS                 = Set.of(TYPE_RULE, CONTAINING_ATTRIBUTE_RULE);
@@ -202,7 +202,7 @@ public abstract class DObject implements Mutable {
 
     @Override
     public boolean dCheckConsistency() {
-        return isActive();
+        return !isExternal() && isActive();
     }
 
     public abstract boolean isExternal();
@@ -212,7 +212,7 @@ public abstract class DObject implements Mutable {
     }
 
     protected boolean isActive() {
-        return !isExternal();
+        return true;
     }
 
 }

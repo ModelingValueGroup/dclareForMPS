@@ -21,11 +21,18 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
-import org.jetbrains.mps.openapi.module.*;
+import org.jetbrains.mps.openapi.module.ModelAccess;
+import org.jetbrains.mps.openapi.module.RepositoryAccess;
+import org.jetbrains.mps.openapi.module.SModule;
+import org.jetbrains.mps.openapi.module.SModuleId;
+import org.jetbrains.mps.openapi.module.SRepository;
+import org.jetbrains.mps.openapi.module.SRepositoryListener;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.TriConsumer;
-import org.modelingvalue.dclare.*;
+import org.modelingvalue.dclare.Constant;
+import org.modelingvalue.dclare.Observer;
+import org.modelingvalue.dclare.Setable;
 
 import jetbrains.mps.errors.item.IssueKindReportItem;
 import jetbrains.mps.project.ProjectRepository;
@@ -36,12 +43,12 @@ public class DRepository extends DFromOriginalObject<ProjectRepository> implemen
     private static final Constant<Set<SLanguage>, DRepositoryType>        REPOSITORY_TYPE = Constant.of("REPOSITORY_TYPE", DRepositoryType::new);
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    protected static final DObserved<DRepository, Set<DModule>>    MODULES         = DObserved.of("MODULES", Set.of(), r -> {
-                                                                                       return Collection.of(dClareMPS().project.getProjectModules()).sequential().map(DModule::of).toSet();
-                                                                                   }, null, containment);
+    protected static final DObserved<DRepository, Set<DModule>>           MODULES         = DObserved.of("MODULES", Set.of(), r -> {
+                                                                                              return Collection.of(dClareMPS().project.getProjectModules()).sequential().map(DModule::of).toSet();
+                                                                                          }, null, containment);
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    protected static final DObserved<DRepository, Set<?>>          EXCEPTIONS      = DObserved.of("EXCEPTIONS", Set.of(), (Function) null, (TriConsumer) null);
+    protected static final DObserved<DRepository, Set<?>>                 EXCEPTIONS      = DObserved.of("EXCEPTIONS", Set.of(), (Function) null, (TriConsumer) null);
 
     protected static final Setable<DRepository, Set<IssueKindReportItem>> ALL_MPS_ISSUES  = Setable.of("$ALL_MPS_ISSUES", Set.of());
 
