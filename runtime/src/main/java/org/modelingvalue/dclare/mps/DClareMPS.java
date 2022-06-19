@@ -15,8 +15,8 @@
 
 package org.modelingvalue.dclare.mps;
 
-import static org.modelingvalue.dclare.CoreSetableModifier.containment;
-import static org.modelingvalue.dclare.CoreSetableModifier.plumbing;
+import static org.modelingvalue.dclare.SetableModifier.containment;
+import static org.modelingvalue.dclare.SetableModifier.plumbing;
 import static org.modelingvalue.dclare.mps.DclareForMPSEngine.ALL_DCLARE_MPS;
 
 import java.lang.Thread.UncaughtExceptionHandler;
@@ -220,6 +220,23 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
             @Override
             protected void init() {
             }
+
+            @Override
+            protected void setPostDeltaState(IState state) {
+                super.setPostDeltaState(new StateDeriver(state.state()) {
+                    @SuppressWarnings({"unchecked", "rawtypes"})
+                    @Override
+                    protected <O, T> T derive(O object, Setable<O, T> property) {
+                        T val = state().get(object, property);
+                        if (property instanceof DObserved) {
+                            return (T) ((DObserved) property).read((DObject) object, val);
+                        } else {
+                            return val;
+                        }
+                    }
+                });
+            };
+
         };
         this.dObserverTransactions = Concurrent.of(() -> new ReusableTransaction<>(universeTransaction));
         this.dCopyObserverTransactions = Concurrent.of(() -> new ReusableTransaction<>(universeTransaction));
@@ -617,7 +634,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
             if (dObserved instanceof DObservedAttribute || !dObject.isExternal()) {
                 Object preVal = pre.get(dObserved);
                 Object postVal = post.get(dObserved);
-                Object readVal = dObserved.read(dObject, preVal, postVal);
+                Object readVal = dObserved.read(dObject, preVal);
                 if (!Objects.equals(readVal, postVal)) {
                     changed = true;
                     dObserved.toMPS(dObject, readVal, postVal);

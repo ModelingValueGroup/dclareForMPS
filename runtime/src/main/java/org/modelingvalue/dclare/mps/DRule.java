@@ -24,20 +24,19 @@ import org.modelingvalue.dclare.*;
 public interface DRule<O> extends DFeature {
 
     Constant<DRule, DObserver>    OBSERVER = Constant.of("OBSERVER",                                         //
-            r -> DObserver.of(r, r.initialLowPriority() ? Priority.backward : Priority.forward));
+            r -> new DObserver(r));
 
     @SuppressWarnings("unchecked")
     Constant<DRule, Set<Setable>> TARGETS  = Constant.of("TARGETS", r -> Collection.of(r.targets()).toSet());
 
     class DObserver<O extends Mutable> extends Observer<O> {
 
-        private static <M extends Mutable> DObserver of(DRule rule, Priority initPriority) {
-            return new DObserver<M>(rule, initPriority);
-        }
-
         @SuppressWarnings("unchecked")
-        private DObserver(DRule rule, Priority initPriority) {
-            super(rule, rule::run, IAspect.DIRECTION.get(rule.ruleSet().getAspect()), initPriority);
+        private DObserver(DRule rule) {
+            super(rule, rule::run, //
+                    rule.initialLowPriority() ? Priority.backward : Priority.forward, //
+                    IAspect.DIRECTION.get(rule.ruleSet().getAspect()), //
+                    LeafModifier.anonymous.iff(rule.ruleSet().getAnonymousType() != null));
         }
 
         public DRule rule() {

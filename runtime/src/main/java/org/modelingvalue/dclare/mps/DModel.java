@@ -16,7 +16,7 @@
 package org.modelingvalue.dclare.mps;
 
 import static java.lang.Boolean.TRUE;
-import static org.modelingvalue.dclare.CoreSetableModifier.*;
+import static org.modelingvalue.dclare.SetableModifier.*;
 
 import java.util.Collections;
 import java.util.stream.Collectors;

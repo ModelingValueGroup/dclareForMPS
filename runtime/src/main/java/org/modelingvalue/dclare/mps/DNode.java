@@ -15,7 +15,7 @@
 
 package org.modelingvalue.dclare.mps;
 
-import static org.modelingvalue.dclare.CoreSetableModifier.*;
+import static org.modelingvalue.dclare.SetableModifier.*;
 
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicLong;
@@ -252,13 +252,13 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
 
     static public class DCopyObserver extends Observer<DNode> {
 
-        private static DCopyObserver of(DObserved<DNode, ?> observed, Consumer<DNode> action) {
-            return new DCopyObserver(observed, action);
+        private static DCopyObserver of(DObserved<DNode, ?> observed, Consumer<DNode> action, LeafModifier... modifiers) {
+            return new DCopyObserver(observed, action, modifiers);
         }
 
         @SuppressWarnings({"unchecked", "RedundantSuppression"})
-        private DCopyObserver(DObserved<DNode, ?> observed, Consumer<DNode> action) {
-            super(observed, action, Priority.forward);
+        private DCopyObserver(DObserved<DNode, ?> observed, Consumer<DNode> action, LeafModifier... modifiers) {
+            super(observed, action, modifiers);
         }
 
         @SuppressWarnings("unchecked")

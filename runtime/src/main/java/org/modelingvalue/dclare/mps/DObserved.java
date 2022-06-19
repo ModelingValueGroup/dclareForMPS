@@ -29,13 +29,7 @@ import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.collections.util.QuadConsumer;
 import org.modelingvalue.collections.util.TriConsumer;
-import org.modelingvalue.dclare.Action;
-import org.modelingvalue.dclare.DerivationTransaction;
-import org.modelingvalue.dclare.LeafTransaction;
-import org.modelingvalue.dclare.Observed;
-import org.modelingvalue.dclare.Priority;
-import org.modelingvalue.dclare.Setable;
-import org.modelingvalue.dclare.SetableModifier;
+import org.modelingvalue.dclare.*;
 import org.modelingvalue.dclare.ex.ThrowableError;
 
 @SuppressWarnings("unused")
@@ -73,7 +67,7 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
     private DObserved(Object id, T def, Supplier<Setable<?, ?>> opposite, Function<O, T> fromMPS, TriConsumer<O, T, T> toMPS, QuadConsumer<LeafTransaction, O, T, T> changed, Supplier<SNode> source, SetableModifier... modifiers) {
         super(id, def, opposite, null, changed, modifiers);
         this.source = source;
-        this.readAction = fromMPS != null ? new ReadAction<O>(Pair.of("$READ", id), o -> set(o, fromMPS(o)), Priority.urgent) : null;
+        this.readAction = fromMPS != null ? new ReadAction<O>(Pair.of("$READ", id), this::read, Priority.urgent) : null;
         setFromToMPS(fromMPS, toMPS);
     }
 
@@ -102,6 +96,11 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
         return source != null ? source.get() : null;
     }
 
+    private void read(O object) {
+        IState postDeltaState = currentLeaf(object).universeTransaction().postDeltaState();
+        set(object, postDeltaState.get(object, this));
+    }
+
     protected final void toMPS(O object, T pre, T post) {
         try {
             toMPS.accept(object, pre, post);
@@ -127,7 +126,7 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
 
     @Override
     public T get(O object) {
-        LeafTransaction tx = LeafTransaction.getCurrent();
+        LeafTransaction tx = currentLeaf(object);
         if (object == null && tx instanceof DerivationTransaction) {
             return getDefault();
         } else if (fromMPS != null && (tx instanceof DerivationTransaction || !object.isActive())) {
@@ -137,8 +136,8 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
         }
     }
 
-    protected T read(O dObject, T preVal, T postVal) {
-        return fromMPS != null ? fromMPS(dObject) : postVal;
+    protected T read(O dObject, T val) {
+        return fromMPS != null ? fromMPS(dObject) : val;
     }
 
     public static <T> void map(Set<T> ist, Set<T> soll, Consumer<T> add, Consumer<T> remove) {
@@ -210,8 +209,8 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
 
     public static class ReadAction<O extends DObject> extends Action<O> {
 
-        protected ReadAction(Object id, Consumer<O> action, Priority initPriority) {
-            super(id, action, initPriority);
+        protected ReadAction(Object id, Consumer<O> action, LeafModifier... modifiers) {
+            super(id, action, modifiers);
         }
 
     }

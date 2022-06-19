@@ -15,7 +15,7 @@
 
 package org.modelingvalue.dclare.mps;
 
-import static org.modelingvalue.dclare.CoreSetableModifier.*;
+import static org.modelingvalue.dclare.SetableModifier.*;
 
 import java.util.Collections;
 import java.util.Objects;
@@ -170,14 +170,14 @@ public interface DAttribute<O, T> extends DFeature {
         }
 
         @Override
-        protected V read(C dObject, V preVal, V postVal) {
+        protected V read(C dObject, V val) {
             if (dObject instanceof DNode) {
                 if (((DNode) dObject).tryOriginal() != null) {
                     State preState = LeafTransaction.getCurrent().universeTransaction().preState();
                     return preState.derive(() -> super.get(dObject));
                 }
             }
-            return postVal;
+            return val;
         }
 
         @Override
@@ -207,7 +207,7 @@ public interface DAttribute<O, T> extends DFeature {
             this.name = name;
             this.composite = containment.in(modifiers);
             this.index = index;
-            this.synthetic = CoreSetableModifier.synthetic.in(modifiers);
+            this.synthetic = SetableModifier.synthetic.in(modifiers);
             this.source = source;
             this.cls = cls;
             this.ruleSet = ruleSet;

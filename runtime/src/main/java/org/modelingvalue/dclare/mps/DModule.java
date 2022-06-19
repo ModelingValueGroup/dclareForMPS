@@ -15,8 +15,8 @@
 
 package org.modelingvalue.dclare.mps;
 
-import static org.modelingvalue.dclare.CoreSetableModifier.containment;
-import static org.modelingvalue.dclare.CoreSetableModifier.synthetic;
+import static org.modelingvalue.dclare.SetableModifier.containment;
+import static org.modelingvalue.dclare.SetableModifier.synthetic;
 
 import java.util.HashSet;
 import java.util.stream.Collectors;

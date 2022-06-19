@@ -15,8 +15,8 @@
 
 package org.modelingvalue.dclare.mps;
 
-import static org.modelingvalue.dclare.CoreSetableModifier.containment;
-import static org.modelingvalue.dclare.CoreSetableModifier.plumbing;
+import static org.modelingvalue.dclare.SetableModifier.containment;
+import static org.modelingvalue.dclare.SetableModifier.plumbing;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -31,7 +31,6 @@ import org.modelingvalue.dclare.Mutable;
 import org.modelingvalue.dclare.NonCheckingObserver;
 import org.modelingvalue.dclare.Observed;
 import org.modelingvalue.dclare.Observer;
-import org.modelingvalue.dclare.Priority;
 import org.modelingvalue.dclare.Setable;
 
 import jetbrains.mps.errors.item.IssueKindReportItem;
@@ -104,7 +103,7 @@ public abstract class DObject implements Mutable {
                                                                                                                      }
                                                                                                                  });
 
-    protected static final DObserved<DObject, Set<DIssue>>                             DCLARE_ISSUES             = DObserved.of("$DCLARE_ISSUES", Set.of(), dObject -> null, (dObject, pre, post) -> {
+    protected static final DObserved<DObject, Set<DIssue>>                             DCLARE_ISSUES             = DObserved.of("$DCLARE_ISSUES", Set.of(), null, (dObject, pre, post) -> {
                                                                                                                  }, containment);
 
     protected static final Set<Observer>                                               OBSERVERS                 = Set.of(TYPE_RULE, CONTAINING_ATTRIBUTE_RULE);
@@ -189,11 +188,11 @@ public abstract class DObject implements Mutable {
     protected abstract DObjectType<?> getType();
 
     public static <O extends DObject> NonCheckingObserver<O> observer(String id, Consumer<O> action) {
-        return NonCheckingObserver.of(id, action, Priority.forward);
+        return NonCheckingObserver.of(id, action);
     }
 
     public static <O extends DObject, V> NonCheckingObserver<O> observer(Setable<O, V> setable, Function<O, V> value) {
-        return NonCheckingObserver.of(setable, value, Priority.forward);
+        return NonCheckingObserver.of(setable, value);
     }
 
     public boolean isDclareOnly() {
