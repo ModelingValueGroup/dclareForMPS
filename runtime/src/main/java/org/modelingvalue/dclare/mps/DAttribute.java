@@ -29,13 +29,7 @@ import org.jetbrains.mps.openapi.model.EditableSModel;
 import org.jetbrains.mps.openapi.model.SModel;
 import org.jetbrains.mps.openapi.model.SNode;
 import org.modelingvalue.collections.ContainingCollection;
-import org.modelingvalue.dclare.Constant;
-import org.modelingvalue.dclare.DerivationTransaction;
-import org.modelingvalue.dclare.LeafTransaction;
-import org.modelingvalue.dclare.ReadOnlyTransaction;
-import org.modelingvalue.dclare.Setable;
-import org.modelingvalue.dclare.SetableModifier;
-import org.modelingvalue.dclare.State;
+import org.modelingvalue.dclare.*;
 
 import jetbrains.mps.smodel.adapter.structure.property.InvalidProperty;
 
@@ -148,6 +142,9 @@ public interface DAttribute<O, T> extends DFeature {
         @Override
         public V get(C object) {
             LeafTransaction tx = LeafTransaction.getCurrent();
+            if (tx instanceof IdentityDerivationTransaction) {
+                return super.get(object);
+            }
             if (object instanceof DNode && tx instanceof ReadOnlyTransaction && DClareMPS.instance(tx).isRunningRead()) {
                 if (!(tx instanceof DerivationTransaction) || !((DerivationTransaction) tx).isDeriving()) {
                     SNode sNode = ((DNode) object).tryOriginal();

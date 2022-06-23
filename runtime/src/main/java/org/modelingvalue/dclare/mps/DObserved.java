@@ -29,13 +29,7 @@ import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.collections.util.QuadConsumer;
 import org.modelingvalue.collections.util.TriConsumer;
-import org.modelingvalue.dclare.Action;
-import org.modelingvalue.dclare.DerivationTransaction;
-import org.modelingvalue.dclare.LeafModifier;
-import org.modelingvalue.dclare.LeafTransaction;
-import org.modelingvalue.dclare.Observed;
-import org.modelingvalue.dclare.Setable;
-import org.modelingvalue.dclare.SetableModifier;
+import org.modelingvalue.dclare.*;
 import org.modelingvalue.dclare.ex.ThrowableError;
 
 @SuppressWarnings("unused")
@@ -132,7 +126,9 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
     @Override
     public T get(O object) {
         LeafTransaction tx = currentLeaf(object);
-        if (object == null && tx instanceof DerivationTransaction) {
+        if (tx instanceof IdentityDerivationTransaction) {
+            return super.get(object);
+        } else if (object == null && tx instanceof DerivationTransaction) {
             return getDefault();
         } else if (fromMPS != null && (tx instanceof DerivationTransaction || !object.isActive())) {
             return fromMPS(object);
