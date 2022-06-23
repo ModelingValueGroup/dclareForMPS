@@ -221,26 +221,11 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
             protected void init() {
             }
 
-            @Override
-            protected void setPostDeltaState(IState state) {
-                super.setPostDeltaState(new StateDeriver(state.state()) {
-                    @SuppressWarnings({"unchecked", "rawtypes"})
-                    @Override
-                    protected <O, T> T derive(O object, Setable<O, T> property) {
-                        T val = state().get(object, property);
-                        if (property instanceof DObserved) {
-                            return (T) ((DObserved) property).read((DObject) object, val);
-                        } else {
-                            return val;
-                        }
-                    }
-                });
-            };
-
         };
         this.dObserverTransactions = Concurrent.of(() -> new ReusableTransaction<>(universeTransaction));
         this.dCopyObserverTransactions = Concurrent.of(() -> new ReusableTransaction<>(universeTransaction));
         new ShutdownHelperThread();
+
     }
 
     public DclareForMpsConfig getConfig() {

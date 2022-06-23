@@ -24,7 +24,13 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.jetbrains.mps.openapi.language.*;
-import org.jetbrains.mps.openapi.model.*;
+import org.jetbrains.mps.openapi.model.ResolveInfo;
+import org.jetbrains.mps.openapi.model.SModel;
+import org.jetbrains.mps.openapi.model.SModelReference;
+import org.jetbrains.mps.openapi.model.SNode;
+import org.jetbrains.mps.openapi.model.SNodeId;
+import org.jetbrains.mps.openapi.model.SNodeReference;
+import org.jetbrains.mps.openapi.model.SReference;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.Map;
@@ -529,14 +535,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
             }
             return map;
         } else if (concept.isSubConceptOf(SNodeUtil.concept_INamedConcept)) {
-            String name = SNodeAccessUtil.getProperty(this, SNodeUtil.property_INamedConcept_name);
-            if (name == null) {
-                SNode original = tryOriginal();
-                if (original != null) {
-                    name = dClareMPS().read(() -> SNodeAccessUtil.getProperty(original, SNodeUtil.property_INamedConcept_name));
-                }
-            }
-            return name;
+            return getName();
         } else {
             Set<SReferenceLink> references = SINGLE_REFERENCES.get(concept);
             Set<SContainmentLink> containments = SINGLE_CONTAINMENTS.get(concept);

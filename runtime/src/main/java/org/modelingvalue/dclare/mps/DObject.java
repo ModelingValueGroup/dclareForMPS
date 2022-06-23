@@ -27,6 +27,7 @@ import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.dclare.Action;
+import org.modelingvalue.dclare.LeafModifier;
 import org.modelingvalue.dclare.Mutable;
 import org.modelingvalue.dclare.NonCheckingObserver;
 import org.modelingvalue.dclare.Observed;
@@ -187,12 +188,12 @@ public abstract class DObject implements Mutable {
 
     protected abstract DObjectType<?> getType();
 
-    public static <O extends DObject> NonCheckingObserver<O> observer(String id, Consumer<O> action) {
-        return NonCheckingObserver.of(id, action);
+    public static <O extends DObject> NonCheckingObserver<O> observer(String id, Consumer<O> action, LeafModifier... modifiers) {
+        return NonCheckingObserver.of(id, action, modifiers);
     }
 
-    public static <O extends DObject, V> NonCheckingObserver<O> observer(Setable<O, V> setable, Function<O, V> value) {
-        return NonCheckingObserver.of(setable, value);
+    public static <O extends DObject, V> NonCheckingObserver<O> observer(Setable<O, V> setable, Function<O, V> value, LeafModifier... modifiers) {
+        return NonCheckingObserver.of(setable, value, modifiers);
     }
 
     public boolean isDclareOnly() {
