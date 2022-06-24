@@ -776,7 +776,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
     }
 
     @SuppressWarnings("rawtypes")
-    private static DObserved dObserved(SConceptFeature feature) {
+    public static DObserved dObserved(SConceptFeature feature) {
         if (feature instanceof SProperty) {
             return PROPERTY.get((SProperty) feature);
         } else if (feature instanceof SContainmentLink) {

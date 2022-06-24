@@ -62,7 +62,7 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
 
     private static final Constant<Triple<Set<SLanguage>, Boolean, Set<String>>, DModelType> MODEL_TYPE      = Constant.of("MODEL_TYPE", DModelType::new);
 
-    protected static final DObserved<DModel, String>                                        NAME            = DObserved.of("NAME", null, dModel -> {
+    public static final DObserved<DModel, String>                                           NAME            = DObserved.of("NAME", null, dModel -> {
                                                                                                                 SModel sModel = dModel.tryOriginal();
                                                                                                                 return sModel != null ? sModel.getName().getLongName() : null;
                                                                                                             }, (dModel, pre, post) -> {
@@ -72,7 +72,7 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
                                                                                                                 }
                                                                                                             });
 
-    protected static final DObserved<DModel, Set<DNode>>                                    ROOTS           = DObserved.of("ROOTS", Set.of(), dModel -> {
+    public static final DObserved<DModel, Set<DNode>>                                       ROOTS           = DObserved.of("ROOTS", Set.of(), dModel -> {
                                                                                                                 if (LeafTransaction.getCurrent() instanceof DObserverTransaction &&                                                              //
                                                                                                                         !dModel.isExternal() && !TYPE.get(dModel).getLanguages().isEmpty()) {
                                                                                                                     DModel.ACTIVE.set(dModel, Boolean.TRUE);
@@ -90,7 +90,7 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
                                                                                                                 }
                                                                                                             }, containment);
 
-    protected static final DObserved<DModel, Set<SLanguage>>                                USED_LANGUAGES  = DObserved.of("USED_LANGUAGES", Set.of(), dModel -> {
+    public static final DObserved<DModel, Set<SLanguage>>                                   USED_LANGUAGES  = DObserved.of("USED_LANGUAGES", Set.of(), dModel -> {
                                                                                                                 SModelInternal sModel = (SModelInternal) dModel.tryOriginal();
                                                                                                                 return sModel != null ? Collection.of(sModel.importedLanguageIds()).sequential().toSet() : Set.of();
                                                                                                             }, (dModel, pre, post) -> {
@@ -99,7 +99,7 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
                                                                                                             });
 
     @SuppressWarnings("deprecation")
-    protected static final DObserved<DModel, Set<DevKit>>                                   USED_DEVKITS    = DObserved.of("USED_DEVKITS", Set.of(), dModel -> {
+    public static final DObserved<DModel, Set<DevKit>>                                      USED_DEVKITS    = DObserved.of("USED_DEVKITS", Set.of(), dModel -> {
                                                                                                                 SModelInternal sModel = (SModelInternal) dModel.tryOriginal();
                                                                                                                 return sModel != null ? Collection.of(sModel.importedDevkits()).sequential().                                                    //
                                                                                                                         map(r -> r.resolve(MPSModuleRepository.getInstance())).filter(DevKit.class).toSet() : Set.of();
@@ -110,7 +110,7 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
                                                                                                                 DObserved.map(ist, soll, sModel::addDevKit, sModel::deleteDevKit);
                                                                                                             });
 
-    protected static final DObserved<DModel, Set<DModel>>                                   USED_MODELS     = DObserved.of("USED_MODELS", Set.of(), dModel -> {
+    public static final DObserved<DModel, Set<DModel>>                                      USED_MODELS     = DObserved.of("USED_MODELS", Set.of(), dModel -> {
                                                                                                                 SModelInternal sModel = (SModelInternal) dModel.tryOriginal();
                                                                                                                 return sModel != null ? Collection.of(((SModelInternal) sModel).getModelImports()).sequential().                                 //
                                                                                                                         map(r -> r.resolve(null)).notNull().map(DModel::of).toSet() : Set.of();

@@ -23,17 +23,13 @@ import org.modelingvalue.dclare.*;
 @SuppressWarnings("rawtypes")
 public interface DRule<O> extends DFeature {
 
-    Constant<DRule, DObserver>    OBSERVER = Constant.of("OBSERVER",                                         //
-            r -> new DObserver(r));
-
-    @SuppressWarnings("unchecked")
-    Constant<DRule, Set<Setable>> TARGETS  = Constant.of("TARGETS", r -> Collection.of(r.targets()).toSet());
+    Constant<DRule, DObserver> OBSERVER = Constant.of("OBSERVER", DObserver::new);
 
     class DObserver<O extends Mutable> extends Observer<O> {
 
         @SuppressWarnings("unchecked")
         private DObserver(DRule rule) {
-            super(rule, rule::run, //
+            super(rule, rule::run, Collection.of(rule.targets()).toSet(), //
                     rule.initialLowPriority() ? Priority.backward : Priority.forward, //
                     IAspect.DIRECTION.get(rule.ruleSet().getAspect()), //
                     LeafModifier.anonymous.iff(rule.ruleSet().getAnonymousType() != null));
@@ -56,12 +52,6 @@ public interface DRule<O> extends DFeature {
         @Override
         public DRule.DObserverTransaction newTransaction(UniverseTransaction universeTransaction) {
             return new DRule.DObserverTransaction(universeTransaction);
-        }
-
-        @SuppressWarnings("unchecked")
-        @Override
-        public Set<Setable<O, ?>> targets() {
-            return (Set) TARGETS.get(rule());
         }
 
     }
@@ -107,6 +97,6 @@ public interface DRule<O> extends DFeature {
 
     boolean initialLowPriority();
 
-    java.util.List<DAttribute> targets();
+    java.util.List<DObserved> targets();
 
 }
