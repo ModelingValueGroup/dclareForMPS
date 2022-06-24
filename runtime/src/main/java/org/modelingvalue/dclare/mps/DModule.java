@@ -203,10 +203,6 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
         return MODELS.get(this).collect(Collectors.toSet());
     }
 
-    public void setModels(Iterable<DModel> models) {
-        MODELS.set(this, Collection.of(models).notNull().map(DModel::of).toSet());
-    }
-
     @Override
     public Iterable<SModuleFacet> getFacets() {
         return original().getFacets();

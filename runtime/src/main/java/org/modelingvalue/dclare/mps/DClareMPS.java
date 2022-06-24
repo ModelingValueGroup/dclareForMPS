@@ -22,7 +22,6 @@ import static org.modelingvalue.dclare.mps.DclareForMPSEngine.ALL_DCLARE_MPS;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Supplier;
@@ -220,6 +219,12 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
             @Override
             protected void init() {
             }
+
+            @Override
+            public <T, O> void setPreserved(O object, Setable<O, T> property, T post) {
+                super.setPreserved(object, property, post);
+                imperativeTransaction.mutableState().set(object, property, post);
+            };
 
         };
         this.dObserverTransactions = Concurrent.of(() -> new ReusableTransaction<>(universeTransaction));
@@ -573,21 +578,23 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
-    public void handleDelta(State pre, State post, boolean last, DefaultMap<Object, Set<Setable>> setted) {
+    public void handleDelta(State imper, State dclare, boolean last, DefaultMap<Object, Set<Setable>> setted) {
         if (isRunning() && !universeTransaction.isKilled()) {
             if (config.isTraceDclare()) {
                 System.err.println(DCLARE + "    START COMMIT " + this);
             }
             committing.set(true);
             try {
-                List<Entry<Object, Pair<DefaultMap<Setable, Object>, DefaultMap<Setable, Object>>>> diff = pre.diff(post, o -> o instanceof DObject && !((DObject) o).isDclareOnly() && ((DObject) o).isActive()).toList();
+                List<Entry<Object, Map<Setable, Pair<Object, Object>>>> diff = imper.diff(dclare, //
+                        o -> o instanceof DObject && !((DObject) o).isDclareOnly() && ((DObject) o).isActive(), //
+                        s -> s instanceof DObserved && !((DObserved) s).isDclareOnly()).toList();
                 if (!diff.isEmpty()) {
                     modelAccess.executeUndoTransparentCommand(() -> {
-                        diff.forEachOrdered(e0 -> {
-                            DObject dObject = (DObject) e0.getKey();
-                            boolean changed = toMPS(dObject, e0.getValue().a(), e0.getValue().b());
-                            if (!dObject.isExternal() && (changed || (post.get(dObject, Mutable.D_PARENT_CONTAINING) != null && //
-                                    pre.get(dObject, Mutable.D_PARENT_CONTAINING) == null))) {
+                        diff.forEachOrdered(e -> {
+                            DObject dObject = (DObject) e.getKey();
+                            boolean changed = toMPS(dObject, e.getValue());
+                            if (!dObject.isExternal() && (changed || (dclare.get(dObject, Mutable.D_PARENT_CONTAINING) != null && //
+                                    imper.get(dObject, Mutable.D_PARENT_CONTAINING) == null))) {
                                 addToChanged(dObject);
                             }
                         });
@@ -613,19 +620,17 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    private boolean toMPS(DObject dObject, DefaultMap<Setable, Object> pre, DefaultMap<Setable, Object> post) {
+    private boolean toMPS(DObject dObject, Map<Setable, Pair<Object, Object>> delta) {
         boolean changed = false;
-        for (DObserved dObserved : dObject.dClass().dObserveds()) {
+        for (Entry<Setable, Pair<Object, Object>> e : delta) {
+            DObserved dObserved = (DObserved) e.getKey();
             if (dObserved instanceof DObservedAttribute || !dObject.isExternal()) {
-                Object preVal = pre.get(dObserved);
-                Object postVal = post.get(dObserved);
-                Object readVal = dObserved.read(dObject, preVal);
-                if (!Objects.equals(readVal, postVal)) {
-                    changed = true;
-                    dObserved.toMPS(dObject, readVal, postVal);
-                    if (TRACE_MPS_MODEL_CHANGES && !(dObserved instanceof DObservedAttribute)) {
-                        System.err.println(DCLARE + "    MPS MODEL CHANGE: " + dObject + "." + dObserved + " = " + postVal);
-                    }
+                changed = true;
+                Object preVal = e.getValue().a();
+                Object postVal = e.getValue().b();
+                dObserved.toMPS(dObject, preVal, postVal);
+                if (TRACE_MPS_MODEL_CHANGES) {
+                    System.err.println(DCLARE + "    MPS MODEL CHANGE: " + dObject + "." + dObserved + " = " + preVal + " -> " + postVal);
                 }
             }
         }

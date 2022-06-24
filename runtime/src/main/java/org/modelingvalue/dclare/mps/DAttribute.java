@@ -172,17 +172,6 @@ public interface DAttribute<O, T> extends DFeature {
         }
 
         @Override
-        protected V read(C dObject, V val) {
-            if (dObject instanceof DNode) {
-                if (((DNode) dObject).tryOriginal() != null) {
-                    State preState = LeafTransaction.getCurrent().universeTransaction().preState();
-                    return preState.derive(() -> super.get(dObject));
-                }
-            }
-            return val;
-        }
-
-        @Override
         public Class<?> cls() {
             return cls;
         }
