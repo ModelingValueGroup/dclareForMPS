@@ -109,20 +109,18 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
     }
 
     protected final T fromMPS(O object) {
-        LeafTransaction tx = LeafTransaction.getCurrent();
-        DClareMPS dClareMPS = DClareMPS.instance(tx);
-        T result = dClareMPS.read(() -> {
+        return DClareMPS.instance().read(() -> fromMPS(object, getDefault()));
+    }
+
+    protected final T fromMPS(O object, T def) {
+        if (fromMPS != null) {
             try {
                 return fromMPS.apply(object);
             } catch (Throwable t) {
-                dClareMPS.addMessage(new ThrowableError(object, this, Instant.now(), t));
-                return getDefault();
+                DClareMPS.instance().addMessage(new ThrowableError(object, this, Instant.now(), t));
             }
-        });
-        if (!(tx.leaf() instanceof ReadAction)) {
-            dClareMPS.universeTransaction().setPreserved(object, this, result);
         }
-        return result;
+        return def;
     }
 
     protected Action<O> readAction() {

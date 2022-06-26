@@ -22,6 +22,7 @@ import static org.modelingvalue.dclare.mps.DclareForMPSEngine.ALL_DCLARE_MPS;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Supplier;
@@ -625,12 +626,14 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
         for (Entry<Setable, Pair<Object, Object>> e : delta) {
             DObserved dObserved = (DObserved) e.getKey();
             if (dObserved instanceof DObservedAttribute || !dObject.isExternal()) {
-                changed = true;
-                Object preVal = e.getValue().a();
+                Object preVal = dObserved.fromMPS(dObject, e.getValue().a());
                 Object postVal = e.getValue().b();
-                dObserved.toMPS(dObject, preVal, postVal);
-                if (TRACE_MPS_MODEL_CHANGES) {
-                    System.err.println(DCLARE + "    MPS MODEL CHANGE: " + dObject + "." + dObserved + " = " + preVal + " -> " + postVal);
+                if (!Objects.equals(preVal, postVal)) {
+                    changed = true;
+                    dObserved.toMPS(dObject, preVal, postVal);
+                    if (TRACE_MPS_MODEL_CHANGES) {
+                        System.err.println(DCLARE + "    MPS MODEL CHANGE: " + dObject + "." + dObserved + " = " + State.shortValueDiffString(preVal, postVal));
+                    }
                 }
             }
         }
