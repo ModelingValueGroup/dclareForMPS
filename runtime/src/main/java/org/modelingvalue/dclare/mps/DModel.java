@@ -85,8 +85,15 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
                                                                                                                 Set<SNode> ist = pre.sequential().map(DNode::tryOriginal).toSet();
                                                                                                                 DObserved.map(ist, soll, sModel::addRootNode, sModel::removeRootNode);
                                                                                                             }, (t, m, b, a) -> {
-                                                                                                                if (!m.isExternal() && b.isEmpty() && !a.isEmpty()) {
-                                                                                                                    DModel.ACTIVE.set(m, Boolean.TRUE);
+                                                                                                                if (!m.isExternal()) {
+                                                                                                                    if (b.isEmpty() && !a.isEmpty()) {
+                                                                                                                        DModel.ACTIVE.set(m, Boolean.TRUE);
+                                                                                                                    }
+                                                                                                                    for (DNode n : a) {
+                                                                                                                        if (!b.contains(n)) {
+                                                                                                                            CONTAINED.set(n, Boolean.TRUE);
+                                                                                                                        }
+                                                                                                                    }
                                                                                                                 }
                                                                                                             }, containment);
 
@@ -131,6 +138,7 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
                                                                                                                         if (dClareMPS().getConfig().isTraceActivation()) {
                                                                                                                             System.err.println("DCLARE: ACTIVATE " + sModel.getName() + " (external = " + m.isExternal() + ")");
                                                                                                                         }
+                                                                                                                        CONTAINED.set(m, Boolean.TRUE);
                                                                                                                         USED_MODELS.readAction().trigger(m);
                                                                                                                         ROOTS.readAction().trigger(m);
                                                                                                                     }

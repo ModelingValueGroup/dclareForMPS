@@ -223,8 +223,10 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
 
             @Override
             public <T, O> void setPreserved(O object, Setable<O, T> property, T post) {
-                super.setPreserved(object, property, post);
-                imperativeTransaction.mutableState().set(object, property, post);
+                if (property != DObject.CONTAINED) {
+                    super.setPreserved(object, property, post);
+                    imperativeTransaction.mutableState().set(object, property, post);
+                }
             };
 
         };
@@ -593,9 +595,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
                     modelAccess.executeUndoTransparentCommand(() -> {
                         diff.forEachOrdered(e -> {
                             DObject dObject = (DObject) e.getKey();
-                            boolean changed = toMPS(dObject, e.getValue());
-                            if (!dObject.isExternal() && (changed || (dclare.get(dObject, Mutable.D_PARENT_CONTAINING) != null && //
-                                    imper.get(dObject, Mutable.D_PARENT_CONTAINING) == null))) {
+                            if (toMPS(dObject, e.getValue()) && !dObject.isExternal()) {
                                 addToChanged(dObject);
                             }
                         });
@@ -631,7 +631,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
                 if (!Objects.equals(preVal, postVal)) {
                     changed = true;
                     dObserved.toMPS(dObject, preVal, postVal);
-                    if (TRACE_MPS_MODEL_CHANGES) {
+                    if (TRACE_MPS_MODEL_CHANGES && dObserved != DObject.CONTAINED) {
                         System.err.println(DCLARE + "    MPS MODEL CHANGE: " + dObject + "." + dObserved + " = " + State.shortValueDiffString(preVal, postVal));
                     }
                 }

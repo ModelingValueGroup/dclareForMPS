@@ -122,6 +122,7 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
     @Override
     protected void read(DClareMPS dClareMPS) {
         if (!isExternal()) {
+            CONTAINED.set(this, Boolean.TRUE);
             MODELS.readAction().trigger(this);
             LANGUAGES.readAction().trigger(this);
         }
