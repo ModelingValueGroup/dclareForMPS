@@ -408,7 +408,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
             if (sNode.getModel() == null) {
                 sParent.addRootNode(sNode);
             }
-        } else {
+        } else if (parent instanceof DNode) {
             SNode sParent = ((DNode) parent).original();
             //noinspection ConstantConditions
             if (sNode.getParent() == null) {
