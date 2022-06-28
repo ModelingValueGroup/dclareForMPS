@@ -12404,7 +12404,7 @@
                 <node concept="3clFbF" id="4f_r0qDv_PH" role="3cqZAp">
                   <node concept="2OqwBi" id="1zZpoCazEhr" role="3clFbG">
                     <node concept="liA8E" id="1zZpoCazHQS" role="2OqNvi">
-                      <ref role="37wK5l" to="t4tl:~DClareMPS.getOrDerive(java.util.function.Supplier)" resolve="getOrDerive" />
+                      <ref role="37wK5l" to="t4tl:~DClareMPS.get(java.util.function.Supplier)" resolve="get" />
                       <node concept="1bVj0M" id="1zZpoCazMsn" role="37wK5m">
                         <node concept="3clFbS" id="1zZpoCazMso" role="1bW5cS">
                           <node concept="2Gpval" id="1zZpoCatgT4" role="3cqZAp">

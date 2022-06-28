@@ -1610,7 +1610,7 @@
                       <ref role="3cqZAo" node="5hu6jp4qcsx" resolve="dClare" />
                     </node>
                     <node concept="liA8E" id="54lhvuXGFOJ" role="2OqNvi">
-                      <ref role="37wK5l" to="t4tl:~DClareMPS.getOrDerive(java.util.function.Supplier)" resolve="getOrDerive" />
+                      <ref role="37wK5l" to="t4tl:~DClareMPS.get(java.util.function.Supplier)" resolve="get" />
                       <node concept="2ShNRf" id="6z6Ucdn5y8Y" role="37wK5m">
                         <node concept="YeOm9" id="6z6Ucdn5Apq" role="2ShVmc">
                           <node concept="1Y3b0j" id="6z6Ucdn5Apt" role="YeSDq">
@@ -4983,7 +4983,7 @@
                       <ref role="3cqZAo" node="5hu6jp4qC9I" resolve="dClare" />
                     </node>
                     <node concept="liA8E" id="54lhvuXGjdf" role="2OqNvi">
-                      <ref role="37wK5l" to="t4tl:~DClareMPS.getOrDerive(java.util.function.Supplier)" resolve="getOrDerive" />
+                      <ref role="37wK5l" to="t4tl:~DClareMPS.get(java.util.function.Supplier)" resolve="get" />
                       <node concept="2ShNRf" id="54lhvuXGjRJ" role="37wK5m">
                         <node concept="YeOm9" id="54lhvuXGjRK" role="2ShVmc">
                           <node concept="1Y3b0j" id="54lhvuXGjRL" role="YeSDq">

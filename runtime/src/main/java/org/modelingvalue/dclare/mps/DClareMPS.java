@@ -164,6 +164,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
     private Concurrent<Set<SModel>>                                                                     changedModels;
     private Concurrent<Set<SModule>>                                                                    changedModules;
     private Concurrent<Set<SNode>>                                                                      changedRoots;
+    private ConstantState                                                                               derivationState;
 
     protected DClareMPS(DclareForMPSEngine engine, ProjectBase project, DclareForMpsConfig config) {
         this.config = config;
@@ -230,6 +231,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
             };
 
         };
+        this.derivationState = new ConstantState(universeTransaction::handleException);
         this.dObserverTransactions = Concurrent.of(() -> new ReusableTransaction<>(universeTransaction));
         this.dCopyObserverTransactions = Concurrent.of(() -> new ReusableTransaction<>(universeTransaction));
         new ShutdownHelperThread();
@@ -611,6 +613,9 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
                     }
                     runModelCheck();
                 }
+                if (!diff.isEmpty() || !setted.isEmpty()) {
+                    createNewDerivationState();
+                }
             } finally {
                 committing.set(false);
                 if (config.isTraceDclare()) {
@@ -618,6 +623,12 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
                 }
             }
         }
+    }
+
+    private void createNewDerivationState() {
+        ConstantState ds = derivationState;
+        derivationState = new ConstantState(universeTransaction::handleException);
+        ds.stop();
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
@@ -682,10 +693,17 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
         return UNIVERSE_CLASS;
     }
 
-    public <T> T getOrDerive(Supplier<T> supplier) {
-        ImperativeTransaction it = imperativeTransaction;
-        State state = it != null ? it.state() : universeTransaction.lastState();
-        return state.derive(() -> {
+    private State preState() {
+        ImperativeTransaction itx = imperativeTransaction;
+        return itx != null ? itx.state() : universeTransaction.preState();
+    }
+
+    protected <T> T derive(Supplier<T> supplier) {
+        return preState().derive(supplier, derivationState);
+    }
+
+    public <T> T get(Supplier<T> supplier) {
+        return preState().get(() -> {
             try {
                 return supplier.get();
             } catch (NullPointerException npe) {
@@ -838,6 +856,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
                     System.err.println(DCLARE + "the pool did not terminate in time: " + this + " (Thread " + Thread.currentThread().getName() + " was interrupted)");
                     e.printStackTrace();
                 }
+                derivationState.stop();
                 if (config.isTraceDclare()) {
                     System.err.println(DCLARE + "END   " + this);
                     if (result != null) {

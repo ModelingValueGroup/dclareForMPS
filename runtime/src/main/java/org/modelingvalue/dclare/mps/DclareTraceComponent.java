@@ -20,24 +20,22 @@ import org.modelingvalue.collections.Set;
 
 public class DclareTraceComponent {
 
-   private final DclareForMPSEngine engine;
-   private final DClareMPS          universe; 
-   
-   public DclareTraceComponent(DclareForMPSEngine engine, DClareMPS universe) {
-	this.engine = engine;
-	this.universe = universe;
-}
+    private final DclareForMPSEngine engine;
+    private final DClareMPS          universe;
 
-   public Set<IRuleSet> getRuleSets(SLanguage l) {
-	   return universe.RULE_SETS.get(l);
-   }
-   
-   public Set<DModule> getModules() {
-	   return universe.getOrDerive(()-> {
-		   return DRepository.MODULES.get(universe.getRepository());
-	   });	
-   }
-   
-   
+    public DclareTraceComponent(DclareForMPSEngine engine, DClareMPS universe) {
+        this.engine = engine;
+        this.universe = universe;
+    }
+
+    public Set<IRuleSet> getRuleSets(SLanguage l) {
+        return DClareMPS.RULE_SETS.get(l);
+    }
+
+    public Set<DModule> getModules() {
+        return universe.get(() -> {
+            return DRepository.MODULES.get(universe.getRepository());
+        });
+    }
 
 }

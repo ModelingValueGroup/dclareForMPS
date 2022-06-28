@@ -374,7 +374,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
         } else {
             LeafTransaction tx = LeafTransaction.getCurrent();
             if (tx == null) {
-                return DClareMPS.dClareForObject(original).getOrDerive(() -> of(original.getConcept(), original.getReference(), original));
+                return DClareMPS.dClareForObject(original).get(() -> of(original.getConcept(), original.getReference(), original));
             } else {
                 return of(original.getConcept(), original.getReference(), original);
             }

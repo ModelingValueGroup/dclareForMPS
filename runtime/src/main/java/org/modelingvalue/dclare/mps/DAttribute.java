@@ -18,7 +18,6 @@ package org.modelingvalue.dclare.mps;
 import static org.modelingvalue.dclare.SetableModifier.*;
 
 import java.util.Collections;
-import java.util.Objects;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -29,7 +28,12 @@ import org.jetbrains.mps.openapi.model.EditableSModel;
 import org.jetbrains.mps.openapi.model.SModel;
 import org.jetbrains.mps.openapi.model.SNode;
 import org.modelingvalue.collections.ContainingCollection;
-import org.modelingvalue.dclare.*;
+import org.modelingvalue.dclare.AbstractDerivationTransaction;
+import org.modelingvalue.dclare.Constant;
+import org.modelingvalue.dclare.LeafTransaction;
+import org.modelingvalue.dclare.ReadOnlyTransaction;
+import org.modelingvalue.dclare.Setable;
+import org.modelingvalue.dclare.SetableModifier;
 
 import jetbrains.mps.smodel.adapter.structure.property.InvalidProperty;
 
@@ -91,10 +95,10 @@ public interface DAttribute<O, T> extends DFeature {
 
         public DObservedAttribute(Object id, String name, IRuleSet ruleSet, boolean indetifying, boolean isPublic, V def, Class<?> cls, Supplier<Setable<?, ?>> opposite, Supplier<SNode> source, SetableModifier... modifiers) {
             super(id, def, opposite, null, source, modifiers);
-            SProperty sProperty = new InvalidProperty(id.toString(), name);
             if (isPublic) {
+                this.sProperty = new InvalidProperty(id.toString(), name);
                 setFromToMPS(null, (o, b, a) -> {
-                    if (o instanceof DNode && !Objects.equals(b, a)) {
+                    if (o instanceof DNode) {
                         SNode sNode = ((DNode) o).tryOriginal();
                         SModel sModel = sNode != null ? sNode.getModel() : null;
                         if (sNode != null && sModel instanceof EditableSModel) {
@@ -102,14 +106,14 @@ public interface DAttribute<O, T> extends DFeature {
                             sNode.setProperty(sProperty, "");
                             sNode.setProperty(sProperty, null);
                             ((EditableSModel) sModel).setChanged(changed);
-                            // System.err.println("!!!!!!!!!!! CHANGED !!!!!!!!! node=" + sNode + ", attribute=" + name + "#" + id);
                         }
                     }
                 });
+            } else {
+                this.sProperty = null;
             }
             this.name = name;
             this.cls = cls;
-            this.sProperty = sProperty;
             this.indetifying = indetifying;
             this.ruleSet = ruleSet;
         }
@@ -140,24 +144,24 @@ public interface DAttribute<O, T> extends DFeature {
         }
 
         @Override
+        protected V fromMPS(C object) {
+            return fromMPS(object, getDefault());
+        }
+
+        @Override
         public V get(C object) {
             LeafTransaction tx = LeafTransaction.getCurrent();
-            if (tx instanceof IdentityDerivationTransaction) {
-                return super.get(object);
-            }
-            if (object instanceof DNode && tx instanceof ReadOnlyTransaction && DClareMPS.instance(tx).isRunningRead()) {
-                if (!(tx instanceof DerivationTransaction) || !((DerivationTransaction) tx).isDeriving()) {
-                    SNode sNode = ((DNode) object).tryOriginal();
-                    if (sNode != null) {
-                        sNode.getProperty(sProperty);
-                    }
+            DClareMPS dClareMPS = DClareMPS.instance(tx);
+            if (sProperty != null && object instanceof DNode && tx instanceof ReadOnlyTransaction && !(tx instanceof AbstractDerivationTransaction) && dClareMPS.isRunningRead()) {
+                SNode sNode = ((DNode) object).tryOriginal();
+                if (sNode != null) {
+                    sNode.getProperty(sProperty);
                 }
             }
-            if (tx instanceof DerivationTransaction || object.isActive()) {
-                return super.get(object);
+            if (!(tx instanceof AbstractDerivationTransaction) && !object.isActive()) {
+                return dClareMPS.derive(() -> super.get(object));
             } else {
-                State preState = tx.universeTransaction().preState();
-                return preState.derive(() -> super.get(object));
+                return super.get(object);
             }
         }
 

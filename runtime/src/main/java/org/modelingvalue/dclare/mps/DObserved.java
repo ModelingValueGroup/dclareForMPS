@@ -108,7 +108,7 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
         }
     }
 
-    protected final T fromMPS(O object) {
+    protected T fromMPS(O object) {
         return DClareMPS.instance().read(() -> fromMPS(object, getDefault()));
     }
 
@@ -130,11 +130,7 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
     @Override
     public T get(O object) {
         LeafTransaction tx = currentLeaf(object);
-        if (tx instanceof IdentityDerivationTransaction) {
-            return super.get(object);
-        } else if (object == null && tx instanceof DerivationTransaction) {
-            return getDefault();
-        } else if (fromMPS != null && (tx instanceof DerivationTransaction || !object.isActive())) {
+        if (fromMPS != null && !(tx instanceof IdentityDerivationTransaction) && (tx instanceof DerivationTransaction || !object.isActive())) {
             return fromMPS(object);
         } else {
             return super.get(object);
