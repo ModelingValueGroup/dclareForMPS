@@ -114,7 +114,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
     @SuppressWarnings("deprecation")
     public static final Constant<SContainmentLink, DObserved<DNode, List<DNode>>>                                MANY_CONTAINMENT       = Constant.of("MANY_CONTAINMENT", mc -> DObserved.of(mc, List.of(), dNode -> {
                                                                                                                                             SNode sNode = dNode.tryOriginal();
-                                                                                                                                            return sNode != null ? children(sNode, mc).map(DNode::of).toList() : List.of();
+                                                                                                                                            return sNode != null ? children(sNode, mc).sequential().map(DNode::of).toList() : List.of();
                                                                                                                                         }, (dNode, pre, post) -> {
                                                                                                                                             SNode sNode = dNode.reParent();
                                                                                                                                             List<SNode> soll = post.sequential().map(c -> c.reParent(sNode, mc, c.original())).toList();
@@ -1032,7 +1032,11 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
 
     @SuppressWarnings("unchecked")
     protected static List<SNode> children(SNode node, SContainmentLink feature) {
-        return Collection.<SNode> of((Iterable<SNode>) node.getChildren(feature)).sequential().toList();
+        List<SNode> children = List.of();
+        for (SNode child : node.getChildren(feature)) {
+            children = children.add(child);
+        }
+        return children;
     }
 
     public boolean hasAncestor(DNode ancestor) {
