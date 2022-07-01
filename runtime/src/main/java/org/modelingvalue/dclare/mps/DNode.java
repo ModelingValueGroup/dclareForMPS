@@ -696,7 +696,8 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
     }
 
     private boolean derive() {
-        return LeafTransaction.getCurrent() instanceof DerivationTransaction || !isActive();
+        LeafTransaction tx = LeafTransaction.getCurrent();
+        return !(tx instanceof IdentityDerivationTransaction) && (tx instanceof DerivationTransaction || !isActive());
     }
 
     @Override
