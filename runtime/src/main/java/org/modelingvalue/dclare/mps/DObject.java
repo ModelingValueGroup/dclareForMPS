@@ -108,7 +108,7 @@ public abstract class DObject implements Mutable {
                                                                                                                  }, containment);
 
     protected static final DObserved<DObject, Boolean>                                 CONTAINED                 = DObserved.of("$CONTAINED", Boolean.FALSE, null, (dObject, pre, post) -> {
-                                                                                                                 });
+                                                                                                                 }, plumbing);
 
     protected static final Set<Observer>                                               OBSERVERS                 = Set.of(TYPE_RULE, CONTAINING_ATTRIBUTE_RULE);
 

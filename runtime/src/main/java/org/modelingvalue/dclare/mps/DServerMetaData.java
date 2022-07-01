@@ -15,6 +15,8 @@
 
 package org.modelingvalue.dclare.mps;
 
+import static org.modelingvalue.dclare.SetableModifier.plumbing;
+
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.dclare.Constant;
 import org.modelingvalue.dclare.Observer;
@@ -25,7 +27,7 @@ public class DServerMetaData extends DObject {
     protected static final Constant<Boolean, DServerMetaDataType>  SERVER_METADATA_TYPE = Constant.of("SERVER_METADATA_TYPE", p -> new DServerMetaDataType(p));
 
     protected static final DObserved<DServerMetaData, Set<DModel>> SHARED_MODELS        = DObserved.of("SHARED_MODELS", Set.of(), null, (m, pre, post) -> {
-                                                                                        });
+                                                                                        }, plumbing);
 
     protected static final Observer<DServerMetaData>               MODELS_RULE          = DObject.observer("$SHARED_MODELS", o -> {
                                                                                             Set<DModel> sharedModels = DRepository.MODULES.get(dClareMPS().getRepository()).filter(m -> !m.isExternal()).flatMap(m -> DModule.MODELS.get(m)).filter(m -> m.isShared()).toSet();

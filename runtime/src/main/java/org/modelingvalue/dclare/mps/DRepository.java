@@ -16,6 +16,7 @@
 package org.modelingvalue.dclare.mps;
 
 import static org.modelingvalue.dclare.SetableModifier.containment;
+import static org.modelingvalue.dclare.SetableModifier.plumbing;
 
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -48,7 +49,7 @@ public class DRepository extends DFromOriginalObject<ProjectRepository> implemen
                                                                                           }, null, containment);
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    protected static final DObserved<DRepository, Set<?>>                 EXCEPTIONS      = DObserved.of("EXCEPTIONS", Set.of(), (Function) null, (TriConsumer) null);
+    protected static final DObserved<DRepository, Set<?>>                 EXCEPTIONS      = DObserved.of("EXCEPTIONS", Set.of(), (Function) null, (TriConsumer) null, plumbing);
 
     protected static final Setable<DRepository, Set<IssueKindReportItem>> ALL_MPS_ISSUES  = Setable.of("$ALL_MPS_ISSUES", Set.of());
 

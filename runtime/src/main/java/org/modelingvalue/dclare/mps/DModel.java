@@ -16,7 +16,8 @@
 package org.modelingvalue.dclare.mps;
 
 import static java.lang.Boolean.TRUE;
-import static org.modelingvalue.dclare.SetableModifier.*;
+import static org.modelingvalue.dclare.SetableModifier.containment;
+import static org.modelingvalue.dclare.SetableModifier.plumbing;
 
 import java.util.Collections;
 import java.util.stream.Collectors;
@@ -128,7 +129,7 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
                                                                                                                 DObserved.map(ist, soll, sModel::addModelImport, sModel::deleteModelImport);
                                                                                                             });
 
-    protected static final Observed<DModel, ModelRoot>                                      MODEL_ROOT      = Observed.of("MODEL_ROOT", null, synthetic);
+    protected static final Observed<DModel, ModelRoot>                                      MODEL_ROOT      = Observed.of("MODEL_ROOT", null, plumbing);
 
     @SuppressWarnings({"rawtypes", "unchecked", "RedundantSuppression"})
     protected static final DObserved<DModel, Boolean>                                       ACTIVE          = DObserved.of("ACTIVE", Boolean.FALSE, null, null, (tx, m, pre, post) -> {
@@ -150,7 +151,7 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
                                                                                                                 return sModel != null ? sModel.isLoaded() : Boolean.FALSE;
                                                                                                             }, null, plumbing);
     @SuppressWarnings({"rawtypes", "unchecked"})
-    private static final DObserved<DModel, Boolean>                                         SHARED          = DObserved.of("SHARED", Boolean.FALSE, null, (TriConsumer) null, synthetic);
+    private static final DObserved<DModel, Boolean>                                         SHARED          = DObserved.of("SHARED", Boolean.FALSE, null, (TriConsumer) null, plumbing);
 
     private static final Observer<DModel>                                                   REFERENCED_RULE = DObject.observer("$REFERENCED_RULE", o -> {
                                                                                                                 if (o.isActive()) {

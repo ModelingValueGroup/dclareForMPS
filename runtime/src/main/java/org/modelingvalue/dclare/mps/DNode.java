@@ -84,7 +84,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                             SNode sNode = dNode.tryOriginal();
                                                                                                                                             SModel sModel = sNode != null ? sNode.getModel() : null;
                                                                                                                                             return sModel != null ? DModel.of(sModel) : null;
-                                                                                                                                        }, null, synthetic);
+                                                                                                                                        }, null, plumbing);
 
     protected static final DObserved<DNode, DNode>                                                               ROOT                   = DObserved.of("$ROOT", null, dNode -> {
                                                                                                                                             SNode sNode = dNode.tryOriginal();
@@ -98,7 +98,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                             if (post != null) {
                                                                                                                                                 DNode.ALL_MPS_ISSUES.set(post, Set::addAll, items);
                                                                                                                                             }
-                                                                                                                                        }, synthetic);
+                                                                                                                                        }, plumbing);
     @SuppressWarnings({"unchecked", "rawtypes"})
     protected static final DObserved<DNode, Map<Object, Object>>                                                 USER_OBJECTS           = DObserved.of("USER_OBJECTS", Map.of(), (Function) null, (TriConsumer) null);
 
@@ -218,7 +218,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
     protected static final DObserved<DNode, Integer>                                                             INDEX                  = DObserved.of("INDEX", -1, dNode -> {
                                                                                                                                             SNode sNode = dNode.tryOriginal();
                                                                                                                                             return sNode != null ? SNodeOperations.getIndexInParent(sNode) : -1;
-                                                                                                                                        }, null, synthetic);
+                                                                                                                                        }, null, plumbing);
 
     @SuppressWarnings("rawtypes")
     private static final Observer<DNode>                                                                         INDEX_RULE             = DObject.observer(INDEX, o -> {
