@@ -423,9 +423,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
 
     @Override
     public String toString() {
-        SConcept concept = getConcept();
-        Object id = dMatchingIdentity();
-        return concept.getName() + (id != null && !id.equals(concept) ? "#" + identity[0] + ":" + id : "#" + identity[0]);
+        return getConcept().getName() + "#" + identity[0];
     }
 
     @Override
