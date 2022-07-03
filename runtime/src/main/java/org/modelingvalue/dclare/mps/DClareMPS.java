@@ -172,7 +172,6 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
         this.modelAccess = project.getModelAccess();
         this.engine = engine;
         this.dRepository = new DRepository((ProjectRepository) project.getRepository());
-
         this.dServerMetaData = new DServerMetaData();
         invokeLater(() -> commandThread = Thread.currentThread());
         if (config.isTraceDclare()) {
@@ -271,7 +270,6 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
         imperativeTransaction.schedule(() -> {
             REPOSITORY_CONTAINER.set(this, getRepository());
         });
-
         imperativeTransaction.schedule(() -> {
             DSERVER_METADATA.set(this, dServerMetaData);
         });
@@ -670,6 +668,10 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
 
     public DRepository getRepository() {
         return dRepository;
+    }
+
+    public DServerMetaData getServerMetaData() {
+        return dServerMetaData;
     }
 
     public boolean isRunning() {

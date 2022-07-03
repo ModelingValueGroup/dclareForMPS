@@ -15,6 +15,7 @@
 
 package org.modelingvalue.dclare.mps;
 
+import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.dclare.Observer;
@@ -22,39 +23,36 @@ import org.modelingvalue.dclare.Setable;
 
 public class DServerMetaDataType extends DObjectType<Boolean> {
 
-	protected DServerMetaDataType(Boolean s) {
-		super(s);
-	}
+    protected DServerMetaDataType(Boolean s) {
+        super(s);
+    }
 
-	@Override
-	public Set getRules(Set ruleSets) {
-		return Set.of();
-	}
+    @SuppressWarnings("rawtypes")
+    @Override
+    public Set<DRule> getRules(Set ruleSets) {
+        return Set.of();
+    }
 
-	@Override
-	public Set getAttributes(Set ruleSets) {
-		return Set.of();
-	}
+    @SuppressWarnings("rawtypes")
+    @Override
+    public Set<DAttribute> getAttributes(Set ruleSets) {
+        return Set.of();
+    }
 
-	@Override
-	public Set getLanguages() {
-		return Set.of();
-	}
+    @Override
+    public Set<SLanguage> getLanguages() {
+        return Set.of();
+    }
 
-	@Override
-	public boolean external() {
-		return false;
-	}
+    @SuppressWarnings("rawtypes")
+    @Override
+    protected Collection<Observer> observers() {
+        return DServerMetaData.OBSERVERS;
+    }
 
-	@SuppressWarnings("rawtypes")
-	@Override
-	protected Collection<Observer> observers() {
-		return DServerMetaData.OBSERVERS;
-	}
-
-	@SuppressWarnings("rawtypes")
-	@Override
-	public Collection<Setable> setables() {
-		return DServerMetaData.SETABLES;
-	}
+    @SuppressWarnings("rawtypes")
+    @Override
+    public Collection<Setable> setables() {
+        return DServerMetaData.SETABLES;
+    }
 }

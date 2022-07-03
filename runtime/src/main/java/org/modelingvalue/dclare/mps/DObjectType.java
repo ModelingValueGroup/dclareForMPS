@@ -29,14 +29,13 @@ import org.modelingvalue.dclare.mps.DRule.DObserver;
 public abstract class DObjectType<I> implements MutableClass {
 
     private static final Constant<DObjectType<?>, Set<IRuleSet>>                                TYPE_RULE_SETS = Constant.of("TYPE_RULE_SETS", Set.of(), t -> t.getLanguages().flatMap(DClareMPS.RULE_SETS::get).toSet());
-    private static final Constant<DObjectType<?>, Set<DObserver>>                               OBSERVERS      = Constant.of("OBSERVERS", Set.of(), t -> t.getRules(TYPE_RULE_SETS.get(t)).filter(r -> !t.external() || r.onlyTemporal()).map(DRule.OBSERVER::get).toSet());
-    private static final Constant<DObjectType<?>, Set<DAttribute>>                              ATTRIBUTES     = Constant.of("ATTRIBUTES", Set.of(), t -> t.getAttributes(TYPE_RULE_SETS.get(t)).filter(a -> !t.external() || a.onlyTemporal()).toSet());
+    private static final Constant<DObjectType<?>, Set<DObserver>>                               OBSERVERS      = Constant.of("OBSERVERS", Set.of(), t -> t.getRules(TYPE_RULE_SETS.get(t)).map(DRule.OBSERVER::get).toSet());
+    private static final Constant<DObjectType<?>, Set<DAttribute>>                              ATTRIBUTES     = Constant.of("ATTRIBUTES", Set.of(), t -> t.getAttributes(TYPE_RULE_SETS.get(t)).toSet());
     private static final Constant<DObjectType<?>, Set<DAttribute>>                              CONTAINERS     = Constant.of("CONTAINERS", Set.of(), t -> ATTRIBUTES.get(t).filter(DAttribute::isComposite).toSet());
     private static final Constant<DObjectType<?>, Set<DAttribute>>                              NON_SYNTHETICS = Constant.of("NON_SYNTHETICS", Set.of(), t -> ATTRIBUTES.get(t).filter(a -> !a.isSynthetic()).toSet());
     private static final Constant<DObjectType<?>, Set<DAttribute>>                              IDENTIFYING    = Constant.of("IDENTIFYING", Set.of(), t -> ATTRIBUTES.get(t).filter(a -> !a.isSynthetic() && a.isIndetifying()).toSet());
     @SuppressWarnings("unchecked")
-    private static final Constant<DObjectType<?>, Set<? extends Setable<? extends Mutable, ?>>> SETABLES       = Constant.of("SETABLES", Set.of(), t -> t == DObject.TYPE.getDefault() ? Set.of(DObject.TYPE) :                                                                  //
-            Collection.concat(t.getAttributes().filter(a -> a instanceof Setable), t.setables()).map(o -> (Setable<? extends Mutable, ?>) o).toSet());
+    private static final Constant<DObjectType<?>, Set<? extends Setable<? extends Mutable, ?>>> SETABLES       = Constant.of("SETABLES", Set.of(), t -> Collection.concat(t.getAttributes().filter(a -> a instanceof Setable), t.setables()).map(o -> (Setable<? extends Mutable, ?>) o).toSet());
     private static final Constant<DObjectType<?>, Set<DObserved>>                               D_OBSERVEDS    = Constant.of("D_OBSERVEDS", Set.of(), t -> t.dSetables().filter(s -> s instanceof DObserved && !((DObserved) s).isDclareOnly()).map(s -> (DObserved) s).toSet());
 
     public abstract Set<DRule> getRules(Set<IRuleSet> ruleSets);
@@ -75,8 +74,6 @@ public abstract class DObjectType<I> implements MutableClass {
         this.identity = identity;
     }
 
-    public abstract boolean external();
-
     public I id() {
         return identity;
     }
@@ -96,12 +93,10 @@ public abstract class DObjectType<I> implements MutableClass {
         return getClass().getSimpleName() + ":" + identity;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public final Collection<? extends Observer<?>> dObservers() {
-        return this == DObject.TYPE.getDefault() //
-                ? Set.of(DObject.TYPE_RULE) //
-                : Collection.concat(observers(), getObservers()) //
-                        .map(o -> (Observer<?>) o);
+        return (Collection) Collection.concat(observers(), getObservers());
     }
 
     @SuppressWarnings("unchecked")

@@ -20,13 +20,13 @@ import java.util.Objects;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.Set;
-import org.modelingvalue.collections.util.Triple;
+import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.dclare.Constant;
 
 @SuppressWarnings("unused")
 public class DStructObject extends DIdentifiedObject implements SStructObject {
 
-    private static final Constant<Triple<Set<SLanguage>, SStructClass, Boolean>, DStructClass> CLASS_OBJECT_TYPE = Constant.of("CLASS_OBJECT_TYPE", p -> new DStructClass(p));
+    private static final Constant<Pair<Set<SLanguage>, SStructClass>, DStructClass> CLASS_OBJECT_TYPE = Constant.of("CLASS_OBJECT_TYPE", DStructClass::new);
 
     public static DStructObject of(SStructClass cls, Object[] identity) {
         for (int i = 0; i < identity.length; i++) {
@@ -53,9 +53,13 @@ public class DStructObject extends DIdentifiedObject implements SStructObject {
 
     @Override
     protected DStructClass getType() {
+        return CLASS_OBJECT_TYPE.get(Pair.of(Set.of(getSClass().getLanguage()), getSClass()));
+    }
+
+    @Override
+    protected boolean isActive() {
         DObject parent = dObjectParent();
-        boolean external = parent != null ? TYPE.get(parent).external() : isExternal();
-        return CLASS_OBJECT_TYPE.get(Triple.of(Set.of(getSClass().getLanguage()), getSClass(), external));
+        return parent != null ? parent.isActive() : super.isActive();
     }
 
     @Override

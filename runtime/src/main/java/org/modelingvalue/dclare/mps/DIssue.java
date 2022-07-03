@@ -22,45 +22,50 @@ import org.jetbrains.mps.openapi.model.SModel;
 import org.jetbrains.mps.openapi.model.SNode;
 import org.jetbrains.mps.openapi.module.SModule;
 import org.modelingvalue.collections.Set;
-import org.modelingvalue.dclare.*;
+import org.modelingvalue.dclare.Constant;
+import org.modelingvalue.dclare.LeafTransaction;
+import org.modelingvalue.dclare.Observer;
+import org.modelingvalue.dclare.Setable;
 import org.modelingvalue.dclare.mps.DRule.DObserver;
 import org.modelingvalue.dclare.mps.DRule.DObserverTransaction;
 
 import jetbrains.mps.errors.MessageStatus;
 import jetbrains.mps.errors.item.IssueKindReportItem;
-import jetbrains.mps.errors.item.IssueKindReportItem.*;
+import jetbrains.mps.errors.item.IssueKindReportItem.CheckerCategory;
+import jetbrains.mps.errors.item.IssueKindReportItem.ItemKind;
+import jetbrains.mps.errors.item.IssueKindReportItem.KindLevel;
 import jetbrains.mps.errors.item.RuleIdFlavouredItem.TypesystemRuleId;
 import jetbrains.mps.errors.messageTargets.MessageTarget;
 
 public class DIssue extends DIdentifiedObject {
 
-    protected static final CheckerCategory                CHECKER_CATEGORY = new IssueKindReportItem.CheckerCategory(KindLevel.MANUAL, "Dclare");
+    protected static final CheckerCategory                   CHECKER_CATEGORY = new IssueKindReportItem.CheckerCategory(KindLevel.MANUAL, "Dclare");
 
-    protected static final ItemKind                       ITEM_KIND        = CHECKER_CATEGORY.deriveItemKind();
+    protected static final ItemKind                          ITEM_KIND        = CHECKER_CATEGORY.deriveItemKind();
 
-    private static final Constant<Boolean, DIsssueType>   ISSUE_TYPE       = Constant.of("ISSUE_TYPE", p -> new DIsssueType(p));
+    private static final Constant<MessageStatus, DIssueType> ISSUE_TYPE       = Constant.of("ISSUE_TYPE", DIssueType::new);
 
-    private static final Setable<DIssue, String>          MESSAGE          = Setable.of("$MESSAGE", null);
+    private static final Setable<DIssue, String>             MESSAGE          = Setable.of("$MESSAGE", null);
 
-    private static final Observer<DIssue>                 MESSAGE_RULE     = DObject.observer(MESSAGE, o -> o.message.get());
+    private static final Observer<DIssue>                    MESSAGE_RULE     = DObject.observer(MESSAGE, o -> o.message.get());
 
-    public static final Setable<DIssue, DObject>          DOBJECT          = Setable.of("$DOBJECT", null);
+    public static final Setable<DIssue, DObject>             DOBJECT          = Setable.of("$DOBJECT", null);
 
-    private static final Observer<DIssue>                 DOBJECT_RULE     = DObject.observer(DOBJECT, o -> o.dObject.get());
+    private static final Observer<DIssue>                    DOBJECT_RULE     = DObject.observer(DOBJECT, o -> o.dObject.get());
 
-    protected static final Setable<DIssue, MessageStatus> SEVERITY         = Setable.of("$SEVERITY", null);
+    protected static final Setable<DIssue, MessageStatus>    SEVERITY         = Setable.of("$SEVERITY", null);
 
-    private static final Observer<DIssue>                 SEVERITY_RULE    = DObject.observer(SEVERITY, o -> o.severity.get());
+    private static final Observer<DIssue>                    SEVERITY_RULE    = DObject.observer(SEVERITY, o -> o.severity.get());
 
-    protected static final Setable<DIssue, MessageTarget> FEATURE          = Setable.of("$FEATURE", null);
+    protected static final Setable<DIssue, MessageTarget>    FEATURE          = Setable.of("$FEATURE", null);
 
-    private static final Observer<DIssue>                 FEATURE_RULE     = DObject.observer(FEATURE, o -> o.feature.get());
-
-    @SuppressWarnings("rawtypes")
-    protected static final Set<Observer>                  OBSERVERS        = DObject.OBSERVERS.addAll(Set.of(MESSAGE_RULE, DOBJECT_RULE, SEVERITY_RULE, FEATURE_RULE));
+    private static final Observer<DIssue>                    FEATURE_RULE     = DObject.observer(FEATURE, o -> o.feature.get());
 
     @SuppressWarnings("rawtypes")
-    protected static final Set<Setable>                   SETABLES         = DObject.SETABLES.addAll(Set.of(MESSAGE, DOBJECT, SEVERITY, FEATURE));
+    protected static final Set<Observer>                     OBSERVERS        = DObject.OBSERVERS.addAll(Set.of(MESSAGE_RULE, DOBJECT_RULE, SEVERITY_RULE, FEATURE_RULE));
+
+    @SuppressWarnings("rawtypes")
+    protected static final Set<Setable>                      SETABLES         = DObject.SETABLES.addAll(Set.of(MESSAGE, DOBJECT, SEVERITY, FEATURE));
 
     public static DIssue of(Supplier<DObject> object, Supplier<MessageStatus> severity, Supplier<MessageTarget> feature, Supplier<String> message, Object[] identity) {
         DObserverTransaction tx = (DObserverTransaction) LeafTransaction.getCurrent();
@@ -135,8 +140,8 @@ public class DIssue extends DIdentifiedObject {
     }
 
     @Override
-    protected DIsssueType getType() {
-        return ISSUE_TYPE.get(isExternal());
+    protected DIssueType getType() {
+        return ISSUE_TYPE.get(getSeverity());
     }
 
     @Override

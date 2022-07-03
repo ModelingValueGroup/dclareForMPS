@@ -51,7 +51,7 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
             if (a().isActive()) {
                 DNode.PROPERTY.get(event.getProperty()).set(DNode.of(event.getNode()), event.getNewValue());
             } else {
-                a().activateIfUsed();
+                a().setActivateIfUsed();
             }
         });
     }
@@ -64,7 +64,7 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
                 SNode targetNode = newValue != null ? newValue.getTargetNode() : null;
                 DNode.REFERENCE.get(event.getAssociationLink()).set(DNode.of(event.getNode()), targetNode != null ? DNode.of(targetNode) : null);
             } else {
-                a().activateIfUsed();
+                a().setActivateIfUsed();
             }
         });
     }
@@ -95,7 +95,7 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
                     }
                 }
             } else {
-                a().activateIfUsed();
+                a().setActivateIfUsed();
             }
         });
     }
@@ -119,7 +119,7 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
                     }
                 }
             } else {
-                a().activateIfUsed();
+                a().setActivateIfUsed();
             }
         });
     }

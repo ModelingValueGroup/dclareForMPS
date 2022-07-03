@@ -18,38 +18,30 @@ package org.modelingvalue.dclare.mps;
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
-import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.Setable;
 
-public class DModuleType extends DObjectType<Pair<Boolean, Set<SLanguage>>> {
+public class DModuleType extends DObjectType<Set<SLanguage>> {
 
-    public DModuleType(Pair<Boolean, Set<SLanguage>> identity) {
+    public DModuleType(Set<SLanguage> identity) {
         super(identity);
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
-        //noinspection RedundantCast
-        return !external() ? (Set) ruleSets.flatMap(rs -> Collection.of(rs.getModuleRules())).toSet() : Set.of();
+        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getModuleRules())).toSet();
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
     public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
-        //noinspection RedundantCast
-        return !external() ? (Set) ruleSets.flatMap(rs -> Collection.of(rs.getModuleAttributes())).toSet() : Set.of();
+        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getModuleAttributes())).toSet();
     }
 
     @Override
     public Set<SLanguage> getLanguages() {
-        return id().b();
-    }
-
-    @Override
-    public boolean external() {
-        return id().a();
+        return id();
     }
 
     @SuppressWarnings("rawtypes")

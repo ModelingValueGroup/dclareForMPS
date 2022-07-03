@@ -59,15 +59,20 @@ public abstract class DObject implements Mutable {
                                                                                                                      }
 
                                                                                                                      @Override
-                                                                                                                     public boolean external() {
-                                                                                                                         return false;
+                                                                                                                     protected Collection<Observer> observers() {
+                                                                                                                         return Set.of(DObject.TYPE_RULE);
+                                                                                                                     }
+
+                                                                                                                     @Override
+                                                                                                                     protected Collection<Setable> setables() {
+                                                                                                                         return Set.of(DObject.TYPE);
                                                                                                                      }
 
                                                                                                                  };
 
-    public static final Observed<DObject, DObjectType<?>>                              TYPE                      = Observed.of("$TYPE", DUMMY_TYPE, plumbing);
+    public static final DObserved<DObject, DObjectType<?>>                             TYPE                      = DObserved.of("$TYPE", DUMMY_TYPE, DObject::getType, null, plumbing);
 
-    protected static final Observer<DObject>                                           TYPE_RULE                 = observer(TYPE, o -> o.getType());
+    protected static final Observer<DObject>                                           TYPE_RULE                 = observer(TYPE, DObject::getType);
 
     protected static final Observed<DObject, DAttribute>                               CONTAINING_ATTRIBUTE      = Observed.of("$CONTAINING_ATTRIBUTE", null, plumbing);
 
@@ -205,7 +210,7 @@ public abstract class DObject implements Mutable {
 
     @Override
     public boolean dCheckConsistency() {
-        return !isExternal() && isActive();
+        return isActive();
     }
 
     public abstract boolean isExternal();
@@ -215,7 +220,13 @@ public abstract class DObject implements Mutable {
     }
 
     protected boolean isActive() {
-        return true;
+        return !isExternal();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public Collection<? extends Observer<?>> dAllObservers() {
+        return isActive() ? Mutable.super.dAllObservers() : (Collection) dClass().observers();
     }
 
 }

@@ -41,11 +41,11 @@ import jetbrains.mps.smodel.adapter.structure.property.InvalidProperty;
 public interface DAttribute<O, T> extends DFeature {
 
     @SuppressWarnings("unchecked")
-    static <C, V> DAttribute<C, V> of(String id, String name, IRuleSet ruleSet, boolean syn, boolean optional, boolean composite, int identifyingNr, boolean isPublic, Object def, Class<?> cls, SLanguage oppositeLanguage, String opposite, Supplier<SNode> source, Function<C, V> deriver, boolean onlyTemporal) {
+    static <C, V> DAttribute<C, V> of(String id, String name, IRuleSet ruleSet, boolean syn, boolean optional, boolean composite, int identifyingNr, boolean isPublic, Object def, Class<?> cls, SLanguage oppositeLanguage, String opposite, Supplier<SNode> source, Function<C, V> deriver) {
         boolean idAttr = identifyingNr >= 0 && (ruleSet == null || ruleSet.getAnonymousType() != null);
         SetableModifier[] mods = {synthetic.iff(syn), mandatory.iff(idAttr || (!optional && identifyingNr < 0)), containment.iff(composite)};
         return idAttr ? new DIdentifyingAttribute(id, name, ruleSet, identifyingNr, cls, source, mods) : //
-                deriver != null ? new DConstant(id, name, ruleSet, cls, source, deriver, onlyTemporal, mods) : //
+                deriver != null ? new DConstant(id, name, ruleSet, cls, source, deriver, mods) : //
                         new DObservedAttribute(id, name, ruleSet, identifyingNr >= 0, isPublic, def, cls, opposite != null ? () -> of(oppositeLanguage, opposite) : null, source, mods);
     }
 
@@ -214,11 +214,6 @@ public interface DAttribute<O, T> extends DFeature {
         }
 
         @Override
-        public boolean onlyTemporal() {
-            return false;
-        }
-
-        @Override
         public String id() {
             return id;
         }
@@ -315,21 +310,14 @@ public interface DAttribute<O, T> extends DFeature {
         private final String          name;
         private final Supplier<SNode> source;
         private final Class<?>        cls;
-        private final boolean         onlyTemporal;
         private final IRuleSet        ruleSet;
 
-        public DConstant(Object id, String name, IRuleSet ruleSet, Class<?> cls, Supplier<SNode> source, Function<C, V> deriver, boolean onlyTemporal, SetableModifier... modifiers) {
+        public DConstant(Object id, String name, IRuleSet ruleSet, Class<?> cls, Supplier<SNode> source, Function<C, V> deriver, SetableModifier... modifiers) {
             super(id, null, null, null, deriver, null, modifiers);
             this.name = name;
             this.source = source;
             this.cls = cls;
-            this.onlyTemporal = onlyTemporal;
             this.ruleSet = ruleSet;
-        }
-
-        @Override
-        public boolean onlyTemporal() {
-            return onlyTemporal;
         }
 
         @Override

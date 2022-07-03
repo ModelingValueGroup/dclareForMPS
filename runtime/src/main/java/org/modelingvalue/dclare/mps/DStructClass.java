@@ -18,11 +18,11 @@ package org.modelingvalue.dclare.mps;
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
-import org.modelingvalue.collections.util.Triple;
+import org.modelingvalue.collections.util.Pair;
 
-public class DStructClass extends DObjectType<Triple<Set<SLanguage>, SStructClass, Boolean>> {
+public class DStructClass extends DObjectType<Pair<Set<SLanguage>, SStructClass>> {
 
-    public DStructClass(Triple<Set<SLanguage>, SStructClass, Boolean> identity) {
+    public DStructClass(Pair<Set<SLanguage>, SStructClass> identity) {
         super(identity);
     }
 
@@ -43,8 +43,4 @@ public class DStructClass extends DObjectType<Triple<Set<SLanguage>, SStructClas
         return id().a();
     }
 
-    @Override
-    public boolean external() {
-        return id().c();
-    }
 }

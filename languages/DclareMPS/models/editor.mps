@@ -1077,42 +1077,6 @@
           </node>
         </node>
       </node>
-      <node concept="3F0ifn" id="3I0pf1O7UZ1" role="3EZMnx">
-        <property role="3F0ifm" value="model" />
-        <ref role="1k5W1q" to="tpen:hgVS8CF" resolve="KeyWord" />
-        <node concept="Veino" id="4FbMPtU$CUw" role="3F10Kt">
-          <node concept="3ZlJ5R" id="2HLAWGSguf3" role="VblUZ">
-            <node concept="3clFbS" id="2HLAWGSguf4" role="2VODD2">
-              <node concept="3clFbF" id="2HLAWGSguiS" role="3cqZAp">
-                <node concept="2YIFZM" id="2HLAWGT1p3z" role="3clFbG">
-                  <ref role="37wK5l" to="u4ym:2HLAWGSyups" resolve="ifColor" />
-                  <ref role="1Pybhc" to="u4ym:30fQumnG8Au" resolve="DclareUtil" />
-                  <node concept="1Q80Hx" id="2HLAWGT1p3$" role="37wK5m" />
-                  <node concept="2nou5x" id="2HLAWGT1p3_" role="37wK5m">
-                    <property role="2noCCI" value="71F496" />
-                  </node>
-                  <node concept="10M0yZ" id="2HLAWGT68zV" role="37wK5m">
-                    <ref role="3cqZAo" to="z60i:~Color.white" resolve="white" />
-                    <ref role="1PxDUh" to="z60i:~Color" resolve="Color" />
-                  </node>
-                </node>
-              </node>
-            </node>
-          </node>
-        </node>
-        <node concept="pkWqt" id="3I0pf1O7V69" role="pqm2j">
-          <node concept="3clFbS" id="3I0pf1O7V6a" role="2VODD2">
-            <node concept="3clFbF" id="3I0pf1O7Zmo" role="3cqZAp">
-              <node concept="2OqwBi" id="3I0pf1O8BwN" role="3clFbG">
-                <node concept="pncrf" id="3I0pf1O8BwO" role="2Oq$k0" />
-                <node concept="3TrcHB" id="3I0pf1O8BwP" role="2OqNvi">
-                  <ref role="3TsBF5" to="7ggn:3I0pf1O7QPM" resolve="modelDeriver" />
-                </node>
-              </node>
-            </node>
-          </node>
-        </node>
-      </node>
       <node concept="3F0ifn" id="6_R8J$2CjPg" role="3EZMnx">
         <property role="3F0ifm" value="rule" />
         <ref role="1k5W1q" to="tpen:hgVS8CF" resolve="KeyWord" />

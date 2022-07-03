@@ -49,7 +49,7 @@ public class MPSSerializationHelper extends SerializationHelperWithPool<DObjectT
         return m -> {
             boolean ret = false;
             DModel model = m.dAncestor(DModel.class);
-            if (model == null || model.isShared()) {
+            if (model != null && model.isShared()) {
                 ret = (m instanceof DModule || m instanceof DModel || m instanceof DNode || m instanceof DServerMetaData) && !((DObject) m).isDclareOnly();
             }
             return ret;

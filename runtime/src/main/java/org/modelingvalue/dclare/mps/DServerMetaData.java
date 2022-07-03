@@ -24,40 +24,31 @@ import org.modelingvalue.dclare.Setable;
 
 public class DServerMetaData extends DObject {
 
-    protected static final Constant<Boolean, DServerMetaDataType>  SERVER_METADATA_TYPE = Constant.of("SERVER_METADATA_TYPE", p -> new DServerMetaDataType(p));
+    protected static final Constant<Boolean, DServerMetaDataType>  SERVER_METADATA_TYPE = Constant.of("SERVER_METADATA_TYPE", DServerMetaDataType::new);
 
     protected static final DObserved<DServerMetaData, Set<DModel>> SHARED_MODELS        = DObserved.of("SHARED_MODELS", Set.of(), null, (m, pre, post) -> {
                                                                                         }, plumbing);
 
-    protected static final Observer<DServerMetaData>               MODELS_RULE          = DObject.observer("$SHARED_MODELS", o -> {
-                                                                                            Set<DModel> sharedModels = DRepository.MODULES.get(dClareMPS().getRepository()).filter(m -> !m.isExternal()).flatMap(m -> DModule.MODELS.get(m)).filter(m -> m.isShared()).toSet();
-                                                                                            SHARED_MODELS.set(o, sharedModels);
-                                                                                        });
+    @SuppressWarnings("rawtypes")
+    protected static final Set<Observer>                           OBSERVERS            = DObject.OBSERVERS;
 
     @SuppressWarnings("rawtypes")
-    protected static final Set<Observer>                           OBSERVERS            = DObject.OBSERVERS.add(MODELS_RULE);
-
-    @SuppressWarnings("rawtypes")
-    protected static final Set<Setable>                            SETABLES             = DObject.SETABLES.addAll(Set.of(SHARED_MODELS));
+    protected static final Set<Setable>                            SETABLES             = DObject.SETABLES.add(SHARED_MODELS);
 
     public DServerMetaData() {
     }
 
     @Override
     protected void read(DClareMPS dClareMPS) {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
     protected DObjectType<?> getType() {
-        // TODO Auto-generated method stub
-        return SERVER_METADATA_TYPE.get(true);
+        return SERVER_METADATA_TYPE.get(isActive());
     }
 
     @Override
     public boolean isExternal() {
-        // TODO Auto-generated method stub
         return false;
     }
 

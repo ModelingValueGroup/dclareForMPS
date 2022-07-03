@@ -20,14 +20,14 @@ import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
-import org.modelingvalue.collections.util.Quintuple;
+import org.modelingvalue.collections.util.Quadruple;
 import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.Setable;
 
 @SuppressWarnings("unused")
-public class DNodeType extends DObjectType<Quintuple<Set<SLanguage>, SConcept, Set<String>, Boolean, IAspect>> {
+public class DNodeType extends DObjectType<Quadruple<Set<SLanguage>, SConcept, Set<String>, IAspect>> {
 
-    public DNodeType(Quintuple<Set<SLanguage>, SConcept, Set<String>, Boolean, IAspect> q) {
+    public DNodeType(Quadruple<Set<SLanguage>, SConcept, Set<String>, IAspect> q) {
         super(q);
     }
 
@@ -52,17 +52,12 @@ public class DNodeType extends DObjectType<Quintuple<Set<SLanguage>, SConcept, S
         return id().b();
     }
 
-    @Override
-    public boolean external() {
-        return id().d();
-    }
-
     public Set<String> getAnonymousTypes() {
         return id().c();
     }
 
     public IAspect copyAspect() {
-        return id().e();
+        return id().d();
     }
 
     @SuppressWarnings("rawtypes")

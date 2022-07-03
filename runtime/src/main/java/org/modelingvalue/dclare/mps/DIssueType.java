@@ -21,10 +21,12 @@ import org.modelingvalue.collections.Set;
 import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.Setable;
 
-public class DIsssueType extends DObjectType<Boolean> {
+import jetbrains.mps.errors.MessageStatus;
 
-    public DIsssueType(Boolean identity) {
-        super(identity);
+public class DIssueType extends DObjectType<MessageStatus> {
+
+    public DIssueType(MessageStatus type) {
+        super(type);
     }
 
     @SuppressWarnings("rawtypes")
@@ -42,11 +44,6 @@ public class DIsssueType extends DObjectType<Boolean> {
     @Override
     public Set<SLanguage> getLanguages() {
         return Set.of();
-    }
-
-    @Override
-    public boolean external() {
-        return id();
     }
 
     @SuppressWarnings("rawtypes")

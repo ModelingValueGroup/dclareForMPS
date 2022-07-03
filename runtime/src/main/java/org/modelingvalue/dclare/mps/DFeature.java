@@ -24,8 +24,6 @@ public interface DFeature extends Internable {
 
     boolean isSynthetic();
 
-    boolean onlyTemporal();
-
     IRuleSet ruleSet();
 
 }
