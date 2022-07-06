@@ -17,17 +17,22 @@ package org.modelingvalue.dclare.mps;
 
 import java.util.List;
 
+import org.modelingvalue.collections.Collection;
 import org.modelingvalue.dclare.Constant;
 import org.modelingvalue.dclare.Direction;
 
 public interface IAspect {
 
-    Constant<IAspect, Direction> DIRECTION = Constant.of("DIRECTION", Direction::of);
+    Constant<IAspect, Direction> DIRECTION = Constant.of("DIRECTION", a -> Direction.of(a, () -> {
+        return Collection.of(a.getOpposites()).sequential().map(o -> IAspect.DIRECTION.get(o)).toSet();
+    }));
 
     String getId();
 
     String getName();
 
     List<IAspect> getDependencies();
+
+    List<IAspect> getOpposites();
 
 }

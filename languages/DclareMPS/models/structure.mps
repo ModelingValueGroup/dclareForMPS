@@ -1237,7 +1237,14 @@
       <property role="20lmBu" value="fLJjDmT/aggregation" />
       <property role="20kJfa" value="dependencies" />
       <property role="20lbJX" value="fLJekj5/_0__n" />
-      <ref role="20lvS9" node="55f2HNAp5aa" resolve="AspectDependency" />
+      <ref role="20lvS9" node="55f2HNAp5aa" resolve="AspectReference" />
+    </node>
+    <node concept="1TJgyj" id="2_SJ50nnAGS" role="1TKVEi">
+      <property role="IQ2ns" value="2988345404935793464" />
+      <property role="20lmBu" value="fLJjDmT/aggregation" />
+      <property role="20kJfa" value="opposites" />
+      <property role="20lbJX" value="fLJekj5/_0__n" />
+      <ref role="20lvS9" node="55f2HNAp5aa" resolve="AspectReference" />
     </node>
     <node concept="1irR5M" id="55f2HNAqjSK" role="rwd14">
       <property role="2$rrk2" value="41" />
@@ -1295,7 +1302,7 @@
   <node concept="1TIwiD" id="55f2HNAp5aa">
     <property role="EcuMT" value="5858913584106721930" />
     <property role="3GE5qa" value="aspects" />
-    <property role="TrG5h" value="AspectDependency" />
+    <property role="TrG5h" value="AspectReference" />
     <ref role="1TJDcQ" to="tpck:gw2VY9q" resolve="BaseConcept" />
     <node concept="1TJgyj" id="55f2HNAp5ab" role="1TKVEi">
       <property role="IQ2ns" value="5858913584106721931" />

@@ -141,7 +141,8 @@ public class DIssue extends DIdentifiedObject {
 
     @Override
     protected DIssueType getType() {
-        return ISSUE_TYPE.get(getSeverity());
+        MessageStatus severity = getSeverity();
+        return ISSUE_TYPE.get(severity != null ? severity : MessageStatus.OK);
     }
 
     @Override

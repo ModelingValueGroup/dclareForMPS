@@ -127,6 +127,12 @@
         <child id="1081773367580" name="leftExpression" index="3uHU7B" />
       </concept>
       <concept id="1073239437375" name="jetbrains.mps.baseLanguage.structure.NotEqualsExpression" flags="nn" index="3y3z36" />
+      <concept id="1144226303539" name="jetbrains.mps.baseLanguage.structure.ForeachStatement" flags="nn" index="1DcWWT">
+        <child id="1144226360166" name="iterable" index="1DdaDG" />
+      </concept>
+      <concept id="1144230876926" name="jetbrains.mps.baseLanguage.structure.AbstractForStatement" flags="nn" index="1DupvO">
+        <child id="1144230900587" name="variable" index="1Duv9x" />
+      </concept>
       <concept id="1163668896201" name="jetbrains.mps.baseLanguage.structure.TernaryOperatorExpression" flags="nn" index="3K4zz7">
         <child id="1163668914799" name="condition" index="3K4Cdx" />
         <child id="1163668922816" name="ifTrue" index="3K4E3e" />
@@ -4757,6 +4763,123 @@
     <node concept="1YaCAy" id="F_kCLyp86q" role="1YuTPh">
       <property role="TrG5h" value="ruleSetReference" />
       <ref role="1YaFvo" to="7ggn:F_kCLyp1WG" resolve="RuleSetReference" />
+    </node>
+  </node>
+  <node concept="18kY7G" id="2_SJ50nrTTD">
+    <property role="TrG5h" value="check_Aspect" />
+    <property role="3GE5qa" value="aspects" />
+    <node concept="3clFbS" id="2_SJ50nrTTE" role="18ibNy">
+      <node concept="1DcWWT" id="2_SJ50nrTTW" role="3cqZAp">
+        <node concept="3cpWsn" id="2_SJ50nrTTX" role="1Duv9x">
+          <property role="TrG5h" value="opp" />
+          <node concept="3Tqbb2" id="2_SJ50nrU2K" role="1tU5fm">
+            <ref role="ehGHo" to="7ggn:55f2HNAp5aa" resolve="AspectReference" />
+          </node>
+        </node>
+        <node concept="2OqwBi" id="2_SJ50nrV2e" role="1DdaDG">
+          <node concept="1YBJjd" id="2_SJ50nrUIj" role="2Oq$k0">
+            <ref role="1YBMHb" node="2_SJ50nrTTG" resolve="aspect" />
+          </node>
+          <node concept="3Tsc0h" id="2_SJ50nrVjH" role="2OqNvi">
+            <ref role="3TtcxE" to="7ggn:2_SJ50nnAGS" resolve="opposites" />
+          </node>
+        </node>
+        <node concept="3clFbS" id="2_SJ50nrTTZ" role="2LFqv$">
+          <node concept="3clFbJ" id="2_SJ50nrWz8" role="3cqZAp">
+            <node concept="3fqX7Q" id="2_SJ50ns2qV" role="3clFbw">
+              <node concept="2OqwBi" id="2_SJ50ns2qX" role="3fr31v">
+                <node concept="2OqwBi" id="2_SJ50ns59t" role="2Oq$k0">
+                  <node concept="2OqwBi" id="2_SJ50ns2qY" role="2Oq$k0">
+                    <node concept="2OqwBi" id="2_SJ50nsaid" role="2Oq$k0">
+                      <node concept="37vLTw" id="2_SJ50ns2qZ" role="2Oq$k0">
+                        <ref role="3cqZAo" node="2_SJ50nrTTX" resolve="opposite" />
+                      </node>
+                      <node concept="3TrEf2" id="2_SJ50nsbF9" role="2OqNvi">
+                        <ref role="3Tt5mk" to="7ggn:55f2HNAp5ab" resolve="aspect" />
+                      </node>
+                    </node>
+                    <node concept="3Tsc0h" id="2_SJ50ns2r0" role="2OqNvi">
+                      <ref role="3TtcxE" to="7ggn:2_SJ50nnAGS" resolve="opposites" />
+                    </node>
+                  </node>
+                  <node concept="13MTOL" id="2_SJ50ns7BR" role="2OqNvi">
+                    <ref role="13MTZf" to="7ggn:55f2HNAp5ab" resolve="aspect" />
+                  </node>
+                </node>
+                <node concept="3JPx81" id="2_SJ50ns2r1" role="2OqNvi">
+                  <node concept="1YBJjd" id="2_SJ50ns2r2" role="25WWJ7">
+                    <ref role="1YBMHb" node="2_SJ50nrTTG" resolve="aspect" />
+                  </node>
+                </node>
+              </node>
+            </node>
+            <node concept="3clFbS" id="2_SJ50nrWza" role="3clFbx">
+              <node concept="2MkqsV" id="2_SJ50ns8T8" role="3cqZAp">
+                <node concept="Xl_RD" id="2_SJ50ns8Tk" role="2MkJ7o">
+                  <property role="Xl_RC" value="Opposites are not symmetrical" />
+                </node>
+                <node concept="37vLTw" id="2_SJ50nsdZp" role="1urrMF">
+                  <ref role="3cqZAo" node="2_SJ50nrTTX" resolve="opposite" />
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+      <node concept="1DcWWT" id="2_SJ50nw$Ua" role="3cqZAp">
+        <node concept="3cpWsn" id="2_SJ50nw$Ub" role="1Duv9x">
+          <property role="TrG5h" value="dep" />
+          <node concept="3Tqbb2" id="2_SJ50nw$Uc" role="1tU5fm">
+            <ref role="ehGHo" to="7ggn:55f2HNAp5aa" resolve="AspectReference" />
+          </node>
+        </node>
+        <node concept="2OqwBi" id="2_SJ50nw$Ud" role="1DdaDG">
+          <node concept="1YBJjd" id="2_SJ50nw$Ue" role="2Oq$k0">
+            <ref role="1YBMHb" node="2_SJ50nrTTG" resolve="aspect" />
+          </node>
+          <node concept="3Tsc0h" id="2_SJ50nw$Uf" role="2OqNvi">
+            <ref role="3TtcxE" to="7ggn:55f2HNAp5aW" resolve="dependencies" />
+          </node>
+        </node>
+        <node concept="3clFbS" id="2_SJ50nw$Ug" role="2LFqv$">
+          <node concept="3clFbJ" id="2_SJ50nw$Uh" role="3cqZAp">
+            <node concept="3clFbS" id="2_SJ50nw$Ut" role="3clFbx">
+              <node concept="2MkqsV" id="2_SJ50nw$Uu" role="3cqZAp">
+                <node concept="Xl_RD" id="2_SJ50nw$Uv" role="2MkJ7o">
+                  <property role="Xl_RC" value="Circular dependency" />
+                </node>
+                <node concept="37vLTw" id="2_SJ50nw$Uw" role="1urrMF">
+                  <ref role="3cqZAo" node="2_SJ50nw$Ub" resolve="opposite" />
+                </node>
+              </node>
+            </node>
+            <node concept="2OqwBi" id="2_SJ50nxBRd" role="3clFbw">
+              <node concept="2OqwBi" id="2_SJ50nxy0m" role="2Oq$k0">
+                <node concept="2OqwBi" id="2_SJ50nxt4X" role="2Oq$k0">
+                  <node concept="37vLTw" id="2_SJ50nxqEa" role="2Oq$k0">
+                    <ref role="3cqZAo" node="2_SJ50nw$Ub" resolve="dep" />
+                  </node>
+                  <node concept="3TrEf2" id="2_SJ50nxv$6" role="2OqNvi">
+                    <ref role="3Tt5mk" to="7ggn:55f2HNAp5ab" resolve="aspect" />
+                  </node>
+                </node>
+                <node concept="2qgKlT" id="2_SJ50nx$yP" role="2OqNvi">
+                  <ref role="37wK5l" to="us1s:2_SJ50nwJSh" resolve="allDependencies" />
+                </node>
+              </node>
+              <node concept="3JPx81" id="2_SJ50nxEFs" role="2OqNvi">
+                <node concept="1YBJjd" id="2_SJ50nxH7F" role="25WWJ7">
+                  <ref role="1YBMHb" node="2_SJ50nrTTG" resolve="aspect" />
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+    <node concept="1YaCAy" id="2_SJ50nrTTG" role="1YuTPh">
+      <property role="TrG5h" value="aspect" />
+      <ref role="1YaFvo" to="7ggn:55f2HNAoLSh" resolve="Aspect" />
     </node>
   </node>
 </model>

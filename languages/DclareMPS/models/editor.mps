@@ -5069,7 +5069,7 @@
   </node>
   <node concept="24kQdi" id="55f2HNAp5aB">
     <property role="3GE5qa" value="aspects" />
-    <ref role="1XX52x" to="7ggn:55f2HNAp5aa" resolve="AspectDependency" />
+    <ref role="1XX52x" to="7ggn:55f2HNAp5aa" resolve="AspectReference" />
     <node concept="3EZMnI" id="55f2HNAp5aD" role="2wV5jI">
       <node concept="1iCGBv" id="55f2HNAp5aK" role="3EZMnx">
         <ref role="1NtTu8" to="7ggn:55f2HNAp5ab" resolve="aspect" />
@@ -5955,7 +5955,6 @@
       <node concept="3F0ifn" id="55f2HNAp5bF" role="3EZMnx">
         <property role="3F0ifm" value="aspect" />
       </node>
-      <node concept="2iRfu4" id="55f2HNAp5bG" role="2iSdaV" />
       <node concept="3F0A7n" id="55f2HNAp5bO" role="3EZMnx">
         <ref role="1NtTu8" to="tpck:h0TrG11" resolve="name" />
         <node concept="VechU" id="55f2HNApkyd" role="3F10Kt">
@@ -5963,16 +5962,28 @@
         </node>
       </node>
       <node concept="3F0ifn" id="55f2HNAp5cC" role="3EZMnx">
-        <property role="3F0ifm" value="depends on" />
+        <property role="3F0ifm" value=" depends on" />
       </node>
       <node concept="3F2HdR" id="55f2HNAp5bZ" role="3EZMnx">
         <property role="2czwfO" value="," />
         <ref role="1NtTu8" to="7ggn:55f2HNAp5aW" resolve="dependencies" />
-        <node concept="2iRfu4" id="55f2HNAp5c9" role="2czzBx" />
         <node concept="3F0ifn" id="55f2HNAqmym" role="2czzBI">
           <property role="3F0ifm" value="..." />
         </node>
+        <node concept="l2Vlx" id="2_SJ50nnPNq" role="2czzBx" />
       </node>
+      <node concept="3F0ifn" id="2_SJ50nnPMw" role="3EZMnx">
+        <property role="3F0ifm" value=" opposites" />
+      </node>
+      <node concept="3F2HdR" id="2_SJ50nnPMO" role="3EZMnx">
+        <property role="2czwfO" value="," />
+        <ref role="1NtTu8" to="7ggn:2_SJ50nnAGS" resolve="opposites" />
+        <node concept="3F0ifn" id="2_SJ50nnPMQ" role="2czzBI">
+          <property role="3F0ifm" value="..." />
+        </node>
+        <node concept="l2Vlx" id="2_SJ50nnPNr" role="2czzBx" />
+      </node>
+      <node concept="l2Vlx" id="2_SJ50nnPNs" role="2iSdaV" />
     </node>
   </node>
   <node concept="24kQdi" id="4$bpWrNHP9b">

@@ -86,8 +86,6 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
     private static final String                                                                         CONNECT_SYNC_HOST_PORT  = System.getProperty("CONNECT_SYNC_HOST_PORT", null);
     private static final boolean                                                                        TRACE_MPS_MODEL_CHANGES = Boolean.getBoolean("TRACE_MPS_MODEL_CHANGES");
 
-    protected static Constant<SLanguage, Direction>                                                     DIRECTION               = Constant.of("DIRECTION", Direction::of);
-
     protected static Constant<SLanguage, IRuleAspect>                                                   RULE_ASPECT             = Constant.of("RULE_ASPECT", l -> {
                                                                                                                                     LanguageRuntime rtLang = registry().getLanguage(l);
                                                                                                                                     return rtLang != null ? rtLang.getAspect(IRuleAspect.class) : null;

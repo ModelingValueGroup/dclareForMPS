@@ -512,12 +512,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
         if (!id.isEmpty()) {
             Map<DAttribute, Object> map = Map.of();
             for (DAttribute attr : id) {
-                Object val = attr.get(this);
-                if (val == null) {
-                    return null;
-                } else {
-                    map = map.put(attr, val);
-                }
+                map = map.put(attr, attr.get(this));
             }
             return map;
         } else if (concept.isSubConceptOf(SNodeUtil.concept_INamedConcept)) {
@@ -531,21 +526,11 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
                 Map<SAbstractLink, Object> map = Map.of();
                 for (SReferenceLink rl : references) {
                     DNode referenced = REFERENCE.get(rl).get(this);
-                    Object val = referenced != null ? referenced.dMatchingIdentity() : null;
-                    if (val == null) {
-                        return null;
-                    } else {
-                        map = map.put(rl, val);
-                    }
+                    map = map.put(rl, referenced != null ? referenced.dIdentity() : null);
                 }
                 for (SContainmentLink cl : containments) {
                     DNode child = SINGLE_CONTAINMENT.get(cl).get(this);
-                    Object val = child != null ? child.dMatchingIdentity() : null;
-                    if (val == null) {
-                        return null;
-                    } else {
-                        map = map.put(cl, val);
-                    }
+                    map = map.put(cl, child != null ? child.dIdentity() : null);
                 }
                 return map;
             }
