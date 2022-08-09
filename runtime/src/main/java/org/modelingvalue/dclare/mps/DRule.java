@@ -30,7 +30,7 @@ public interface DRule<O> extends DFeature {
         @SuppressWarnings("unchecked")
         private DObserver(DRule rule) {
             super(rule, rule::run, Collection.of(rule.targets()).toSet(), //
-                    rule.initialLowPriority() ? Priority.backward : Priority.forward, //
+                    rule.initialLowPriority() ? Priority.outer : Priority.immediate, //
                     IAspect.DIRECTION.get(rule.ruleSet().getAspect()), //
                     LeafModifier.anonymous.iff(rule.ruleSet().getAnonymousType() != null));
         }
