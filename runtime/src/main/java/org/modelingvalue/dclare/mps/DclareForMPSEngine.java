@@ -203,25 +203,30 @@ public class DclareForMPSEngine implements DeployListener {
 
         @Override
         public void run() {
+            statusIterator.setInterruptedHandler(this::interruptedHandler);
             while (!stop) {
-                if (statusIterator.hasNext()) {
-                    Status status = statusIterator.next();
-                    if (!stop) {
-                        if (status == null) {
-                            dclareMPS.universeTransaction().handleException(new IllegalArgumentException("MoodUpdaterThread got null status while running"));
-                        } else {
-                            modelAccess.runWriteInEDT(() -> edtPayload(status));
-                        }
-                    }
-                } else {
+                if (!statusIterator.hasNext()) {
                     try {
                         futureDclareMPS.get();
                     } catch (InterruptedException | ExecutionException e) {
-                        if (!stop) {
-                            dclareMPS.universeTransaction().handleException(e);
+                        interruptedHandler(e);
+                    }
+                } else {
+                    Status status = statusIterator.next();
+                    if (!stop) {
+                        if (status != null) {
+                            modelAccess.runWriteInEDT(() -> edtPayload(status));
+                        } else {
+                            dclareMPS.universeTransaction().handleException(new IllegalArgumentException("MoodUpdaterThread got null status while running"));
                         }
                     }
                 }
+            }
+        }
+
+        private void interruptedHandler(Exception e) {
+            if (!stop) {
+                dclareMPS.universeTransaction().handleException(e);
             }
         }
 
