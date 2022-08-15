@@ -328,8 +328,10 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
             Highlighter highlighter = project.getComponent(Highlighter.class);
             modelAccess.runReadInEDT(() -> highlighter.removeChecker(languageEditorChecker));
             ImperativeTransaction it = imperativeTransaction;
-            invokeLater(it::stop);
-            imperativeTransaction = null;
+            if (it != null) {
+                invokeLater(it::stop);
+                imperativeTransaction = null;
+            }
             state.run(() -> getRepository().stop(this));
         }
         universeTransaction.kill();
