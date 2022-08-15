@@ -154,6 +154,9 @@ public abstract class DNewableObject<T extends DNewableObject, R, S> extends DId
             addOriginal(sObject);
             originalConstruct(sObject, reference(sObject), () -> this);
             init(dClareMPS(), sObject);
+        } else {
+            reParent(sObject);
+            addOriginal(sObject);
         }
         return sObject;
     }
@@ -203,5 +206,7 @@ public abstract class DNewableObject<T extends DNewableObject, R, S> extends DId
     protected abstract S create(R ref);
 
     protected abstract void addOriginal(S sObject);
+
+    protected abstract void reParent(S sNode);
 
 }

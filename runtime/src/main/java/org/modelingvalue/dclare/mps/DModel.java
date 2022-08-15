@@ -79,7 +79,8 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
                                                                                                      return sModel != null ? DModel.roots(sModel).sequential().map(DNode::of).toSet() : Set.of();
                                                                                                  }, (dModel, pre, post) -> {
                                                                                                      SModel sModel = dModel.original();
-                                                                                                     Set<SNode> soll = post.sequential().map(r -> r.reParent(sModel, null, r.original())).toSet();
+                                                                                                     Set<SNode> soll = post.sequential().map(r -> r.original()).toSet();
+                                                                                                     pre = DModel.ROOTS.fromMPS(dModel, Set.of());
                                                                                                      Set<SNode> ist = pre.sequential().map(DNode::tryOriginal).toSet();
                                                                                                      DObserved.map(ist, soll, sModel::addRootNode, sModel::removeRootNode);
                                                                                                  }, (t, m, b, a) -> {
@@ -304,6 +305,14 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
         SModuleBase sModule = (SModuleBase) getModule().original();
         if (!sModule.getModels().contains(sModel)) {
             sModule.registerModel((SModelBase) sModel);
+        }
+    }
+
+    @Override
+    protected void reParent(SModel sModel) {
+        SModuleBase sModule = (SModuleBase) sModel.getModule();
+        if (sModule != getModule().original()) {
+            sModule.unregisterModel((SModelBase) sModel);
         }
     }
 
