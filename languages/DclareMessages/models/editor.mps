@@ -1068,7 +1068,7 @@
                 <node concept="1Q80Hx" id="3NHQg08RN6c" role="37wK5m" />
               </node>
               <node concept="37vLTw" id="5Tx2On$lEf6" role="37wK5m">
-                <ref role="3cqZAo" node="5Tx2On$lEeY" resolve="withOnMode" />
+                <ref role="3cqZAo" node="5Tx2On$lEeY" resolve="newConfig" />
               </node>
             </node>
           </node>

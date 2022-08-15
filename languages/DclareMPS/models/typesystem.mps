@@ -4792,7 +4792,7 @@
                   <node concept="2OqwBi" id="2_SJ50ns2qY" role="2Oq$k0">
                     <node concept="2OqwBi" id="2_SJ50nsaid" role="2Oq$k0">
                       <node concept="37vLTw" id="2_SJ50ns2qZ" role="2Oq$k0">
-                        <ref role="3cqZAo" node="2_SJ50nrTTX" resolve="opposite" />
+                        <ref role="3cqZAo" node="2_SJ50nrTTX" resolve="opp" />
                       </node>
                       <node concept="3TrEf2" id="2_SJ50nsbF9" role="2OqNvi">
                         <ref role="3Tt5mk" to="7ggn:55f2HNAp5ab" resolve="aspect" />
@@ -4819,7 +4819,7 @@
                   <property role="Xl_RC" value="Opposites are not symmetrical" />
                 </node>
                 <node concept="37vLTw" id="2_SJ50nsdZp" role="1urrMF">
-                  <ref role="3cqZAo" node="2_SJ50nrTTX" resolve="opposite" />
+                  <ref role="3cqZAo" node="2_SJ50nrTTX" resolve="opp" />
                 </node>
               </node>
             </node>
@@ -4849,7 +4849,7 @@
                   <property role="Xl_RC" value="Circular dependency" />
                 </node>
                 <node concept="37vLTw" id="2_SJ50nw$Uw" role="1urrMF">
-                  <ref role="3cqZAo" node="2_SJ50nw$Ub" resolve="opposite" />
+                  <ref role="3cqZAo" node="2_SJ50nw$Ub" resolve="dep" />
                 </node>
               </node>
             </node>
