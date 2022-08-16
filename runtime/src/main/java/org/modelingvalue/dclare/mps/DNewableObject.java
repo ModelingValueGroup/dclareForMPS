@@ -154,7 +154,7 @@ public abstract class DNewableObject<T extends DNewableObject, R, S> extends DId
             addOriginal(sObject);
             originalConstruct(sObject, reference(sObject), () -> this);
             init(dClareMPS(), sObject);
-        } else {
+        } else if (isActive()) {
             reParent(sObject);
             addOriginal(sObject);
         }
