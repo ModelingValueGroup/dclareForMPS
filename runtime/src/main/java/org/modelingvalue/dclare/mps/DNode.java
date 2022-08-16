@@ -42,6 +42,7 @@ import org.modelingvalue.dclare.*;
 
 import jetbrains.mps.errors.item.IssueKindReportItem;
 import jetbrains.mps.errors.item.NodeReportItem;
+import jetbrains.mps.lang.smodel.generator.smodelAdapter.SLinkOperations;
 import jetbrains.mps.lang.smodel.generator.smodelAdapter.SNodeOperations;
 import jetbrains.mps.smodel.DynamicReference;
 import jetbrains.mps.smodel.SNodeUtil;
@@ -395,8 +396,12 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
             SNode sParent = ((DNode) parent).original();
             //noinspection ConstantConditions
             if (sNode.getParent() == null) {
-                Setable<Mutable, ?> containing = dContaining();
-                sParent.addChild(containing != null && containing.id() instanceof SContainmentLink ? (SContainmentLink) containing.id() : null, sNode);
+                SContainmentLink cl = (SContainmentLink) dContaining().id();
+                if (cl.isMultiple()) {
+                    SLinkOperations.addChild(sParent, cl, sNode);
+                } else {
+                    SLinkOperations.setTarget(sParent, cl, sNode);
+                }
             }
         }
         SConcept concept = getConcept();
