@@ -145,7 +145,7 @@ public interface DAttribute<O, T> extends DFeature {
 
         @Override
         protected V fromMPS(C object) {
-            return fromMPS(object, getDefault());
+            throw new UnsupportedOperationException();
         }
 
         @Override
