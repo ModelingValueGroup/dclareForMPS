@@ -30,6 +30,7 @@ import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.collections.util.QuadConsumer;
 import org.modelingvalue.collections.util.TriConsumer;
 import org.modelingvalue.dclare.Action;
+import org.modelingvalue.dclare.DerivationTransaction;
 import org.modelingvalue.dclare.LeafModifier;
 import org.modelingvalue.dclare.LeafTransaction;
 import org.modelingvalue.dclare.Observed;
@@ -129,7 +130,8 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
 
     @Override
     public T get(O object) {
-        if (fromMPS != null && !object.isActive()) {
+        LeafTransaction tx = LeafTransaction.getCurrent();
+        if (fromMPS != null && (tx instanceof DerivationTransaction || !object.isActive())) {
             return fromMPS(object);
         } else {
             return super.get(object);
