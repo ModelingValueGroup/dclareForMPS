@@ -4882,5 +4882,37 @@
       <ref role="1YaFvo" to="7ggn:55f2HNAoLSh" resolve="Aspect" />
     </node>
   </node>
+  <node concept="18kY7G" id="v36rleFU1e">
+    <property role="TrG5h" value="emptyAspect" />
+    <node concept="3clFbS" id="v36rleFU1f" role="18ibNy">
+      <node concept="3clFbJ" id="v36rleFU1q" role="3cqZAp">
+        <node concept="3clFbC" id="v36rleFU_f" role="3clFbw">
+          <node concept="10Nm6u" id="v36rleFUFh" role="3uHU7w" />
+          <node concept="2OqwBi" id="v36rleFUcZ" role="3uHU7B">
+            <node concept="1YBJjd" id="v36rleFU1A" role="2Oq$k0">
+              <ref role="1YBMHb" node="v36rleFU1h" resolve="ruleSet" />
+            </node>
+            <node concept="3TrEf2" id="v36rleFUot" role="2OqNvi">
+              <ref role="3Tt5mk" to="7ggn:55f2HNAp5cR" resolve="aspect" />
+            </node>
+          </node>
+        </node>
+        <node concept="3clFbS" id="v36rleFU1s" role="3clFbx">
+          <node concept="2MkqsV" id="v36rleFUFD" role="3cqZAp">
+            <node concept="Xl_RD" id="v36rleFUFP" role="2MkJ7o">
+              <property role="Xl_RC" value="Empty aspect" />
+            </node>
+            <node concept="1YBJjd" id="v36rleFUG$" role="1urrMF">
+              <ref role="1YBMHb" node="v36rleFU1h" resolve="ruleSet" />
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+    <node concept="1YaCAy" id="v36rleFU1h" role="1YuTPh">
+      <property role="TrG5h" value="ruleSet" />
+      <ref role="1YaFvo" to="7ggn:29R9$zZUovD" resolve="RuleSet" />
+    </node>
+  </node>
 </model>
 
