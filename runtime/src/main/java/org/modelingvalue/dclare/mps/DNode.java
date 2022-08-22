@@ -142,7 +142,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                    SNode orig = dNode.tryOriginal();
                                                                                                                                    SReference ref = orig != null ? orig.getReference(sr) : null;
                                                                                                                                    SNode sNode = ref != null ? ref.getTargetNode() : null;
-                                                                                                                                   return sNode != null ? DNode.of(sNode) : null;
+                                                                                                                                   return sNode != null ? DNode.of(sNode) : ref != null ? referenceConstruct(ref.getTargetNodeReference(), () -> null) : null;
                                                                                                                                }, (dNode, pre, post) -> {
                                                                                                                                    SNode sNode = dNode.original();
                                                                                                                                    SNode soll = post != null ? post.original() : null;
