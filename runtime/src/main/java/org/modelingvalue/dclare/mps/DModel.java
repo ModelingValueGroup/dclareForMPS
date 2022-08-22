@@ -177,8 +177,14 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
                                                                                                          }
                                                                                                      }
                                                                                                  });
+
+    private static final Observer<DModel>                                        ACTIVATE_RULE   = DObject.observer("$ACTIVATE_RULE", o -> {
+                                                                                                     if (!o.dDerivedConstructions().isEmpty()) {
+                                                                                                         ACTIVE.set(o, true);
+                                                                                                     }
+                                                                                                 });
     @SuppressWarnings("rawtypes")
-    protected static final Set<Observer>                                         OBSERVERS       = DNewableObject.OBSERVERS.add(REFERENCED_RULE);
+    protected static final Set<Observer>                                         OBSERVERS       = DNewableObject.OBSERVERS.addAll(Set.of(REFERENCED_RULE, ACTIVATE_RULE));
 
     @SuppressWarnings("rawtypes")
     protected static final Set<Setable>                                          SETABLES        = DNewableObject.SETABLES.addAll(Set.of(NAME, ROOTS, MODEL_ROOT, USED_MODELS, USED_LANGUAGES, USED_DEVKITS, ACTIVE, LOADED, SHARED));
