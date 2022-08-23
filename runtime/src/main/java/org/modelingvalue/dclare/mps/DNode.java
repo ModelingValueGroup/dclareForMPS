@@ -15,15 +15,15 @@
 
 package org.modelingvalue.dclare.mps;
 
-import static org.modelingvalue.dclare.SetableModifier.*;
-
-import java.util.Objects;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
-import org.jetbrains.mps.openapi.language.*;
+import org.jetbrains.mps.openapi.language.SAbstractConcept;
+import org.jetbrains.mps.openapi.language.SAbstractLink;
+import org.jetbrains.mps.openapi.language.SConcept;
+import org.jetbrains.mps.openapi.language.SConceptFeature;
+import org.jetbrains.mps.openapi.language.SContainmentLink;
+import org.jetbrains.mps.openapi.language.SInterfaceConcept;
+import org.jetbrains.mps.openapi.language.SLanguage;
+import org.jetbrains.mps.openapi.language.SProperty;
+import org.jetbrains.mps.openapi.language.SReferenceLink;
 import org.jetbrains.mps.openapi.model.ResolveInfo;
 import org.jetbrains.mps.openapi.model.SModel;
 import org.jetbrains.mps.openapi.model.SModelReference;
@@ -38,7 +38,27 @@ import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.collections.util.Quadruple;
 import org.modelingvalue.collections.util.TriConsumer;
-import org.modelingvalue.dclare.*;
+import org.modelingvalue.dclare.Constant;
+import org.modelingvalue.dclare.Construction;
+import org.modelingvalue.dclare.DerivationTransaction;
+import org.modelingvalue.dclare.IdentityDerivationTransaction;
+import org.modelingvalue.dclare.LeafModifier;
+import org.modelingvalue.dclare.LeafTransaction;
+import org.modelingvalue.dclare.Mutable;
+import org.modelingvalue.dclare.MutableTransaction;
+import org.modelingvalue.dclare.Newable;
+import org.modelingvalue.dclare.Observer;
+import org.modelingvalue.dclare.ObserverTransaction;
+import org.modelingvalue.dclare.Setable;
+import org.modelingvalue.dclare.State;
+import org.modelingvalue.dclare.Transaction;
+import org.modelingvalue.dclare.UniverseTransaction;
+
+import java.util.Objects;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import jetbrains.mps.errors.item.IssueKindReportItem;
 import jetbrains.mps.errors.item.NodeReportItem;
@@ -46,6 +66,11 @@ import jetbrains.mps.lang.smodel.generator.smodelAdapter.SLinkOperations;
 import jetbrains.mps.lang.smodel.generator.smodelAdapter.SNodeOperations;
 import jetbrains.mps.smodel.DynamicReference;
 import jetbrains.mps.smodel.SNodeUtil;
+
+import static org.modelingvalue.dclare.SetableModifier.containment;
+import static org.modelingvalue.dclare.SetableModifier.durable;
+import static org.modelingvalue.dclare.SetableModifier.plumbing;
+import static org.modelingvalue.dclare.SetableModifier.synthetic;
 
 @SuppressWarnings("unused")
 public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implements SNode {
@@ -366,8 +391,10 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
         }
     }
 
+    private final boolean isINamedConcept;
     protected DNode(Object[] identity) {
         super(identity);
+        isINamedConcept = isInstanceOfConcept(SNodeUtil.concept_INamedConcept);
     }
 
     @Override
@@ -404,8 +431,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
                 }
             }
         }
-        SConcept concept = getConcept();
-        if (concept.isSubConceptOf(SNodeUtil.concept_INamedConcept)) {
+        if (isINamedConcept) {
             sNode.setProperty(SNodeUtil.property_INamedConcept_name, PROPERTY.get(SNodeUtil.property_INamedConcept_name).get(this));
         }
     }
@@ -436,7 +462,20 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
 
     @Override
     public String toString() {
-        return getConcept().getName() + "#" + identity[0];
+        return getConcept().getName() + "#" + identity[0] + toStringNameIfAvailable();
+    }
+
+    private String toStringNameIfAvailable() {
+        if (isINamedConcept) {
+            LeafTransaction current = LeafTransaction.getCurrent();
+            if (current != null) {
+                String name = current.state().get(this, PROPERTY.get(SNodeUtil.property_INamedConcept_name));
+                if (name != null) {
+                    return '\'' + name + '\'';
+                }
+            }
+        }
+        return "";
     }
 
     @Override
@@ -532,7 +571,6 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
     @SuppressWarnings({"rawtypes", "unchecked", "deprecation"})
     @Override
     public Object dIdentity() {
-        SConcept concept = getConcept();
         Set<DAttribute> id = TYPE.get(this).getIdentifying();
         if (!id.isEmpty()) {
             Map<DAttribute, Object> map = Map.of();
@@ -540,9 +578,10 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
                 map = map.put(attr, attr.get(this));
             }
             return map;
-        } else if (concept.isSubConceptOf(SNodeUtil.concept_INamedConcept)) {
+        } else if (isINamedConcept) {
             return getName();
         } else {
+            SConcept concept = getConcept();
             Set<SReferenceLink> references = SINGLE_REFERENCES.get(concept);
             Set<SContainmentLink> containments = SINGLE_CONTAINMENTS.get(concept);
             if (references.isEmpty() && containments.isEmpty()) {

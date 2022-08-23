@@ -5821,13 +5821,33 @@
       </node>
       <node concept="3Tm1VV" id="2$O6I01klgT" role="1B3o_S" />
       <node concept="3clFbS" id="2$O6I01klgU" role="3clF47">
+        <node concept="3cpWs8" id="3ioQSqQLsdV" role="3cqZAp">
+          <node concept="3cpWsn" id="3ioQSqQLsdW" role="3cpWs9">
+            <property role="TrG5h" value="currentTxType" />
+            <node concept="3uibUv" id="3ioQSqQLrmF" role="1tU5fm">
+              <ref role="3uigEE" to="wyt6:~String" resolve="String" />
+            </node>
+            <node concept="2OqwBi" id="3ioQSqQLsdX" role="33vP2m">
+              <node concept="2YIFZM" id="3ioQSqQLsdY" role="2Oq$k0">
+                <ref role="37wK5l" to="kag7:~LeafTransaction.getCurrent()" resolve="getCurrent" />
+                <ref role="1Pybhc" to="kag7:~LeafTransaction" resolve="LeafTransaction" />
+              </node>
+              <node concept="liA8E" id="3ioQSqQLsdZ" role="2OqNvi">
+                <ref role="37wK5l" to="kag7:~LeafTransaction.getCurrentTypeForTrace()" resolve="getCurrentTypeForTrace" />
+              </node>
+            </node>
+          </node>
+        </node>
         <node concept="RRSsy" id="2$O6I01k0e3" role="3cqZAp">
           <property role="RRSoG" value="h1akgim/info" />
           <node concept="2YIFZM" id="2$O6I04c6wK" role="RRSoy">
             <ref role="1Pybhc" to="wyt6:~String" resolve="String" />
             <ref role="37wK5l" to="wyt6:~String.format(java.lang.String,java.lang.Object...)" resolve="format" />
             <node concept="Xl_RD" id="2$O6I04c6wL" role="37wK5m">
-              <property role="Xl_RC" value="+++++ %s: %s" />
+              <property role="Xl_RC" value="+++++ %s %s: %s" />
+            </node>
+            <node concept="37vLTw" id="3ioQSqQL$cq" role="37wK5m">
+              <ref role="3cqZAo" node="3ioQSqQLsdW" resolve="currentTxType" />
             </node>
             <node concept="37vLTw" id="2$O6I04c6wM" role="37wK5m">
               <ref role="3cqZAo" node="2$O6I01kDBC" resolve="message" />
@@ -5844,7 +5864,10 @@
               <ref role="37wK5l" to="t4tl:~DClareMPS.instance()" resolve="instance" />
             </node>
             <node concept="liA8E" id="1eooSyZP6NC" role="2OqNvi">
-              <ref role="37wK5l" to="t4tl:~DClareMPS.addTraceMessage(java.lang.Object,java.lang.String)" resolve="addTraceMessage" />
+              <ref role="37wK5l" to="t4tl:~DClareMPS.addTraceMessage(java.lang.String,java.lang.Object,java.lang.String)" resolve="addTraceMessage" />
+              <node concept="37vLTw" id="7lWcteUzu44" role="37wK5m">
+                <ref role="3cqZAo" node="3ioQSqQLsdW" resolve="currentTxType" />
+              </node>
               <node concept="37vLTw" id="OthMe3lvvo" role="37wK5m">
                 <ref role="3cqZAo" node="2$O6I01klgP" resolve="node" />
               </node>

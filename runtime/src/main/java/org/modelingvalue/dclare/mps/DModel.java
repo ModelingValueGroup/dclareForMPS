@@ -15,18 +15,19 @@
 
 package org.modelingvalue.dclare.mps;
 
-import static org.modelingvalue.dclare.SetableModifier.containment;
-import static org.modelingvalue.dclare.SetableModifier.plumbing;
-import static org.modelingvalue.dclare.mps.DServerMetaData.SHARED_MODELS;
-
-import java.util.Collections;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
-
 import org.jetbrains.mps.openapi.language.SAbstractConcept;
 import org.jetbrains.mps.openapi.language.SConcept;
 import org.jetbrains.mps.openapi.language.SLanguage;
-import org.jetbrains.mps.openapi.model.*;
+import org.jetbrains.mps.openapi.model.EditableSModel;
+import org.jetbrains.mps.openapi.model.SModel;
+import org.jetbrains.mps.openapi.model.SModelId;
+import org.jetbrains.mps.openapi.model.SModelListener;
+import org.jetbrains.mps.openapi.model.SModelName;
+import org.jetbrains.mps.openapi.model.SModelReference;
+import org.jetbrains.mps.openapi.model.SNode;
+import org.jetbrains.mps.openapi.model.SNodeAccessListener;
+import org.jetbrains.mps.openapi.model.SNodeChangeListener;
+import org.jetbrains.mps.openapi.model.SNodeId;
 import org.jetbrains.mps.openapi.module.SModule;
 import org.jetbrains.mps.openapi.module.SModuleReference;
 import org.jetbrains.mps.openapi.persistence.DataSource;
@@ -43,6 +44,10 @@ import org.modelingvalue.dclare.Setable;
 import org.modelingvalue.dclare.State;
 import org.modelingvalue.dclare.mps.DRule.DObserverTransaction;
 
+import java.util.Collections;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
 import jetbrains.mps.errors.item.ModelReportItem;
 import jetbrains.mps.extapi.model.SModelBase;
 import jetbrains.mps.extapi.module.SModuleBase;
@@ -53,6 +58,10 @@ import jetbrains.mps.project.Solution;
 import jetbrains.mps.smodel.Language;
 import jetbrains.mps.smodel.MPSModuleRepository;
 import jetbrains.mps.smodel.SModelInternal;
+
+import static org.modelingvalue.dclare.SetableModifier.containment;
+import static org.modelingvalue.dclare.SetableModifier.plumbing;
+import static org.modelingvalue.dclare.mps.DServerMetaData.SHARED_MODELS;
 
 @SuppressWarnings("unused")
 public class DModel extends DNewableObject<DModel, SModelReference, SModel> implements SModel {
@@ -575,8 +584,18 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
 
     @Override
     public String toString() {
-        String name = NAME.get(this);
-        return "model" + (name != null ? "#" + identity[0] + ":" + name : "#" + identity[0]);
+        return "model#" + identity[0] + toStringNameIfAvailable();
+    }
+
+    private String toStringNameIfAvailable() {
+        LeafTransaction current = LeafTransaction.getCurrent();
+        if (current != null) {
+            String name = current.state().get(this, NAME);
+            if (name != null) {
+                return '\'' + name + '\'';
+            }
+        }
+        return "";
     }
 
     @SuppressWarnings("unchecked")
