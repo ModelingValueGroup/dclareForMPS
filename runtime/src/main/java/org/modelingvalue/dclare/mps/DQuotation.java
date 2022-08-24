@@ -17,12 +17,17 @@ package org.modelingvalue.dclare.mps;
 
 import java.util.Arrays;
 
+import org.modelingvalue.dclare.Construction.Reason;
 import org.modelingvalue.dclare.Mutable;
 
 public class DQuotation extends DDerive {
 
     protected DQuotation(Mutable thiz, IRuleSet ruleSet, String anonymousType, Object[] ctx) {
         super(thiz, init(ctx, ruleSet, anonymousType));
+    }
+
+    private DQuotation(Mutable thiz, Object[] identity) {
+        super(thiz, identity);
     }
 
     private static Object[] init(Object[] ctx, IRuleSet ruleSet, String anonymousType) {
@@ -40,6 +45,11 @@ public class DQuotation extends DDerive {
     @Override
     public IRuleSet ruleSet() {
         return (IRuleSet) get(null, size() - 2);
+    }
+
+    @Override
+    protected Reason clone(Mutable thiz, Object[] identity) {
+        return new DQuotation(thiz, identity);
     }
 
 }

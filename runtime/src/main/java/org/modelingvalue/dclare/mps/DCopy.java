@@ -15,6 +15,7 @@
 
 package org.modelingvalue.dclare.mps;
 
+import org.modelingvalue.dclare.Construction.Reason;
 import org.modelingvalue.dclare.Mutable;
 
 public class DCopy extends DDerive {
@@ -48,6 +49,11 @@ public class DCopy extends DDerive {
     @Override
     public IRuleSet ruleSet() {
         return (IRuleSet) root().get(null, 1);
+    }
+
+    @Override
+    protected Reason clone(Mutable thiz, Object[] identity) {
+        return new DCopy(identity);
     }
 
 }

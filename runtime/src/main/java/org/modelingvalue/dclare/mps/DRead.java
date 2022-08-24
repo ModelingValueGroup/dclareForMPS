@@ -16,7 +16,9 @@
 package org.modelingvalue.dclare.mps;
 
 import org.modelingvalue.dclare.Construction;
+import org.modelingvalue.dclare.Construction.Reason;
 import org.modelingvalue.dclare.Direction;
+import org.modelingvalue.dclare.Mutable;
 
 public class DRead<R> extends Construction.Reason {
 
@@ -34,6 +36,11 @@ public class DRead<R> extends Construction.Reason {
     @Override
     public Direction direction() {
         return DIRECTION;
+    }
+
+    @Override
+    protected Reason clone(Mutable thiz, Object[] identity) {
+        throw new UnsupportedOperationException();
     }
 
 }
