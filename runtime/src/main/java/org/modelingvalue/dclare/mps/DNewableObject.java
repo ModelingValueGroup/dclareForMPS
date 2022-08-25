@@ -46,12 +46,12 @@ public abstract class DNewableObject<T extends DNewableObject, R, S> extends DId
 
     protected static <D extends DNewableObject> D copyRootConstruct(IRuleSet ruleSet, String anonymousType, DObject object, DNode copied, Supplier<D> supplier) {
         LeafTransaction tx = LeafTransaction.getCurrent();
-        return tx.construct(new DCopy(tx.mutable(), copied, ruleSet, anonymousType), supplier);
+        return tx.construct(new DCopy(copied, ruleSet, anonymousType), supplier);
     }
 
     protected static <D extends DNewableObject> D copyChildConstruct(DCopy root, DNode copied, Supplier<D> supplier) {
         LeafTransaction tx = LeafTransaction.getCurrent();
-        return tx.construct(new DCopy(tx.mutable(), copied, root), supplier);
+        return tx.construct(new DCopy(copied, root), supplier);
     }
 
     @SuppressWarnings("unchecked")
