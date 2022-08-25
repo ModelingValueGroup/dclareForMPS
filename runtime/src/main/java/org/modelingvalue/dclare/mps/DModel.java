@@ -75,12 +75,12 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
                                                                                                          dModel.setActive();
                                                                                                      }
                                                                                                      SModel sModel = dModel.tryOriginal();
-                                                                                                     return sModel != null ? DModel.roots(sModel).sequential().map(DNode::of).toSet() : Set.of();
+                                                                                                     return sModel != null ? DModel.roots(sModel).map(DNode::of).toSet() : Set.of();
                                                                                                  }, (dModel, pre, post) -> {
                                                                                                      SModel sModel = dModel.original();
-                                                                                                     Set<SNode> soll = post.sequential().map(r -> r.original()).toSet();
+                                                                                                     Set<SNode> soll = post.map(r -> r.original()).toSet();
                                                                                                      pre = DModel.ROOTS.fromMPS(dModel, Set.of());
-                                                                                                     Set<SNode> ist = pre.sequential().map(DNode::tryOriginal).toSet();
+                                                                                                     Set<SNode> ist = pre.map(DNode::tryOriginal).toSet();
                                                                                                      DObserved.map(ist, soll, sModel::addRootNode, sModel::removeRootNode);
                                                                                                  }, (t, m, b, a) -> {
                                                                                                      if (!m.isExternal()) {
@@ -97,7 +97,7 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
 
     public static final DObserved<DModel, Set<SLanguage>>                        USED_LANGUAGES  = DObserved.of("USED_LANGUAGES", Set.of(), dModel -> {
                                                                                                      SModelInternal sModel = (SModelInternal) dModel.tryOriginal();
-                                                                                                     return sModel != null ? Collection.of(sModel.importedLanguageIds()).sequential().toSet() : Set.of();
+                                                                                                     return sModel != null ? Collection.of(sModel.importedLanguageIds()).toSet() : Set.of();
                                                                                                  }, (dModel, pre, post) -> {
                                                                                                      SModelInternal sModel = (SModelInternal) dModel.original();
                                                                                                      DObserved.map(pre, post, sModel::addLanguage, sModel::deleteLanguageId);
@@ -106,23 +106,23 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
     @SuppressWarnings("deprecation")
     public static final DObserved<DModel, Set<DevKit>>                           USED_DEVKITS    = DObserved.of("USED_DEVKITS", Set.of(), dModel -> {
                                                                                                      SModelInternal sModel = (SModelInternal) dModel.tryOriginal();
-                                                                                                     return sModel != null ? Collection.of(sModel.importedDevkits()).sequential().                                                    //
+                                                                                                     return sModel != null ? Collection.of(sModel.importedDevkits()).                                                                 //
                                                                                                              map(r -> r.resolve(MPSModuleRepository.getInstance())).filter(DevKit.class).toSet() : Set.of();
                                                                                                  }, (dModel, pre, post) -> {
                                                                                                      SModelInternal sModel = (SModelInternal) dModel.original();
-                                                                                                     Set<SModuleReference> soll = post.sequential().map(dk -> dk.getModuleReference()).toSet();
-                                                                                                     Set<SModuleReference> ist = pre.sequential().map(dk -> dk.getModuleReference()).toSet();
+                                                                                                     Set<SModuleReference> soll = post.map(dk -> dk.getModuleReference()).toSet();
+                                                                                                     Set<SModuleReference> ist = pre.map(dk -> dk.getModuleReference()).toSet();
                                                                                                      DObserved.map(ist, soll, sModel::addDevKit, sModel::deleteDevKit);
                                                                                                  });
 
     public static final DObserved<DModel, Set<DModel>>                           USED_MODELS     = DObserved.of("USED_MODELS", Set.of(), dModel -> {
                                                                                                      SModelInternal sModel = (SModelInternal) dModel.tryOriginal();
-                                                                                                     return sModel != null ? Collection.of(((SModelInternal) sModel).getModelImports()).sequential().                                 //
+                                                                                                     return sModel != null ? Collection.of(((SModelInternal) sModel).getModelImports()).                                              //
                                                                                                              map(r -> r.resolve(null)).notNull().map(DModel::of).toSet() : Set.of();
                                                                                                  }, (o, pre, post) -> {
                                                                                                      SModelInternal sModel = (SModelInternal) o.original();
-                                                                                                     Set<SModelReference> soll = post.sequential().map(DModel::reference).notNull().toSet();
-                                                                                                     Set<SModelReference> ist = pre.sequential().map(DModel::reference).toSet();
+                                                                                                     Set<SModelReference> soll = post.map(DModel::reference).notNull().toSet();
+                                                                                                     Set<SModelReference> ist = pre.map(DModel::reference).toSet();
                                                                                                      DObserved.map(ist, soll, sModel::addModelImport, sModel::deleteModelImport);
                                                                                                  });
 

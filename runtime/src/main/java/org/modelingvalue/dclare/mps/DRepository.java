@@ -45,7 +45,7 @@ public class DRepository extends DFromOriginalObject<ProjectRepository> implemen
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     protected static final DObserved<DRepository, Set<DModule>>           MODULES         = DObserved.of("MODULES", Set.of(), r -> {
-                                                                                              return Collection.of(dClareMPS().project.getProjectModules()).sequential().map(DModule::of).toSet();
+                                                                                              return Collection.of(dClareMPS().project.getProjectModules()).map(DModule::of).toSet();
                                                                                           }, null, containment);
 
     @SuppressWarnings({"rawtypes", "unchecked"})

@@ -115,12 +115,12 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
     @SuppressWarnings("deprecation")
     public static final Constant<SContainmentLink, DObserved<DNode, List<DNode>>>                       MANY_CONTAINMENT       = Constant.of("MANY_CONTAINMENT", mc -> DObserved.of(mc, List.of(), dNode -> {
                                                                                                                                    SNode sNode = dNode.tryOriginal();
-                                                                                                                                   return sNode != null ? children(sNode, mc).sequential().map(DNode::of).toList() : List.of();
+                                                                                                                                   return sNode != null ? children(sNode, mc).map(DNode::of).toList() : List.of();
                                                                                                                                }, (dNode, pre, post) -> {
                                                                                                                                    SNode sNode = dNode.original();
-                                                                                                                                   List<SNode> soll = post.sequential().map(c -> c.original()).toList();
+                                                                                                                                   List<SNode> soll = post.map(c -> c.original()).toList();
                                                                                                                                    pre = DNode.MANY_CONTAINMENT.get(mc).fromMPS(dNode, List.of());
-                                                                                                                                   List<SNode> ist = pre.sequential().map(c -> c.tryOriginal()).toList();
+                                                                                                                                   List<SNode> ist = pre.map(c -> c.tryOriginal()).toList();
                                                                                                                                    DObserved.map(ist, soll, (n, a) -> sNode.insertChildAfter(mc, n, a), sNode::removeChild);
                                                                                                                                }, mc::getDeclarationNode, containment));
 

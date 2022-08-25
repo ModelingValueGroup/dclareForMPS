@@ -52,7 +52,7 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
     private static final Constant<Set<SLanguage>, DModuleType> MODULE_TYPE = Constant.of("MODULE_TYPE", DModuleType::new);
 
     public static final DObserved<DModule, Set<DModel>>        MODELS      = DObserved.of("MODELS", Set.of(), m -> {
-                                                                               return m.models().sequential().map(DModel::of).toSet();
+                                                                               return m.models().map(DModel::of).toSet();
                                                                            }, (m, pre, post) -> {
                                                                                if (m.isSolution()) {
                                                                                    Setable.<Set<DModel>, DModel> diff(pre, post,                                         //
@@ -62,7 +62,7 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
                                                                            }, containment);
 
     public static final DObserved<DModule, Set<SLanguage>>     LANGUAGES   = DObserved.of("LANGUAGES", Set.of(), m -> {
-                                                                               return Collection.of(m.original().getUsedLanguages()).sequential().toSet();
+                                                                               return Collection.of(m.original().getUsedLanguages()).toSet();
                                                                            }, null, (tx, o, pre, post) -> {
                                                                                Setable.<Set<SLanguage>, SLanguage> diff(pre, post,                                       //
                                                                                        a -> {

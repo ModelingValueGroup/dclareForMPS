@@ -325,7 +325,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
             checkerRegistry.unregisterChecker(modelChecker);
             checkerRegistry.unregisterChecker(nodeChecker);
             Highlighter highlighter = project.getComponent(Highlighter.class);
-            modelAccess.runReadInEDT(() -> highlighter.removeChecker(languageEditorChecker));
+            modelAccess.runReadInEDT(Collection.sequential(() -> highlighter.removeChecker(languageEditorChecker)));
             ImperativeTransaction it = imperativeTransaction;
             if (it != null) {
                 invokeLater(it::stop);
@@ -545,17 +545,17 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
     }
 
     public void command(Runnable runnable) {
-        invokeLater(() -> modelAccess.executeUndoTransparentCommand(runnable));
+        invokeLater(() -> modelAccess.executeUndoTransparentCommand(Collection.sequential(runnable)));
     }
 
     public void read(Runnable runnable) {
-        modelAccess.runReadAction(() -> {
+        modelAccess.runReadAction(Collection.sequential(() -> {
             try {
                 runnable.run();
             } catch (Throwable t) {
                 addMessage(t);
             }
-        });
+        }));
     }
 
     @SuppressWarnings("unchecked")
@@ -592,14 +592,14 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
                         o -> o instanceof DObject && !((DObject) o).isDclareOnly() && ((DObject) o).isActive(), //
                         s -> s instanceof DObserved && !((DObserved) s).isDclareOnly()).toList();
                 if (!diff.isEmpty()) {
-                    modelAccess.executeUndoTransparentCommand(() -> {
+                    modelAccess.executeUndoTransparentCommand(Collection.sequential(() -> {
                         diff.forEachOrdered(e -> {
                             DObject dObject = (DObject) e.getKey();
                             if (toMPS(dObject, e.getValue()) && !dObject.isExternal()) {
                                 addToChanged(dObject);
                             }
                         });
-                    });
+                    }));
                 }
                 if (last) {
                     if (!setted.isEmpty()) {
