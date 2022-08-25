@@ -26,13 +26,7 @@ import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
-import org.modelingvalue.dclare.Action;
-import org.modelingvalue.dclare.LeafModifier;
-import org.modelingvalue.dclare.Mutable;
-import org.modelingvalue.dclare.NonCheckingObserver;
-import org.modelingvalue.dclare.Observed;
-import org.modelingvalue.dclare.Observer;
-import org.modelingvalue.dclare.Setable;
+import org.modelingvalue.dclare.*;
 
 import jetbrains.mps.errors.item.IssueKindReportItem;
 
@@ -221,6 +215,11 @@ public abstract class DObject implements Mutable {
 
     protected boolean isActive() {
         return !isExternal();
+    }
+
+    public boolean deriveFromMPS() {
+        LeafTransaction tx = LeafTransaction.getCurrent();
+        return (tx instanceof DerivationTransaction || !isActive());
     }
 
     @SuppressWarnings("unchecked")

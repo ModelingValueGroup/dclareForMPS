@@ -682,14 +682,9 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
         }
     }
 
-    private boolean derive() {
-        LeafTransaction tx = LeafTransaction.getCurrent();
-        return !(tx instanceof IdentityDerivationTransaction) && (tx instanceof DerivationTransaction || !isActive());
-    }
-
     @Override
     public DNode getParent() {
-        if (derive()) {
+        if (deriveFromMPS()) {
             SNode parent = dClareMPS().read(() -> {
                 SNode sNode = tryOriginal();
                 return sNode != null ? sNode.getParent() : null;
@@ -703,7 +698,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
 
     @Override
     public SContainmentLink getContainmentLink() {
-        if (derive()) {
+        if (deriveFromMPS()) {
             return dClareMPS().read(() -> {
                 SNode sNode = tryOriginal();
                 return sNode != null ? sNode.getContainmentLink() : null;
