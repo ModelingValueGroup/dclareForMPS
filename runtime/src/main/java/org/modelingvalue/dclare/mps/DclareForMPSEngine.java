@@ -15,18 +15,19 @@
 
 package org.modelingvalue.dclare.mps;
 
-import org.jetbrains.mps.openapi.module.ModelAccess;
-import org.jetbrains.mps.openapi.module.SModule;
-import org.jetbrains.mps.openapi.util.ProgressMonitor;
-import org.modelingvalue.collections.util.StatusProvider.StatusIterator;
-import org.modelingvalue.dclare.UniverseTransaction;
-import org.modelingvalue.dclare.UniverseTransaction.Status;
-
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutionException;
+
+import org.jetbrains.mps.openapi.module.ModelAccess;
+import org.jetbrains.mps.openapi.module.SModule;
+import org.jetbrains.mps.openapi.util.ProgressMonitor;
+import org.modelingvalue.collections.Collection;
+import org.modelingvalue.collections.util.StatusProvider.StatusIterator;
+import org.modelingvalue.dclare.UniverseTransaction;
+import org.modelingvalue.dclare.UniverseTransaction.Status;
 
 import jetbrains.mps.classloading.ClassLoaderManager;
 import jetbrains.mps.classloading.DeployListener;
@@ -38,24 +39,24 @@ import jetbrains.mps.smodel.tempmodel.TempModule;
 
 @SuppressWarnings("unused")
 public class DclareForMPSEngine implements DeployListener {
-    public static final    int                             MAX_NR_OF_HISTORY_FOR_MPS = 4;
+    public static final int                                MAX_NR_OF_HISTORY_FOR_MPS = 4;
     protected static final CopyOnWriteArrayList<DClareMPS> ALL_DCLARE_MPS            = new CopyOnWriteArrayList<>();
     //
-    private final          ProjectBase                     project;
-    private final          ClassLoaderManager              classLoaderManager;
-    private final          EngineStatusHandler             engineStatusHandler;
-    private final          ModelAccess                     modelAccess;
+    private final ProjectBase                              project;
+    private final ClassLoaderManager                       classLoaderManager;
+    private final EngineStatusHandler                      engineStatusHandler;
+    private final ModelAccess                              modelAccess;
     //
-    private                CompletableFuture<Void>         futureDclareMPS;
-    private                DClareMPS                       dClareMPS;
-    private                MoodUpdaterThread               moodUpdaterThread;
-    private                DclareTracer                    tracer;
+    private CompletableFuture<Void>                        futureDclareMPS;
+    private DClareMPS                                      dClareMPS;
+    private MoodUpdaterThread                              moodUpdaterThread;
+    private DclareTracer                                   tracer;
 
     public DclareForMPSEngine(ProjectBase project, EngineStatusHandler engineStatusHandler) {
-        this.project             = project;
-        this.modelAccess         = project.getModelAccess();
+        this.project = project;
+        this.modelAccess = project.getModelAccess();
         this.engineStatusHandler = engineStatusHandler;
-        classLoaderManager       = Objects.requireNonNull(MPSCoreComponents.getInstance().getPlatform().findComponent(ClassLoaderManager.class));
+        classLoaderManager = Objects.requireNonNull(MPSCoreComponents.getInstance().getPlatform().findComponent(ClassLoaderManager.class));
         classLoaderManager.addListener(this);
         newDClareMPS(project, new DclareForMpsConfig().withMaxNrOfHistory(MAX_NR_OF_HISTORY_FOR_MPS).withStatusHandler(engineStatusHandler));
     }
@@ -63,7 +64,7 @@ public class DclareForMPSEngine implements DeployListener {
     private void newDClareMPS(ProjectBase project, DclareForMpsConfig config) {
         synchronized (ALL_DCLARE_MPS) {
             futureDclareMPS = new CompletableFuture<>();
-            dClareMPS       = new DClareMPS(this, project, config);
+            dClareMPS = new DClareMPS(this, project, config);
             StatusIterator<Status> statusIterator = dClareMPS.universeTransaction().getStatusIterator();
             if (moodUpdaterThread != null) {
                 moodUpdaterThread.stop = true;
@@ -186,18 +187,17 @@ public class DclareForMPSEngine implements DeployListener {
         return val;
     }
 
-
     private class MoodUpdaterThread extends Thread {
         private final DClareMPS               dclareMPS;
         private final CompletableFuture<Void> futureDclareMPS;
         private final StatusIterator<Status>  statusIterator;
-        private       boolean                 stop;
+        private boolean                       stop;
 
         public MoodUpdaterThread(DClareMPS dclareMPS, CompletableFuture<Void> futureDclareMPS, StatusIterator<Status> statusIterator) {
             super("dclare-moods-" + project.getName());
-            this.dclareMPS       = dclareMPS;
+            this.dclareMPS = dclareMPS;
             this.futureDclareMPS = futureDclareMPS;
-            this.statusIterator  = statusIterator;
+            this.statusIterator = statusIterator;
             setDaemon(true);
         }
 
@@ -215,7 +215,7 @@ public class DclareForMPSEngine implements DeployListener {
                     Status status = statusIterator.next();
                     if (!stop) {
                         if (status != null) {
-                            modelAccess.runWriteInEDT(() -> edtPayload(status));
+                            modelAccess.runWriteInEDT(Collection.sequential(() -> edtPayload(status)));
                         } else {
                             dclareMPS.universeTransaction().handleException(new IllegalArgumentException("MoodUpdaterThread got null status while running"));
                         }
