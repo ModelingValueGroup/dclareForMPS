@@ -44,14 +44,14 @@ public abstract class DNewableObject<T extends DNewableObject, R, S> extends DId
         return tx.construct(new DQuotation(tx.mutable(), ruleSet, anonymousType, ctx), supplier);
     }
 
-    protected static <D extends DNewableObject> D copyRootConstruct(IRuleSet ruleSet, String anonymousType, DObject object, DNode copied, Supplier<D> supplier) {
+    protected static <D extends DNewableObject> D copyRootConstruct(IRuleSet ruleSet, String anonymousType, DObject object, DNode copiedRoot, Supplier<D> supplier) {
         LeafTransaction tx = LeafTransaction.getCurrent();
-        return tx.construct(new DCopy(copied, ruleSet, anonymousType), supplier);
+        return tx.construct(new DCopy(copiedRoot, ruleSet, anonymousType), supplier);
     }
 
-    protected static <D extends DNewableObject> D copyChildConstruct(DCopy root, DNode copied, Supplier<D> supplier) {
+    protected static <D extends DNewableObject> D copyChildConstruct(DCopy root, DNode copiedChild, Supplier<D> supplier) {
         LeafTransaction tx = LeafTransaction.getCurrent();
-        return tx.construct(new DCopy(copied, root), supplier);
+        return tx.construct(new DCopy(copiedChild, root), supplier);
     }
 
     @SuppressWarnings("unchecked")
@@ -113,7 +113,7 @@ public abstract class DNewableObject<T extends DNewableObject, R, S> extends DId
         return cons != null && cons.reason() instanceof DRead ? (DRead) cons.reason() : null;
     }
 
-    private Collection<Reason> deriveReasons() {
+    protected Collection<Reason> deriveReasons() {
         return dDerivedConstructions().map(Construction::reason);
     }
 

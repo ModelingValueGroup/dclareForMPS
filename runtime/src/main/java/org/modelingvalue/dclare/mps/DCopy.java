@@ -20,12 +20,12 @@ import org.modelingvalue.dclare.Mutable;
 
 public class DCopy extends DDerive {
 
-    protected DCopy(DNode copied, IRuleSet ruleSet, String anonymousType) {
-        this(new Object[]{copied, ruleSet, anonymousType});
+    protected DCopy(DNode copiedRoot, IRuleSet ruleSet, String anonymousType) {
+        this(new Object[]{copiedRoot, ruleSet, anonymousType});
     }
 
-    protected DCopy(DNode copied, DCopy root) {
-        this(new Object[]{copied, root});
+    protected DCopy(DNode copiedChild, DCopy root) {
+        this(new Object[]{copiedChild, root});
     }
 
     private DCopy(Object[] identity) {

@@ -18,6 +18,7 @@ package org.modelingvalue.dclare.mps;
 import static org.modelingvalue.dclare.SetableModifier.*;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -301,8 +302,8 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
                 () -> new DNode(new Object[]{uniqueLong(concept), concept, false}));
     }
 
-    public DNode copy(IRuleSet ruleSet, String anonymousType, DObject ctx) {
-        return copyRootConstruct(ruleSet, anonymousType, ctx, this, //
+    public DNode copy(IRuleSet ruleSet, String anonymousType, DObject copiedRoot) {
+        return copyRootConstruct(ruleSet, anonymousType, copiedRoot, this, //
                 () -> new DNode(new Object[]{uniqueLong(getConcept()), getConcept(), false}));
     }
 
@@ -548,7 +549,14 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
     @SuppressWarnings({"rawtypes", "unchecked", "deprecation"})
     @Override
     public Object dIdentity() {
-        Set<DAttribute> id = TYPE.get(this).getIdentifying();
+        if (LeafTransaction.getCurrent() instanceof IdentityDerivationTransaction) {
+            Optional<DCopy> copy = deriveReasons().filter(DCopy.class).findFirst();
+            if (copy.isPresent()) {
+                return copy.get().copied().dIdentity();
+            }
+        }
+        DObjectType<?> dObjectType = TYPE.get(this);
+        Set<DAttribute> id = dObjectType.getIdentifying();
         if (!id.isEmpty()) {
             Map<DAttribute, Object> map = Map.of();
             for (DAttribute attr : id) {
