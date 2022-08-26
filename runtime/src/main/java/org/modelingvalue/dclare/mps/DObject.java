@@ -219,8 +219,10 @@ public abstract class DObject implements Mutable {
 
     public boolean deriveFromMPS() {
         LeafTransaction tx = LeafTransaction.getCurrent();
-        return (tx instanceof DerivationTransaction || !isActive());
+        return (tx instanceof DerivationTransaction || (tx instanceof IdentityDerivationTransaction && isRead()) || !isActive());
     }
+
+    protected abstract boolean isRead();
 
     @SuppressWarnings("unchecked")
     @Override

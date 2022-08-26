@@ -129,6 +129,11 @@ public abstract class DNewableObject<T extends DNewableObject, R, S> extends DId
         return deriveReasons().filter(DQuotation.class).map(DDerive::language).notNull().toSet();
     }
 
+    @Override
+    protected boolean isRead() {
+        return tryOriginal() != null;
+    }
+
     @SuppressWarnings("unchecked")
     public final S tryOriginal() {
         S sObject = ORIGINAL.isSet(this) ? (S) ORIGINAL.get(this) : null;

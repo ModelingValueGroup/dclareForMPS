@@ -190,11 +190,7 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
 
     public static DModel of(IRuleSet ruleSet, String anonymousType, Object[] identity, boolean temporal) {
         return quotationConstruct(ruleSet, anonymousType, identity, //
-                () -> {
-                    DModel dModel = new DModel(new Object[]{DClareMPS.uniqueLong(), temporal, false});
-                    ACTIVE.set(dModel, true);
-                    return dModel;
-                });
+                () -> new DModel(new Object[]{DClareMPS.uniqueLong(), temporal, false}));
     }
 
     @SuppressWarnings("deprecation")
@@ -253,11 +249,15 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
     @Override
     protected boolean isActive() {
         if (super.isActive()) {
-            boolean active = LeafTransaction.getCurrent().current().get(this, ACTIVE);
-            if (active) {
+            if (tryOriginal() == null) {
                 return true;
             } else {
-                return ACTIVE.get(this);
+                boolean active = LeafTransaction.getCurrent().current().get(this, ACTIVE);
+                if (active) {
+                    return true;
+                } else {
+                    return ACTIVE.get(this);
+                }
             }
         } else {
             return false;

@@ -52,4 +52,9 @@ public class DServerMetaData extends DObject {
         return false;
     }
 
+    @Override
+    protected boolean isRead() {
+        return false;
+    }
+
 }

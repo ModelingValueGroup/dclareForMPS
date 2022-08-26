@@ -198,6 +198,10 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
         return toMPS == null;
     }
 
+    protected boolean isRead() {
+        return fromMPS != null;
+    }
+
     @Override
     public IRuleSet ruleSet() {
         return null;
