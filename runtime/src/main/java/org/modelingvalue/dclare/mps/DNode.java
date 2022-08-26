@@ -184,7 +184,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                    for (SReferenceLink reference : c.getReferenceLinks()) {
                                                                                                                                        DObserved<DNode, DNode> observed = REFERENCE.get(reference);
                                                                                                                                        observers = observers.add(copyObserver(a, observed,                                                                                                    //
-                                                                                                                                               (t, s, r) -> observed.set(t, map(t, s, observed.get(s), r.copied()))));
+                                                                                                                                               (t, s, r) -> observed.set(t, map(t, s, observed.get(s), r))));
                                                                                                                                    }
                                                                                                                                    return observers;
                                                                                                                                });
@@ -500,7 +500,8 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
         }
     }
 
-    private static DNode map(DNode copy, DNode copied, DNode referenced, DNode copiedRoot) {
+    private static DNode map(DNode copy, DNode copied, DNode referenced, DCopy root) {
+        DNode copiedRoot = root.copied();
         if (referenced != null && referenced.hasAncestor(copiedRoot)) {
             while (!referenced.hasAncestor(copied)) {
                 copied = copied.getParent();
