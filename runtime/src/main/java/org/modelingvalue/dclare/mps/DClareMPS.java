@@ -634,15 +634,13 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
         boolean changed = false;
         for (Entry<Setable, Pair<Object, Object>> e : delta) {
             DObserved dObserved = (DObserved) e.getKey();
-            if (dObserved instanceof DObservedAttribute || !dObject.isExternal()) {
-                Object preVal = dObserved.fromMPS(dObject, e.getValue().a());
-                Object postVal = e.getValue().b();
-                if (!Objects.equals(preVal, postVal)) {
-                    changed = true;
-                    dObserved.toMPS(dObject, preVal, postVal);
-                    if (TRACE_MPS_MODEL_CHANGES && dObserved != DObject.CONTAINED) {
-                        System.err.println("DCLARE: MPS MODEL CHANGE: " + dObject + "." + dObserved + " = " + State.shortValueDiffString(preVal, postVal));
-                    }
+            Object preVal = dObserved.fromMPS(dObject, e.getValue().a());
+            Object postVal = e.getValue().b();
+            if (!Objects.equals(preVal, postVal)) {
+                changed = true;
+                dObserved.toMPS(dObject, preVal, postVal);
+                if (TRACE_MPS_MODEL_CHANGES && !(dObserved instanceof DObservedAttribute) && dObserved != DObject.CONTAINED) {
+                    System.err.println("DCLARE: MPS MODEL CHANGE: " + dObject + "." + dObserved + " = " + State.shortValueDiffString(preVal, postVal));
                 }
             }
         }

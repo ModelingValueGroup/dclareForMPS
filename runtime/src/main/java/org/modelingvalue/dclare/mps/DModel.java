@@ -72,7 +72,7 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
 
     public static final DObserved<DModel, Set<DNode>>                            ROOTS           = DObserved.of("ROOTS", Set.of(), dModel -> {
                                                                                                      if (LeafTransaction.getCurrent() instanceof DObserverTransaction) {
-                                                                                                         dModel.setActive();
+                                                                                                         dModel.setActiveIfHavingRules();
                                                                                                      }
                                                                                                      SModel sModel = dModel.tryOriginal();
                                                                                                      return sModel != null ? DModel.roots(sModel).map(DNode::of).toSet() : Set.of();
@@ -148,7 +148,7 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
                                                                                                      return sModel != null ? sModel.isLoaded() : Boolean.FALSE;
                                                                                                  }, null, (tx, m, b, a) -> {
                                                                                                      if (a) {
-                                                                                                         m.setActive();
+                                                                                                         m.setActiveIfHavingRules();
                                                                                                      }
                                                                                                  }, plumbing);
     @SuppressWarnings({"rawtypes", "unchecked"})
@@ -264,13 +264,19 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
         }
     }
 
-    protected void setActivateIfUsed() {
+    protected void setActiveIfObserved() {
         if (super.isActive() && DModel.ACTIVE.observers().get(this).anyMatch(e -> !(e.getKey() instanceof NonCheckingObserver))) {
-            setActive();
+            DModel.ACTIVE.set(this, Boolean.TRUE);
         }
     }
 
     private void setActive() {
+        if (super.isActive()) {
+            DModel.ACTIVE.set(this, Boolean.TRUE);
+        }
+    }
+
+    private void setActiveIfHavingRules() {
         if (super.isActive() && !TYPE.get(this).getLanguages().isEmpty()) {
             DModel.ACTIVE.set(this, Boolean.TRUE);
         }
