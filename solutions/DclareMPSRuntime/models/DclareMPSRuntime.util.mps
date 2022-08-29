@@ -5823,17 +5823,16 @@
       <node concept="3clFbS" id="2$O6I01klgU" role="3clF47">
         <node concept="3cpWs8" id="3ioQSqQLsdV" role="3cqZAp">
           <node concept="3cpWsn" id="3ioQSqQLsdW" role="3cpWs9">
-            <property role="TrG5h" value="currentTxType" />
-            <node concept="3uibUv" id="3ioQSqQLrmF" role="1tU5fm">
-              <ref role="3uigEE" to="wyt6:~String" resolve="String" />
-            </node>
-            <node concept="2OqwBi" id="3ioQSqQLsdX" role="33vP2m">
-              <node concept="2YIFZM" id="3ioQSqQLsdY" role="2Oq$k0">
-                <ref role="37wK5l" to="kag7:~LeafTransaction.getCurrent()" resolve="getCurrent" />
-                <ref role="1Pybhc" to="kag7:~LeafTransaction" resolve="LeafTransaction" />
+            <property role="TrG5h" value="pre" />
+            <node concept="17QB3L" id="kkv2xtusGg" role="1tU5fm" />
+            <node concept="2YIFZM" id="kkv2xtul2x" role="33vP2m">
+              <ref role="37wK5l" to="kag7:~LeafTransaction.getTraceLineStart(java.lang.String,int)" resolve="getTraceLineStart" />
+              <ref role="1Pybhc" to="kag7:~LeafTransaction" resolve="LeafTransaction" />
+              <node concept="Xl_RD" id="kkv2xtunBi" role="37wK5m">
+                <property role="Xl_RC" value="TRACE" />
               </node>
-              <node concept="liA8E" id="3ioQSqQLsdZ" role="2OqNvi">
-                <ref role="37wK5l" to="kag7:~LeafTransaction.getCurrentTypeForTrace()" resolve="getCurrentTypeForTrace" />
+              <node concept="3cmrfG" id="kkv2xtur9Z" role="37wK5m">
+                <property role="3cmrfH" value="0" />
               </node>
             </node>
           </node>
