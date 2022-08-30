@@ -176,14 +176,14 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
             @Override
             public void start(Action<Universe> action) {
                 if (config.isTraceDclare()) {
-                    System.err.println(DclareTrace.getLineStart("START ACTION") + action + "  " + this);
+                    System.err.println(DclareTrace.getLineStart("ACTION") + "START " + action + "  " + this);
                 }
             }
 
             @Override
             public void end(Action<Universe> action) {
                 if (config.isTraceDclare()) {
-                    System.err.println(DclareTrace.getLineStart("END ACTION") + action + "  " + this);
+                    System.err.println(DclareTrace.getLineStart("ACTION") + "END " + action + "  " + this);
                 }
             }
 
@@ -582,7 +582,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
     public void handleDelta(State imper, State dclare, boolean last, DefaultMap<Object, Set<Setable>> setted) {
         if (isRunning() && !universeTransaction.isKilled()) {
             if (config.isTraceDclare()) {
-                System.err.println(DclareTrace.getLineStart("START COMMIT") + this);
+                System.err.println(DclareTrace.getLineStart("COMMIT") + "START " + this);
             }
             committing.set(true);
             try {
@@ -615,7 +615,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
             } finally {
                 committing.set(false);
                 if (config.isTraceDclare()) {
-                    System.err.println(DclareTrace.getLineStart("END COMMIT") + this);
+                    System.err.println(DclareTrace.getLineStart("COMMIT") + "END " + this);
                 }
             }
         }
@@ -638,7 +638,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
                 changed = true;
                 dObserved.toMPS(dObject, preVal, postVal);
                 if (getConfig().isTraceMPSModelChanges() && !(dObserved instanceof DObservedAttribute) && dObserved != DObject.CONTAINED) {
-                    System.err.println(DclareTrace.getLineStart("MPS MODEL CHANGE") + dObject + "." + dObserved + " = " + State.shortValueDiffString(preVal, postVal));
+                    System.err.println(DclareTrace.getLineStart("MPS") + "MODEL CHANGE " + dObject + "." + dObserved + " = " + State.shortValueDiffString(preVal, postVal));
                 }
             }
         }
@@ -845,7 +845,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
             } finally {
                 thePool.shutdownNow();
                 if (config.isTraceDclare()) {
-                    System.err.println(DclareTrace.getLineStart("AWAIT TERMINATION") + this);
+                    System.err.println(DclareTrace.getLineStart("AWAIT") + "TERMINATION " + this);
                 }
                 try {
                     //noinspection ResultOfMethodCallIgnored
