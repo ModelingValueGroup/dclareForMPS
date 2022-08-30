@@ -33,13 +33,7 @@ import org.jetbrains.mps.openapi.persistence.ModelRoot;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
-import org.modelingvalue.dclare.Constant;
-import org.modelingvalue.dclare.LeafTransaction;
-import org.modelingvalue.dclare.NonCheckingObserver;
-import org.modelingvalue.dclare.Observed;
-import org.modelingvalue.dclare.Observer;
-import org.modelingvalue.dclare.Setable;
-import org.modelingvalue.dclare.State;
+import org.modelingvalue.dclare.*;
 import org.modelingvalue.dclare.mps.DRule.DObserverTransaction;
 
 import jetbrains.mps.errors.item.ModelReportItem;
@@ -134,7 +128,7 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
                                                                                                          SModel sModel = m.tryOriginal();
                                                                                                          if (sModel != null) {
                                                                                                              if (dClareMPS().getConfig().isTraceActivation()) {
-                                                                                                                 System.err.println("DCLARE: ACTIVATE " + m + " (" + sModel.getName() + ")");
+                                                                                                                 System.err.println(DclareTrace.getLineStart("ACTIVATE") + m + " (" + sModel.getName() + ")");
                                                                                                              }
                                                                                                              CONTAINED.set(m, Boolean.TRUE);
                                                                                                              USED_MODELS.readAction().trigger(m);

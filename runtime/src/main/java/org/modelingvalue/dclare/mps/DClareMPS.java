@@ -112,7 +112,6 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
                                                                                                                                        return SETABLES;
                                                                                                                                    }
                                                                                                                                };
-    protected static final String                                                                       DCLARE                 = "---------> DCLARE ";
     public static final Observed<DClareMPS, Set<SLanguage>>                                             ALL_LANGUAGES          = Observed.of("ALL_LANGUAGES", Set.of(), plumbing, doNotDerive);
     public static final Observed<DClareMPS, Set<IAspect>>                                               ALL_ASPECTS            = Observed.of("ALL_ASPECTS", Set.of(), (t, o, b, a) -> {
                                                                                                                                    o.allAspects.set(a.sortedBy(IAspect::getName).toList());
@@ -171,20 +170,20 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
         this.dServerMetaData = new DServerMetaData();
         invokeLater(() -> commandThread = Thread.currentThread());
         if (config.isTraceDclare()) {
-            System.err.println(DCLARE + "BEGIN " + this);
+            System.err.println(DclareTrace.getLineStart("BEGIN") + this);
         }
         universeTransaction = new UniverseTransaction(this, thePool, config.getDclareConfig()) {
             @Override
             public void start(Action<Universe> action) {
                 if (config.isTraceDclare()) {
-                    System.err.println(DCLARE + "START ACTION " + action + "  " + this);
+                    System.err.println(DclareTrace.getLineStart("START ACTION") + action + "  " + this);
                 }
             }
 
             @Override
             public void end(Action<Universe> action) {
                 if (config.isTraceDclare()) {
-                    System.err.println(DCLARE + "END ACTION   " + action + "  " + this);
+                    System.err.println(DclareTrace.getLineStart("END ACTION") + action + "  " + this);
                 }
             }
 
@@ -282,7 +281,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
     protected void start() {
         running = true;
         if (config.isTraceDclare()) {
-            System.err.println(DCLARE + "START " + this);
+            System.err.println(DclareTrace.getLineStart("START") + this);
         }
         changedModels = Concurrent.of(Set.of());
         changedModules = Concurrent.of(Set.of());
@@ -312,7 +311,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
             }
             running = false;
             if (config.isTraceDclare()) {
-                System.err.println(DCLARE + "STOP  " + this);
+                System.err.println(DclareTrace.getLineStart("STOP") + this);
             }
             State state = universeTransaction.lastState();
             invokeLater(() -> commandThread = null);
@@ -583,7 +582,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
     public void handleDelta(State imper, State dclare, boolean last, DefaultMap<Object, Set<Setable>> setted) {
         if (isRunning() && !universeTransaction.isKilled()) {
             if (config.isTraceDclare()) {
-                System.err.println(DCLARE + "    START COMMIT " + this);
+                System.err.println(DclareTrace.getLineStart("START COMMIT") + this);
             }
             committing.set(true);
             try {
@@ -616,7 +615,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
             } finally {
                 committing.set(false);
                 if (config.isTraceDclare()) {
-                    System.err.println(DCLARE + "    END COMMIT " + this);
+                    System.err.println(DclareTrace.getLineStart("END COMMIT") + this);
                 }
             }
         }
@@ -639,7 +638,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
                 changed = true;
                 dObserved.toMPS(dObject, preVal, postVal);
                 if (getConfig().isTraceMPSModelChanges() && !(dObserved instanceof DObservedAttribute) && dObserved != DObject.CONTAINED) {
-                    System.err.println("DCLARE: MPS MODEL CHANGE: " + dObject + "." + dObserved + " = " + State.shortValueDiffString(preVal, postVal));
+                    System.err.println(DclareTrace.getLineStart("MPS MODEL CHANGE") + dObject + "." + dObserved + " = " + State.shortValueDiffString(preVal, postVal));
                 }
             }
         }
@@ -846,22 +845,22 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
             } finally {
                 thePool.shutdownNow();
                 if (config.isTraceDclare()) {
-                    System.err.println(DCLARE + "AWAIT TERMINATION   " + this);
+                    System.err.println(DclareTrace.getLineStart("AWAIT TERMINATION") + this);
                 }
                 try {
                     //noinspection ResultOfMethodCallIgnored
                     thePool.awaitTermination(99, TimeUnit.DAYS);
                 } catch (InterruptedException e) {
-                    System.err.println(DCLARE + "the pool did not terminate in time: " + this + " (Thread " + Thread.currentThread().getName() + " was interrupted)");
+                    System.err.println(DclareTrace.getLineStart("ERROR") + "the pool did not terminate in time: " + this + " (Thread " + Thread.currentThread().getName() + " was interrupted)");
                     e.printStackTrace();
                 }
                 derivationState.stop();
                 if (config.isTraceDclare()) {
-                    System.err.println(DCLARE + "END   " + this);
+                    System.err.println(DclareTrace.getLineStart("END") + this);
                     if (result != null) {
                         for (@SuppressWarnings("rawtypes")
                         Entry<Setable, Integer> e : result.count()) {
-                            System.err.println(DCLARE + "    COUNT " + e.getKey() + " = " + e.getValue());
+                            System.err.println(DclareTrace.getLineStart("COUNT") + e.getKey() + " = " + e.getValue());
                         }
                     }
                 }
