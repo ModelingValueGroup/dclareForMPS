@@ -5825,14 +5825,11 @@
           <node concept="3cpWsn" id="3ioQSqQLsdW" role="3cpWs9">
             <property role="TrG5h" value="pre" />
             <node concept="17QB3L" id="kkv2xtusGg" role="1tU5fm" />
-            <node concept="2YIFZM" id="kkv2xtul2x" role="33vP2m">
-              <ref role="37wK5l" to="kag7:~LeafTransaction.getTraceLineStart(java.lang.String,int)" resolve="getTraceLineStart" />
-              <ref role="1Pybhc" to="kag7:~LeafTransaction" resolve="LeafTransaction" />
-              <node concept="Xl_RD" id="kkv2xtunBi" role="37wK5m">
+            <node concept="2YIFZM" id="1BVKwjPW5pb" role="33vP2m">
+              <ref role="37wK5l" to="kag7:~DclareTrace.getLineStart(java.lang.String)" resolve="getLineStart" />
+              <ref role="1Pybhc" to="kag7:~DclareTrace" resolve="DclareTrace" />
+              <node concept="Xl_RD" id="1BVKwjPW5pc" role="37wK5m">
                 <property role="Xl_RC" value="TRACE" />
-              </node>
-              <node concept="3cmrfG" id="kkv2xtur9Z" role="37wK5m">
-                <property role="3cmrfH" value="0" />
               </node>
             </node>
           </node>
