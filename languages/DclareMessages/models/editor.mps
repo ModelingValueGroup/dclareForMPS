@@ -1160,7 +1160,7 @@
                 <ref role="3uigEE" to="u4ym:22ExA6fKnVF" resolve="IAspectPrefs" />
               </node>
               <node concept="2YIFZM" id="3z4syYQCtU0" role="33vP2m">
-                <ref role="37wK5l" to="u4ym:6g03R83sM9t" resolve="getIAspectPres" />
+                <ref role="37wK5l" to="u4ym:6g03R83sM9t" resolve="getIAspectPrefs" />
                 <ref role="1Pybhc" to="u4ym:30fQumnG8Au" resolve="DclareUtil" />
                 <node concept="37vLTw" id="3z4syYQCulL" role="37wK5m">
                   <ref role="3cqZAo" node="3z4syYPGU6k" resolve="project" />

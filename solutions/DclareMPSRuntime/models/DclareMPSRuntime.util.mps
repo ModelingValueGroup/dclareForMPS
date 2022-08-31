@@ -5843,7 +5843,7 @@
               <property role="Xl_RC" value="+++++ %s %s: %s" />
             </node>
             <node concept="37vLTw" id="3ioQSqQL$cq" role="37wK5m">
-              <ref role="3cqZAo" node="3ioQSqQLsdW" resolve="currentTxType" />
+              <ref role="3cqZAo" node="3ioQSqQLsdW" resolve="pre" />
             </node>
             <node concept="37vLTw" id="2$O6I04c6wM" role="37wK5m">
               <ref role="3cqZAo" node="2$O6I01kDBC" resolve="message" />
@@ -5862,7 +5862,7 @@
             <node concept="liA8E" id="1eooSyZP6NC" role="2OqNvi">
               <ref role="37wK5l" to="t4tl:~DClareMPS.addTraceMessage(java.lang.String,java.lang.Object,java.lang.String)" resolve="addTraceMessage" />
               <node concept="37vLTw" id="7lWcteUzu44" role="37wK5m">
-                <ref role="3cqZAo" node="3ioQSqQLsdW" resolve="currentTxType" />
+                <ref role="3cqZAo" node="3ioQSqQLsdW" resolve="pre" />
               </node>
               <node concept="37vLTw" id="OthMe3lvvo" role="37wK5m">
                 <ref role="3cqZAo" node="2$O6I01klgP" resolve="node" />
