@@ -117,7 +117,7 @@ public class MPSSerializationHelper extends SerializationHelperWithPool<DObjectT
         public String serialize(DNode n, Object context) {
             return Util.encodeWithLength(//
                     mpsPersist().asString(n.getConcept()), //
-                    mpsPersist().asString(n.original().getReference()));
+                    mpsPersist().asString(n.tryOriginal().getReference()));
         }
 
         @Override

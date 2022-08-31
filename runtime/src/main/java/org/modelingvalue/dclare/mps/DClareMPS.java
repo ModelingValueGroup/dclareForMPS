@@ -586,21 +586,21 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
             }
             committing.set(true);
             try {
-                List<Entry<Object, Map<Setable, Pair<Object, Object>>>> diff = imper.diff(dclare, //
+                boolean changed = false;
+                Map<DObject, Map<DObserved, Pair<Object, Object>>>[] diff = new Map[]{imper.diff(dclare, //
                         o -> o instanceof DObject && !((DObject) o).isDclareOnly() && ((DObject) o).isActive(), //
-                        s -> s instanceof DObserved && !((DObserved) s).isDclareOnly()).toList();
-                if (!diff.isEmpty()) {
+                        s -> s instanceof DObserved && !((DObserved) s).isDclareOnly()).toMap(e -> (Entry) e)};
+                if (!diff[0].isEmpty()) {
+                    changed = true;
                     modelAccess.executeUndoTransparentCommand(Collection.sequential(() -> {
-                        diff.forEachOrdered(e -> {
-                            DObject dObject = (DObject) e.getKey();
-                            if (toMPS(dObject, e.getValue()) && !dObject.isExternal()) {
-                                addToChanged(dObject);
-                            }
-                        });
+                        do {
+                            toMPS(imper, dclare, diff, diff[0].get(0).getKey());
+                        } while (!diff[0].isEmpty());
                     }));
                 }
                 if (last) {
                     if (!setted.isEmpty()) {
+                        changed = true;
                         read(() -> {
                             for (DObject dObject : setted.filter(e -> e.getValue().anyMatch(s -> s instanceof DObserved && !((DObserved) s).isDclareOnly())).map(Entry::getKey).filter(DObject.class)) {
                                 addToChanged(dObject);
@@ -609,7 +609,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
                     }
                     runModelCheck();
                 }
-                if (!diff.isEmpty() || !setted.isEmpty()) {
+                if (changed) {
                     createNewDerivationState();
                 }
             } finally {
@@ -628,21 +628,51 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    private boolean toMPS(DObject dObject, Map<Setable, Pair<Object, Object>> delta) {
-        boolean changed = false;
-        for (Entry<Setable, Pair<Object, Object>> e : delta) {
-            DObserved dObserved = (DObserved) e.getKey();
-            Object preVal = dObserved.fromMPS(dObject, e.getValue().a());
-            Object postVal = e.getValue().b();
-            if (!Objects.equals(preVal, postVal)) {
-                changed = true;
-                dObserved.toMPS(dObject, preVal, postVal);
-                if (getConfig().isTraceMPSModelChanges() && !(dObserved instanceof DObservedAttribute) && dObserved != DObject.CONTAINED) {
-                    System.err.println(DclareTrace.getLineStart("MPS") + "MODEL CHANGE " + dObject + "." + dObserved + " = " + State.shortValueDiffString(preVal, postVal));
+    private void toMPS(State pre, State post, Map<DObject, Map<DObserved, Pair<Object, Object>>>[] diff, DObject dObject) {
+        Map<DObserved, Pair<Object, Object>> delta = diff[0].get(dObject);
+        if (delta != null) {
+            diff[0] = diff[0].removeKey(dObject);
+            parentToMPS(pre, post, post, diff, dObject);
+            boolean changed = false;
+            for (Entry<DObserved, Pair<Object, Object>> e : delta) {
+                DObserved dObserved = e.getKey();
+                Object preVal = dObserved.fromMPS(dObject, e.getValue().a());
+                Object postVal = e.getValue().b();
+                if (!Objects.equals(preVal, postVal)) {
+                    changed = true;
+                    if (dObserved.containment()) {
+                        DObserved.diff(preVal, postVal, a -> {
+                            if (a instanceof DObject) {
+                                parentToMPS(pre, post, pre, diff, (DObject) a);
+                            }
+                        }, r -> {
+                        });
+                    } else if (dObserved.isReference()) {
+                        DObserved.diff(preVal, postVal, a -> {
+                            if (a instanceof DObject) {
+                                parentToMPS(pre, post, post, diff, (DObject) a);
+                            }
+                        }, r -> {
+                        });
+                    }
+                    dObserved.toMPS(dObject, preVal, postVal);
+                    if (getConfig().isTraceMPSModelChanges() && !(dObserved instanceof DObservedAttribute) && dObserved != DObject.CONTAINED) {
+                        System.err.println(DclareTrace.getLineStart("MPS") + "MODEL CHANGE " + dObject + "." + dObserved + " = " + State.shortValueDiffString(preVal, postVal));
+                    }
                 }
             }
+            if (changed) {
+                addToChanged(dObject);
+            }
         }
-        return changed;
+    }
+
+    @SuppressWarnings("rawtypes")
+    private void parentToMPS(State imper, State dclare, State state, Map<DObject, Map<DObserved, Pair<Object, Object>>>[] diff, DObject dObject) {
+        Pair<Mutable, Setable<Mutable, ?>> pair = state.get(dObject, Mutable.D_PARENT_CONTAINING);
+        if (pair != null && pair.a() instanceof DObject) {
+            toMPS(imper, dclare, diff, (DObject) pair.a());
+        }
     }
 
     private void addToChanged(DObject dObject) {
