@@ -59,7 +59,7 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
                                                                                                      return sModel != null ? sModel.getName().getLongName() : null;
                                                                                                  }, (dModel, pre, post) -> {
                                                                                                      if (post != null) {
-                                                                                                         SModel sModel = dModel.original();
+                                                                                                         SModel sModel = dModel.tryOriginal();
                                                                                                          ((EditableSModel) sModel).rename(post, true);
                                                                                                      }
                                                                                                  });
@@ -71,11 +71,15 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
                                                                                                      SModel sModel = dModel.tryOriginal();
                                                                                                      return sModel != null ? DModel.roots(sModel).map(DNode::of).toSet() : Set.of();
                                                                                                  }, (dModel, pre, post) -> {
-                                                                                                     SModel sModel = dModel.original();
-                                                                                                     Set<SNode> soll = post.map(r -> r.original()).toSet();
-                                                                                                     pre = DModel.ROOTS.fromMPS(dModel, Set.of());
-                                                                                                     Set<SNode> ist = pre.map(DNode::tryOriginal).toSet();
-                                                                                                     DObserved.map(ist, soll, sModel::addRootNode, sModel::removeRootNode);
+                                                                                                     SModel sModel = dModel.tryOriginal();
+                                                                                                     Setable.<Set<DNode>, DNode> diff(pre, post, a -> {
+                                                                                                         SNode sNode = a.original();
+                                                                                                         sModel.addRootNode(sNode);
+                                                                                                         a.init(sNode);
+                                                                                                     }, r -> {
+                                                                                                         SNode sNode = r.tryOriginal();
+                                                                                                         sModel.removeRootNode(sNode);
+                                                                                                     });
                                                                                                  }, (t, m, b, a) -> {
                                                                                                      if (!m.isExternal()) {
                                                                                                          if (b.isEmpty() && !a.isEmpty()) {
@@ -93,7 +97,7 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
                                                                                                      SModelInternal sModel = (SModelInternal) dModel.tryOriginal();
                                                                                                      return sModel != null ? Collection.of(sModel.importedLanguageIds()).toSet() : Set.of();
                                                                                                  }, (dModel, pre, post) -> {
-                                                                                                     SModelInternal sModel = (SModelInternal) dModel.original();
+                                                                                                     SModelInternal sModel = (SModelInternal) dModel.tryOriginal();
                                                                                                      DObserved.map(pre, post, sModel::addLanguage, sModel::deleteLanguageId);
                                                                                                  });
 
@@ -103,7 +107,7 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
                                                                                                      return sModel != null ? Collection.of(sModel.importedDevkits()).                                                                 //
                                                                                                              map(r -> r.resolve(MPSModuleRepository.getInstance())).filter(DevKit.class).toSet() : Set.of();
                                                                                                  }, (dModel, pre, post) -> {
-                                                                                                     SModelInternal sModel = (SModelInternal) dModel.original();
+                                                                                                     SModelInternal sModel = (SModelInternal) dModel.tryOriginal();
                                                                                                      Set<SModuleReference> soll = post.map(dk -> dk.getModuleReference()).toSet();
                                                                                                      Set<SModuleReference> ist = pre.map(dk -> dk.getModuleReference()).toSet();
                                                                                                      DObserved.map(ist, soll, sModel::addDevKit, sModel::deleteDevKit);
@@ -114,7 +118,7 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
                                                                                                      return sModel != null ? Collection.of(((SModelInternal) sModel).getModelImports()).                                              //
                                                                                                              map(r -> r.resolve(null)).notNull().map(DModel::of).toSet() : Set.of();
                                                                                                  }, (o, pre, post) -> {
-                                                                                                     SModelInternal sModel = (SModelInternal) o.original();
+                                                                                                     SModelInternal sModel = (SModelInternal) o.tryOriginal();
                                                                                                      Set<SModelReference> soll = post.map(DModel::reference).notNull().toSet();
                                                                                                      Set<SModelReference> ist = pre.map(DModel::reference).toSet();
                                                                                                      DObserved.map(ist, soll, sModel::addModelImport, sModel::deleteModelImport);
@@ -319,22 +323,6 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
     }
 
     @Override
-    protected void addOriginal(SModel sModel) {
-        SModuleBase sModule = (SModuleBase) getModule().original();
-        if (!sModule.getModels().contains(sModel)) {
-            sModule.registerModel((SModelBase) sModel);
-        }
-    }
-
-    @Override
-    protected void reParent(SModel sModel) {
-        SModuleBase sModule = (SModuleBase) sModel.getModule();
-        if (sModule != getModule().original()) {
-            sModule.unregisterModel((SModelBase) sModel);
-        }
-    }
-
-    @Override
     protected SModel resolve(SModelReference ref) {
         return ref.resolve(null);
     }
@@ -400,7 +388,8 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
 
     @Override
     public SModelId getModelId() {
-        return original().getModelId();
+        SModel sModel = tryOriginal();
+        return sModel != null ? sModel.getModelId() : null;
     }
 
     @Override
@@ -450,12 +439,12 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
 
     @Override
     public DNode createNode(SConcept concept) {
-        return DNode.of(original().createNode(concept));
+        return DNode.of(tryOriginal().createNode(concept));
     }
 
     @Override
     public DNode createNode(SConcept concept, SNodeId nodeId) {
-        return DNode.of(original().createNode(concept, nodeId));
+        return DNode.of(tryOriginal().createNode(concept, nodeId));
     }
 
     @Override

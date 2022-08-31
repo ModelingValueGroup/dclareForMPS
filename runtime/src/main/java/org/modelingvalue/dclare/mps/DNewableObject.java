@@ -156,14 +156,13 @@ public abstract class DNewableObject<T extends DNewableObject, R, S> extends DId
             if (sObject == null) {
                 sObject = create(ref);
             }
-            addOriginal(sObject);
-            originalConstruct(sObject, reference(sObject), () -> this);
-            init(dClareMPS(), sObject);
-        } else if (isActive()) {
-            reParent(sObject);
-            addOriginal(sObject);
         }
         return sObject;
+    }
+
+    protected void init(S sObject) {
+        originalConstruct(sObject, reference(sObject), () -> this);
+        init(dClareMPS(), sObject);
     }
 
     @Override
@@ -196,11 +195,9 @@ public abstract class DNewableObject<T extends DNewableObject, R, S> extends DId
         stop(dClareMPS());
     }
 
-    protected void init(DClareMPS dClareMPS, S original) {
-    }
+    protected abstract void init(DClareMPS dClareMPS, S original);
 
-    protected void exit(DClareMPS dClareMPS, S original) {
-    }
+    protected abstract void exit(DClareMPS dClareMPS, S original);
 
     protected abstract void read();
 
@@ -209,9 +206,5 @@ public abstract class DNewableObject<T extends DNewableObject, R, S> extends DId
     protected abstract S resolve(R ref);
 
     protected abstract S create(R ref);
-
-    protected abstract void addOriginal(S sObject);
-
-    protected abstract void reParent(S sNode);
 
 }

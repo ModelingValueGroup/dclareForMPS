@@ -39,6 +39,8 @@ import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.Setable;
 
 import jetbrains.mps.errors.item.ModuleReportItem;
+import jetbrains.mps.extapi.model.SModelBase;
+import jetbrains.mps.extapi.module.SModuleBase;
 import jetbrains.mps.model.ModelDeleteHelper;
 import jetbrains.mps.project.Solution;
 import jetbrains.mps.smodel.Generator;
@@ -55,8 +57,15 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
                                                                                return m.models().map(DModel::of).toSet();
                                                                            }, (m, pre, post) -> {
                                                                                if (m.isSolution()) {
+                                                                                   SModule sModule = m.original();
                                                                                    Setable.<Set<DModel>, DModel> diff(pre, post,                                         //
-                                                                                           DNewableObject::original,                                                     //
+                                                                                           a -> {
+                                                                                               SModel sModel = a.original();
+                                                                                               if (sModel.getModule() != sModule) {
+                                                                                                   ((SModuleBase) sModule).registerModel((SModelBase) sModel);
+                                                                                               }
+                                                                                               a.init(sModel);
+                                                                                           },                                                                            //
                                                                                            r -> new ModelDeleteHelper(r.tryOriginal()).delete());
                                                                                }
                                                                            }, containment);

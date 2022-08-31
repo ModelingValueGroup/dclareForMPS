@@ -43,7 +43,6 @@ import org.modelingvalue.dclare.*;
 
 import jetbrains.mps.errors.item.IssueKindReportItem;
 import jetbrains.mps.errors.item.NodeReportItem;
-import jetbrains.mps.lang.smodel.generator.smodelAdapter.SLinkOperations;
 import jetbrains.mps.lang.smodel.generator.smodelAdapter.SNodeOperations;
 import jetbrains.mps.smodel.DynamicReference;
 import jetbrains.mps.smodel.SNodeUtil;
@@ -109,7 +108,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                    SNode sNode = dNode.tryOriginal();
                                                                                                                                    return sNode != null ? sNode.getProperty(sp) : null;
                                                                                                                                }, (dNode, pre, post) -> {
-                                                                                                                                   SNode sNode = dNode.original();
+                                                                                                                                   SNode sNode = dNode.tryOriginal();
                                                                                                                                    sNode.setProperty(sp, post);
                                                                                                                                }, sp::getDeclarationNode));
 
@@ -118,11 +117,15 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                    SNode sNode = dNode.tryOriginal();
                                                                                                                                    return sNode != null ? children(sNode, mc).map(DNode::of).toList() : List.of();
                                                                                                                                }, (dNode, pre, post) -> {
-                                                                                                                                   SNode sNode = dNode.original();
-                                                                                                                                   List<SNode> soll = post.map(c -> c.original()).toList();
-                                                                                                                                   pre = DNode.MANY_CONTAINMENT.get(mc).fromMPS(dNode, List.of());
-                                                                                                                                   List<SNode> ist = pre.map(c -> c.tryOriginal()).toList();
-                                                                                                                                   DObserved.map(ist, soll, (n, a) -> sNode.insertChildAfter(mc, n, a), sNode::removeChild);
+                                                                                                                                   SNode sNode = dNode.tryOriginal();
+                                                                                                                                   DObserved.<DNode> map(pre, post, (n, a) -> {
+                                                                                                                                       SNode s = n.original();
+                                                                                                                                       sNode.insertChildAfter(mc, s, a != null ? a.tryOriginal() : null);
+                                                                                                                                       n.init(s);
+                                                                                                                                   }, r -> {
+                                                                                                                                       SNode s = r.tryOriginal();
+                                                                                                                                       sNode.removeChild(s);
+                                                                                                                                   });
                                                                                                                                }, mc::getDeclarationNode, containment));
 
     @SuppressWarnings("deprecation")
@@ -131,11 +134,16 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                    SNode child = sNode != null ? children(sNode, sc).first() : null;
                                                                                                                                    return child != null ? DNode.of(child) : null;
                                                                                                                                }, (dNode, pre, post) -> {
-                                                                                                                                   SNode sNode = dNode.original();
-                                                                                                                                   List<SNode> soll = post != null ? List.of(post.original()) : List.of();
-                                                                                                                                   pre = DNode.SINGLE_CONTAINMENT.get(sc).fromMPS(dNode, null);
-                                                                                                                                   List<SNode> ist = pre != null ? List.of(pre.tryOriginal()) : List.of();
-                                                                                                                                   DObserved.map(ist, soll, (n, a) -> sNode.insertChildAfter(sc, n, a), sNode::removeChild);
+                                                                                                                                   SNode sNode = dNode.tryOriginal();
+                                                                                                                                   if (pre != null) {
+                                                                                                                                       SNode s = pre.tryOriginal();
+                                                                                                                                       sNode.removeChild(s);
+                                                                                                                                   }
+                                                                                                                                   if (post != null) {
+                                                                                                                                       SNode s = post.original();
+                                                                                                                                       sNode.addChild(sc, s);
+                                                                                                                                       post.init(s);
+                                                                                                                                   }
                                                                                                                                }, sc::getDeclarationNode, containment));
 
     @SuppressWarnings("deprecation")
@@ -145,8 +153,8 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                    SNode sNode = ref != null ? ref.getTargetNode() : null;
                                                                                                                                    return sNode != null ? DNode.of(sNode) : ref != null ? referenceConstruct(ref.getTargetNodeReference(), () -> null) : null;
                                                                                                                                }, (dNode, pre, post) -> {
-                                                                                                                                   SNode sNode = dNode.original();
-                                                                                                                                   SNode soll = post != null ? post.original() : null;
+                                                                                                                                   SNode sNode = dNode.tryOriginal();
+                                                                                                                                   SNode soll = post != null ? post.tryOriginal() : null;
                                                                                                                                    sNode.setReferenceTarget(sr, soll);
                                                                                                                                }, sr::getDeclarationNode));
     @SuppressWarnings("deprecation")
@@ -383,57 +391,13 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
     protected SNode create(SNodeReference ref) {
         SConcept concept = getConcept();
         DModel dModel = getModel();
-        SModel sModel = dModel.original();
+        SModel sModel = dModel.tryOriginal();
         return ref != null ? sModel.createNode(concept, ref.getNodeId()) : sModel.createNode(concept);
     }
 
-    @Override
-    protected void addOriginal(SNode sNode) {
-        DObject parent = dObjectParent();
-        if (parent instanceof DModel) {
-            SModel sParent = ((DModel) parent).original();
-            //noinspection ConstantConditions
-            if (sNode.getModel() == null) {
-                sParent.addRootNode(sNode);
-            }
-        } else if (parent instanceof DNode) {
-            SNode sParent = ((DNode) parent).original();
-            //noinspection ConstantConditions
-            if (sNode.getParent() == null) {
-                SContainmentLink cl = (SContainmentLink) dContaining().id();
-                if (cl.isMultiple()) {
-                    SLinkOperations.addChild(sParent, cl, sNode);
-                } else {
-                    SLinkOperations.setTarget(sParent, cl, sNode);
-                }
-            }
-        }
+    private void setMPSName(SNode sNode) {
         if (isINamedConcept) {
             sNode.setProperty(SNodeUtil.property_INamedConcept_name, PROPERTY.get(SNodeUtil.property_INamedConcept_name).get(this));
-        }
-    }
-
-    @Override
-    protected void reParent(SNode sNode) {
-        Mutable dParent = dParent();
-        if (dParent instanceof DNode) {
-            reParent(((DNode) dParent).original(), getContainmentLink(), sNode);
-        } else {
-            reParent(((DModel) dParent).original(), null, sNode);
-        }
-    }
-
-    private void reParent(Object sParent, SContainmentLink container, SNode sNode) {
-        Object istParent = sNode.getParent();
-        if (istParent == null) {
-            istParent = sNode.getModel();
-        }
-        if (istParent != null && (istParent != sParent || container != sNode.getContainmentLink())) {
-            if (istParent instanceof SModel) {
-                ((SModel) istParent).removeRootNode(sNode);
-            } else {
-                ((SNode) istParent).removeChild(sNode);
-            }
         }
     }
 
@@ -531,7 +495,8 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
 
     @Override
     public SNodeId getNodeId() {
-        return original().getNodeId();
+        SNode sNode = tryOriginal();
+        return sNode != null ? sNode.getNodeId() : null;
     }
 
     @SuppressWarnings("unchecked")
@@ -1087,6 +1052,14 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
             return concept.getName() + super.toString();
         }
 
+    }
+
+    @Override
+    protected void init(DClareMPS dClareMPS, SNode original) {
+    }
+
+    @Override
+    protected void exit(DClareMPS dClareMPS, SNode original) {
     }
 
     @Override
