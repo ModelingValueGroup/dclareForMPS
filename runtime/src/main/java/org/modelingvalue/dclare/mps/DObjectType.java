@@ -36,7 +36,7 @@ public abstract class DObjectType<I> implements MutableClass {
     private static final Constant<DObjectType<?>, Set<DAttribute>>                              IDENTIFYING    = Constant.of("IDENTIFYING", Set.of(), t -> ATTRIBUTES.get(t).filter(a -> !a.isSynthetic() && a.isIndetifying()).toSet());
     @SuppressWarnings("unchecked")
     private static final Constant<DObjectType<?>, Set<? extends Setable<? extends Mutable, ?>>> SETABLES       = Constant.of("SETABLES", Set.of(), t -> Collection.concat(t.getAttributes().filter(a -> a instanceof Setable), t.setables()).map(o -> (Setable<? extends Mutable, ?>) o).toSet());
-    private static final Constant<DObjectType<?>, Set<DObserved>>                               D_OBSERVEDS    = Constant.of("D_OBSERVEDS", Set.of(), t -> t.dSetables().filter(s -> s instanceof DObserved && !((DObserved) s).isDclareOnly()).map(s -> (DObserved) s).toSet());
+    private static final Constant<DObjectType<?>, Set<DObserved>>                               OBSERVEDS      = Constant.of("OBSERVEDS", Set.of(), t -> t.dSetables().filter(s -> s instanceof DObserved && !((DObserved) s).isDclareOnly()).map(s -> (DObserved) s).toSet());
 
     public abstract Set<DRule> getRules(Set<IRuleSet> ruleSets);
 
@@ -106,7 +106,7 @@ public abstract class DObjectType<I> implements MutableClass {
     }
 
     public final Set<DObserved> dObserveds() {
-        return D_OBSERVEDS.get(this);
+        return OBSERVEDS.get(this);
     }
 
     protected Collection<Observer> observers() {
