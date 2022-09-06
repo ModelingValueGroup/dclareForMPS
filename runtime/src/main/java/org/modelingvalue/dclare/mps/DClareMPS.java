@@ -82,6 +82,9 @@ import jetbrains.mps.smodel.language.LanguageRuntime;
 
 public class DClareMPS implements StateDeltaHandler, Universe, UncaughtExceptionHandler {
 
+    @SuppressWarnings("rawtypes")
+    protected static final DefaultMap<Pair<String, Integer>, List<DMethod>>                             EMPTY_METHOD_MAP       = DefaultMap.of(k -> List.of());
+
     private static final String                                                                         CONNECT_SYNC_HOST_PORT = System.getProperty("CONNECT_SYNC_HOST_PORT", null);
 
     protected static Constant<SLanguage, IRuleAspect>                                                   RULE_ASPECT            = Constant.of("RULE_ASPECT", l -> {
@@ -97,6 +100,17 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
                                                                                                                                    IRuleAspect aspect = RULE_ASPECT.get(l);
                                                                                                                                    Set<SStructClass> structClasses = aspect != null ? Collection.of(aspect.getStructClasses()).toSet() : Set.of();
                                                                                                                                    return structClasses.toMap(s -> Entry.of(s.id(), s));
+                                                                                                                               });
+    @SuppressWarnings("rawtypes")
+    protected static Constant<Set<SLanguage>, DefaultMap<Pair<String, Integer>, List<DMethod>>>         METHOD_MAP             = Constant.of("METHOD_MAP", ls -> {
+                                                                                                                                   Set<IRuleSet> ruleSets = ls.flatMap(l -> DClareMPS.RULE_SETS.get(l)).toSet();
+                                                                                                                                   DefaultMap<Pair<String, Integer>, List<DMethod>> map = EMPTY_METHOD_MAP;
+                                                                                                                                   for (DMethod m : ruleSets.flatMap(rs -> Collection.of(rs.getAllMethods()))) {
+                                                                                                                                       Pair<String, Integer> k = Pair.of(m.name(), m.signature().size());
+                                                                                                                                       map = map.put(k, map.get(k).add(m));
+                                                                                                                                   }
+                                                                                                                                   return map.toDefaultMap(EMPTY_METHOD_MAP.defaultFunction(),                                                          //
+                                                                                                                                           e -> Entry.of(e.getKey(), e.getValue().sorted((a, b) -> a.signature().compareTo(b.signature())).toList()));
                                                                                                                                });
     private static final Set<DMessageType>                                                              MESSAGE_TYPES          = Collection.of(DMessageType.values()).toSet();
     private static final QualifiedSet<Triple<DObject, DFeature, String>, DMessage>                      MESSAGE_QSET           = QualifiedSet.of(m -> Triple.of(m.context(), m.feature(), m.id()));

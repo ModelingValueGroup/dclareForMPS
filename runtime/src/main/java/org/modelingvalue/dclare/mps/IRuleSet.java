@@ -45,6 +45,8 @@ public interface IRuleSet {
 
     List<DRule<SStructObject>> getStructRules(SStructClass cls);
 
+    List<DMethod<?>> getAllMethods();
+
     List<DAttribute<?, ?>> getAllAttributes();
 
     IAspect getAspect();
