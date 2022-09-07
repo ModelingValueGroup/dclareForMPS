@@ -428,7 +428,15 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
 
     @Override
     public DModule getModule() {
-        return (DModule) dParent();
+        if (deriveFromMPS()) {
+            SModule parent = dClareMPS().read(() -> {
+                SModel sModel = tryOriginal();
+                return sModel != null ? sModel.getModule() : null;
+            });
+            return parent != null ? DModule.of(parent) : null;
+        } else {
+            return (DModule) dParent();
+        }
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
