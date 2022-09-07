@@ -204,7 +204,7 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
 
     @Override
     public SModel getModel(SModelId id) {
-        return MODELS.get(this).filter(m -> m.getModelId().equals(id)).findAny().orElse(null);
+        return MODELS.get(this).filter(m -> m.getModelId().equals(id)).findAny().orElse(DModel.of(original().getModel(id)));
     }
 
     @Override

@@ -22,6 +22,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
+import org.jetbrains.mps.openapi.model.SModel;
+import org.jetbrains.mps.openapi.model.SModelId;
 import org.jetbrains.mps.openapi.module.ModelAccess;
 import org.jetbrains.mps.openapi.module.RepositoryAccess;
 import org.jetbrains.mps.openapi.module.SModule;
@@ -63,6 +65,15 @@ public class DRepository extends DFromOriginalObject<ProjectRepository> implemen
         super(original);
     }
 
+
+    @Override
+    public SModel getModel(SModelId modelId) {
+        SModel sModel = this.original().getModel(modelId);
+        return DModel.of(sModel);
+    }
+
+
+
     @Override
     protected DRepositoryType getType() {
         return REPOSITORY_TYPE.get(DClareMPS.ALL_LANGUAGES.get(dClareMPS()).filter(l -> !DClareMPS.RULE_SETS.get(l).isEmpty()).toSet());
@@ -95,7 +106,7 @@ public class DRepository extends DFromOriginalObject<ProjectRepository> implemen
 
     @Override
     public SModule getModule(SModuleId moduleId) {
-        return MODULES.get(this).filter(m -> m.getModuleId().equals(moduleId)).findAny().orElse(null);
+        return MODULES.get(this).filter(m -> m.getModuleId().equals(moduleId)).findAny().orElse(DModule.of(original().getModule(moduleId)));
     }
 
     @Override
