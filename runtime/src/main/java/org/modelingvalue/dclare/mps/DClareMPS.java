@@ -1004,7 +1004,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
     }
 
     public static String getPluginPath() {
-        return PathManager.getPluginsPath();
+        return System.getProperty("CDM_INSTALLATION",PathManager.getPluginsPath());
     }
 
 }
