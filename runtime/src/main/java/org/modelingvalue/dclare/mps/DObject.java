@@ -26,6 +26,7 @@ import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
+import org.modelingvalue.collections.util.Triple;
 import org.modelingvalue.dclare.*;
 
 import jetbrains.mps.errors.item.IssueKindReportItem;
@@ -152,6 +153,11 @@ public abstract class DObject implements Mutable {
         } else {
             return v == null ? Set.of() : Set.of((DObject) v);
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    public <R> R callMethod(DMethod called, Object[] arguments) {
+        return (R) DMethod.D_METHOD.get(Triple.of(TYPE.get(this).getLanguages(), called.name(), Signature.of(called.signature(), arguments))).call(arguments);
     }
 
     @Override

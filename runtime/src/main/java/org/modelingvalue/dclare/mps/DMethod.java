@@ -15,44 +15,29 @@
 
 package org.modelingvalue.dclare.mps;
 
-import java.util.List;
-
-import org.jetbrains.mps.openapi.language.SAbstractConcept;
 import org.jetbrains.mps.openapi.language.SLanguage;
-import org.jetbrains.mps.openapi.model.SModel;
-import org.jetbrains.mps.openapi.model.SNode;
 import org.modelingvalue.collections.Set;
+import org.modelingvalue.collections.util.Pair;
+import org.modelingvalue.collections.util.Triple;
+import org.modelingvalue.dclare.Constant;
 
-public interface IRuleSet {
+public interface DMethod<R> extends DFeature {
 
-    List<DAttribute<SNode, ?>> getNodeAttributes(SAbstractConcept concept, Set<String> anonymousTypes);
+    @SuppressWarnings("rawtypes")
+    Constant<Triple<Set<SLanguage>, String, Signature>, DMethod> D_METHOD = Constant.of("D_METHOD", t -> {
+        for (DMethod method : DClareMPS.METHOD_MAP.get(t.a()).get(Pair.of(t.b(), t.c().size()))) {
+            if (t.c().isSubOf(method.signature())) {
+                return method;
+            }
+        }
+        throw new UnsupportedOperationException(t.b() + t.c());
+    });
 
-    List<DAttribute<SModel, ?>> getModelAttributes(Set<String> anonymousTypes);
+    String name();
 
-    List<DAttribute<DModule, ?>> getModuleAttributes();
+    @SuppressWarnings("rawtypes")
+    Signature signature();
 
-    List<DAttribute<DRepository, ?>> getRepositoryAttributes();
-
-    List<DAttribute<SStructObject, ?>> getStructAttributes(SStructClass cls);
-
-    List<DRule<SNode>> getNodeRules(SAbstractConcept concept, Set<String> anonymousTypes);
-
-    List<DRule<SModel>> getModelRules(Set<String> anonymousTypes);
-
-    List<DRule<DModule>> getModuleRules();
-
-    List<DRule<DRepository>> getRepositoryRules();
-
-    List<DRule<SStructObject>> getStructRules(SStructClass cls);
-
-    List<DMethod<?>> getAllMethods();
-
-    List<DAttribute<?, ?>> getAllAttributes();
-
-    IAspect getAspect();
-
-    String getAnonymousType();
-
-    SLanguage getLanguage();
+    R call(Object[] arguments);
 
 }

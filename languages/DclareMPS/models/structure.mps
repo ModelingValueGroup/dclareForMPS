@@ -1311,5 +1311,27 @@
       <ref role="20lvS9" node="55f2HNAoLSh" resolve="Aspect" />
     </node>
   </node>
+  <node concept="1TIwiD" id="3$OkZkHRDLt">
+    <property role="EcuMT" value="4122011871452503133" />
+    <property role="TrG5h" value="Method" />
+    <property role="3GE5qa" value="methods" />
+    <property role="34LRSv" value="method" />
+    <ref role="1TJDcQ" to="tpee:fzclF8t" resolve="InstanceMethodDeclaration" />
+    <node concept="PrWs8" id="3$OkZkHRDLu" role="PzmwI">
+      <ref role="PrY4T" node="4WFClUM1rSw" resolve="Feature" />
+    </node>
+  </node>
+  <node concept="1TIwiD" id="3uCFKuPHfh_">
+    <property role="EcuMT" value="4010647915821593701" />
+    <property role="3GE5qa" value="methods" />
+    <property role="TrG5h" value="MethodCall" />
+    <ref role="1TJDcQ" to="tpee:6LFqxSRBTg4" resolve="LocalMethodCall" />
+  </node>
+  <node concept="1TIwiD" id="6wxUpFc$a2F">
+    <property role="EcuMT" value="7503535305242222763" />
+    <property role="3GE5qa" value="methods" />
+    <property role="TrG5h" value="MethodCallOperation" />
+    <ref role="1TJDcQ" to="tpee:hwliAcM" resolve="InstanceMethodCallOperation" />
+  </node>
 </model>
 
