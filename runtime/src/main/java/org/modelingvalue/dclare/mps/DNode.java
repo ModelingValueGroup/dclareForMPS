@@ -310,8 +310,8 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
                 () -> new DNode(new Object[]{uniqueLong(concept), concept, false}));
     }
 
-    public DNode copy(IRuleSet ruleSet, String anonymousType, DObject copiedRoot) {
-        return copyRootConstruct(ruleSet, anonymousType, copiedRoot, this, //
+    public DNode copy(IRuleSet ruleSet, String anonymousType, Object[] identity) {
+        return copyRootConstruct(ruleSet, anonymousType, identity, this, //
                 () -> new DNode(new Object[]{uniqueLong(getConcept()), getConcept(), false}));
     }
 

@@ -44,9 +44,9 @@ public abstract class DNewableObject<T extends DNewableObject, R, S> extends DId
         return tx.construct(new DQuotation(tx.mutable(), ruleSet, anonymousType, ctx), supplier);
     }
 
-    protected static <D extends DNewableObject> D copyRootConstruct(IRuleSet ruleSet, String anonymousType, DObject object, DNode copiedRoot, Supplier<D> supplier) {
+    protected static <D extends DNewableObject> D copyRootConstruct(IRuleSet ruleSet, String anonymousType, Object[] ctx, DNode copiedRoot, Supplier<D> supplier) {
         LeafTransaction tx = LeafTransaction.getCurrent();
-        return tx.construct(new DCopy(copiedRoot, ruleSet, anonymousType), supplier);
+        return tx.construct(new DCopy(tx.mutable(), copiedRoot, ruleSet, anonymousType, ctx), supplier);
     }
 
     protected static <D extends DNewableObject> D copyChildConstruct(DCopy root, DNode copiedChild, Supplier<D> supplier) {
