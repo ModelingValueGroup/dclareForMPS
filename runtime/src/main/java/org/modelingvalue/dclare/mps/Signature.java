@@ -18,9 +18,8 @@ package org.modelingvalue.dclare.mps;
 import java.util.Arrays;
 
 import org.jetbrains.mps.openapi.language.SConcept;
+import org.jetbrains.mps.openapi.model.SNode;
 import org.modelingvalue.collections.util.IdentifiedByArray;
-
-import jetbrains.mps.smodel.SNode;
 
 public class Signature extends IdentifiedByArray implements Comparable<Signature> {
 
