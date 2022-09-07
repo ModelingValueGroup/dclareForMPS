@@ -6072,6 +6072,50 @@
         </node>
       </node>
     </node>
+    <node concept="3aamgX" id="JpItC66b_4" role="3acgRq">
+      <ref role="30HIoZ" to="tpee:hqOqwz4" resolve="DotExpression" />
+      <node concept="gft3U" id="JpItC66oaW" role="1lVwrX">
+        <node concept="2YIFZM" id="JpItC6eRmX" role="gfFT$">
+          <ref role="37wK5l" to="u4ym:JpItC6e_yl" resolve="asSConcept" />
+          <ref role="1Pybhc" to="u4ym:30fQumnG8Au" resolve="DclareUtil" />
+          <node concept="10Nm6u" id="JpItC6eR_H" role="37wK5m">
+            <node concept="29HgVG" id="JpItC6eRAP" role="lGtFl">
+              <node concept="3NFfHV" id="JpItC6eRAQ" role="3NFExx">
+                <node concept="3clFbS" id="JpItC6eRAR" role="2VODD2">
+                  <node concept="3clFbF" id="JpItC6eRAX" role="3cqZAp">
+                    <node concept="2OqwBi" id="JpItC6eRAS" role="3clFbG">
+                      <node concept="3TrEf2" id="JpItC6eRAV" role="2OqNvi">
+                        <ref role="3Tt5mk" to="tpee:hqOq$gm" resolve="operand" />
+                      </node>
+                      <node concept="30H73N" id="JpItC6eRAW" role="2Oq$k0" />
+                    </node>
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+      <node concept="30G5F_" id="JpItC66mFt" role="30HLyM">
+        <node concept="3clFbS" id="JpItC66mFu" role="2VODD2">
+          <node concept="3clFbF" id="JpItC66mFP" role="3cqZAp">
+            <node concept="2OqwBi" id="JpItC66n_0" role="3clFbG">
+              <node concept="2OqwBi" id="JpItC66mVj" role="2Oq$k0">
+                <node concept="30H73N" id="JpItC66mFO" role="2Oq$k0" />
+                <node concept="3TrEf2" id="JpItC66na$" role="2OqNvi">
+                  <ref role="3Tt5mk" to="tpee:hqOqNr4" resolve="operation" />
+                </node>
+              </node>
+              <node concept="1mIQ4w" id="JpItC66nRB" role="2OqNvi">
+                <node concept="chp4Y" id="JpItC66nXS" role="cj9EA">
+                  <ref role="cht4Q" to="tp25:i$PM5v5z4L" resolve="AsSConcept" />
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
     <node concept="2rT7sh" id="1$veQIxmoNu" role="2rTMjI">
       <property role="TrG5h" value="ruleSetConstructor" />
       <ref role="2rZz_L" to="tpee:fzclF84" resolve="ConstructorDeclaration" />
