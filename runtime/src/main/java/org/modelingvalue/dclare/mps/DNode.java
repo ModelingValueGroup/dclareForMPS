@@ -626,9 +626,6 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
         DNode dNode = of(child);
         SContainmentLink link = dNode.getContainmentLink();
         if (link != null) {
-            if (dNode.getConcept().isAbstract()) {
-                Newable.D_DERIVED_CONSTRUCTIONS.setDefault(dNode);
-            }
             if (link.isMultiple()) {
                 MANY_CONTAINMENT.get(link).set(this, List::remove, dNode);
             } else {
