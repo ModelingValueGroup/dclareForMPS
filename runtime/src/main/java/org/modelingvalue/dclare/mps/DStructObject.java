@@ -62,6 +62,17 @@ public class DStructObject extends DIdentifiedObject implements SStructObject {
         return parent != null ? parent.isActive() : super.isActive();
     }
 
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    @Override
+    public void dActivate() {
+        super.dActivate();
+        for (DAttribute id : getSClass().getIdentity()) {
+            if (id.isComposite()) {
+                id.activate(this);
+            }
+        }
+    }
+
     @Override
     public SStructClass getSClass() {
         return (SStructClass) identity[identity.length - 1];

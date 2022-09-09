@@ -54,6 +54,8 @@ public interface DAttribute<O, T> extends DFeature {
         return (DAttribute<C, V>) DClareMPS.ATTRIBUTE_MAP.get(language).get(id);
     }
 
+    void activate(O object);
+
     String id();
 
     T pre(O object);
@@ -185,49 +187,28 @@ public interface DAttribute<O, T> extends DFeature {
             return ruleSet;
         }
 
+        @Override
+        public void activate(C object) {
+            throw new UnsupportedOperationException();
+        }
+
     }
 
-    final class DIdentifyingAttribute<C extends DIdentifiedObject, V> implements DAttribute<C, V> {
-        private final String          id;
+    final class DIdentifyingAttribute<C extends DIdentifiedObject, V> extends Setable<C, V> implements DAttribute<C, V> {
+
         private final String          name;
-        private final boolean         composite;
         private final int             index;
-        private final boolean         synthetic;
         private final Supplier<SNode> source;
         private final Class<?>        cls;
         private final IRuleSet        ruleSet;
 
         public DIdentifyingAttribute(String id, String name, IRuleSet ruleSet, int index, Class<?> cls, Supplier<SNode> source, SetableModifier... modifiers) {
-            this.id = id;
+            super(id, null, null, null, null, modifiers);
             this.name = name;
-            this.composite = containment.in(modifiers);
             this.index = index;
-            this.synthetic = SetableModifier.synthetic.in(modifiers);
             this.source = source;
             this.cls = cls;
             this.ruleSet = ruleSet;
-        }
-
-        @Override
-        public int hashCode() {
-            return id.hashCode();
-        }
-
-        @Override
-        public String id() {
-            return id;
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (this == obj) {
-                return true;
-            } else if (!(obj instanceof DIdentifyingAttribute)) {
-                return false;
-            } else {
-                DIdentifyingAttribute other = (DIdentifyingAttribute) obj;
-                return id.equals(other.id);
-            }
         }
 
         @Override
@@ -247,11 +228,6 @@ public interface DAttribute<O, T> extends DFeature {
         @Override
         public String toString() {
             return name;
-        }
-
-        @Override
-        public boolean isComposite() {
-            return composite;
         }
 
         @Override
@@ -280,11 +256,6 @@ public interface DAttribute<O, T> extends DFeature {
         }
 
         @Override
-        public boolean isSynthetic() {
-            return synthetic;
-        }
-
-        @Override
         public SNode getSource() {
             return source != null ? source.get() : null;
         }
@@ -301,6 +272,26 @@ public interface DAttribute<O, T> extends DFeature {
 
         public String anonymousType() {
             return ruleSet != null ? ruleSet.getAnonymousType() : null;
+        }
+
+        @Override
+        public boolean isSynthetic() {
+            return synthetic();
+        }
+
+        @Override
+        public String id() {
+            return (String) id;
+        }
+
+        @Override
+        public boolean isComposite() {
+            return containment();
+        }
+
+        @Override
+        public void activate(C object) {
+            changed(LeafTransaction.getCurrent(), object, null, get(object));
         }
 
     }
@@ -378,6 +369,11 @@ public interface DAttribute<O, T> extends DFeature {
         @Override
         public IRuleSet ruleSet() {
             return ruleSet;
+        }
+
+        @Override
+        public void activate(C object) {
+            throw new UnsupportedOperationException();
         }
 
     }
