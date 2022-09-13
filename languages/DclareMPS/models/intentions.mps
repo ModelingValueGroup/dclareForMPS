@@ -914,5 +914,51 @@
       </node>
     </node>
   </node>
+  <node concept="2S6QgY" id="60123R2Bhte">
+    <property role="TrG5h" value="SwitchAtomic" />
+    <ref role="2ZfgGC" to="7ggn:29R9$zZUovC" resolve="Rule" />
+    <node concept="2S6ZIM" id="60123R2Bhtf" role="2ZfVej">
+      <node concept="3clFbS" id="60123R2Bhtg" role="2VODD2">
+        <node concept="3clFbF" id="60123R2Bhyg" role="3cqZAp">
+          <node concept="3K4zz7" id="60123R2Bi8W" role="3clFbG">
+            <node concept="Xl_RD" id="60123R2Bigm" role="3K4E3e">
+              <property role="Xl_RC" value="make nonatomic" />
+            </node>
+            <node concept="Xl_RD" id="60123R2Biid" role="3K4GZi">
+              <property role="Xl_RC" value="make atomic" />
+            </node>
+            <node concept="2OqwBi" id="60123R2BhHQ" role="3K4Cdx">
+              <node concept="2Sf5sV" id="60123R2Bhyf" role="2Oq$k0" />
+              <node concept="3TrcHB" id="60123R2BhJ_" role="2OqNvi">
+                <ref role="3TsBF5" to="7ggn:2uXxmTffMZh" resolve="atomic" />
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+    <node concept="2Sbjvc" id="60123R2Bhth" role="2ZfgGD">
+      <node concept="3clFbS" id="60123R2Bhti" role="2VODD2">
+        <node concept="3clFbF" id="60123R2Birr" role="3cqZAp">
+          <node concept="37vLTI" id="60123R2BiPM" role="3clFbG">
+            <node concept="3fqX7Q" id="60123R2BiXK" role="37vLTx">
+              <node concept="2OqwBi" id="60123R2Bj7h" role="3fr31v">
+                <node concept="2Sf5sV" id="60123R2Bj27" role="2Oq$k0" />
+                <node concept="3TrcHB" id="60123R2Bjfb" role="2OqNvi">
+                  <ref role="3TsBF5" to="7ggn:2uXxmTffMZh" resolve="atomic" />
+                </node>
+              </node>
+            </node>
+            <node concept="2OqwBi" id="60123R2Biu6" role="37vLTJ">
+              <node concept="2Sf5sV" id="60123R2Birq" role="2Oq$k0" />
+              <node concept="3TrcHB" id="60123R2BivJ" role="2OqNvi">
+                <ref role="3TsBF5" to="7ggn:2uXxmTffMZh" resolve="atomic" />
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+  </node>
 </model>
 

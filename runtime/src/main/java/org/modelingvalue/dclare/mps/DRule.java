@@ -32,7 +32,8 @@ public interface DRule<O> extends DFeature {
             super(rule, rule::run, Collection.of(rule.targets()).toSet(), //
                     rule.initialLowPriority() ? Priority.outer : Priority.immediate, //
                     IAspect.DIRECTION.get(rule.ruleSet().getAspect()), //
-                    LeafModifier.anonymous.iff(rule.ruleSet().getAnonymousType() != null));
+                    LeafModifier.anonymous.iff(rule.ruleSet().getAnonymousType() != null), //
+                    LeafModifier.atomic.iff(rule.atomic()));
         }
 
         public DRule rule() {
@@ -98,5 +99,7 @@ public interface DRule<O> extends DFeature {
     boolean initialLowPriority();
 
     java.util.List<DObserved> targets();
+
+    boolean atomic();
 
 }

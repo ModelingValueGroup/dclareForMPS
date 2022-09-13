@@ -1008,6 +1008,42 @@
       <node concept="PMmxH" id="4kJ$pn7gXDb" role="3EZMnx">
         <ref role="PMmxG" node="4kJ$pn7gUF7" resolve="ContextType_Editor" />
       </node>
+      <node concept="3F0ifn" id="60123R2BqRq" role="3EZMnx">
+        <property role="3F0ifm" value="atomic" />
+        <ref role="1k5W1q" to="tpen:hgVS8CF" resolve="KeyWord" />
+        <node concept="Veino" id="60123R2BqRr" role="3F10Kt">
+          <node concept="3ZlJ5R" id="60123R2BqRs" role="VblUZ">
+            <node concept="3clFbS" id="60123R2BqRt" role="2VODD2">
+              <node concept="3clFbF" id="60123R2BqRu" role="3cqZAp">
+                <node concept="2YIFZM" id="60123R2BqRv" role="3clFbG">
+                  <ref role="37wK5l" to="u4ym:2HLAWGSyups" resolve="ifColor" />
+                  <ref role="1Pybhc" to="u4ym:30fQumnG8Au" resolve="DclareUtil" />
+                  <node concept="1Q80Hx" id="60123R2BqRw" role="37wK5m" />
+                  <node concept="2nou5x" id="60123R2BqRx" role="37wK5m">
+                    <property role="2noCCI" value="71F496" />
+                  </node>
+                  <node concept="10M0yZ" id="60123R2BqRy" role="37wK5m">
+                    <ref role="3cqZAo" to="z60i:~Color.white" resolve="white" />
+                    <ref role="1PxDUh" to="z60i:~Color" resolve="Color" />
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="pkWqt" id="60123R2BqRz" role="pqm2j">
+          <node concept="3clFbS" id="60123R2BqR$" role="2VODD2">
+            <node concept="3clFbF" id="60123R2BqR_" role="3cqZAp">
+              <node concept="2OqwBi" id="60123R2BqRA" role="3clFbG">
+                <node concept="pncrf" id="60123R2BqRB" role="2Oq$k0" />
+                <node concept="3TrcHB" id="60123R2BqRC" role="2OqNvi">
+                  <ref role="3TsBF5" to="7ggn:2uXxmTffMZh" resolve="atomic" />
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
       <node concept="3F0ifn" id="4WFClUM1now" role="3EZMnx">
         <property role="3F0ifm" value="synthetic" />
         <ref role="1k5W1q" to="tpen:hgVS8CF" resolve="KeyWord" />
