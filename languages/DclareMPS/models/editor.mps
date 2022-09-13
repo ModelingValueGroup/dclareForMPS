@@ -6616,7 +6616,7 @@
       </node>
       <node concept="3F1sOY" id="fDoUsrO" role="3EZMnx">
         <property role="1$x2rV" value="&lt;no return type&gt;" />
-        <property role="1cu_pB" value="2" />
+        <property role="1cu_pB" value="gtguBGO/firstEditableCell" />
         <ref role="1NtTu8" to="tpee:fzclF7X" resolve="returnType" />
         <node concept="A1WHu" id="43H3v3INDz_" role="3vIgyS">
           <ref role="A1WHt" to="tpen:3$ZGCDhcCx4" resolve="ForReturnTypeOfTheMethod" />
@@ -6786,7 +6786,6 @@
           <node concept="3F0A7n" id="hwlm1Df" role="2wV5jI">
             <property role="1Intyy" value="true" />
             <property role="1$x2rV" value="&lt;no name&gt;" />
-            <property role="1cu_pB" value="0" />
             <ref role="1NtTu8" to="tpck:h0TrG11" resolve="name" />
             <ref role="1k5W1q" to="tpen:6H7j4iMM5Cm" resolve="MPSMethodCall" />
           </node>

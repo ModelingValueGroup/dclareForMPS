@@ -4164,7 +4164,7 @@
               <ref role="1Pybhc" to="o8zo:4IP40Bi3e_R" resolve="ListScope" />
               <node concept="2OqwBi" id="1qjtL8JY1Sb" role="37wK5m">
                 <node concept="37vLTw" id="1qjtL8JY1Sc" role="2Oq$k0">
-                  <ref role="3cqZAo" node="1qjtL8JY1S3" resolve="attributes" />
+                  <ref role="3cqZAo" node="1qjtL8JY1S3" resolve="methods" />
                 </node>
                 <node concept="3zZkjj" id="1qjtL8JY1Sd" role="2OqNvi">
                   <node concept="1bVj0M" id="1qjtL8JY1Se" role="23t8la">
