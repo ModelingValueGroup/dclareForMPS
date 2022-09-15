@@ -58,14 +58,14 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
                                                                            }, (m, pre, post) -> {
                                                                                if (m.isSolution()) {
                                                                                    SModule sModule = m.original();
-                                                                                   Setable.<Set<DModel>, DModel> diff(pre, post,                                         //
+                                                                                   Setable.<Set<DModel>, DModel> diff(pre, post,                                             //
                                                                                            a -> {
                                                                                                SModel sModel = a.original();
                                                                                                if (sModel.getModule() != sModule) {
                                                                                                    ((SModuleBase) sModule).registerModel((SModelBase) sModel);
                                                                                                }
                                                                                                a.init(sModel);
-                                                                                           },                                                                            //
+                                                                                           },                                                                                //
                                                                                            r -> new ModelDeleteHelper(r.tryOriginal()).delete());
                                                                                }
                                                                            }, containment);
@@ -73,11 +73,13 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
     public static final DObserved<DModule, Set<SLanguage>>     LANGUAGES   = DObserved.of("LANGUAGES", Set.of(), m -> {
                                                                                return Collection.of(m.original().getUsedLanguages()).toSet();
                                                                            }, null, (tx, o, pre, post) -> {
-                                                                               Setable.<Set<SLanguage>, SLanguage> diff(pre, post,                                       //
+                                                                               Setable.<Set<SLanguage>, SLanguage> diff(pre, post,                                           //
                                                                                        a -> {
-                                                                                           DClareMPS.ALL_LANGUAGES.set(dClareMPS(), Set::add, a);
-                                                                                           DClareMPS.ALL_ASPECTS.set(dClareMPS(), Set::addAll, DClareMPS.ASPECTS.get(a));
-                                                                                       },                                                                                //
+                                                                                           if (DClareMPS.RULE_ASPECT.get(a) != null) {
+                                                                                               DClareMPS.ALL_LANGUAGES.set(dClareMPS(), Set::add, a);
+                                                                                               DClareMPS.ALL_ASPECTS.set(dClareMPS(), Set::addAll, DClareMPS.ASPECTS.get(a));
+                                                                                           }
+                                                                                       },                                                                                    //
                                                                                        r -> {
                                                                                        });
                                                                            });

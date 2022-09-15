@@ -65,18 +65,15 @@ public class DRepository extends DFromOriginalObject<ProjectRepository> implemen
         super(original);
     }
 
-
     @Override
     public SModel getModel(SModelId modelId) {
         SModel sModel = this.original().getModel(modelId);
         return DModel.of(sModel);
     }
 
-
-
     @Override
     protected DRepositoryType getType() {
-        return REPOSITORY_TYPE.get(DClareMPS.ALL_LANGUAGES.get(dClareMPS()).filter(l -> !DClareMPS.RULE_SETS.get(l).isEmpty()).toSet());
+        return REPOSITORY_TYPE.get(DClareMPS.ALL_LANGUAGES.get(dClareMPS()));
     }
 
     @Override

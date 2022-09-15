@@ -17,6 +17,8 @@ package org.modelingvalue.dclare.mps;
 
 import java.util.List;
 
+import org.jetbrains.mps.openapi.language.SReferenceLink;
+
 import jetbrains.mps.smodel.runtime.ILanguageAspect;
 
 public interface IRuleAspect extends ILanguageAspect {
@@ -25,4 +27,6 @@ public interface IRuleAspect extends ILanguageAspect {
     List<IAspect> getAspects();
 
     List<SStructClass> getStructClasses();
+
+    List<SReferenceLink> getReferencesWithOpposite();
 }

@@ -147,7 +147,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                }, sc::getDeclarationNode, containment));
 
     @SuppressWarnings("deprecation")
-    public static final Constant<SReferenceLink, DObserved<DNode, DNode>>                               REFERENCE              = Constant.of("REFERENCE", sr -> DObserved.of(sr, null, () -> DNode.OPPOSITE.get(sr), dNode -> {
+    public static final Constant<SReferenceLink, DObserved<DNode, DNode>>                               REFERENCE              = Constant.of("REFERENCE", sr -> DObserved.of(sr, null, hasOpposite(sr) ? () -> DNode.OPPOSITE.get(sr) : null, dNode -> {
                                                                                                                                    SNode orig = dNode.tryOriginal();
                                                                                                                                    SReference ref = orig != null ? orig.getReference(sr) : null;
                                                                                                                                    SNode sNode = ref != null ? ref.getTargetNode() : null;
@@ -248,6 +248,10 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
                 }
             }
         }, IAspect.DIRECTION.get(aspect));
+    }
+
+    private static boolean hasOpposite(SReferenceLink sr) {
+        return DClareMPS.REFERENCES_WITH_OPPOSITE.get(sr.getOwner().getLanguage()).contains(sr);
     }
 
     static public class DCopyObserver extends Observer<DNode> {

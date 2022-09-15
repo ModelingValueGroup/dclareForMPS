@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
 import javax.swing.SwingUtilities;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
+import org.jetbrains.mps.openapi.language.SReferenceLink;
 import org.jetbrains.mps.openapi.model.SModel;
 import org.jetbrains.mps.openapi.model.SNode;
 import org.jetbrains.mps.openapi.module.ModelAccess;
@@ -83,71 +84,75 @@ import jetbrains.mps.smodel.language.LanguageRuntime;
 public class DClareMPS implements StateDeltaHandler, Universe, UncaughtExceptionHandler {
 
     @SuppressWarnings("rawtypes")
-    protected static final DefaultMap<Pair<String, Integer>, List<DMethod>>                             EMPTY_METHOD_MAP       = DefaultMap.of(k -> List.of());
+    protected static final DefaultMap<Pair<String, Integer>, List<DMethod>>                             EMPTY_METHOD_MAP         = DefaultMap.of(k -> List.of());
 
-    private static final String                                                                         CONNECT_SYNC_HOST_PORT = System.getProperty("CONNECT_SYNC_HOST_PORT", null);
+    private static final String                                                                         CONNECT_SYNC_HOST_PORT   = System.getProperty("CONNECT_SYNC_HOST_PORT", null);
 
-    protected static Constant<SLanguage, IRuleAspect>                                                   RULE_ASPECT            = Constant.of("RULE_ASPECT", l -> {
-                                                                                                                                   LanguageRuntime rtLang = registry().getLanguage(l);
-                                                                                                                                   return rtLang != null ? rtLang.getAspect(IRuleAspect.class) : null;
-                                                                                                                               });
-    protected static Constant<SLanguage, Map<String, DAttribute<?, ?>>>                                 ATTRIBUTE_MAP          = Constant.of("ATTRIBUTE_MAP", l -> {
-                                                                                                                                   Collection<DAttribute<?, ?>> attrs1 = DClareMPS.STRUCT_CLASS_MAP.get(l).flatMap(e -> e.getValue().getIdentity());
-                                                                                                                                   Collection<DAttribute<?, ?>> attrs2 = DClareMPS.RULE_SETS.get(l).flatMap(rs -> Collection.of(rs.getAllAttributes()));
-                                                                                                                                   return Collection.concat(attrs1, attrs2).toMap(a -> Entry.of(a.id(), a));
-                                                                                                                               });
-    protected static Constant<SLanguage, Map<String, SStructClass>>                                     STRUCT_CLASS_MAP       = Constant.of("STRUCT_CLASS_MAP", l -> {
-                                                                                                                                   IRuleAspect aspect = RULE_ASPECT.get(l);
-                                                                                                                                   Set<SStructClass> structClasses = aspect != null ? Collection.of(aspect.getStructClasses()).toSet() : Set.of();
-                                                                                                                                   return structClasses.toMap(s -> Entry.of(s.id(), s));
-                                                                                                                               });
+    protected static Constant<SLanguage, IRuleAspect>                                                   RULE_ASPECT              = Constant.of("RULE_ASPECT", l -> {
+                                                                                                                                     LanguageRuntime rtLang = registry().getLanguage(l);
+                                                                                                                                     return rtLang != null ? rtLang.getAspect(IRuleAspect.class) : null;
+                                                                                                                                 });
+    protected static Constant<SLanguage, Map<String, DAttribute<?, ?>>>                                 ATTRIBUTE_MAP            = Constant.of("ATTRIBUTE_MAP", l -> {
+                                                                                                                                     Collection<DAttribute<?, ?>> attrs1 = DClareMPS.STRUCT_CLASS_MAP.get(l).flatMap(e -> e.getValue().getIdentity());
+                                                                                                                                     Collection<DAttribute<?, ?>> attrs2 = DClareMPS.RULE_SETS.get(l).flatMap(rs -> Collection.of(rs.getAllAttributes()));
+                                                                                                                                     return Collection.concat(attrs1, attrs2).toMap(a -> Entry.of(a.id(), a));
+                                                                                                                                 });
+    protected static Constant<SLanguage, Map<String, SStructClass>>                                     STRUCT_CLASS_MAP         = Constant.of("STRUCT_CLASS_MAP", l -> {
+                                                                                                                                     IRuleAspect aspect = RULE_ASPECT.get(l);
+                                                                                                                                     Set<SStructClass> structClasses = aspect != null ? Collection.of(aspect.getStructClasses()).toSet() : Set.of();
+                                                                                                                                     return structClasses.toMap(s -> Entry.of(s.id(), s));
+                                                                                                                                 });
+    protected static Constant<SLanguage, Set<SReferenceLink>>                                           REFERENCES_WITH_OPPOSITE = Constant.of("REFERENCES_WITH_OPPOSITE", l -> {
+                                                                                                                                     IRuleAspect aspect = RULE_ASPECT.get(l);
+                                                                                                                                     return aspect != null ? Collection.of(aspect.getReferencesWithOpposite()).toSet() : Set.of();
+                                                                                                                                 });
     @SuppressWarnings("rawtypes")
-    protected static Constant<Set<SLanguage>, DefaultMap<Pair<String, Integer>, List<DMethod>>>         METHOD_MAP             = Constant.of("METHOD_MAP", ls -> {
-                                                                                                                                   Set<IRuleSet> ruleSets = ls.flatMap(l -> DClareMPS.RULE_SETS.get(l)).toSet();
-                                                                                                                                   DefaultMap<Pair<String, Integer>, List<DMethod>> map = EMPTY_METHOD_MAP;
-                                                                                                                                   for (DMethod m : ruleSets.flatMap(rs -> Collection.of(rs.getAllMethods()))) {
-                                                                                                                                       Pair<String, Integer> k = Pair.of(m.name(), m.signature().size());
-                                                                                                                                       map = map.put(k, map.get(k).add(m));
-                                                                                                                                   }
-                                                                                                                                   return map.toDefaultMap(EMPTY_METHOD_MAP.defaultFunction(),                                                          //
-                                                                                                                                           e -> Entry.of(e.getKey(), e.getValue().sorted((a, b) -> a.signature().compareTo(b.signature())).toList()));
-                                                                                                                               });
-    private static final Set<DMessageType>                                                              MESSAGE_TYPES          = Collection.of(DMessageType.values()).toSet();
-    private static final QualifiedSet<Triple<DObject, DFeature, String>, DMessage>                      MESSAGE_QSET           = QualifiedSet.of(m -> Triple.of(m.context(), m.feature(), m.id()));
-    protected static final Map<DMessageType, QualifiedSet<Triple<DObject, DFeature, String>, DMessage>> MESSAGE_QSET_MAP       = MESSAGE_TYPES.sequential().toMap(t -> Entry.of(t, MESSAGE_QSET));
-    private static final MutableClass                                                                   UNIVERSE_CLASS         = new MutableClass() {
-                                                                                                                                   @Override
-                                                                                                                                   public Collection<? extends Observer<?>> dObservers() {
-                                                                                                                                       return Collection.of();
-                                                                                                                                   }
+    protected static Constant<Set<SLanguage>, DefaultMap<Pair<String, Integer>, List<DMethod>>>         METHOD_MAP               = Constant.of("METHOD_MAP", ls -> {
+                                                                                                                                     Set<IRuleSet> ruleSets = ls.flatMap(l -> DClareMPS.RULE_SETS.get(l)).toSet();
+                                                                                                                                     DefaultMap<Pair<String, Integer>, List<DMethod>> map = EMPTY_METHOD_MAP;
+                                                                                                                                     for (DMethod m : ruleSets.flatMap(rs -> Collection.of(rs.getAllMethods()))) {
+                                                                                                                                         Pair<String, Integer> k = Pair.of(m.name(), m.signature().size());
+                                                                                                                                         map = map.put(k, map.get(k).add(m));
+                                                                                                                                     }
+                                                                                                                                     return map.toDefaultMap(EMPTY_METHOD_MAP.defaultFunction(),                                                          //
+                                                                                                                                             e -> Entry.of(e.getKey(), e.getValue().sorted((a, b) -> a.signature().compareTo(b.signature())).toList()));
+                                                                                                                                 });
+    private static final Set<DMessageType>                                                              MESSAGE_TYPES            = Collection.of(DMessageType.values()).toSet();
+    private static final QualifiedSet<Triple<DObject, DFeature, String>, DMessage>                      MESSAGE_QSET             = QualifiedSet.of(m -> Triple.of(m.context(), m.feature(), m.id()));
+    protected static final Map<DMessageType, QualifiedSet<Triple<DObject, DFeature, String>, DMessage>> MESSAGE_QSET_MAP         = MESSAGE_TYPES.sequential().toMap(t -> Entry.of(t, MESSAGE_QSET));
+    private static final MutableClass                                                                   UNIVERSE_CLASS           = new MutableClass() {
+                                                                                                                                     @Override
+                                                                                                                                     public Collection<? extends Observer<?>> dObservers() {
+                                                                                                                                         return Collection.of();
+                                                                                                                                     }
 
-                                                                                                                                   @Override
-                                                                                                                                   public Collection<? extends Setable<? extends Mutable, ?>> dSetables() {
-                                                                                                                                       return SETABLES;
-                                                                                                                                   }
-                                                                                                                               };
-    public static final Observed<DClareMPS, Set<SLanguage>>                                             ALL_LANGUAGES          = Observed.of("ALL_LANGUAGES", Set.of(), plumbing, doNotDerive);
-    public static final Observed<DClareMPS, Set<IAspect>>                                               ALL_ASPECTS            = Observed.of("ALL_ASPECTS", Set.of(), (t, o, b, a) -> {
-                                                                                                                                   o.allAspects.set(a.sortedBy(IAspect::getName).toList());
-                                                                                                                               }, plumbing);
-    public static final Constant<SLanguage, Set<IRuleSet>>                                              RULE_SETS              = Constant.of("RULE_SETS", Set.of(), l -> {
-                                                                                                                                   DClareMPS dclareMPS = DClareMPS.instance();
-                                                                                                                                   IRuleAspect aspect = RULE_ASPECT.get(l);
-                                                                                                                                   Set<IRuleSet> ruleSets = aspect != null ? Collection.of(aspect.getRuleSets()).                                       //
-                                                                                                                                           filter(rs -> dclareMPS.isActiveAspect(rs.getAspect())).toSet() : Set.of();
-                                                                                                                                   return ruleSets;
-                                                                                                                               });
-    public static final Constant<SLanguage, Set<IAspect>>                                               ASPECTS                = Constant.of("ASPECTS", Set.of(), l -> {
-                                                                                                                                   IRuleAspect aspect = RULE_ASPECT.get(l);
-                                                                                                                                   return aspect != null ? Collection.of(aspect.getAspects()).toSet() : Set.of();
-                                                                                                                               });
-    public static final Constant<DevKit, Set<SLanguage>>                                                DEVKIT_LANGUAGES       = Constant.of("DEVKIT_LANGUAGES", Set.of(), devkit -> Collection.of(devkit.getAllExportedLanguageIds()).toSet());
-    private static final Setable<DClareMPS, DRepository>                                                REPOSITORY_CONTAINER   = Setable.of("REPOSITORY_CONTAINER", null, containment);
-    private static final Setable<DClareMPS, DServerMetaData>                                            DSERVER_METADATA       = Setable.of("SERVER_METADATA", null, containment);
-    protected static final Set<? extends Setable<? extends Mutable, ?>>                                 SETABLES               = Set.of(REPOSITORY_CONTAINER, DSERVER_METADATA);
+                                                                                                                                     @Override
+                                                                                                                                     public Collection<? extends Setable<? extends Mutable, ?>> dSetables() {
+                                                                                                                                         return SETABLES;
+                                                                                                                                     }
+                                                                                                                                 };
+    public static final Observed<DClareMPS, Set<SLanguage>>                                             ALL_LANGUAGES            = Observed.of("ALL_LANGUAGES", Set.of(), plumbing, doNotDerive);
+    public static final Observed<DClareMPS, Set<IAspect>>                                               ALL_ASPECTS              = Observed.of("ALL_ASPECTS", Set.of(), (t, o, b, a) -> {
+                                                                                                                                     o.allAspects.set(a.sortedBy(IAspect::getName).toList());
+                                                                                                                                 }, plumbing);
+    public static final Constant<SLanguage, Set<IRuleSet>>                                              RULE_SETS                = Constant.of("RULE_SETS", Set.of(), l -> {
+                                                                                                                                     DClareMPS dclareMPS = DClareMPS.instance();
+                                                                                                                                     IRuleAspect aspect = RULE_ASPECT.get(l);
+                                                                                                                                     Set<IRuleSet> ruleSets = aspect != null ? Collection.of(aspect.getRuleSets()).                                       //
+                                                                                                                                             filter(rs -> dclareMPS.isActiveAspect(rs.getAspect())).toSet() : Set.of();
+                                                                                                                                     return ruleSets;
+                                                                                                                                 });
+    public static final Constant<SLanguage, Set<IAspect>>                                               ASPECTS                  = Constant.of("ASPECTS", Set.of(), l -> {
+                                                                                                                                     IRuleAspect aspect = RULE_ASPECT.get(l);
+                                                                                                                                     return aspect != null ? Collection.of(aspect.getAspects()).toSet() : Set.of();
+                                                                                                                                 });
+    public static final Constant<DevKit, Set<SLanguage>>                                                DEVKIT_LANGUAGES         = Constant.of("DEVKIT_LANGUAGES", Set.of(), devkit -> Collection.of(devkit.getAllExportedLanguageIds()).toSet());
+    private static final Setable<DClareMPS, DRepository>                                                REPOSITORY_CONTAINER     = Setable.of("REPOSITORY_CONTAINER", null, containment);
+    private static final Setable<DClareMPS, DServerMetaData>                                            DSERVER_METADATA         = Setable.of("SERVER_METADATA", null, containment);
+    protected static final Set<? extends Setable<? extends Mutable, ?>>                                 SETABLES                 = Set.of(REPOSITORY_CONTAINER, DSERVER_METADATA);
     //
-    private final ContextPool                                                                           thePool                = ContextThread.createPool(this);
-    private final ThreadLocal<Boolean>                                                                  committing             = ThreadLocal.withInitial(() -> false);
+    private final ContextPool                                                                           thePool                  = ContextThread.createPool(this);
+    private final ThreadLocal<Boolean>                                                                  committing               = ThreadLocal.withInitial(() -> false);
     private final UniverseTransaction                                                                   universeTransaction;
     private final DclareForMpsConfig                                                                    config;
     protected final ProjectBase                                                                         project;
@@ -155,13 +160,13 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
     protected final Concurrent<ReusableTransaction<DRule.DObserver<?>, DRule.DObserverTransaction>>     dObserverTransactions;
     protected final Concurrent<ReusableTransaction<DNode.DCopyObserver, DNode.DCopyTransaction>>        dCopyObserverTransactions;
     protected final DclareForMPSEngine                                                                  engine;
-    private final AtomicLong                                                                            counter                = new AtomicLong(0L);
+    private final AtomicLong                                                                            counter                  = new AtomicLong(0L);
     private final DRepository                                                                           dRepository;
     private final DServerMetaData                                                                       dServerMetaData;
-    private final MutationWrapper<List<IAspect>>                                                        allAspects             = new MutationWrapper<>(List.of());
+    private final MutationWrapper<List<IAspect>>                                                        allAspects               = new MutationWrapper<>(List.of());
     //
-    protected Map<DMessageType, QualifiedSet<Triple<DObject, DFeature, String>, DMessage>>              messages               = MESSAGE_QSET_MAP;
-    private boolean                                                                                     running                = false;
+    protected Map<DMessageType, QualifiedSet<Triple<DObject, DFeature, String>, DMessage>>              messages                 = MESSAGE_QSET_MAP;
+    private boolean                                                                                     running                  = false;
     private ImperativeTransaction                                                                       imperativeTransaction;
     private Thread                                                                                      commandThread;
     private ModuleChecker                                                                               moduleChecker;
@@ -1004,7 +1009,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
     }
 
     public static String getPluginPath() {
-        return System.getProperty("CDM_INSTALLATION",PathManager.getPluginsPath());
+        return System.getProperty("CDM_INSTALLATION", PathManager.getPluginsPath());
     }
 
 }
