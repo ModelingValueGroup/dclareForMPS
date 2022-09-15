@@ -213,6 +213,11 @@ public abstract class DObject implements Mutable {
         return isActive();
     }
 
+    @Override
+    public boolean dIsConstant() {
+        return isExternal();
+    }
+
     public abstract boolean isExternal();
 
     protected boolean isObsolete(String anonymousType) {

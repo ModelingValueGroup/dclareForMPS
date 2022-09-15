@@ -590,7 +590,7 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
     private String toStringNameIfAvailable() {
         LeafTransaction current = LeafTransaction.getCurrent();
         if (current != null) {
-            String name = current.state().get(this, NAME);
+            String name = current.state().get(() -> NAME.get(this));
             if (name != null) {
                 return '\'' + name + '\'';
             }

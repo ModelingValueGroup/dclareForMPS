@@ -410,7 +410,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
         if (isINamedConcept) {
             LeafTransaction current = LeafTransaction.getCurrent();
             if (current != null) {
-                String name = current.state().get(this, PROPERTY.get(SNodeUtil.property_INamedConcept_name));
+                String name = current.state().get(() -> PROPERTY.get(SNodeUtil.property_INamedConcept_name).get(this));
                 if (name != null) {
                     return '\'' + name + '\'';
                 }
