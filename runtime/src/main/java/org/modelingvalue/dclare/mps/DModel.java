@@ -339,15 +339,16 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
     }
 
     public java.util.Set<SLanguage> getUsedLanguages() {
-        return USED_LANGUAGES.get(this).collect(Collectors.toSet());
+        return USED_LANGUAGES.get(this).toMutable();
     }
 
     public void setUsedLanguages(Iterable<SLanguage> languages) {
         USED_LANGUAGES.set(this, Collection.of(languages).toSet());
     }
 
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public java.util.Set<SModel> getUsedModels() {
-        return USED_MODELS.get(this).collect(Collectors.toSet());
+        return ((Set) USED_MODELS.get(this)).toMutable();
     }
 
     public void setUsedModels(Iterable<DModel> models) {

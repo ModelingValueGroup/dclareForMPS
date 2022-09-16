@@ -18,7 +18,6 @@ package org.modelingvalue.dclare.mps;
 import static org.modelingvalue.dclare.SetableModifier.containment;
 
 import java.util.HashSet;
-import java.util.stream.Collectors;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.jetbrains.mps.openapi.model.EditableSModel;
@@ -209,9 +208,10 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
         return MODELS.get(this).filter(m -> m.getModelId().equals(id)).findAny().orElse(DModel.of(original().getModel(id)));
     }
 
+    @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     public Iterable<SModel> getModels() {
-        return MODELS.get(this).collect(Collectors.toSet());
+        return ((Set) MODELS.get(this)).toMutable();
     }
 
     public void setModels(Iterable<DModel> models) {

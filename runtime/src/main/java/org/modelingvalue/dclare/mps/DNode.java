@@ -22,7 +22,6 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import org.jetbrains.mps.openapi.language.*;
 import org.jetbrains.mps.openapi.model.ResolveInfo;
@@ -841,7 +840,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
         } else if (feature instanceof SContainmentLink) {
             SContainmentLink cl = (SContainmentLink) feature;
             if (cl.isMultiple()) {
-                return MANY_CONTAINMENT.get(cl).get(this).collect(Collectors.toList());
+                return MANY_CONTAINMENT.get(cl).get(this).toMutable();
             } else {
                 return SINGLE_CONTAINMENT.get(cl).get(this);
             }
