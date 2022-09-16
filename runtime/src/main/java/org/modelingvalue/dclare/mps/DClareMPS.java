@@ -651,7 +651,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
         Map<DObserved, Pair<Object, Object>> delta = diff[0].get(dObject);
         if (delta != null) {
             diff[0] = diff[0].removeKey(dObject);
-            parentToMPS(pre, post, post, diff, dObject);
+            parentToMPS(pre, post, diff, dObject);
             boolean changed = false;
             for (Entry<DObserved, Pair<Object, Object>> e : delta) {
                 DObserved dObserved = e.getKey();
@@ -659,17 +659,10 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
                 Object postVal = e.getValue().b();
                 if (!Objects.equals(preVal, postVal)) {
                     changed = true;
-                    if (dObserved.containment()) {
+                    if (dObserved.isReference()) {
                         DObserved.diff(preVal, postVal, a -> {
                             if (a instanceof DObject) {
-                                parentToMPS(pre, post, pre, diff, (DObject) a);
-                            }
-                        }, r -> {
-                        });
-                    } else if (dObserved.isReference()) {
-                        DObserved.diff(preVal, postVal, a -> {
-                            if (a instanceof DObject) {
-                                parentToMPS(pre, post, post, diff, (DObject) a);
+                                parentToMPS(pre, post, diff, (DObject) a);
                             }
                         }, r -> {
                         });
@@ -686,10 +679,10 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
         }
     }
 
-    @SuppressWarnings("rawtypes")
-    private void parentToMPS(State imper, State dclare, State state, Map<DObject, Map<DObserved, Pair<Object, Object>>>[] diff, DObject dObject) {
-        Pair<Mutable, Setable<Mutable, ?>> pair = state.get(dObject, Mutable.D_PARENT_CONTAINING);
-        if (pair != null && pair.a() instanceof DObject) {
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    private void parentToMPS(State imper, State dclare, Map<DObject, Map<DObserved, Pair<Object, Object>>>[] diff, DObject dObject) {
+        Pair<Mutable, Setable<Mutable, ?>> pair = dclare.get(dObject, Mutable.D_PARENT_CONTAINING);
+        if (pair != null && pair.a() instanceof DObject && pair.b() instanceof DObserved) {
             toMPS(imper, dclare, diff, (DObject) pair.a());
         }
     }

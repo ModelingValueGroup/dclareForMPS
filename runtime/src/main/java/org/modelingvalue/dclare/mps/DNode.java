@@ -119,6 +119,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                    SNode sNode = dNode.tryOriginal();
                                                                                                                                    DObserved.<DNode> map(pre, post, (n, a) -> {
                                                                                                                                        SNode s = n.original();
+                                                                                                                                       removeWhenAllreadyContained(sNode, s);
                                                                                                                                        sNode.insertChildAfter(mc, s, a != null ? a.tryOriginal() : null);
                                                                                                                                        n.init(s);
                                                                                                                                    }, r -> {
@@ -140,6 +141,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                    }
                                                                                                                                    if (post != null) {
                                                                                                                                        SNode s = post.original();
+                                                                                                                                       removeWhenAllreadyContained(sNode, s);
                                                                                                                                        sNode.addChild(sc, s);
                                                                                                                                        post.init(s);
                                                                                                                                    }
@@ -237,6 +239,13 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
 
     @SuppressWarnings("rawtypes")
     protected static final Set<Setable>                                                                 SETABLES               = DNewableObject.SETABLES.addAll(Set.of(ROOT, MODEL, USER_OBJECTS, ALL_MPS_ISSUES, INDEX));
+
+    private static void removeWhenAllreadyContained(SNode newParent, SNode node) {
+        SNode oldParent = node.getParent();
+        if (oldParent != null && oldParent != newParent) {
+            oldParent.removeChild(node);
+        }
+    }
 
     public static Observer<DNode> copyObserver(IAspect aspect, DObserved<DNode, ?> observed, TriConsumer<DNode, DNode, DCopy> action) {
         return DCopyObserver.of(observed, t -> {
