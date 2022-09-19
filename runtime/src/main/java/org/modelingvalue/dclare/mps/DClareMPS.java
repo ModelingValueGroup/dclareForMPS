@@ -151,6 +151,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
     private static final Setable<DClareMPS, DServerMetaData>                                            DSERVER_METADATA         = Setable.of("SERVER_METADATA", null, containment);
     protected static final Set<? extends Setable<? extends Mutable, ?>>                                 SETABLES                 = Set.of(REPOSITORY_CONTAINER, DSERVER_METADATA);
     //
+    private final int                                                                                   nr;
     private final ContextPool                                                                           thePool                  = ContextThread.createPool(this);
     private final ThreadLocal<Boolean>                                                                  committing               = ThreadLocal.withInitial(() -> false);
     private final UniverseTransaction                                                                   universeTransaction;
@@ -180,7 +181,8 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
     private Concurrent<Set<SNode>>                                                                      changedRoots;
     private ConstantState                                                                               derivationState;
 
-    protected DClareMPS(DclareForMPSEngine engine, ProjectBase project, DclareForMpsConfig config) {
+    protected DClareMPS(DclareForMPSEngine engine, ProjectBase project, DclareForMpsConfig config, int nr) {
+        this.nr = nr;
         this.config = config;
         this.project = project;
         this.modelAccess = project.getModelAccess();
@@ -524,7 +526,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
 
     @Override
     public String toString() {
-        return "Universe[" + project.getName() + "]";
+        return "Universe[" + project.getName() + ":" + nr + "]";
     }
 
     public void handleMPSChange(Runnable action) {

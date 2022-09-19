@@ -20,9 +20,9 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.jetbrains.mps.openapi.module.ModelAccess;
-import org.jetbrains.mps.openapi.module.SModule;
 import org.jetbrains.mps.openapi.util.ProgressMonitor;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.util.StatusProvider.StatusIterator;
@@ -35,17 +35,20 @@ import jetbrains.mps.errors.item.IssueKindReportItem;
 import jetbrains.mps.ide.MPSCoreComponents;
 import jetbrains.mps.module.ReloadableModule;
 import jetbrains.mps.project.ProjectBase;
-import jetbrains.mps.smodel.tempmodel.TempModule;
 
 @SuppressWarnings("unused")
 public class DclareForMPSEngine implements DeployListener {
+
+    private static final boolean                           TRACE_ENGINE              = Boolean.getBoolean("TRACE_ENGINE");
     public static final int                                MAX_NR_OF_HISTORY_FOR_MPS = 4;
     protected static final CopyOnWriteArrayList<DClareMPS> ALL_DCLARE_MPS            = new CopyOnWriteArrayList<>();
+    private static final AtomicInteger                     COUNTER                   = new AtomicInteger(0);
     //
     private final ProjectBase                              project;
     private final ClassLoaderManager                       classLoaderManager;
     private final EngineStatusHandler                      engineStatusHandler;
     private final ModelAccess                              modelAccess;
+    private final int                                      nr;
     //
     private CompletableFuture<Void>                        futureDclareMPS;
     private DClareMPS                                      dClareMPS;
@@ -53,18 +56,25 @@ public class DclareForMPSEngine implements DeployListener {
     private DclareTracer                                   tracer;
 
     public DclareForMPSEngine(ProjectBase project, EngineStatusHandler engineStatusHandler) {
+        this.nr = COUNTER.getAndIncrement();
         this.project = project;
         this.modelAccess = project.getModelAccess();
         this.engineStatusHandler = engineStatusHandler;
+        if (TRACE_ENGINE) {
+            System.err.println("--- DCLARE FOR MPS --- PROJECT START " + project + ":" + nr + " " + ALL_DCLARE_MPS);
+        }
         classLoaderManager = Objects.requireNonNull(MPSCoreComponents.getInstance().getPlatform().findComponent(ClassLoaderManager.class));
         classLoaderManager.addListener(this);
         newDClareMPS(project, new DclareForMpsConfig().withMaxNrOfHistory(MAX_NR_OF_HISTORY_FOR_MPS).withStatusHandler(engineStatusHandler));
     }
 
     private void newDClareMPS(ProjectBase project, DclareForMpsConfig config) {
+        if (TRACE_ENGINE) {
+            System.err.println("--- DCLARE FOR MPS --- START " + project + ":" + nr + " " + ALL_DCLARE_MPS);
+        }
         synchronized (ALL_DCLARE_MPS) {
             futureDclareMPS = new CompletableFuture<>();
-            dClareMPS = new DClareMPS(this, project, config);
+            dClareMPS = new DClareMPS(this, project, config, COUNTER.getAndIncrement());
             StatusIterator<Status> statusIterator = dClareMPS.universeTransaction().getStatusIterator();
             if (moodUpdaterThread != null) {
                 moodUpdaterThread.stop = true;
@@ -74,8 +84,15 @@ public class DclareForMPSEngine implements DeployListener {
             moodUpdaterThread = new MoodUpdaterThread(dClareMPS, futureDclareMPS, statusIterator);
             moodUpdaterThread.start();
             syncTracer();
-            // System.err.println("!!!!!!!!!!!!!!!!!!!!!! " + ALL_DCLARE_MPS);
         }
+        if (config.isOnMode()) {
+            dClareMPS.start();
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "ENGINE " + project + ":" + nr;
     }
 
     public DclareForMpsConfig getConfig() {
@@ -103,7 +120,9 @@ public class DclareForMPSEngine implements DeployListener {
         config = config.withMaxNrOfHistory(getConfig().getMaxNrOfHistory()).withStatusHandler(getConfig().getStatusHandler());
         synchronized (ALL_DCLARE_MPS) {
             if (!getConfig().equals(config) || config.isOnMode() != dClareMPS.isRunning()) {
-                stopDClareMPS();
+                if (TRACE_ENGINE) {
+                    System.err.println("--- DCLARE FOR MPS --- SET CONFIG " + project + ":" + nr + " " + ALL_DCLARE_MPS);
+                }
                 startDCLareMPS(config);
             }
         }
@@ -126,25 +145,28 @@ public class DclareForMPSEngine implements DeployListener {
     }
 
     private void startDCLareMPS(DclareForMpsConfig config) {
+        stopDClareMPS();
         CompletableFuture<Void> oldFuture = futureDclareMPS;
         synchronized (ALL_DCLARE_MPS) {
             ALL_DCLARE_MPS.remove(dClareMPS);
-            // System.err.println("!!!!!!!!!!!!!!!!!!!!!! " + ALL_DCLARE_MPS);
             newDClareMPS(project, config);
-            if (config.isOnMode()) {
-                dClareMPS.start();
-            }
         }
         oldFuture.complete(null);
     }
 
     protected void stopDClareMPS() {
+        if (TRACE_ENGINE) {
+            System.err.println("--- DCLARE FOR MPS --- STOP " + project + ":" + nr + " " + ALL_DCLARE_MPS);
+        }
         synchronized (ALL_DCLARE_MPS) {
             dClareMPS.stop();
         }
     }
 
     public void stop() {
+        if (TRACE_ENGINE) {
+            System.err.println("--- DCLARE FOR MPS --- PROJECT STOP " + project + ":" + nr + " " + ALL_DCLARE_MPS);
+        }
         classLoaderManager.removeListener(this);
         stopDClareMPS();
         synchronized (ALL_DCLARE_MPS) {
@@ -155,25 +177,14 @@ public class DclareForMPSEngine implements DeployListener {
     }
 
     @Override
-    public void onUnloaded(Set<ReloadableModule> unloadedModules, ProgressMonitor monitor) {
-        if (unloadedModules.stream().anyMatch(m -> m instanceof TempModule)) {
-            stopDClareMPS();
-        } else {
-            java.util.List<SModule> projectModules = project.getProjectModules();
-            if (unloadedModules.stream().anyMatch(projectModules::contains)) {
-                stopDClareMPS();
-            }
-        }
-    }
-
-    @Override
     public void onLoaded(Set<ReloadableModule> loadedModules, ProgressMonitor monitor) {
-        if (loadedModules.stream().anyMatch(m -> m instanceof TempModule)) {
-            startDCLareMPS(getConfig());
-        } else {
-            java.util.List<SModule> projectModules = project.getProjectModules();
-            if (loadedModules.stream().anyMatch(projectModules::contains)) {
+        for (DClareMPS dClareMPS : ALL_DCLARE_MPS) {
+            if (loadedModules.stream().anyMatch(m -> dClareMPS.project.isProjectModule(m))) {
+                if (TRACE_ENGINE) {
+                    System.err.println("--- DCLARE FOR MPS --- LOADED " + project + ":" + nr + " " + ALL_DCLARE_MPS);
+                }
                 startDCLareMPS(getConfig());
+                break;
             }
         }
     }
