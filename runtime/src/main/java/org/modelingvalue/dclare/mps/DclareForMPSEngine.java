@@ -17,14 +17,15 @@ package org.modelingvalue.dclare.mps;
 
 import java.util.Objects;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import org.jetbrains.mps.openapi.module.ModelAccess;
 import org.jetbrains.mps.openapi.util.ProgressMonitor;
 import org.modelingvalue.collections.Collection;
+import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.collections.util.StatusProvider.StatusIterator;
 import org.modelingvalue.dclare.UniverseTransaction;
 import org.modelingvalue.dclare.UniverseTransaction.Status;
@@ -49,10 +50,9 @@ public class DclareForMPSEngine implements DeployListener {
     private final EngineStatusHandler                      engineStatusHandler;
     private final ModelAccess                              modelAccess;
     private final int                                      nr;
+    private final MoodUpdaterThread                        moodUpdaterThread;
     //
-    private CompletableFuture<Void>                        futureDclareMPS;
     private DClareMPS                                      dClareMPS;
-    private MoodUpdaterThread                              moodUpdaterThread;
     private DclareTracer                                   tracer;
 
     public DclareForMPSEngine(ProjectBase project, EngineStatusHandler engineStatusHandler) {
@@ -65,7 +65,9 @@ public class DclareForMPSEngine implements DeployListener {
         }
         classLoaderManager = Objects.requireNonNull(MPSCoreComponents.getInstance().getPlatform().findComponent(ClassLoaderManager.class));
         classLoaderManager.addListener(this);
+        moodUpdaterThread = new MoodUpdaterThread();
         newDClareMPS(project, new DclareForMpsConfig().withMaxNrOfHistory(MAX_NR_OF_HISTORY_FOR_MPS).withStatusHandler(engineStatusHandler));
+        moodUpdaterThread.start();
     }
 
     private void newDClareMPS(ProjectBase project, DclareForMpsConfig config) {
@@ -73,16 +75,9 @@ public class DclareForMPSEngine implements DeployListener {
             System.err.println("--- DCLARE FOR MPS --- START " + project + ":" + nr + " " + ALL_DCLARE_MPS);
         }
         synchronized (ALL_DCLARE_MPS) {
-            futureDclareMPS = new CompletableFuture<>();
             dClareMPS = new DClareMPS(this, project, config, COUNTER.getAndIncrement());
-            StatusIterator<Status> statusIterator = dClareMPS.universeTransaction().getStatusIterator();
-            if (moodUpdaterThread != null) {
-                moodUpdaterThread.stop = true;
-                moodUpdaterThread.interrupt();
-            }
             ALL_DCLARE_MPS.add(dClareMPS);
-            moodUpdaterThread = new MoodUpdaterThread(dClareMPS, futureDclareMPS, statusIterator);
-            moodUpdaterThread.start();
+            moodUpdaterThread.putDClareMPS(dClareMPS);
             syncTracer();
         }
         if (config.isOnMode()) {
@@ -146,12 +141,10 @@ public class DclareForMPSEngine implements DeployListener {
 
     private void startDCLareMPS(DclareForMpsConfig config) {
         stopDClareMPS();
-        CompletableFuture<Void> oldFuture = futureDclareMPS;
         synchronized (ALL_DCLARE_MPS) {
             ALL_DCLARE_MPS.remove(dClareMPS);
             newDClareMPS(project, config);
         }
-        oldFuture.complete(null);
     }
 
     protected void stopDClareMPS() {
@@ -172,8 +165,8 @@ public class DclareForMPSEngine implements DeployListener {
         synchronized (ALL_DCLARE_MPS) {
             ALL_DCLARE_MPS.remove(dClareMPS);
         }
-        dClareMPS = null;
-        futureDclareMPS.complete(null);
+        moodUpdaterThread.stop = true;
+        moodUpdaterThread.interrupt();
     }
 
     @Override
@@ -199,66 +192,72 @@ public class DclareForMPSEngine implements DeployListener {
     }
 
     private class MoodUpdaterThread extends Thread {
-        private final DClareMPS               dclareMPS;
-        private final CompletableFuture<Void> futureDclareMPS;
-        private final StatusIterator<Status>  statusIterator;
-        private boolean                       stop;
 
-        public MoodUpdaterThread(DClareMPS dclareMPS, CompletableFuture<Void> futureDclareMPS, StatusIterator<Status> statusIterator) {
+        private final BlockingQueue<Pair<DClareMPS, StatusIterator<Status>>> queue = new LinkedBlockingQueue<>(3);
+        private boolean                                                      stop;
+
+        public MoodUpdaterThread() {
             super("dclare-moods-" + project.getName());
-            this.dclareMPS = dclareMPS;
-            this.futureDclareMPS = futureDclareMPS;
-            this.statusIterator = statusIterator;
             setDaemon(true);
+        }
+
+        private void putDClareMPS(DClareMPS dClareMPS) {
+            try {
+                queue.put(Pair.of(dClareMPS, dClareMPS.universeTransaction().getStatusIterator()));
+            } catch (InterruptedException e) {
+                dClareMPS.universeTransaction().handleException(e);
+            }
         }
 
         @Override
         public void run() {
-            statusIterator.setInterruptedHandler(this::interruptedHandler);
             while (!stop) {
-                if (!statusIterator.hasNext()) {
-                    try {
-                        futureDclareMPS.get();
-                    } catch (InterruptedException | ExecutionException e) {
-                        interruptedHandler(e);
-                    }
-                } else {
+                Pair<DClareMPS, StatusIterator<Status>> pair;
+                try {
+                    pair = queue.take();
+                } catch (InterruptedException e) {
+                    interruptedHandler(e, dClareMPS);
+                    break;
+                }
+                DClareMPS current = pair.a();
+                StatusIterator<Status> statusIterator = pair.b();
+                statusIterator.setInterruptedHandler(e -> interruptedHandler(e, current));
+                while (!stop && statusIterator.hasNext()) {
                     Status status = statusIterator.next();
                     if (!stop) {
                         if (status != null) {
-                            modelAccess.runWriteInEDT(Collection.sequential(() -> edtPayload(status)));
+                            modelAccess.runWriteInEDT(Collection.sequential(() -> edtPayload(status, current)));
                         } else {
-                            dclareMPS.universeTransaction().handleException(new IllegalArgumentException("MoodUpdaterThread got null status while running"));
+                            current.universeTransaction().handleException(new IllegalArgumentException("MoodUpdaterThread got null status while running"));
                         }
                     }
                 }
             }
         }
 
-        private void interruptedHandler(Exception e) {
+        private void interruptedHandler(Exception e, DClareMPS current) {
             if (!stop) {
-                dclareMPS.universeTransaction().handleException(e);
+                current.universeTransaction().handleException(e);
             }
         }
 
-        private void edtPayload(Status status) {
+        private void edtPayload(Status status, DClareMPS current) {
             if (status.stats != null) {
-                engineStatusHandler.stats(status.stats, dclareMPS);
+                engineStatusHandler.stats(status.stats, current);
             }
-            engineStatusHandler.aspects(dclareMPS.getAllAspects(), dclareMPS);
-
-            if (!dclareMPS.getConfig().isOnMode() || status.mood == UniverseTransaction.Mood.stopped) {
-                engineStatusHandler.idle(project, dclareMPS, status.state::get);
-                engineStatusHandler.off(project, dclareMPS);
+            engineStatusHandler.aspects(current.getAllAspects(), current);
+            if (!current.getConfig().isOnMode() || status.mood == UniverseTransaction.Mood.stopped) {
+                engineStatusHandler.idle(project, current, status.state::get);
+                engineStatusHandler.off(project, current);
             } else if (status.mood == UniverseTransaction.Mood.idle) {
-                engineStatusHandler.idle(project, dclareMPS, status.state::get);
+                engineStatusHandler.idle(project, current, status.state::get);
                 if (!status.active.isEmpty()) {
-                    engineStatusHandler.commiting(project, dclareMPS);
+                    engineStatusHandler.commiting(project, current);
                 }
-                engineStatusHandler.on(project, dclareMPS);
+                engineStatusHandler.on(project, current);
             } else {
-                engineStatusHandler.active(project, dclareMPS);
-                engineStatusHandler.on(project, dclareMPS);
+                engineStatusHandler.active(project, current);
+                engineStatusHandler.on(project, current);
             }
         }
     }

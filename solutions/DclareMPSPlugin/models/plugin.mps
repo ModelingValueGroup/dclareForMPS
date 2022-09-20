@@ -736,6 +736,15 @@
             </node>
           </node>
         </node>
+        <node concept="3cpWs8" id="149Hew32Wvv" role="3cqZAp">
+          <node concept="3cpWsn" id="149Hew32Wvw" role="3cpWs9">
+            <property role="TrG5h" value="mpsProject" />
+            <node concept="3uibUv" id="149Hew32Wvx" role="1tU5fm">
+              <ref role="3uigEE" to="z1c3:~MPSProject" resolve="MPSProject" />
+            </node>
+            <node concept="1KvdUw" id="149Hew32Wvy" role="33vP2m" />
+          </node>
+        </node>
         <node concept="3clFbF" id="5LbVSrDCOSU" role="3cqZAp">
           <node concept="2OqwBi" id="5LbVSrDCo1$" role="3clFbG">
             <node concept="10M0yZ" id="3jy5t$KuxEB" role="2Oq$k0">
@@ -745,7 +754,9 @@
             <node concept="liA8E" id="5LbVSrDCo1A" role="2OqNvi">
               <ref role="37wK5l" to="33ny:~Map.remove(java.lang.Object)" resolve="remove" />
               <node concept="2OqwBi" id="5LbVSrDCo1B" role="37wK5m">
-                <node concept="1KvdUw" id="5LbVSrDCo1C" role="2Oq$k0" />
+                <node concept="37vLTw" id="149Hew337vV" role="2Oq$k0">
+                  <ref role="3cqZAo" node="149Hew32Wvw" resolve="mpsProject" />
+                </node>
                 <node concept="liA8E" id="5LbVSrDCo1D" role="2OqNvi">
                   <ref role="37wK5l" to="z1c3:~MPSProject.getProject()" resolve="getProject" />
                 </node>
