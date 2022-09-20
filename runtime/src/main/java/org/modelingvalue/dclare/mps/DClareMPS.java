@@ -83,6 +83,8 @@ import jetbrains.mps.smodel.language.LanguageRuntime;
 
 public class DClareMPS implements StateDeltaHandler, Universe, UncaughtExceptionHandler {
 
+    private static final String                                                                         MPS_PLUGIN_DIR           = System.getProperty("MPS_PLUGIN_DIR", PathManager.getPluginsPath());
+
     @SuppressWarnings("rawtypes")
     protected static final DefaultMap<Pair<String, Integer>, List<DMethod>>                             EMPTY_METHOD_MAP         = DefaultMap.of(k -> List.of());
 
@@ -1009,7 +1011,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
     }
 
     public static String getPluginPath() {
-        return System.getProperty("CDM_INSTALLATION", PathManager.getPluginsPath());
+        return MPS_PLUGIN_DIR;
     }
 
 }
