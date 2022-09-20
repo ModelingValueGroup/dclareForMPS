@@ -102,6 +102,11 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
                                                                                                                                      Set<SStructClass> structClasses = aspect != null ? Collection.of(aspect.getStructClasses()).toSet() : Set.of();
                                                                                                                                      return structClasses.toMap(s -> Entry.of(s.id(), s));
                                                                                                                                  });
+    protected static Constant<SLanguage, Map<String, IAspect>>                                          ASPECT_MAP               = Constant.of("ASPECT_MAP", l -> {
+                                                                                                                                     IRuleAspect aspect = RULE_ASPECT.get(l);
+                                                                                                                                     Set<IAspect> aspects = aspect != null ? Collection.of(aspect.getAspects()).toSet() : Set.of();
+                                                                                                                                     return aspects.toMap(a -> Entry.of(a.getId(), a));
+                                                                                                                                 });
     protected static Constant<SLanguage, Set<SReferenceLink>>                                           REFERENCES_WITH_OPPOSITE = Constant.of("REFERENCES_WITH_OPPOSITE", l -> {
                                                                                                                                      IRuleAspect aspect = RULE_ASPECT.get(l);
                                                                                                                                      return aspect != null ? Collection.of(aspect.getReferencesWithOpposite()).toSet() : Set.of();
