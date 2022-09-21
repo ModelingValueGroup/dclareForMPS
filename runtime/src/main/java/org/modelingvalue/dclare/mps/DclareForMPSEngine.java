@@ -28,6 +28,7 @@ import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.collections.util.StatusProvider.StatusIterator;
+import org.modelingvalue.dclare.ImperativeTransaction;
 import org.modelingvalue.dclare.UniverseStatistics;
 import org.modelingvalue.dclare.UniverseTransaction;
 import org.modelingvalue.dclare.UniverseTransaction.Mood;
@@ -266,7 +267,7 @@ public class DclareForMPSEngine implements DeployListener {
             List<IAspect> oldAspects = prevAspects;
             UniverseStatistics oldStats = prevStats;
             Set<Object> oldActive = prevActive;
-            if (oldMood != mood || !Objects.equals(oldAspects, aspects) || (stats != null && !Objects.equals(oldStats, stats)) || (active.isEmpty() != oldActive.isEmpty() && mood == UniverseTransaction.Mood.idle)) {
+            if (oldMood != mood || !Objects.equals(oldAspects, aspects) || (stats != null && !Objects.equals(oldStats, stats)) || (!active.equals(oldActive) && mood == UniverseTransaction.Mood.idle)) {
                 modelAccess.runWriteInEDT(Collection.sequential(() -> {
                     if (oldMood != mood) {
                         if (mood == UniverseTransaction.Mood.starting) {
@@ -279,8 +280,10 @@ public class DclareForMPSEngine implements DeployListener {
                         } else if (mood == UniverseTransaction.Mood.busy) {
                             engineStatusHandler.active(project, current);
                         } else if (mood == UniverseTransaction.Mood.idle) {
-                            if (!active.isEmpty()) {
+                            if (active.anyMatch(o -> o instanceof ImperativeTransaction)) {
                                 engineStatusHandler.commiting(project, current);
+                            } else if (active.anyMatch(o -> o instanceof String)) {
+                                engineStatusHandler.checking(project, current);
                             } else {
                                 engineStatusHandler.idle(project, current, status.state::get);
                             }
@@ -288,9 +291,11 @@ public class DclareForMPSEngine implements DeployListener {
                             engineStatusHandler.idle(project, current, status.state::get);
                             engineStatusHandler.off(project, current);
                         }
-                    } else if (active.isEmpty() != oldActive.isEmpty() && mood == UniverseTransaction.Mood.idle) {
-                        if (!active.isEmpty()) {
+                    } else if (!active.equals(oldActive) && mood == UniverseTransaction.Mood.idle) {
+                        if (active.anyMatch(o -> o instanceof ImperativeTransaction)) {
                             engineStatusHandler.commiting(project, current);
+                        } else if (active.anyMatch(o -> o instanceof String)) {
+                            engineStatusHandler.checking(project, current);
                         } else {
                             engineStatusHandler.idle(project, current, status.state::get);
                         }

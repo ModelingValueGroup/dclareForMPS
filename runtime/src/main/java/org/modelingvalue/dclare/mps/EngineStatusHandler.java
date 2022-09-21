@@ -28,6 +28,8 @@ public interface EngineStatusHandler {
 
     void commiting(Project project, DClareMPS engine);
 
+    void checking(Project project, DClareMPS engine);
+
     void off(Project project, DClareMPS engine);
 
     void active(Project project, DClareMPS engine);
