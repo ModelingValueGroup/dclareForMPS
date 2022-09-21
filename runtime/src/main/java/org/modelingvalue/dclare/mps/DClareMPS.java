@@ -188,6 +188,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
     private Concurrent<Set<SModule>>                                                                    changedModules;
     private Concurrent<Set<SNode>>                                                                      changedRoots;
     private ConstantState                                                                               derivationState;
+    private int                                                                                         modelCheckNr;
 
     protected DClareMPS(DclareForMPSEngine engine, ProjectBase project, DclareForMpsConfig config, int nr, Status[] startStatus) {
         this.nr = nr;
@@ -940,6 +941,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
     }
 
     private void runModelCheck() {
+        int checkNr = modelCheckNr++;
         Set<SModel> models = changedModels.result();
         Set<SModule> modules = changedModules.result();
         Set<SNode> roots = changedRoots.result();
@@ -951,37 +953,42 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
             thePool.execute(() -> {
                 engine.issuesChanged(allIssues.collect(Collectors.toList()));
                 if (!models.isEmpty() || !modules.isEmpty() || !roots.isEmpty()) {
-                    RootItemsToCheck itemsToCheck = new RootItemsToCheck();
-                    itemsToCheck.models = models.collect(Collectors.toList());
-                    itemsToCheck.modules = modules.collect(Collectors.toList());
-                    itemsToCheck.roots = roots.filter(r -> r.getModel() != null).collect(Collectors.toList());
-                    java.util.List<IssueKindReportItem> reportItems = new ArrayList<>();
-                    SRepository repos = getRepository().original();
-                    mpsChecker.check(itemsToCheck, repos, reportItems::add, new EmptyProgressMonitor());
-                    imperativeTransaction.schedule(() -> {
-                        for (SModule sModule : modules) {
-                            DObject.MPS_ISSUES.set(DModule.of(sModule), DObject.MPS_ISSUES.getDefault());
-                        }
-                        for (SModel sModel : models) {
-                            DObject.MPS_ISSUES.set(DModel.of(sModel), DObject.MPS_ISSUES.getDefault());
-                        }
-                        for (SNode root : roots) {
-                            DNode.ALL_MPS_ISSUES.set(DNode.of(root), DNode.ALL_MPS_ISSUES.getDefault());
-                        }
-                        for (IssueKindReportItem item : reportItems) {
-                            DObject d = read(() -> context(item));
-                            if (d != null) {
-                                if (item instanceof NodeFlavouredItem) {
-                                    DNode root = root(repos, (NodeFlavouredItem) item);
-                                    if (root != null) {
-                                        DNode.ALL_MPS_ISSUES.set(root, Set::add, Pair.of(d, item));
+                    universeTransaction.addActive("Check Model " + checkNr);
+                    try {
+                        RootItemsToCheck itemsToCheck = new RootItemsToCheck();
+                        itemsToCheck.models = models.collect(Collectors.toList());
+                        itemsToCheck.modules = modules.collect(Collectors.toList());
+                        itemsToCheck.roots = roots.filter(r -> r.getModel() != null).collect(Collectors.toList());
+                        java.util.List<IssueKindReportItem> reportItems = new ArrayList<>();
+                        SRepository repos = getRepository().original();
+                        mpsChecker.check(itemsToCheck, repos, reportItems::add, new EmptyProgressMonitor());
+                        imperativeTransaction.schedule(() -> {
+                            for (SModule sModule : modules) {
+                                DObject.MPS_ISSUES.set(DModule.of(sModule), DObject.MPS_ISSUES.getDefault());
+                            }
+                            for (SModel sModel : models) {
+                                DObject.MPS_ISSUES.set(DModel.of(sModel), DObject.MPS_ISSUES.getDefault());
+                            }
+                            for (SNode root : roots) {
+                                DNode.ALL_MPS_ISSUES.set(DNode.of(root), DNode.ALL_MPS_ISSUES.getDefault());
+                            }
+                            for (IssueKindReportItem item : reportItems) {
+                                DObject d = read(() -> context(item));
+                                if (d != null) {
+                                    if (item instanceof NodeFlavouredItem) {
+                                        DNode root = root(repos, (NodeFlavouredItem) item);
+                                        if (root != null) {
+                                            DNode.ALL_MPS_ISSUES.set(root, Set::add, Pair.of(d, item));
+                                        }
+                                    } else {
+                                        DObject.MPS_ISSUES.set(d, Set::add, Pair.of(d, item));
                                     }
-                                } else {
-                                    DObject.MPS_ISSUES.set(d, Set::add, Pair.of(d, item));
                                 }
                             }
-                        }
-                    });
+                        });
+                    } finally {
+                        universeTransaction.removeActive("Check Model " + checkNr);
+                    }
                 }
             });
         });

@@ -28,7 +28,6 @@ import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.collections.util.StatusProvider.StatusIterator;
-import org.modelingvalue.dclare.ImperativeTransaction;
 import org.modelingvalue.dclare.UniverseStatistics;
 import org.modelingvalue.dclare.UniverseTransaction;
 import org.modelingvalue.dclare.UniverseTransaction.Mood;
@@ -203,7 +202,7 @@ public class DclareForMPSEngine implements DeployListener {
         private UniverseTransaction.Mood                                     prevMood;
         private UniverseStatistics                                           prevStats;
         private List<IAspect>                                                prevAspects;
-        private Set<ImperativeTransaction>                                   prevActive;
+        private Set<Object>                                                  prevActive;
 
         public MoodUpdaterThread() {
             super("dclare-moods-" + project.getName());
@@ -261,13 +260,13 @@ public class DclareForMPSEngine implements DeployListener {
             Mood mood = status.mood;
             List<IAspect> aspects = current.getAllAspects();
             UniverseStatistics stats = status.stats != null ? status.stats.clone() : null;
-            Set<ImperativeTransaction> active = status.active;
+            Set<Object> active = status.active;
             Boolean onMode = current.getConfig().isOnMode();
             Mood oldMood = prevMood;
             List<IAspect> oldAspects = prevAspects;
             UniverseStatistics oldStats = prevStats;
-            Set<ImperativeTransaction> oldActive = prevActive;
-            if (oldMood != mood || !Objects.equals(oldAspects, aspects) || !Objects.equals(oldStats, stats) || (active.isEmpty() != oldActive.isEmpty() && mood == UniverseTransaction.Mood.idle)) {
+            Set<Object> oldActive = prevActive;
+            if (oldMood != mood || !Objects.equals(oldAspects, aspects) || (stats != null && !Objects.equals(oldStats, stats)) || (active.isEmpty() != oldActive.isEmpty() && mood == UniverseTransaction.Mood.idle)) {
                 modelAccess.runWriteInEDT(Collection.sequential(() -> {
                     if (oldMood != mood) {
                         if (mood == UniverseTransaction.Mood.starting) {
