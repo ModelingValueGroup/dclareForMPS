@@ -52,6 +52,7 @@ import org.modelingvalue.collections.util.MutationWrapper;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.collections.util.Triple;
 import org.modelingvalue.dclare.*;
+import org.modelingvalue.dclare.UniverseTransaction.Status;
 import org.modelingvalue.dclare.ex.*;
 import org.modelingvalue.dclare.mps.DAttribute.DObservedAttribute;
 import org.modelingvalue.dclare.mps.DRule.DObserver;
@@ -188,7 +189,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
     private Concurrent<Set<SNode>>                                                                      changedRoots;
     private ConstantState                                                                               derivationState;
 
-    protected DClareMPS(DclareForMPSEngine engine, ProjectBase project, DclareForMpsConfig config, int nr) {
+    protected DClareMPS(DclareForMPSEngine engine, ProjectBase project, DclareForMpsConfig config, int nr, Status[] startStatus) {
         this.nr = nr;
         this.config = config;
         this.project = project;
@@ -200,7 +201,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
         if (config.isTraceDclare()) {
             System.err.println(DclareTrace.getLineStart("BEGIN") + this);
         }
-        universeTransaction = new UniverseTransaction(this, thePool, config.getDclareConfig()) {
+        universeTransaction = new UniverseTransaction(this, thePool, config.getDclareConfig(), startStatus) {
             @Override
             public void start(Action<Universe> action) {
                 if (config.isTraceDclare()) {

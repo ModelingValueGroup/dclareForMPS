@@ -75,9 +75,10 @@ public class DclareForMPSEngine implements DeployListener {
             System.err.println("--- DCLARE FOR MPS --- START " + project + ":" + nr + " " + ALL_DCLARE_MPS);
         }
         synchronized (ALL_DCLARE_MPS) {
-            dClareMPS = new DClareMPS(this, project, config, COUNTER.getAndIncrement());
+            Status[] startStatus = new Status[1];
+            dClareMPS = new DClareMPS(this, project, config, COUNTER.getAndIncrement(), startStatus);
             ALL_DCLARE_MPS.add(dClareMPS);
-            moodUpdaterThread.putDClareMPS(dClareMPS);
+            moodUpdaterThread.putDClareMPS(dClareMPS, startStatus[0]);
             syncTracer();
         }
         if (config.isOnMode()) {
@@ -201,9 +202,9 @@ public class DclareForMPSEngine implements DeployListener {
             setDaemon(true);
         }
 
-        private void putDClareMPS(DClareMPS dClareMPS) {
+        private void putDClareMPS(DClareMPS dClareMPS, Status startStatus) {
             try {
-                queue.put(Pair.of(dClareMPS, dClareMPS.universeTransaction().getStatusIterator()));
+                queue.put(Pair.of(dClareMPS, StatusIterator.of(startStatus)));
             } catch (InterruptedException e) {
                 dClareMPS.universeTransaction().handleException(e);
             }
