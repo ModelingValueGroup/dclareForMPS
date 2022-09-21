@@ -16,7 +16,6 @@
 package org.modelingvalue.dclare.mps;
 
 import java.util.Objects;
-import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -25,9 +24,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.jetbrains.mps.openapi.module.ModelAccess;
 import org.jetbrains.mps.openapi.util.ProgressMonitor;
 import org.modelingvalue.collections.Collection;
+import org.modelingvalue.collections.List;
+import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.collections.util.StatusProvider.StatusIterator;
+import org.modelingvalue.dclare.ImperativeTransaction;
+import org.modelingvalue.dclare.UniverseStatistics;
 import org.modelingvalue.dclare.UniverseTransaction;
+import org.modelingvalue.dclare.UniverseTransaction.Mood;
 import org.modelingvalue.dclare.UniverseTransaction.Status;
 
 import jetbrains.mps.classloading.ClassLoaderManager;
@@ -61,7 +65,7 @@ public class DclareForMPSEngine implements DeployListener {
         this.modelAccess = project.getModelAccess();
         this.engineStatusHandler = engineStatusHandler;
         if (TRACE_ENGINE) {
-            System.err.println("--- DCLARE FOR MPS --- PROJECT START " + project + ":" + nr + " " + ALL_DCLARE_MPS);
+            System.err.println("--- DCLARE FOR MPS --- PROJECT START " + project + ":" + nr);
         }
         classLoaderManager = Objects.requireNonNull(MPSCoreComponents.getInstance().getPlatform().findComponent(ClassLoaderManager.class));
         classLoaderManager.addListener(this);
@@ -72,7 +76,7 @@ public class DclareForMPSEngine implements DeployListener {
 
     private void newDClareMPS(ProjectBase project, DclareForMpsConfig config) {
         if (TRACE_ENGINE) {
-            System.err.println("--- DCLARE FOR MPS --- START " + project + ":" + nr + " " + ALL_DCLARE_MPS);
+            System.err.println("--- DCLARE FOR MPS --- START " + project + ":" + nr);
         }
         synchronized (ALL_DCLARE_MPS) {
             Status[] startStatus = new Status[1];
@@ -117,7 +121,7 @@ public class DclareForMPSEngine implements DeployListener {
         synchronized (ALL_DCLARE_MPS) {
             if (!getConfig().equals(config) || config.isOnMode() != dClareMPS.isRunning()) {
                 if (TRACE_ENGINE) {
-                    System.err.println("--- DCLARE FOR MPS --- SET CONFIG " + project + ":" + nr + " " + ALL_DCLARE_MPS);
+                    System.err.println("--- DCLARE FOR MPS --- SET CONFIG " + project + ":" + nr);
                 }
                 startDCLareMPS(config);
             }
@@ -150,7 +154,7 @@ public class DclareForMPSEngine implements DeployListener {
 
     protected void stopDClareMPS() {
         if (TRACE_ENGINE) {
-            System.err.println("--- DCLARE FOR MPS --- STOP " + project + ":" + nr + " " + ALL_DCLARE_MPS);
+            System.err.println("--- DCLARE FOR MPS --- STOP " + project + ":" + nr);
         }
         synchronized (ALL_DCLARE_MPS) {
             dClareMPS.stop();
@@ -159,23 +163,23 @@ public class DclareForMPSEngine implements DeployListener {
 
     public void stop() {
         if (TRACE_ENGINE) {
-            System.err.println("--- DCLARE FOR MPS --- PROJECT STOP " + project + ":" + nr + " " + ALL_DCLARE_MPS);
+            System.err.println("--- DCLARE FOR MPS --- PROJECT STOP " + project + ":" + nr);
         }
         classLoaderManager.removeListener(this);
         stopDClareMPS();
         synchronized (ALL_DCLARE_MPS) {
             ALL_DCLARE_MPS.remove(dClareMPS);
+            moodUpdaterThread.stop = true;
         }
-        moodUpdaterThread.stop = true;
         moodUpdaterThread.interrupt();
     }
 
     @Override
-    public void onLoaded(Set<ReloadableModule> loadedModules, ProgressMonitor monitor) {
+    public void onLoaded(java.util.Set<ReloadableModule> loadedModules, ProgressMonitor monitor) {
         for (DClareMPS dClareMPS : ALL_DCLARE_MPS) {
             if (loadedModules.stream().anyMatch(m -> dClareMPS.project.isProjectModule(m))) {
                 if (TRACE_ENGINE) {
-                    System.err.println("--- DCLARE FOR MPS --- LOADED " + project + ":" + nr + " " + ALL_DCLARE_MPS);
+                    System.err.println("--- DCLARE FOR MPS --- LOADED " + project + ":" + nr);
                 }
                 startDCLareMPS(getConfig());
                 break;
@@ -196,6 +200,10 @@ public class DclareForMPSEngine implements DeployListener {
 
         private final BlockingQueue<Pair<DClareMPS, StatusIterator<Status>>> queue = new LinkedBlockingQueue<>(3);
         private boolean                                                      stop;
+        private UniverseTransaction.Mood                                     prevMood;
+        private UniverseStatistics                                           prevStats;
+        private List<IAspect>                                                prevAspects;
+        private Set<ImperativeTransaction>                                   prevActive;
 
         public MoodUpdaterThread() {
             super("dclare-moods-" + project.getName());
@@ -221,18 +229,25 @@ public class DclareForMPSEngine implements DeployListener {
                     break;
                 }
                 DClareMPS current = pair.a();
+                if (TRACE_ENGINE) {
+                    System.err.println("--- DCLARE FOR MPS --- START UPDATER " + project + ":" + nr + " " + current);
+                }
                 StatusIterator<Status> statusIterator = pair.b();
                 statusIterator.setInterruptedHandler(e -> interruptedHandler(e, current));
                 while (!stop && statusIterator.hasNext()) {
                     Status status = statusIterator.next();
                     if (!stop) {
                         if (status != null) {
-                            modelAccess.runWriteInEDT(Collection.sequential(() -> edtPayload(status, current)));
+                            updateStatus(status, current);
                         } else {
                             current.universeTransaction().handleException(new IllegalArgumentException("MoodUpdaterThread got null status while running"));
                         }
                     }
                 }
+                prevMood = null;
+                prevStats = null;
+                prevAspects = null;
+                prevActive = null;
             }
         }
 
@@ -242,24 +257,57 @@ public class DclareForMPSEngine implements DeployListener {
             }
         }
 
-        private void edtPayload(Status status, DClareMPS current) {
-            if (status.stats != null) {
-                engineStatusHandler.stats(status.stats, current);
+        private void updateStatus(Status status, DClareMPS current) {
+            Mood mood = status.mood;
+            List<IAspect> aspects = current.getAllAspects();
+            UniverseStatistics stats = status.stats != null ? status.stats.clone() : null;
+            Set<ImperativeTransaction> active = status.active;
+            Boolean onMode = current.getConfig().isOnMode();
+            Mood oldMood = prevMood;
+            List<IAspect> oldAspects = prevAspects;
+            UniverseStatistics oldStats = prevStats;
+            Set<ImperativeTransaction> oldActive = prevActive;
+            if (oldMood != mood || !Objects.equals(oldAspects, aspects) || !Objects.equals(oldStats, stats) || (active.isEmpty() != oldActive.isEmpty() && mood == UniverseTransaction.Mood.idle)) {
+                modelAccess.runWriteInEDT(Collection.sequential(() -> {
+                    if (oldMood != mood) {
+                        if (mood == UniverseTransaction.Mood.starting) {
+                            engineStatusHandler.idle(project, current, status.state::get);
+                            if (onMode) {
+                                engineStatusHandler.on(project, current);
+                            } else {
+                                engineStatusHandler.off(project, current);
+                            }
+                        } else if (mood == UniverseTransaction.Mood.busy) {
+                            engineStatusHandler.active(project, current);
+                        } else if (mood == UniverseTransaction.Mood.idle) {
+                            if (!active.isEmpty()) {
+                                engineStatusHandler.commiting(project, current);
+                            } else {
+                                engineStatusHandler.idle(project, current, status.state::get);
+                            }
+                        } else if (mood == UniverseTransaction.Mood.stopped) {
+                            engineStatusHandler.idle(project, current, status.state::get);
+                            engineStatusHandler.off(project, current);
+                        }
+                    } else if (active.isEmpty() != oldActive.isEmpty() && mood == UniverseTransaction.Mood.idle) {
+                        if (!active.isEmpty()) {
+                            engineStatusHandler.commiting(project, current);
+                        } else {
+                            engineStatusHandler.idle(project, current, status.state::get);
+                        }
+                    }
+                    if (stats != null && !Objects.equals(oldStats, stats)) {
+                        engineStatusHandler.stats(stats, current);
+                    }
+                    if (!Objects.equals(oldAspects, aspects)) {
+                        engineStatusHandler.aspects(aspects, current);
+                    }
+                }));
             }
-            engineStatusHandler.aspects(current.getAllAspects(), current);
-            if (!current.getConfig().isOnMode() || status.mood == UniverseTransaction.Mood.stopped) {
-                engineStatusHandler.idle(project, current, status.state::get);
-                engineStatusHandler.off(project, current);
-            } else if (status.mood == UniverseTransaction.Mood.idle) {
-                engineStatusHandler.idle(project, current, status.state::get);
-                if (!status.active.isEmpty()) {
-                    engineStatusHandler.commiting(project, current);
-                }
-                engineStatusHandler.on(project, current);
-            } else {
-                engineStatusHandler.active(project, current);
-                engineStatusHandler.on(project, current);
-            }
+            prevMood = mood;
+            prevAspects = aspects;
+            prevStats = stats;
+            prevActive = active;
         }
     }
 }
