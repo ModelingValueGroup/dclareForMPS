@@ -1034,6 +1034,24 @@
               </node>
             </node>
           </node>
+          <node concept="3clFbF" id="71cKV1AwnLA" role="3cqZAp">
+            <node concept="37vLTI" id="71cKV1Awomv" role="3clFbG">
+              <node concept="2OqwBi" id="71cKV1AwnLC" role="37vLTJ">
+                <node concept="0IXxy" id="71cKV1AwnLD" role="2Oq$k0" />
+                <node concept="3TrcHB" id="71cKV1AwnLE" role="2OqNvi">
+                  <ref role="3TsBF5" to="wknp:1DUQ$OwrN1P" resolve="on" />
+                </node>
+              </node>
+              <node concept="3fqX7Q" id="71cKV1Awo$c" role="37vLTx">
+                <node concept="2OqwBi" id="71cKV1Awo$e" role="3fr31v">
+                  <node concept="0IXxy" id="71cKV1Awo$f" role="2Oq$k0" />
+                  <node concept="3TrcHB" id="71cKV1Awo$g" role="2OqNvi">
+                    <ref role="3TsBF5" to="wknp:1DUQ$OwrN1P" resolve="on" />
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
           <node concept="3cpWs8" id="5Tx2On$lEeX" role="3cqZAp">
             <node concept="3cpWsn" id="5Tx2On$lEeY" role="3cpWs9">
               <property role="TrG5h" value="newConfig" />
@@ -1046,12 +1064,10 @@
                 </node>
                 <node concept="liA8E" id="5Tx2On$lEf1" role="2OqNvi">
                   <ref role="37wK5l" to="t4tl:~DclareForMpsConfig.withOnMode(boolean)" resolve="withOnMode" />
-                  <node concept="3fqX7Q" id="6MrOAdY4MuI" role="37wK5m">
-                    <node concept="2OqwBi" id="6MrOAdY4MuK" role="3fr31v">
-                      <node concept="0IXxy" id="6MrOAdY4MuL" role="2Oq$k0" />
-                      <node concept="3TrcHB" id="6MrOAdY4MuM" role="2OqNvi">
-                        <ref role="3TsBF5" to="wknp:1DUQ$OwrN1P" resolve="on" />
-                      </node>
+                  <node concept="2OqwBi" id="6MrOAdY4MuK" role="37wK5m">
+                    <node concept="0IXxy" id="6MrOAdY4MuL" role="2Oq$k0" />
+                    <node concept="3TrcHB" id="6MrOAdY4MuM" role="2OqNvi">
+                      <ref role="3TsBF5" to="wknp:1DUQ$OwrN1P" resolve="on" />
                     </node>
                   </node>
                 </node>
