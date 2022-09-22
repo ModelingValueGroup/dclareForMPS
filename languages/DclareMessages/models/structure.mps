@@ -128,26 +128,6 @@
       <property role="TrG5h" value="on" />
       <ref role="AX2Wp" to="tpck:fKAQMTB" resolve="boolean" />
     </node>
-    <node concept="1TJgyi" id="3VwCmlf$VFh" role="1TKVEl">
-      <property role="IQ2nx" value="4530798681633569489" />
-      <property role="TrG5h" value="mood" />
-      <ref role="AX2Wp" node="6omEkmwvEXF" resolve="EngineMood" />
-    </node>
-    <node concept="1TJgyi" id="2TyoUkhlXBM" role="1TKVEl">
-      <property role="IQ2nx" value="3342343434074053106" />
-      <property role="TrG5h" value="runs" />
-      <ref role="AX2Wp" to="tpck:fKAQMTA" resolve="integer" />
-    </node>
-    <node concept="1TJgyi" id="1FrOyhdWCsR" role="1TKVEl">
-      <property role="IQ2nx" value="1935371518254155575" />
-      <property role="TrG5h" value="changes" />
-      <ref role="AX2Wp" to="tpck:fKAQMTA" resolve="integer" />
-    </node>
-    <node concept="1TJgyi" id="2TyoUkhlXBP" role="1TKVEl">
-      <property role="IQ2nx" value="3342343434074053109" />
-      <property role="TrG5h" value="changesEver" />
-      <ref role="AX2Wp" to="tpck:fKAQMTA" resolve="integer" />
-    </node>
     <node concept="1TJgyj" id="7e_PmaZxgoQ" role="1TKVEi">
       <property role="IQ2ns" value="8333301305615648310" />
       <property role="20lmBu" value="fLJjDmT/aggregation" />

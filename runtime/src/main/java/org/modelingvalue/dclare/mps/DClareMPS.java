@@ -174,7 +174,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
     private final DServerMetaData                                                                       dServerMetaData;
     private final MutationWrapper<List<IAspect>>                                                        allAspects               = new MutationWrapper<>(List.of());
     //
-    protected Map<DMessageType, QualifiedSet<Triple<DObject, DFeature, String>, DMessage>>              messages                 = MESSAGE_QSET_MAP;
+    private Map<DMessageType, QualifiedSet<Triple<DObject, DFeature, String>, DMessage>>                messages                 = MESSAGE_QSET_MAP;
     private boolean                                                                                     running                  = false;
     private ImperativeTransaction                                                                       imperativeTransaction;
     private Thread                                                                                      commandThread;
@@ -515,12 +515,8 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
         messages = messages.put(message.type(), messages.get(message.type()).add(message));
     }
 
-    public QualifiedSet<Triple<DObject, DFeature, String>, DMessage> getMessages(DMessageType type) {
-        return messages.get(type);
-    }
-
-    public boolean hasMessages() {
-        return messages.anyMatch(t -> !t.getValue().isEmpty());
+    protected Map<DMessageType, QualifiedSet<Triple<DObject, DFeature, String>, DMessage>> getMessages() {
+        return messages;
     }
 
     @Override

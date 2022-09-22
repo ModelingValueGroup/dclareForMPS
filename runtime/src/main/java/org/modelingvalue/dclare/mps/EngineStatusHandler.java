@@ -15,24 +15,17 @@
 
 package org.modelingvalue.dclare.mps;
 
-import org.jetbrains.mps.openapi.project.Project;
 import org.modelingvalue.collections.List;
-import org.modelingvalue.dclare.UniverseStatistics;
+import org.modelingvalue.collections.Map;
+import org.modelingvalue.collections.QualifiedSet;
+import org.modelingvalue.collections.util.Triple;
 
 public interface EngineStatusHandler {
-    void aspects(List<IAspect> apects, DClareMPS engine);
 
-    void stats(UniverseStatistics stats, DClareMPS engine);
+    void status(DclareForMpsStatus status);
 
-    void on(Project project, DClareMPS engine);
+    void aspects(List<IAspect> apects, DclareForMpsStatus status);
 
-    void commiting(Project project, DClareMPS engine);
+    void messages(Map<DMessageType, QualifiedSet<Triple<DObject, DFeature, String>, DMessage>> messages, DclareForMpsStatus status);
 
-    void checking(Project project, DClareMPS engine);
-
-    void off(Project project, DClareMPS engine);
-
-    void active(Project project, DClareMPS engine);
-
-    void idle(Project project, DClareMPS engine, Getter getter);
 }

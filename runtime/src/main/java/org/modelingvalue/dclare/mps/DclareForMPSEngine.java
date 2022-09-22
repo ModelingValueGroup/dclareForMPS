@@ -15,6 +15,8 @@
 
 package org.modelingvalue.dclare.mps;
 
+import static org.modelingvalue.dclare.UniverseTransaction.Mood.*;
+
 import java.util.Objects;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -25,13 +27,11 @@ import org.jetbrains.mps.openapi.module.ModelAccess;
 import org.jetbrains.mps.openapi.util.ProgressMonitor;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.List;
-import org.modelingvalue.collections.Set;
+import org.modelingvalue.collections.Map;
+import org.modelingvalue.collections.QualifiedSet;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.collections.util.StatusProvider.StatusIterator;
-import org.modelingvalue.dclare.ImperativeTransaction;
-import org.modelingvalue.dclare.UniverseStatistics;
-import org.modelingvalue.dclare.UniverseTransaction;
-import org.modelingvalue.dclare.UniverseTransaction.Mood;
+import org.modelingvalue.collections.util.Triple;
 import org.modelingvalue.dclare.UniverseTransaction.Status;
 
 import jetbrains.mps.classloading.ClassLoaderManager;
@@ -198,12 +198,11 @@ public class DclareForMPSEngine implements DeployListener {
 
     private class MoodUpdaterThread extends Thread {
 
-        private final BlockingQueue<Pair<DClareMPS, StatusIterator<Status>>> queue = new LinkedBlockingQueue<>(3);
-        private boolean                                                      stop;
-        private UniverseTransaction.Mood                                     prevMood;
-        private UniverseStatistics                                           prevStats;
-        private List<IAspect>                                                prevAspects;
-        private Set<Object>                                                  prevActive;
+        private final BlockingQueue<Pair<DClareMPS, StatusIterator<Status>>>                 queue        = new LinkedBlockingQueue<>(3);
+        private boolean                                                                      stop;
+        private List<IAspect>                                                                prevAspects  = List.of();
+        @SuppressWarnings("static-access")
+        private Map<DMessageType, QualifiedSet<Triple<DObject, DFeature, String>, DMessage>> prevMessages = dClareMPS.MESSAGE_QSET_MAP;
 
         public MoodUpdaterThread() {
             super("dclare-moods-" + project.getName());
@@ -244,10 +243,6 @@ public class DclareForMPSEngine implements DeployListener {
                         }
                     }
                 }
-                prevMood = null;
-                prevStats = null;
-                prevAspects = null;
-                prevActive = null;
             }
         }
 
@@ -258,60 +253,18 @@ public class DclareForMPSEngine implements DeployListener {
         }
 
         private void updateStatus(Status status, DClareMPS current) {
-            Mood mood = status.mood;
-            List<IAspect> aspects = current.getAllAspects();
-            UniverseStatistics stats = status.stats != null ? status.stats.clone() : null;
-            Set<Object> active = status.active;
-            Boolean onMode = current.getConfig().isOnMode();
-            Mood oldMood = prevMood;
-            List<IAspect> oldAspects = prevAspects;
-            UniverseStatistics oldStats = prevStats;
-            Set<Object> oldActive = prevActive;
-            if (oldMood != mood || !Objects.equals(oldAspects, aspects) || (stats != null && !Objects.equals(oldStats, stats)) || (!active.equals(oldActive) && mood == UniverseTransaction.Mood.idle)) {
-                modelAccess.runWriteInEDT(Collection.sequential(() -> {
-                    if (oldMood != mood) {
-                        if (mood == UniverseTransaction.Mood.starting) {
-                            engineStatusHandler.idle(project, current, status.state::get);
-                            if (onMode) {
-                                engineStatusHandler.on(project, current);
-                            } else {
-                                engineStatusHandler.off(project, current);
-                            }
-                        } else if (mood == UniverseTransaction.Mood.busy) {
-                            engineStatusHandler.active(project, current);
-                        } else if (mood == UniverseTransaction.Mood.idle) {
-                            if (active.anyMatch(o -> o instanceof ImperativeTransaction)) {
-                                engineStatusHandler.commiting(project, current);
-                            } else if (active.anyMatch(o -> o instanceof String)) {
-                                engineStatusHandler.checking(project, current);
-                            } else {
-                                engineStatusHandler.idle(project, current, status.state::get);
-                            }
-                        } else if (mood == UniverseTransaction.Mood.stopped) {
-                            engineStatusHandler.idle(project, current, status.state::get);
-                            engineStatusHandler.off(project, current);
-                        }
-                    } else if (!active.equals(oldActive) && mood == UniverseTransaction.Mood.idle) {
-                        if (active.anyMatch(o -> o instanceof ImperativeTransaction)) {
-                            engineStatusHandler.commiting(project, current);
-                        } else if (active.anyMatch(o -> o instanceof String)) {
-                            engineStatusHandler.checking(project, current);
-                        } else {
-                            engineStatusHandler.idle(project, current, status.state::get);
-                        }
-                    }
-                    if (stats != null && !Objects.equals(oldStats, stats)) {
-                        engineStatusHandler.stats(stats, current);
-                    }
-                    if (!Objects.equals(oldAspects, aspects)) {
-                        engineStatusHandler.aspects(aspects, current);
-                    }
-                }));
+            DclareForMpsStatus dclareForMpsStatus = new DclareForMpsStatus(status);
+            List<IAspect> aspects = status.mood == idle || status.mood == stopped ? current.getAllAspects() : prevAspects;
+            Map<DMessageType, QualifiedSet<Triple<DObject, DFeature, String>, DMessage>> messages = status.mood == starting || status.mood == idle || status.mood == stopped ? current.getMessages() : prevMessages;
+            modelAccess.runReadInEDT(Collection.sequential(() -> engineStatusHandler.status(dclareForMpsStatus)));
+            if (!aspects.equals(prevAspects)) {
+                modelAccess.runWriteInEDT(Collection.sequential(() -> engineStatusHandler.aspects(aspects, dclareForMpsStatus)));
             }
-            prevMood = mood;
+            if (!messages.equals(prevMessages)) {
+                modelAccess.runWriteInEDT(Collection.sequential(() -> engineStatusHandler.messages(messages, dclareForMpsStatus)));
+            }
             prevAspects = aspects;
-            prevStats = stats;
-            prevActive = active;
+            prevMessages = messages;
         }
     }
 }
