@@ -433,7 +433,7 @@
               <ref role="3cqZAo" node="5TKknZxas_t" resolve="dClareMPS" />
             </node>
             <node concept="liA8E" id="5TKknZxazAr" role="2OqNvi">
-              <ref role="37wK5l" to="t4tl:~DClareMPS.command(java.lang.Runnable)" resolve="command" />
+              <ref role="37wK5l" to="t4tl:~DClareMPS.writeInEDT(java.lang.Runnable)" resolve="writeInEDT" />
               <node concept="1bVj0M" id="5TKknZxazAT" role="37wK5m">
                 <node concept="3clFbS" id="5TKknZxazAU" role="1bW5cS">
                   <node concept="3clFbJ" id="1KqhpdFKLJ1" role="3cqZAp">

@@ -23,9 +23,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import org.jetbrains.mps.openapi.module.ModelAccess;
 import org.jetbrains.mps.openapi.util.ProgressMonitor;
-import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.Map;
 import org.modelingvalue.collections.QualifiedSet;
@@ -52,7 +50,6 @@ public class DclareForMPSEngine implements DeployListener {
     private final ProjectBase                              project;
     private final ClassLoaderManager                       classLoaderManager;
     private final EngineStatusHandler                      engineStatusHandler;
-    private final ModelAccess                              modelAccess;
     private final int                                      nr;
     private final MoodUpdaterThread                        moodUpdaterThread;
     //
@@ -62,7 +59,6 @@ public class DclareForMPSEngine implements DeployListener {
     public DclareForMPSEngine(ProjectBase project, EngineStatusHandler engineStatusHandler) {
         this.nr = COUNTER.getAndIncrement();
         this.project = project;
-        this.modelAccess = project.getModelAccess();
         this.engineStatusHandler = engineStatusHandler;
         if (TRACE_ENGINE) {
             System.err.println("--- DCLARE FOR MPS --- PROJECT START " + project + ":" + nr);
@@ -256,12 +252,12 @@ public class DclareForMPSEngine implements DeployListener {
             DclareForMpsStatus dclareForMpsStatus = new DclareForMpsStatus(status);
             List<IAspect> aspects = status.mood == idle || status.mood == stopped ? current.getAllAspects() : prevAspects;
             Map<DMessageType, QualifiedSet<Triple<DObject, DFeature, String>, DMessage>> messages = status.mood == starting || status.mood == idle || status.mood == stopped ? current.getMessages() : prevMessages;
-            modelAccess.runReadInEDT(Collection.sequential(() -> engineStatusHandler.status(dclareForMpsStatus)));
+            current.readInEDT(() -> engineStatusHandler.status(dclareForMpsStatus));
             if (!aspects.equals(prevAspects)) {
-                modelAccess.runWriteInEDT(Collection.sequential(() -> engineStatusHandler.aspects(aspects, dclareForMpsStatus)));
+                current.writeInEDT(() -> engineStatusHandler.aspects(aspects, dclareForMpsStatus));
             }
             if (!messages.equals(prevMessages)) {
-                modelAccess.runWriteInEDT(Collection.sequential(() -> engineStatusHandler.messages(messages, dclareForMpsStatus)));
+                current.writeInEDT(() -> engineStatusHandler.messages(messages, dclareForMpsStatus));
             }
             prevAspects = aspects;
             prevMessages = messages;

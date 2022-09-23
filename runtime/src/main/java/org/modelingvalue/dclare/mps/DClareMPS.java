@@ -353,7 +353,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
             checkerRegistry.unregisterChecker(modelChecker);
             checkerRegistry.unregisterChecker(nodeChecker);
             Highlighter highlighter = project.getComponent(Highlighter.class);
-            modelAccess.runReadInEDT(Collection.sequential(() -> highlighter.removeChecker(languageEditorChecker)));
+            readInEDT(() -> highlighter.removeChecker(languageEditorChecker));
             ImperativeTransaction it = imperativeTransaction;
             if (it != null) {
                 invokeLater(it::stop);
@@ -568,18 +568,28 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
         });
     }
 
-    public void command(Runnable runnable) {
-        invokeLater(() -> modelAccess.executeUndoTransparentCommand(Collection.sequential(runnable)));
+    public void read(Runnable runnable) {
+        modelAccess.runReadAction(Collection.sequential(runnable));
     }
 
-    public void read(Runnable runnable) {
-        modelAccess.runReadAction(Collection.sequential(() -> {
-            try {
-                runnable.run();
-            } catch (Throwable t) {
-                addMessage(t);
-            }
-        }));
+    public void write(Runnable runnable) {
+        modelAccess.runWriteAction(Collection.sequential(runnable));
+    }
+
+    public void command(Runnable runnable) {
+        modelAccess.executeUndoTransparentCommand(Collection.sequential(runnable));
+    }
+
+    public void readInEDT(Runnable runnable) {
+        invokeLater(() -> read(runnable));
+    }
+
+    public void writeInEDT(Runnable runnable) {
+        invokeLater(() -> write(runnable));
+    }
+
+    public void commandInEDT(Runnable runnable) {
+        invokeLater(() -> command(runnable));
     }
 
     @SuppressWarnings("unchecked")
@@ -618,11 +628,11 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
                         s -> s instanceof DObserved && !((DObserved) s).isDclareOnly()).toMap(e -> (Entry) e)};
                 if (!diff[0].isEmpty()) {
                     changed = true;
-                    modelAccess.executeUndoTransparentCommand(Collection.sequential(() -> {
+                    command(() -> {
                         do {
                             toMPS(imper, dclare, diff, diff[0].get(0).getKey());
                         } while (!diff[0].isEmpty());
-                    }));
+                    });
                 }
                 if (last) {
                     if (!setted.isEmpty()) {
