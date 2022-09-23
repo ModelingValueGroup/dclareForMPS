@@ -17,12 +17,28 @@ package org.modelingvalue.dclare.mps;
 
 import java.util.List;
 
+import org.jetbrains.mps.openapi.language.SLanguage;
+import org.modelingvalue.collections.Collection;
+import org.modelingvalue.dclare.Constant;
+import org.modelingvalue.dclare.Direction;
+
 public interface IAspect {
+
+    @SuppressWarnings("unchecked")
+    static <C, V> IAspect of(SLanguage language, String id) {
+        return DClareMPS.ASPECT_MAP.get(language).get(id);
+    }
+
+    Constant<IAspect, Direction> DIRECTION = Constant.of("DIRECTION", a -> Direction.of(a, () -> {
+        return Collection.of(a.getOpposites()).sequential().map(o -> IAspect.DIRECTION.get(o)).toSet();
+    }));
 
     String getId();
 
     String getName();
 
     List<IAspect> getDependencies();
+
+    List<IAspect> getOpposites();
 
 }

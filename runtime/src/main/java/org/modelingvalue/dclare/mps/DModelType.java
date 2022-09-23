@@ -18,13 +18,13 @@ package org.modelingvalue.dclare.mps;
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
-import org.modelingvalue.collections.util.Triple;
+import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.Setable;
 
-public class DModelType extends DObjectType<Triple<Set<SLanguage>, Boolean, Set<String>>> {
+public class DModelType extends DObjectType<Pair<Set<SLanguage>, Set<String>>> {
 
-    public DModelType(Triple<Set<SLanguage>, Boolean, Set<String>> identity) {
+    public DModelType(Pair<Set<SLanguage>, Set<String>> identity) {
         super(identity);
     }
 
@@ -45,13 +45,8 @@ public class DModelType extends DObjectType<Triple<Set<SLanguage>, Boolean, Set<
         return id().a();
     }
 
-    @Override
-    public boolean external() {
-        return id().b();
-    }
-
     public Set<String> getAnonymousTypes() {
-        return id().c();
+        return id().b();
     }
 
     @SuppressWarnings("rawtypes")

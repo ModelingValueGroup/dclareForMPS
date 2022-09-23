@@ -16,44 +16,26 @@
 package org.modelingvalue.dclare.mps;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
-import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
-import org.modelingvalue.dclare.Observer;
-import org.modelingvalue.dclare.Setable;
 
-public class DModuleType extends DObjectType<Set<SLanguage>> {
+public class DclareTraceComponent {
 
-    public DModuleType(Set<SLanguage> identity) {
-        super(identity);
+    private final DclareForMPSEngine engine;
+    private final DClareMPS          universe;
+
+    public DclareTraceComponent(DclareForMPSEngine engine, DClareMPS universe) {
+        this.engine = engine;
+        this.universe = universe;
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    @Override
-    public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
-        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getModuleRules())).toSet();
+    public Set<IRuleSet> getRuleSets(SLanguage l) {
+        return DClareMPS.RULE_SETS.get(l);
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    @Override
-    public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
-        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getModuleAttributes())).toSet();
-    }
-
-    @Override
-    public Set<SLanguage> getLanguages() {
-        return id();
-    }
-
-    @SuppressWarnings("rawtypes")
-    @Override
-    protected Collection<Observer> observers() {
-        return DModule.OBSERVERS;
-    }
-
-    @SuppressWarnings("rawtypes")
-    @Override
-    public Collection<Setable> setables() {
-        return DModule.SETABLES;
+    public Set<DModule> getModules() {
+        return universe.get(() -> {
+            return DRepository.MODULES.get(universe.getRepository());
+        });
     }
 
 }

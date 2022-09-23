@@ -15,10 +15,9 @@
 
 package org.modelingvalue.dclare.mps;
 
-import static org.modelingvalue.dclare.CoreSetableModifier.containment;
-import static org.modelingvalue.dclare.CoreSetableModifier.plumbing;
+import static org.modelingvalue.dclare.SetableModifier.containment;
+import static org.modelingvalue.dclare.SetableModifier.plumbing;
 
-import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -27,12 +26,16 @@ import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
+import org.modelingvalue.collections.util.Triple;
 import org.modelingvalue.dclare.*;
 
 import jetbrains.mps.errors.item.IssueKindReportItem;
 
 @SuppressWarnings({"rawtypes", "unused"})
 public abstract class DObject implements Mutable {
+
+    private static final Runnable                                                      DUMMY_RUNNABLE            = () -> {
+                                                                                                                 };
 
     private static final DObjectType<String>                                           DUMMY_TYPE                = new DObjectType<>("<DUMMY_TYPE>") {
                                                                                                                      @Override
@@ -51,22 +54,27 @@ public abstract class DObject implements Mutable {
                                                                                                                      }
 
                                                                                                                      @Override
-                                                                                                                     public boolean external() {
-                                                                                                                         return false;
+                                                                                                                     protected Collection<Observer> observers() {
+                                                                                                                         return Set.of(DObject.TYPE_RULE);
+                                                                                                                     }
+
+                                                                                                                     @Override
+                                                                                                                     protected Collection<Setable> setables() {
+                                                                                                                         return Set.of(DObject.TYPE);
                                                                                                                      }
 
                                                                                                                  };
 
-    public static final Observed<DObject, DObjectType<?>>                              TYPE                      = Observed.of("$TYPE", DUMMY_TYPE, plumbing);
+    public static final DObserved<DObject, DObjectType<?>>                             TYPE                      = DObserved.of("$TYPE", DUMMY_TYPE, DObject::getType, null, plumbing);
 
-    protected static final Observer<DObject>                                           TYPE_RULE                 = observer(TYPE, o -> o.getType());
+    protected static final Observer<DObject>                                           TYPE_RULE                 = observer(TYPE, DObject::getType);
 
     protected static final Observed<DObject, DAttribute>                               CONTAINING_ATTRIBUTE      = Observed.of("$CONTAINING_ATTRIBUTE", null, plumbing);
 
     protected static final Observer<DObject>                                           CONTAINING_ATTRIBUTE_RULE = observer(CONTAINING_ATTRIBUTE, o -> {
                                                                                                                      Pair<Mutable, Setable<Mutable, ?>> pc = Mutable.D_PARENT_CONTAINING.get(o);
-                                                                                                                     return pc == null || pc.a() instanceof DClareMPS ? null :                                                   //
-                                                                                                                     pc.b() instanceof DAttribute ? (DAttribute) pc.b() : CONTAINING_ATTRIBUTE.get((DObject) pc.a());
+                                                                                                                     return pc == null || pc.a() instanceof DClareMPS ? null :                                                       //
+                                                                                                                             pc.b() instanceof DAttribute ? (DAttribute) pc.b() : CONTAINING_ATTRIBUTE.get((DObject) pc.a());
                                                                                                                  });
 
     protected static final Action<DObject>                                             REFRESH_CHILDREN          = Action.of("$REFRESH_CHILDREN", o -> {
@@ -80,20 +88,31 @@ public abstract class DObject implements Mutable {
                                                                                                                      DObject.REFRESH_CHILDREN.trigger(o);
                                                                                                                  });
 
-    protected static final DObserved<DObject, Set<Pair<DObject, IssueKindReportItem>>> MPS_ISSUES                = DObserved.of("$MPS_ISSUES", Set.of(), null, (tx, o, pre, post) -> {
-                                                                                                                     DNode root = o instanceof DNode ? ((DNode) o).getContainingRoot() : null;
-                                                                                                                     if (root != null) {
-                                                                                                                         Setable.<Set<Pair<DObject, IssueKindReportItem>>, Pair<DObject, IssueKindReportItem>> diff(pre, post,   //
-                                                                                                                                 a -> DNode.ALL_MPS_ISSUES.set(root, Set::add, a),                                               //
-                                                                                                                                 r -> DNode.ALL_MPS_ISSUES.set(root, Set::remove, r));
+    protected static final DObserved<DObject, Set<Pair<DObject, IssueKindReportItem>>> MPS_ISSUES                = DObserved.of("$MPS_ISSUES", Set.of(), null, null, (tx, o, pre, post) -> {
+                                                                                                                     if (o instanceof DNode) {
+                                                                                                                         DNode root = ((DNode) o).getContainingRoot();
+                                                                                                                         if (root != null) {
+                                                                                                                             Setable.<Set<Pair<DObject, IssueKindReportItem>>, Pair<DObject, IssueKindReportItem>> diff(pre, post,   //
+                                                                                                                                     a -> DNode.ALL_MPS_ISSUES.set(root, Set::add, a),                                               //
+                                                                                                                                     r -> DNode.ALL_MPS_ISSUES.set(root, Set::remove, r));
+                                                                                                                         }
+                                                                                                                     } else {
+                                                                                                                         DRepository repos = DClareMPS.instance().getRepository();
+                                                                                                                         Setable.<Set<Pair<DObject, IssueKindReportItem>>, Pair<DObject, IssueKindReportItem>> diff(pre, post,       //
+                                                                                                                                 a -> DRepository.ALL_MPS_ISSUES.set(repos, Set::add, a.b()),                                        //
+                                                                                                                                 r -> DRepository.ALL_MPS_ISSUES.set(repos, Set::remove, r.b()));
                                                                                                                      }
                                                                                                                  });
 
-    protected static final DObserved<DObject, Set<DIssue>>                             DCLARE_ISSUES             = DObserved.of("$DCLARE_ISSUES", Set.of(), (dObject, pre, post) -> !Objects.equals(pre, post), containment);
+    protected static final DObserved<DObject, Set<DIssue>>                             DCLARE_ISSUES             = DObserved.of("$DCLARE_ISSUES", Set.of(), null, (dObject, pre, post) -> {
+                                                                                                                 }, containment);
+
+    protected static final DObserved<DObject, Boolean>                                 CONTAINED                 = DObserved.of("$CONTAINED", Boolean.FALSE, null, (dObject, pre, post) -> {
+                                                                                                                 }, plumbing);
 
     protected static final Set<Observer>                                               OBSERVERS                 = Set.of(TYPE_RULE, CONTAINING_ATTRIBUTE_RULE);
 
-    protected static final Set<Setable>                                                SETABLES                  = Set.of(TYPE, MPS_ISSUES, DCLARE_ISSUES, CONTAINING_ATTRIBUTE);
+    protected static final Set<Setable>                                                SETABLES                  = Set.of(TYPE, MPS_ISSUES, DCLARE_ISSUES, CONTAINING_ATTRIBUTE, CONTAINED);
 
     public static DClareMPS dClareMPS() {
         return DClareMPS.instance();
@@ -136,6 +155,11 @@ public abstract class DObject implements Mutable {
         }
     }
 
+    @SuppressWarnings("unchecked")
+    public <R> R callMethod(DMethod called, Object[] arguments) {
+        return (R) DMethod.D_METHOD.get(Triple.of(TYPE.get(this).getLanguages(), called.name(), Signature.of(called.signature(), arguments))).call(arguments);
+    }
+
     @Override
     public void dActivate() {
         Mutable.super.dActivate();
@@ -172,12 +196,12 @@ public abstract class DObject implements Mutable {
 
     protected abstract DObjectType<?> getType();
 
-    public static <O extends DObject> NonCheckingObserver<O> observer(String id, Consumer<O> action) {
-        return NonCheckingObserver.of(id, action, Priority.forward);
+    public static <O extends DObject> NonCheckingObserver<O> observer(String id, Consumer<O> action, LeafModifier... modifiers) {
+        return NonCheckingObserver.of(id, action, modifiers);
     }
 
-    public static <O extends DObject, V> NonCheckingObserver<O> observer(Setable<O, V> setable, Function<O, V> value) {
-        return NonCheckingObserver.of(setable, value, Priority.forward);
+    public static <O extends DObject, V> NonCheckingObserver<O> observer(Setable<O, V> setable, Function<O, V> value, LeafModifier... modifiers) {
+        return NonCheckingObserver.of(setable, value, modifiers);
     }
 
     public boolean isDclareOnly() {
@@ -186,7 +210,12 @@ public abstract class DObject implements Mutable {
 
     @Override
     public boolean dCheckConsistency() {
-        return !isExternal() && isActive();
+        return isActive();
+    }
+
+    @Override
+    public boolean dIsConstant() {
+        return isExternal();
     }
 
     public abstract boolean isExternal();
@@ -196,7 +225,20 @@ public abstract class DObject implements Mutable {
     }
 
     protected boolean isActive() {
-        return true;
+        return !isExternal();
+    }
+
+    public boolean deriveFromMPS() {
+        LeafTransaction tx = LeafTransaction.getCurrent();
+        return (tx instanceof DerivationTransaction || (tx instanceof IdentityDerivationTransaction && isRead()) || !isActive());
+    }
+
+    protected abstract boolean isRead();
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public Collection<? extends Observer<?>> dAllObservers() {
+        return isActive() ? Mutable.super.dAllObservers() : (Collection) dClass().observers();
     }
 
 }

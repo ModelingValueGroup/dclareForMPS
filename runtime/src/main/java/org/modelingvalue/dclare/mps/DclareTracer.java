@@ -20,5 +20,7 @@ public interface DclareTracer {
 	public void onModelActive(DModel m);
 	
 	public void onRuleSetActive(IRuleSet r);
+	
+	public void notifyTraceComponent(DclareTraceComponent c);
 
 }

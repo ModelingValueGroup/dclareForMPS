@@ -20,14 +20,14 @@ import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
-import org.modelingvalue.collections.util.Quintuple;
+import org.modelingvalue.collections.util.Quadruple;
 import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.Setable;
 
 @SuppressWarnings("unused")
-public class DNodeType extends DObjectType<Quintuple<Set<SLanguage>, SConcept, Set<String>, Boolean, SLanguage>> {
+public class DNodeType extends DObjectType<Quadruple<Set<SLanguage>, SConcept, Set<String>, IAspect>> {
 
-    public DNodeType(Quintuple<Set<SLanguage>, SConcept, Set<String>, Boolean, SLanguage> q) {
+    public DNodeType(Quadruple<Set<SLanguage>, SConcept, Set<String>, IAspect> q) {
         super(q);
     }
 
@@ -52,31 +52,26 @@ public class DNodeType extends DObjectType<Quintuple<Set<SLanguage>, SConcept, S
         return id().b();
     }
 
-    @Override
-    public boolean external() {
-        return id().d();
-    }
-
     public Set<String> getAnonymousTypes() {
         return id().c();
     }
 
-    public SLanguage copyAnonymousLanguage() {
-        return id().e();
+    public IAspect copyAspect() {
+        return id().d();
     }
 
     @SuppressWarnings("rawtypes")
     @Override
     public Collection<Setable> setables() {
-        return Collection.concat(DNode.SETABLES, DNode.CONCEPT_SETABLES.get(getConcept()));
+        return Collection.concat(DNode.SETABLES, DNode.CONCEPT_DOBSERVEDS.get(getConcept()));
     }
 
     @SuppressWarnings("rawtypes")
     @Override
     protected Collection<Observer> observers() {
         Set<Observer> conceptObservers = DNode.OBSERVERS.addAll(DNode.CONCEPT_OBSERVERS.get(getConcept()));
-        SLanguage copyLang = copyAnonymousLanguage();
-        return copyLang != null ? conceptObservers.addAll(DNode.COPY_CONCEPT_OBSERVERS.get(Pair.of(getConcept(), copyLang))) : conceptObservers;
+        IAspect aspect = copyAspect();
+        return aspect != null ? conceptObservers.addAll(DNode.COPY_CONCEPT_OBSERVERS.get(Pair.of(getConcept(), aspect))) : conceptObservers;
     }
 
 }

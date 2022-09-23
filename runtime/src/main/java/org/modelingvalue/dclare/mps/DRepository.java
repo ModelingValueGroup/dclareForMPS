@@ -15,11 +15,15 @@
 
 package org.modelingvalue.dclare.mps;
 
-import static org.modelingvalue.dclare.CoreSetableModifier.containment;
+import static org.modelingvalue.dclare.SetableModifier.containment;
+import static org.modelingvalue.dclare.SetableModifier.plumbing;
 
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
+import org.jetbrains.mps.openapi.model.SModel;
+import org.jetbrains.mps.openapi.model.SModelId;
 import org.jetbrains.mps.openapi.module.ModelAccess;
 import org.jetbrains.mps.openapi.module.RepositoryAccess;
 import org.jetbrains.mps.openapi.module.SModule;
@@ -28,50 +32,53 @@ import org.jetbrains.mps.openapi.module.SRepository;
 import org.jetbrains.mps.openapi.module.SRepositoryListener;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
-import org.modelingvalue.collections.util.TriFunction;
-import org.modelingvalue.dclare.Action;
+import org.modelingvalue.collections.util.TriConsumer;
 import org.modelingvalue.dclare.Constant;
 import org.modelingvalue.dclare.Observer;
-import org.modelingvalue.dclare.Priority;
 import org.modelingvalue.dclare.Setable;
 
+import jetbrains.mps.errors.item.IssueKindReportItem;
 import jetbrains.mps.project.ProjectRepository;
 
 @SuppressWarnings("deprecation")
 public class DRepository extends DFromOriginalObject<ProjectRepository> implements SRepository {
 
-    private static final Constant<Set<SLanguage>, DRepositoryType> REPOSITORY_TYPE = Constant.of("REPOSITORY_TYPE", DRepositoryType::new);
+    private static final Constant<Set<SLanguage>, DRepositoryType>        REPOSITORY_TYPE = Constant.of("REPOSITORY_TYPE", DRepositoryType::new);
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    protected static final DObserved<DRepository, Set<DModule>>    MODULES         = DObserved.of("MODULES", Set.of(), (TriFunction) null, containment);
+    protected static final DObserved<DRepository, Set<DModule>>           MODULES         = DObserved.of("MODULES", Set.of(), r -> {
+                                                                                              return Collection.of(dClareMPS().project.getProjectModules()).map(DModule::of).toSet();
+                                                                                          }, null, containment);
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    protected static final DObserved<DRepository, Set<?>>          EXCEPTIONS      = DObserved.of("EXCEPTIONS", Set.of(), (TriFunction) null);
+    protected static final DObserved<DRepository, Set<?>>                 EXCEPTIONS      = DObserved.of("EXCEPTIONS", Set.of(), (Function) null, (TriConsumer) null, plumbing);
 
-    private static final Action<DRepository>                       READ_MODULES    = Action.of("$READ_MODULES", r -> MODULES.set(r, Set::addAll, dClareMPS().read(DRepository::modules).map(DModule::of).toSet()), Priority.urgent);
-
-    @SuppressWarnings("rawtypes")
-    protected static final Set<Observer>                           OBSERVERS       = DObject.OBSERVERS;
+    protected static final Setable<DRepository, Set<IssueKindReportItem>> ALL_MPS_ISSUES  = Setable.of("$ALL_MPS_ISSUES", Set.of());
 
     @SuppressWarnings("rawtypes")
-    protected static final Set<Setable>                            SETABLES        = DObject.SETABLES.addAll(Set.of(MODULES));
+    protected static final Set<Observer>                                  OBSERVERS       = DObject.OBSERVERS;
+
+    @SuppressWarnings("rawtypes")
+    protected static final Set<Setable>                                   SETABLES        = DObject.SETABLES.addAll(Set.of(MODULES, ALL_MPS_ISSUES));
 
     protected DRepository(ProjectRepository original) {
         super(original);
     }
 
     @Override
+    public SModel getModel(SModelId modelId) {
+        SModel sModel = this.original().getModel(modelId);
+        return DModel.of(sModel);
+    }
+
+    @Override
     protected DRepositoryType getType() {
-        return REPOSITORY_TYPE.get(DClareMPS.ALL_LANGUAGES.get(dClareMPS()).filter(l -> !DClareMPS.RULE_SETS.get(l).isEmpty()).toSet());
+        return REPOSITORY_TYPE.get(DClareMPS.ALL_LANGUAGES.get(dClareMPS()));
     }
 
     @Override
     protected void read(DClareMPS dClareMPS) {
-        READ_MODULES.trigger(this);
-    }
-
-    protected static Set<SModule> modules() {
-        return Collection.of(dClareMPS().project.getProjectModules()).sequential().toSet();
+        MODULES.readAction().trigger(this);
     }
 
     @Override
@@ -96,7 +103,7 @@ public class DRepository extends DFromOriginalObject<ProjectRepository> implemen
 
     @Override
     public SModule getModule(SModuleId moduleId) {
-        return MODULES.get(this).filter(m -> m.getModuleId().equals(moduleId)).findAny().orElse(null);
+        return MODULES.get(this).filter(m -> m.getModuleId().equals(moduleId)).findAny().orElse(DModule.of(original().getModule(moduleId)));
     }
 
     @Override

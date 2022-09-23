@@ -44,11 +44,6 @@ public class DRepositoryType extends DObjectType<Set<SLanguage>> {
         return id();
     }
 
-    @Override
-    public boolean external() {
-        return false;
-    }
-
     @SuppressWarnings("rawtypes")
     @Override
     protected Collection<Observer> observers() {

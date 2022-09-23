@@ -15,26 +15,47 @@
 
 package org.modelingvalue.dclare.mps;
 
+import org.jetbrains.mps.openapi.language.SLanguage;
+import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
+import org.modelingvalue.dclare.Observer;
+import org.modelingvalue.dclare.Setable;
 
-public class DclareTraceBroadcaster {
+import jetbrains.mps.errors.MessageStatus;
 
-    private static DclareTracer tracer;
+public class DIssueType extends DObjectType<MessageStatus> {
 
-    public static void setTracer(DclareTracer tracer) {
-        DclareTraceBroadcaster.tracer = tracer;
+    public DIssueType(MessageStatus type) {
+        super(type);
     }
 
-    public static void onModelActive(DModel m) {
-        if (tracer != null) {
-            tracer.onModelActive(m);
-        }
+    @SuppressWarnings("rawtypes")
+    @Override
+    public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
+        return Set.of();
     }
 
-    public static void onRuleSetActive(Set<IRuleSet> r) {
-        if (tracer != null) {
-            r.forEachOrdered(i -> tracer.onRuleSetActive(i));
-        }
+    @SuppressWarnings("rawtypes")
+    @Override
+    public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
+        return Set.of();
+    }
+
+    @Override
+    public Set<SLanguage> getLanguages() {
+        return Set.of();
+    }
+
+    @SuppressWarnings("rawtypes")
+    @Override
+    protected Collection<Observer> observers() {
+        return DIssue.OBSERVERS;
+    }
+
+    @SuppressWarnings("rawtypes")
+    @Override
+    protected Collection<Setable> setables() {
+        return DIssue.SETABLES;
     }
 
 }

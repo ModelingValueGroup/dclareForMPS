@@ -21,39 +21,38 @@ import org.modelingvalue.collections.Set;
 import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.Setable;
 
-public class DModuleType extends DObjectType<Set<SLanguage>> {
+public class DServerMetaDataType extends DObjectType<Boolean> {
 
-    public DModuleType(Set<SLanguage> identity) {
-        super(identity);
+    protected DServerMetaDataType(Boolean s) {
+        super(s);
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
+    @SuppressWarnings("rawtypes")
     @Override
-    public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
-        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getModuleRules())).toSet();
+    public Set<DRule> getRules(Set ruleSets) {
+        return Set.of();
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
+    @SuppressWarnings("rawtypes")
     @Override
-    public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
-        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getModuleAttributes())).toSet();
+    public Set<DAttribute> getAttributes(Set ruleSets) {
+        return Set.of();
     }
 
     @Override
     public Set<SLanguage> getLanguages() {
-        return id();
+        return Set.of();
     }
 
     @SuppressWarnings("rawtypes")
     @Override
     protected Collection<Observer> observers() {
-        return DModule.OBSERVERS;
+        return DServerMetaData.OBSERVERS;
     }
 
     @SuppressWarnings("rawtypes")
     @Override
     public Collection<Setable> setables() {
-        return DModule.SETABLES;
+        return DServerMetaData.SETABLES;
     }
-
 }

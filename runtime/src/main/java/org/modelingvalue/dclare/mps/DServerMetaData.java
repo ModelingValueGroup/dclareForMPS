@@ -15,11 +15,46 @@
 
 package org.modelingvalue.dclare.mps;
 
-import java.util.function.Supplier;
+import static org.modelingvalue.dclare.SetableModifier.plumbing;
 
-@FunctionalInterface
-public interface Getter {
+import org.modelingvalue.collections.Set;
+import org.modelingvalue.dclare.Constant;
+import org.modelingvalue.dclare.Observer;
+import org.modelingvalue.dclare.Setable;
 
-    <R> R get(Supplier<R> supplier);
+public class DServerMetaData extends DObject {
+
+    protected static final Constant<Boolean, DServerMetaDataType>  SERVER_METADATA_TYPE = Constant.of("SERVER_METADATA_TYPE", DServerMetaDataType::new);
+
+    protected static final DObserved<DServerMetaData, Set<DModel>> SHARED_MODELS        = DObserved.of("SHARED_MODELS", Set.of(), null, (m, pre, post) -> {
+                                                                                        }, plumbing);
+
+    @SuppressWarnings("rawtypes")
+    protected static final Set<Observer>                           OBSERVERS            = DObject.OBSERVERS;
+
+    @SuppressWarnings("rawtypes")
+    protected static final Set<Setable>                            SETABLES             = DObject.SETABLES.add(SHARED_MODELS);
+
+    public DServerMetaData() {
+    }
+
+    @Override
+    protected void read(DClareMPS dClareMPS) {
+    }
+
+    @Override
+    protected DObjectType<?> getType() {
+        return SERVER_METADATA_TYPE.get(isActive());
+    }
+
+    @Override
+    public boolean isExternal() {
+        return false;
+    }
+
+    @Override
+    protected boolean isRead() {
+        return false;
+    }
 
 }

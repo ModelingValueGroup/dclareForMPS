@@ -15,7 +15,6 @@
 
 package org.modelingvalue.dclare.mps;
 
-import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Concurrent;
@@ -24,23 +23,17 @@ import org.modelingvalue.dclare.*;
 @SuppressWarnings("rawtypes")
 public interface DRule<O> extends DFeature {
 
-    Constant<DRule, DObserver>     OBSERVER  = Constant.of("OBSERVER",                                         //
-            r -> DObserver.of(r, r.initialLowPriority() ? Priority.backward : Priority.forward));
-
-    Constant<SLanguage, Direction> DIRECTION = Constant.of("DIRECTION", l -> Direction.of(l));
-
-    @SuppressWarnings("unchecked")
-    Constant<DRule, Set<Setable>>  TARGETS   = Constant.of("TARGETS", r -> Collection.of(r.targets()).toSet());
+    Constant<DRule, DObserver> OBSERVER = Constant.of("OBSERVER", DObserver::new);
 
     class DObserver<O extends Mutable> extends Observer<O> {
 
-        private static <M extends Mutable> DObserver of(DRule rule, Priority initPriority) {
-            return new DObserver<M>(rule, initPriority);
-        }
-
         @SuppressWarnings("unchecked")
-        private DObserver(DRule rule, Priority initPriority) {
-            super(rule, rule::run, m -> DIRECTION.get(rule.anonymousLanguage()), initPriority);
+        private DObserver(DRule rule) {
+            super(rule, rule::run, Collection.of(rule.targets()).toSet(), //
+                    rule.initialLowPriority() ? Priority.outer : Priority.immediate, //
+                    IAspect.DIRECTION.get(rule.ruleSet().getAspect()), //
+                    LeafModifier.anonymous.iff(rule.ruleSet().getAnonymousType() != null), //
+                    LeafModifier.atomic.iff(rule.atomic()));
         }
 
         public DRule rule() {
@@ -62,12 +55,6 @@ public interface DRule<O> extends DFeature {
             return new DRule.DObserverTransaction(universeTransaction);
         }
 
-        @SuppressWarnings("unchecked")
-        @Override
-        public Set<Setable<O, ?>> targets() {
-            return (Set) TARGETS.get(rule());
-        }
-
     }
 
     class DObserverTransaction extends ObserverTransaction {
@@ -83,7 +70,7 @@ public interface DRule<O> extends DFeature {
             DObject dObject = mutable();
             issues.init(Set.of());
             try {
-                if (!dObject.isObsolete(rule().anonymousType())) {
+                if (!dObject.isObsolete(rule().ruleSet().getAnonymousType())) {
                     super.doRun(pre, universeTransaction);
                 }
             } finally {
@@ -111,10 +98,8 @@ public interface DRule<O> extends DFeature {
 
     boolean initialLowPriority();
 
-    String anonymousType();
+    java.util.List<DObserved> targets();
 
-    SLanguage anonymousLanguage();
-
-    java.util.List<DAttribute> targets();
+    boolean atomic();
 
 }

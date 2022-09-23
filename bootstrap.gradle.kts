@@ -17,7 +17,7 @@ defaultTasks(
     "download-MPS",
 )
 plugins {
-    id("org.modelingvalue.gradle.mvgplugin") version "1.0.8"
+    id("org.modelingvalue.gradle.mvgplugin") version "1.1.3"
 }
 tasks.register<DefaultTask>("download-MPS") {
     group = "modelingvaluegroup"

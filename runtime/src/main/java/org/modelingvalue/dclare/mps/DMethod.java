@@ -16,49 +16,28 @@
 package org.modelingvalue.dclare.mps;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
-import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
-import org.modelingvalue.dclare.Observer;
-import org.modelingvalue.dclare.Setable;
+import org.modelingvalue.collections.util.Pair;
+import org.modelingvalue.collections.util.Triple;
+import org.modelingvalue.dclare.Constant;
 
-public class DIsssueType extends DObjectType<Boolean> {
-
-    public DIsssueType(Boolean identity) {
-        super(identity);
-    }
+public interface DMethod<R> extends DFeature {
 
     @SuppressWarnings("rawtypes")
-    @Override
-    public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
-        return Set.of();
-    }
+    Constant<Triple<Set<SLanguage>, String, Signature>, DMethod> D_METHOD = Constant.of("D_METHOD", t -> {
+        for (DMethod method : DClareMPS.METHOD_MAP.get(t.a()).get(Pair.of(t.b(), t.c().size()))) {
+            if (t.c().isSubOf(method.signature())) {
+                return method;
+            }
+        }
+        throw new UnsupportedOperationException(t.b() + t.c());
+    });
+
+    String name();
 
     @SuppressWarnings("rawtypes")
-    @Override
-    public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
-        return Set.of();
-    }
+    Signature signature();
 
-    @Override
-    public Set<SLanguage> getLanguages() {
-        return Set.of();
-    }
-
-    @Override
-    public boolean external() {
-        return id();
-    }
-
-    @SuppressWarnings("rawtypes")
-    @Override
-    protected Collection<Observer> observers() {
-        return DIssue.OBSERVERS;
-    }
-
-    @SuppressWarnings("rawtypes")
-    @Override
-    protected Collection<Setable> setables() {
-        return DIssue.SETABLES;
-    }
+    R call(Object[] arguments);
 
 }

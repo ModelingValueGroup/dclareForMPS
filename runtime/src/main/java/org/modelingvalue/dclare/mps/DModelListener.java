@@ -34,14 +34,7 @@ import org.modelingvalue.collections.util.Pair;
 
 import jetbrains.mps.project.DevKit;
 import jetbrains.mps.smodel.MPSModuleRepository;
-import jetbrains.mps.smodel.event.SModelChildEvent;
-import jetbrains.mps.smodel.event.SModelDevKitEvent;
-import jetbrains.mps.smodel.event.SModelImportEvent;
-import jetbrains.mps.smodel.event.SModelLanguageEvent;
-import jetbrains.mps.smodel.event.SModelPropertyEvent;
-import jetbrains.mps.smodel.event.SModelReferenceEvent;
-import jetbrains.mps.smodel.event.SModelRenamedEvent;
-import jetbrains.mps.smodel.event.SModelRootEvent;
+import jetbrains.mps.smodel.event.*;
 import jetbrains.mps.smodel.loading.ModelLoadingState;
 
 public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChangeListener, SModelListener, jetbrains.mps.smodel.event.SModelListener {
@@ -58,7 +51,7 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
             if (a().isActive()) {
                 DNode.PROPERTY.get(event.getProperty()).set(DNode.of(event.getNode()), event.getNewValue());
             } else {
-                a().activateIfUsed();
+                a().setActiveIfObserved();
             }
         });
     }
@@ -67,11 +60,12 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
     public void referenceChanged(SReferenceChangeEvent event) {
         b().handleMPSChange(() -> {
             if (a().isActive()) {
-                SReference newValue = event.getNewValue();
-                SNode targetNode = newValue != null ? newValue.getTargetNode() : null;
-                DNode.REFERENCE.get(event.getAssociationLink()).set(DNode.of(event.getNode()), targetNode != null ? DNode.of(targetNode) : null);
+                SReference ref = event.getNewValue();
+                SNode sNode = ref != null ? ref.getTargetNode() : null;
+                DNode dNode = sNode != null ? DNode.of(sNode) : ref != null ? DNode.referenceConstruct(ref.getTargetNodeReference(), null) : null;
+                DNode.REFERENCE.get(event.getAssociationLink()).set(DNode.of(event.getNode()), dNode);
             } else {
-                a().activateIfUsed();
+                a().setActiveIfObserved();
             }
         });
     }
@@ -102,7 +96,7 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
                     }
                 }
             } else {
-                a().activateIfUsed();
+                a().setActiveIfObserved();
             }
         });
     }
@@ -126,7 +120,7 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
                     }
                 }
             } else {
-                a().activateIfUsed();
+                a().setActiveIfObserved();
             }
         });
     }

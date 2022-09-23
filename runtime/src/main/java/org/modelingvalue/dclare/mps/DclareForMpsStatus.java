@@ -15,45 +15,54 @@
 
 package org.modelingvalue.dclare.mps;
 
-import org.jetbrains.mps.openapi.language.SLanguage;
-import org.modelingvalue.collections.Collection;
-import org.modelingvalue.collections.Set;
-import org.modelingvalue.dclare.Observer;
-import org.modelingvalue.dclare.Setable;
+import static org.modelingvalue.dclare.UniverseTransaction.Mood.*;
 
-public class DModuleType extends DObjectType<Set<SLanguage>> {
+import java.util.function.Supplier;
 
-    public DModuleType(Set<SLanguage> identity) {
-        super(identity);
+import org.modelingvalue.dclare.ImperativeTransaction;
+import org.modelingvalue.dclare.UniverseStatistics;
+import org.modelingvalue.dclare.UniverseTransaction.Status;
+
+public class DclareForMpsStatus {
+
+    private final Status    status;
+    private final DClareMPS dClareMPS;
+
+    public DclareForMpsStatus(Status status, DClareMPS dClareMPS) {
+        this.status = status;
+        this.dClareMPS = dClareMPS;
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    @Override
-    public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
-        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getModuleRules())).toSet();
+    public boolean isChecking() {
+        return status.mood == idle && status.active.anyMatch(a -> a instanceof String);
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    @Override
-    public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
-        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getModuleAttributes())).toSet();
+    public boolean isCommitting() {
+        return status.mood == idle && status.active.anyMatch(a -> a instanceof ImperativeTransaction);
     }
 
-    @Override
-    public Set<SLanguage> getLanguages() {
-        return id();
+    public boolean isIdle() {
+        return status.mood == idle || status.mood == starting;
     }
 
-    @SuppressWarnings("rawtypes")
-    @Override
-    protected Collection<Observer> observers() {
-        return DModule.OBSERVERS;
+    public boolean isActive() {
+        return status.mood == busy;
     }
 
-    @SuppressWarnings("rawtypes")
-    @Override
-    public Collection<Setable> setables() {
-        return DModule.SETABLES;
+    public boolean isStopped() {
+        return status.mood == stopped;
+    }
+
+    public <R> R get(Supplier<R> supplier) {
+        return status.state.get(supplier);
+    }
+
+    public UniverseStatistics stats() {
+        return status.stats;
+    }
+
+    public DClareMPS dClareMPS() {
+        return dClareMPS;
     }
 
 }

@@ -15,22 +15,31 @@
 
 package org.modelingvalue.dclare.mps;
 
-import org.jetbrains.mps.openapi.language.SLanguage;
-import org.modelingvalue.dclare.Direction;
+import java.util.Arrays;
+
+import org.modelingvalue.dclare.Construction.Reason;
 import org.modelingvalue.dclare.Mutable;
 
 public class DCopy extends DDerive {
 
-    protected DCopy(Mutable thiz, DNode copied, SLanguage anonymousLanguage, String anonymousType) {
-        this(new Object[]{copied, anonymousLanguage, anonymousType});
+    protected DCopy(Mutable thiz, DNode copiedRoot, IRuleSet ruleSet, String anonymousType, Object[] ctx) {
+        this(thiz, init(ctx, copiedRoot, ruleSet, anonymousType));
     }
 
-    protected DCopy(Mutable thiz, DNode copied, DCopy root) {
-        this(new Object[]{copied, root});
+    private static Object[] init(Object[] ctx, DNode copiedRoot, IRuleSet ruleSet, String anonymousType) {
+        Object[] array = Arrays.copyOf(ctx, ctx.length + 3);
+        array[array.length - 3] = copiedRoot;
+        array[array.length - 2] = ruleSet;
+        array[array.length - 1] = anonymousType;
+        return array;
     }
 
-    private DCopy(Object[] identity) {
-        super(null, identity);
+    protected DCopy(DNode copiedChild, DCopy root) {
+        this(null, new Object[]{copiedChild, root});
+    }
+
+    private DCopy(Mutable thiz, Object[] identity) {
+        super(thiz, identity);
     }
 
     public DCopy root() {
@@ -39,22 +48,25 @@ public class DCopy extends DDerive {
     }
 
     public DNode copied() {
-        return (DNode) get(null, 0);
+        DCopy root = root();
+        return root == this ? (DNode) get(null, root.size() - 3) : (DNode) get(null, 0);
     }
 
     @Override
-    public String getAnonymousType() {
-        return (String) root().get(null, 2);
+    public IRuleSet ruleSet() {
+        DCopy root = root();
+        return (IRuleSet) root.get(null, root.size() - 2);
     }
 
     @Override
-    public SLanguage getAnonymousLanguage() {
-        return (SLanguage) root().get(null, 1);
+    public String anonymousType() {
+        DCopy root = root();
+        return (String) root.get(null, root.size() - 1);
     }
 
     @Override
-    public Direction direction() {
-        return Direction.of(getAnonymousLanguage());
+    protected Reason clone(Mutable thiz, Object[] identity) {
+        return new DCopy(thiz, identity);
     }
 
 }
