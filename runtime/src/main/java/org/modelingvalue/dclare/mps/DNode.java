@@ -157,7 +157,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                    SNode sNode = dNode.tryOriginal();
                                                                                                                                    SNode soll = post != null ? post.tryOriginal() : null;
                                                                                                                                    sNode.setReferenceTarget(sr, soll);
-                                                                                                                               }, sr::getDeclarationNode));
+                                                                                                                               }, sr::getDeclarationNode, orphansAllowed));
     @SuppressWarnings("deprecation")
     public static final Constant<SReferenceLink, DObserved<DNode, Set<DNode>>>                          OPPOSITE               = Constant.of("OPPOSITE", sr -> DObserved.of(Pair.of(sr, "OPPOSITE"), Set.of(), () -> DNode.REFERENCE.get(sr), null, null, sr::getDeclarationNode, synthetic));
 
