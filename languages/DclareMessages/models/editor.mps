@@ -211,10 +211,19 @@
       <concept id="1080120340718" name="jetbrains.mps.baseLanguage.structure.AndExpression" flags="nn" index="1Wc70l" />
     </language>
     <language id="7866978e-a0f0-4cc7-81bc-4d213d9375e1" name="jetbrains.mps.lang.smodel">
+      <concept id="1177026924588" name="jetbrains.mps.lang.smodel.structure.RefConcept_Reference" flags="nn" index="chp4Y">
+        <reference id="1177026940964" name="conceptDeclaration" index="cht4Q" />
+      </concept>
       <concept id="1179409122411" name="jetbrains.mps.lang.smodel.structure.Node_ConceptMethodCall" flags="nn" index="2qgKlT" />
+      <concept id="2396822768958367367" name="jetbrains.mps.lang.smodel.structure.AbstractTypeCastExpression" flags="nn" index="$5XWr">
+        <child id="6733348108486823193" name="leftExpression" index="1m5AlR" />
+        <child id="3906496115198199033" name="conceptArgument" index="3oSUPX" />
+      </concept>
       <concept id="1145404486709" name="jetbrains.mps.lang.smodel.structure.SemanticDowncastExpression" flags="nn" index="2JrnkZ">
         <child id="1145404616321" name="leftExpression" index="2JrQYb" />
       </concept>
+      <concept id="1139613262185" name="jetbrains.mps.lang.smodel.structure.Node_GetParentOperation" flags="nn" index="1mfA1w" />
+      <concept id="1140137987495" name="jetbrains.mps.lang.smodel.structure.SNodeTypeCastExpression" flags="nn" index="1PxgMI" />
       <concept id="1138056022639" name="jetbrains.mps.lang.smodel.structure.SPropertyAccess" flags="nn" index="3TrcHB">
         <reference id="1138056395725" name="property" index="3TsBF5" />
       </concept>
@@ -1297,6 +1306,61 @@
               </node>
             </node>
           </node>
+          <node concept="3cpWs8" id="7g0RzQwEraF" role="3cqZAp">
+            <node concept="3cpWsn" id="7g0RzQwEraG" role="3cpWs9">
+              <property role="TrG5h" value="config" />
+              <node concept="3uibUv" id="7g0RzQwEr4n" role="1tU5fm">
+                <ref role="3uigEE" to="t4tl:~DclareForMpsConfig" resolve="DclareForMpsConfig" />
+              </node>
+              <node concept="2OqwBi" id="7g0RzQwEraH" role="33vP2m">
+                <node concept="2OqwBi" id="7g0RzQwEraI" role="2Oq$k0">
+                  <node concept="37vLTw" id="7g0RzQwEraJ" role="2Oq$k0">
+                    <ref role="3cqZAo" node="22ExA6fGE0x" resolve="engine" />
+                  </node>
+                  <node concept="liA8E" id="7g0RzQwEraK" role="2OqNvi">
+                    <ref role="37wK5l" to="t4tl:~DclareForMPSEngine.getConfig()" resolve="getConfig" />
+                  </node>
+                </node>
+                <node concept="liA8E" id="7g0RzQwEraL" role="2OqNvi">
+                  <ref role="37wK5l" to="t4tl:~DclareForMpsConfig.withInactiveAspects(java.lang.String[])" resolve="withInactiveAspects" />
+                  <node concept="2OqwBi" id="7g0RzQwEraM" role="37wK5m">
+                    <node concept="37vLTw" id="7g0RzQwEraN" role="2Oq$k0">
+                      <ref role="3cqZAo" node="22ExA6g7a6k" resolve="prefs" />
+                    </node>
+                    <node concept="liA8E" id="7g0RzQwEraO" role="2OqNvi">
+                      <ref role="37wK5l" to="u4ym:69vWBEqgka3" resolve="getInactiveAspectIds" />
+                    </node>
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+          <node concept="3clFbF" id="7g0RzQwEplT" role="3cqZAp">
+            <node concept="37vLTI" id="7g0RzQwEr1F" role="3clFbG">
+              <node concept="2OqwBi" id="7g0RzQwErRO" role="37vLTx">
+                <node concept="37vLTw" id="7g0RzQwErJX" role="2Oq$k0">
+                  <ref role="3cqZAo" node="7g0RzQwEraG" resolve="config" />
+                </node>
+                <node concept="liA8E" id="7g0RzQwEs3o" role="2OqNvi">
+                  <ref role="37wK5l" to="t4tl:~DclareForMpsConfig.isOnMode()" resolve="isOnMode" />
+                </node>
+              </node>
+              <node concept="2OqwBi" id="7g0RzQwEqiO" role="37vLTJ">
+                <node concept="1PxgMI" id="7g0RzQwEq7b" role="2Oq$k0">
+                  <node concept="chp4Y" id="7g0RzQwEqaw" role="3oSUPX">
+                    <ref role="cht4Q" to="wknp:7e_PmaZxgoP" resolve="MessageSet" />
+                  </node>
+                  <node concept="2OqwBi" id="7g0RzQwEpFT" role="1m5AlR">
+                    <node concept="0IXxy" id="7g0RzQwEplS" role="2Oq$k0" />
+                    <node concept="1mfA1w" id="7g0RzQwEpX2" role="2OqNvi" />
+                  </node>
+                </node>
+                <node concept="3TrcHB" id="7g0RzQwEqzQ" role="2OqNvi">
+                  <ref role="3TsBF5" to="wknp:1DUQ$OwrN1P" resolve="on" />
+                </node>
+              </node>
+            </node>
+          </node>
           <node concept="3clFbF" id="3z4syYPGSGJ" role="3cqZAp">
             <node concept="2YIFZM" id="3z4syYPGT1$" role="3clFbG">
               <ref role="37wK5l" to="u4ym:4FbMPtV5fvT" resolve="setConfig" />
@@ -1304,26 +1368,8 @@
               <node concept="37vLTw" id="3z4syYPGU6n" role="37wK5m">
                 <ref role="3cqZAo" node="3z4syYPGU6k" resolve="project" />
               </node>
-              <node concept="2OqwBi" id="3z4syYPGTcc" role="37wK5m">
-                <node concept="2OqwBi" id="3z4syYPGTcd" role="2Oq$k0">
-                  <node concept="37vLTw" id="3z4syYPGTce" role="2Oq$k0">
-                    <ref role="3cqZAo" node="22ExA6fGE0x" resolve="engine" />
-                  </node>
-                  <node concept="liA8E" id="3z4syYPGTcf" role="2OqNvi">
-                    <ref role="37wK5l" to="t4tl:~DclareForMPSEngine.getConfig()" resolve="getConfig" />
-                  </node>
-                </node>
-                <node concept="liA8E" id="3z4syYPGTcg" role="2OqNvi">
-                  <ref role="37wK5l" to="t4tl:~DclareForMpsConfig.withInactiveAspects(java.lang.String[])" resolve="withInactiveAspects" />
-                  <node concept="2OqwBi" id="3z4syYPGTch" role="37wK5m">
-                    <node concept="37vLTw" id="3z4syYPGTci" role="2Oq$k0">
-                      <ref role="3cqZAo" node="22ExA6g7a6k" resolve="prefs" />
-                    </node>
-                    <node concept="liA8E" id="3z4syYPGTcj" role="2OqNvi">
-                      <ref role="37wK5l" to="u4ym:69vWBEqgka3" resolve="getInactiveAspectIds" />
-                    </node>
-                  </node>
-                </node>
+              <node concept="37vLTw" id="7g0RzQwEraP" role="37wK5m">
+                <ref role="3cqZAo" node="7g0RzQwEraG" resolve="withInactiveAspects" />
               </node>
             </node>
           </node>

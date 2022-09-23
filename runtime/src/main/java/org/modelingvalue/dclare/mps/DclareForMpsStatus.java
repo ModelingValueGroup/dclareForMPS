@@ -25,10 +25,12 @@ import org.modelingvalue.dclare.UniverseTransaction.Status;
 
 public class DclareForMpsStatus {
 
-    private final Status status;
+    private final Status    status;
+    private final DClareMPS dClareMPS;
 
-    public DclareForMpsStatus(Status status) {
+    public DclareForMpsStatus(Status status, DClareMPS dClareMPS) {
         this.status = status;
+        this.dClareMPS = dClareMPS;
     }
 
     public boolean isChecking() {
@@ -57,6 +59,10 @@ public class DclareForMpsStatus {
 
     public UniverseStatistics stats() {
         return status.stats;
+    }
+
+    public DClareMPS dClareMPS() {
+        return dClareMPS;
     }
 
 }

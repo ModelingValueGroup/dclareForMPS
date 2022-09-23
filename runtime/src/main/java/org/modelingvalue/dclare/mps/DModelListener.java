@@ -62,7 +62,7 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
             if (a().isActive()) {
                 SReference ref = event.getNewValue();
                 SNode sNode = ref != null ? ref.getTargetNode() : null;
-                DNode dNode = sNode != null ? DNode.of(sNode) : ref != null ? DNode.referenceConstruct(ref.getTargetNodeReference(), () -> null) : null;
+                DNode dNode = sNode != null ? DNode.of(sNode) : ref != null ? DNode.referenceConstruct(ref.getTargetNodeReference(), null) : null;
                 DNode.REFERENCE.get(event.getAssociationLink()).set(DNode.of(event.getNode()), dNode);
             } else {
                 a().setActiveIfObserved();
