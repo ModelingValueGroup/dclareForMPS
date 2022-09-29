@@ -259,7 +259,8 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
     }
 
     private static boolean hasOpposite(SReferenceLink sr) {
-        return DClareMPS.REFERENCES_WITH_OPPOSITE.get(sr.getOwner().getLanguage()).contains(sr);
+        return DClareMPS.REFERENCES_WITH_OPPOSITE.get(sr.getOwner().getLanguage()).contains(sr) || //
+                DClareMPS.REFERENCES_WITH_OPPOSITE.get(sr.getTargetConcept().getLanguage()).contains(sr);
     }
 
     static public class DCopyObserver extends Observer<DNode> {
