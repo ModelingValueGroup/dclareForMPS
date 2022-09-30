@@ -4117,6 +4117,23 @@
       <ref role="1N5Vy1" to="tpee:6LFqxSRBTg7" resolve="method" />
       <node concept="3dgokm" id="1qjtL8JY1RP" role="1N6uqs">
         <node concept="3clFbS" id="1qjtL8JY1RQ" role="2VODD2">
+          <node concept="3cpWs8" id="1qjtL8JY1S2" role="3cqZAp">
+            <node concept="3cpWsn" id="1qjtL8JY1S3" role="3cpWs9">
+              <property role="TrG5h" value="methods" />
+              <node concept="2I9FWS" id="1qjtL8JY1S4" role="1tU5fm">
+                <ref role="2I9WkF" to="7ggn:3$OkZkHRDLt" resolve="Method" />
+              </node>
+              <node concept="2OqwBi" id="1qjtL8JY1S5" role="33vP2m">
+                <node concept="35c_gC" id="1qjtL8JY1S6" role="2Oq$k0">
+                  <ref role="35c_gD" to="7ggn:29R9$zZUovD" resolve="RuleSet" />
+                </node>
+                <node concept="2qgKlT" id="1qjtL8JY1S7" role="2OqNvi">
+                  <ref role="37wK5l" to="us1s:1qjtL8JYrnT" resolve="visibleMethods" />
+                  <node concept="2rP1CM" id="1qjtL8JY1S8" role="37wK5m" />
+                </node>
+              </node>
+            </node>
+          </node>
           <node concept="3cpWs8" id="1qjtL8JY1RR" role="3cqZAp">
             <node concept="3cpWsn" id="1qjtL8JY1RS" role="3cpWs9">
               <property role="TrG5h" value="contextType" />
@@ -4137,23 +4154,6 @@
                 </node>
                 <node concept="2qgKlT" id="1qjtL8JY1S1" role="2OqNvi">
                   <ref role="37wK5l" to="us1s:29R9$zZWsRH" resolve="getContextType" />
-                </node>
-              </node>
-            </node>
-          </node>
-          <node concept="3cpWs8" id="1qjtL8JY1S2" role="3cqZAp">
-            <node concept="3cpWsn" id="1qjtL8JY1S3" role="3cpWs9">
-              <property role="TrG5h" value="methods" />
-              <node concept="2I9FWS" id="1qjtL8JY1S4" role="1tU5fm">
-                <ref role="2I9WkF" to="7ggn:3$OkZkHRDLt" resolve="Method" />
-              </node>
-              <node concept="2OqwBi" id="1qjtL8JY1S5" role="33vP2m">
-                <node concept="35c_gC" id="1qjtL8JY1S6" role="2Oq$k0">
-                  <ref role="35c_gD" to="7ggn:29R9$zZUovD" resolve="RuleSet" />
-                </node>
-                <node concept="2qgKlT" id="1qjtL8JY1S7" role="2OqNvi">
-                  <ref role="37wK5l" to="us1s:1qjtL8JYrnT" resolve="visibleMethods" />
-                  <node concept="2rP1CM" id="1qjtL8JY1S8" role="37wK5m" />
                 </node>
               </node>
             </node>

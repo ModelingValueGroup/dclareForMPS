@@ -4952,6 +4952,32 @@
               </node>
             </node>
           </node>
+          <node concept="3cpWs8" id="5NHZGduElaN" role="3cqZAp">
+            <node concept="3cpWsn" id="5NHZGduElaQ" role="3cpWs9">
+              <property role="TrG5h" value="aspectPrefs" />
+              <node concept="3uibUv" id="5NHZGduElaR" role="1tU5fm">
+                <ref role="3uigEE" node="3gm2YTwE11B" resolve="AspectPrefs" />
+              </node>
+              <node concept="2YIFZM" id="5NHZGduOVoT" role="33vP2m">
+                <ref role="37wK5l" node="3gm2YTwEKsS" resolve="getOrCreatePrefs" />
+                <ref role="1Pybhc" node="3gm2YTwE11B" resolve="AspectPrefs" />
+                <node concept="2xqhHp" id="5NHZGduOVoU" role="37wK5m" />
+              </node>
+            </node>
+          </node>
+          <node concept="3cpWs8" id="4KK_HU4c_mm" role="3cqZAp">
+            <node concept="3cpWsn" id="4KK_HU4c_mn" role="3cpWs9">
+              <property role="TrG5h" value="mpsProject" />
+              <node concept="3uibUv" id="4KK_HU4cx4M" role="1tU5fm">
+                <ref role="3uigEE" to="z1c3:~MPSProject" resolve="MPSProject" />
+              </node>
+              <node concept="2YIFZM" id="4KK_HU4c_mo" role="33vP2m">
+                <ref role="37wK5l" to="alof:~ProjectHelper.fromIdeaProject(com.intellij.openapi.project.Project)" resolve="fromIdeaProject" />
+                <ref role="1Pybhc" to="alof:~ProjectHelper" resolve="ProjectHelper" />
+                <node concept="2xqhHp" id="5NHZGdvg310" role="37wK5m" />
+              </node>
+            </node>
+          </node>
           <node concept="3clFbF" id="61KkDbfvZB6" role="3cqZAp">
             <node concept="2OqwBi" id="61KkDbfvZB7" role="3clFbG">
               <node concept="2XshWL" id="61KkDbfvZB8" role="2OqNvi">
@@ -4962,10 +4988,11 @@
                     <ref role="2WH_rO" node="5LbVSrDAu_C" resolve="onMode" />
                   </node>
                 </node>
-                <node concept="2YIFZM" id="61KkDbfwegr" role="2XxRq1">
-                  <ref role="1Pybhc" node="3gm2YTwE11B" resolve="AspectPrefs" />
-                  <ref role="37wK5l" node="3gm2YTwEKsS" resolve="getOrCreatePrefs" />
-                  <node concept="2xqhHp" id="61KkDbfweVV" role="37wK5m" />
+                <node concept="37vLTw" id="5NHZGduP1_7" role="2XxRq1">
+                  <ref role="3cqZAo" node="5NHZGduElaQ" resolve="aspectPrefs" />
+                </node>
+                <node concept="37vLTw" id="5NHZGdvgbAA" role="2XxRq1">
+                  <ref role="3cqZAo" node="4KK_HU4c_mn" resolve="mpsProject" />
                 </node>
               </node>
               <node concept="2OqwBi" id="61KkDbfvZBd" role="2Oq$k0">
@@ -5046,7 +5073,7 @@
                 <ref role="37wK5l" to="u4ym:3z4syYPRmGX" resolve="getEngine" />
                 <ref role="1Pybhc" to="u4ym:30fQumnG8Au" resolve="DclareUtil" />
                 <node concept="37vLTw" id="61KkDbfvibH" role="37wK5m">
-                  <ref role="3cqZAo" node="61KkDbfvibC" resolve="project" />
+                  <ref role="3cqZAo" node="61KkDbfvibC" resolve="ideaProject" />
                 </node>
               </node>
               <node concept="liA8E" id="1iXkhsJzrwa" role="2OqNvi">
@@ -5493,7 +5520,7 @@
               <ref role="37wK5l" node="3gm2YTwEKsS" resolve="getOrCreatePrefs" />
               <ref role="1Pybhc" node="3gm2YTwE11B" resolve="AspectPrefs" />
               <node concept="37vLTw" id="61KkDbfvIU3" role="37wK5m">
-                <ref role="3cqZAo" node="61KkDbfvibC" resolve="project" />
+                <ref role="3cqZAo" node="61KkDbfvibC" resolve="ideaProject" />
               </node>
             </node>
           </node>
@@ -5507,10 +5534,10 @@
             <node concept="liA8E" id="3z4syYQDvZq" role="2OqNvi">
               <ref role="37wK5l" to="33ny:~Map.put(java.lang.Object,java.lang.Object)" resolve="put" />
               <node concept="37vLTw" id="61KkDbfvibI" role="37wK5m">
-                <ref role="3cqZAo" node="61KkDbfvibC" resolve="project" />
+                <ref role="3cqZAo" node="61KkDbfvibC" resolve="ideaProject" />
               </node>
               <node concept="37vLTw" id="61KkDbfvIU4" role="37wK5m">
-                <ref role="3cqZAo" node="61KkDbfvIU1" resolve="orCreatePrefs" />
+                <ref role="3cqZAo" node="61KkDbfvIU1" resolve="aspectPrefs" />
               </node>
             </node>
           </node>
@@ -5524,13 +5551,13 @@
             <node concept="liA8E" id="3z4syYQD$P5" role="2OqNvi">
               <ref role="37wK5l" to="33ny:~Map.put(java.lang.Object,java.lang.Object)" resolve="put" />
               <node concept="37vLTw" id="61KkDbfvibK" role="37wK5m">
-                <ref role="3cqZAo" node="61KkDbfvibC" resolve="project" />
+                <ref role="3cqZAo" node="61KkDbfvibC" resolve="ideaProject" />
               </node>
               <node concept="2YIFZM" id="3z4syYQD$P9" role="37wK5m">
                 <ref role="1Pybhc" node="4f_r0qDun_n" resolve="SharingPrefs" />
                 <ref role="37wK5l" node="4f_r0qDuKfG" resolve="getOrCreatePrefs" />
                 <node concept="37vLTw" id="61KkDbfvibL" role="37wK5m">
-                  <ref role="3cqZAo" node="61KkDbfvibC" resolve="project" />
+                  <ref role="3cqZAo" node="61KkDbfvibC" resolve="ideaProject" />
                 </node>
               </node>
             </node>
@@ -5547,15 +5574,16 @@
                 </node>
               </node>
               <node concept="37vLTw" id="61KkDbfvIU5" role="2XxRq1">
-                <ref role="3cqZAo" node="61KkDbfvIU1" resolve="orCreatePrefs" />
+                <ref role="3cqZAo" node="61KkDbfvIU1" resolve="aspectPrefs" />
               </node>
+              <node concept="1KvdUw" id="5NHZGduQJi1" role="2XxRq1" />
             </node>
             <node concept="2OqwBi" id="61KkDbfuCJQ" role="2Oq$k0">
               <node concept="LR4U6" id="61KkDbfuCJS" role="2OqNvi">
                 <ref role="LR4U5" node="3OqCb4$v3q7" resolve="DClareMessages" />
               </node>
               <node concept="37vLTw" id="61KkDbfvibM" role="2Oq$k0">
-                <ref role="3cqZAo" node="61KkDbfvibC" resolve="project" />
+                <ref role="3cqZAo" node="61KkDbfvibC" resolve="ideaProject" />
               </node>
             </node>
           </node>
@@ -5565,7 +5593,7 @@
             <ref role="1Pybhc" to="u4ym:30fQumnG8Au" resolve="DclareUtil" />
             <ref role="37wK5l" to="u4ym:4FbMPtV5fvT" resolve="setConfig" />
             <node concept="37vLTw" id="61KkDbfvibO" role="37wK5m">
-              <ref role="3cqZAo" node="61KkDbfvibC" resolve="project" />
+              <ref role="3cqZAo" node="61KkDbfvibC" resolve="ideaProject" />
             </node>
             <node concept="37vLTw" id="1iXkhsJzrxl" role="37wK5m">
               <ref role="3cqZAo" node="1iXkhsJzrw5" resolve="config" />
@@ -7682,7 +7710,7 @@
                 <node concept="3clFbF" id="26byUJz3vBm" role="3cqZAp">
                   <node concept="2OqwBi" id="26byUJz3vBn" role="3clFbG">
                     <node concept="37vLTw" id="26byUJz3vBo" role="2Oq$k0">
-                      <ref role="3cqZAo" node="26byUJz3vBf" resolve="messages" />
+                      <ref role="3cqZAo" node="26byUJz3vBf" resolve="tool" />
                     </node>
                     <node concept="2XshWL" id="26byUJz3vBp" role="2OqNvi">
                       <ref role="2WH_rO" node="26byUJz3_Ah" resolve="aspects" />
@@ -7703,7 +7731,7 @@
               <node concept="3y3z36" id="26byUJz3vBs" role="3clFbw">
                 <node concept="10Nm6u" id="26byUJz3vBt" role="3uHU7w" />
                 <node concept="37vLTw" id="26byUJz3vBu" role="3uHU7B">
-                  <ref role="3cqZAo" node="26byUJz3vBf" resolve="messages" />
+                  <ref role="3cqZAo" node="26byUJz3vBf" resolve="tool" />
                 </node>
               </node>
             </node>
@@ -7789,10 +7817,10 @@
                 <node concept="3clFbF" id="433JJClaHVH" role="3cqZAp">
                   <node concept="2OqwBi" id="433JJClaIoU" role="3clFbG">
                     <node concept="37vLTw" id="433JJClaHVG" role="2Oq$k0">
-                      <ref role="3cqZAo" node="433JJClaw3v" resolve="messages" />
+                      <ref role="3cqZAo" node="433JJClaw3v" resolve="tool" />
                     </node>
                     <node concept="2XshWL" id="433JJClaIDJ" role="2OqNvi">
-                      <ref role="2WH_rO" node="3zaVTDehlGr" resolve="idle" />
+                      <ref role="2WH_rO" node="3zaVTDehlGr" resolve="messages" />
                       <node concept="37vLTw" id="433JJClbVZE" role="2XxRq1">
                         <ref role="3cqZAo" node="433JJClagMr" resolve="messages" />
                       </node>
@@ -7806,7 +7834,7 @@
               <node concept="3y3z36" id="433JJClax72" role="3clFbw">
                 <node concept="10Nm6u" id="433JJClax73" role="3uHU7w" />
                 <node concept="37vLTw" id="433JJClax74" role="3uHU7B">
-                  <ref role="3cqZAo" node="433JJClaw3v" resolve="messages" />
+                  <ref role="3cqZAo" node="433JJClaw3v" resolve="tool" />
                 </node>
               </node>
             </node>
@@ -7827,7 +7855,7 @@
         </node>
       </node>
       <node concept="2AHcQZ" id="433JJClagMB" role="2AJF6D">
-        <ref role="2AI5Lk" to="wyt6:~Override" />
+        <ref role="2AI5Lk" to="wyt6:~Override" resolve="Override" />
       </node>
     </node>
     <node concept="2tJIrI" id="433JJClajbz" role="jymVt" />
@@ -7837,33 +7865,78 @@
     <property role="2XNbzY" value="Status" />
     <node concept="2XrIbr" id="61KkDbfuocz" role="2XNbBy">
       <property role="TrG5h" value="on" />
+      <property role="DiZV1" value="true" />
       <node concept="37vLTG" id="61KkDbfupgA" role="3clF46">
         <property role="TrG5h" value="on" />
+        <property role="3TUv4t" value="true" />
         <node concept="10P_77" id="61KkDbfupDY" role="1tU5fm" />
       </node>
       <node concept="37vLTG" id="61KkDbfuocB" role="3clF46">
         <property role="TrG5h" value="prefs" />
+        <property role="3TUv4t" value="true" />
         <node concept="3uibUv" id="61KkDbfuocC" role="1tU5fm">
           <ref role="3uigEE" node="3gm2YTwE11B" resolve="AspectPrefs" />
         </node>
       </node>
+      <node concept="37vLTG" id="5NHZGduQiES" role="3clF46">
+        <property role="TrG5h" value="project" />
+        <node concept="3uibUv" id="5NHZGduQiJt" role="1tU5fm">
+          <ref role="3uigEE" to="z1c3:~MPSProject" resolve="MPSProject" />
+        </node>
+      </node>
       <node concept="3cqZAl" id="61KkDbfuocD" role="3clF45" />
       <node concept="3clFbS" id="61KkDbfuocE" role="3clF47">
-        <node concept="3clFbF" id="61KkDbfuocF" role="3cqZAp">
-          <node concept="2OqwBi" id="61KkDbfuocG" role="3clFbG">
-            <node concept="2OqwBi" id="61KkDbfuocH" role="2Oq$k0">
-              <node concept="2WthIp" id="61KkDbfuocI" role="2Oq$k0" />
-              <node concept="2BZ7hE" id="61KkDbfuocJ" role="2OqNvi">
-                <ref role="2WH_rO" node="3OqCb4$vqbk" resolve="panel" />
+        <node concept="3clFbF" id="5NHZGduQiPV" role="3cqZAp">
+          <node concept="2OqwBi" id="5NHZGduQjKt" role="3clFbG">
+            <node concept="2OqwBi" id="5NHZGduQj8h" role="2Oq$k0">
+              <node concept="37vLTw" id="5NHZGduQiPT" role="2Oq$k0">
+                <ref role="3cqZAo" node="5NHZGduQiES" resolve="project" />
+              </node>
+              <node concept="liA8E" id="5NHZGduQjDJ" role="2OqNvi">
+                <ref role="37wK5l" to="z1c4:~Project.getModelAccess()" resolve="getModelAccess" />
               </node>
             </node>
-            <node concept="liA8E" id="61KkDbfuocK" role="2OqNvi">
-              <ref role="37wK5l" node="61KkDbfq3T1" resolve="on" />
-              <node concept="37vLTw" id="61KkDbfuocL" role="37wK5m">
-                <ref role="3cqZAo" node="61KkDbfupgA" resolve="on" />
-              </node>
-              <node concept="37vLTw" id="61KkDbfuocM" role="37wK5m">
-                <ref role="3cqZAo" node="61KkDbfuocB" resolve="prefs" />
+            <node concept="liA8E" id="5NHZGduQjTy" role="2OqNvi">
+              <ref role="37wK5l" to="lui2:~ModelAccess.executeCommandInEDT(java.lang.Runnable)" resolve="executeCommandInEDT" />
+              <node concept="2ShNRf" id="5NHZGduQjX7" role="37wK5m">
+                <node concept="YeOm9" id="5NHZGduQ$Zr" role="2ShVmc">
+                  <node concept="1Y3b0j" id="5NHZGduQ$Zu" role="YeSDq">
+                    <property role="2bfB8j" value="true" />
+                    <property role="373rjd" value="true" />
+                    <ref role="1Y3XeK" to="wyt6:~Runnable" resolve="Runnable" />
+                    <ref role="37wK5l" to="wyt6:~Object.&lt;init&gt;()" resolve="Object" />
+                    <node concept="3Tm1VV" id="5NHZGduQ$Zv" role="1B3o_S" />
+                    <node concept="3clFb_" id="5NHZGduQ$ZH" role="jymVt">
+                      <property role="TrG5h" value="run" />
+                      <node concept="3Tm1VV" id="5NHZGduQ$ZI" role="1B3o_S" />
+                      <node concept="3cqZAl" id="5NHZGduQ$ZK" role="3clF45" />
+                      <node concept="3clFbS" id="5NHZGduQ$ZL" role="3clF47">
+                        <node concept="3clFbF" id="61KkDbfuocF" role="3cqZAp">
+                          <node concept="2OqwBi" id="61KkDbfuocG" role="3clFbG">
+                            <node concept="2OqwBi" id="61KkDbfuocH" role="2Oq$k0">
+                              <node concept="2WthIp" id="61KkDbfuocI" role="2Oq$k0" />
+                              <node concept="2BZ7hE" id="61KkDbfuocJ" role="2OqNvi">
+                                <ref role="2WH_rO" node="3OqCb4$vqbk" resolve="panel" />
+                              </node>
+                            </node>
+                            <node concept="liA8E" id="61KkDbfuocK" role="2OqNvi">
+                              <ref role="37wK5l" node="61KkDbfq3T1" resolve="on" />
+                              <node concept="37vLTw" id="61KkDbfuocL" role="37wK5m">
+                                <ref role="3cqZAo" node="61KkDbfupgA" resolve="on" />
+                              </node>
+                              <node concept="37vLTw" id="61KkDbfuocM" role="37wK5m">
+                                <ref role="3cqZAo" node="61KkDbfuocB" resolve="prefs" />
+                              </node>
+                            </node>
+                          </node>
+                        </node>
+                      </node>
+                      <node concept="2AHcQZ" id="5NHZGduQ$ZN" role="2AJF6D">
+                        <ref role="2AI5Lk" to="wyt6:~Override" resolve="Override" />
+                      </node>
+                    </node>
+                  </node>
+                </node>
               </node>
             </node>
           </node>
@@ -7889,7 +7962,7 @@
               </node>
             </node>
             <node concept="liA8E" id="3zaVTDehqNq" role="2OqNvi">
-              <ref role="37wK5l" node="1sOlkZtHpWV" resolve="active" />
+              <ref role="37wK5l" node="1sOlkZtHpWV" resolve="status" />
               <node concept="37vLTw" id="433JJCledBF" role="37wK5m">
                 <ref role="3cqZAo" node="433JJClc1pH" resolve="status" />
               </node>
@@ -7978,7 +8051,7 @@
         <node concept="3clFbF" id="3zaVTDeofAh" role="3cqZAp">
           <node concept="2OqwBi" id="3zaVTDeofAi" role="3clFbG">
             <node concept="liA8E" id="3zaVTDeofAj" role="2OqNvi">
-              <ref role="37wK5l" node="1sOlkZtHpX5" resolve="idle" />
+              <ref role="37wK5l" node="1sOlkZtHpX5" resolve="mesages" />
               <node concept="37vLTw" id="3zaVTDeofAk" role="37wK5m">
                 <ref role="3cqZAo" node="433JJClei3a" resolve="messages" />
               </node>

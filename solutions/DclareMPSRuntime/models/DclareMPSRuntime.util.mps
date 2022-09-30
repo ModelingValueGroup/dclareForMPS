@@ -1465,7 +1465,41 @@
         </node>
       </node>
     </node>
-    <node concept="2tJIrI" id="4xaBPI8cNHW" role="jymVt" />
+    <node concept="2tJIrI" id="1prswk9imf$" role="jymVt" />
+    <node concept="2YIFZL" id="1prswk9iwp4" role="jymVt">
+      <property role="TrG5h" value="getAspect" />
+      <node concept="37vLTG" id="1prswk9iwp5" role="3clF46">
+        <property role="TrG5h" value="language" />
+        <property role="3TUv4t" value="true" />
+        <node concept="3uibUv" id="1prswk9iwp6" role="1tU5fm">
+          <ref role="3uigEE" to="c17a:~SLanguage" resolve="SLanguage" />
+        </node>
+      </node>
+      <node concept="37vLTG" id="1prswk9iwp7" role="3clF46">
+        <property role="TrG5h" value="id" />
+        <property role="3TUv4t" value="true" />
+        <node concept="17QB3L" id="1prswk9iwp8" role="1tU5fm" />
+      </node>
+      <node concept="3clFbS" id="1prswk9iwp9" role="3clF47">
+        <node concept="3cpWs6" id="1prswk9iwpa" role="3cqZAp">
+          <node concept="2YIFZM" id="1prswk9iwpb" role="3cqZAk">
+            <ref role="1Pybhc" to="t4tl:~IAspect" resolve="IAspect" />
+            <ref role="37wK5l" to="t4tl:~IAspect.of(org.jetbrains.mps.openapi.language.SLanguage,java.lang.String)" resolve="of" />
+            <node concept="37vLTw" id="1prswk9iwpc" role="37wK5m">
+              <ref role="3cqZAo" node="1prswk9iwp5" resolve="language" />
+            </node>
+            <node concept="37vLTw" id="1prswk9iwpd" role="37wK5m">
+              <ref role="3cqZAo" node="1prswk9iwp7" resolve="id" />
+            </node>
+          </node>
+        </node>
+      </node>
+      <node concept="3Tm1VV" id="1prswk9iwpe" role="1B3o_S" />
+      <node concept="3uibUv" id="1prswk9j7_q" role="3clF45">
+        <ref role="3uigEE" to="t4tl:~IAspect" resolve="IAspect" />
+      </node>
+    </node>
+    <node concept="2tJIrI" id="1prswk9iryn" role="jymVt" />
     <node concept="2YIFZL" id="4xaBPI8df35" role="jymVt">
       <property role="TrG5h" value="getAttribute" />
       <node concept="37vLTG" id="4xaBPI8dvpK" role="3clF46">
@@ -5008,7 +5042,39 @@
       </node>
       <node concept="3Tm1VV" id="3nckJKR5l1k" role="1B3o_S" />
     </node>
-    <node concept="2tJIrI" id="5vtCMlZPNrW" role="jymVt" />
+    <node concept="2tJIrI" id="4sbhsdUHGjR" role="jymVt" />
+    <node concept="2YIFZL" id="4sbhsdUHOji" role="jymVt">
+      <property role="TrG5h" value="getMethod" />
+      <node concept="3clFbS" id="4sbhsdUHOjj" role="3clF47">
+        <node concept="3cpWs6" id="4sbhsdUHOjk" role="3cqZAp">
+          <node concept="2YIFZM" id="4sbhsdUIdkF" role="3cqZAk">
+            <ref role="37wK5l" to="t4tl:~DMethod.of(org.jetbrains.mps.openapi.language.SLanguage,java.lang.String)" resolve="of" />
+            <ref role="1Pybhc" to="t4tl:~DMethod" resolve="DMethod" />
+            <node concept="37vLTw" id="4sbhsdUIdkG" role="37wK5m">
+              <ref role="3cqZAo" node="4sbhsdUHOjq" resolve="lang" />
+            </node>
+            <node concept="37vLTw" id="4sbhsdUIdkH" role="37wK5m">
+              <ref role="3cqZAo" node="4sbhsdUHOjs" resolve="id" />
+            </node>
+          </node>
+        </node>
+      </node>
+      <node concept="3Tm1VV" id="4sbhsdUHOjo" role="1B3o_S" />
+      <node concept="3uibUv" id="4sbhsdUHOjp" role="3clF45">
+        <ref role="3uigEE" to="t4tl:~DMethod" resolve="DMethod" />
+      </node>
+      <node concept="37vLTG" id="4sbhsdUHOjq" role="3clF46">
+        <property role="TrG5h" value="lang" />
+        <node concept="3uibUv" id="4sbhsdUHOjr" role="1tU5fm">
+          <ref role="3uigEE" to="c17a:~SLanguage" resolve="SLanguage" />
+        </node>
+      </node>
+      <node concept="37vLTG" id="4sbhsdUHOjs" role="3clF46">
+        <property role="TrG5h" value="id" />
+        <node concept="17QB3L" id="4sbhsdUHOjt" role="1tU5fm" />
+      </node>
+    </node>
+    <node concept="2tJIrI" id="4sbhsdUHGSZ" role="jymVt" />
     <node concept="2YIFZL" id="3Qetf3dBkKx" role="jymVt">
       <property role="TrG5h" value="sStructClass" />
       <property role="od$2w" value="false" />

@@ -23,6 +23,11 @@ import org.modelingvalue.dclare.Constant;
 
 public interface DMethod<R> extends DFeature {
 
+    @SuppressWarnings("unchecked")
+    static <R> DMethod<R> of(SLanguage language, String id) {
+        return (DMethod<R>) DClareMPS.ALL_METHODS_MAP.get(language).get(id);
+    }
+
     @SuppressWarnings("rawtypes")
     Constant<Triple<Set<SLanguage>, String, Signature>, DMethod> D_METHOD = Constant.of("D_METHOD", t -> {
         for (DMethod method : DClareMPS.METHOD_MAP.get(t.a()).get(Pair.of(t.b(), t.c().size()))) {
@@ -39,5 +44,7 @@ public interface DMethod<R> extends DFeature {
     Signature signature();
 
     R call(Object[] arguments);
+
+    String id();
 
 }

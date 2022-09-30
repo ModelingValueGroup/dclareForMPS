@@ -398,7 +398,7 @@
               <ref role="3uigEE" to="t4tl:~DclareForMpsStatus" resolve="DclareForMpsStatus" />
             </node>
             <node concept="BsUDl" id="5j905zHgyHX" role="33vP2m">
-              <ref role="37wK5l" node="5j905zH3nNX" resolve="getter" />
+              <ref role="37wK5l" node="5j905zH3nNX" resolve="status" />
             </node>
           </node>
         </node>
@@ -581,7 +581,7 @@
             </node>
             <node concept="2OqwBi" id="5MBAdvC69an" role="33vP2m">
               <node concept="37vLTw" id="5MBAdvC691u" role="2Oq$k0">
-                <ref role="3cqZAo" node="1KqhpdFNfb8" resolve="getter" />
+                <ref role="3cqZAo" node="1KqhpdFNfb8" resolve="status" />
               </node>
               <node concept="liA8E" id="5MBAdvC69zU" role="2OqNvi">
                 <ref role="37wK5l" to="t4tl:~DclareForMpsStatus.get(java.util.function.Supplier)" resolve="get" />
@@ -745,7 +745,7 @@
                 <property role="Xl_RC" value="D_STATUS" />
               </node>
               <node concept="37vLTw" id="1KqhpdFNfbQ" role="37wK5m">
-                <ref role="3cqZAo" node="1KqhpdFNfb8" resolve="getter" />
+                <ref role="3cqZAo" node="1KqhpdFNfb8" resolve="status" />
               </node>
             </node>
           </node>

@@ -110,6 +110,10 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
                                                                                                                                      Set<IAspect> aspects = aspect != null ? Collection.of(aspect.getAspects()).toSet() : Set.of();
                                                                                                                                      return aspects.toMap(a -> Entry.of(a.getId(), a));
                                                                                                                                  });
+    protected static Constant<SLanguage, Map<String, DMethod<?>>>                                       ALL_METHODS_MAP          = Constant.of("ALL_METHODS_MAP", l -> {
+                                                                                                                                     Collection<DMethod<?>> methods = DClareMPS.RULE_SETS.get(l).flatMap(rs -> Collection.of(rs.getAllMethods()));
+                                                                                                                                     return methods.toMap(m -> Entry.of(m.id(), m));
+                                                                                                                                 });
     protected static Constant<SLanguage, Set<SReferenceLink>>                                           REFERENCES_WITH_OPPOSITE = Constant.of("REFERENCES_WITH_OPPOSITE", l -> {
                                                                                                                                      IRuleAspect aspect = RULE_ASPECT.get(l);
                                                                                                                                      return aspect != null ? Collection.of(aspect.getReferencesWithOpposite()).toSet() : Set.of();

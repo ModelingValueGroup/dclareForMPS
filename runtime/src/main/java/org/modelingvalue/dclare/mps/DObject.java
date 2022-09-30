@@ -22,6 +22,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.jetbrains.mps.openapi.language.SConcept;
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
@@ -156,8 +157,22 @@ public abstract class DObject implements Mutable {
     }
 
     @SuppressWarnings("unchecked")
-    public <R> R callMethod(DMethod called, Object[] arguments) {
-        return (R) DMethod.D_METHOD.get(Triple.of(TYPE.get(this).getLanguages(), called.name(), Signature.of(called.signature(), arguments))).call(arguments);
+    public <R> R callMethod(DMethod called, Object[] args) {
+        Signature def = called.signature();
+        Set<SLanguage> langs = Set.of();
+        for (int i = 0; i < args.length; i++) {
+            if (args[i] == null) {
+                Object type = def.get(i);
+                if (type instanceof SConcept) {
+                    langs = langs.add(((SConcept) type).getLanguage());
+                } else if (type instanceof SStructClass) {
+                    langs = langs.add(((SStructClass) type).getLanguage());
+                }
+            } else if (args[i] instanceof DObject) {
+                langs = langs.addAll(TYPE.get((DObject) args[i]).getLanguages());
+            }
+        }
+        return (R) DMethod.D_METHOD.get(Triple.of(langs, called.name(), Signature.of(def, args))).call(args);
     }
 
     @Override

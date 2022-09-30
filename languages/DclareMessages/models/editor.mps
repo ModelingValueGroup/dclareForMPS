@@ -1369,7 +1369,7 @@
                 <ref role="3cqZAo" node="3z4syYPGU6k" resolve="project" />
               </node>
               <node concept="37vLTw" id="7g0RzQwEraP" role="37wK5m">
-                <ref role="3cqZAo" node="7g0RzQwEraG" resolve="withInactiveAspects" />
+                <ref role="3cqZAo" node="7g0RzQwEraG" resolve="config" />
               </node>
             </node>
           </node>
