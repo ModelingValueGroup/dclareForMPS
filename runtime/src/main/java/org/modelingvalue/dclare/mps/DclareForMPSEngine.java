@@ -253,6 +253,9 @@ public class DclareForMPSEngine implements DeployListener {
             List<IAspect> aspects = status.mood == idle || status.mood == stopped ? current.getAllAspects() : prevAspects;
             Map<DMessageType, QualifiedSet<Triple<DObject, DFeature, String>, DMessage>> messages = status.mood == starting || status.mood == idle || status.mood == stopped ? current.getMessages() : prevMessages;
             current.readInEDT(() -> engineStatusHandler.status(dclareForMpsStatus));
+            if (status.mood == starting) {
+                current.writeInEDT(() -> engineStatusHandler.start(dclareForMpsStatus));
+            }
             if (!aspects.equals(prevAspects)) {
                 current.writeInEDT(() -> engineStatusHandler.aspects(aspects, dclareForMpsStatus));
             }

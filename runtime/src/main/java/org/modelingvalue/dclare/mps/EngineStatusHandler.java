@@ -28,4 +28,6 @@ public interface EngineStatusHandler {
 
     void messages(Map<DMessageType, QualifiedSet<Triple<DObject, DFeature, String>, DMessage>> messages, DclareForMpsStatus status);
 
+    void start(DclareForMpsStatus status);
+
 }
