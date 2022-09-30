@@ -1331,12 +1331,26 @@
     <property role="3GE5qa" value="methods" />
     <property role="TrG5h" value="MethodCall" />
     <ref role="1TJDcQ" to="tpee:6LFqxSRBTg4" resolve="LocalMethodCall" />
+    <node concept="1TJgyj" id="2_KHFK2vWEv" role="1TKVEi">
+      <property role="IQ2ns" value="2986087471558675103" />
+      <property role="20kJfa" value="method" />
+      <property role="20lbJX" value="fLJekj4/_1" />
+      <ref role="20lvS9" node="3$OkZkHRDLt" resolve="Method" />
+      <ref role="20ksaX" to="tpee:6LFqxSRBTg7" resolve="method" />
+    </node>
   </node>
   <node concept="1TIwiD" id="6wxUpFc$a2F">
     <property role="EcuMT" value="7503535305242222763" />
     <property role="3GE5qa" value="methods" />
     <property role="TrG5h" value="MethodCallOperation" />
     <ref role="1TJDcQ" to="tpee:hwliAcM" resolve="InstanceMethodCallOperation" />
+    <node concept="1TJgyj" id="2_KHFK2mnX$" role="1TKVEi">
+      <property role="IQ2ns" value="2986087471556165476" />
+      <property role="20kJfa" value="method" />
+      <property role="20lbJX" value="fLJekj4/_1" />
+      <ref role="20lvS9" node="3$OkZkHRDLt" resolve="Method" />
+      <ref role="20ksaX" to="tpee:hwllgre" resolve="instanceMethodDeclaration" />
+    </node>
   </node>
 </model>
 

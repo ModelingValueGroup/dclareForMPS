@@ -4114,7 +4114,7 @@
     <property role="3GE5qa" value="methods" />
     <ref role="1M2myG" to="7ggn:3uCFKuPHfh_" resolve="MethodCall" />
     <node concept="1N5Pfh" id="6LFqxSRDAjP" role="1Mr941">
-      <ref role="1N5Vy1" to="tpee:6LFqxSRBTg7" resolve="method" />
+      <ref role="1N5Vy1" to="7ggn:2_KHFK2vWEv" resolve="method" />
       <node concept="3dgokm" id="1qjtL8JY1RP" role="1N6uqs">
         <node concept="3clFbS" id="1qjtL8JY1RQ" role="2VODD2">
           <node concept="3cpWs8" id="1qjtL8JY1S2" role="3cqZAp">
@@ -4205,7 +4205,7 @@
     <property role="3GE5qa" value="methods" />
     <ref role="1M2myG" to="7ggn:6wxUpFc$a2F" resolve="MethodCallOperation" />
     <node concept="1N5Pfh" id="6rHe4o50fU9" role="1Mr941">
-      <ref role="1N5Vy1" to="tpee:hwllgre" resolve="instanceMethodDeclaration" />
+      <ref role="1N5Vy1" to="7ggn:2_KHFK2mnX$" resolve="method" />
       <node concept="3dgokm" id="6rHe4o50fVQ" role="1N6uqs">
         <node concept="3clFbS" id="6rHe4o50fVR" role="2VODD2">
           <node concept="3cpWs8" id="6rHe4o50j3J" role="3cqZAp">

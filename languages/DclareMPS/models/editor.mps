@@ -6735,7 +6735,7 @@
         </node>
       </node>
       <node concept="1iCGBv" id="6LFqxSRCOeI" role="3EZMnx">
-        <ref role="1NtTu8" to="tpee:6LFqxSRBTg7" resolve="method" />
+        <ref role="1NtTu8" to="7ggn:2_KHFK2vWEv" resolve="method" />
         <node concept="1sVBvm" id="6LFqxSRCOeJ" role="1sWHZn">
           <node concept="3F0A7n" id="6LFqxSRCOeK" role="2wV5jI">
             <property role="1Intyy" value="true" />
@@ -6781,7 +6781,7 @@
       </node>
       <node concept="1iCGBv" id="hwlm1Dd" role="3EZMnx">
         <property role="1$x2rV" value="&lt;no method&gt;" />
-        <ref role="1NtTu8" to="tpee:hwllgre" resolve="instanceMethodDeclaration" />
+        <ref role="1NtTu8" to="7ggn:2_KHFK2mnX$" resolve="method" />
         <node concept="1sVBvm" id="hwlm1De" role="1sWHZn">
           <node concept="3F0A7n" id="hwlm1Df" role="2wV5jI">
             <property role="1Intyy" value="true" />
