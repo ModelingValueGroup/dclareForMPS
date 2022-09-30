@@ -4498,7 +4498,7 @@
                 </node>
               </node>
               <node concept="Xl_RD" id="4$bpWrMM4AD" role="3uHU7B">
-                <property role="Xl_RC" value="Attribute not used in same aspect " />
+                <property role="Xl_RC" value="Attribute not used in aspect " />
               </node>
             </node>
             <node concept="1YBJjd" id="4$bpWrMM4AE" role="1urrMF">
