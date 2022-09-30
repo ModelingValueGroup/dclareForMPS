@@ -7724,6 +7724,9 @@
                           <ref role="3cqZAo" node="1sOlkZtGU54" resolve="ideaProject" />
                         </node>
                       </node>
+                      <node concept="37vLTw" id="7My1dni783H" role="2XxRq1">
+                        <ref role="3cqZAo" node="WqIZmgizjl" resolve="status" />
+                      </node>
                     </node>
                   </node>
                 </node>
@@ -7988,23 +7991,46 @@
           <ref role="3uigEE" node="3gm2YTwE11B" resolve="AspectPrefs" />
         </node>
       </node>
+      <node concept="37vLTG" id="7My1dni76L1" role="3clF46">
+        <property role="TrG5h" value="status" />
+        <node concept="3uibUv" id="7My1dni76T$" role="1tU5fm">
+          <ref role="3uigEE" to="t4tl:~DclareForMpsStatus" resolve="DclareForMpsStatus" />
+        </node>
+      </node>
       <node concept="3cqZAl" id="26byUJz3AgU" role="3clF45" />
       <node concept="3clFbS" id="26byUJz3_Aj" role="3clF47">
-        <node concept="3clFbF" id="26byUJz3AuU" role="3cqZAp">
-          <node concept="2OqwBi" id="26byUJz3BqV" role="3clFbG">
-            <node concept="2OqwBi" id="26byUJz3AAo" role="2Oq$k0">
-              <node concept="2WthIp" id="26byUJz3AuT" role="2Oq$k0" />
-              <node concept="2BZ7hE" id="26byUJz3AIp" role="2OqNvi">
-                <ref role="2WH_rO" node="3OqCb4$vqbk" resolve="panel" />
-              </node>
+        <node concept="3clFbF" id="7My1dni76Vx" role="3cqZAp">
+          <node concept="2OqwBi" id="7My1dni76Vz" role="3clFbG">
+            <node concept="37vLTw" id="7My1dni76V$" role="2Oq$k0">
+              <ref role="3cqZAo" node="7My1dni76L1" resolve="status" />
             </node>
-            <node concept="liA8E" id="26byUJz5$Tx" role="2OqNvi">
-              <ref role="37wK5l" node="26byUJz4ucu" resolve="aspects" />
-              <node concept="37vLTw" id="26byUJz5$WK" role="37wK5m">
-                <ref role="3cqZAo" node="26byUJz5$uW" resolve="aspects" />
-              </node>
-              <node concept="37vLTw" id="26byUJzEqZk" role="37wK5m">
-                <ref role="3cqZAo" node="26byUJzlKnB" resolve="prefs" />
+            <node concept="liA8E" id="7My1dni76V_" role="2OqNvi">
+              <ref role="37wK5l" to="t4tl:~DclareForMpsStatus.get(java.util.function.Supplier)" resolve="get" />
+              <node concept="1bVj0M" id="7My1dni76VA" role="37wK5m">
+                <node concept="3clFbS" id="7My1dni76VB" role="1bW5cS">
+                  <node concept="3clFbF" id="26byUJz3AuU" role="3cqZAp">
+                    <node concept="2OqwBi" id="26byUJz3BqV" role="3clFbG">
+                      <node concept="2OqwBi" id="26byUJz3AAo" role="2Oq$k0">
+                        <node concept="2WthIp" id="26byUJz3AuT" role="2Oq$k0" />
+                        <node concept="2BZ7hE" id="26byUJz3AIp" role="2OqNvi">
+                          <ref role="2WH_rO" node="3OqCb4$vqbk" resolve="panel" />
+                        </node>
+                      </node>
+                      <node concept="liA8E" id="26byUJz5$Tx" role="2OqNvi">
+                        <ref role="37wK5l" node="26byUJz4ucu" resolve="aspects" />
+                        <node concept="37vLTw" id="26byUJz5$WK" role="37wK5m">
+                          <ref role="3cqZAo" node="26byUJz5$uW" resolve="aspects" />
+                        </node>
+                        <node concept="37vLTw" id="26byUJzEqZk" role="37wK5m">
+                          <ref role="3cqZAo" node="26byUJzlKnB" resolve="prefs" />
+                        </node>
+                      </node>
+                    </node>
+                  </node>
+                  <node concept="3cpWs6" id="7My1dni76VK" role="3cqZAp">
+                    <node concept="10Nm6u" id="7My1dni76VL" role="3cqZAk" />
+                  </node>
+                </node>
               </node>
             </node>
           </node>
@@ -8048,21 +8074,38 @@
       </node>
       <node concept="3cqZAl" id="3zaVTDehlGs" role="3clF45" />
       <node concept="3clFbS" id="3zaVTDehlGt" role="3clF47">
-        <node concept="3clFbF" id="3zaVTDeofAh" role="3cqZAp">
-          <node concept="2OqwBi" id="3zaVTDeofAi" role="3clFbG">
-            <node concept="liA8E" id="3zaVTDeofAj" role="2OqNvi">
-              <ref role="37wK5l" node="1sOlkZtHpX5" resolve="mesages" />
-              <node concept="37vLTw" id="3zaVTDeofAk" role="37wK5m">
-                <ref role="3cqZAo" node="433JJClei3a" resolve="messages" />
-              </node>
-              <node concept="37vLTw" id="WqIZmgjdy5" role="37wK5m">
-                <ref role="3cqZAo" node="WqIZmgjc1d" resolve="status" />
-              </node>
+        <node concept="3clFbF" id="7My1dnhSpre" role="3cqZAp">
+          <node concept="2OqwBi" id="7My1dnhSq7y" role="3clFbG">
+            <node concept="37vLTw" id="7My1dnhSprc" role="2Oq$k0">
+              <ref role="3cqZAo" node="WqIZmgjc1d" resolve="status" />
             </node>
-            <node concept="2OqwBi" id="3zaVTDeofAq" role="2Oq$k0">
-              <node concept="2WthIp" id="3zaVTDeofAr" role="2Oq$k0" />
-              <node concept="2BZ7hE" id="3zaVTDeofAs" role="2OqNvi">
-                <ref role="2WH_rO" node="3OqCb4$vqbk" resolve="panel" />
+            <node concept="liA8E" id="7My1dnhTcQK" role="2OqNvi">
+              <ref role="37wK5l" to="t4tl:~DclareForMpsStatus.get(java.util.function.Supplier)" resolve="get" />
+              <node concept="1bVj0M" id="7My1dnhTd67" role="37wK5m">
+                <node concept="3clFbS" id="7My1dnhTd68" role="1bW5cS">
+                  <node concept="3clFbF" id="7My1dnhTiBo" role="3cqZAp">
+                    <node concept="2OqwBi" id="3zaVTDeofAi" role="3clFbG">
+                      <node concept="liA8E" id="3zaVTDeofAj" role="2OqNvi">
+                        <ref role="37wK5l" node="1sOlkZtHpX5" resolve="mesages" />
+                        <node concept="37vLTw" id="3zaVTDeofAk" role="37wK5m">
+                          <ref role="3cqZAo" node="433JJClei3a" resolve="messages" />
+                        </node>
+                        <node concept="37vLTw" id="WqIZmgjdy5" role="37wK5m">
+                          <ref role="3cqZAo" node="WqIZmgjc1d" resolve="status" />
+                        </node>
+                      </node>
+                      <node concept="2OqwBi" id="3zaVTDeofAq" role="2Oq$k0">
+                        <node concept="2WthIp" id="3zaVTDeofAr" role="2Oq$k0" />
+                        <node concept="2BZ7hE" id="3zaVTDeofAs" role="2OqNvi">
+                          <ref role="2WH_rO" node="3OqCb4$vqbk" resolve="panel" />
+                        </node>
+                      </node>
+                    </node>
+                  </node>
+                  <node concept="3cpWs6" id="7My1dni75Ud" role="3cqZAp">
+                    <node concept="10Nm6u" id="7My1dni76iS" role="3cqZAk" />
+                  </node>
+                </node>
               </node>
             </node>
           </node>
