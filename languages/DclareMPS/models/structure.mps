@@ -1352,5 +1352,12 @@
       <ref role="20ksaX" to="tpee:hwllgre" resolve="instanceMethodDeclaration" />
     </node>
   </node>
+  <node concept="1TIwiD" id="5KrXDVZClCp">
+    <property role="EcuMT" value="6637169638614587929" />
+    <property role="TrG5h" value="InnerExpression" />
+    <property role="34LRSv" value="inner" />
+    <property role="3GE5qa" value="expressions" />
+    <ref role="1TJDcQ" to="tpee:fz3vP1J" resolve="Expression" />
+  </node>
 </model>
 

@@ -251,11 +251,10 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
             }
 
             @Override
-            public <T, O> void setPreserved(O object, Setable<O, T> property, T post) {
-                if (property != DObject.CONTAINED) {
-                    super.setPreserved(object, property, post);
-                    imperativeTransaction.mutableState().set(object, property, post);
-                }
+            public <T, O> TransactionId setPreserved(O object, Setable<O, T> property, T post) {
+                TransactionId txid = super.setPreserved(object, property, post);
+                imperativeTransaction.mutableState().set(object, property, post, txid);
+                return txid;
             };
 
         };
