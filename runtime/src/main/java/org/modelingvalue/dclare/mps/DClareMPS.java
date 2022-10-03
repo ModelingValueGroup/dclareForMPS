@@ -741,7 +741,11 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
     }
 
     public static <T> T pre(Supplier<T> supplier) {
-        return LeafTransaction.getCurrent().universeTransaction().preState().get(supplier);
+        return LeafTransaction.getCurrent().universeTransaction().preOuterStartState().get(supplier);
+    }
+
+    public static <T> T post(Supplier<T> supplier) {
+        return LeafTransaction.getCurrent().universeTransaction().outerStartState().get(supplier);
     }
 
     public UniverseTransaction universeTransaction() {
