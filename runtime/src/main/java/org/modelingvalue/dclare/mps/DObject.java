@@ -159,7 +159,7 @@ public abstract class DObject implements Mutable {
     @SuppressWarnings("unchecked")
     public <R> R callMethod(DMethod called, Object[] args) {
         Signature def = called.signature();
-        Set<SLanguage> langs = Set.of();
+        Set<SLanguage> langs = Set.of(called.ruleSet().getLanguage());
         for (int i = 0; i < args.length; i++) {
             if (args[i] == null) {
                 Object type = def.get(i);
