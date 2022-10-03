@@ -3349,7 +3349,7 @@
     </node>
     <node concept="1YaCAy" id="3HLMRNkuXsJ" role="1YuTPh">
       <property role="TrG5h" value="pre" />
-      <ref role="1YaFvo" to="7ggn:3HLMRNkuBN1" resolve="PreviousStateExpression" />
+      <ref role="1YaFvo" to="7ggn:3HLMRNkuBN1" resolve="PreStateExpression" />
     </node>
   </node>
   <node concept="1YbPZF" id="rTfv3GZ67q">
@@ -7849,6 +7849,37 @@
     <node concept="1YaCAy" id="5KrXDVZCKHF" role="1YuTPh">
       <property role="TrG5h" value="innerExpression" />
       <ref role="1YaFvo" to="7ggn:5KrXDVZClCp" resolve="InnerExpression" />
+    </node>
+  </node>
+  <node concept="1YbPZF" id="4y4FX$OmR$h">
+    <property role="TrG5h" value="typeof_PostStateExpression" />
+    <property role="3GE5qa" value="expressions" />
+    <node concept="3clFbS" id="4y4FX$OmR$i" role="18ibNy">
+      <node concept="1Z5TYs" id="4y4FX$OmR$o" role="3cqZAp">
+        <node concept="mw_s8" id="4y4FX$OmR$p" role="1ZfhK$">
+          <node concept="1Z2H0r" id="4y4FX$OmR$q" role="mwGJk">
+            <node concept="1YBJjd" id="4y4FX$OmR$r" role="1Z2MuG">
+              <ref role="1YBMHb" node="4y4FX$OmR$k" resolve="post" />
+            </node>
+          </node>
+        </node>
+        <node concept="mw_s8" id="4y4FX$OmR$s" role="1ZfhKB">
+          <node concept="1Z2H0r" id="4y4FX$OmR$t" role="mwGJk">
+            <node concept="2OqwBi" id="4y4FX$OmR$u" role="1Z2MuG">
+              <node concept="1YBJjd" id="4y4FX$OmR$v" role="2Oq$k0">
+                <ref role="1YBMHb" node="4y4FX$OmR$k" resolve="post" />
+              </node>
+              <node concept="3TrEf2" id="4y4FX$OmR$w" role="2OqNvi">
+                <ref role="3Tt5mk" to="7ggn:4y4FX$OmRdo" resolve="expression" />
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+    <node concept="1YaCAy" id="4y4FX$OmR$k" role="1YuTPh">
+      <property role="TrG5h" value="post" />
+      <ref role="1YaFvo" to="7ggn:4y4FX$OmRdn" resolve="PostStateExpression" />
     </node>
   </node>
 </model>
