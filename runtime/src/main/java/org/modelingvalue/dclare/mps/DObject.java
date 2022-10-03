@@ -78,17 +78,6 @@ public abstract class DObject implements Mutable {
                                                                                                                              pc.b() instanceof DAttribute ? (DAttribute) pc.b() : CONTAINING_ATTRIBUTE.get((DObject) pc.a());
                                                                                                                  });
 
-    protected static final Action<DObject>                                             REFRESH_CHILDREN          = Action.of("$REFRESH_CHILDREN", o -> {
-                                                                                                                     for (DObject c : o.getAllChildren()) {
-                                                                                                                         DObject.REFRESH.trigger(c);
-                                                                                                                     }
-                                                                                                                 });
-
-    protected static final Action<DObject>                                             REFRESH                   = Action.of("$REFRESH", o -> {
-                                                                                                                     o.read(dClareMPS());
-                                                                                                                     DObject.REFRESH_CHILDREN.trigger(o);
-                                                                                                                 });
-
     protected static final DObserved<DObject, Set<Pair<DObject, IssueKindReportItem>>> MPS_ISSUES                = DObserved.of("$MPS_ISSUES", Set.of(), null, null, (tx, o, pre, post) -> {
                                                                                                                      if (o instanceof DNode) {
                                                                                                                          DNode root = ((DNode) o).getContainingRoot();

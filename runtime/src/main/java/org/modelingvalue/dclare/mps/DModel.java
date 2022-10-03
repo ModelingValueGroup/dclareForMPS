@@ -135,11 +135,11 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
                                                                                                                  System.err.println(DclareTrace.getLineStart("ACTIVATE") + m + " (" + sModel.getName() + ")");
                                                                                                              }
                                                                                                              CONTAINED.set(m, Boolean.TRUE);
-                                                                                                             USED_MODELS.readAction().trigger(m);
-                                                                                                             ROOTS.readAction().trigger(m);
+                                                                                                             m.readComplete();
                                                                                                          }
                                                                                                      }
                                                                                                  }, plumbing, doNotDerive);
+
     @SuppressWarnings({"rawtypes", "unchecked"})
     protected static final DObserved<DModel, Boolean>                            LOADED          = DObserved.of("LOADED", Boolean.FALSE, m -> {
                                                                                                      SModel sModel = m.tryOriginal();
@@ -149,6 +149,14 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
                                                                                                          m.setActiveIfHavingRules();
                                                                                                      }
                                                                                                  }, plumbing);
+
+    protected static final Action<DModel>                                        REFRESH         = Action.of("$REFRESH", m -> {
+                                                                                                     m.read();
+                                                                                                     m.readComplete();
+                                                                                                     for (DNode r : ROOTS.fromMPS(m)) {
+                                                                                                         DNode.REFRESH.trigger(r);
+                                                                                                     }
+                                                                                                 });
     @SuppressWarnings({"rawtypes", "unchecked"})
     private static final DObserved<DModel, Boolean>                              SHARED          = DObserved.of("SHARED", Boolean.FALSE, null, null, (tx, m, b, a) -> {
                                                                                                      DServerMetaData smd = dClareMPS().getServerMetaData();
@@ -361,6 +369,11 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
         NAME.readAction().trigger(this);
         USED_LANGUAGES.readAction().trigger(this);
         USED_DEVKITS.readAction().trigger(this);
+    }
+
+    protected void readComplete() {
+        USED_MODELS.readAction().trigger(this);
+        ROOTS.readAction().trigger(this);
     }
 
     @Override

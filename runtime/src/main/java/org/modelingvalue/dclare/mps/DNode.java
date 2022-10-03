@@ -221,6 +221,13 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                            });
                                                                                                                                });
 
+    protected static final Action<DNode>                                                                REFRESH                = Action.of("$REFRESH", n -> {
+                                                                                                                                   n.read();
+                                                                                                                                   for (DNode c : n.getChildrenFromMPS()) {
+                                                                                                                                       DNode.REFRESH.trigger(c);
+                                                                                                                                   }
+                                                                                                                               });
+
     @SuppressWarnings({"rawtypes", "unchecked"})
     protected static final DObserved<DNode, Integer>                                                    INDEX                  = DObserved.of("INDEX", -1, dNode -> {
                                                                                                                                    SNode sNode = dNode.tryOriginal();
@@ -447,6 +454,21 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
                 result = result.appendList(MANY_CONTAINMENT.get(cl).get(this));
             } else {
                 DNode child = SINGLE_CONTAINMENT.get(cl).get(this);
+                if (child != null) {
+                    result = result.append(child);
+                }
+            }
+        }
+        return result;
+    }
+
+    private List<DNode> getChildrenFromMPS() {
+        List<DNode> result = List.of();
+        for (SContainmentLink cl : getConcept().getContainmentLinks()) {
+            if (cl.isMultiple()) {
+                result = result.appendList(MANY_CONTAINMENT.get(cl).fromMPS(this));
+            } else {
+                DNode child = SINGLE_CONTAINMENT.get(cl).fromMPS(this);
                 if (child != null) {
                     result = result.append(child);
                 }
