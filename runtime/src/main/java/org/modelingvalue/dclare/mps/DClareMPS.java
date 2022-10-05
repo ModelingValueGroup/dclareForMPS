@@ -760,7 +760,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
         return UNIVERSE_CLASS;
     }
 
-    private State preState() {
+    protected State preState() {
         ImperativeTransaction itx = imperativeTransaction;
         return itx != null ? itx.state() : universeTransaction.preState();
     }

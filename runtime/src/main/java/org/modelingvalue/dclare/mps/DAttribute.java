@@ -28,6 +28,7 @@ import org.jetbrains.mps.openapi.model.EditableSModel;
 import org.jetbrains.mps.openapi.model.SModel;
 import org.jetbrains.mps.openapi.model.SNode;
 import org.modelingvalue.collections.ContainingCollection;
+import org.modelingvalue.dclare.AbstractDerivationTransaction;
 import org.modelingvalue.dclare.Constant;
 import org.modelingvalue.dclare.LeafTransaction;
 import org.modelingvalue.dclare.Setable;
@@ -150,6 +151,17 @@ public interface DAttribute<O, T> extends DFeature {
         @Override
         protected V fromMPS(C object) {
             throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public V get(C object) {
+            LeafTransaction tx = LeafTransaction.getCurrent();
+            if (!(tx instanceof AbstractDerivationTransaction) && object.isExternal()) {
+                DClareMPS dClareMPS = DClareMPS.instance(tx);
+                return dClareMPS.preState().derive(() -> super.get(object), dClareMPS.universeTransaction().constantState());
+            } else {
+                return super.get(object);
+            }
         }
 
         @SuppressWarnings("unchecked")
