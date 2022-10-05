@@ -16,7 +16,6 @@
 package org.modelingvalue.dclare.mps;
 
 import static org.modelingvalue.dclare.SetableModifier.*;
-import static org.modelingvalue.dclare.mps.DclareForMPSEngine.ALL_DCLARE_MPS;
 
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.ArrayList;
@@ -258,7 +257,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
             };
 
         };
-        this.derivationState = new ConstantState(universeTransaction::handleException);
+        this.derivationState = new ConstantState("DERIVE", universeTransaction::handleException);
         this.dObserverTransactions = Concurrent.of(() -> new ReusableTransaction<>(universeTransaction));
         this.dCopyObserverTransactions = Concurrent.of(() -> new ReusableTransaction<>(universeTransaction));
         new ShutdownHelperThread();
@@ -662,8 +661,12 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
 
     private void createNewDerivationState() {
         ConstantState ds = derivationState;
-        derivationState = new ConstantState(universeTransaction::handleException);
+        derivationState = new ConstantState(ds.toString(), universeTransaction::handleException);
         ds.stop();
+    }
+
+    protected ConstantState derivationState() {
+        return derivationState;
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
@@ -762,21 +765,24 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
         return itx != null ? itx.state() : universeTransaction.preState();
     }
 
-    protected <T> T derive(Supplier<T> supplier) {
-        return preState().derive(supplier, derivationState);
-    }
-
-    public <T> T get(Supplier<T> supplier) {
-        return preState().get(() -> {
-            try {
-                return supplier.get();
-            } catch (NullPointerException npe) {
-                return null;
+    public static <T> T get(Object sObject, Supplier<T> supplier) {
+        DClareMPS dClareMPS = dClareForObject(sObject);
+        State state = dClareMPS != null ? dClareMPS.preState() : null;
+        return state != null ? state.get(() -> {
+            if (dClareMPS.toDObject(sObject).isActive()) {
+                try {
+                    return supplier.get();
+                } catch (Throwable t) {
+                    dClareMPS.addMessage(t);
+                    return null;
+                }
+            } else {
+                return state.derive(supplier, dClareMPS.derivationState());
             }
-        });
+        }) : null;
     }
 
-    public static DClareMPS dClareForObject(Object sObject) {
+    private static DClareMPS dClareForObject(Object sObject) {
         if (sObject instanceof SNode) {
             sObject = ((SNode) sObject).getModel();
         }
@@ -784,29 +790,36 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
             sObject = ((SModel) sObject).getModule();
         }
         if (sObject instanceof SModule) {
-            for (DClareMPS dClareMPS : ALL_DCLARE_MPS) {
+            for (DClareMPS dClareMPS : DclareForMPSEngine.ALL_DCLARE_MPS) {
                 if (dClareMPS.project.getPath((SModule) sObject) != null) {
                     return dClareMPS;
                 }
             }
-        }
-        if (sObject instanceof SRepository) {
-            for (DClareMPS dClareMPS : ALL_DCLARE_MPS) {
+        } else if (sObject instanceof SRepository) {
+            for (DClareMPS dClareMPS : DclareForMPSEngine.ALL_DCLARE_MPS) {
                 if (dClareMPS.dRepository.original().equals(sObject)) {
                     return dClareMPS;
                 }
             }
-        }
-        if (sObject instanceof SLanguage) {
-            for (DClareMPS dClareMPS : ALL_DCLARE_MPS) {
-                for (SModule module : dClareMPS.project.getProjectModules()) {
-                    if (module.getUsedLanguages().contains((SLanguage) sObject)) {
-                        return dClareMPS;
-                    }
-                }
-            }
+        } else {
+            throw new UnsupportedOperationException("Non supported sObject " + sObject);
         }
         return null;
+    }
+
+    @SuppressWarnings("unchecked")
+    private DObject toDObject(Object sObject) {
+        if (sObject instanceof SNode) {
+            return DNode.of(((SNode) sObject));
+        } else if (sObject instanceof SModel) {
+            return DModel.of(((SModel) sObject));
+        } else if (sObject instanceof SModule) {
+            return DModule.of(((SModule) sObject));
+        } else if (sObject instanceof SRepository) {
+            return getRepository();
+        } else {
+            throw new UnsupportedOperationException("No DObject possible for " + sObject);
+        }
     }
 
     @Override

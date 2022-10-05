@@ -344,10 +344,6 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
         return NODE_COUNTER.get(concept).getAndIncrement();
     }
 
-    protected static DNode read(SNode original) {
-        return of(original.getConcept(), original.getReference(), original);
-    }
-
     public static DNode of(SNode original) {
         return original instanceof DNode ? (DNode) original : of(original.getConcept(), original.getReference(), original);
     }
@@ -380,19 +376,6 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
     @Override
     public Long dSortKey() {
         return (Long) identity[0];
-    }
-
-    public static SNode wrap(SNode original) {
-        if (original instanceof DNode) {
-            return original;
-        } else {
-            LeafTransaction tx = LeafTransaction.getCurrent();
-            if (tx == null) {
-                return DClareMPS.dClareForObject(original).get(() -> of(original.getConcept(), original.getReference(), original));
-            } else {
-                return of(original.getConcept(), original.getReference(), original);
-            }
-        }
     }
 
     private final boolean isINamedConcept;

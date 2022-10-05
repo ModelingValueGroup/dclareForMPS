@@ -218,8 +218,10 @@ public abstract class DObject implements Mutable {
     }
 
     @Override
-    public boolean dIsConstant() {
-        return isExternal();
+    public ConstantState dMemoization(AbstractDerivationTransaction tx) {
+        ConstantState derivationState = DClareMPS.instance(tx).derivationState();
+        return this instanceof Newable && !derivationState.get(tx, (Newable) this, Newable.D_DERIVED_CONSTRUCTIONS.constant()).isEmpty() ? derivationState : //
+                isExternal() ? tx.universeTransaction().constantState() : Mutable.super.dMemoization(tx);
     }
 
     public abstract boolean isExternal();

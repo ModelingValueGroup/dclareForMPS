@@ -54,7 +54,6 @@ public class DclareForMPSEngine implements DeployListener {
     private final MoodUpdaterThread                        moodUpdaterThread;
     //
     private DClareMPS                                      dClareMPS;
-    private DclareTracer                                   tracer;
 
     public DclareForMPSEngine(ProjectBase project, EngineStatusHandler engineStatusHandler) {
         this.nr = COUNTER.getAndIncrement();
@@ -79,7 +78,6 @@ public class DclareForMPSEngine implements DeployListener {
             dClareMPS = new DClareMPS(this, project, config, COUNTER.getAndIncrement(), startStatus);
             ALL_DCLARE_MPS.add(dClareMPS);
             moodUpdaterThread.putDClareMPS(dClareMPS, startStatus[0]);
-            syncTracer();
         }
         if (config.isOnMode()) {
             dClareMPS.start();
@@ -97,19 +95,6 @@ public class DclareForMPSEngine implements DeployListener {
 
     public DClareMPS getDClareMPS() {
         return dClareMPS;
-    }
-
-    public void registerTracer(DclareTracer tracer) {
-        this.tracer = tracer;
-        if (tracer != null) {
-            tracer.notifyTraceComponent(new DclareTraceComponent(this, dClareMPS));
-        }
-    }
-
-    private void syncTracer() {
-        if (this.tracer != null) {
-            tracer.notifyTraceComponent(new DclareTraceComponent(this, dClareMPS));
-        }
     }
 
     public void setConfig(DclareForMpsConfig config) {
