@@ -1322,6 +1322,11 @@
     <property role="3GE5qa" value="methods" />
     <property role="34LRSv" value="method" />
     <ref role="1TJDcQ" to="tpee:fzclF8t" resolve="InstanceMethodDeclaration" />
+    <node concept="1TJgyi" id="1bjvCAP$dkc" role="1TKVEl">
+      <property role="IQ2nx" value="1356567042690438412" />
+      <property role="TrG5h" value="puplic" />
+      <ref role="AX2Wp" to="tpck:fKAQMTB" resolve="boolean" />
+    </node>
     <node concept="PrWs8" id="3$OkZkHRDLu" role="PzmwI">
       <ref role="PrY4T" node="4WFClUM1rSw" resolve="Feature" />
     </node>
