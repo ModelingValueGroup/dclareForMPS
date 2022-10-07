@@ -1095,22 +1095,35 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
     }
 
     @Override
-    protected void setParentFromMPS() {
+    protected void setParentFromMPS(DObject parent) {
         SNode original = tryOriginal();
         DClareMPS dClareMPS = dClareMPS();
         SNode sNodeParent = dClareMPS.read(() -> original.getParent());
-        if (sNodeParent != null) {
+        if (parent instanceof DNode) {
             SContainmentLink link = dClareMPS.read(() -> original.getContainmentLink());
             DNode dNodeParent = DNode.of(sNodeParent);
             dNodeParent.addChild(link, this);
-            dNodeParent.triggerSetParentFromMPS();
         } else {
             SModel sModelParent = dClareMPS.read(() -> original.getModel());
-            if (sModelParent != null) {
-                DModel dModelParent = DModel.of(sModelParent);
-                dModelParent.addRootNode(this);
-                dModelParent.triggerSetParentFromMPS();
-            }
+            DModel dModelParent = DModel.of(sModelParent);
+            dModelParent.addRootNode(this);
+        }
+    }
+
+    @Override
+    protected DObject originalParent() {
+        SNode original = tryOriginal();
+        DClareMPS dClareMPS = dClareMPS();
+        SNode parentNode = dClareMPS.read(() -> original.getParent());
+        if (parentNode != null) {
+            DNode parent = DNode.of(parentNode);
+            parent.triggerSetParentFromMPS();
+            return parent;
+        } else {
+            SModel parentModel = dClareMPS.read(() -> original.getModel());
+            DModel parent = DModel.of(parentModel);
+            parent.triggerSetParentFromMPS();
+            return parent;
         }
     }
 

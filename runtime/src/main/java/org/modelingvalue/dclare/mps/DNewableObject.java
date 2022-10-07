@@ -20,6 +20,7 @@ import java.util.function.Supplier;
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
+import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.dclare.*;
 import org.modelingvalue.dclare.Construction.Reason;
 import org.modelingvalue.dclare.mps.DAttribute.DIdentifyingAttribute;
@@ -27,18 +28,16 @@ import org.modelingvalue.dclare.mps.DAttribute.DIdentifyingAttribute;
 @SuppressWarnings("rawtypes")
 public abstract class DNewableObject<T extends DNewableObject, R, S> extends DIdentifiedObject implements Newable {
 
-    private static final Constant<DNewableObject, Object>          ORIGINAL        = Constant.of("$ORIGINAL", null);
+    private static final Constant<DNewableObject, Object>          ORIGINAL       = Constant.of("$ORIGINAL", null);
 
-    protected static final Setable<DNewableObject, Set<DObserved>> READ_OBSERVEDS  = Setable.of("$READ_OBSERVEDS", Set.of());
+    protected static final Setable<DNewableObject, Set<DObserved>> READ_OBSERVEDS = Setable.of("$READ_OBSERVEDS", Set.of());
 
-    protected static final Action<DNewableObject>                  READ_DEEP       = Action.of("$READ_DEEP", DNewableObject::readDeep);
-
-    protected static final Action<DNewableObject>                  PARENT_FROM_MPS = Action.of("$PARENT_FROM_MPS", DNewableObject::parentFromMPS);
+    protected static final Action<DNewableObject>                  READ_DEEP      = Action.of("$READ_DEEP", DNewableObject::readDeep);
 
     @SuppressWarnings("unchecked")
-    protected static final Set<Observer>                           OBSERVERS       = DObject.OBSERVERS;
+    protected static final Set<Observer>                           OBSERVERS      = DObject.OBSERVERS;
 
-    protected static final Set<Setable>                            SETABLES        = DObject.SETABLES.add(READ_OBSERVEDS);
+    protected static final Set<Setable>                            SETABLES       = DObject.SETABLES.add(READ_OBSERVEDS);
 
     protected static <D extends DNewableObject> D quotationConstruct(IRuleSet ruleSet, String anonymousType, Object[] ctx, Supplier<D> supplier) {
         LeafTransaction tx = LeafTransaction.getCurrent();
@@ -134,16 +133,16 @@ public abstract class DNewableObject<T extends DNewableObject, R, S> extends DId
         return tryOriginal() != null;
     }
 
-    private void parentFromMPS() {
+    private void parentFromMPS(DObject parent) {
         if (Mutable.D_PARENT_CONTAINING.get(this) == null) {
             if (dClareMPS().getConfig().isTraceActivation()) {
                 System.err.println(DclareTrace.getLineStart("ACTIVATE") + this);
             }
-            setParentFromMPS();
+            setParentFromMPS(parent);
         }
     }
 
-    protected abstract void setParentFromMPS();
+    protected abstract void setParentFromMPS(DObject parent);
 
     @SuppressWarnings("unchecked")
     public final S tryOriginal() {
@@ -215,7 +214,7 @@ public abstract class DNewableObject<T extends DNewableObject, R, S> extends DId
 
     protected void triggerSetParentFromMPS() {
         if (Mutable.D_PARENT_CONTAINING.get(this) == null) {
-            DNewableObject.PARENT_FROM_MPS.trigger(this);
+            Action.<DObject> of(Pair.of("SET_PARENT_FROM_MPS", this), this::parentFromMPS).trigger(originalParent());
         }
     }
 
@@ -253,5 +252,7 @@ public abstract class DNewableObject<T extends DNewableObject, R, S> extends DId
     protected abstract S resolve(R ref);
 
     protected abstract S create(R ref);
+
+    protected abstract DObject originalParent();
 
 }

@@ -550,12 +550,8 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
     }
 
     @Override
-    protected void setParentFromMPS() {
-        SModel original = tryOriginal();
-        SModule parent = original.getModule();
-        if (parent != null) {
-            DModule.MODELS.add(DModule.of(parent), this);
-        }
+    protected void setParentFromMPS(DObject parent) {
+        DModule.MODELS.add((DModule) parent, this);
     }
 
     public final static class RootsOfConcept extends Pair<String, SAbstractConcept> {
@@ -571,6 +567,13 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
             return "ROOTS<" + b().getName() + ">";
         }
 
+    }
+
+    @Override
+    protected DObject originalParent() {
+        DClareMPS dClareMPS = dClareMPS();
+        SModule parentModule = dClareMPS.read(() -> tryOriginal().getModule());
+        return DModule.of(parentModule);
     }
 
 }
