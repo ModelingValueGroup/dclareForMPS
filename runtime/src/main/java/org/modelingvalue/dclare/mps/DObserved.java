@@ -134,14 +134,14 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
                 }
             } else if (object instanceof DNewableObject && tx instanceof ObserverTransaction) {
                 ((DNewableObject) object).triggerSetParentFromMPS();
-                if (fromMPS != null) {
+                if (fromMPS != null && !isDclareOnly()) {
                     ((DNewableObject) object).triggerRead(this);
                 }
             } else if (object instanceof DNewableObject && DClareMPS.GET_FROM_MPS.get()) {
                 if (Mutable.D_PARENT_CONTAINING.get(object) == null) {
                     tx.universeTransaction().put(Pair.of(object, "SET_PARENT_FROM_MPS"), () -> ((DNewableObject) object).triggerSetParentFromMPS());
                 }
-                if (!DNode.READ_OBSERVEDS.get(((DNewableObject) object)).contains(this)) {
+                if (fromMPS != null && !isDclareOnly() && !DNode.READ_OBSERVEDS.get(((DNewableObject) object)).contains(this)) {
                     tx.universeTransaction().put(Triple.of(object, this, "TRIGGER_READ"), () -> ((DNewableObject) object).triggerRead(this));
                 }
             }
