@@ -158,10 +158,9 @@ public interface DAttribute<O, T> extends DFeature {
             LeafTransaction tx = LeafTransaction.getCurrent();
             if (!(tx instanceof AbstractDerivationTransaction) && object.isExternal()) {
                 DClareMPS dClareMPS = DClareMPS.instance(tx);
-                return dClareMPS.preState().derive(() -> super.get(object), dClareMPS.universeTransaction().constantState());
-            } else {
-                return super.get(object);
+                return dClareMPS.imperativeState().derive(() -> super.get(object), dClareMPS.universeTransaction().constantState());
             }
+            return super.get(object);
         }
 
         @SuppressWarnings("unchecked")

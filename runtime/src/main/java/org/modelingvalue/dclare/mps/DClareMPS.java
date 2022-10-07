@@ -15,7 +15,7 @@
 
 package org.modelingvalue.dclare.mps;
 
-import static org.modelingvalue.dclare.SetableModifier.*;
+import static org.modelingvalue.dclare.SetableModifier.containment;
 
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.util.ArrayList;
@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 
 import javax.swing.SwingUtilities;
 
+import org.jetbrains.mps.openapi.language.SAbstractConcept;
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.jetbrains.mps.openapi.language.SReferenceLink;
 import org.jetbrains.mps.openapi.model.SModel;
@@ -45,6 +46,7 @@ import org.modelingvalue.collections.Map;
 import org.modelingvalue.collections.QualifiedSet;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Concurrent;
+import org.modelingvalue.collections.util.Context;
 import org.modelingvalue.collections.util.ContextThread;
 import org.modelingvalue.collections.util.ContextThread.ContextPool;
 import org.modelingvalue.collections.util.MutationWrapper;
@@ -82,6 +84,8 @@ import jetbrains.mps.smodel.language.LanguageRegistry;
 import jetbrains.mps.smodel.language.LanguageRuntime;
 
 public class DClareMPS implements StateDeltaHandler, Universe, UncaughtExceptionHandler {
+
+    protected static final Context<Boolean>                                                             GET_FROM_MPS             = Context.of(false);
 
     private static final String                                                                         MPS_PLUGIN_DIR           = System.getProperty("MPS_PLUGIN_DIR", PathManager.getPluginsPath());
 
@@ -142,10 +146,6 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
                                                                                                                                          return SETABLES;
                                                                                                                                      }
                                                                                                                                  };
-    public static final Observed<DClareMPS, Set<SLanguage>>                                             ALL_LANGUAGES            = Observed.of("ALL_LANGUAGES", Set.of(), plumbing, doNotDerive);
-    public static final Observed<DClareMPS, Set<IAspect>>                                               ALL_ASPECTS              = Observed.of("ALL_ASPECTS", Set.of(), (t, o, b, a) -> {
-                                                                                                                                     o.allAspects.set(a.sortedBy(IAspect::getName).toList());
-                                                                                                                                 }, plumbing);
     public static final Constant<SLanguage, Set<IRuleSet>>                                              RULE_SETS                = Constant.of("RULE_SETS", Set.of(), l -> {
                                                                                                                                      DClareMPS dclareMPS = DClareMPS.instance();
                                                                                                                                      IRuleAspect aspect = RULE_ASPECT.get(l);
@@ -157,6 +157,9 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
                                                                                                                                      IRuleAspect aspect = RULE_ASPECT.get(l);
                                                                                                                                      return aspect != null ? Collection.of(aspect.getAspects()).toSet() : Set.of();
                                                                                                                                  });
+
+    public static final Constant<SAbstractConcept, SLanguage>                                           LANGUAGE                 = Constant.of("LANGUAGE", null, c -> c.getLanguage());
+
     public static final Constant<DevKit, Set<SLanguage>>                                                DEVKIT_LANGUAGES         = Constant.of("DEVKIT_LANGUAGES", Set.of(), devkit -> Collection.of(devkit.getAllExportedLanguageIds()).toSet());
     private static final Setable<DClareMPS, DRepository>                                                REPOSITORY_CONTAINER     = Setable.of("REPOSITORY_CONTAINER", null, containment);
     private static final Setable<DClareMPS, DServerMetaData>                                            DSERVER_METADATA         = Setable.of("SERVER_METADATA", null, containment);
@@ -171,7 +174,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
     private final ModelAccess                                                                           modelAccess;
     protected final Concurrent<ReusableTransaction<DRule.DObserver<?>, DRule.DObserverTransaction>>     dObserverTransactions;
     protected final Concurrent<ReusableTransaction<DNode.DCopyObserver, DNode.DCopyTransaction>>        dCopyObserverTransactions;
-    protected final DclareForMPSEngine                                                                  engine;
+    private final DclareForMPSEngine                                                                    engine;
     private final AtomicLong                                                                            counter                  = new AtomicLong(0L);
     private final DRepository                                                                           dRepository;
     private final DServerMetaData                                                                       dServerMetaData;
@@ -262,6 +265,10 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
         this.dCopyObserverTransactions = Concurrent.of(() -> new ReusableTransaction<>(universeTransaction));
         new ShutdownHelperThread();
 
+    }
+
+    public DclareForMPSEngine engine() {
+        return engine;
     }
 
     public DclareForMpsConfig getConfig() {
@@ -760,26 +767,31 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
         return UNIVERSE_CLASS;
     }
 
-    protected State preState() {
+    protected State imperativeState() {
         ImperativeTransaction itx = imperativeTransaction;
         return itx != null ? itx.state() : universeTransaction.preState();
     }
 
     public static <T> T get(Object sObject, Supplier<T> supplier) {
         DClareMPS dClareMPS = dClareForObject(sObject);
-        State state = dClareMPS != null ? dClareMPS.preState() : null;
-        return state != null ? state.get(() -> {
-            if (dClareMPS.toDObject(sObject).isActive()) {
-                try {
-                    return supplier.get();
-                } catch (Throwable t) {
-                    dClareMPS.addMessage(t);
-                    return null;
-                }
+        State state = dClareMPS != null ? dClareMPS.imperativeState() : null;
+        return state != null ? state.get(() -> GET_FROM_MPS.get(true, () -> {
+            DObject dObject = dClareMPS.toDObject(sObject);
+            if (dObject.isExternal()) {
+                return state.derive(supplier, dClareMPS.universeTransaction().constantState());
             } else {
-                return state.derive(supplier, dClareMPS.derivationState());
+                if (dObject.isActive()) {
+                    try {
+                        return supplier.get();
+                    } catch (Throwable t) {
+                        dClareMPS.addMessage(t);
+                        return null;
+                    }
+                } else {
+                    return state.derive(supplier, dClareMPS.derivationState());
+                }
             }
-        }) : null;
+        })) : null;
     }
 
     private static DClareMPS dClareForObject(Object sObject) {

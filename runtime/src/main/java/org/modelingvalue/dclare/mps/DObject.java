@@ -153,7 +153,7 @@ public abstract class DObject implements Mutable {
             if (args[i] == null) {
                 Object type = def.get(i);
                 if (type instanceof SConcept) {
-                    langs = langs.add(((SConcept) type).getLanguage());
+                    langs = langs.add(DClareMPS.LANGUAGE.get((SConcept) type));
                 } else if (type instanceof SStructClass) {
                     langs = langs.add(((SStructClass) type).getLanguage());
                 }
@@ -214,7 +214,7 @@ public abstract class DObject implements Mutable {
 
     @Override
     public boolean dCheckConsistency() {
-        return isActive();
+        return !isExternal();
     }
 
     @Override
@@ -228,13 +228,8 @@ public abstract class DObject implements Mutable {
         return false;
     }
 
-    protected boolean isActive() {
-        return !isExternal();
-    }
-
-    public boolean deriveFromMPS() {
-        LeafTransaction tx = LeafTransaction.getCurrent();
-        return (tx instanceof DerivationTransaction || (tx instanceof IdentityDerivationTransaction && isRead()) || !isActive());
+    public boolean readFromMPS() {
+        return isExternal() || Constant.DERIVED.get() != null;
     }
 
     protected abstract boolean isRead();
@@ -242,7 +237,11 @@ public abstract class DObject implements Mutable {
     @SuppressWarnings("unchecked")
     @Override
     public Collection<? extends Observer<?>> dAllObservers() {
-        return isActive() ? Mutable.super.dAllObservers() : (Collection) dClass().observers();
+        return !isExternal() ? Mutable.super.dAllObservers() : (Collection) dClass().observers();
+    }
+
+    protected boolean isActive() {
+        return !isExternal() && Mutable.D_PARENT_CONTAINING.get(this) != null;
     }
 
 }

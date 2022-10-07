@@ -126,8 +126,8 @@ public class DclareForMPSEngine implements DeployListener {
     }
 
     private void startDCLareMPS(DclareForMpsConfig config) {
-        stopDClareMPS();
         synchronized (ALL_DCLARE_MPS) {
+            stopDClareMPS();
             ALL_DCLARE_MPS.remove(dClareMPS);
             newDClareMPS(project, config);
         }
@@ -147,8 +147,8 @@ public class DclareForMPSEngine implements DeployListener {
             System.err.println("--- DCLARE FOR MPS --- PROJECT STOP " + project + ":" + nr);
         }
         classLoaderManager.removeListener(this);
-        stopDClareMPS();
         synchronized (ALL_DCLARE_MPS) {
+            stopDClareMPS();
             ALL_DCLARE_MPS.remove(dClareMPS);
             moodUpdaterThread.stop = true;
         }
@@ -162,10 +162,14 @@ public class DclareForMPSEngine implements DeployListener {
                 if (TRACE_ENGINE) {
                     System.err.println("--- DCLARE FOR MPS --- LOADED " + project + ":" + nr);
                 }
-                startDCLareMPS(getConfig());
+                restart();
                 break;
             }
         }
+    }
+
+    protected void restart() {
+        startDCLareMPS(getConfig());
     }
 
     public static void breakpoint() {

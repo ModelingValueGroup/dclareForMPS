@@ -43,23 +43,27 @@ import jetbrains.mps.project.ProjectRepository;
 @SuppressWarnings("deprecation")
 public class DRepository extends DFromOriginalObject<ProjectRepository> implements SRepository {
 
-    private static final Constant<Set<SLanguage>, DRepositoryType>        REPOSITORY_TYPE = Constant.of("REPOSITORY_TYPE", DRepositoryType::new);
+    private static final Constant<Set<SLanguage>, DRepositoryType>        REPOSITORY_TYPE                = Constant.of("REPOSITORY_TYPE", DRepositoryType::new);
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    protected static final DObserved<DRepository, Set<DModule>>           MODULES         = DObserved.of("MODULES", Set.of(), r -> {
-                                                                                              return Collection.of(dClareMPS().project.getProjectModules()).map(DModule::of).toSet();
-                                                                                          }, null, containment);
+    protected static final DObserved<DRepository, Set<DModule>>           MODULES                        = DObserved.of("MODULES", Set.of(), r -> {
+                                                                                                             return Collection.of(dClareMPS().project.getProjectModules()).map(DModule::of).toSet();
+                                                                                                         }, null, containment);
+
+    public static final Constant<DRepository, Set<SLanguage>>             ALL_LANGUAGES_WITH_RULE_ASPECT = Constant.of("ALL_LANGUAGES", Set.of(), r -> {
+                                                                                                             return MODULES.get(r).flatMap(m -> DModule.LANGUAGES_WITH_RULE_ASPECT.get(m)).toSet();
+                                                                                                         });
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    protected static final DObserved<DRepository, Set<?>>                 EXCEPTIONS      = DObserved.of("EXCEPTIONS", Set.of(), (Function) null, (TriConsumer) null, plumbing);
+    protected static final DObserved<DRepository, Set<?>>                 EXCEPTIONS                     = DObserved.of("EXCEPTIONS", Set.of(), (Function) null, (TriConsumer) null, plumbing);
 
-    protected static final Setable<DRepository, Set<IssueKindReportItem>> ALL_MPS_ISSUES  = Setable.of("$ALL_MPS_ISSUES", Set.of());
-
-    @SuppressWarnings("rawtypes")
-    protected static final Set<Observer>                                  OBSERVERS       = DObject.OBSERVERS;
+    protected static final Setable<DRepository, Set<IssueKindReportItem>> ALL_MPS_ISSUES                 = Setable.of("$ALL_MPS_ISSUES", Set.of());
 
     @SuppressWarnings("rawtypes")
-    protected static final Set<Setable>                                   SETABLES        = DObject.SETABLES.addAll(Set.of(MODULES, ALL_MPS_ISSUES));
+    protected static final Set<Observer>                                  OBSERVERS                      = DObject.OBSERVERS;
+
+    @SuppressWarnings("rawtypes")
+    protected static final Set<Setable>                                   SETABLES                       = DObject.SETABLES.addAll(Set.of(MODULES, ALL_MPS_ISSUES));
 
     protected DRepository(ProjectRepository original) {
         super(original);
@@ -73,7 +77,7 @@ public class DRepository extends DFromOriginalObject<ProjectRepository> implemen
 
     @Override
     protected DRepositoryType getType() {
-        return REPOSITORY_TYPE.get(DClareMPS.ALL_LANGUAGES.get(dClareMPS()));
+        return REPOSITORY_TYPE.get(ALL_LANGUAGES_WITH_RULE_ASPECT.get(this));
     }
 
     @Override

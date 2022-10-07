@@ -24,7 +24,7 @@ import org.modelingvalue.dclare.Setable;
 
 public class DServerMetaData extends DObject {
 
-    protected static final Constant<Boolean, DServerMetaDataType>  SERVER_METADATA_TYPE = Constant.of("SERVER_METADATA_TYPE", DServerMetaDataType::new);
+    protected static final Constant<String, DServerMetaDataType>   SERVER_METADATA_TYPE = Constant.of("SERVER_METADATA_TYPE", DServerMetaDataType::new);
 
     protected static final DObserved<DServerMetaData, Set<DModel>> SHARED_MODELS        = DObserved.of("SHARED_MODELS", Set.of(), null, (m, pre, post) -> {
                                                                                         }, plumbing);
@@ -44,7 +44,7 @@ public class DServerMetaData extends DObject {
 
     @Override
     protected DObjectType<?> getType() {
-        return SERVER_METADATA_TYPE.get(isActive());
+        return SERVER_METADATA_TYPE.get("SERVER_METADATA_TYPE");
     }
 
     @Override

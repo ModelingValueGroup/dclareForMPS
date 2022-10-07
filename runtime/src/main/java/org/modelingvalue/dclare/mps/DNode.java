@@ -221,13 +221,6 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                            });
                                                                                                                                });
 
-    protected static final Action<DNode>                                                                REFRESH                = Action.of("$REFRESH", n -> {
-                                                                                                                                   n.read();
-                                                                                                                                   for (DNode c : n.getChildrenFromMPS()) {
-                                                                                                                                       DNode.REFRESH.trigger(c);
-                                                                                                                                   }
-                                                                                                                               });
-
     @SuppressWarnings({"rawtypes", "unchecked"})
     protected static final DObserved<DNode, Integer>                                                    INDEX                  = DObserved.of("INDEX", -1, dNode -> {
                                                                                                                                    SNode sNode = dNode.tryOriginal();
@@ -266,8 +259,8 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
     }
 
     private static boolean hasOpposite(SReferenceLink sr) {
-        return DClareMPS.REFERENCES_WITH_OPPOSITE.get(sr.getOwner().getLanguage()).contains(sr) || //
-                DClareMPS.REFERENCES_WITH_OPPOSITE.get(sr.getTargetConcept().getLanguage()).contains(sr);
+        return DClareMPS.REFERENCES_WITH_OPPOSITE.get(DClareMPS.LANGUAGE.get(sr.getOwner())).contains(sr) || //
+                DClareMPS.REFERENCES_WITH_OPPOSITE.get(DClareMPS.LANGUAGE.get(sr.getTargetConcept())).contains(sr);
     }
 
     static public class DCopyObserver extends Observer<DNode> {
@@ -424,7 +417,11 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
 
     @Override
     protected DNodeType getType() {
-        Set<SLanguage> ls = dClareMPS().getRepository().getType().getLanguages().add(getConcept().getLanguage());
+        Set<SLanguage> ls = DRepository.ALL_LANGUAGES_WITH_RULE_ASPECT.get(dClareMPS().getRepository());
+        SLanguage lang = DClareMPS.LANGUAGE.get(getConcept());
+        if (DClareMPS.RULE_ASPECT.get(lang) != null) {
+            ls = ls.add(lang);
+        }
         ls = ls.addAll(getAnonymousLanguages());
         return NODE_TYPE.get(Quadruple.of(ls, getConcept(), getAnonymousTypes(), getCopyAspect()));
     }
@@ -517,11 +514,14 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
         return sNode != null ? sNode.getNodeId() : null;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
-    protected void read() {
-        INDEX.readAction().trigger(this);
-        DNode.CONCEPT_DOBSERVEDS.get(getConcept()).map(DObserved::readAction).forEachOrdered(a -> a.trigger(this));
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    protected void readDeep() {
+        Set<DObserved> read = DNewableObject.READ_OBSERVEDS.get(this);
+        readObserved(read, INDEX);
+        readObserved(read, ROOT);
+        readObserved(read, MODEL);
+        DNode.CONCEPT_DOBSERVEDS.get(getConcept()).forEachOrdered(a -> readObserved(read, a));
     }
 
     @Override
@@ -673,7 +673,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
 
     @Override
     public DNode getParent() {
-        if (deriveFromMPS()) {
+        if (readFromMPS()) {
             SNode parent = dClareMPS().read(() -> {
                 SNode sNode = tryOriginal();
                 return sNode != null ? sNode.getParent() : null;
@@ -687,7 +687,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
 
     @Override
     public SContainmentLink getContainmentLink() {
-        if (deriveFromMPS()) {
+        if (readFromMPS()) {
             return dClareMPS().read(() -> {
                 SNode sNode = tryOriginal();
                 return sNode != null ? sNode.getContainmentLink() : null;
@@ -1077,21 +1077,6 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
     protected void exit(DClareMPS dClareMPS, SNode original) {
     }
 
-    @Override
-    protected boolean isActive() {
-        if (super.isActive()) {
-            SNode sNode = tryOriginal();
-            if (sNode == null) {
-                return true;
-            } else {
-                SModel sModel = getModelFromMPS(sNode.getReference());
-                return sModel == null || DModel.of(sModel).isActive();
-            }
-        } else {
-            return false;
-        }
-    }
-
     protected DModel getDModelFromMPS() {
         SNodeReference ref = reference();
         SModel sModel = ref != null ? getModelFromMPS(ref) : null;
@@ -1101,6 +1086,32 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
     private SModel getModelFromMPS(SNodeReference ref) {
         SModelReference mRef = ref.getModelReference();
         return mRef != null ? dClareMPS().read(() -> mRef.resolve(null)) : null;
+    }
+
+    @Override
+    protected void setParentFromMPS() {
+        SNode original = tryOriginal();
+        DClareMPS dClareMPS = dClareMPS();
+        SNode sNodeParent = dClareMPS.read(() -> original.getParent());
+        if (sNodeParent != null) {
+            SContainmentLink link = dClareMPS.read(() -> original.getContainmentLink());
+            DNode dNodeParent = DNode.of(sNodeParent);
+            dNodeParent.addChild(link, this);
+            dNodeParent.triggerSetParentFromMPS();
+            if (dClareMPS().getConfig().isTraceActivation()) {
+                System.err.println(DclareTrace.getLineStart("ACTIVATE") + this);
+            }
+        } else {
+            SModel sModelParent = dClareMPS.read(() -> original.getModel());
+            if (sModelParent != null) {
+                DModel dModelParent = DModel.of(sModelParent);
+                dModelParent.addRootNode(this);
+                dModelParent.triggerSetParentFromMPS();
+                if (dClareMPS().getConfig().isTraceActivation()) {
+                    System.err.println(DclareTrace.getLineStart("ACTIVATE") + this);
+                }
+            }
+        }
     }
 
 }

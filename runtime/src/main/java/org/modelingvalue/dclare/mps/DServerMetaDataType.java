@@ -21,9 +21,9 @@ import org.modelingvalue.collections.Set;
 import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.Setable;
 
-public class DServerMetaDataType extends DObjectType<Boolean> {
+public class DServerMetaDataType extends DObjectType<String> {
 
-    protected DServerMetaDataType(Boolean s) {
+    protected DServerMetaDataType(String s) {
         super(s);
     }
 

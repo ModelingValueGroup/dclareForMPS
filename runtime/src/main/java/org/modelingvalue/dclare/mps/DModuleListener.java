@@ -18,7 +18,9 @@ package org.modelingvalue.dclare.mps;
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.jetbrains.mps.openapi.model.SModel;
 import org.jetbrains.mps.openapi.model.SModelReference;
-import org.jetbrains.mps.openapi.module.*;
+import org.jetbrains.mps.openapi.module.SDependency;
+import org.jetbrains.mps.openapi.module.SModule;
+import org.jetbrains.mps.openapi.module.SModuleListener;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
 
@@ -78,12 +80,24 @@ public class DModuleListener extends Pair<DModule, DClareMPS> implements SModule
 
     @Override
     public void languageAdded(SModule module, SLanguage lang) {
-        b().handleMPSChange(() -> DModule.LANGUAGES.set(a(), Set::add, lang));
+        b().handleMPSChange(() -> {
+            DModule.LANGUAGES.set(a(), Set::add, lang);
+            DRepository repository = DClareMPS.instance().getRepository();
+            if (DClareMPS.RULE_ASPECT.get(lang) != null && !DRepository.ALL_LANGUAGES_WITH_RULE_ASPECT.get(repository).contains(lang)) {
+                DClareMPS.instance().engine().restart();
+            }
+        });
     }
 
     @Override
     public void languageRemoved(SModule module, SLanguage lang) {
-        b().handleMPSChange(() -> DModule.LANGUAGES.set(a(), Set::remove, lang));
+        b().handleMPSChange(() -> {
+            DModule.LANGUAGES.set(a(), Set::remove, lang);
+            DRepository repository = DClareMPS.instance().getRepository();
+            if (DClareMPS.RULE_ASPECT.get(lang) != null && DRepository.ALL_LANGUAGES_WITH_RULE_ASPECT.get(repository).contains(lang)) {
+                DClareMPS.instance().engine().restart();
+            }
+        });
     }
 
     @Override

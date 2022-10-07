@@ -19,7 +19,6 @@ import java.util.Arrays;
 import java.util.Objects;
 
 import org.modelingvalue.dclare.DclareConfig;
-import org.modelingvalue.dclare.State;
 
 public class DclareForMpsConfig {
     private static final boolean      ON_MODE_DEFAULT          = Boolean.getBoolean("ON_MODE");
@@ -115,11 +114,6 @@ public class DclareForMpsConfig {
     }
 
     //===
-    public DclareForMpsConfig withStart(State start) {
-        DclareConfig config = this.config.withStart(start);
-        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, inactiveAspects);
-    }
-
     public DclareForMpsConfig withDevMode(boolean devMode) {
         DclareConfig config = this.config.withDevMode(devMode);
         return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, inactiveAspects);
@@ -227,10 +221,6 @@ public class DclareForMpsConfig {
     //===
     public DclareConfig getDclareConfig() {
         return config;
-    }
-
-    public State getStart() {
-        return config.getStart();
     }
 
     public boolean isDevMode() {

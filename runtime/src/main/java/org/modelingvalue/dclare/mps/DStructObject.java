@@ -56,12 +56,6 @@ public class DStructObject extends DIdentifiedObject implements SStructObject {
         return CLASS_OBJECT_TYPE.get(Pair.of(Set.of(getSClass().getLanguage()), getSClass()));
     }
 
-    @Override
-    protected boolean isActive() {
-        DObject parent = dObjectParent();
-        return parent != null ? parent.isActive() : super.isActive();
-    }
-
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     public void dActivate() {

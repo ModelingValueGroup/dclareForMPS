@@ -29,12 +29,8 @@ import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.collections.util.QuadConsumer;
 import org.modelingvalue.collections.util.TriConsumer;
-import org.modelingvalue.dclare.Action;
-import org.modelingvalue.dclare.LeafModifier;
-import org.modelingvalue.dclare.LeafTransaction;
-import org.modelingvalue.dclare.Observed;
-import org.modelingvalue.dclare.Setable;
-import org.modelingvalue.dclare.SetableModifier;
+import org.modelingvalue.collections.util.Triple;
+import org.modelingvalue.dclare.*;
 import org.modelingvalue.dclare.ex.ThrowableError;
 
 @SuppressWarnings("unused")
@@ -127,13 +123,30 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
         return readAction;
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
     public T get(O object) {
-        if (fromMPS != null && object.deriveFromMPS()) {
-            return fromMPS(object);
-        } else {
-            return super.get(object);
+        LeafTransaction tx = LeafTransaction.getCurrent();
+        if (object.isRead()) {
+            if (object.readFromMPS()) {
+                if (fromMPS != null) {
+                    return fromMPS(object);
+                }
+            } else if (object instanceof DNewableObject && tx instanceof ObserverTransaction) {
+                ((DNewableObject) object).triggerSetParentFromMPS();
+                if (fromMPS != null) {
+                    ((DNewableObject) object).triggerRead(this);
+                }
+            } else if (object instanceof DNewableObject && DClareMPS.GET_FROM_MPS.get()) {
+                if (Mutable.D_PARENT_CONTAINING.get(object) == null) {
+                    tx.universeTransaction().put(Pair.of(object, "SET_PARENT_FROM_MPS"), () -> ((DNewableObject) object).triggerSetParentFromMPS());
+                }
+                if (!DNode.READ_OBSERVEDS.get(((DNewableObject) object)).contains(this)) {
+                    tx.universeTransaction().put(Triple.of(object, this, "TRIGGER_READ"), () -> ((DNewableObject) object).triggerRead(this));
+                }
+            }
         }
+        return super.get(object);
     }
 
     public static <T> void map(Set<T> ist, Set<T> soll, Consumer<T> add, Consumer<T> remove) {
