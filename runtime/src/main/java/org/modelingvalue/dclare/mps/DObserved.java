@@ -154,10 +154,11 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
                     ((DNewableObject) object).triggerInitRead(this);
                 }
             } else if (object instanceof DNewableObject && DClareMPS.GET_FROM_MPS.get()) {
-                if (Mutable.D_PARENT_CONTAINING.get(object) == null) {
+                Set<Observed> reads = DNode.READ_OBSERVEDS.get(((DNewableObject) object));
+                if (!reads.contains(Mutable.D_PARENT_CONTAINING)) {
                     DClareMPS.instance(tx).handleMPSChange(() -> ((DNewableObject) object).triggerSetParentFromMPS());
                 }
-                if (fromMPS != null && !isDclareOnly() && !DNode.READ_OBSERVEDS.get(((DNewableObject) object)).contains(this)) {
+                if (fromMPS != null && !isDclareOnly() && !reads.contains(this)) {
                     DClareMPS.instance(tx).handleMPSChange(() -> ((DNewableObject) object).triggerInitRead(this));
                 }
             }

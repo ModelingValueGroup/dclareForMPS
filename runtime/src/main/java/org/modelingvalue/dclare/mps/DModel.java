@@ -283,7 +283,7 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
     @Override
     @SuppressWarnings("rawtypes")
     protected void readDeep() {
-        Set<DObserved> read = DNewableObject.READ_OBSERVEDS.get(this);
+        Set<Observed> read = DNewableObject.READ_OBSERVEDS.get(this);
         readObserved(read, NAME);
         readObserved(read, LOADED);
         readObserved(read, USED_LANGUAGES);

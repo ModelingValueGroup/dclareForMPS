@@ -523,7 +523,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
     @Override
     @SuppressWarnings({"unchecked", "rawtypes"})
     protected void readDeep() {
-        Set<DObserved> read = DNewableObject.READ_OBSERVEDS.get(this);
+        Set<Observed> read = DNewableObject.READ_OBSERVEDS.get(this);
         readObserved(read, INDEX);
         readObserved(read, ROOT);
         readObserved(read, MODEL);
@@ -1098,15 +1098,11 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
     protected void setParentFromMPS(DObject parent) {
         SNode original = tryOriginal();
         DClareMPS dClareMPS = dClareMPS();
-        SNode sNodeParent = dClareMPS.read(() -> original.getParent());
         if (parent instanceof DNode) {
             SContainmentLink link = dClareMPS.read(() -> original.getContainmentLink());
-            DNode dNodeParent = DNode.of(sNodeParent);
-            dNodeParent.addChild(link, this);
+            ((DNode) parent).addChild(link, this);
         } else {
-            SModel sModelParent = dClareMPS.read(() -> original.getModel());
-            DModel dModelParent = DModel.of(sModelParent);
-            dModelParent.addRootNode(this);
+            ((DModel) parent).addRootNode(this);
         }
     }
 
