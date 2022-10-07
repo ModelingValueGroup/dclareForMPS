@@ -36,7 +36,7 @@ public class DRepositoryListener extends Pair<DRepository, DClareMPS> implements
             DModule dModule = DModule.of(sModule);
             if (!dModule.isExternal()) {
                 DRepository.MODULES.set(a(), Set::add, dModule);
-                if (DModule.LANGUAGES_WITH_RULE_ASPECT.get(dModule).anyMatch(l -> !DRepository.ALL_LANGUAGES_WITH_RULE_ASPECT.get(a()).contains(l))) {
+                if (DModule.LANGUAGES_WITH_RULES.get(dModule).anyMatch(l -> !DRepository.ALL_LANGUAGES_WITH_RULES.get(a()).contains(l))) {
                     DClareMPS.instance().engine().restart();
                 }
             }
@@ -49,7 +49,7 @@ public class DRepositoryListener extends Pair<DRepository, DClareMPS> implements
             DModule dModule = DModule.of(sModule);
             if (!dModule.isExternal()) {
                 DRepository.MODULES.set(a(), Set::remove, dModule);
-                if (DModule.LANGUAGES_WITH_RULE_ASPECT.get(dModule).anyMatch(l -> DRepository.ALL_LANGUAGES_WITH_RULE_ASPECT.get(a()).contains(l))) {
+                if (DModule.LANGUAGES_WITH_RULES.get(dModule).anyMatch(l -> DRepository.ALL_LANGUAGES_WITH_RULES.get(a()).contains(l))) {
                     DClareMPS.instance().engine().restart();
                 }
             }

@@ -22,12 +22,10 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import org.jetbrains.mps.openapi.language.SConcept;
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
-import org.modelingvalue.collections.util.Triple;
 import org.modelingvalue.dclare.*;
 
 import jetbrains.mps.errors.item.IssueKindReportItem;
@@ -143,25 +141,6 @@ public abstract class DObject implements Mutable {
         } else {
             return v == null ? Set.of() : Set.of((DObject) v);
         }
-    }
-
-    @SuppressWarnings("unchecked")
-    public <R> R callMethod(DMethod called, Object[] args) {
-        Signature def = called.signature();
-        Set<SLanguage> langs = Set.of(called.ruleSet().getLanguage());
-        for (int i = 0; i < args.length; i++) {
-            if (args[i] == null) {
-                Object type = def.get(i);
-                if (type instanceof SConcept) {
-                    langs = langs.add(DClareMPS.LANGUAGE.get((SConcept) type));
-                } else if (type instanceof SStructClass) {
-                    langs = langs.add(((SStructClass) type).getLanguage());
-                }
-            } else if (args[i] instanceof DObject) {
-                langs = langs.addAll(TYPE.get((DObject) args[i]).getLanguages());
-            }
-        }
-        return (R) DMethod.D_METHOD.get(Triple.of(langs, called.name(), Signature.of(def, args))).call(args);
     }
 
     @Override

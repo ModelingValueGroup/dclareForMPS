@@ -48,40 +48,39 @@ import jetbrains.mps.smodel.Language;
 @SuppressWarnings("unused")
 public class DModule extends DFromOriginalObject<SModule> implements SModule {
 
-    private static final Constant<SModule, DModule>            DMODULE                    = Constant.of("DMODULE", DModule::new);
+    private static final Constant<SModule, DModule>            DMODULE              = Constant.of("DMODULE", DModule::new);
 
-    private static final Constant<Set<SLanguage>, DModuleType> MODULE_TYPE                = Constant.of("MODULE_TYPE", DModuleType::new);
+    private static final Constant<Set<SLanguage>, DModuleType> MODULE_TYPE          = Constant.of("MODULE_TYPE", DModuleType::new);
 
-    public static final DObserved<DModule, Set<DModel>>        MODELS                     = DObserved.of("MODELS", Set.of(), m -> {
-                                                                                              return m.models().map(DModel::of).toSet();
-                                                                                          }, (m, pre, post) -> {
-                                                                                              if (m.isSolution()) {
-                                                                                                  SModule sModule = m.original();
-                                                                                                  Setable.<Set<DModel>, DModel> diff(pre, post,                                 //
-                                                                                                          a -> {
-                                                                                                              SModel sModel = a.original();
-                                                                                                              if (sModel.getModule() != sModule) {
-                                                                                                                  ((SModuleBase) sModule).registerModel((SModelBase) sModel);
-                                                                                                              }
-                                                                                                              a.init(sModel);
-                                                                                                          },                                                                    //
-                                                                                                          r -> new ModelDeleteHelper(r.tryOriginal()).delete());
-                                                                                              }
-                                                                                          }, containment);
+    public static final DObserved<DModule, Set<DModel>>        MODELS               = DObserved.of("MODELS", Set.of(), m -> {
+                                                                                        return m.models().map(DModel::of).toSet();
+                                                                                    }, (m, pre, post) -> {
+                                                                                        if (m.isSolution()) {
+                                                                                            SModule sModule = m.original();
+                                                                                            Setable.<Set<DModel>, DModel> diff(pre, post,                                  //
+                                                                                                    a -> {
+                                                                                                        SModel sModel = a.original();
+                                                                                                        if (sModel.getModule() != sModule) {
+                                                                                                            ((SModuleBase) sModule).registerModel((SModelBase) sModel);
+                                                                                                        }
+                                                                                                        a.init(sModel);
+                                                                                                    },                                                                     //
+                                                                                                    r -> new ModelDeleteHelper(r.tryOriginal()).delete());
+                                                                                        }
+                                                                                    }, containment);
 
-    public static final DObserved<DModule, Set<SLanguage>>     LANGUAGES                  = DObserved.of("LANGUAGES", Set.of(), m -> {
-                                                                                              return Collection.of(m.original().getUsedLanguages()).toSet();
-                                                                                          }, null);
+    public static final DObserved<DModule, Set<SLanguage>>     LANGUAGES            = DObserved.of("LANGUAGES", Set.of(), m -> {
+                                                                                        return Collection.of(m.original().getUsedLanguages()).toSet();
+                                                                                    }, null);
 
-    public static final Constant<DModule, Set<SLanguage>>      LANGUAGES_WITH_RULE_ASPECT = Constant.of("LANGUAGES_WITH_RULE_ASPECT", Set.of(), m -> {
-                                                                                              return LANGUAGES.get(m).filter(l -> DClareMPS.RULE_ASPECT.get(l) != null).toSet();
-                                                                                          });
+    public static final Constant<DModule, Set<SLanguage>>      LANGUAGES_WITH_RULES = Constant.of("LANGUAGES_WITH_RULE_ASPECT", Set.of(), m -> {
+                                                                                        return LANGUAGES.get(m).filter(l -> !DClareMPS.RULE_SETS.get(l).isEmpty()).toSet();
+                                                                                    });
+    @SuppressWarnings("rawtypes")
+    protected static final Set<Observer>                       OBSERVERS            = DObject.OBSERVERS;
 
     @SuppressWarnings("rawtypes")
-    protected static final Set<Observer>                       OBSERVERS                  = DObject.OBSERVERS;
-
-    @SuppressWarnings("rawtypes")
-    protected static final Set<Setable>                        SETABLES                   = DObject.SETABLES.addAll(Set.of(MODELS, LANGUAGES, LANGUAGES_WITH_RULE_ASPECT));
+    protected static final Set<Setable>                        SETABLES             = DObject.SETABLES.addAll(Set.of(MODELS, LANGUAGES, LANGUAGES_WITH_RULES));
 
     public static DModule of(SModule original) {
         return original instanceof DModule ? (DModule) original : DMODULE.get(original);
@@ -98,7 +97,7 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
 
     @Override
     protected DModuleType getType() {
-        Set<SLanguage> languages = LANGUAGES_WITH_RULE_ASPECT.get(this);
+        Set<SLanguage> languages = LANGUAGES_WITH_RULES.get(this);
         return MODULE_TYPE.get(languages);
     }
 

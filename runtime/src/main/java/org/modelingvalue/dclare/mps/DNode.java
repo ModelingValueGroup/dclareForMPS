@@ -49,6 +49,12 @@ import jetbrains.mps.smodel.SNodeUtil;
 @SuppressWarnings("unused")
 public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implements SNode {
 
+    @SuppressWarnings("rawtypes")
+    protected static Constant<SAbstractConcept, Set<DRule<SNode>>>                                      RULES                  = Constant.of("RULES", c -> {
+                                                                                                                                   Set<SLanguage> langs = DRepository.ALL_LANGUAGES_WITH_RULES.get(DClareMPS.instance().getRepository());
+                                                                                                                                   return langs.flatMap(l -> DClareMPS.RULE_SETS.get(l)).flatMap(rs -> Collection.of(rs.getNodeRules(c, Set.of()))).toSet();
+                                                                                                                               });
+
     private static final Constant<Quadruple<Set<SLanguage>, SConcept, Set<String>, IAspect>, DNodeType> NODE_TYPE              = Constant.of("NODE_TYPE", DNodeType::new);
 
     private static final Constant<SConcept, AtomicLong>                                                 NODE_COUNTER           = Constant.of("NODE_COUNTER", NodeCounter::new, durable);
@@ -417,9 +423,9 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
 
     @Override
     protected DNodeType getType() {
-        Set<SLanguage> ls = DRepository.ALL_LANGUAGES_WITH_RULE_ASPECT.get(dClareMPS().getRepository());
+        Set<SLanguage> ls = DRepository.ALL_LANGUAGES_WITH_RULES.get(dClareMPS().getRepository());
         SLanguage lang = DClareMPS.LANGUAGE.get(getConcept());
-        if (DClareMPS.RULE_ASPECT.get(lang) != null) {
+        if (!DClareMPS.RULE_SETS.get(lang).isEmpty()) {
             ls = ls.add(lang);
         }
         ls = ls.addAll(getAnonymousLanguages());

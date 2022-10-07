@@ -18,7 +18,6 @@ package org.modelingvalue.dclare.mps;
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
-import org.modelingvalue.collections.util.Triple;
 import org.modelingvalue.dclare.Constant;
 
 public interface DMethod<R> extends DFeature {
@@ -29,14 +28,20 @@ public interface DMethod<R> extends DFeature {
     }
 
     @SuppressWarnings("rawtypes")
-    Constant<Triple<Set<SLanguage>, String, Signature>, DMethod> D_METHOD = Constant.of("D_METHOD", t -> {
-        for (DMethod method : DClareMPS.METHOD_MAP.get(t.a()).get(Pair.of(t.b(), t.c().size()))) {
-            if (t.c().isSubOf(method.signature())) {
+    Constant<Pair<String, Signature>, DMethod> D_METHOD = Constant.of("D_METHOD", p -> {
+        Set<SLanguage> langs = DRepository.ALL_LANGUAGES_WITH_RULES.get(DClareMPS.instance().getRepository());
+        for (DMethod method : DClareMPS.METHOD_MAP.get(langs).get(Pair.of(p.a(), p.b().size()))) {
+            if (p.b().isSubOf(method.signature())) {
                 return method;
             }
         }
-        throw new UnsupportedOperationException(t.b() + t.c());
+        throw new UnsupportedOperationException(p.a() + p.b());
     });
+
+    @SuppressWarnings("unchecked")
+    default R invoke(Object[] args) {
+        return (R) DMethod.D_METHOD.get(Pair.of(name(), Signature.of(signature(), args))).call(args);
+    }
 
     String name();
 

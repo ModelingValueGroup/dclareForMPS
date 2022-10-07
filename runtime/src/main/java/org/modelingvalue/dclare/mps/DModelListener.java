@@ -307,37 +307,40 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeAcce
 
     @Override
     public void nodeRead(SNodeReadEvent event) {
-        b().handleMPSChange(() -> b().imperativeState().derive(() -> {
-            DNode read = DNode.of(event.getNode());
-            if (Mutable.D_PARENT_CONTAINING.get(read) == null && !DObject.TYPE.get(read).getRuleSets().isEmpty()) {
-                b().universeTransaction().put(Pair.of(read, "SET_PARENT_FROM_MPS"), () -> read.triggerSetParentFromMPS());
+        b().handleMPSChange(() -> {
+            if (!DNode.RULES.get(event.getNode().getConcept()).isEmpty()) {
+                DNode read = DNode.of(event.getNode());
+                if (Mutable.D_PARENT_CONTAINING.get(read) == null) {
+                    b().universeTransaction().put(Pair.of(read, "SET_PARENT_FROM_MPS"), () -> read.triggerSetParentFromMPS());
+                }
             }
-            return null;
-        }, b().derivationState()));
+        });
     }
 
     @Override
     public void propertyRead(SPropertyReadEvent event) {
-        b().handleMPSChange(() -> b().imperativeState().derive(() -> {
-            DNode read = DNode.of(event.getNode());
-            DObserved<DNode, String> dObserved = DNode.PROPERTY.get(event.getProperty());
-            if (!DNewableObject.READ_OBSERVEDS.get(read).contains(dObserved) && !DObject.TYPE.get(read).getRuleSets().isEmpty()) {
-                b().universeTransaction().put(Triple.of(read, dObserved, "TRIGGER_READ"), () -> read.triggerRead(dObserved));
+        b().handleMPSChange(() -> {
+            if (!DNode.RULES.get(event.getNode().getConcept()).isEmpty()) {
+                DNode read = DNode.of(event.getNode());
+                DObserved<DNode, String> dObserved = DNode.PROPERTY.get(event.getProperty());
+                if (!DNewableObject.READ_OBSERVEDS.get(read).contains(dObserved)) {
+                    b().universeTransaction().put(Triple.of(read, dObserved, "TRIGGER_READ"), () -> read.triggerRead(dObserved));
+                }
             }
-            return null;
-        }, b().derivationState()));
+        });
     }
 
     @Override
     public void referenceRead(SReferenceReadEvent event) {
-        b().handleMPSChange(() -> b().imperativeState().derive(() -> {
-            DNode read = DNode.of(event.getNode());
-            DObserved<DNode, DNode> dObserved = DNode.REFERENCE.get(event.getAssociationLink());
-            if (!DNode.READ_OBSERVEDS.get(read).contains(dObserved) && !DObject.TYPE.get(read).getRuleSets().isEmpty()) {
-                b().universeTransaction().put(Triple.of(read, dObserved, "TRIGGER_READ"), () -> read.triggerRead(dObserved));
+        b().handleMPSChange(() -> {
+            if (!DNode.RULES.get(event.getNode().getConcept()).isEmpty()) {
+                DNode read = DNode.of(event.getNode());
+                DObserved<DNode, DNode> dObserved = DNode.REFERENCE.get(event.getAssociationLink());
+                if (!DNode.READ_OBSERVEDS.get(read).contains(dObserved)) {
+                    b().universeTransaction().put(Triple.of(read, dObserved, "TRIGGER_READ"), () -> read.triggerRead(dObserved));
+                }
             }
-            return null;
-        }, b().derivationState()));
+        });
     }
 
 }

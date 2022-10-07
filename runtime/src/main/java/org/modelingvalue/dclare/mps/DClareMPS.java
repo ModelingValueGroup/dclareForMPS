@@ -94,7 +94,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
 
     private static final String                                                                         CONNECT_SYNC_HOST_PORT   = System.getProperty("CONNECT_SYNC_HOST_PORT", null);
 
-    protected static Constant<SLanguage, IRuleAspect>                                                   RULE_ASPECT              = Constant.of("RULE_ASPECT", l -> {
+    private static Constant<SLanguage, IRuleAspect>                                                     RULE_ASPECT              = Constant.of("RULE_ASPECT", l -> {
                                                                                                                                      LanguageRuntime rtLang = registry().getLanguage(l);
                                                                                                                                      return rtLang != null ? rtLang.getAspect(IRuleAspect.class) : null;
                                                                                                                                  });
@@ -149,15 +149,13 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
     public static final Constant<SLanguage, Set<IRuleSet>>                                              RULE_SETS                = Constant.of("RULE_SETS", Set.of(), l -> {
                                                                                                                                      DClareMPS dclareMPS = DClareMPS.instance();
                                                                                                                                      IRuleAspect aspect = RULE_ASPECT.get(l);
-                                                                                                                                     Set<IRuleSet> ruleSets = aspect != null ? Collection.of(aspect.getRuleSets()).                                       //
+                                                                                                                                     return aspect != null ? Collection.of(aspect.getRuleSets()).                                                         //
                                                                                                                                              filter(rs -> dclareMPS.isActiveAspect(rs.getAspect())).toSet() : Set.of();
-                                                                                                                                     return ruleSets;
                                                                                                                                  });
     public static final Constant<SLanguage, Set<IAspect>>                                               ASPECTS                  = Constant.of("ASPECTS", Set.of(), l -> {
                                                                                                                                      IRuleAspect aspect = RULE_ASPECT.get(l);
                                                                                                                                      return aspect != null ? Collection.of(aspect.getAspects()).toSet() : Set.of();
                                                                                                                                  });
-
     public static final Constant<SAbstractConcept, SLanguage>                                           LANGUAGE                 = Constant.of("LANGUAGE", null, c -> c.getLanguage());
 
     public static final Constant<DevKit, Set<SLanguage>>                                                DEVKIT_LANGUAGES         = Constant.of("DEVKIT_LANGUAGES", Set.of(), devkit -> Collection.of(devkit.getAllExportedLanguageIds()).toSet());
