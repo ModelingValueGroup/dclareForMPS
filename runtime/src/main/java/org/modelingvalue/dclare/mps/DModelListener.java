@@ -141,9 +141,11 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeAcce
 
     @Override
     public void modelLoaded(SModel model, boolean partially) {
-        if (!partially && DNode.READ_OBSERVEDS.get(a()).contains(DModel.LOADED)) {
-            b().handleMPSChange(() -> DModel.LOADED.set(a(), Boolean.TRUE));
-        }
+        b().handleMPSChange(() -> {
+            if (!partially && DNode.READ_OBSERVEDS.get(a()).contains(DModel.LOADED)) {
+                b().handleMPSChange(() -> DModel.LOADED.set(a(), Boolean.TRUE));
+            }
+        });
     }
 
     @Override
@@ -155,9 +157,11 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeAcce
 
     @Override
     public void modelUnloaded(SModel model) {
-        if (DNode.READ_OBSERVEDS.get(a()).contains(DModel.LOADED)) {
-            b().handleMPSChange(() -> DModel.LOADED.set(a(), Boolean.FALSE));
-        }
+        b().handleMPSChange(() -> {
+            if (DNode.READ_OBSERVEDS.get(a()).contains(DModel.LOADED)) {
+                b().handleMPSChange(() -> DModel.LOADED.set(a(), Boolean.FALSE));
+            }
+        });
     }
 
     @Override
