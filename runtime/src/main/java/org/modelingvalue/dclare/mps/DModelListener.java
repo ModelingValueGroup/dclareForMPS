@@ -35,8 +35,6 @@ import org.jetbrains.mps.openapi.module.SRepository;
 import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
-import org.modelingvalue.collections.util.Triple;
-import org.modelingvalue.dclare.Mutable;
 
 import jetbrains.mps.project.DevKit;
 import jetbrains.mps.smodel.MPSModuleRepository;
@@ -151,7 +149,7 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeAcce
     @Override
     public void modelReplaced(SModel model) {
         b().handleMPSChange(() -> {
-            b().universeTransaction().put("$READ_DEEP", () -> DNewableObject.READ_DEEP.trigger(DModel.of(model)));
+            DNewableObject.READ_DEEP.trigger(DModel.of(model));
         });
     }
 
@@ -314,9 +312,7 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeAcce
         b().handleMPSChange(() -> {
             if (!DNode.RULES.get(event.getNode().getConcept()).isEmpty()) {
                 DNode read = DNode.of(event.getNode());
-                if (Mutable.D_PARENT_CONTAINING.get(read) == null) {
-                    b().universeTransaction().put(Pair.of(read, "SET_PARENT_FROM_MPS"), () -> read.triggerSetParentFromMPS());
-                }
+                read.triggerSetParentFromMPS();
             }
         });
     }
@@ -327,9 +323,7 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeAcce
             if (!DNode.RULES.get(event.getNode().getConcept()).isEmpty()) {
                 DNode read = DNode.of(event.getNode());
                 DObserved<DNode, String> dObserved = DNode.PROPERTY.get(event.getProperty());
-                if (!DNewableObject.READ_OBSERVEDS.get(read).contains(dObserved)) {
-                    b().universeTransaction().put(Triple.of(read, dObserved, "TRIGGER_READ"), () -> read.triggerRead(dObserved));
-                }
+                read.triggerInitRead(dObserved);
             }
         });
     }
@@ -340,9 +334,7 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeAcce
             if (!DNode.RULES.get(event.getNode().getConcept()).isEmpty()) {
                 DNode read = DNode.of(event.getNode());
                 DObserved<DNode, DNode> dObserved = DNode.REFERENCE.get(event.getAssociationLink());
-                if (!DNode.READ_OBSERVEDS.get(read).contains(dObserved)) {
-                    b().universeTransaction().put(Triple.of(read, dObserved, "TRIGGER_READ"), () -> read.triggerRead(dObserved));
-                }
+                read.triggerInitRead(dObserved);
             }
         });
     }

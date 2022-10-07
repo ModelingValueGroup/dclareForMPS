@@ -1104,18 +1104,12 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
             DNode dNodeParent = DNode.of(sNodeParent);
             dNodeParent.addChild(link, this);
             dNodeParent.triggerSetParentFromMPS();
-            if (dClareMPS().getConfig().isTraceActivation()) {
-                System.err.println(DclareTrace.getLineStart("ACTIVATE") + this);
-            }
         } else {
             SModel sModelParent = dClareMPS.read(() -> original.getModel());
             if (sModelParent != null) {
                 DModel dModelParent = DModel.of(sModelParent);
                 dModelParent.addRootNode(this);
                 dModelParent.triggerSetParentFromMPS();
-                if (dClareMPS().getConfig().isTraceActivation()) {
-                    System.err.println(DclareTrace.getLineStart("ACTIVATE") + this);
-                }
             }
         }
     }

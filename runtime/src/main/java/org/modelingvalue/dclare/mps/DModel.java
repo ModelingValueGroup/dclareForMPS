@@ -35,7 +35,6 @@ import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.dclare.Constant;
-import org.modelingvalue.dclare.DclareTrace;
 import org.modelingvalue.dclare.LeafTransaction;
 import org.modelingvalue.dclare.Observed;
 import org.modelingvalue.dclare.Observer;
@@ -556,9 +555,6 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
         SModule parent = original.getModule();
         if (parent != null) {
             DModule.MODELS.add(DModule.of(parent), this);
-            if (dClareMPS().getConfig().isTraceActivation()) {
-                System.err.println(DclareTrace.getLineStart("ACTIVATE") + this);
-            }
         }
     }
 

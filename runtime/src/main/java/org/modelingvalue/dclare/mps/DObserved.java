@@ -29,7 +29,6 @@ import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.collections.util.QuadConsumer;
 import org.modelingvalue.collections.util.TriConsumer;
-import org.modelingvalue.collections.util.Triple;
 import org.modelingvalue.dclare.*;
 import org.modelingvalue.dclare.ex.ThrowableError;
 
@@ -64,11 +63,13 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
     private TriConsumer<O, T, T>  toMPS;
     private final Supplier<SNode> source;
     private final Action<O>       readAction;
+    private final Action<O>       initReadAction;
 
     private DObserved(Object id, T def, Supplier<Setable<?, ?>> opposite, Function<O, T> fromMPS, TriConsumer<O, T, T> toMPS, QuadConsumer<LeafTransaction, O, T, T> changed, Supplier<SNode> source, SetableModifier... modifiers) {
         super(id, def, opposite, null, changed, modifiers);
         this.source = source;
         this.readAction = fromMPS != null ? new ReadAction<O>(Pair.of("$READ", id), this::read, LeafModifier.preserved) : null;
+        this.initReadAction = fromMPS != null ? new ReadAction<O>(Pair.of("$INIT_READ", id), this::initRead, LeafModifier.preserved) : null;
         setFromToMPS(fromMPS, toMPS);
     }
 
@@ -76,6 +77,7 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
         super(id, def, opposite, null, changed, modifiers);
         this.source = source;
         this.readAction = null;
+        this.initReadAction = null;
     }
 
     protected final void setFromToMPS(Function<O, T> fromMPS, TriConsumer<O, T, T> toMPS) {
@@ -94,6 +96,16 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
 
     private void read(O object) {
         set(object, fromMPS(object));
+    }
+
+    @SuppressWarnings("rawtypes")
+    private void initRead(O object) {
+        if (!DNewableObject.READ_OBSERVEDS.set((DNewableObject) object, s -> s.add(this)).contains(this)) {
+            if (DClareMPS.instance().getConfig().isTraceActivation()) {
+                System.err.println(DclareTrace.getLineStart("ACTIVATE") + object + "." + this);
+            }
+            set(object, fromMPS(object));
+        }
     }
 
     protected final void toMPS(O object, T pre, T post) {
@@ -123,6 +135,10 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
         return readAction;
     }
 
+    protected Action<O> initReadAction() {
+        return initReadAction;
+    }
+
     @SuppressWarnings("rawtypes")
     @Override
     public T get(O object) {
@@ -135,14 +151,14 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
             } else if (object instanceof DNewableObject && tx instanceof ObserverTransaction) {
                 ((DNewableObject) object).triggerSetParentFromMPS();
                 if (fromMPS != null && !isDclareOnly()) {
-                    ((DNewableObject) object).triggerRead(this);
+                    ((DNewableObject) object).triggerInitRead(this);
                 }
             } else if (object instanceof DNewableObject && DClareMPS.GET_FROM_MPS.get()) {
                 if (Mutable.D_PARENT_CONTAINING.get(object) == null) {
-                    tx.universeTransaction().put(Pair.of(object, "SET_PARENT_FROM_MPS"), () -> ((DNewableObject) object).triggerSetParentFromMPS());
+                    DClareMPS.instance(tx).handleMPSChange(() -> ((DNewableObject) object).triggerSetParentFromMPS());
                 }
                 if (fromMPS != null && !isDclareOnly() && !DNode.READ_OBSERVEDS.get(((DNewableObject) object)).contains(this)) {
-                    tx.universeTransaction().put(Triple.of(object, this, "TRIGGER_READ"), () -> ((DNewableObject) object).triggerRead(this));
+                    DClareMPS.instance(tx).handleMPSChange(() -> ((DNewableObject) object).triggerInitRead(this));
                 }
             }
         }
