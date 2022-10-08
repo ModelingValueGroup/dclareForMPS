@@ -6184,32 +6184,27 @@
         </node>
         <node concept="3clFbJ" id="1bjvCAOQSls" role="3cqZAp">
           <node concept="3clFbS" id="1bjvCAOQSlu" role="3clFbx">
-            <node concept="3cpWs6" id="7avOKBtV_Fr" role="3cqZAp">
-              <node concept="2OqwBi" id="7avOKBtVDUA" role="3cqZAk">
-                <node concept="1eOMI4" id="7avOKBtVApG" role="2Oq$k0">
-                  <node concept="10QFUN" id="7avOKBtVApD" role="1eOMHV">
-                    <node concept="3uibUv" id="7avOKBtVBP5" role="10QFUM">
-                      <ref role="3uigEE" to="t4tl:~DObject" resolve="DObject" />
-                    </node>
-                    <node concept="37vLTw" id="7avOKBtVBa5" role="10QFUP">
-                      <ref role="3cqZAo" node="1bjvCAOVfkt" resolve="object" />
-                    </node>
-                  </node>
+            <node concept="3cpWs6" id="4qns$2VC_Pb" role="3cqZAp">
+              <node concept="10QFUN" id="4qns$2VCIm0" role="3cqZAk">
+                <node concept="16syzq" id="4qns$2VCJd6" role="10QFUM">
+                  <ref role="16sUi3" node="7avOKBtUFfG" resolve="R" />
                 </node>
-                <node concept="liA8E" id="7avOKBtVFVl" role="2OqNvi">
-                  <ref role="37wK5l" to="t4tl:~DObject.callMethod(org.modelingvalue.dclare.mps.DMethod,java.lang.Object[])" resolve="callMethod" />
-                  <node concept="2YIFZM" id="1bjvCAOVFwt" role="37wK5m">
+                <node concept="2OqwBi" id="4qns$2VCCtF" role="10QFUP">
+                  <node concept="2YIFZM" id="4qns$2VCBts" role="2Oq$k0">
                     <ref role="37wK5l" to="t4tl:~DMethod.of(org.jetbrains.mps.openapi.language.SLanguage,java.lang.String)" resolve="of" />
                     <ref role="1Pybhc" to="t4tl:~DMethod" resolve="DMethod" />
-                    <node concept="37vLTw" id="1bjvCAOVIrz" role="37wK5m">
+                    <node concept="37vLTw" id="4qns$2VCBtt" role="37wK5m">
                       <ref role="3cqZAo" node="1bjvCAOV49H" resolve="language" />
                     </node>
-                    <node concept="37vLTw" id="1bjvCAOVOIM" role="37wK5m">
+                    <node concept="37vLTw" id="4qns$2VCBtu" role="37wK5m">
                       <ref role="3cqZAo" node="1bjvCAOVKp3" resolve="id" />
                     </node>
                   </node>
-                  <node concept="37vLTw" id="7avOKBtVJBV" role="37wK5m">
-                    <ref role="3cqZAo" node="7avOKBtULfd" resolve="args" />
+                  <node concept="liA8E" id="4qns$2VCD_d" role="2OqNvi">
+                    <ref role="37wK5l" to="t4tl:~DMethod.invoke(java.lang.Object[])" resolve="invoke" />
+                    <node concept="37vLTw" id="4qns$2VCFh7" role="37wK5m">
+                      <ref role="3cqZAo" node="7avOKBtULfd" resolve="args" />
+                    </node>
                   </node>
                 </node>
               </node>
@@ -6246,27 +6241,6 @@
                             <ref role="16sUi3" node="7avOKBtUFfG" resolve="R" />
                           </node>
                           <node concept="3clFbS" id="1bjvCAOQZe2" role="3clF47">
-                            <node concept="3cpWs8" id="1bjvCAOQZe3" role="3cqZAp">
-                              <node concept="3cpWsn" id="1bjvCAOQZe4" role="3cpWs9">
-                                <property role="TrG5h" value="meth" />
-                                <node concept="3uibUv" id="1bjvCAOQZe5" role="1tU5fm">
-                                  <ref role="3uigEE" to="t4tl:~DMethod" resolve="DMethod" />
-                                  <node concept="16syzq" id="1bjvCAOQZe6" role="11_B2D">
-                                    <ref role="16sUi3" node="7avOKBtUFfG" resolve="R" />
-                                  </node>
-                                </node>
-                                <node concept="2YIFZM" id="1bjvCAOVQ_Z" role="33vP2m">
-                                  <ref role="1Pybhc" to="t4tl:~DMethod" resolve="DMethod" />
-                                  <ref role="37wK5l" to="t4tl:~DMethod.of(org.jetbrains.mps.openapi.language.SLanguage,java.lang.String)" resolve="of" />
-                                  <node concept="37vLTw" id="1bjvCAOVQA0" role="37wK5m">
-                                    <ref role="3cqZAo" node="1bjvCAOV49H" resolve="language" />
-                                  </node>
-                                  <node concept="37vLTw" id="1bjvCAOVQA1" role="37wK5m">
-                                    <ref role="3cqZAo" node="1bjvCAOVKp3" resolve="id" />
-                                  </node>
-                                </node>
-                              </node>
-                            </node>
                             <node concept="3clFbF" id="1bjvCAPbpqC" role="3cqZAp">
                               <node concept="1rXfSq" id="1bjvCAPbpqA" role="3clFbG">
                                 <ref role="37wK5l" node="1bjvCAPcAhJ" resolve="toDObject" />
@@ -6275,34 +6249,28 @@
                                 </node>
                               </node>
                             </node>
-                            <node concept="3cpWs6" id="1bjvCAOQZez" role="3cqZAp">
-                              <node concept="10QFUN" id="1bjvCAOWi3h" role="3cqZAk">
-                                <node concept="16syzq" id="1bjvCAOWjei" role="10QFUM">
+                            <node concept="3cpWs6" id="4qns$2VCKX4" role="3cqZAp">
+                              <node concept="10QFUN" id="4qns$2VDbqI" role="3cqZAk">
+                                <node concept="16syzq" id="4qns$2VDcF3" role="10QFUM">
                                   <ref role="16sUi3" node="7avOKBtUFfG" resolve="R" />
                                 </node>
-                                <node concept="1rXfSq" id="1bjvCAOWggI" role="10QFUP">
+                                <node concept="1rXfSq" id="4qns$2VCYP8" role="10QFUP">
                                   <ref role="37wK5l" node="4sx0mC_spGq" resolve="toSObject" />
-                                  <node concept="2OqwBi" id="1bjvCAOWrO0" role="37wK5m">
-                                    <node concept="1eOMI4" id="1bjvCAOWo_x" role="2Oq$k0">
-                                      <node concept="10QFUN" id="1bjvCAOWo_u" role="1eOMHV">
-                                        <node concept="3uibUv" id="1bjvCAOWpBp" role="10QFUM">
-                                          <ref role="3uigEE" to="t4tl:~DObject" resolve="DObject" />
-                                        </node>
-                                        <node concept="1rXfSq" id="1bjvCAOWjY7" role="10QFUP">
-                                          <ref role="37wK5l" node="7cS5T_tZh5f" resolve="toDObject" />
-                                          <node concept="37vLTw" id="1bjvCAOWlJV" role="37wK5m">
-                                            <ref role="3cqZAo" node="1bjvCAOVfkt" resolve="object" />
-                                          </node>
-                                        </node>
+                                  <node concept="2OqwBi" id="4qns$2VD52R" role="37wK5m">
+                                    <node concept="liA8E" id="4qns$2VD65m" role="2OqNvi">
+                                      <ref role="37wK5l" to="t4tl:~DMethod.invoke(java.lang.Object[])" resolve="invoke" />
+                                      <node concept="37vLTw" id="4qns$2VD7Ov" role="37wK5m">
+                                        <ref role="3cqZAo" node="7avOKBtULfd" resolve="args" />
                                       </node>
                                     </node>
-                                    <node concept="liA8E" id="1bjvCAOWuhD" role="2OqNvi">
-                                      <ref role="37wK5l" to="t4tl:~DObject.callMethod(org.modelingvalue.dclare.mps.DMethod,java.lang.Object[])" resolve="callMethod" />
-                                      <node concept="37vLTw" id="1bjvCAOWwTL" role="37wK5m">
-                                        <ref role="3cqZAo" node="1bjvCAOQZe4" resolve="meth" />
+                                    <node concept="2YIFZM" id="1bjvCAOVQ_Z" role="2Oq$k0">
+                                      <ref role="37wK5l" to="t4tl:~DMethod.of(org.jetbrains.mps.openapi.language.SLanguage,java.lang.String)" resolve="of" />
+                                      <ref role="1Pybhc" to="t4tl:~DMethod" resolve="DMethod" />
+                                      <node concept="37vLTw" id="1bjvCAOVQA0" role="37wK5m">
+                                        <ref role="3cqZAo" node="1bjvCAOV49H" resolve="language" />
                                       </node>
-                                      <node concept="37vLTw" id="1bjvCAOWz2d" role="37wK5m">
-                                        <ref role="3cqZAo" node="7avOKBtULfd" resolve="args" />
+                                      <node concept="37vLTw" id="1bjvCAOVQA1" role="37wK5m">
+                                        <ref role="3cqZAo" node="1bjvCAOVKp3" resolve="id" />
                                       </node>
                                     </node>
                                   </node>
@@ -6376,24 +6344,14 @@
             </node>
           </node>
         </node>
-        <node concept="3cpWs6" id="1bjvCAOUhin" role="3cqZAp">
-          <node concept="2OqwBi" id="1bjvCAOUhio" role="3cqZAk">
-            <node concept="1eOMI4" id="1bjvCAOUhip" role="2Oq$k0">
-              <node concept="10QFUN" id="1bjvCAOUhiq" role="1eOMHV">
-                <node concept="3uibUv" id="1bjvCAOUhir" role="10QFUM">
-                  <ref role="3uigEE" to="t4tl:~DObject" resolve="DObject" />
-                </node>
-                <node concept="37vLTw" id="1bjvCAOUhis" role="10QFUP">
-                  <ref role="3cqZAo" node="1bjvCAOUhi6" resolve="object" />
-                </node>
-              </node>
+        <node concept="3cpWs6" id="4qns$2VCt5p" role="3cqZAp">
+          <node concept="2OqwBi" id="4qns$2VCvNS" role="3cqZAk">
+            <node concept="37vLTw" id="4qns$2VCuQ9" role="2Oq$k0">
+              <ref role="3cqZAo" node="1bjvCAOUhi8" resolve="meth" />
             </node>
-            <node concept="liA8E" id="1bjvCAOUhit" role="2OqNvi">
-              <ref role="37wK5l" to="t4tl:~DObject.callMethod(org.modelingvalue.dclare.mps.DMethod,java.lang.Object[])" resolve="callMethod" />
-              <node concept="37vLTw" id="1bjvCAOUhiu" role="37wK5m">
-                <ref role="3cqZAo" node="1bjvCAOUhi8" resolve="called" />
-              </node>
-              <node concept="37vLTw" id="1bjvCAOUhiv" role="37wK5m">
+            <node concept="liA8E" id="4qns$2VCwId" role="2OqNvi">
+              <ref role="37wK5l" to="t4tl:~DMethod.invoke(java.lang.Object[])" resolve="invoke" />
+              <node concept="37vLTw" id="4qns$2VCybK" role="37wK5m">
                 <ref role="3cqZAo" node="1bjvCAOUhib" resolve="args" />
               </node>
             </node>
