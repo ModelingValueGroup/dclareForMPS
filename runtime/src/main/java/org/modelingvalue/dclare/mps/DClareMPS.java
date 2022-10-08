@@ -249,6 +249,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
             }
         }, false);
         imperativeTransaction.schedule(() -> {
+            DObject.READ_OBSERVEDS.add(getRepository(), D_PARENT_CONTAINING);
             REPOSITORY_CONTAINER.set(this, getRepository());
         });
         imperativeTransaction.schedule(() -> {

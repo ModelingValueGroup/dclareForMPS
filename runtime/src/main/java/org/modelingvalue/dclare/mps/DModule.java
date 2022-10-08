@@ -277,7 +277,7 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
     protected Pair<DObject, DObserved<DObject, ?>> readParent() {
-        return (Pair) Pair.of(dClareMPS(), DRepository.MODULES);
+        return (Pair) Pair.of(dClareMPS().getRepository(), DRepository.MODULES);
     }
 
 }
