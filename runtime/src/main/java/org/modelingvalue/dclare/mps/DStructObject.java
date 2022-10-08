@@ -86,4 +86,14 @@ public class DStructObject extends DIdentifiedObject implements SStructObject {
         return true;
     }
 
+    @Override
+    protected boolean isRead() {
+        return false;
+    }
+
+    @Override
+    protected Pair<DObject, DObserved<DObject, ?>> readParent() {
+        throw new UnsupportedOperationException();
+    }
+
 }

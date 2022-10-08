@@ -15,8 +15,7 @@
 
 package org.modelingvalue.dclare.mps;
 
-import static org.modelingvalue.dclare.SetableModifier.containment;
-import static org.modelingvalue.dclare.SetableModifier.plumbing;
+import static org.modelingvalue.dclare.SetableModifier.*;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -98,9 +97,11 @@ public abstract class DObject implements Mutable {
     protected static final DObserved<DObject, Boolean>                                 CONTAINED                 = DObserved.of("$CONTAINED", Boolean.FALSE, null, (dObject, pre, post) -> {
                                                                                                                  }, plumbing);
 
+    protected static final Setable<DObject, Set<Observed>>                             READ_OBSERVEDS            = Setable.of("$READ_OBSERVEDS", Set.of(), plumbing, preserved);
+
     protected static final Set<Observer>                                               OBSERVERS                 = Set.of(TYPE_RULE, CONTAINING_ATTRIBUTE_RULE);
 
-    protected static final Set<Setable>                                                SETABLES                  = Set.of(TYPE, MPS_ISSUES, DCLARE_ISSUES, CONTAINING_ATTRIBUTE, CONTAINED);
+    protected static final Set<Setable>                                                SETABLES                  = Set.of(TYPE, MPS_ISSUES, DCLARE_ISSUES, CONTAINING_ATTRIBUTE, CONTAINED, READ_OBSERVEDS);
 
     public static DClareMPS dClareMPS() {
         return DClareMPS.instance();
@@ -212,6 +213,8 @@ public abstract class DObject implements Mutable {
     }
 
     protected abstract boolean isRead();
+
+    protected abstract Pair<DObject, DObserved<DObject, ?>> readParent();
 
     @SuppressWarnings("unchecked")
     @Override

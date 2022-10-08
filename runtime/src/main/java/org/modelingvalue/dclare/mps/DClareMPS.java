@@ -159,7 +159,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
     public static final Constant<SAbstractConcept, SLanguage>                                           LANGUAGE                 = Constant.of("LANGUAGE", null, c -> c.getLanguage());
 
     public static final Constant<DevKit, Set<SLanguage>>                                                DEVKIT_LANGUAGES         = Constant.of("DEVKIT_LANGUAGES", Set.of(), devkit -> Collection.of(devkit.getAllExportedLanguageIds()).toSet());
-    private static final Setable<DClareMPS, DRepository>                                                REPOSITORY_CONTAINER     = Setable.of("REPOSITORY_CONTAINER", null, containment);
+    protected static final Setable<DClareMPS, DRepository>                                              REPOSITORY_CONTAINER     = Setable.of("REPOSITORY_CONTAINER", null, containment);
     private static final Setable<DClareMPS, DServerMetaData>                                            DSERVER_METADATA         = Setable.of("SERVER_METADATA", null, containment);
     protected static final Set<? extends Setable<? extends Mutable, ?>>                                 SETABLES                 = Set.of(REPOSITORY_CONTAINER, DSERVER_METADATA);
     //
@@ -206,58 +206,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
         if (config.isTraceDclare()) {
             System.err.println(DclareTrace.getLineStart("BEGIN") + this);
         }
-        universeTransaction = new UniverseTransaction(this, thePool, config.getDclareConfig(), startStatus) {
-            @Override
-            public void start(Action<Universe> action) {
-                if (config.isTraceDclare()) {
-                    System.err.println(DclareTrace.getLineStart("ACTION") + "START " + action + "  " + this);
-                }
-            }
-
-            @Override
-            public void end(Action<Universe> action) {
-                if (config.isTraceDclare()) {
-                    System.err.println(DclareTrace.getLineStart("ACTION") + "END " + action + "  " + this);
-                }
-            }
-
-            @Override
-            protected void handleExceptions(Set<Throwable> errors) {
-                clearErrors();
-                addMessages(errors);
-            }
-
-            @Override
-            protected void clearOrphans(Universe universe) {
-                if (isRunning()) {
-                    super.clearOrphans(universe);
-                }
-            }
-
-            @Override
-            protected void checkConsistency(Universe universe) {
-                if (isRunning()) {
-                    super.checkConsistency(universe);
-                }
-            }
-
-            @SuppressWarnings("rawtypes")
-            @Override
-            protected void checkOrphanState(Mutable mutable, DefaultMap<Setable, Object> values) {
-            }
-
-            @Override
-            protected void init() {
-            }
-
-            @Override
-            public <T, O> TransactionId setPreserved(O object, Setable<O, T> property, T post) {
-                TransactionId txid = super.setPreserved(object, property, post);
-                imperativeTransaction.mutableState().set(object, property, post, txid);
-                return txid;
-            };
-
-        };
+        universeTransaction = new MPSUniverseTransaction(this, thePool, startStatus, config);
         this.derivationState = new ConstantState("DERIVE", universeTransaction::handleException);
         this.dObserverTransactions = Concurrent.of(() -> new ReusableTransaction<>(universeTransaction));
         this.dCopyObserverTransactions = Concurrent.of(() -> new ReusableTransaction<>(universeTransaction));
@@ -835,6 +784,132 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
     @Override
     public void uncaughtException(Thread thread, Throwable t) {
         addMessage(t);
+    }
+
+    private final class MPSUniverseTransaction extends UniverseTransaction {
+        private final DclareForMpsConfig config;
+
+        private MPSUniverseTransaction(Universe universe, ContextPool pool, Status[] startStatus, DclareForMpsConfig config) {
+            super(universe, pool, config.getDclareConfig(), startStatus);
+            this.config = config;
+        }
+
+        @Override
+        public void start(Action<Universe> action) {
+            if (config.isTraceDclare()) {
+                System.err.println(DclareTrace.getLineStart("ACTION") + "START " + action + "  " + this);
+            }
+        }
+
+        @Override
+        public void end(Action<Universe> action) {
+            if (config.isTraceDclare()) {
+                System.err.println(DclareTrace.getLineStart("ACTION") + "END " + action + "  " + this);
+            }
+        }
+
+        @Override
+        protected void handleExceptions(Set<Throwable> errors) {
+            clearErrors();
+            addMessages(errors);
+        }
+
+        @Override
+        protected void clearOrphans(Universe universe) {
+            if (isRunning()) {
+                super.clearOrphans(universe);
+            }
+        }
+
+        @Override
+        protected void checkConsistency(Universe universe) {
+            if (isRunning()) {
+                super.checkConsistency(universe);
+            }
+        }
+
+        @SuppressWarnings("rawtypes")
+        @Override
+        protected void checkOrphanState(Mutable mutable, DefaultMap<Setable, Object> values) {
+        }
+
+        @Override
+        protected void init() {
+        }
+
+        @SuppressWarnings("rawtypes")
+        @Override
+        protected State createState(DefaultMap<Object, DefaultMap<Setable, Object>> map) {
+            return new MPSState(this, map);
+        }
+
+        @Override
+        public <T, O> TransactionId setPreserved(O object, Setable<O, T> property, T post) {
+            TransactionId txid = super.setPreserved(object, property, post);
+            imperativeTransaction.mutableState().set(object, property, post, txid);
+            return txid;
+        }
+    }
+
+    private static final class MPSState extends State {
+        private static final long serialVersionUID = 4292875367058590190L;
+
+        @SuppressWarnings("rawtypes")
+        private MPSState(UniverseTransaction universeTransaction, DefaultMap<Object, DefaultMap<Setable, Object>> map) {
+            super(universeTransaction, map);
+        }
+
+        @SuppressWarnings({"unchecked", "rawtypes"})
+        @Override
+        public <O, T> T get(O object, Getable<O, T> property) {
+            if (object instanceof DObject) {
+                DObject dObject = (DObject) object;
+                if (property instanceof DObserved) {
+                    DObserved<DObject, T> dObserved = (DObserved<DObject, T>) property;
+                    Set<Observed> reads = get(dObject, DObject.READ_OBSERVEDS);
+                    if (dObserved.isRead() && !dObserved.isDclareOnly() && dObject.isRead() && !reads.contains(property)) {
+                        DObserved.initAncestors(dObject, reads);
+                        dObserved.triggerInitRead(dObject);
+                        return dObserved.fromMPS(dObject);
+                    }
+                } else if (property == Mutable.D_PARENT_CONTAINING) {
+                    Set<Observed> reads = get(dObject, DObject.READ_OBSERVEDS);
+                    if (dObject.isRead() && !reads.contains(property)) {
+                        DObserved.initAncestors(dObject, reads);
+                        return (T) dObject.readParent();
+                    }
+                }
+            }
+            return super.get(object, property);
+        }
+
+        @SuppressWarnings({"rawtypes", "unchecked"})
+        @Override
+        public <O, A, B> A getA(O object, Getable<O, Pair<A, B>> property) {
+            if (object instanceof DObject && property == (Getable) Mutable.D_PARENT_CONTAINING) {
+                DObject dObject = (DObject) object;
+                Set<Observed> reads = get(dObject, DObject.READ_OBSERVEDS);
+                if (dObject.isRead() && !reads.contains(property)) {
+                    DObserved.initAncestors(dObject, reads);
+                    return (A) dObject.readParent().a();
+                }
+            }
+            return super.getA(object, property);
+        }
+
+        @SuppressWarnings({"rawtypes", "unchecked"})
+        @Override
+        public <O, A, B> B getB(O object, Getable<O, Pair<A, B>> property) {
+            if (object instanceof DObject && property == (Getable) Mutable.D_PARENT_CONTAINING) {
+                DObject dObject = (DObject) object;
+                Set<Observed> reads = get(dObject, DObject.READ_OBSERVEDS);
+                if (dObject.isRead() && !reads.contains(property)) {
+                    DObserved.initAncestors(dObject, reads);
+                    return (B) dObject.readParent().b();
+                }
+            }
+            return super.getB(object, property);
+        }
     }
 
     private class ModuleChecker extends IChecker.AbstractModuleChecker<ModuleReportItem> {

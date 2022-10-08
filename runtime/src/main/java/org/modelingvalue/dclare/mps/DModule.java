@@ -33,6 +33,7 @@ import org.jetbrains.mps.openapi.module.SRepository;
 import org.jetbrains.mps.openapi.persistence.ModelRoot;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
+import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.dclare.Constant;
 import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.Setable;
@@ -125,8 +126,6 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
     protected void read(DClareMPS dClareMPS) {
         if (!isExternal()) {
             CONTAINED.set(this, Boolean.TRUE);
-            MODELS.readAction().trigger(this);
-            LANGUAGES.readAction().trigger(this);
         }
     }
 
@@ -174,7 +173,11 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
 
     @Override
     public DRepository getRepository() {
-        return (DRepository) dParent();
+        if (readFromMPS()) {
+            return dClareMPS().getRepository();
+        } else {
+            return (DRepository) dParent();
+        }
     }
 
     @Override
@@ -269,6 +272,12 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
 
     public boolean isSolution() {
         return original() instanceof Solution;
+    }
+
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    @Override
+    protected Pair<DObject, DObserved<DObject, ?>> readParent() {
+        return (Pair) Pair.of(dClareMPS(), DRepository.MODULES);
     }
 
 }

@@ -870,6 +870,22 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
         }
     }
 
+    @SuppressWarnings("rawtypes")
+    public static DObserved getDObserved(SConceptFeature feature) {
+        if (feature instanceof SProperty) {
+            return PROPERTY.get((SProperty) feature);
+        } else if (feature instanceof SContainmentLink) {
+            SContainmentLink cl = (SContainmentLink) feature;
+            if (cl.isMultiple()) {
+                return MANY_CONTAINMENT.get(cl);
+            } else {
+                return SINGLE_CONTAINMENT.get(cl);
+            }
+        } else {
+            return REFERENCE.get((SReferenceLink) feature);
+        }
+    }
+
     @Override
     public Iterable<? extends SReference> getReferences() {
         List<SReference> result = List.of();
@@ -1094,32 +1110,21 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
         return mRef != null ? dClareMPS().read(() -> mRef.resolve(null)) : null;
     }
 
+    @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
-    protected void setParentFromMPS(DObject parent) {
-        SNode original = tryOriginal();
-        DClareMPS dClareMPS = dClareMPS();
-        if (parent instanceof DNode) {
-            SContainmentLink link = dClareMPS.read(() -> original.getContainmentLink());
-            ((DNode) parent).addChild(link, this);
-        } else {
-            ((DModel) parent).addRootNode(this);
-        }
-    }
-
-    @Override
-    protected DObject originalParent() {
+    protected Pair<DObject, DObserved<DObject, ?>> readParent() {
         SNode original = tryOriginal();
         DClareMPS dClareMPS = dClareMPS();
         SNode parentNode = dClareMPS.read(() -> original.getParent());
         if (parentNode != null) {
+            SContainmentLink link = original.getContainmentLink();
             DNode parent = DNode.of(parentNode);
-            parent.triggerSetParentFromMPS();
-            return parent;
+            DObserved observed = getDObserved(link);
+            return Pair.of(parent, observed);
         } else {
             SModel parentModel = dClareMPS.read(() -> original.getModel());
             DModel parent = DModel.of(parentModel);
-            parent.triggerSetParentFromMPS();
-            return parent;
+            return (Pair) Pair.of(parent, DModel.ROOTS);
         }
     }
 

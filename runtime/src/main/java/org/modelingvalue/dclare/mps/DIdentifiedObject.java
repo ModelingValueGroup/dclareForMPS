@@ -72,9 +72,4 @@ public abstract class DIdentifiedObject extends DObject {
         return identity;
     }
 
-    @Override
-    protected boolean isRead() {
-        return false;
-    }
-
 }

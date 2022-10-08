@@ -549,11 +549,6 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
         return !isExternal() && super.dIsOrphan(state);
     }
 
-    @Override
-    protected void setParentFromMPS(DObject parent) {
-        DModule.MODELS.add((DModule) parent, this);
-    }
-
     public final static class RootsOfConcept extends Pair<String, SAbstractConcept> {
 
         private static final long serialVersionUID = 7134080093293245921L;
@@ -569,11 +564,11 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
 
     }
 
+    @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
-    protected DObject originalParent() {
-        DClareMPS dClareMPS = dClareMPS();
-        SModule parentModule = dClareMPS.read(() -> tryOriginal().getModule());
-        return DModule.of(parentModule);
+    protected Pair<DObject, DObserved<DObject, ?>> readParent() {
+        SModule sModule = dClareMPS().read(() -> tryOriginal().getModule());
+        return (Pair) Pair.of(DModule.of(sModule), DModule.MODELS);
     }
 
 }

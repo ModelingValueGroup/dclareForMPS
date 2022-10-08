@@ -32,6 +32,7 @@ import org.jetbrains.mps.openapi.module.SRepository;
 import org.jetbrains.mps.openapi.module.SRepositoryListener;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
+import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.collections.util.TriConsumer;
 import org.modelingvalue.dclare.Constant;
 import org.modelingvalue.dclare.Observer;
@@ -82,7 +83,7 @@ public class DRepository extends DFromOriginalObject<ProjectRepository> implemen
 
     @Override
     protected void read(DClareMPS dClareMPS) {
-        MODULES.readAction().trigger(this);
+        MODULES.triggerInitRead(this);
     }
 
     @Override
@@ -154,6 +155,12 @@ public class DRepository extends DFromOriginalObject<ProjectRepository> implemen
     @Override
     public String toString() {
         return original().getProject().getName();
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    @Override
+    protected Pair<DObject, DObserved<DObject, ?>> readParent() {
+        throw new UnsupportedOperationException();
     }
 
 }

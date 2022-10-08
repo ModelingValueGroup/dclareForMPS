@@ -18,6 +18,7 @@ package org.modelingvalue.dclare.mps;
 import static org.modelingvalue.dclare.SetableModifier.plumbing;
 
 import org.modelingvalue.collections.Set;
+import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.dclare.Constant;
 import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.Setable;
@@ -55,6 +56,11 @@ public class DServerMetaData extends DObject {
     @Override
     protected boolean isRead() {
         return false;
+    }
+
+    @Override
+    protected Pair<DObject, DObserved<DObject, ?>> readParent() {
+        throw new UnsupportedOperationException();
     }
 
 }
