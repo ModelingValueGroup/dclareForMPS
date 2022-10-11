@@ -235,7 +235,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
 
     @SuppressWarnings("rawtypes")
     private static final Observer<DNode>                                                                INDEX_RULE             = DObject.observer(INDEX, o -> {
-                                                                                                                                   Pair<Mutable, Setable<Mutable, ?>> pc = Mutable.D_PARENT_CONTAINING.get(o);
+                                                                                                                                   Pair<Mutable, Setable<Mutable, ?>> pc = o.dParentContaining();
                                                                                                                                    Object children = pc != null ? pc.b().get(pc.a()) : null;
                                                                                                                                    return o.equals(children) ? 0 : children instanceof List ? ((List) children).firstIndexOf(o) : -1;
                                                                                                                                });
@@ -423,7 +423,8 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
 
     @Override
     protected DNodeType getType() {
-        Set<SLanguage> ls = DRepository.ALL_LANGUAGES_WITH_RULES.get(dClareMPS().getRepository());
+        DObject dParent = dObjectParent();
+        Set<SLanguage> ls = dParent != null ? dParent.getType().getLanguages() : Set.of();
         SLanguage lang = DClareMPS.LANGUAGE.get(getConcept());
         if (!DClareMPS.RULE_SETS.get(lang).isEmpty()) {
             ls = ls.add(lang);

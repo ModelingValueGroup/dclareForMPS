@@ -70,7 +70,7 @@ public abstract class DObject implements Mutable {
     protected static final Observed<DObject, DAttribute>                               CONTAINING_ATTRIBUTE      = Observed.of("$CONTAINING_ATTRIBUTE", null, plumbing);
 
     protected static final Observer<DObject>                                           CONTAINING_ATTRIBUTE_RULE = observer(CONTAINING_ATTRIBUTE, o -> {
-                                                                                                                     Pair<Mutable, Setable<Mutable, ?>> pc = Mutable.D_PARENT_CONTAINING.get(o);
+                                                                                                                     Pair<Mutable, Setable<Mutable, ?>> pc = o.dParentContaining();
                                                                                                                      return pc == null || pc.a() instanceof DClareMPS ? null :                                                       //
                                                                                                                              pc.b() instanceof DAttribute ? (DAttribute) pc.b() : CONTAINING_ATTRIBUTE.get((DObject) pc.a());
                                                                                                                  });
@@ -249,7 +249,7 @@ public abstract class DObject implements Mutable {
     }
 
     protected boolean isActive() {
-        return !isExternal() && Mutable.D_PARENT_CONTAINING.get(this) != null;
+        return !isExternal() && DObject.READ_OBSERVEDS.get(this).contains(Mutable.D_PARENT_CONTAINING);
     }
 
 }
