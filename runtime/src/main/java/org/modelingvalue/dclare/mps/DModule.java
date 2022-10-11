@@ -173,11 +173,7 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
 
     @Override
     public DRepository getRepository() {
-        if (readFromMPS()) {
-            return dClareMPS().getRepository();
-        } else {
-            return (DRepository) dParent();
-        }
+        return (DRepository) dParent();
     }
 
     @Override

@@ -679,29 +679,14 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
 
     @Override
     public DNode getParent() {
-        if (readFromMPS()) {
-            SNode parent = dClareMPS().read(() -> {
-                SNode sNode = tryOriginal();
-                return sNode != null ? sNode.getParent() : null;
-            });
-            return parent != null ? DNode.of(parent) : null;
-        } else {
-            Mutable parent = dParent();
-            return parent instanceof DNode ? (DNode) parent : null;
-        }
+        Mutable parent = dParent();
+        return parent instanceof DNode ? (DNode) parent : null;
     }
 
     @Override
     public SContainmentLink getContainmentLink() {
-        if (readFromMPS()) {
-            return dClareMPS().read(() -> {
-                SNode sNode = tryOriginal();
-                return sNode != null ? sNode.getContainmentLink() : null;
-            });
-        } else {
-            Setable<Mutable, ?> containing = dContaining();
-            return containing != null && containing.id() instanceof SContainmentLink ? (SContainmentLink) containing.id() : null;
-        }
+        Setable<Mutable, ?> containing = dContaining();
+        return containing != null && containing.id() instanceof SContainmentLink ? (SContainmentLink) containing.id() : null;
     }
 
     @Override

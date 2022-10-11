@@ -863,20 +863,15 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
         @SuppressWarnings({"unchecked", "rawtypes"})
         @Override
         public <O, T> T get(O object, Getable<O, T> property) {
-            if (object instanceof DObject) {
+            if (object instanceof DObject && !isPreState()) {
                 DObject dObject = (DObject) object;
-                if (property instanceof DObserved) {
-                    DObserved<DObject, T> dObserved = (DObserved<DObject, T>) property;
-                    Set<Observed> reads = get(dObject, DObject.READ_OBSERVEDS);
-                    if (dObserved.isRead() && !dObserved.isDclareOnly() && dObject.isRead() && !reads.contains(property)) {
-                        DObserved.initAncestors(dObject, reads);
-                        dObserved.triggerInitRead(dObject);
-                        return dObserved.fromMPS(dObject);
-                    }
-                } else if (property == Mutable.D_PARENT_CONTAINING) {
-                    Set<Observed> reads = get(dObject, DObject.READ_OBSERVEDS);
-                    if (dObject.isRead() && !reads.contains(property)) {
-                        DObserved.initAncestors(dObject, reads);
+                if (dObject.isRead()) {
+                    if (property instanceof DObserved) {
+                        DObserved<DObject, T> dObserved = (DObserved<DObject, T>) property;
+                        if (dObserved.isRead() && !dObserved.isDclareOnly() && !get(dObject, DObject.READ_OBSERVEDS).contains(property)) {
+                            return dObserved.fromMPS(dObject);
+                        }
+                    } else if (property == Mutable.D_PARENT_CONTAINING && !get(dObject, DObject.READ_OBSERVEDS).contains(property)) {
                         return (T) dObject.readParent();
                     }
                 }
@@ -887,11 +882,9 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
         @SuppressWarnings({"rawtypes", "unchecked"})
         @Override
         public <O, A, B> A getA(O object, Getable<O, Pair<A, B>> property) {
-            if (object instanceof DObject && property == (Getable) Mutable.D_PARENT_CONTAINING) {
+            if (object instanceof DObject && !isPreState() && property == (Getable) Mutable.D_PARENT_CONTAINING) {
                 DObject dObject = (DObject) object;
-                Set<Observed> reads = get(dObject, DObject.READ_OBSERVEDS);
-                if (dObject.isRead() && !reads.contains(property)) {
-                    DObserved.initAncestors(dObject, reads);
+                if (dObject.isRead() && !get(dObject, DObject.READ_OBSERVEDS).contains(property)) {
                     return (A) dObject.readParent().a();
                 }
             }
@@ -901,15 +894,18 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
         @SuppressWarnings({"rawtypes", "unchecked"})
         @Override
         public <O, A, B> B getB(O object, Getable<O, Pair<A, B>> property) {
-            if (object instanceof DObject && property == (Getable) Mutable.D_PARENT_CONTAINING) {
+            if (object instanceof DObject && !isPreState() && property == (Getable) Mutable.D_PARENT_CONTAINING) {
                 DObject dObject = (DObject) object;
-                Set<Observed> reads = get(dObject, DObject.READ_OBSERVEDS);
-                if (dObject.isRead() && !reads.contains(property)) {
-                    DObserved.initAncestors(dObject, reads);
+                if (dObject.isRead() && !get(dObject, DObject.READ_OBSERVEDS).contains(property)) {
                     return (B) dObject.readParent().b();
                 }
             }
             return super.getB(object, property);
+        }
+
+        private boolean isPreState() {
+            UniverseTransaction utx = universeTransaction();
+            return this == utx.preState() || this == utx.preOuterStartState();
         }
     }
 

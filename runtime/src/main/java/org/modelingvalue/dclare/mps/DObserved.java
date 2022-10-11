@@ -163,7 +163,7 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
     }
 
     protected final T fromMPS(O object, T def) {
-        if (fromMPS != null) {
+        if (isRead()) {
             try {
                 return fromMPS.apply(object);
             } catch (Throwable t) {
@@ -177,30 +177,19 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
     @Override
     public T get(O object) {
         if (object.isRead()) {
-            LeafTransaction tx = LeafTransaction.getCurrent();
-            if (object.readFromMPS()) {
-                if (fromMPS != null) {
+            if (object.readConstant()) {
+                if (isRead()) {
                     return fromMPS(object);
                 }
-            } else if (tx instanceof ActionTransaction || DClareMPS.GET_FROM_MPS.get()) {
+            } else if (object.isObserving()) {
                 Set<Observed> reads = DObject.READ_OBSERVEDS.get(object);
-                initAncestors(object, reads);
-                if (fromMPS != null && !isDclareOnly() && !reads.contains(this)) {
+                object.initAncestors(reads);
+                if (isRead() && !isDclareOnly() && !reads.contains(this)) {
                     triggerInitRead(object);
-                    return fromMPS(object);
                 }
             }
         }
         return super.get(object);
-    }
-
-    @SuppressWarnings("rawtypes")
-    protected static void initAncestors(DObject object, Set<Observed> reads) {
-        if (!reads.contains(Mutable.D_PARENT_CONTAINING)) {
-            Pair<DObject, DObserved<DObject, ?>> parent = object.readParent();
-            initAncestors(parent.a(), DObject.READ_OBSERVEDS.get(parent.a()));
-            parent.b().triggerInitParent(parent.a(), object);
-        }
     }
 
     public static <T> void map(Set<T> ist, Set<T> soll, Consumer<T> add, Consumer<T> remove) {

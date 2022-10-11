@@ -208,13 +208,39 @@ public abstract class DObject implements Mutable {
         return false;
     }
 
-    public boolean readFromMPS() {
+    protected boolean readConstant() {
         return isExternal() || Constant.DERIVED.get() != null;
+    }
+
+    protected boolean isObserving() {
+        return LeafTransaction.getCurrent() instanceof ObserverTransaction || DClareMPS.GET_FROM_MPS.get();
     }
 
     protected abstract boolean isRead();
 
+    @SuppressWarnings("unchecked")
+    @Override
+    public Pair<Mutable, Setable<Mutable, ?>> dParentContaining() {
+        if (isRead()) {
+            if (readConstant()) {
+                return (Pair) readParent();
+            } else if (isObserving()) {
+                initAncestors(DObject.READ_OBSERVEDS.get(this));
+            }
+        }
+        return Mutable.super.dParentContaining();
+    }
+
     protected abstract Pair<DObject, DObserved<DObject, ?>> readParent();
+
+    @SuppressWarnings("rawtypes")
+    protected void initAncestors(Set<Observed> reads) {
+        if (!reads.contains(Mutable.D_PARENT_CONTAINING)) {
+            Pair<DObject, DObserved<DObject, ?>> parent = readParent();
+            parent.a().initAncestors(DObject.READ_OBSERVEDS.get(parent.a()));
+            parent.b().triggerInitParent(parent.a(), this);
+        }
+    }
 
     @SuppressWarnings("unchecked")
     @Override
