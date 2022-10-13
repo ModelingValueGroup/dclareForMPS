@@ -856,7 +856,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
         @SuppressWarnings({"unchecked", "rawtypes"})
         @Override
         public <O, T> T get(O object, Getable<O, T> property) {
-            if (object instanceof DObject && !isPreState() && LeafTransaction.getCurrent() instanceof IdentityDerivationTransaction) {
+            if (getFromMPS(object)) {
                 DObject dObject = (DObject) object;
                 if (dObject.isRead()) {
                     if (property instanceof DObserved) {
@@ -875,7 +875,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
         @SuppressWarnings({"rawtypes", "unchecked"})
         @Override
         public <O, A, B> A getA(O object, Getable<O, Pair<A, B>> property) {
-            if (object instanceof DObject && !isPreState() && property == (Getable) Mutable.D_PARENT_CONTAINING && LeafTransaction.getCurrent() instanceof IdentityDerivationTransaction) {
+            if (property == (Getable) Mutable.D_PARENT_CONTAINING && getFromMPS(object)) {
                 DObject dObject = (DObject) object;
                 if (dObject.isRead() && !get(dObject, DObject.READ_OBSERVEDS).contains(property)) {
                     return (A) dObject.readParent().a();
@@ -887,13 +887,17 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
         @SuppressWarnings({"rawtypes", "unchecked"})
         @Override
         public <O, A, B> B getB(O object, Getable<O, Pair<A, B>> property) {
-            if (object instanceof DObject && !isPreState() && property == (Getable) Mutable.D_PARENT_CONTAINING && LeafTransaction.getCurrent() instanceof IdentityDerivationTransaction) {
+            if (property == (Getable) Mutable.D_PARENT_CONTAINING && getFromMPS(object)) {
                 DObject dObject = (DObject) object;
                 if (dObject.isRead() && !get(dObject, DObject.READ_OBSERVEDS).contains(property)) {
                     return (B) dObject.readParent().b();
                 }
             }
             return super.getB(object, property);
+        }
+
+        private <O> boolean getFromMPS(O object) {
+            return object instanceof DObject && !isPreState() && LeafTransaction.getCurrent() instanceof IdentityDerivationTransaction;
         }
 
         private boolean isPreState() {

@@ -424,7 +424,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
     @Override
     protected DNodeType getType() {
         DObject dParent = dObjectParent();
-        Set<SLanguage> ls = dParent != null ? dParent.getType().getLanguages() : Set.of();
+        Set<SLanguage> ls = dParent != null ? TYPE.get(dParent).getLanguages() : Set.of();
         SLanguage lang = DClareMPS.LANGUAGE.get(getConcept());
         if (!DClareMPS.RULE_SETS.get(lang).isEmpty()) {
             ls = ls.add(lang);
