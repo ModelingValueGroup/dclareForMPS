@@ -897,7 +897,8 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
         }
 
         private <O> boolean getFromMPS(O object) {
-            return object instanceof DObject && !isPreState() && LeafTransaction.getCurrent() instanceof IdentityDerivationTransaction;
+            return object instanceof DObject && !isPreState() && //
+                    (ObserverTransaction.RIPPLE_OUT.get() || (LeafTransaction.getCurrent() instanceof IdentityDerivationTransaction));
         }
 
         private boolean isPreState() {
