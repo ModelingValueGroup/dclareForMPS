@@ -189,7 +189,7 @@ public abstract class DObject implements Mutable {
     }
 
     public boolean isDclareOnly() {
-        return !DObject.READ_OBSERVEDS.get(this).contains(Mutable.D_PARENT_CONTAINING) || CONTAINING_ATTRIBUTE.get(this) != null;
+        return dParentContaining() == null || CONTAINING_ATTRIBUTE.get(this) != null;
     }
 
     @Override
@@ -233,8 +233,12 @@ public abstract class DObject implements Mutable {
 
     @Override
     public Pair<Mutable, Setable<Mutable, ?>> dSetParentContaining(Pair<Mutable, Setable<Mutable, ?>> pc) {
-        if (!isRead() && isObserving()) {
-            DObject.READ_OBSERVEDS.add(this, Mutable.D_PARENT_CONTAINING);
+        if (isObserving()) {
+            if (isRead()) {
+                initAncestors(DObject.READ_OBSERVEDS.get(this));
+            } else if (!DObject.READ_OBSERVEDS.add(this, Mutable.D_PARENT_CONTAINING).contains(Mutable.D_PARENT_CONTAINING) && DClareMPS.instance().getConfig().isTraceActivation()) {
+                LeafTransaction.getCurrent().runNonObserving(() -> System.err.println(DclareTrace.getLineStart("ACTIVATE") + this));
+            }
         }
         return Mutable.super.dSetParentContaining(pc);
     }
@@ -245,8 +249,15 @@ public abstract class DObject implements Mutable {
     protected void initAncestors(Set<Observed> reads) {
         if (!reads.contains(Mutable.D_PARENT_CONTAINING)) {
             Pair<DObject, DObserved<DObject, ?>> parent = readParent();
-            parent.a().initAncestors(DObject.READ_OBSERVEDS.get(parent.a()));
-            parent.b().triggerInitParent(parent.a(), this);
+            if (parent != null) {
+                parent.a().initAncestors(DObject.READ_OBSERVEDS.get(parent.a()));
+                parent.b().triggerInitParent(parent.a(), this);
+            } else {
+                DObject.READ_OBSERVEDS.add(this, Mutable.D_PARENT_CONTAINING);
+                if (DClareMPS.instance().getConfig().isTraceActivation()) {
+                    LeafTransaction.getCurrent().runNonObserving(() -> System.err.println(DclareTrace.getLineStart("ACTIVATE") + this));
+                }
+            }
         }
     }
 

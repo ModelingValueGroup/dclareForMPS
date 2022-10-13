@@ -101,7 +101,7 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
     private void initParent(O parent, DObject child) {
         if (!DObject.READ_OBSERVEDS.add(child, D_PARENT_CONTAINING).contains(D_PARENT_CONTAINING)) {
             if (DClareMPS.instance().getConfig().isTraceActivation()) {
-                System.err.println(DclareTrace.getLineStart("ACTIVATE") + child);
+                LeafTransaction.getCurrent().runNonObserving(() -> System.err.println(DclareTrace.getLineStart("ACTIVATE") + child));
             }
             add(parent, child);
         }
@@ -115,7 +115,7 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
     private void initRead(O object) {
         if (!DObject.READ_OBSERVEDS.add(object, this).contains(this)) {
             if (DClareMPS.instance().getConfig().isTraceActivation()) {
-                System.err.println(DclareTrace.getLineStart("ACTIVATE") + object + "." + this);
+                LeafTransaction.getCurrent().runNonObserving(() -> System.err.println(DclareTrace.getLineStart("ACTIVATE") + object + "." + this));
             }
             set(object, fromMPS(object));
         }
@@ -177,11 +177,24 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
         return super.get(object);
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
     public T set(O object, T value) {
-        if (!object.isRead() && isRead() && !isDclareOnly() && object.isObserving()) {
-            DObject.READ_OBSERVEDS.add(object, Mutable.D_PARENT_CONTAINING);
-            DObject.READ_OBSERVEDS.add(object, this);
+        if (isRead() && !isDclareOnly() && object.isObserving()) {
+            if (object.isRead()) {
+                Set<Observed> reads = DObject.READ_OBSERVEDS.get(object);
+                object.initAncestors(reads);
+                if (!reads.contains(this)) {
+                    triggerInitRead(object);
+                }
+            } else {
+                if (!DObject.READ_OBSERVEDS.add(object, Mutable.D_PARENT_CONTAINING).contains(Mutable.D_PARENT_CONTAINING) && DClareMPS.instance().getConfig().isTraceActivation()) {
+                    LeafTransaction.getCurrent().runNonObserving(() -> System.err.println(DclareTrace.getLineStart("ACTIVATE") + object));
+                }
+                if (!DObject.READ_OBSERVEDS.add(object, this).contains(this) && DClareMPS.instance().getConfig().isTraceActivation()) {
+                    LeafTransaction.getCurrent().runNonObserving(() -> System.err.println(DclareTrace.getLineStart("ACTIVATE") + object + "." + this));
+                }
+            }
         }
         return super.set(object, value);
     }

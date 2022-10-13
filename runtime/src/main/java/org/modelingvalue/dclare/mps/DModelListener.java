@@ -311,7 +311,7 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeAcce
     @SuppressWarnings("unchecked")
     @Override
     public void nodeRead(SNodeReadEvent event) {
-        if (!DClareMPS.READING.get()) {
+        if (!DClareMPS.RUNNING_DCLARE.get()) {
             b().imperativeState().run(() -> {
                 if (!DNode.RULES.get(event.getNode().getConcept()).isEmpty()) {
                     DNode dNode = DNode.of(event.getNode());

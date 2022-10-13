@@ -560,7 +560,7 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
     @Override
     protected Pair<DObject, DObserved<DObject, ?>> readParent() {
         SModule sModule = dClareMPS().read(() -> tryOriginal().getModule());
-        return (Pair) Pair.of(DModule.of(sModule), DModule.MODELS);
+        return sModule != null ? (Pair) Pair.of(DModule.of(sModule), DModule.MODELS) : null;
     }
 
 }

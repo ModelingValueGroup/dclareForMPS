@@ -1109,8 +1109,12 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
             return Pair.of(parent, observed);
         } else {
             SModel parentModel = dClareMPS.read(() -> original.getModel());
-            DModel parent = DModel.of(parentModel);
-            return (Pair) Pair.of(parent, DModel.ROOTS);
+            if (parentModel != null) {
+                DModel parent = DModel.of(parentModel);
+                return (Pair) Pair.of(parent, DModel.ROOTS);
+            } else {
+                return null;
+            }
         }
     }
 

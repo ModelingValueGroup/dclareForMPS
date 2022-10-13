@@ -85,7 +85,7 @@ import jetbrains.mps.smodel.language.LanguageRuntime;
 
 public class DClareMPS implements StateDeltaHandler, Universe, UncaughtExceptionHandler {
 
-    protected static final Context<Boolean>                                                             READING                  = Context.of(false);
+    protected static final Context<Boolean>                                                             RUNNING_DCLARE           = Context.of(false);
     protected static final Context<Boolean>                                                             GET_FROM_MPS             = Context.of(false);
 
     private static final String                                                                         MPS_PLUGIN_DIR           = System.getProperty("MPS_PLUGIN_DIR", PathManager.getPluginsPath());
@@ -166,7 +166,6 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
     //
     private final int                                                                                   nr;
     private final ContextPool                                                                           thePool                  = ContextThread.createPool(this);
-    private final ThreadLocal<Boolean>                                                                  committing               = ThreadLocal.withInitial(() -> false);
     private final UniverseTransaction                                                                   universeTransaction;
     private final DclareForMpsConfig                                                                    config;
     protected final ProjectBase                                                                         project;
@@ -495,7 +494,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
     public void handleMPSChange(Runnable action) {
         if (isRunning()) {
             if (Thread.currentThread() == commandThread) {
-                if (!committing.get()) {
+                if (!RUNNING_DCLARE.get()) {
                     try {
                         LeafTransaction.getContext().run(imperativeTransaction, action);
                     } catch (Throwable t) {
@@ -519,7 +518,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
     public void invokeLater(Runnable runnable) {
         SwingUtilities.invokeLater(() -> {
             try {
-                runnable.run();
+                RUNNING_DCLARE.run(true, runnable);
             } catch (Throwable t) {
                 addMessage(t);
             }
@@ -527,15 +526,15 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
     }
 
     public void read(Runnable runnable) {
-        modelAccess.runReadAction(Collection.sequential(() -> READING.run(true, runnable)));
+        modelAccess.runReadAction(Collection.sequential(() -> RUNNING_DCLARE.run(true, runnable)));
     }
 
     public void write(Runnable runnable) {
-        modelAccess.runWriteAction(Collection.sequential(runnable));
+        modelAccess.runWriteAction(Collection.sequential(() -> RUNNING_DCLARE.run(true, runnable)));
     }
 
     public void command(Runnable runnable) {
-        modelAccess.executeUndoTransparentCommand(Collection.sequential(runnable));
+        modelAccess.executeUndoTransparentCommand(Collection.sequential(() -> RUNNING_DCLARE.run(true, runnable)));
     }
 
     public void readInEDT(Runnable runnable) {
@@ -578,39 +577,34 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
             if (config.isTraceDclare()) {
                 System.err.println(DclareTrace.getLineStart("COMMIT") + "START " + this);
             }
-            committing.set(true);
-            try {
-                boolean changed = false;
-                Map<DObject, Map<DObserved, Pair<Object, Object>>>[] diff = new Map[]{imper.diff(dclare, //
-                        o -> o instanceof DObject && !((DObject) o).isDclareOnly() && ((DObject) o).isActive(), //
-                        s -> s instanceof DObserved && !((DObserved) s).isDclareOnly()).toMap(e -> (Entry) e)};
-                if (!diff[0].isEmpty()) {
+            boolean changed = false;
+            Map<DObject, Map<DObserved, Pair<Object, Object>>>[] diff = new Map[]{imper.diff(dclare, //
+                    o -> o instanceof DObject && !((DObject) o).isDclareOnly() && ((DObject) o).isActive(), //
+                    s -> s instanceof DObserved && !((DObserved) s).isDclareOnly()).toMap(e -> (Entry) e)};
+            if (!diff[0].isEmpty()) {
+                changed = true;
+                command(() -> {
+                    do {
+                        toMPS(imper, dclare, diff, diff[0].get(0).getKey());
+                    } while (!diff[0].isEmpty());
+                });
+            }
+            if (last) {
+                if (!setted.isEmpty()) {
                     changed = true;
-                    command(() -> {
-                        do {
-                            toMPS(imper, dclare, diff, diff[0].get(0).getKey());
-                        } while (!diff[0].isEmpty());
+                    read(() -> {
+                        for (DObject dObject : setted.filter(e -> e.getValue().anyMatch(s -> s instanceof DObserved && !((DObserved) s).isDclareOnly())).map(Entry::getKey).filter(DObject.class)) {
+                            addToChanged(dObject);
+                        }
                     });
                 }
-                if (last) {
-                    if (!setted.isEmpty()) {
-                        changed = true;
-                        read(() -> {
-                            for (DObject dObject : setted.filter(e -> e.getValue().anyMatch(s -> s instanceof DObserved && !((DObserved) s).isDclareOnly())).map(Entry::getKey).filter(DObject.class)) {
-                                addToChanged(dObject);
-                            }
-                        });
-                    }
-                    runModelCheck();
-                }
-                if (changed) {
-                    createNewDerivationState();
-                }
-            } finally {
-                committing.set(false);
-                if (config.isTraceDclare()) {
-                    System.err.println(DclareTrace.getLineStart("COMMIT") + "END " + this);
-                }
+                runModelCheck();
+            }
+            if (changed) {
+                createNewDerivationState();
+            }
+            if (config.isTraceDclare()) {
+                System.err.println(DclareTrace.getLineStart("COMMIT") + "END " + this);
             }
         }
     }
