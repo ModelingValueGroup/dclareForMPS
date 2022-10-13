@@ -85,6 +85,7 @@ import jetbrains.mps.smodel.language.LanguageRuntime;
 
 public class DClareMPS implements StateDeltaHandler, Universe, UncaughtExceptionHandler {
 
+    protected static final Context<Boolean>                                                             READING                  = Context.of(false);
     protected static final Context<Boolean>                                                             GET_FROM_MPS             = Context.of(false);
 
     private static final String                                                                         MPS_PLUGIN_DIR           = System.getProperty("MPS_PLUGIN_DIR", PathManager.getPluginsPath());
@@ -526,7 +527,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
     }
 
     public void read(Runnable runnable) {
-        modelAccess.runReadAction(Collection.sequential(runnable));
+        modelAccess.runReadAction(Collection.sequential(() -> READING.run(true, runnable)));
     }
 
     public void write(Runnable runnable) {
@@ -727,17 +728,15 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
             DObject dObject = dClareMPS.toDObject(sObject);
             if (dObject.isExternal()) {
                 return state.derive(supplier, dClareMPS.universeTransaction().constantState());
-            } else {
-                if (dObject.isActive()) {
-                    try {
-                        return supplier.get();
-                    } catch (Throwable t) {
-                        dClareMPS.addMessage(t);
-                        return null;
-                    }
-                } else {
-                    return state.derive(supplier, dClareMPS.derivationState());
+            } else if (dObject.isActive()) {
+                try {
+                    return supplier.get();
+                } catch (Throwable t) {
+                    dClareMPS.addMessage(t);
+                    return null;
                 }
+            } else {
+                return state.derive(supplier, dClareMPS.derivationState());
             }
         })) : null;
     }
@@ -863,7 +862,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
         @SuppressWarnings({"unchecked", "rawtypes"})
         @Override
         public <O, T> T get(O object, Getable<O, T> property) {
-            if (object instanceof DObject && !isPreState()) {
+            if (object instanceof DObject && !isPreState() && LeafTransaction.getCurrent() instanceof IdentityDerivationTransaction) {
                 DObject dObject = (DObject) object;
                 if (dObject.isRead()) {
                     if (property instanceof DObserved) {
@@ -882,7 +881,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
         @SuppressWarnings({"rawtypes", "unchecked"})
         @Override
         public <O, A, B> A getA(O object, Getable<O, Pair<A, B>> property) {
-            if (object instanceof DObject && !isPreState() && property == (Getable) Mutable.D_PARENT_CONTAINING) {
+            if (object instanceof DObject && !isPreState() && property == (Getable) Mutable.D_PARENT_CONTAINING && LeafTransaction.getCurrent() instanceof IdentityDerivationTransaction) {
                 DObject dObject = (DObject) object;
                 if (dObject.isRead() && !get(dObject, DObject.READ_OBSERVEDS).contains(property)) {
                     return (A) dObject.readParent().a();
@@ -894,7 +893,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
         @SuppressWarnings({"rawtypes", "unchecked"})
         @Override
         public <O, A, B> B getB(O object, Getable<O, Pair<A, B>> property) {
-            if (object instanceof DObject && !isPreState() && property == (Getable) Mutable.D_PARENT_CONTAINING) {
+            if (object instanceof DObject && !isPreState() && property == (Getable) Mutable.D_PARENT_CONTAINING && LeafTransaction.getCurrent() instanceof IdentityDerivationTransaction) {
                 DObject dObject = (DObject) object;
                 if (dObject.isRead() && !get(dObject, DObject.READ_OBSERVEDS).contains(property)) {
                     return (B) dObject.readParent().b();

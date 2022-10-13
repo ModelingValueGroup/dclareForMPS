@@ -160,7 +160,7 @@ public class DRepository extends DFromOriginalObject<ProjectRepository> implemen
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     protected Pair<DObject, DObserved<DObject, ?>> readParent() {
-        throw new UnsupportedOperationException();
+        return (Pair) Pair.of(dClareMPS(), DClareMPS.REPOSITORY_CONTAINER);
     }
 
 }

@@ -35,6 +35,7 @@ import org.jetbrains.mps.openapi.module.SRepository;
 import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
+import org.modelingvalue.dclare.Mutable;
 
 import jetbrains.mps.project.DevKit;
 import jetbrains.mps.smodel.MPSModuleRepository;
@@ -310,43 +311,33 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeAcce
     @SuppressWarnings("unchecked")
     @Override
     public void nodeRead(SNodeReadEvent event) {
-        SNode sParent = event.getNode().getParent();
-        SContainmentLink sLink = sParent != null ? event.getNode().getContainmentLink() : null;
-        SModel sModel = sParent == null ? event.getNode().getModel() : null;
-        b().handleMPSChange(() -> {
-            if (!DNode.RULES.get(event.getNode().getConcept()).isEmpty()) {
-                DNode dNode = DNode.of(event.getNode());
-                if (sParent != null) {
-                    DNode dParent = DNode.of(sParent);
-                    DNode.getDObserved(sLink).initParent(dParent, dNode);
-                } else {
-                    DModel dModel = DModel.of(sModel);
-                    DModel.ROOTS.initParent(dModel, dNode);
+        if (!DClareMPS.READING.get()) {
+            b().imperativeState().run(() -> {
+                if (!DNode.RULES.get(event.getNode().getConcept()).isEmpty()) {
+                    DNode dNode = DNode.of(event.getNode());
+                    if (!DObject.READ_OBSERVEDS.get(dNode).contains(Mutable.D_PARENT_CONTAINING)) {
+                        SNode sParent = event.getNode().getParent();
+                        SContainmentLink sLink = sParent != null ? event.getNode().getContainmentLink() : null;
+                        SModel sModel = sParent == null ? event.getNode().getModel() : null;
+                        b().handleMPSChange(() -> {
+                            if (sParent != null) {
+                                DNode.getDObserved(sLink).add(DNode.of(sParent), dNode);
+                            } else if (sModel != null) {
+                                DModel.ROOTS.add(DModel.of(sModel), dNode);
+                            }
+                        });
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     @Override
     public void propertyRead(SPropertyReadEvent event) {
-        b().handleMPSChange(() -> {
-            if (!DNode.RULES.get(event.getNode().getConcept()).isEmpty()) {
-                DNode read = DNode.of(event.getNode());
-                DObserved<DNode, String> dObserved = DNode.PROPERTY.get(event.getProperty());
-                dObserved.initRead(read);
-            }
-        });
     }
 
     @Override
     public void referenceRead(SReferenceReadEvent event) {
-        b().handleMPSChange(() -> {
-            if (!DNode.RULES.get(event.getNode().getConcept()).isEmpty()) {
-                DNode read = DNode.of(event.getNode());
-                DObserved<DNode, DNode> dObserved = DNode.REFERENCE.get(event.getAssociationLink());
-                dObserved.initRead(read);
-            }
-        });
     }
 
 }
