@@ -308,26 +308,35 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeAcce
         return SModelListenerPriority.CLIENT;
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public void nodeRead(SNodeReadEvent event) {
         if (!DClareMPS.RUNNING_DCLARE.get()) {
-            b().imperativeState().run(() -> {
+            b().imperativeState().run(() -> DClareMPS.RUNNING_DCLARE.run(true, () -> {
                 if (!DNode.RULES.get(event.getNode().getConcept()).isEmpty()) {
-                    DNode dNode = DNode.of(event.getNode());
-                    if (!DObject.READ_OBSERVEDS.get(dNode).contains(Mutable.D_PARENT_CONTAINING)) {
-                        SNode sParent = event.getNode().getParent();
-                        SContainmentLink sLink = sParent != null ? event.getNode().getContainmentLink() : null;
-                        SModel sModel = sParent == null ? event.getNode().getModel() : null;
-                        b().handleMPSChange(() -> {
-                            if (sParent != null) {
-                                DNode.getDObserved(sLink).add(DNode.of(sParent), dNode);
-                            } else if (sModel != null) {
-                                DModel.ROOTS.add(DModel.of(sModel), dNode);
-                            }
-                        });
-                    }
+                    activate(event.getNode());
                 }
+            }));
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void activate(SNode sNode) {
+        DNode dNode = DNode.of(sNode);
+        if (!DObject.READ_OBSERVEDS.get(dNode).contains(Mutable.D_PARENT_CONTAINING)) {
+            SNode sParent = sNode.getParent();
+            SContainmentLink sLink = sParent != null ? sNode.getContainmentLink() : null;
+            if (sParent != null && DNode.RULES.get(sParent.getConcept()).isEmpty()) {
+                activate(sParent);
+            }
+            SModel sModel = sParent == null ? sNode.getModel() : null;
+            DClareMPS.RUNNING_DCLARE.run(false, () -> {
+                b().handleMPSChange(() -> {
+                    if (sParent != null) {
+                        DNode.getDObserved(sLink).add(DNode.of(sParent), dNode);
+                    } else if (sModel != null) {
+                        DModel.ROOTS.add(DModel.of(sModel), dNode);
+                    }
+                });
             });
         }
     }
