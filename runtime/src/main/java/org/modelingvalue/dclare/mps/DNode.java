@@ -17,7 +17,6 @@ package org.modelingvalue.dclare.mps;
 
 import static org.modelingvalue.dclare.SetableModifier.*;
 
-import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
@@ -832,7 +831,9 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
             SContainmentLink cl = (SContainmentLink) feature;
             if (cl.isMultiple()) {
                 List<DNode> post = value != null ? Collection.of((Iterable<DNode>) value).notNull().distinct().toList() : null;
-                MANY_CONTAINMENT.get(cl).set(this, (b, a) -> a == null || Objects.equals(a, b) ? b : a, post);
+                if (post != null) {
+                    MANY_CONTAINMENT.get(cl).set(this, post);
+                }
             } else {
                 SINGLE_CONTAINMENT.get(cl).set(this, (DNode) value);
             }
