@@ -173,6 +173,13 @@ public interface DAttribute<O, T> extends DFeature {
                 ContainingCollection cc = (ContainingCollection) value;
                 value = (V) cc.clear().addAll(cc.notNull());
             }
+            if (isReference() && object.isObserving()) {
+                for (DObject r : collection(value).filter(DObject.class)) {
+                    if (!r.isExternal() && r.isRead()) {
+                        r.initAncestors(DObject.READ_OBSERVEDS.get(r));
+                    }
+                }
+            }
             return super.set(object, value);
         }
 
