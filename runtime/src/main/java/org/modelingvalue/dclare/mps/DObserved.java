@@ -195,6 +195,13 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
                     LeafTransaction.getCurrent().runNonObserving(() -> System.err.println(DclareTrace.getLineStart("ACTIVATE") + object + "." + this));
                 }
             }
+            if (isReference()) {
+                for (DObject r : collection(value).filter(DObject.class)) {
+                    if (!r.isExternal() && r.isRead()) {
+                        r.initAncestors(DObject.READ_OBSERVEDS.get(r));
+                    }
+                }
+            }
         }
         return super.set(object, value);
     }
