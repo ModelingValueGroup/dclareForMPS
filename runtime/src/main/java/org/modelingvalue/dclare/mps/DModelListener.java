@@ -16,18 +16,14 @@
 package org.modelingvalue.dclare.mps;
 
 import org.jetbrains.mps.openapi.event.SNodeAddEvent;
-import org.jetbrains.mps.openapi.event.SNodeReadEvent;
 import org.jetbrains.mps.openapi.event.SNodeRemoveEvent;
 import org.jetbrains.mps.openapi.event.SPropertyChangeEvent;
-import org.jetbrains.mps.openapi.event.SPropertyReadEvent;
 import org.jetbrains.mps.openapi.event.SReferenceChangeEvent;
-import org.jetbrains.mps.openapi.event.SReferenceReadEvent;
 import org.jetbrains.mps.openapi.language.SContainmentLink;
 import org.jetbrains.mps.openapi.model.SModel;
 import org.jetbrains.mps.openapi.model.SModel.Problem;
 import org.jetbrains.mps.openapi.model.SModelListener;
 import org.jetbrains.mps.openapi.model.SNode;
-import org.jetbrains.mps.openapi.model.SNodeAccessListener;
 import org.jetbrains.mps.openapi.model.SNodeChangeListener;
 import org.jetbrains.mps.openapi.model.SNodeReference;
 import org.jetbrains.mps.openapi.model.SReference;
@@ -35,14 +31,13 @@ import org.jetbrains.mps.openapi.module.SRepository;
 import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
-import org.modelingvalue.dclare.Mutable;
 
 import jetbrains.mps.project.DevKit;
 import jetbrains.mps.smodel.MPSModuleRepository;
 import jetbrains.mps.smodel.event.*;
 import jetbrains.mps.smodel.loading.ModelLoadingState;
 
-public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeAccessListener, SNodeChangeListener, SModelListener, jetbrains.mps.smodel.event.SModelListener {
+public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChangeListener, SModelListener, jetbrains.mps.smodel.event.SModelListener {
 
     private static final long serialVersionUID = -5189200443861195660L;
 
@@ -306,47 +301,6 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeAcce
     @Override
     public SModelListenerPriority getPriority() {
         return SModelListenerPriority.CLIENT;
-    }
-
-    @Override
-    public void nodeRead(SNodeReadEvent event) {
-        if (!DClareMPS.RUNNING_DCLARE.get()) {
-            b().imperativeState().run(() -> DClareMPS.RUNNING_DCLARE.run(true, () -> {
-                if (!DNode.RULES.get(event.getNode().getConcept()).isEmpty()) {
-                    activate(event.getNode());
-                }
-            }));
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    private void activate(SNode sNode) {
-        DNode dNode = DNode.of(sNode);
-        if (!DObject.READ_OBSERVEDS.get(dNode).contains(Mutable.D_PARENT_CONTAINING)) {
-            SNode sParent = sNode.getParent();
-            SContainmentLink sLink = sParent != null ? sNode.getContainmentLink() : null;
-            if (sParent != null && DNode.RULES.get(sParent.getConcept()).isEmpty()) {
-                activate(sParent);
-            }
-            SModel sModel = sParent == null ? sNode.getModel() : null;
-            DClareMPS.RUNNING_DCLARE.run(false, () -> {
-                b().handleMPSChange(() -> {
-                    if (sParent != null) {
-                        DNode.getDObserved(sLink).add(DNode.of(sParent), dNode);
-                    } else if (sModel != null) {
-                        DModel.ROOTS.add(DModel.of(sModel), dNode);
-                    }
-                });
-            });
-        }
-    }
-
-    @Override
-    public void propertyRead(SPropertyReadEvent event) {
-    }
-
-    @Override
-    public void referenceRead(SReferenceReadEvent event) {
     }
 
 }

@@ -93,10 +93,6 @@ public abstract class DNewableObject<T extends DNewableObject, R, S> extends DId
         return null;
     }
 
-    @Override
-    protected void read(DClareMPS dClareMPS) {
-    }
-
     @SuppressWarnings("unchecked")
     protected final R reference() {
         DRead<R> rc = referenceReason();
@@ -162,7 +158,7 @@ public abstract class DNewableObject<T extends DNewableObject, R, S> extends DId
     }
 
     @Override
-    protected void init(DClareMPS dClareMPS) {
+    protected final void init(DClareMPS dClareMPS) {
         super.init(dClareMPS);
         S original = tryOriginal();
         if (original != null) {
@@ -171,11 +167,18 @@ public abstract class DNewableObject<T extends DNewableObject, R, S> extends DId
     }
 
     @Override
-    protected void exit(DClareMPS dClareMPS) {
+    protected final void exit(DClareMPS dClareMPS) {
         super.exit(dClareMPS);
         S original = tryOriginal();
         if (original != null) {
             exit(dClareMPS, original);
+        }
+    }
+
+    @Override
+    protected final void read(DClareMPS dClareMPS) {
+        if (isRead()) {
+            read();
         }
     }
 
@@ -213,6 +216,8 @@ public abstract class DNewableObject<T extends DNewableObject, R, S> extends DId
             }
         }
     }
+
+    protected abstract void read();
 
     protected abstract void readDeep();
 

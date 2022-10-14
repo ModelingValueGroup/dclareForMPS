@@ -49,201 +49,206 @@ import jetbrains.mps.smodel.SNodeUtil;
 public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implements SNode {
 
     @SuppressWarnings("rawtypes")
-    protected static Constant<SAbstractConcept, Set<DRule<SNode>>>                                      RULES                  = Constant.of("RULES", c -> {
-                                                                                                                                   Set<SLanguage> langs = DRepository.ALL_LANGUAGES_WITH_RULES.get(DClareMPS.instance().getRepository());
-                                                                                                                                   return langs.flatMap(l -> DClareMPS.RULE_SETS.get(l)).flatMap(rs -> Collection.of(rs.getNodeRules(c, Set.of()))).toSet();
-                                                                                                                               });
+    protected static Constant<SAbstractConcept, Set<DRule<SNode>>>                                      RULES                   = Constant.of("RULES", c -> {
+                                                                                                                                    Set<SLanguage> langs = DRepository.ALL_LANGUAGES_WITH_RULES.get(DClareMPS.instance().getRepository());
+                                                                                                                                    return langs.flatMap(l -> DClareMPS.RULE_SETS.get(l)).flatMap(rs -> Collection.of(rs.getNodeRules(c, Set.of()))).toSet();
+                                                                                                                                });
 
-    private static final Constant<Quadruple<Set<SLanguage>, SConcept, Set<String>, IAspect>, DNodeType> NODE_TYPE              = Constant.of("NODE_TYPE", DNodeType::new);
+    private static final Constant<Quadruple<Set<SLanguage>, SConcept, Set<String>, IAspect>, DNodeType> NODE_TYPE               = Constant.of("NODE_TYPE", DNodeType::new);
 
-    private static final Constant<SConcept, AtomicLong>                                                 NODE_COUNTER           = Constant.of("NODE_COUNTER", NodeCounter::new, durable);
+    private static final Constant<SConcept, AtomicLong>                                                 NODE_COUNTER            = Constant.of("NODE_COUNTER", NodeCounter::new, durable);
 
-    protected static final Constant<SAbstractConcept, Set<SAbstractConcept>>                            SUPER_CONCEPTS         = Constant.of("SUPER_CONCEPTS", ac -> {
-                                                                                                                                   if (ac instanceof SInterfaceConcept) {
-                                                                                                                                       SInterfaceConcept i = (SInterfaceConcept) ac;
-                                                                                                                                       Set<SAbstractConcept> supers = Collection.of(i.getSuperInterfaces()).flatMap(DNode.SUPER_CONCEPTS::get).toSet();
-                                                                                                                                       return supers.add(ac);
-                                                                                                                                   } else {
-                                                                                                                                       SConcept c = (SConcept) ac;
-                                                                                                                                       Set<SAbstractConcept> supers = Collection.of(c.getSuperInterfaces()).flatMap(DNode.SUPER_CONCEPTS::get).toSet();
-                                                                                                                                       SConcept sc = c.getSuperConcept();
-                                                                                                                                       if (sc != null) {
-                                                                                                                                           supers = supers.addAll(DNode.SUPER_CONCEPTS.get(sc));
-                                                                                                                                       }
-                                                                                                                                       return supers.add(ac);
-                                                                                                                                   }
-                                                                                                                               });
+    protected static final Constant<SAbstractConcept, Set<SAbstractConcept>>                            SUPER_CONCEPTS          = Constant.of("SUPER_CONCEPTS", ac -> {
+                                                                                                                                    if (ac instanceof SInterfaceConcept) {
+                                                                                                                                        SInterfaceConcept i = (SInterfaceConcept) ac;
+                                                                                                                                        Set<SAbstractConcept> supers = Collection.of(i.getSuperInterfaces()).flatMap(DNode.SUPER_CONCEPTS::get).toSet();
+                                                                                                                                        return supers.add(ac);
+                                                                                                                                    } else {
+                                                                                                                                        SConcept c = (SConcept) ac;
+                                                                                                                                        Set<SAbstractConcept> supers = Collection.of(c.getSuperInterfaces()).flatMap(DNode.SUPER_CONCEPTS::get).toSet();
+                                                                                                                                        SConcept sc = c.getSuperConcept();
+                                                                                                                                        if (sc != null) {
+                                                                                                                                            supers = supers.addAll(DNode.SUPER_CONCEPTS.get(sc));
+                                                                                                                                        }
+                                                                                                                                        return supers.add(ac);
+                                                                                                                                    }
+                                                                                                                                });
 
-    protected static final Constant<SConcept, Set<SReferenceLink>>                                      SINGLE_REFERENCES      = Constant.of("SINGLE_REFERENCES", c -> {
-                                                                                                                                   return Collection.of(c.getReferenceLinks()).exclude(SReferenceLink::isOptional).                                                                           //
-                                                                                                                                           exclude(SNodeUtil.concept_BaseConcept.getReferenceLinks()::contains).toSet();
-                                                                                                                               });
+    protected static final Constant<SConcept, Set<SReferenceLink>>                                      SINGLE_REFERENCES       = Constant.of("SINGLE_REFERENCES", c -> {
+                                                                                                                                    return Collection.of(c.getReferenceLinks()).exclude(SReferenceLink::isOptional).                                                                           //
+                                                                                                                                            exclude(SNodeUtil.concept_BaseConcept.getReferenceLinks()::contains).toSet();
+                                                                                                                                });
 
     @SuppressWarnings("unlikely-arg-type")
-    protected static final Constant<SConcept, Set<SContainmentLink>>                                    SINGLE_CONTAINMENTS    = Constant.of("SINGLE_CONTAINMENTS", c -> {
-                                                                                                                                   return Collection.of(c.getContainmentLinks()).exclude(SContainmentLink::isMultiple).exclude(SContainmentLink::isOptional).                                 //
-                                                                                                                                           exclude(SNodeUtil.concept_BaseConcept.getContainmentLinks()::contains).toSet();
-                                                                                                                               });
+    protected static final Constant<SConcept, Set<SContainmentLink>>                                    SINGLE_CONTAINMENTS     = Constant.of("SINGLE_CONTAINMENTS", c -> {
+                                                                                                                                    return Collection.of(c.getContainmentLinks()).exclude(SContainmentLink::isMultiple).exclude(SContainmentLink::isOptional).                                 //
+                                                                                                                                            exclude(SNodeUtil.concept_BaseConcept.getContainmentLinks()::contains).toSet();
+                                                                                                                                });
 
-    protected static final DObserved<DNode, DModel>                                                     MODEL                  = DObserved.of("$MODEL", null, dNode -> {
-                                                                                                                                   SNode sNode = dNode.tryOriginal();
-                                                                                                                                   SModel sModel = sNode != null ? sNode.getModel() : null;
-                                                                                                                                   return sModel != null ? DModel.of(sModel) : null;
-                                                                                                                               }, null, plumbing);
+    protected static final DObserved<DNode, DModel>                                                     MODEL                   = DObserved.of("$MODEL", null, dNode -> {
+                                                                                                                                    SNode sNode = dNode.tryOriginal();
+                                                                                                                                    SModel sModel = sNode != null ? sNode.getModel() : null;
+                                                                                                                                    return sModel != null ? DModel.of(sModel) : null;
+                                                                                                                                }, null, plumbing);
 
-    protected static final DObserved<DNode, DNode>                                                      ROOT                   = DObserved.of("$ROOT", null, dNode -> {
-                                                                                                                                   SNode sNode = dNode.tryOriginal();
-                                                                                                                                   SNode sRoot = sNode != null ? sNode.getContainingRoot() : null;
-                                                                                                                                   return sRoot != null ? DNode.of(sRoot) : null;
-                                                                                                                               }, null, (tx, o, pre, post) -> {
-                                                                                                                                   Set<Pair<DObject, IssueKindReportItem>> items = MPS_ISSUES.get(o);
-                                                                                                                                   if (pre != null) {
-                                                                                                                                       DNode.ALL_MPS_ISSUES.set(pre, Set::removeAll, items);
-                                                                                                                                   }
-                                                                                                                                   if (post != null) {
-                                                                                                                                       DNode.ALL_MPS_ISSUES.set(post, Set::addAll, items);
-                                                                                                                                   }
-                                                                                                                               }, plumbing);
+    protected static final DObserved<DNode, DNode>                                                      ROOT                    = DObserved.of("$ROOT", null, dNode -> {
+                                                                                                                                    SNode sNode = dNode.tryOriginal();
+                                                                                                                                    SNode sRoot = sNode != null ? sNode.getContainingRoot() : null;
+                                                                                                                                    return sRoot != null ? DNode.of(sRoot) : null;
+                                                                                                                                }, null, (tx, o, pre, post) -> {
+                                                                                                                                    Set<Pair<DObject, IssueKindReportItem>> items = MPS_ISSUES.get(o);
+                                                                                                                                    if (pre != null) {
+                                                                                                                                        DNode.ALL_MPS_ISSUES.set(pre, Set::removeAll, items);
+                                                                                                                                    }
+                                                                                                                                    if (post != null) {
+                                                                                                                                        DNode.ALL_MPS_ISSUES.set(post, Set::addAll, items);
+                                                                                                                                    }
+                                                                                                                                }, plumbing);
     @SuppressWarnings({"unchecked", "rawtypes"})
-    protected static final DObserved<DNode, Map<Object, Object>>                                        USER_OBJECTS           = DObserved.of("USER_OBJECTS", Map.of(), (Function) null, (TriConsumer) null);
+    protected static final DObserved<DNode, Map<Object, Object>>                                        USER_OBJECTS            = DObserved.of("USER_OBJECTS", Map.of(), (Function) null, (TriConsumer) null);
 
     @SuppressWarnings("deprecation")
-    public static final Constant<SProperty, DObserved<DNode, String>>                                   PROPERTY               = Constant.of("PROPERTY", sp -> DObserved.of(sp, null, dNode -> {
-                                                                                                                                   SNode sNode = dNode.tryOriginal();
-                                                                                                                                   return sNode != null ? sNode.getProperty(sp) : null;
-                                                                                                                               }, (dNode, pre, post) -> {
-                                                                                                                                   SNode sNode = dNode.tryOriginal();
-                                                                                                                                   sNode.setProperty(sp, post);
-                                                                                                                               }, sp::getDeclarationNode));
+    public static final Constant<SProperty, DObserved<DNode, String>>                                   PROPERTY                = Constant.of("PROPERTY", sp -> DObserved.of(sp, null, dNode -> {
+                                                                                                                                    SNode sNode = dNode.tryOriginal();
+                                                                                                                                    return sNode != null ? sNode.getProperty(sp) : null;
+                                                                                                                                }, (dNode, pre, post) -> {
+                                                                                                                                    SNode sNode = dNode.tryOriginal();
+                                                                                                                                    sNode.setProperty(sp, post);
+                                                                                                                                }, sp::getDeclarationNode));
 
     @SuppressWarnings("deprecation")
-    public static final Constant<SContainmentLink, DObserved<DNode, List<DNode>>>                       MANY_CONTAINMENT       = Constant.of("MANY_CONTAINMENT", mc -> DObserved.of(mc, List.of(), dNode -> {
-                                                                                                                                   SNode sNode = dNode.tryOriginal();
-                                                                                                                                   return sNode != null ? children(sNode, mc).map(DNode::of).toList() : List.of();
-                                                                                                                               }, (dNode, pre, post) -> {
-                                                                                                                                   SNode sNode = dNode.tryOriginal();
-                                                                                                                                   DObserved.<DNode> map(pre, post, (n, a) -> {
-                                                                                                                                       SNode s = n.original();
-                                                                                                                                       removeWhenAllreadyContained(sNode, mc, s);
-                                                                                                                                       sNode.insertChildAfter(mc, s, a != null ? a.tryOriginal() : null);
-                                                                                                                                       n.init(s);
-                                                                                                                                   }, r -> {
-                                                                                                                                       SNode s = r.tryOriginal();
-                                                                                                                                       sNode.removeChild(s);
-                                                                                                                                   });
-                                                                                                                               }, mc::getDeclarationNode, containment));
+    public static final Constant<SContainmentLink, DObserved<DNode, List<DNode>>>                       MANY_CONTAINMENT        = Constant.of("MANY_CONTAINMENT", mc -> DObserved.of(mc, List.of(), dNode -> {
+                                                                                                                                    SNode sNode = dNode.tryOriginal();
+                                                                                                                                    return sNode != null ? children(sNode, mc).map(DNode::of).toList() : List.of();
+                                                                                                                                }, (dNode, pre, post) -> {
+                                                                                                                                    SNode sNode = dNode.tryOriginal();
+                                                                                                                                    DObserved.<DNode> map(pre, post, (n, a) -> {
+                                                                                                                                        SNode s = n.original();
+                                                                                                                                        removeWhenAllreadyContained(sNode, mc, s);
+                                                                                                                                        sNode.insertChildAfter(mc, s, a != null ? a.tryOriginal() : null);
+                                                                                                                                        n.init(s);
+                                                                                                                                    }, r -> {
+                                                                                                                                        SNode s = r.tryOriginal();
+                                                                                                                                        sNode.removeChild(s);
+                                                                                                                                    });
+                                                                                                                                }, mc::getDeclarationNode, containment));
 
     @SuppressWarnings("deprecation")
-    public static final Constant<SContainmentLink, DObserved<DNode, DNode>>                             SINGLE_CONTAINMENT     = Constant.of("SINGLE_CONTAINMENT", sc -> DObserved.of(sc, null, dNode -> {
-                                                                                                                                   SNode sNode = dNode.tryOriginal();
-                                                                                                                                   SNode child = sNode != null ? children(sNode, sc).first() : null;
-                                                                                                                                   return child != null ? DNode.of(child) : null;
-                                                                                                                               }, (dNode, pre, post) -> {
-                                                                                                                                   SNode sNode = dNode.tryOriginal();
-                                                                                                                                   if (pre != null) {
-                                                                                                                                       SNode s = pre.tryOriginal();
-                                                                                                                                       sNode.removeChild(s);
-                                                                                                                                   }
-                                                                                                                                   if (post != null) {
-                                                                                                                                       SNode s = post.original();
-                                                                                                                                       removeWhenAllreadyContained(sNode, sc, s);
-                                                                                                                                       sNode.addChild(sc, s);
-                                                                                                                                       post.init(s);
-                                                                                                                                   }
-                                                                                                                               }, sc::getDeclarationNode, containment));
+    public static final Constant<SContainmentLink, DObserved<DNode, DNode>>                             SINGLE_CONTAINMENT      = Constant.of("SINGLE_CONTAINMENT", sc -> DObserved.of(sc, null, dNode -> {
+                                                                                                                                    SNode sNode = dNode.tryOriginal();
+                                                                                                                                    SNode child = sNode != null ? children(sNode, sc).first() : null;
+                                                                                                                                    return child != null ? DNode.of(child) : null;
+                                                                                                                                }, (dNode, pre, post) -> {
+                                                                                                                                    SNode sNode = dNode.tryOriginal();
+                                                                                                                                    if (pre != null) {
+                                                                                                                                        SNode s = pre.tryOriginal();
+                                                                                                                                        sNode.removeChild(s);
+                                                                                                                                    }
+                                                                                                                                    if (post != null) {
+                                                                                                                                        SNode s = post.original();
+                                                                                                                                        removeWhenAllreadyContained(sNode, sc, s);
+                                                                                                                                        sNode.addChild(sc, s);
+                                                                                                                                        post.init(s);
+                                                                                                                                    }
+                                                                                                                                }, sc::getDeclarationNode, containment));
 
     @SuppressWarnings("deprecation")
-    public static final Constant<SReferenceLink, DObserved<DNode, DNode>>                               REFERENCE              = Constant.of("REFERENCE", sr -> DObserved.of(sr, null, hasOpposite(sr) ? () -> DNode.OPPOSITE.get(sr) : null, dNode -> {
-                                                                                                                                   SNode orig = dNode.tryOriginal();
-                                                                                                                                   SReference ref = orig != null ? orig.getReference(sr) : null;
-                                                                                                                                   SNode sNode = ref != null ? ref.getTargetNode() : null;
-                                                                                                                                   return sNode != null ? DNode.of(sNode) : ref != null ? referenceConstruct(ref.getTargetNodeReference(), null) : null;
-                                                                                                                               }, (dNode, pre, post) -> {
-                                                                                                                                   SNode sNode = dNode.tryOriginal();
-                                                                                                                                   SNode soll = post != null ? post.tryOriginal() : null;
-                                                                                                                                   sNode.setReferenceTarget(sr, soll);
-                                                                                                                               }, sr::getDeclarationNode, orphansAllowed));
+    public static final Constant<SReferenceLink, DObserved<DNode, DNode>>                               REFERENCE               = Constant.of("REFERENCE", sr -> DObserved.of(sr, null, hasOpposite(sr) ? () -> DNode.OPPOSITE.get(sr) : null, dNode -> {
+                                                                                                                                    SNode orig = dNode.tryOriginal();
+                                                                                                                                    SReference ref = orig != null ? orig.getReference(sr) : null;
+                                                                                                                                    SNode sNode = ref != null ? ref.getTargetNode() : null;
+                                                                                                                                    return sNode != null ? DNode.of(sNode) : ref != null ? referenceConstruct(ref.getTargetNodeReference(), null) : null;
+                                                                                                                                }, (dNode, pre, post) -> {
+                                                                                                                                    SNode sNode = dNode.tryOriginal();
+                                                                                                                                    SNode soll = post != null ? post.tryOriginal() : null;
+                                                                                                                                    sNode.setReferenceTarget(sr, soll);
+                                                                                                                                }, sr::getDeclarationNode, orphansAllowed));
     @SuppressWarnings("deprecation")
-    public static final Constant<SReferenceLink, DObserved<DNode, Set<DNode>>>                          OPPOSITE               = Constant.of("OPPOSITE", sr -> DObserved.of(Pair.of(sr, "OPPOSITE"), Set.of(), () -> DNode.REFERENCE.get(sr), null, null, sr::getDeclarationNode, synthetic));
+    public static final Constant<SReferenceLink, DObserved<DNode, Set<DNode>>>                          OPPOSITE                = Constant.of("OPPOSITE", sr -> DObserved.of(Pair.of(sr, "OPPOSITE"), Set.of(), () -> DNode.REFERENCE.get(sr), null, null, sr::getDeclarationNode, synthetic));
 
-    private static final Observer<DNode>                                                                MODEL_RULE             = DObject.observer(MODEL, o -> {
-                                                                                                                                   DNode p = o.getAncestor(DNode.class);
-                                                                                                                                   return p != null ? MODEL.get(p) : o.getAncestor(DModel.class);
-                                                                                                                               });
+    private static final Observer<DNode>                                                                MODEL_RULE              = DObject.observer(MODEL, o -> {
+                                                                                                                                    DNode p = o.getAncestor(DNode.class);
+                                                                                                                                    return p != null ? MODEL.get(p) : o.getAncestor(DModel.class);
+                                                                                                                                });
 
-    private static final Observer<DNode>                                                                ROOT_RULE              = DObject.observer(ROOT, o -> {
-                                                                                                                                   DNode p = o.getParent();
-                                                                                                                                   return p != null ? ROOT.get(p) : o;
-                                                                                                                               });
+    private static final Observer<DNode>                                                                ROOT_RULE               = DObject.observer(ROOT, o -> {
+                                                                                                                                    DNode p = o.getParent();
+                                                                                                                                    return p != null ? ROOT.get(p) : o;
+                                                                                                                                });
     @SuppressWarnings("rawtypes")
-    protected static final Constant<Pair<SConcept, IAspect>, Set<Observer>>                             COPY_CONCEPT_OBSERVERS = Constant.of("COPY_CONCEPT_OBSERVERS", p -> {
-                                                                                                                                   SConcept c = p.a();
-                                                                                                                                   IAspect a = p.b();
-                                                                                                                                   Set<Observer> observers = Set.of();
-                                                                                                                                   for (SProperty property : c.getProperties()) {
-                                                                                                                                       DObserved<DNode, String> observed = PROPERTY.get(property);
-                                                                                                                                       observers = observers.add(copyObserver(a, observed,                                                                                                    //
-                                                                                                                                               (t, s, r) -> observed.set(t, observed.get(s))));
-                                                                                                                                   }
-                                                                                                                                   for (SContainmentLink containment : c.getContainmentLinks()) {
-                                                                                                                                       if (containment.isMultiple()) {
-                                                                                                                                           DObserved<DNode, List<DNode>> observed = MANY_CONTAINMENT.get(containment);
-                                                                                                                                           observers = observers.add(copyObserver(a, observed,                                                                                                //
-                                                                                                                                                   (t, s, r) -> observed.set(t, copy(observed.get(s), r))));
-                                                                                                                                       } else {
-                                                                                                                                           DObserved<DNode, DNode> observed = SINGLE_CONTAINMENT.get(containment);
-                                                                                                                                           observers = observers.add(copyObserver(a, observed,                                                                                                //
-                                                                                                                                                   (t, s, r) -> observed.set(t, copy(observed.get(s), r))));
-                                                                                                                                       }
-                                                                                                                                   }
-                                                                                                                                   for (SReferenceLink reference : c.getReferenceLinks()) {
-                                                                                                                                       DObserved<DNode, DNode> observed = REFERENCE.get(reference);
-                                                                                                                                       observers = observers.add(copyObserver(a, observed,                                                                                                    //
-                                                                                                                                               (t, s, r) -> observed.set(t, map(t, s, observed.get(s), r))));
-                                                                                                                                   }
-                                                                                                                                   return observers;
-                                                                                                                               });
+    protected static final Constant<Pair<SConcept, IAspect>, Set<Observer>>                             COPY_CONCEPT_OBSERVERS  = Constant.of("COPY_CONCEPT_OBSERVERS", p -> {
+                                                                                                                                    SConcept c = p.a();
+                                                                                                                                    IAspect a = p.b();
+                                                                                                                                    Set<Observer> observers = Set.of();
+                                                                                                                                    for (SProperty property : c.getProperties()) {
+                                                                                                                                        DObserved<DNode, String> observed = PROPERTY.get(property);
+                                                                                                                                        observers = observers.add(copyObserver(a, observed,                                                                                                    //
+                                                                                                                                                (t, s, r) -> observed.set(t, observed.get(s))));
+                                                                                                                                    }
+                                                                                                                                    for (SContainmentLink containment : c.getContainmentLinks()) {
+                                                                                                                                        if (containment.isMultiple()) {
+                                                                                                                                            DObserved<DNode, List<DNode>> observed = MANY_CONTAINMENT.get(containment);
+                                                                                                                                            observers = observers.add(copyObserver(a, observed,                                                                                                //
+                                                                                                                                                    (t, s, r) -> observed.set(t, copy(observed.get(s), r))));
+                                                                                                                                        } else {
+                                                                                                                                            DObserved<DNode, DNode> observed = SINGLE_CONTAINMENT.get(containment);
+                                                                                                                                            observers = observers.add(copyObserver(a, observed,                                                                                                //
+                                                                                                                                                    (t, s, r) -> observed.set(t, copy(observed.get(s), r))));
+                                                                                                                                        }
+                                                                                                                                    }
+                                                                                                                                    for (SReferenceLink reference : c.getReferenceLinks()) {
+                                                                                                                                        DObserved<DNode, DNode> observed = REFERENCE.get(reference);
+                                                                                                                                        observers = observers.add(copyObserver(a, observed,                                                                                                    //
+                                                                                                                                                (t, s, r) -> observed.set(t, map(t, s, observed.get(s), r))));
+                                                                                                                                    }
+                                                                                                                                    return observers;
+                                                                                                                                });
 
     @SuppressWarnings("rawtypes")
-    protected static final Constant<SConcept, Set<DObserved>>                                           CONCEPT_DOBSERVEDS     = Constant.of("$CONCEPT_DOBSERVEDS", c -> Collection.concat(                                                                                                   //
-            Collection.of(c.getProperties()),                                                                                                                                                                                                                                                 //
-            Collection.of(c.getContainmentLinks()),                                                                                                                                                                                                                                           //
+    protected static final Constant<SConcept, Set<DObserved>>                                           CONCEPT_DOBSERVEDS      = Constant.of("$CONCEPT_DOBSERVEDS", c -> Collection.concat(                                                                                                   //
+            Collection.of(c.getProperties()),                                                                                                                                                                                                                                                  //
+            Collection.of(c.getContainmentLinks()),                                                                                                                                                                                                                                            //
             Collection.of(c.getReferenceLinks())).map(DNode::dObserved).toSet());
 
     @SuppressWarnings("rawtypes")
-    protected static final Constant<SConcept, Set<Observer>>                                            CONCEPT_OBSERVERS      = Constant.of("$CONCEPT_OBSERVERS", c -> Set.of());
+    private static final Constant<SConcept, Set<DObserved>>                                             CONCEPT_INIT_DOBSERVEDS = Constant.of("$CONCEPT_INIT_DOBSERVEDS", c -> Collection.concat(                                                                                              //
+            Collection.of(c.getContainmentLinks()),                                                                                                                                                                                                                                            //
+            Collection.of(c.getReferenceLinks()).filter(DNode::hasOpposite)).map(DNode::dObserved).toSet());
 
-    protected static final Setable<DNode, Set<Pair<DObject, IssueKindReportItem>>>                      ALL_MPS_ISSUES         = Setable.of("$ALL_MPS_ISSUES", Set.of(), (tx, o, pre, post) -> {
-                                                                                                                                   DRepository repos = DClareMPS.instance().getRepository();
-                                                                                                                                   Setable.<Set<Pair<DObject, IssueKindReportItem>>, Pair<DObject, IssueKindReportItem>> diff(pre, post,                                                      //
-                                                                                                                                           a -> {
-                                                                                                                                               DObject.MPS_ISSUES.set(a.a(), Set::add, a);
-                                                                                                                                               DRepository.ALL_MPS_ISSUES.set(repos, Set::add, a.b());
-                                                                                                                                           },                                                                                                                                                 //
-                                                                                                                                           r -> {
-                                                                                                                                               DObject.MPS_ISSUES.set(r.a(), Set::remove, r);
-                                                                                                                                               DRepository.ALL_MPS_ISSUES.set(repos, Set::remove, r.b());
-                                                                                                                                           });
-                                                                                                                               });
+    @SuppressWarnings("rawtypes")
+    protected static final Constant<SConcept, Set<Observer>>                                            CONCEPT_OBSERVERS       = Constant.of("$CONCEPT_OBSERVERS", c -> Set.of());
+
+    protected static final Setable<DNode, Set<Pair<DObject, IssueKindReportItem>>>                      ALL_MPS_ISSUES          = Setable.of("$ALL_MPS_ISSUES", Set.of(), (tx, o, pre, post) -> {
+                                                                                                                                    DRepository repos = DClareMPS.instance().getRepository();
+                                                                                                                                    Setable.<Set<Pair<DObject, IssueKindReportItem>>, Pair<DObject, IssueKindReportItem>> diff(pre, post,                                                      //
+                                                                                                                                            a -> {
+                                                                                                                                                DObject.MPS_ISSUES.set(a.a(), Set::add, a);
+                                                                                                                                                DRepository.ALL_MPS_ISSUES.set(repos, Set::add, a.b());
+                                                                                                                                            },                                                                                                                                                 //
+                                                                                                                                            r -> {
+                                                                                                                                                DObject.MPS_ISSUES.set(r.a(), Set::remove, r);
+                                                                                                                                                DRepository.ALL_MPS_ISSUES.set(repos, Set::remove, r.b());
+                                                                                                                                            });
+                                                                                                                                });
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    protected static final DObserved<DNode, Integer>                                                    INDEX                  = DObserved.of("INDEX", -1, dNode -> {
-                                                                                                                                   SNode sNode = dNode.tryOriginal();
-                                                                                                                                   return sNode != null ? SNodeOperations.getIndexInParent(sNode) : -1;
-                                                                                                                               }, null, plumbing);
+    protected static final DObserved<DNode, Integer>                                                    INDEX                   = DObserved.of("INDEX", -1, dNode -> {
+                                                                                                                                    SNode sNode = dNode.tryOriginal();
+                                                                                                                                    return sNode != null ? SNodeOperations.getIndexInParent(sNode) : -1;
+                                                                                                                                }, null, plumbing);
 
     @SuppressWarnings("rawtypes")
-    private static final Observer<DNode>                                                                INDEX_RULE             = DObject.observer(INDEX, o -> {
-                                                                                                                                   Pair<Mutable, Setable<Mutable, ?>> pc = o.dParentContaining();
-                                                                                                                                   Object children = pc != null ? pc.b().get(pc.a()) : null;
-                                                                                                                                   return o.equals(children) ? 0 : children instanceof List ? ((List) children).firstIndexOf(o) : -1;
-                                                                                                                               });
+    private static final Observer<DNode>                                                                INDEX_RULE              = DObject.observer(INDEX, o -> {
+                                                                                                                                    Pair<Mutable, Setable<Mutable, ?>> pc = o.dParentContaining();
+                                                                                                                                    Object children = pc != null ? pc.b().get(pc.a()) : null;
+                                                                                                                                    return o.equals(children) ? 0 : children instanceof List ? ((List) children).firstIndexOf(o) : -1;
+                                                                                                                                });
 
     @SuppressWarnings("rawtypes")
-    protected static final Set<Observer>                                                                OBSERVERS              = DNewableObject.OBSERVERS.addAll(Set.of(ROOT_RULE, MODEL_RULE, INDEX_RULE));
+    protected static final Set<Observer>                                                                OBSERVERS               = DNewableObject.OBSERVERS.addAll(Set.of(ROOT_RULE, MODEL_RULE, INDEX_RULE));
 
     @SuppressWarnings("rawtypes")
-    protected static final Set<Setable>                                                                 SETABLES               = DNewableObject.SETABLES.addAll(Set.of(ROOT, MODEL, USER_OBJECTS, ALL_MPS_ISSUES, INDEX));
+    protected static final Set<Setable>                                                                 SETABLES                = DNewableObject.SETABLES.addAll(Set.of(ROOT, MODEL, USER_OBJECTS, ALL_MPS_ISSUES, INDEX));
 
     private static void removeWhenAllreadyContained(SNode newParent, SContainmentLink link, SNode node) {
         SNode oldParent = node.getParent();
@@ -518,16 +523,6 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
     public SNodeId getNodeId() {
         SNode sNode = tryOriginal();
         return sNode != null ? sNode.getNodeId() : null;
-    }
-
-    @Override
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    protected void readDeep() {
-        Set<Observed> read = DNewableObject.READ_OBSERVEDS.get(this);
-        readObserved(read, INDEX);
-        readObserved(read, ROOT);
-        readObserved(read, MODEL);
-        DNode.CONCEPT_DOBSERVEDS.get(getConcept()).forEachOrdered(a -> readObserved(read, a));
     }
 
     @Override
@@ -1084,6 +1079,35 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
 
     @Override
     protected void exit(DClareMPS dClareMPS, SNode original) {
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    protected void read() {
+        DNode.CONCEPT_INIT_DOBSERVEDS.get(getConcept()).forEachOrdered(o -> o.triggerInitRead(this));
+    }
+
+    @Override
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    protected void readDeep() {
+        Set<Observed> read = DNewableObject.READ_OBSERVEDS.get(this);
+        readObserved(read, INDEX);
+        readObserved(read, ROOT);
+        readObserved(read, MODEL);
+        DNode.CONCEPT_DOBSERVEDS.get(getConcept()).forEachOrdered(o -> readObserved(read, o));
+    }
+
+    @Override
+    protected void activate() {
+        if (!isExternal() && isAction() && isRead() && !isActive()) {
+            SNode root = dClareMPS().read(() -> tryOriginal().getContainingRoot());
+            if (root != null) {
+                SModel model = dClareMPS().read(() -> root.getModel());
+                if (model != null) {
+                    DModel.of(model).triggerAddRoot(DNode.of(root));
+                }
+            }
+        }
     }
 
     protected DModel getDModelFromMPS() {

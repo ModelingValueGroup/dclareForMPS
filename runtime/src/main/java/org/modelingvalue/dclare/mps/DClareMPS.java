@@ -579,7 +579,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
             }
             boolean changed = false;
             Map<DObject, Map<DObserved, Pair<Object, Object>>>[] diff = new Map[]{imper.diff(dclare, //
-                    o -> o instanceof DObject && !((DObject) o).isDclareOnly() && ((DObject) o).isActive(), //
+                    o -> o instanceof DObject && ((DObject) o).isActive() && !((DObject) o).isDclareOnly(), //
                     s -> s instanceof DObserved && !((DObserved) s).isDclareOnly()).toMap(e -> (Entry) e)};
             if (!diff[0].isEmpty()) {
                 changed = true;
@@ -861,10 +861,10 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
                 if (dObject.isRead()) {
                     if (property instanceof DObserved) {
                         DObserved<DObject, T> dObserved = (DObserved<DObject, T>) property;
-                        if (dObserved.isRead() && !dObserved.isDclareOnly() && !get(dObject, DObject.READ_OBSERVEDS).contains(property)) {
+                        if (dObserved.isRead() && !dObserved.isDclareOnly() && !super.get(dObject, DObject.READ_OBSERVEDS).contains(property)) {
                             return dObserved.fromMPS(dObject);
                         }
-                    } else if (property == Mutable.D_PARENT_CONTAINING && !get(dObject, DObject.READ_OBSERVEDS).contains(property)) {
+                    } else if (property == Mutable.D_PARENT_CONTAINING && super.get((Mutable) object, Mutable.D_PARENT_CONTAINING) == null) {
                         return (T) dObject.readParent();
                     }
                 }
@@ -877,7 +877,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
         public <O, A, B> A getA(O object, Getable<O, Pair<A, B>> property) {
             if (property == (Getable) Mutable.D_PARENT_CONTAINING && getFromMPS(object)) {
                 DObject dObject = (DObject) object;
-                if (dObject.isRead() && !get(dObject, DObject.READ_OBSERVEDS).contains(property)) {
+                if (dObject.isRead() && super.get((Mutable) object, Mutable.D_PARENT_CONTAINING) == null) {
                     return (A) dObject.readParent().a();
                 }
             }
@@ -889,7 +889,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
         public <O, A, B> B getB(O object, Getable<O, Pair<A, B>> property) {
             if (property == (Getable) Mutable.D_PARENT_CONTAINING && getFromMPS(object)) {
                 DObject dObject = (DObject) object;
-                if (dObject.isRead() && !get(dObject, DObject.READ_OBSERVEDS).contains(property)) {
+                if (dObject.isRead() && super.get((Mutable) object, Mutable.D_PARENT_CONTAINING) == null) {
                     return (B) dObject.readParent().b();
                 }
             }

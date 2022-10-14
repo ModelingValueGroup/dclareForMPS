@@ -15,8 +15,6 @@
 
 package org.modelingvalue.dclare.mps;
 
-import static org.modelingvalue.dclare.Mutable.D_PARENT_CONTAINING;
-
 import java.time.Instant;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -31,7 +29,13 @@ import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.collections.util.QuadConsumer;
 import org.modelingvalue.collections.util.TriConsumer;
-import org.modelingvalue.dclare.*;
+import org.modelingvalue.dclare.Action;
+import org.modelingvalue.dclare.DclareTrace;
+import org.modelingvalue.dclare.LeafModifier;
+import org.modelingvalue.dclare.LeafTransaction;
+import org.modelingvalue.dclare.Observed;
+import org.modelingvalue.dclare.Setable;
+import org.modelingvalue.dclare.SetableModifier;
 import org.modelingvalue.dclare.ex.ThrowableError;
 
 @SuppressWarnings("unused")
@@ -64,7 +68,6 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
     private Function<O, T>        fromMPS;
     private TriConsumer<O, T, T>  toMPS;
     private Action<O>             initReadAction;
-    private Consumer<O>           initParentConsumer;
     private Action<O>             reReadAction;
     private final Supplier<SNode> source;
 
@@ -83,7 +86,6 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
     protected final void setFromToMPS(Function<O, T> fromMPS, TriConsumer<O, T, T> toMPS) {
         this.fromMPS = fromMPS;
         this.toMPS = toMPS;
-        this.initParentConsumer = fromMPS != null && containment() ? p -> initParent(p, ((Pair<String, DObject>) ((Action) LeafTransaction.getCurrent().leaf()).id()).b()) : null;
         this.initReadAction = fromMPS != null ? Action.<O> of(Pair.of("$INIT_READ", id), this::initRead, LeafModifier.preserved) : null;
         this.reReadAction = fromMPS != null ? Action.<O> of(Pair.of("$RE_READ", id), this::reRead, LeafModifier.preserved) : null;
     }
@@ -95,20 +97,6 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
     @Override
     public SNode getSource() {
         return source != null ? source.get() : null;
-    }
-
-    @SuppressWarnings("rawtypes")
-    private void initParent(O parent, DObject child) {
-        if (!DObject.READ_OBSERVEDS.add(child, D_PARENT_CONTAINING).contains(D_PARENT_CONTAINING)) {
-            if (DClareMPS.instance().getConfig().isTraceActivation()) {
-                LeafTransaction.getCurrent().runNonObserving(() -> System.err.println(DclareTrace.getLineStart("ACTIVATE") + child));
-            }
-            add(parent, child);
-        }
-    }
-
-    protected void triggerInitParent(O parent, DObject child) {
-        Action.<O> of(Pair.of("$INIT_PARENT", child), initParentConsumer, LeafModifier.preserved).trigger(parent);
     }
 
     @SuppressWarnings("rawtypes")
@@ -161,19 +149,14 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
     @SuppressWarnings("rawtypes")
     @Override
     public T get(O object) {
-        if (object.isRead()) {
+        if (isRead() && object.isRead()) {
             if (object.readConstant()) {
-                if (isRead()) {
-                    return fromMPS(object);
-                }
-            } else if (object.isObserving()) {
-                Set<Observed> reads = DObject.READ_OBSERVEDS.get(object);
-                object.initAncestors(reads);
-                if (isRead() && !isDclareOnly() && !reads.contains(this)) {
-                    triggerInitRead(object);
-                }
+                return fromMPS(object);
+            } else if (!isDclareOnly() && object.isObserving() && !DObject.READ_OBSERVEDS.get(object).contains(this)) {
+                triggerInitRead(object);
             }
         }
+        object.activate();
         return super.get(object);
     }
 
@@ -182,18 +165,16 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
     public T set(O object, T value) {
         if (isRead() && !isDclareOnly() && object.isObserving()) {
             if (object.isRead()) {
-                Set<Observed> reads = DObject.READ_OBSERVEDS.get(object);
-                object.initAncestors(reads);
-                if (!reads.contains(this)) {
+                if (!DObject.READ_OBSERVEDS.get(object).contains(this)) {
                     triggerInitRead(object);
                 }
-            } else {
-                if (!DObject.READ_OBSERVEDS.add(object, Mutable.D_PARENT_CONTAINING).contains(Mutable.D_PARENT_CONTAINING) && DClareMPS.instance().getConfig().isTraceActivation()) {
-                    LeafTransaction.getCurrent().runNonObserving(() -> System.err.println(DclareTrace.getLineStart("ACTIVATE") + object));
-                }
-                if (!DObject.READ_OBSERVEDS.add(object, this).contains(this) && DClareMPS.instance().getConfig().isTraceActivation()) {
-                    LeafTransaction.getCurrent().runNonObserving(() -> System.err.println(DclareTrace.getLineStart("ACTIVATE") + object + "." + this));
-                }
+            } else if (!DObject.READ_OBSERVEDS.add(object, this).contains(this) && DClareMPS.instance().getConfig().isTraceActivation()) {
+                LeafTransaction.getCurrent().runNonObserving(() -> System.err.println(DclareTrace.getLineStart("ACTIVATE") + object + "." + this));
+            }
+        }
+        if (isReference() && object.isObserving()) {
+            for (DObject r : collection(value).filter(DObject.class)) {
+                r.activate();
             }
         }
         return super.set(object, value);

@@ -189,7 +189,7 @@ public abstract class DObject implements Mutable {
     }
 
     public boolean isDclareOnly() {
-        return dParentContaining() == null || CONTAINING_ATTRIBUTE.get(this) != null;
+        return CONTAINING_ATTRIBUTE.get(this) != null;
     }
 
     @Override
@@ -216,50 +216,34 @@ public abstract class DObject implements Mutable {
         return LeafTransaction.getCurrent() instanceof ObserverTransaction && ObserverTransaction.OBSERVE.get();
     }
 
+    protected boolean isAction() {
+        return LeafTransaction.getCurrent() instanceof ActionTransaction;
+    }
+
     protected abstract boolean isRead();
 
     @SuppressWarnings("unchecked")
     @Override
     public Pair<Mutable, Setable<Mutable, ?>> dParentContaining() {
-        if (isRead()) {
-            if (readConstant()) {
-                return (Pair) readParent();
-            } else if (isObserving()) {
-                initAncestors(DObject.READ_OBSERVEDS.get(this));
-            }
+        if (isRead() && readConstant()) {
+            return (Pair) readParent();
         }
+        activate();
         return Mutable.super.dParentContaining();
     }
 
     @Override
-    public Pair<Mutable, Setable<Mutable, ?>> dSetParentContaining(Pair<Mutable, Setable<Mutable, ?>> pc) {
-        if (isObserving()) {
-            if (isRead()) {
-                initAncestors(DObject.READ_OBSERVEDS.get(this));
-            } else if (!DObject.READ_OBSERVEDS.add(this, Mutable.D_PARENT_CONTAINING).contains(Mutable.D_PARENT_CONTAINING) && DClareMPS.instance().getConfig().isTraceActivation()) {
-                LeafTransaction.getCurrent().runNonObserving(() -> System.err.println(DclareTrace.getLineStart("ACTIVATE") + this));
-            }
+    public void dChangedParentContaining(Pair<Mutable, Setable<Mutable, ?>> pre, Pair<Mutable, Setable<Mutable, ?>> post) {
+        if (post != null && post.a() instanceof DObject) {
+            ((DObject) post.a()).activate();
         }
-        return Mutable.super.dSetParentContaining(pc);
+        Mutable.super.dChangedParentContaining(pre, post);
+    }
+
+    protected void activate() {
     }
 
     protected abstract Pair<DObject, DObserved<DObject, ?>> readParent();
-
-    @SuppressWarnings("rawtypes")
-    protected void initAncestors(Set<Observed> reads) {
-        if (!reads.contains(Mutable.D_PARENT_CONTAINING)) {
-            Pair<DObject, DObserved<DObject, ?>> parent = readParent();
-            if (parent != null) {
-                parent.a().initAncestors(DObject.READ_OBSERVEDS.get(parent.a()));
-                parent.b().triggerInitParent(parent.a(), this);
-            } else {
-                DObject.READ_OBSERVEDS.add(this, Mutable.D_PARENT_CONTAINING);
-                if (DClareMPS.instance().getConfig().isTraceActivation()) {
-                    LeafTransaction.getCurrent().runNonObserving(() -> System.err.println(DclareTrace.getLineStart("ACTIVATE") + this));
-                }
-            }
-        }
-    }
 
     @SuppressWarnings("unchecked")
     @Override
@@ -268,7 +252,7 @@ public abstract class DObject implements Mutable {
     }
 
     protected boolean isActive() {
-        return !isExternal() && DObject.READ_OBSERVEDS.get(this).contains(Mutable.D_PARENT_CONTAINING);
+        return !isExternal() && LeafTransaction.getCurrent().current().get(this, Mutable.D_PARENT_CONTAINING) != null;
     }
 
 }
