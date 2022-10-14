@@ -210,7 +210,9 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
     }
 
     private static boolean isExternal(SModel sModel) {
-        if (dClareMPS().project.getPath(sModel.getModule()) == null) {
+        if (sModel.getName().hasStereotype()) {
+            return true;
+        } else if (dClareMPS().project.getPath(sModel.getModule()) == null) {
             return true;
         } else {
             SModule sModule = sModel.getModule();
