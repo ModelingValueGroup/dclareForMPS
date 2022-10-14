@@ -113,6 +113,9 @@
       </concept>
       <concept id="1068431790189" name="jetbrains.mps.baseLanguage.structure.Type" flags="in" index="33vP2l" />
       <concept id="1068431790191" name="jetbrains.mps.baseLanguage.structure.Expression" flags="nn" index="33vP2n" />
+      <concept id="1513279640923991009" name="jetbrains.mps.baseLanguage.structure.IGenericClassCreator" flags="ng" index="366HgL">
+        <property id="1513279640906337053" name="inferTypeParams" index="373rjd" />
+      </concept>
       <concept id="1068498886296" name="jetbrains.mps.baseLanguage.structure.VariableReference" flags="nn" index="37vLTw">
         <reference id="1068581517664" name="variableDeclaration" index="3cqZAo" />
       </concept>
@@ -14588,6 +14591,49 @@
     </node>
     <node concept="13hLZK" id="4fD99RQwTCG" role="13h7CW">
       <node concept="3clFbS" id="4fD99RQwTCH" role="2VODD2" />
+    </node>
+  </node>
+  <node concept="13h7C7" id="1af$Z1TxuvR">
+    <property role="3GE5qa" value="context" />
+    <ref role="13h7C2" to="7ggn:1af$Z1TxsIy" resolve="TypedContextType" />
+    <node concept="13hLZK" id="1af$Z1TxuvS" role="13h7CW">
+      <node concept="3clFbS" id="1af$Z1TxuvT" role="2VODD2" />
+    </node>
+    <node concept="13i0hz" id="1af$Z1Txuzr" role="13h7CS">
+      <property role="TrG5h" value="getContextType" />
+      <ref role="13i0hy" node="4kJ$pn7h59V" resolve="getContextType" />
+      <node concept="3Tm1VV" id="1af$Z1Txuzs" role="1B3o_S" />
+      <node concept="3clFbS" id="1af$Z1Txuzv" role="3clF47">
+        <node concept="3clFbF" id="1af$Z1TxvSO" role="3cqZAp">
+          <node concept="2OqwBi" id="1af$Z1Txw2P" role="3clFbG">
+            <node concept="13iPFW" id="1af$Z1TxvSN" role="2Oq$k0" />
+            <node concept="3TrEf2" id="1af$Z1Txwcx" role="2OqNvi">
+              <ref role="3Tt5mk" to="7ggn:1af$Z1Txuvq" resolve="type" />
+            </node>
+          </node>
+        </node>
+      </node>
+      <node concept="3Tqbb2" id="1af$Z1Txuzw" role="3clF45">
+        <ref role="ehGHo" to="tpee:fz3vP1H" resolve="Type" />
+      </node>
+    </node>
+    <node concept="13i0hz" id="1af$Z1Txuzx" role="13h7CS">
+      <property role="TrG5h" value="createRuleSet" />
+      <ref role="13i0hy" node="4kJ$pn89CEa" resolve="createRuleSet" />
+      <node concept="3Tm1VV" id="1af$Z1Txuzy" role="1B3o_S" />
+      <node concept="3clFbS" id="1af$Z1Txuz_" role="3clF47">
+        <node concept="YS8fn" id="1af$Z1Tz6AP" role="3cqZAp">
+          <node concept="2ShNRf" id="1af$Z1Tz6B9" role="YScLw">
+            <node concept="1pGfFk" id="1af$Z1Tz7Cn" role="2ShVmc">
+              <property role="373rjd" value="true" />
+              <ref role="37wK5l" to="wyt6:~UnsupportedOperationException.&lt;init&gt;()" resolve="UnsupportedOperationException" />
+            </node>
+          </node>
+        </node>
+      </node>
+      <node concept="3Tqbb2" id="1af$Z1TxuzA" role="3clF45">
+        <ref role="ehGHo" to="7ggn:29R9$zZUovD" resolve="RuleSet" />
+      </node>
     </node>
   </node>
 </model>
