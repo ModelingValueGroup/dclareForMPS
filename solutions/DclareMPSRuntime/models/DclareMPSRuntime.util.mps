@@ -6132,13 +6132,13 @@
                   <ref role="16sUi3" node="7avOKBtUFfG" resolve="R" />
                 </node>
                 <node concept="2OqwBi" id="4qns$2VCCtF" role="10QFUP">
-                  <node concept="2YIFZM" id="4qns$2VCBts" role="2Oq$k0">
+                  <node concept="2YIFZM" id="1x5BZ5CwJHo" role="2Oq$k0">
                     <ref role="37wK5l" to="t4tl:~DMethod.of(org.jetbrains.mps.openapi.language.SLanguage,java.lang.String)" resolve="of" />
                     <ref role="1Pybhc" to="t4tl:~DMethod" resolve="DMethod" />
-                    <node concept="37vLTw" id="4qns$2VCBtt" role="37wK5m">
+                    <node concept="37vLTw" id="1x5BZ5CwJHp" role="37wK5m">
                       <ref role="3cqZAo" node="1bjvCAOV49H" resolve="language" />
                     </node>
-                    <node concept="37vLTw" id="4qns$2VCBtu" role="37wK5m">
+                    <node concept="37vLTw" id="1x5BZ5CwJHq" role="37wK5m">
                       <ref role="3cqZAo" node="1bjvCAOVKp3" resolve="id" />
                     </node>
                   </node>
@@ -6205,13 +6205,13 @@
                                         <ref role="3cqZAo" node="7avOKBtULfd" resolve="args" />
                                       </node>
                                     </node>
-                                    <node concept="2YIFZM" id="1bjvCAOVQ_Z" role="2Oq$k0">
+                                    <node concept="2YIFZM" id="1x5BZ5CwLf8" role="2Oq$k0">
                                       <ref role="37wK5l" to="t4tl:~DMethod.of(org.jetbrains.mps.openapi.language.SLanguage,java.lang.String)" resolve="of" />
                                       <ref role="1Pybhc" to="t4tl:~DMethod" resolve="DMethod" />
-                                      <node concept="37vLTw" id="1bjvCAOVQA0" role="37wK5m">
+                                      <node concept="37vLTw" id="1x5BZ5CwLf9" role="37wK5m">
                                         <ref role="3cqZAo" node="1bjvCAOV49H" resolve="language" />
                                       </node>
-                                      <node concept="37vLTw" id="1bjvCAOVQA1" role="37wK5m">
+                                      <node concept="37vLTw" id="1x5BZ5CwLfa" role="37wK5m">
                                         <ref role="3cqZAo" node="1bjvCAOVKp3" resolve="id" />
                                       </node>
                                     </node>
