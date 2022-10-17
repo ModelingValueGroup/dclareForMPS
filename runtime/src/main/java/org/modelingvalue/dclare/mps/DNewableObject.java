@@ -113,8 +113,8 @@ public abstract class DNewableObject<T extends DNewableObject, R, S> extends DId
         return deriveReasons().filter(DQuotation.class).map(DDerive::anonymousType).notNull().toSet();
     }
 
-    public IAspect getCopyAspect() {
-        return deriveReasons().filter(DCopy.class).map(DDerive::aspect).findFirst().orElse(null);
+    public Set<IAspect> getCopyAspects() {
+        return deriveReasons().filter(DCopy.class).map(DDerive::aspect).toSet();
     }
 
     public Set<SLanguage> getAnonymousLanguages() {
