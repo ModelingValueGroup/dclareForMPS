@@ -20,36 +20,43 @@ import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.dclare.Constant;
 
-public interface DMethod<R> extends DFeature {
+public abstract class DMethod<R> implements DFeature {
 
     @SuppressWarnings("unchecked")
-    static <R> DMethod<R> of(SLanguage language, String id) {
+    public static <R> DMethod<R> of(SLanguage language, String id) {
         return (DMethod<R>) DClareMPS.ALL_METHODS_MAP.get(language).get(id);
     }
 
     @SuppressWarnings("rawtypes")
-    Constant<Pair<String, Signature>, DMethod> D_METHOD = Constant.of("D_METHOD", p -> {
-        Set<SLanguage> langs = DRepository.ALL_LANGUAGES_WITH_RULES.get(DClareMPS.instance().getRepository());
-        for (DMethod method : DClareMPS.METHOD_MAP.get(langs).get(Pair.of(p.a(), p.b().size()))) {
-            if (p.b().isSubOf(method.signature())) {
-                return method;
-            }
-        }
-        throw new UnsupportedOperationException(p.a() + p.b());
-    });
+    private static final Constant<Pair<String, Signature>, DMethod> D_METHOD        = Constant.of("D_METHOD", p -> {
+                                                                                        Set<SLanguage> langs = DRepository.ALL_LANGUAGES_WITH_RULES.get(DClareMPS.instance().getRepository());
+                                                                                        for (DMethod method : DClareMPS.METHOD_MAP.get(langs).get(Pair.of(p.a(), p.b().size()))) {
+                                                                                            if (p.b().isSubOf(method.signature())) {
+                                                                                                return method;
+                                                                                            }
+                                                                                        }
+                                                                                        throw new UnsupportedOperationException(p.a() + p.b());
+                                                                                    });
 
-    @SuppressWarnings("unchecked")
-    default R invoke(Object[] args) {
-        return (R) DMethod.D_METHOD.get(Pair.of(name(), Signature.of(signature(), args))).call(args);
+    private final Constant<ActualArguments, R>                      METHOD_CONSTANT = Constant.of(Pair.of(this, "D_METHOD_CONSTANT"), null, args -> call(args.identity()));
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public R invoke(Object[] args) {
+        DMethod dMethod = DMethod.D_METHOD.get(Pair.of(name(), Signature.of(signature(), args)));
+        if (dMethod.isConstant()) {
+            return (R) dMethod.METHOD_CONSTANT.get(ActualArguments.of(args));
+        } else {
+            return (R) dMethod.call(args);
+        }
     }
 
-    String name();
+    public abstract String name();
 
     @SuppressWarnings("rawtypes")
-    Signature signature();
+    public abstract Signature signature();
 
-    R call(Object[] arguments);
+    public abstract R call(Object[] arguments);
 
-    String id();
+    public abstract String id();
 
 }

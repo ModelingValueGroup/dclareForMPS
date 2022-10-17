@@ -78,8 +78,6 @@ public interface DAttribute<O, T> extends DFeature {
 
     boolean isComposite();
 
-    boolean isConstant();
-
     boolean isIndetifying();
 
     boolean isMandatory();
@@ -246,7 +244,7 @@ public interface DAttribute<O, T> extends DFeature {
 
         @Override
         public boolean isConstant() {
-            return false;
+            return true;
         }
 
         @Override

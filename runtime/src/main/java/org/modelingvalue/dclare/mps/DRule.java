@@ -102,4 +102,9 @@ public interface DRule<O> extends DFeature {
 
     boolean atomic();
 
+    @Override
+    default boolean isConstant() {
+        return false;
+    }
+
 }

@@ -15,17 +15,23 @@
 
 package org.modelingvalue.dclare.mps;
 
-import org.jetbrains.mps.openapi.model.SNode;
-import org.modelingvalue.collections.util.Internable;
+import java.util.Arrays;
 
-public interface DFeature extends Internable {
+import org.modelingvalue.collections.util.IdentifiedByArray;
 
-    SNode getSource();
+public class ActualArguments extends IdentifiedByArray {
 
-    boolean isSynthetic();
+    public static ActualArguments of(Object[] args) {
+        return new ActualArguments(args);
+    }
 
-    IRuleSet ruleSet();
+    private ActualArguments(Object[] id) {
+        super(id);
+    }
 
-    boolean isConstant();
+    @Override
+    public String toString() {
+        return Arrays.toString(identity()).replace('[', '(').replace(']', ')');
+    }
 
 }

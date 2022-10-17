@@ -85,7 +85,7 @@ public abstract class DNewableObject<T extends DNewableObject, R, S> extends DId
     }
 
     private Construction getQuotationConstruction(String anonymousType) {
-        for (Construction c : dDerivedConstructions()) {
+        for (Construction c : dConstructions()) {
             if (c.reason() instanceof DQuotation && ((DQuotation) c.reason()).anonymousType() == anonymousType) {
                 return c;
             }
@@ -106,7 +106,7 @@ public abstract class DNewableObject<T extends DNewableObject, R, S> extends DId
     }
 
     protected Collection<Reason> deriveReasons() {
-        return dDerivedConstructions().map(Construction::reason);
+        return dConstructions().map(Construction::reason);
     }
 
     public Set<String> getAnonymousTypes() {
