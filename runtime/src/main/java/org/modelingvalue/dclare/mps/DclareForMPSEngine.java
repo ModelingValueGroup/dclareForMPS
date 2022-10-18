@@ -43,7 +43,7 @@ import jetbrains.mps.project.ProjectBase;
 public class DclareForMPSEngine implements DeployListener {
 
     private static final boolean                           TRACE_ENGINE              = Boolean.getBoolean("TRACE_ENGINE");
-    public static final int                                MAX_NR_OF_HISTORY_FOR_MPS = 4;
+    public static final int                                MAX_NR_OF_HISTORY_FOR_MPS = Integer.getInteger("MAX_NR_OF_HISTORY_FOR_MPS", 4) + 3;
     protected static final CopyOnWriteArrayList<DClareMPS> ALL_DCLARE_MPS            = new CopyOnWriteArrayList<>();
     private static final AtomicInteger                     COUNTER                   = new AtomicInteger(0);
     //
