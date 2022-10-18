@@ -49,7 +49,6 @@ import org.modelingvalue.collections.util.Concurrent;
 import org.modelingvalue.collections.util.Context;
 import org.modelingvalue.collections.util.ContextThread;
 import org.modelingvalue.collections.util.ContextThread.ContextPool;
-import org.modelingvalue.collections.util.MutationWrapper;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.collections.util.Triple;
 import org.modelingvalue.dclare.*;
@@ -176,7 +175,6 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
     private final AtomicLong                                                                            counter                  = new AtomicLong(0L);
     private final DRepository                                                                           dRepository;
     private final DServerMetaData                                                                       dServerMetaData;
-    private final MutationWrapper<List<IAspect>>                                                        allAspects               = new MutationWrapper<>(List.of());
     //
     private Map<DMessageType, QualifiedSet<Triple<DObject, DFeature, String>, DMessage>>                messages                 = MESSAGE_QSET_MAP;
     private boolean                                                                                     running                  = false;
@@ -223,7 +221,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
     }
 
     protected List<IAspect> getAllAspects() {
-        return allAspects.get();
+        return imperativeState().get(() -> DRepository.ALL_ASPECTS.get(getRepository()));
     }
 
     protected boolean isActiveAspect(IAspect aspect) {

@@ -31,6 +31,7 @@ import org.jetbrains.mps.openapi.module.SModuleId;
 import org.jetbrains.mps.openapi.module.SRepository;
 import org.jetbrains.mps.openapi.module.SRepositoryListener;
 import org.modelingvalue.collections.Collection;
+import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.collections.util.TriConsumer;
@@ -53,6 +54,10 @@ public class DRepository extends DFromOriginalObject<ProjectRepository> implemen
 
     public static final Constant<DRepository, Set<SLanguage>>             ALL_LANGUAGES_WITH_RULES = Constant.of("ALL_LANGUAGES_WITH_RULES", Set.of(), r -> {
                                                                                                        return MODULES.get(r).flatMap(m -> DModule.LANGUAGES_WITH_RULES.get(m)).toSet();
+                                                                                                   });
+
+    public static final Constant<DRepository, List<IAspect>>              ALL_ASPECTS              = Constant.of("ALL_ASPECTS", List.of(), r -> {
+                                                                                                       return ALL_LANGUAGES_WITH_RULES.get(r).flatMap(l -> DClareMPS.ASPECTS.get(l)).sortedBy(IAspect::getName).toList();
                                                                                                    });
 
     @SuppressWarnings({"rawtypes", "unchecked"})

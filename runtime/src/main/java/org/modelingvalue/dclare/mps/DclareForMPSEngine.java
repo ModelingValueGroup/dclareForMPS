@@ -239,13 +239,11 @@ public class DclareForMPSEngine implements DeployListener {
 
         private void updateStatus(Status status, DClareMPS current) {
             DclareForMpsStatus dclareForMpsStatus = new DclareForMpsStatus(status, current);
-            List<IAspect> aspects = status.mood == idle || status.mood == stopped ? current.getAllAspects() : prevAspects;
+            List<IAspect> aspects = status.mood == starting ? current.getAllAspects() : prevAspects;
             Map<DMessageType, QualifiedSet<Triple<DObject, DFeature, String>, DMessage>> messages = status.mood == starting || status.mood == idle || status.mood == stopped ? current.getMessages() : prevMessages;
             current.readInEDT(() -> engineStatusHandler.status(dclareForMpsStatus));
             if (status.mood == starting) {
                 current.writeInEDT(() -> engineStatusHandler.start(dclareForMpsStatus));
-            }
-            if (!aspects.equals(prevAspects)) {
                 current.writeInEDT(() -> engineStatusHandler.aspects(aspects, dclareForMpsStatus));
             }
             if (!messages.equals(prevMessages)) {
