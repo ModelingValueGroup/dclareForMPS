@@ -9611,34 +9611,70 @@
               </node>
             </node>
           </node>
-          <node concept="10QFUN" id="6omEkmwsXQZ" role="2GsD0m">
-            <node concept="3uibUv" id="6omEkmwsXRa" role="10QFUM">
-              <ref role="3uigEE" to="zrbp:~QualifiedSet" resolve="QualifiedSet" />
-              <node concept="3uibUv" id="6omEkmwsXRb" role="11_B2D">
-                <ref role="3uigEE" to="42m3:~Triple" resolve="Triple" />
-                <node concept="3uibUv" id="6omEkmwsXRc" role="11_B2D">
-                  <ref role="3uigEE" to="t4tl:~DObject" resolve="DObject" />
+          <node concept="2OqwBi" id="2WKlv_Z$fdn" role="2GsD0m">
+            <node concept="1eOMI4" id="M$c1CkOYJa" role="2Oq$k0">
+              <node concept="10QFUN" id="6omEkmwsXQZ" role="1eOMHV">
+                <node concept="3uibUv" id="6omEkmwsXRa" role="10QFUM">
+                  <ref role="3uigEE" to="zrbp:~QualifiedSet" resolve="QualifiedSet" />
+                  <node concept="3uibUv" id="6omEkmwsXRb" role="11_B2D">
+                    <ref role="3uigEE" to="42m3:~Triple" resolve="Triple" />
+                    <node concept="3uibUv" id="6omEkmwsXRc" role="11_B2D">
+                      <ref role="3uigEE" to="t4tl:~DObject" resolve="DObject" />
+                    </node>
+                    <node concept="3uibUv" id="6omEkmwsXRd" role="11_B2D">
+                      <ref role="3uigEE" to="t4tl:~DFeature" resolve="DFeature" />
+                    </node>
+                    <node concept="3uibUv" id="6omEkmwsXRe" role="11_B2D">
+                      <ref role="3uigEE" to="wyt6:~String" resolve="String" />
+                    </node>
+                  </node>
+                  <node concept="3uibUv" id="6omEkmwsXRf" role="11_B2D">
+                    <ref role="3uigEE" to="t4tl:~DMessage" resolve="DMessage" />
+                  </node>
                 </node>
-                <node concept="3uibUv" id="6omEkmwsXRd" role="11_B2D">
-                  <ref role="3uigEE" to="t4tl:~DFeature" resolve="DFeature" />
+                <node concept="2OqwBi" id="433JJClmZ7a" role="10QFUP">
+                  <node concept="37vLTw" id="433JJClmKXo" role="2Oq$k0">
+                    <ref role="3cqZAo" node="433JJClgRwX" resolve="messages" />
+                  </node>
+                  <node concept="liA8E" id="433JJClnmRx" role="2OqNvi">
+                    <ref role="37wK5l" to="zrbp:~Map.get(java.lang.Object)" resolve="get" />
+                    <node concept="Rm8GO" id="6omEkmwsXR9" role="37wK5m">
+                      <ref role="1Px2BO" to="t4tl:~DMessageType" resolve="DMessageType" />
+                      <ref role="Rm8GQ" to="t4tl:~DMessageType.info" resolve="info" />
+                    </node>
+                  </node>
                 </node>
-                <node concept="3uibUv" id="6omEkmwsXRe" role="11_B2D">
-                  <ref role="3uigEE" to="wyt6:~String" resolve="String" />
-                </node>
-              </node>
-              <node concept="3uibUv" id="6omEkmwsXRf" role="11_B2D">
-                <ref role="3uigEE" to="t4tl:~DMessage" resolve="DMessage" />
               </node>
             </node>
-            <node concept="2OqwBi" id="433JJClmZ7a" role="10QFUP">
-              <node concept="37vLTw" id="433JJClmKXo" role="2Oq$k0">
-                <ref role="3cqZAo" node="433JJClgRwX" resolve="messages" />
-              </node>
-              <node concept="liA8E" id="433JJClnmRx" role="2OqNvi">
-                <ref role="37wK5l" to="zrbp:~Map.get(java.lang.Object)" resolve="get" />
-                <node concept="Rm8GO" id="6omEkmwsXR9" role="37wK5m">
-                  <ref role="1Px2BO" to="t4tl:~DMessageType" resolve="DMessageType" />
-                  <ref role="Rm8GQ" to="t4tl:~DMessageType.info" resolve="info" />
+            <node concept="liA8E" id="2WKlv_Z$$tT" role="2OqNvi">
+              <ref role="37wK5l" to="zrbp:~Collection.sorted(java.util.Comparator)" resolve="sorted" />
+              <node concept="2OqwBi" id="2WKlv_ZAbTt" role="37wK5m">
+                <node concept="2YIFZM" id="2WKlv_Z_CBS" role="2Oq$k0">
+                  <ref role="37wK5l" to="33ny:~Comparator.comparing(java.util.function.Function)" resolve="comparing" />
+                  <ref role="1Pybhc" to="33ny:~Comparator" resolve="Comparator" />
+                  <node concept="1bVj0M" id="2WKlv_Z_UBn" role="37wK5m">
+                    <node concept="3clFbS" id="2WKlv_Z_UBo" role="1bW5cS">
+                      <node concept="3clFbF" id="2WKlv_Z_UBp" role="3cqZAp">
+                        <node concept="2OqwBi" id="2WKlv_Z_UBq" role="3clFbG">
+                          <node concept="37vLTw" id="2WKlv_Z_UBr" role="2Oq$k0">
+                            <ref role="3cqZAo" node="2WKlv_Z_UBt" resolve="m" />
+                          </node>
+                          <node concept="liA8E" id="2WKlv_Z_UBs" role="2OqNvi">
+                            <ref role="37wK5l" to="42m3:~Triple.c()" resolve="c" />
+                          </node>
+                        </node>
+                      </node>
+                    </node>
+                    <node concept="37vLTG" id="2WKlv_Z_UBt" role="1bW2Oz">
+                      <property role="TrG5h" value="m" />
+                      <node concept="3uibUv" id="2WKlv_Z_UBu" role="1tU5fm">
+                        <ref role="3uigEE" to="t4tl:~DMessage" resolve="DMessage" />
+                      </node>
+                    </node>
+                  </node>
+                </node>
+                <node concept="liA8E" id="2WKlv_ZAuz6" role="2OqNvi">
+                  <ref role="37wK5l" to="33ny:~Comparator.reversed()" resolve="reversed" />
                 </node>
               </node>
             </node>
