@@ -51,7 +51,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
     @SuppressWarnings("rawtypes")
     protected static Constant<SAbstractConcept, Set<DRule<SNode>>>                                           RULES                            = Constant.of("RULES", c -> {
                                                                                                                                                   Set<SLanguage> langs = DRepository.ALL_LANGUAGES_WITH_RULES.get(DClareMPS.instance().getRepository());
-                                                                                                                                                  return langs.flatMap(l -> DClareMPS.RULE_SETS.get(l)).flatMap(rs -> Collection.of(rs.getNodeRules(c, Set.of()))).toSet();
+                                                                                                                                                  return langs.flatMap(l -> DClareMPS.ACTIVE_RULE_SETS.get(l)).flatMap(rs -> Collection.of(rs.getNodeRules(c, Set.of()))).toSet();
                                                                                                                                               });
 
     private static final Constant<Quadruple<Set<SLanguage>, SConcept, Set<String>, Set<IAspect>>, DNodeType> NODE_TYPE                        = Constant.of("NODE_TYPE", DNodeType::new);
@@ -442,7 +442,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
         DObject dParent = dObjectParent();
         Set<SLanguage> ls = dParent != null ? TYPE.get(dParent).getLanguages() : Set.of();
         SLanguage lang = DClareMPS.LANGUAGE.get(getConcept());
-        if (!DClareMPS.RULE_SETS.get(lang).isEmpty()) {
+        if (!DClareMPS.ACTIVE_RULE_SETS.get(lang).isEmpty()) {
             ls = ls.add(lang);
         }
         ls = ls.addAll(getAnonymousLanguages());

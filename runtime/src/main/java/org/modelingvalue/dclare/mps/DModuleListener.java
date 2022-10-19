@@ -83,7 +83,7 @@ public class DModuleListener extends Pair<DModule, DClareMPS> implements SModule
         b().handleMPSChange(() -> {
             DModule.LANGUAGES.set(a(), Set::add, lang);
             DRepository repository = DClareMPS.instance().getRepository();
-            if (!DClareMPS.RULE_SETS.get(lang).isEmpty() && !DRepository.ALL_LANGUAGES_WITH_RULES.get(repository).contains(lang)) {
+            if (!DClareMPS.ACTIVE_RULE_SETS.get(lang).isEmpty() && !DRepository.ALL_LANGUAGES_WITH_RULES.get(repository).contains(lang)) {
                 DClareMPS.instance().engine().restart();
             }
         });
@@ -94,7 +94,7 @@ public class DModuleListener extends Pair<DModule, DClareMPS> implements SModule
         b().handleMPSChange(() -> {
             DModule.LANGUAGES.set(a(), Set::remove, lang);
             DRepository repository = DClareMPS.instance().getRepository();
-            if (!DClareMPS.RULE_SETS.get(lang).isEmpty() && DRepository.ALL_LANGUAGES_WITH_RULES.get(repository).contains(lang)) {
+            if (!DClareMPS.ACTIVE_RULE_SETS.get(lang).isEmpty() && DRepository.ALL_LANGUAGES_WITH_RULES.get(repository).contains(lang)) {
                 DClareMPS.instance().engine().restart();
             }
         });

@@ -280,7 +280,7 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
     }
 
     private Set<SLanguage> allUsedDClareLanguages() {
-        return Collection.concat(USED_LANGUAGES.get(this), USED_DEVKITS.get(this).flatMap(dk -> DClareMPS.DEVKIT_LANGUAGES.get(dk))).filter(l -> !DClareMPS.RULE_SETS.get(l).isEmpty()).toSet();
+        return Collection.concat(USED_LANGUAGES.get(this), USED_DEVKITS.get(this).flatMap(dk -> DClareMPS.DEVKIT_LANGUAGES.get(dk))).filter(l -> !DClareMPS.ACTIVE_RULE_SETS.get(l).isEmpty()).toSet();
     }
 
     public java.util.Set<SLanguage> getUsedLanguages() {

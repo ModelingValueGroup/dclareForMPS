@@ -28,7 +28,7 @@ import org.modelingvalue.dclare.mps.DRule.DObserver;
 @SuppressWarnings({"rawtypes", "unused"})
 public abstract class DObjectType<I> implements MutableClass {
 
-    private static final Constant<DObjectType<?>, Set<IRuleSet>>                                TYPE_RULE_SETS = Constant.of("TYPE_RULE_SETS", Set.of(), t -> t.getLanguages().flatMap(DClareMPS.RULE_SETS::get).toSet());
+    private static final Constant<DObjectType<?>, Set<IRuleSet>>                                TYPE_RULE_SETS = Constant.of("TYPE_RULE_SETS", Set.of(), t -> t.getLanguages().flatMap(DClareMPS.ACTIVE_RULE_SETS::get).toSet());
     private static final Constant<DObjectType<?>, Set<DObserver>>                               OBSERVERS      = Constant.of("OBSERVERS", Set.of(), t -> t.getRules(TYPE_RULE_SETS.get(t)).map(DRule.OBSERVER::get).toSet());
     private static final Constant<DObjectType<?>, Set<DAttribute>>                              ATTRIBUTES     = Constant.of("ATTRIBUTES", Set.of(), t -> t.getAttributes(TYPE_RULE_SETS.get(t)).toSet());
     private static final Constant<DObjectType<?>, Set<DAttribute>>                              CONTAINERS     = Constant.of("CONTAINERS", Set.of(), t -> ATTRIBUTES.get(t).filter(DAttribute::isComposite).toSet());

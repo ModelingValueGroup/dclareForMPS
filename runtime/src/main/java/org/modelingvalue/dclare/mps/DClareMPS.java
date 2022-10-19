@@ -123,7 +123,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
                                                                                                                                  });
     @SuppressWarnings("rawtypes")
     protected static Constant<Set<SLanguage>, DefaultMap<Pair<String, Integer>, List<DMethod>>>         METHOD_MAP               = Constant.of("METHOD_MAP", ls -> {
-                                                                                                                                     Set<IRuleSet> ruleSets = ls.flatMap(l -> DClareMPS.RULE_SETS.get(l)).toSet();
+                                                                                                                                     Set<IRuleSet> ruleSets = ls.flatMap(l -> DClareMPS.ACTIVE_RULE_SETS.get(l)).toSet();
                                                                                                                                      DefaultMap<Pair<String, Integer>, List<DMethod>> map = EMPTY_METHOD_MAP;
                                                                                                                                      for (DMethod m : ruleSets.flatMap(rs -> Collection.of(rs.getAllMethods()))) {
                                                                                                                                          Pair<String, Integer> k = Pair.of(m.name(), m.signature().size());
@@ -146,11 +146,13 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
                                                                                                                                          return SETABLES;
                                                                                                                                      }
                                                                                                                                  };
-    public static final Constant<SLanguage, Set<IRuleSet>>                                              RULE_SETS                = Constant.of("RULE_SETS", Set.of(), l -> {
-                                                                                                                                     DClareMPS dclareMPS = DClareMPS.instance();
+    private static final Constant<SLanguage, Set<IRuleSet>>                                             RULE_SETS                = Constant.of("RULE_SETS", Set.of(), l -> {
                                                                                                                                      IRuleAspect aspect = RULE_ASPECT.get(l);
-                                                                                                                                     return aspect != null ? Collection.of(aspect.getRuleSets()).                                                         //
-                                                                                                                                             filter(rs -> dclareMPS.isActiveAspect(rs.getAspect())).toSet() : Set.of();
+                                                                                                                                     return aspect != null ? Collection.of(aspect.getRuleSets()).toSet() : Set.of();
+                                                                                                                                 });
+    public static final Constant<SLanguage, Set<IRuleSet>>                                              ACTIVE_RULE_SETS         = Constant.of("ACTIVE_RULE_SETS", Set.of(), l -> {
+                                                                                                                                     DClareMPS dclareMPS = DClareMPS.instance();
+                                                                                                                                     return RULE_SETS.get(l).filter(rs -> dclareMPS.isActiveAspect(rs.getAspect())).toSet();
                                                                                                                                  });
     public static final Constant<SLanguage, Set<IAspect>>                                               ASPECTS                  = Constant.of("ASPECTS", Set.of(), l -> {
                                                                                                                                      IRuleAspect aspect = RULE_ASPECT.get(l);

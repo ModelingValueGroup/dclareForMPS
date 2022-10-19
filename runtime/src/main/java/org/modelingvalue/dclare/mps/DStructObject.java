@@ -56,7 +56,7 @@ public class DStructObject extends DIdentifiedObject implements SStructObject {
         DObject dParent = dObjectParent();
         Set<SLanguage> ls = dParent != null ? TYPE.get(dParent).getLanguages() : Set.of();
         SLanguage lang = getSClass().getLanguage();
-        if (!DClareMPS.RULE_SETS.get(lang).isEmpty()) {
+        if (!DClareMPS.ACTIVE_RULE_SETS.get(lang).isEmpty()) {
             ls = ls.add(lang);
         }
         return CLASS_OBJECT_TYPE.get(Pair.of(ls, getSClass()));
