@@ -15,18 +15,20 @@
 
 package org.modelingvalue.dclare.mps;
 
+import org.modelingvalue.dclare.DclareConfig;
+
 import java.util.Arrays;
 import java.util.Objects;
 
-import org.modelingvalue.dclare.DclareConfig;
-
+@SuppressWarnings("unused")
 public class DclareForMpsConfig {
-    private static final boolean      ON_MODE_DEFAULT          = Boolean.getBoolean("ON_MODE");
-    private static final boolean      COLORFUL_EDITORS_DEFAULT = Boolean.getBoolean("COLORFUL_EDITORS");
-    private static final boolean      TRACE_DCLARE_DEFAULT     = Boolean.getBoolean("DCLARE_TRACE");
-    private static final boolean      TRACE_ACTIVATION_DEFAULT = Boolean.getBoolean("TRACE_ACTIVATION");
-    private static final boolean      TRACE_MPS_MODEL_CHANGES  = Boolean.getBoolean("TRACE_MPS_MODEL_CHANGES");
-    private static final String[]     INACTIVE_ASPECTS_DEFAULT = new String[0];
+    private static final boolean  ON_MODE_DEFAULT          = Boolean.getBoolean("ON_MODE");
+    private static final boolean  COLORFUL_EDITORS_DEFAULT = Boolean.getBoolean("COLORFUL_EDITORS");
+    private static final boolean  TRACE_DCLARE_DEFAULT     = Boolean.getBoolean("DCLARE_TRACE");
+    private static final boolean  TRACE_ACTIVATION_DEFAULT = Boolean.getBoolean("TRACE_ACTIVATION");
+    private static final boolean  TRACE_MPS_MODEL_CHANGES  = Boolean.getBoolean("TRACE_MPS_MODEL_CHANGES");
+    private static final boolean  AUTO_MODEL_CHECK         = Boolean.getBoolean("AUTO_MODEL_CHECK");
+    private static final String[] INACTIVE_ASPECTS_DEFAULT = new String[0];
 
     private final DclareConfig        config;
     private final EngineStatusHandler statusHandler;
@@ -35,34 +37,37 @@ public class DclareForMpsConfig {
     private final boolean             traceDclare;
     private final boolean             traceActivation;
     private final boolean             traceMPSModelChanges;
+    private final boolean             disableAutoModelCheck;
     private final String[]            inactiveAspects;
 
     //============================================================================
     public DclareForMpsConfig() {
-        config = new DclareConfig();
-        statusHandler = null;
-        onMode = ON_MODE_DEFAULT;
-        colorfulEditors = COLORFUL_EDITORS_DEFAULT;
-        traceDclare = TRACE_DCLARE_DEFAULT;
-        traceActivation = TRACE_ACTIVATION_DEFAULT;
-        inactiveAspects = INACTIVE_ASPECTS_DEFAULT;
-        traceMPSModelChanges = TRACE_MPS_MODEL_CHANGES;
+        config                = new DclareConfig();
+        statusHandler         = null;
+        onMode                = ON_MODE_DEFAULT;
+        colorfulEditors       = COLORFUL_EDITORS_DEFAULT;
+        traceDclare           = TRACE_DCLARE_DEFAULT;
+        traceActivation       = TRACE_ACTIVATION_DEFAULT;
+        inactiveAspects       = INACTIVE_ASPECTS_DEFAULT;
+        traceMPSModelChanges  = TRACE_MPS_MODEL_CHANGES;
+        disableAutoModelCheck = AUTO_MODEL_CHECK;
     }
 
     //============================================================================
-    private DclareForMpsConfig(DclareConfig config, EngineStatusHandler statusHandler, boolean onMode, boolean colorfulEditors, boolean traceDclare, boolean dclareActivation, boolean traceMPSModelChanges, String[] inactiveAspects) {
-        this.config = config;
-        this.statusHandler = statusHandler;
-        this.onMode = onMode;
-        this.colorfulEditors = colorfulEditors;
-        this.traceDclare = traceDclare;
-        this.traceActivation = dclareActivation;
-        this.inactiveAspects = inactiveAspects;
-        this.traceMPSModelChanges = traceMPSModelChanges;
+    private DclareForMpsConfig(DclareConfig config, EngineStatusHandler statusHandler, boolean onMode, boolean colorfulEditors, boolean traceDclare, boolean dclareActivation, boolean traceMPSModelChanges, boolean disableAutoModelCheck, String[] inactiveAspects) {
+        this.config                = config;
+        this.statusHandler         = statusHandler;
+        this.onMode                = onMode;
+        this.colorfulEditors       = colorfulEditors;
+        this.traceDclare           = traceDclare;
+        this.traceActivation       = dclareActivation;
+        this.inactiveAspects       = inactiveAspects;
+        this.traceMPSModelChanges  = traceMPSModelChanges;
+        this.disableAutoModelCheck = disableAutoModelCheck;
     }
 
-    protected DclareForMpsConfig create(DclareConfig config, EngineStatusHandler statusHandler, boolean onMode, boolean colorfulEditors, boolean dclareTrace, boolean dclareActivation, boolean traceMPSModelChanges, String[] inactiveAspects) {
-        return new DclareForMpsConfig(config, statusHandler, onMode, colorfulEditors, dclareTrace, dclareActivation, traceMPSModelChanges, inactiveAspects);
+    protected DclareForMpsConfig create(DclareConfig config, EngineStatusHandler statusHandler, boolean onMode, boolean colorfulEditors, boolean dclareTrace, boolean dclareActivation, boolean traceMPSModelChanges, boolean disableAutoModelCheck, String[] inactiveAspects) {
+        return new DclareForMpsConfig(config, statusHandler, onMode, colorfulEditors, dclareTrace, dclareActivation, traceMPSModelChanges, disableAutoModelCheck, inactiveAspects);
     }
 
     //============================================================================
@@ -75,118 +80,129 @@ public class DclareForMpsConfig {
             return false;
         }
         DclareForMpsConfig that = (DclareForMpsConfig) o;
-        return Objects.equals(config, that.config) && Objects.equals(statusHandler, that.statusHandler) && Objects.equals(onMode, that.onMode) && Objects.equals(colorfulEditors, that.colorfulEditors) && //
-                Objects.equals(traceDclare, that.traceDclare) && Objects.equals(traceActivation, that.traceActivation) && Objects.equals(traceMPSModelChanges, that.traceMPSModelChanges) && Arrays.equals(inactiveAspects, that.inactiveAspects);
+        return Objects.equals(config, that.config)
+               && Objects.equals(statusHandler, that.statusHandler)
+               && Objects.equals(onMode, that.onMode)
+               && Objects.equals(colorfulEditors, that.colorfulEditors)
+               && Objects.equals(traceDclare, that.traceDclare)
+               && Objects.equals(traceActivation, that.traceActivation)
+               && Objects.equals(traceMPSModelChanges, that.traceMPSModelChanges)
+               && Objects.equals(disableAutoModelCheck, that.disableAutoModelCheck)
+               && Arrays.equals(inactiveAspects, that.inactiveAspects);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, Arrays.hashCode(inactiveAspects));
+        return Objects.hash(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, Arrays.hashCode(inactiveAspects));
     }
 
     //============================================================================
     public DclareForMpsConfig withStatusHandler(EngineStatusHandler statusHandler) {
-        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, inactiveAspects);
+        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, inactiveAspects);
     }
 
     public DclareForMpsConfig withOnMode(boolean onMode) {
-        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, inactiveAspects);
+        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, inactiveAspects);
     }
 
     public DclareForMpsConfig withColorfulEditors(boolean colorfulEditors) {
-        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, inactiveAspects);
+        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, inactiveAspects);
     }
 
     public DclareForMpsConfig withDclareTrace(boolean dclareTrace) {
-        return create(config, statusHandler, onMode, colorfulEditors, dclareTrace, traceActivation, traceMPSModelChanges, inactiveAspects);
+        return create(config, statusHandler, onMode, colorfulEditors, dclareTrace, traceActivation, traceMPSModelChanges, disableAutoModelCheck, inactiveAspects);
     }
 
     public DclareForMpsConfig withDclareActivation(boolean dclareActivation) {
-        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, dclareActivation, traceMPSModelChanges, inactiveAspects);
+        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, dclareActivation, traceMPSModelChanges, disableAutoModelCheck, inactiveAspects);
     }
 
     public DclareForMpsConfig withMPSModelChangesTrace(boolean traceMPSModelChanges) {
-        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, inactiveAspects);
+        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, inactiveAspects);
+    }
+
+    public DclareForMpsConfig withDisableAutoModelCheck(boolean disableAutoModelCheck) {
+        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, inactiveAspects);
     }
 
     public DclareForMpsConfig withInactiveAspects(String[] inactiveAspects) {
-        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, inactiveAspects);
+        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, inactiveAspects);
     }
 
-    //===
+    //=== base config entries
     public DclareForMpsConfig withDevMode(boolean devMode) {
         DclareConfig config = this.config.withDevMode(devMode);
-        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, inactiveAspects);
+        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, inactiveAspects);
     }
 
     public DclareForMpsConfig withCheckOrphanState(boolean checkOrphanState) {
         DclareConfig config = this.config.withCheckOrphanState(checkOrphanState);
-        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, inactiveAspects);
+        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, inactiveAspects);
     }
 
     public DclareForMpsConfig withRunSequential(boolean runSequential) {
         DclareConfig config = this.config.withRunSequential(runSequential);
-        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, inactiveAspects);
+        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, inactiveAspects);
     }
 
     public DclareForMpsConfig withTraceUniverse(boolean traceUniverse) {
         DclareConfig config = this.config.withTraceUniverse(traceUniverse);
-        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, inactiveAspects);
+        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, inactiveAspects);
     }
 
     public DclareForMpsConfig withTraceMutable(boolean traceMutable) {
         DclareConfig config = this.config.withTraceMutable(traceMutable);
-        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, inactiveAspects);
+        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, inactiveAspects);
     }
 
     public DclareForMpsConfig withTraceMatching(boolean traceMatching) {
         DclareConfig config = this.config.withTraceMatching(traceMatching);
-        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, inactiveAspects);
+        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, inactiveAspects);
     }
 
     public DclareForMpsConfig withTraceActions(boolean traceActions) {
         DclareConfig config = this.config.withTraceActions(traceActions);
-        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, inactiveAspects);
+        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, inactiveAspects);
     }
 
     public DclareForMpsConfig withTraceRippleOut(boolean traceRippleOut) {
         DclareConfig config = this.config.withTraceRippleOut(traceRippleOut);
-        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, inactiveAspects);
+        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, inactiveAspects);
     }
 
     public DclareForMpsConfig withTraceDerivation(boolean traceDerivation) {
         DclareConfig config = this.config.withTraceDerivation(traceDerivation);
-        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, inactiveAspects);
+        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, inactiveAspects);
     }
 
     public DclareForMpsConfig withMaxInInQueue(int maxInInQueue) {
         DclareConfig config = this.config.withMaxInInQueue(maxInInQueue);
-        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, inactiveAspects);
+        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, inactiveAspects);
     }
 
     public DclareForMpsConfig withMaxTotalNrOfChanges(int maxTotalNrOfChanges) {
         DclareConfig config = this.config.withMaxTotalNrOfChanges(maxTotalNrOfChanges);
-        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, inactiveAspects);
+        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, inactiveAspects);
     }
 
     public DclareForMpsConfig withMaxNrOfChanges(int maxNrOfChanges) {
         DclareConfig config = this.config.withMaxNrOfChanges(maxNrOfChanges);
-        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, inactiveAspects);
+        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, inactiveAspects);
     }
 
     public DclareForMpsConfig withMaxNrOfObserved(int maxNrOfObserved) {
         DclareConfig config = this.config.withMaxNrOfObserved(maxNrOfObserved);
-        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, inactiveAspects);
+        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, inactiveAspects);
     }
 
     public DclareForMpsConfig withMaxNrOfObservers(int maxNrOfObservers) {
         DclareConfig config = this.config.withMaxNrOfObservers(maxNrOfObservers);
-        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, inactiveAspects);
+        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, inactiveAspects);
     }
 
     public DclareForMpsConfig withMaxNrOfHistory(int maxNrOfHistory) {
         DclareConfig config = this.config.withMaxNrOfHistory(maxNrOfHistory);
-        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, inactiveAspects);
+        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, inactiveAspects);
     }
 
     //============================================================================
@@ -214,11 +230,15 @@ public class DclareForMpsConfig {
         return traceMPSModelChanges;
     }
 
+    public boolean isDisableAutoModelCheck() {
+        return disableAutoModelCheck;
+    }
+
     public String[] getInactiveAspects() {
         return inactiveAspects;
     }
 
-    //===
+    //=== base config entries
     public DclareConfig getDclareConfig() {
         return config;
     }

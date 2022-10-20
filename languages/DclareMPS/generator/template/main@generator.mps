@@ -5511,7 +5511,7 @@
       </node>
     </node>
     <node concept="3aamgX" id="3HLMRNkvc97" role="3acgRq">
-      <ref role="30HIoZ" to="7ggn:3HLMRNkuBN1" resolve="PreviousStateExpression" />
+      <ref role="30HIoZ" to="7ggn:3HLMRNkuBN1" resolve="PreStateExpression" />
       <node concept="gft3U" id="3HLMRNkvieM" role="1lVwrX">
         <node concept="2YIFZM" id="3HLMRNkvihI" role="gfFT$">
           <ref role="37wK5l" to="u4ym:3HLMRNkuJ6J" resolve="pre" />
@@ -8265,7 +8265,7 @@
                 </node>
               </node>
               <node concept="2AHcQZ" id="64dupBmVjLL" role="2AJF6D">
-                <ref role="2AI5Lk" to="wyt6:~Override" />
+                <ref role="2AI5Lk" to="wyt6:~Override" resolve="Override" />
               </node>
             </node>
           </node>
