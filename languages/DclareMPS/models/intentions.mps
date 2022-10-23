@@ -1070,5 +1070,40 @@
       </node>
     </node>
   </node>
+  <node concept="2S6QgY" id="6n54NLYmQ34">
+    <property role="TrG5h" value="ToggleListBuilderOrientation" />
+    <ref role="2ZfgGC" to="7ggn:76efOMRCHWM" resolve="ListBuilder" />
+    <node concept="2S6ZIM" id="6n54NLYmQ35" role="2ZfVej">
+      <node concept="3clFbS" id="6n54NLYmQ36" role="2VODD2">
+        <node concept="3clFbF" id="6n54NLYmQ8o" role="3cqZAp">
+          <node concept="Xl_RD" id="6n54NLYmQ8n" role="3clFbG">
+            <property role="Xl_RC" value="Toggle [list] orientation" />
+          </node>
+        </node>
+      </node>
+    </node>
+    <node concept="2Sbjvc" id="6n54NLYmQ37" role="2ZfgGD">
+      <node concept="3clFbS" id="6n54NLYmQ38" role="2VODD2">
+        <node concept="3clFbF" id="6n54NLYmQEz" role="3cqZAp">
+          <node concept="37vLTI" id="6n54NLYmRkl" role="3clFbG">
+            <node concept="3fqX7Q" id="6n54NLYmRum" role="37vLTx">
+              <node concept="2OqwBi" id="6n54NLYmRGO" role="3fr31v">
+                <node concept="2Sf5sV" id="6n54NLYmRyH" role="2Oq$k0" />
+                <node concept="3TrcHB" id="6n54NLYmS33" role="2OqNvi">
+                  <ref role="3TsBF5" to="7ggn:6n54NLY4afR" resolve="multiLine" />
+                </node>
+              </node>
+            </node>
+            <node concept="2OqwBi" id="6n54NLYmQMz" role="37vLTJ">
+              <node concept="2Sf5sV" id="6n54NLYmQEy" role="2Oq$k0" />
+              <node concept="3TrcHB" id="6n54NLYmQVn" role="2OqNvi">
+                <ref role="3TsBF5" to="7ggn:6n54NLY4afR" resolve="multiLine" />
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+  </node>
 </model>
 

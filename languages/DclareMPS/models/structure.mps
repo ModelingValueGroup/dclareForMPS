@@ -628,6 +628,11 @@
     <property role="3GE5qa" value="expressions" />
     <property role="R4oN_" value="list builder of sequences and/or elements" />
     <ref role="1TJDcQ" to="tpee:fz3vP1J" resolve="Expression" />
+    <node concept="1TJgyi" id="6n54NLY4afR" role="1TKVEl">
+      <property role="IQ2nx" value="7333288718776706039" />
+      <property role="TrG5h" value="multiLine" />
+      <ref role="AX2Wp" to="tpck:fKAQMTB" resolve="boolean" />
+    </node>
     <node concept="1TJgyj" id="4jp8R7C$k_N" role="1TKVEi">
       <property role="IQ2ns" value="4961035436665424243" />
       <property role="20lmBu" value="fLJjDmT/aggregation" />
