@@ -687,7 +687,7 @@
                                   <ref role="3cqZAo" node="30GBB6YzK6E" resolve="a" />
                                 </node>
                                 <node concept="2qgKlT" id="30GBB6YzM54" role="2OqNvi">
-                                  <ref role="37wK5l" to="us1s:58RYP7nvur4" resolve="isInScopeType" />
+                                  <ref role="37wK5l" to="us1s:58RYP7nvur4" resolve="isTypeInScope" />
                                   <node concept="37vLTw" id="58RYP7nwgEA" role="37wK5m">
                                     <ref role="3cqZAo" node="4$bpWrPp9KS" resolve="operandType" />
                                   </node>
@@ -1294,7 +1294,7 @@
                             <ref role="3cqZAo" node="7VpGsFQS4A2" resolve="a" />
                           </node>
                           <node concept="2qgKlT" id="7VpGsFQS4_V" role="2OqNvi">
-                            <ref role="37wK5l" to="us1s:58RYP7nvur4" resolve="isInScopeType" />
+                            <ref role="37wK5l" to="us1s:58RYP7nvur4" resolve="isTypeInScope" />
                             <node concept="37vLTw" id="58RYP7nwcDA" role="37wK5m">
                               <ref role="3cqZAo" node="7VpGsFQS3RA" resolve="elementType" />
                             </node>
@@ -1432,7 +1432,7 @@
                               <ref role="3cqZAo" node="4wbMdoKdaUG" resolve="a" />
                             </node>
                             <node concept="2qgKlT" id="4wbMdoKdaU_" role="2OqNvi">
-                              <ref role="37wK5l" to="us1s:58RYP7nvur4" resolve="isInScopeType" />
+                              <ref role="37wK5l" to="us1s:58RYP7nvur4" resolve="isTypeInScope" />
                               <node concept="37vLTw" id="58RYP7nwiPQ" role="37wK5m">
                                 <ref role="3cqZAo" node="4wbMdoKd9i0" resolve="contextType" />
                               </node>
@@ -4353,7 +4353,7 @@
                               <ref role="3cqZAo" node="1qjtL8JY1Sn" resolve="m" />
                             </node>
                             <node concept="2qgKlT" id="1qjtL8JY1Sk" role="2OqNvi">
-                              <ref role="37wK5l" to="us1s:58RYP7nvur4" resolve="isInScopeType" />
+                              <ref role="37wK5l" to="us1s:58RYP7nvur4" resolve="isTypeInScope" />
                               <node concept="37vLTw" id="58RYP7nvDjt" role="37wK5m">
                                 <ref role="3cqZAo" node="1qjtL8JY1RS" resolve="thisType" />
                               </node>
@@ -4498,7 +4498,7 @@
                                   <ref role="3cqZAo" node="6rHe4o50fWo" resolve="m" />
                                 </node>
                                 <node concept="2qgKlT" id="6rHe4o50fWl" role="2OqNvi">
-                                  <ref role="37wK5l" to="us1s:58RYP7nvur4" resolve="isInScopeType" />
+                                  <ref role="37wK5l" to="us1s:58RYP7nvur4" resolve="isTypeInScope" />
                                   <node concept="37vLTw" id="58RYP7nvHzq" role="37wK5m">
                                     <ref role="3cqZAo" node="6rHe4o50nI7" resolve="baseType" />
                                   </node>

@@ -102,7 +102,8 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
     private void initRead(O object) {
         if (!DObject.READ_OBSERVEDS.add(object, this).contains(this)) {
             if (DClareMPS.instance().getConfig().isTraceActivation()) {
-                LeafTransaction.getCurrent().runNonObserving(() -> System.err.println(DclareTrace.getLineStart("ACTIVATE") + object + "." + this));
+                LeafTransaction current = LeafTransaction.getCurrent();
+                current.runNonObserving(() -> System.err.println(DclareTrace.getLineStart("ACTIVATE", current) + object + "." + this));
             }
             set(object, fromMPS(object));
         }
@@ -163,14 +164,15 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
     @Override
     public T set(O object, T value) {
         if (isRead() && !isDclareOnly() && object.isObserving()) {
+            LeafTransaction current = LeafTransaction.getCurrent();
             if (object.isRead()) {
                 if (!DObject.READ_OBSERVEDS.get(object).contains(this)) {
                     triggerInitRead(object);
-                    ((ObserverTransaction) LeafTransaction.getCurrent()).retrigger(Priority.inner);
+                    ((ObserverTransaction) current).retrigger(Priority.inner);
                     return super.get(object);
                 }
             } else if (!DObject.READ_OBSERVEDS.add(object, this).contains(this) && DClareMPS.instance().getConfig().isTraceActivation()) {
-                LeafTransaction.getCurrent().runNonObserving(() -> System.err.println(DclareTrace.getLineStart("ACTIVATE") + object + "." + this));
+                current.runNonObserving(() -> System.err.println(DclareTrace.getLineStart("ACTIVATE", current) + object + "." + this));
             }
         }
         if (isReference() && object.isObserving()) {

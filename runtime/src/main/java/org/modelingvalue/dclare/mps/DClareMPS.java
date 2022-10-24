@@ -15,6 +15,19 @@
 
 package org.modelingvalue.dclare.mps;
 
+import static org.modelingvalue.dclare.SetableModifier.containment;
+
+import java.lang.Thread.UncaughtExceptionHandler;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Objects;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
+
+import javax.swing.SwingUtilities;
+
 import org.jetbrains.mps.openapi.language.SAbstractConcept;
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.jetbrains.mps.openapi.language.SReferenceLink;
@@ -38,56 +51,17 @@ import org.modelingvalue.collections.util.ContextThread;
 import org.modelingvalue.collections.util.ContextThread.ContextPool;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.collections.util.Triple;
-import org.modelingvalue.dclare.Action;
-import org.modelingvalue.dclare.Constant;
-import org.modelingvalue.dclare.ConstantState;
-import org.modelingvalue.dclare.DclareTrace;
-import org.modelingvalue.dclare.Getable;
-import org.modelingvalue.dclare.IdentityDerivationTransaction;
-import org.modelingvalue.dclare.ImperativeTransaction;
-import org.modelingvalue.dclare.LeafTransaction;
-import org.modelingvalue.dclare.Mutable;
-import org.modelingvalue.dclare.MutableClass;
-import org.modelingvalue.dclare.Observed;
-import org.modelingvalue.dclare.Observer;
-import org.modelingvalue.dclare.ObserverTransaction;
-import org.modelingvalue.dclare.ReusableTransaction;
-import org.modelingvalue.dclare.Setable;
-import org.modelingvalue.dclare.State;
-import org.modelingvalue.dclare.StateDeltaHandler;
-import org.modelingvalue.dclare.Transaction;
-import org.modelingvalue.dclare.TransactionId;
-import org.modelingvalue.dclare.Universe;
-import org.modelingvalue.dclare.UniverseTransaction;
+import org.modelingvalue.dclare.*;
 import org.modelingvalue.dclare.UniverseTransaction.Status;
-import org.modelingvalue.dclare.ex.ConsistencyError;
-import org.modelingvalue.dclare.ex.EmptyMandatoryException;
-import org.modelingvalue.dclare.ex.NonDeterministicException;
-import org.modelingvalue.dclare.ex.OutOfScopeException;
-import org.modelingvalue.dclare.ex.ReferencedOrphanException;
-import org.modelingvalue.dclare.ex.ThrowableError;
-import org.modelingvalue.dclare.ex.TooManyChangesException;
-import org.modelingvalue.dclare.ex.TooManyObservedException;
-import org.modelingvalue.dclare.ex.TooManyObserversException;
-import org.modelingvalue.dclare.ex.TransactionException;
+import org.modelingvalue.dclare.ex.*;
 import org.modelingvalue.dclare.mps.DAttribute.DObservedAttribute;
 import org.modelingvalue.dclare.mps.DRule.DObserver;
 import org.modelingvalue.dclare.mps.DclareModelCheckerBuilder.RootItemsToCheck;
 import org.modelingvalue.dclare.sync.DeltaAdaptor;
 import org.modelingvalue.dclare.sync.SyncConnectionHandler;
 
-import java.lang.Thread.UncaughtExceptionHandler;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Objects;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-
-import javax.swing.*;
-
 import com.intellij.openapi.application.PathManager;
+
 import jetbrains.mps.checkers.AbstractNodeCheckerInEditor;
 import jetbrains.mps.checkers.IAbstractChecker;
 import jetbrains.mps.checkers.IChecker;
@@ -98,15 +72,8 @@ import jetbrains.mps.checkers.ModelCheckerBuilder.ItemsToCheck;
 import jetbrains.mps.checkers.ModelCheckerBuilder.ModelsExtractorImpl;
 import jetbrains.mps.editor.runtime.LanguageEditorChecker;
 import jetbrains.mps.errors.CheckerRegistry;
-import jetbrains.mps.errors.item.IssueKindReportItem;
+import jetbrains.mps.errors.item.*;
 import jetbrains.mps.errors.item.IssueKindReportItem.CheckerCategory;
-import jetbrains.mps.errors.item.ModelFlavouredItem;
-import jetbrains.mps.errors.item.ModelReportItem;
-import jetbrains.mps.errors.item.ModuleFlavouredItem;
-import jetbrains.mps.errors.item.ModuleReportItem;
-import jetbrains.mps.errors.item.NodeFlavouredItem;
-import jetbrains.mps.errors.item.NodeReportItem;
-import jetbrains.mps.errors.item.ReportItem;
 import jetbrains.mps.nodeEditor.Highlighter;
 import jetbrains.mps.progress.EmptyProgressMonitor;
 import jetbrains.mps.project.DevKit;
@@ -114,8 +81,6 @@ import jetbrains.mps.project.ProjectBase;
 import jetbrains.mps.project.ProjectRepository;
 import jetbrains.mps.smodel.language.LanguageRegistry;
 import jetbrains.mps.smodel.language.LanguageRuntime;
-
-import static org.modelingvalue.dclare.SetableModifier.containment;
 
 public class DClareMPS implements StateDeltaHandler, Universe, UncaughtExceptionHandler {
 
@@ -239,14 +204,13 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
         this.dServerMetaData = new DServerMetaData();
         invokeLater(() -> commandThread = Thread.currentThread());
         if (config.isTraceDclare()) {
-            System.err.println(DclareTrace.getLineStart("BEGIN") + this);
+            System.err.println(DclareTrace.getLineStart("BEGIN", null) + this);
         }
         universeTransaction = new MPSUniverseTransaction(this, thePool, startStatus, config);
         this.derivationState = new ConstantState("DERIVE", universeTransaction::handleException);
         this.dObserverTransactions = Concurrent.of(() -> new ReusableTransaction<>(universeTransaction));
         this.dCopyObserverTransactions = Concurrent.of(() -> new ReusableTransaction<>(universeTransaction));
         new ShutdownHelperThread();
-
     }
 
     public DclareForMPSEngine engine() {
@@ -303,7 +267,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
     protected void start() {
         running = true;
         if (config.isTraceDclare()) {
-            System.err.println(DclareTrace.getLineStart("START") + this);
+            System.err.println(DclareTrace.getLineStart("START", null) + this);
         }
         changedModels = Concurrent.of(Set.of());
         changedModules = Concurrent.of(Set.of());
@@ -333,7 +297,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
             }
             running = false;
             if (config.isTraceDclare()) {
-                System.err.println(DclareTrace.getLineStart("STOP") + this);
+                System.err.println(DclareTrace.getLineStart("STOP", null) + this);
             }
             State state = universeTransaction.lastState();
             invokeLater(() -> commandThread = null);
@@ -610,7 +574,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
     public void handleDelta(State imper, State dclare, boolean last, DefaultMap<Object, Set<Setable>> setted) {
         if (isRunning() && !universeTransaction.isKilled()) {
             if (config.isTraceDclare()) {
-                System.err.println(DclareTrace.getLineStart("COMMIT") + "START " + this);
+                System.err.println(DclareTrace.getLineStart("COMMIT", imperativeTransaction) + "START " + this);
             }
             boolean changed = false;
             Map<DObject, Map<DObserved, Pair<Object, Object>>>[] diff = new Map[]{imper.diff(dclare, //
@@ -641,7 +605,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
                 createNewDerivationState();
             }
             if (config.isTraceDclare()) {
-                System.err.println(DclareTrace.getLineStart("COMMIT") + "END " + this);
+                System.err.println(DclareTrace.getLineStart("COMMIT", imperativeTransaction) + "END " + this);
             }
         }
     }
@@ -679,7 +643,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
                     }
                     dObserved.toMPS(dObject, preVal, postVal);
                     if (getConfig().isTraceMPSModelChanges() && !(dObserved instanceof DObservedAttribute) && dObserved != DObject.CONTAINED) {
-                        System.err.println(DclareTrace.getLineStart("MPS") + "MODEL CHANGE " + dObject + "." + dObserved + " = " + State.shortValueDiffString(preVal, postVal));
+                        System.err.println(DclareTrace.getLineStart("MPS", imperativeTransaction) + "MODEL CHANGE " + dObject + "." + dObserved + " = " + State.shortValueDiffString(preVal, postVal));
                     }
                 }
             }
@@ -828,14 +792,14 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
         @Override
         public void start(Action<Universe> action) {
             if (config.isTraceDclare()) {
-                System.err.println(DclareTrace.getLineStart("ACTION") + "START " + action + "  " + this);
+                System.err.println(DclareTrace.getLineStart("ACTION", this) + "START " + action + "  " + this);
             }
         }
 
         @Override
         public void end(Action<Universe> action) {
             if (config.isTraceDclare()) {
-                System.err.println(DclareTrace.getLineStart("ACTION") + "END " + action + "  " + this);
+                System.err.println(DclareTrace.getLineStart("ACTION", this) + "END " + action + "  " + this);
             }
         }
 
@@ -1041,22 +1005,22 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
             } finally {
                 thePool.shutdownNow();
                 if (config.isTraceDclare()) {
-                    System.err.println(DclareTrace.getLineStart("AWAIT") + "TERMINATION " + this);
+                    System.err.println(DclareTrace.getLineStart("AWAIT", null) + "TERMINATION " + this);
                 }
                 try {
                     //noinspection ResultOfMethodCallIgnored
                     thePool.awaitTermination(99, TimeUnit.DAYS);
                 } catch (InterruptedException e) {
-                    System.err.println(DclareTrace.getLineStart("ERROR") + "the pool did not terminate in time: " + this + " (Thread " + Thread.currentThread().getName() + " was interrupted)");
+                    System.err.println(DclareTrace.getLineStart("ERROR", null) + "the pool did not terminate in time: " + this + " (Thread " + Thread.currentThread().getName() + " was interrupted)");
                     e.printStackTrace();
                 }
                 derivationState.stop();
                 if (config.isTraceDclare()) {
-                    System.err.println(DclareTrace.getLineStart("END") + this);
+                    System.err.println(DclareTrace.getLineStart("END", null) + this);
                     if (result != null) {
                         for (@SuppressWarnings("rawtypes")
                         Entry<Setable, Integer> e : result.count()) {
-                            System.err.println(DclareTrace.getLineStart("COUNT") + e.getKey() + " = " + e.getValue());
+                            System.err.println(DclareTrace.getLineStart("COUNT", null) + e.getKey() + " = " + e.getValue());
                         }
                     }
                 }
