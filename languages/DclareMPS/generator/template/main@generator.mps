@@ -15270,6 +15270,24 @@
         <ref role="2AI5Lk" to="wyt6:~Override" resolve="Override" />
       </node>
     </node>
+    <node concept="2tJIrI" id="2$eQdAAMp4T" role="jymVt" />
+    <node concept="3clFb_" id="2$eQdAAMsp8" role="jymVt">
+      <property role="TrG5h" value="toString" />
+      <node concept="3clFbS" id="2$eQdAAMspb" role="3clF47">
+        <node concept="3cpWs6" id="2$eQdAAMupU" role="3cqZAp">
+          <node concept="1rXfSq" id="2$eQdAAMwPE" role="3cqZAk">
+            <ref role="37wK5l" node="4D1d5PC2AHH" resolve="getName" />
+          </node>
+        </node>
+      </node>
+      <node concept="3Tm1VV" id="2$eQdAAMr73" role="1B3o_S" />
+      <node concept="3uibUv" id="2$eQdAAMslv" role="3clF45">
+        <ref role="3uigEE" to="wyt6:~String" resolve="String" />
+      </node>
+      <node concept="2AHcQZ" id="2$eQdAAMtF7" role="2AJF6D">
+        <ref role="2AI5Lk" to="wyt6:~Override" />
+      </node>
+    </node>
     <node concept="2tJIrI" id="yC2uzciRXm" role="jymVt" />
     <node concept="3clFb_" id="2_SJ50nmT2l" role="jymVt">
       <property role="TrG5h" value="getOpposites" />

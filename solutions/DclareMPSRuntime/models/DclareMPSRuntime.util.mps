@@ -5878,10 +5878,14 @@
             <property role="TrG5h" value="pre" />
             <node concept="17QB3L" id="kkv2xtusGg" role="1tU5fm" />
             <node concept="2YIFZM" id="1BVKwjPW5pb" role="33vP2m">
-              <ref role="37wK5l" to="kag7:~DclareTrace.getLineStart(java.lang.String)" resolve="getLineStart" />
               <ref role="1Pybhc" to="kag7:~DclareTrace" resolve="DclareTrace" />
+              <ref role="37wK5l" to="kag7:~DclareTrace.getLineStart(java.lang.String,org.modelingvalue.dclare.Transaction)" resolve="getLineStart" />
               <node concept="Xl_RD" id="1BVKwjPW5pc" role="37wK5m">
                 <property role="Xl_RC" value="TRACE" />
+              </node>
+              <node concept="2YIFZM" id="2$eQdAB2$pz" role="37wK5m">
+                <ref role="37wK5l" to="kag7:~LeafTransaction.getCurrent()" resolve="getCurrent" />
+                <ref role="1Pybhc" to="kag7:~LeafTransaction" resolve="LeafTransaction" />
               </node>
             </node>
           </node>
