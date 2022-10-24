@@ -31,6 +31,7 @@
     <import index="alof" ref="742f6602-5a2f-4313-aa6e-ae1cd4ffdc61/java:jetbrains.mps.ide.project(MPS.Platform/)" />
     <import index="tpce" ref="r:00000000-0000-4000-0000-011c89590292(jetbrains.mps.lang.structure.structure)" />
     <import index="i8bi" ref="r:c3548bac-30eb-4a2a-937c-0111d5697309(jetbrains.mps.lang.smodel.generator.smodelAdapter)" />
+    <import index="9aa5" ref="55d6b6f5-8095-4cd0-a39b-779da8d12940/java:org.modelingvalue.collections.mutable(DclareMPSRuntime/)" />
     <import index="z1c4" ref="6ed54515-acc8-4d1e-a16c-9fd6cfe951ea/java:jetbrains.mps.project(MPS.Core/)" implicit="true" />
   </imports>
   <registry>
@@ -3049,32 +3050,96 @@
                   <node concept="16syzq" id="3DB41z9GPhu" role="10QFUM">
                     <ref role="16sUi3" node="3DB41z9GX$V" resolve="T" />
                   </node>
-                  <node concept="2OqwBi" id="1cUpE405gj2" role="10QFUP">
-                    <node concept="2OqwBi" id="6Ct1cXsyIiB" role="2Oq$k0">
-                      <node concept="2YIFZM" id="3DB41z9GPhv" role="2Oq$k0">
-                        <ref role="37wK5l" to="zrbp:~Collection.of(java.lang.Iterable)" resolve="of" />
-                        <ref role="1Pybhc" to="zrbp:~Collection" resolve="Collection" />
-                        <node concept="10QFUN" id="3DB41z9GPhw" role="37wK5m">
-                          <node concept="3uibUv" id="3DB41z9GPhx" role="10QFUM">
-                            <ref role="3uigEE" to="wyt6:~Iterable" resolve="Iterable" />
-                            <node concept="3qTvmN" id="3DB41z9GPhy" role="11_B2D" />
-                          </node>
-                          <node concept="37vLTw" id="3DB41z9GPiz" role="10QFUP">
-                            <ref role="3cqZAo" node="3DB41z9GPio" resolve="value" />
-                          </node>
+                  <node concept="2OqwBi" id="2$eQdABoqs_" role="10QFUP">
+                    <node concept="1eOMI4" id="2$eQdABoqsA" role="2Oq$k0">
+                      <node concept="10QFUN" id="2$eQdABoqsB" role="1eOMHV">
+                        <node concept="3uibUv" id="2$eQdABoqsC" role="10QFUM">
+                          <ref role="3uigEE" to="9aa5:~Mutable" resolve="Mutable" />
+                        </node>
+                        <node concept="37vLTw" id="2$eQdABoqsD" role="10QFUP">
+                          <ref role="3cqZAo" node="3DB41z9GPio" resolve="value" />
                         </node>
                       </node>
-                      <node concept="liA8E" id="6Ct1cXsyKvN" role="2OqNvi">
-                        <ref role="37wK5l" to="zrbp:~Collection.distinct()" resolve="distinct" />
-                      </node>
                     </node>
-                    <node concept="liA8E" id="1cUpE405hWc" role="2OqNvi">
-                      <ref role="37wK5l" to="zrbp:~Collection.toList()" resolve="toList" />
+                    <node concept="liA8E" id="2$eQdABoqsE" role="2OqNvi">
+                      <ref role="37wK5l" to="9aa5:~Mutable.toImmutable()" resolve="toImmutable" />
                     </node>
                   </node>
                 </node>
                 <node concept="37vLTw" id="3DB41z9GPiq" role="37vLTJ">
                   <ref role="3cqZAo" node="3DB41z9GPio" resolve="value" />
+                </node>
+              </node>
+            </node>
+          </node>
+          <node concept="3eNFk2" id="2$eQdABmZYe" role="3eNLev">
+            <node concept="3clFbS" id="2$eQdABmZYg" role="3eOfB_">
+              <node concept="3clFbF" id="2$eQdABndle" role="3cqZAp">
+                <node concept="37vLTI" id="2$eQdABndlf" role="3clFbG">
+                  <node concept="10QFUN" id="2$eQdABndlg" role="37vLTx">
+                    <node concept="16syzq" id="2$eQdABndlh" role="10QFUM">
+                      <ref role="16sUi3" node="3DB41z9GX$V" resolve="T" />
+                    </node>
+                    <node concept="2OqwBi" id="2$eQdABndli" role="10QFUP">
+                      <node concept="2OqwBi" id="2$eQdABndlj" role="2Oq$k0">
+                        <node concept="2OqwBi" id="2$eQdABndlk" role="2Oq$k0">
+                          <node concept="2YIFZM" id="2$eQdABndll" role="2Oq$k0">
+                            <ref role="1Pybhc" to="zrbp:~Collection" resolve="Collection" />
+                            <ref role="37wK5l" to="zrbp:~Collection.of(java.lang.Iterable)" resolve="of" />
+                            <node concept="10QFUN" id="2$eQdABndlm" role="37wK5m">
+                              <node concept="3uibUv" id="2$eQdABndln" role="10QFUM">
+                                <ref role="3uigEE" to="wyt6:~Iterable" resolve="Iterable" />
+                                <node concept="3qTvmN" id="2$eQdABndlo" role="11_B2D" />
+                              </node>
+                              <node concept="37vLTw" id="2$eQdABndlp" role="10QFUP">
+                                <ref role="3cqZAo" node="3DB41z9GPio" resolve="value" />
+                              </node>
+                            </node>
+                          </node>
+                          <node concept="liA8E" id="2$eQdABndlq" role="2OqNvi">
+                            <ref role="37wK5l" to="zrbp:~Collection.distinct()" resolve="distinct" />
+                          </node>
+                        </node>
+                        <node concept="liA8E" id="2$eQdABndlr" role="2OqNvi">
+                          <ref role="37wK5l" to="zrbp:~Collection.notNull()" resolve="notNull" />
+                        </node>
+                      </node>
+                      <node concept="liA8E" id="2$eQdABndls" role="2OqNvi">
+                        <ref role="37wK5l" to="zrbp:~Collection.toList()" resolve="toList" />
+                      </node>
+                    </node>
+                  </node>
+                  <node concept="37vLTw" id="2$eQdABndlt" role="37vLTJ">
+                    <ref role="3cqZAo" node="3DB41z9GPio" resolve="value" />
+                  </node>
+                </node>
+              </node>
+            </node>
+            <node concept="1Wc70l" id="2$eQdABn5XV" role="3eO9$A">
+              <node concept="2OqwBi" id="2$eQdABn5XW" role="3uHU7w">
+                <node concept="37vLTw" id="2$eQdABn5XX" role="2Oq$k0">
+                  <ref role="3cqZAo" node="5GTBd9D12a_" resolve="attr" />
+                </node>
+                <node concept="liA8E" id="2$eQdABn5XY" role="2OqNvi">
+                  <ref role="37wK5l" to="t4tl:~DAttribute.isComposite()" resolve="isComposite" />
+                </node>
+              </node>
+              <node concept="1Wc70l" id="2$eQdABn5XZ" role="3uHU7B">
+                <node concept="3clFbC" id="2$eQdABn5Y0" role="3uHU7B">
+                  <node concept="37vLTw" id="2$eQdABn5Y1" role="3uHU7B">
+                    <ref role="3cqZAo" node="6Ct1cXsysfU" resolve="cls" />
+                  </node>
+                  <node concept="3VsKOn" id="2$eQdABn5Y2" role="3uHU7w">
+                    <ref role="3VsUkX" to="33ny:~List" resolve="List" />
+                  </node>
+                </node>
+                <node concept="2ZW3vV" id="2$eQdABn5Y3" role="3uHU7w">
+                  <node concept="3uibUv" id="2$eQdABn5Y4" role="2ZW6by">
+                    <ref role="3uigEE" to="wyt6:~Iterable" resolve="Iterable" />
+                  </node>
+                  <node concept="37vLTw" id="2$eQdABn5Y5" role="2ZW6bz">
+                    <ref role="3cqZAo" node="3DB41z9GPio" resolve="value" />
+                  </node>
                 </node>
               </node>
             </node>
@@ -3088,17 +3153,22 @@
                       <ref role="16sUi3" node="3DB41z9GX$V" resolve="T" />
                     </node>
                     <node concept="2OqwBi" id="6Ct1cXsyFO_" role="10QFUP">
-                      <node concept="2YIFZM" id="6Ct1cXsyFOA" role="2Oq$k0">
-                        <ref role="37wK5l" to="zrbp:~Collection.of(java.lang.Iterable)" resolve="of" />
-                        <ref role="1Pybhc" to="zrbp:~Collection" resolve="Collection" />
-                        <node concept="10QFUN" id="6Ct1cXsyFOB" role="37wK5m">
-                          <node concept="3uibUv" id="6Ct1cXsyFOC" role="10QFUM">
-                            <ref role="3uigEE" to="wyt6:~Iterable" resolve="Iterable" />
-                            <node concept="3qTvmN" id="6Ct1cXsyFOD" role="11_B2D" />
+                      <node concept="2OqwBi" id="2$eQdABlYKn" role="2Oq$k0">
+                        <node concept="2YIFZM" id="6Ct1cXsyFOA" role="2Oq$k0">
+                          <ref role="37wK5l" to="zrbp:~Collection.of(java.lang.Iterable)" resolve="of" />
+                          <ref role="1Pybhc" to="zrbp:~Collection" resolve="Collection" />
+                          <node concept="10QFUN" id="6Ct1cXsyFOB" role="37wK5m">
+                            <node concept="3uibUv" id="6Ct1cXsyFOC" role="10QFUM">
+                              <ref role="3uigEE" to="wyt6:~Iterable" resolve="Iterable" />
+                              <node concept="3qTvmN" id="6Ct1cXsyFOD" role="11_B2D" />
+                            </node>
+                            <node concept="37vLTw" id="6Ct1cXsyFOE" role="10QFUP">
+                              <ref role="3cqZAo" node="3DB41z9GPio" resolve="value" />
+                            </node>
                           </node>
-                          <node concept="37vLTw" id="6Ct1cXsyFOE" role="10QFUP">
-                            <ref role="3cqZAo" node="3DB41z9GPio" resolve="value" />
-                          </node>
+                        </node>
+                        <node concept="liA8E" id="2$eQdABm7io" role="2OqNvi">
+                          <ref role="37wK5l" to="zrbp:~Collection.notNull()" resolve="notNull" />
                         </node>
                       </node>
                       <node concept="liA8E" id="6Ct1cXsyFOF" role="2OqNvi">
@@ -3154,21 +3224,26 @@
                     <node concept="16syzq" id="3DB41z9GPhL" role="10QFUM">
                       <ref role="16sUi3" node="3DB41z9GX$V" resolve="T" />
                     </node>
-                    <node concept="2OqwBi" id="1cUpE405m$X" role="10QFUP">
-                      <node concept="2YIFZM" id="3DB41z9GPhM" role="2Oq$k0">
-                        <ref role="37wK5l" to="zrbp:~Collection.of(java.lang.Iterable)" resolve="of" />
-                        <ref role="1Pybhc" to="zrbp:~Collection" resolve="Collection" />
-                        <node concept="10QFUN" id="3DB41z9GPhN" role="37wK5m">
-                          <node concept="3uibUv" id="3DB41z9GPhO" role="10QFUM">
-                            <ref role="3uigEE" to="wyt6:~Iterable" resolve="Iterable" />
-                            <node concept="3qTvmN" id="3DB41z9GPhP" role="11_B2D" />
-                          </node>
-                          <node concept="37vLTw" id="3DB41z9GPix" role="10QFUP">
-                            <ref role="3cqZAo" node="3DB41z9GPio" resolve="value" />
+                    <node concept="2OqwBi" id="2$eQdABlN1S" role="10QFUP">
+                      <node concept="2OqwBi" id="1cUpE405m$X" role="2Oq$k0">
+                        <node concept="2YIFZM" id="3DB41z9GPhM" role="2Oq$k0">
+                          <ref role="37wK5l" to="zrbp:~Collection.of(java.lang.Iterable)" resolve="of" />
+                          <ref role="1Pybhc" to="zrbp:~Collection" resolve="Collection" />
+                          <node concept="10QFUN" id="3DB41z9GPhN" role="37wK5m">
+                            <node concept="3uibUv" id="3DB41z9GPhO" role="10QFUM">
+                              <ref role="3uigEE" to="wyt6:~Iterable" resolve="Iterable" />
+                              <node concept="3qTvmN" id="3DB41z9GPhP" role="11_B2D" />
+                            </node>
+                            <node concept="37vLTw" id="3DB41z9GPix" role="10QFUP">
+                              <ref role="3cqZAo" node="3DB41z9GPio" resolve="value" />
+                            </node>
                           </node>
                         </node>
+                        <node concept="liA8E" id="1cUpE405pbB" role="2OqNvi">
+                          <ref role="37wK5l" to="zrbp:~Collection.notNull()" resolve="notNull" />
+                        </node>
                       </node>
-                      <node concept="liA8E" id="1cUpE405pbB" role="2OqNvi">
+                      <node concept="liA8E" id="2$eQdABlS8l" role="2OqNvi">
                         <ref role="37wK5l" to="zrbp:~Collection.toSet()" resolve="toSet" />
                       </node>
                     </node>
@@ -3207,29 +3282,34 @@
                       <ref role="16sUi3" node="3DB41z9GX$V" resolve="T" />
                     </node>
                     <node concept="2OqwBi" id="3DB41z9GPi1" role="10QFUP">
-                      <node concept="2YIFZM" id="3DB41z9GPi2" role="2Oq$k0">
-                        <ref role="37wK5l" to="zrbp:~Collection.of(java.lang.Iterable)" resolve="of" />
-                        <ref role="1Pybhc" to="zrbp:~Collection" resolve="Collection" />
-                        <node concept="2OqwBi" id="3DB41z9GPi3" role="37wK5m">
-                          <node concept="1eOMI4" id="3DB41z9GPi4" role="2Oq$k0">
-                            <node concept="10QFUN" id="3DB41z9GPi5" role="1eOMHV">
-                              <node concept="3uibUv" id="3DB41z9GPi6" role="10QFUM">
-                                <ref role="3uigEE" to="33ny:~Map" resolve="Map" />
-                                <node concept="3uibUv" id="3BqGZvwU$vT" role="11_B2D">
-                                  <ref role="3uigEE" to="wyt6:~Object" resolve="Object" />
+                      <node concept="2OqwBi" id="2$eQdABloz6" role="2Oq$k0">
+                        <node concept="2YIFZM" id="3DB41z9GPi2" role="2Oq$k0">
+                          <ref role="37wK5l" to="zrbp:~Collection.of(java.lang.Iterable)" resolve="of" />
+                          <ref role="1Pybhc" to="zrbp:~Collection" resolve="Collection" />
+                          <node concept="2OqwBi" id="3DB41z9GPi3" role="37wK5m">
+                            <node concept="1eOMI4" id="3DB41z9GPi4" role="2Oq$k0">
+                              <node concept="10QFUN" id="3DB41z9GPi5" role="1eOMHV">
+                                <node concept="3uibUv" id="3DB41z9GPi6" role="10QFUM">
+                                  <ref role="3uigEE" to="33ny:~Map" resolve="Map" />
+                                  <node concept="3uibUv" id="3BqGZvwU$vT" role="11_B2D">
+                                    <ref role="3uigEE" to="wyt6:~Object" resolve="Object" />
+                                  </node>
+                                  <node concept="3uibUv" id="3BqGZvwUBhE" role="11_B2D">
+                                    <ref role="3uigEE" to="wyt6:~Object" resolve="Object" />
+                                  </node>
                                 </node>
-                                <node concept="3uibUv" id="3BqGZvwUBhE" role="11_B2D">
-                                  <ref role="3uigEE" to="wyt6:~Object" resolve="Object" />
+                                <node concept="37vLTw" id="3DB41z9GPiy" role="10QFUP">
+                                  <ref role="3cqZAo" node="3DB41z9GPio" resolve="value" />
                                 </node>
-                              </node>
-                              <node concept="37vLTw" id="3DB41z9GPiy" role="10QFUP">
-                                <ref role="3cqZAo" node="3DB41z9GPio" resolve="value" />
                               </node>
                             </node>
+                            <node concept="liA8E" id="3DB41z9GPi8" role="2OqNvi">
+                              <ref role="37wK5l" to="33ny:~Map.entrySet()" resolve="entrySet" />
+                            </node>
                           </node>
-                          <node concept="liA8E" id="3DB41z9GPi8" role="2OqNvi">
-                            <ref role="37wK5l" to="33ny:~Map.entrySet()" resolve="entrySet" />
-                          </node>
+                        </node>
+                        <node concept="liA8E" id="2$eQdABlzGf" role="2OqNvi">
+                          <ref role="37wK5l" to="zrbp:~Collection.notNull()" resolve="notNull" />
                         </node>
                       </node>
                       <node concept="liA8E" id="3DB41z9GPi9" role="2OqNvi">
@@ -3297,32 +3377,12 @@
               </node>
             </node>
           </node>
-          <node concept="1Wc70l" id="6Ct1cXsyAzn" role="3clFbw">
-            <node concept="2OqwBi" id="6Ct1cXsyClU" role="3uHU7w">
-              <node concept="37vLTw" id="6Ct1cXsyBKv" role="2Oq$k0">
-                <ref role="3cqZAo" node="5GTBd9D12a_" resolve="attr" />
-              </node>
-              <node concept="liA8E" id="6Ct1cXsyCEJ" role="2OqNvi">
-                <ref role="37wK5l" to="t4tl:~DAttribute.isComposite()" resolve="isComposite" />
-              </node>
+          <node concept="2ZW3vV" id="2$eQdABocu8" role="3clFbw">
+            <node concept="3uibUv" id="2$eQdABocu9" role="2ZW6by">
+              <ref role="3uigEE" to="9aa5:~Mutable" resolve="Mutable" />
             </node>
-            <node concept="1Wc70l" id="5GTBd9DBjaH" role="3uHU7B">
-              <node concept="3clFbC" id="5GTBd9D1ke3" role="3uHU7B">
-                <node concept="37vLTw" id="6Ct1cXsysfY" role="3uHU7B">
-                  <ref role="3cqZAo" node="6Ct1cXsysfU" resolve="cls" />
-                </node>
-                <node concept="3VsKOn" id="5GTBd9D1nOr" role="3uHU7w">
-                  <ref role="3VsUkX" to="33ny:~List" resolve="List" />
-                </node>
-              </node>
-              <node concept="2ZW3vV" id="5GTBd9DBn3I" role="3uHU7w">
-                <node concept="3uibUv" id="1cUpE4055mA" role="2ZW6by">
-                  <ref role="3uigEE" to="wyt6:~Iterable" resolve="Iterable" />
-                </node>
-                <node concept="37vLTw" id="5GTBd9DBlD$" role="2ZW6bz">
-                  <ref role="3cqZAo" node="3DB41z9GPio" resolve="value" />
-                </node>
-              </node>
+            <node concept="37vLTw" id="2$eQdABocua" role="2ZW6bz">
+              <ref role="3cqZAo" node="3DB41z9GPio" resolve="value" />
             </node>
           </node>
         </node>
@@ -3357,60 +3417,94 @@
       <node concept="3clFbS" id="7qx2SEVljev" role="3clF47">
         <node concept="3clFbJ" id="7qx2SEVljeB" role="3cqZAp">
           <node concept="3clFbS" id="7qx2SEVljeC" role="3clFbx">
-            <node concept="3clFbF" id="7qx2SEVljfj" role="3cqZAp">
-              <node concept="37vLTI" id="7qx2SEVljfk" role="3clFbG">
-                <node concept="37vLTw" id="7qx2SEVljfl" role="37vLTJ">
-                  <ref role="3cqZAo" node="7qx2SEVljet" resolve="value" />
-                </node>
-                <node concept="2OqwBi" id="7qx2SEVmU07" role="37vLTx">
-                  <node concept="2OqwBi" id="7qx2SEVmkcq" role="2Oq$k0">
-                    <node concept="2YIFZM" id="7qx2SEVljfp" role="2Oq$k0">
-                      <ref role="1Pybhc" to="zrbp:~Collection" resolve="Collection" />
-                      <ref role="37wK5l" to="zrbp:~Collection.of(java.lang.Iterable)" resolve="of" />
-                      <node concept="10QFUN" id="7qx2SEVljfq" role="37wK5m">
-                        <node concept="3uibUv" id="7qx2SEVljfr" role="10QFUM">
-                          <ref role="3uigEE" to="wyt6:~Iterable" resolve="Iterable" />
-                          <node concept="3uibUv" id="7qx2SEVmG$V" role="11_B2D">
-                            <ref role="3uigEE" to="wyt6:~Object" resolve="Object" />
-                          </node>
-                        </node>
-                        <node concept="37vLTw" id="7qx2SEVljft" role="10QFUP">
-                          <ref role="3cqZAo" node="7qx2SEVljet" resolve="value" />
-                        </node>
+            <node concept="3clFbF" id="2$eQdABmK6d" role="3cqZAp">
+              <node concept="37vLTI" id="2$eQdABmNox" role="3clFbG">
+                <node concept="2OqwBi" id="2$eQdABmTWp" role="37vLTx">
+                  <node concept="1eOMI4" id="2$eQdABmQD$" role="2Oq$k0">
+                    <node concept="10QFUN" id="2$eQdABmQDx" role="1eOMHV">
+                      <node concept="3uibUv" id="2$eQdABmQDA" role="10QFUM">
+                        <ref role="3uigEE" to="9aa5:~Mutable" resolve="Mutable" />
                       </node>
-                      <node concept="3uibUv" id="7qx2SEVmD6e" role="3PaCim">
-                        <ref role="3uigEE" to="wyt6:~Object" resolve="Object" />
+                      <node concept="37vLTw" id="2$eQdABmQDB" role="10QFUP">
+                        <ref role="3cqZAo" node="7qx2SEVljet" resolve="value" />
                       </node>
                     </node>
-                    <node concept="liA8E" id="7qx2SEVmnYs" role="2OqNvi">
-                      <ref role="37wK5l" to="zrbp:~Collection.map(java.util.function.Function)" resolve="map" />
-                      <node concept="1bVj0M" id="7qx2SEVmrzG" role="37wK5m">
-                        <node concept="37vLTG" id="7qx2SEVms5N" role="1bW2Oz">
-                          <property role="TrG5h" value="e" />
-                          <node concept="3uibUv" id="7qx2SEVmsam" role="1tU5fm">
-                            <ref role="3uigEE" to="wyt6:~Object" resolve="Object" />
+                  </node>
+                  <node concept="liA8E" id="2$eQdABmXiE" role="2OqNvi">
+                    <ref role="37wK5l" to="9aa5:~Mutable.toImmutable()" resolve="toImmutable" />
+                  </node>
+                </node>
+                <node concept="37vLTw" id="2$eQdABmK6c" role="37vLTJ">
+                  <ref role="3cqZAo" node="7qx2SEVljet" resolve="value" />
+                </node>
+              </node>
+            </node>
+          </node>
+          <node concept="3eNFk2" id="2$eQdABnlm5" role="3eNLev">
+            <node concept="3clFbS" id="2$eQdABnlm7" role="3eOfB_">
+              <node concept="3clFbF" id="7qx2SEVljfj" role="3cqZAp">
+                <node concept="37vLTI" id="7qx2SEVljfk" role="3clFbG">
+                  <node concept="37vLTw" id="7qx2SEVljfl" role="37vLTJ">
+                    <ref role="3cqZAo" node="7qx2SEVljet" resolve="value" />
+                  </node>
+                  <node concept="2OqwBi" id="7qx2SEVmU07" role="37vLTx">
+                    <node concept="2OqwBi" id="7qx2SEVmkcq" role="2Oq$k0">
+                      <node concept="2YIFZM" id="7qx2SEVljfp" role="2Oq$k0">
+                        <ref role="1Pybhc" to="zrbp:~Collection" resolve="Collection" />
+                        <ref role="37wK5l" to="zrbp:~Collection.of(java.lang.Iterable)" resolve="of" />
+                        <node concept="10QFUN" id="7qx2SEVljfq" role="37wK5m">
+                          <node concept="3uibUv" id="7qx2SEVljfr" role="10QFUM">
+                            <ref role="3uigEE" to="wyt6:~Iterable" resolve="Iterable" />
+                            <node concept="3uibUv" id="7qx2SEVmG$V" role="11_B2D">
+                              <ref role="3uigEE" to="wyt6:~Object" resolve="Object" />
+                            </node>
+                          </node>
+                          <node concept="37vLTw" id="7qx2SEVljft" role="10QFUP">
+                            <ref role="3cqZAo" node="7qx2SEVljet" resolve="value" />
                           </node>
                         </node>
-                        <node concept="3clFbS" id="7qx2SEVmrzI" role="1bW5cS">
-                          <node concept="3clFbF" id="7qx2SEVmw05" role="3cqZAp">
-                            <node concept="1rXfSq" id="7qx2SEVmw04" role="3clFbG">
-                              <ref role="37wK5l" node="7qx2SEVljem" resolve="toNonMutable" />
-                              <node concept="37vLTw" id="7qx2SEVmxaB" role="37wK5m">
-                                <ref role="3cqZAo" node="7qx2SEVms5N" resolve="e" />
+                        <node concept="3uibUv" id="7qx2SEVmD6e" role="3PaCim">
+                          <ref role="3uigEE" to="wyt6:~Object" resolve="Object" />
+                        </node>
+                      </node>
+                      <node concept="liA8E" id="7qx2SEVmnYs" role="2OqNvi">
+                        <ref role="37wK5l" to="zrbp:~Collection.map(java.util.function.Function)" resolve="map" />
+                        <node concept="1bVj0M" id="7qx2SEVmrzG" role="37wK5m">
+                          <node concept="37vLTG" id="7qx2SEVms5N" role="1bW2Oz">
+                            <property role="TrG5h" value="e" />
+                            <node concept="3uibUv" id="7qx2SEVmsam" role="1tU5fm">
+                              <ref role="3uigEE" to="wyt6:~Object" resolve="Object" />
+                            </node>
+                          </node>
+                          <node concept="3clFbS" id="7qx2SEVmrzI" role="1bW5cS">
+                            <node concept="3clFbF" id="7qx2SEVmw05" role="3cqZAp">
+                              <node concept="1rXfSq" id="7qx2SEVmw04" role="3clFbG">
+                                <ref role="37wK5l" node="7qx2SEVljem" resolve="toNonMutable" />
+                                <node concept="37vLTw" id="7qx2SEVmxaB" role="37wK5m">
+                                  <ref role="3cqZAo" node="7qx2SEVms5N" resolve="e" />
+                                </node>
                               </node>
                             </node>
                           </node>
                         </node>
-                      </node>
-                      <node concept="3uibUv" id="7qx2SEVmQg3" role="3PaCim">
-                        <ref role="3uigEE" to="wyt6:~Object" resolve="Object" />
+                        <node concept="3uibUv" id="7qx2SEVmQg3" role="3PaCim">
+                          <ref role="3uigEE" to="wyt6:~Object" resolve="Object" />
+                        </node>
                       </node>
                     </node>
-                  </node>
-                  <node concept="liA8E" id="7qx2SEVmYv8" role="2OqNvi">
-                    <ref role="37wK5l" to="zrbp:~Collection.toSet()" resolve="toSet" />
+                    <node concept="liA8E" id="7qx2SEVmYv8" role="2OqNvi">
+                      <ref role="37wK5l" to="zrbp:~Collection.toSet()" resolve="toSet" />
+                    </node>
                   </node>
                 </node>
+              </node>
+            </node>
+            <node concept="2ZW3vV" id="7qx2SEVljgh" role="3eO9$A">
+              <node concept="3uibUv" id="7qx2SEVmfaJ" role="2ZW6by">
+                <ref role="3uigEE" to="33ny:~Set" resolve="Set" />
+              </node>
+              <node concept="37vLTw" id="7qx2SEVljgj" role="2ZW6bz">
+                <ref role="3cqZAo" node="7qx2SEVljet" resolve="value" />
               </node>
             </node>
           </node>
@@ -3489,7 +3583,7 @@
                         <node concept="37vLTG" id="7qx2SEVljg0" role="1bW2Oz">
                           <property role="TrG5h" value="e" />
                           <node concept="3uibUv" id="7qx2SEVljg1" role="1tU5fm">
-                            <ref role="3uigEE" to="33ny:~Map$Entry" resolve="Map.Entry" />
+                            <ref role="3uigEE" to="33ny:~Map$Entry" resolve="Entry" />
                             <node concept="3uibUv" id="7qx2SEVntF1" role="11_B2D">
                               <ref role="3uigEE" to="wyt6:~Object" resolve="Object" />
                             </node>
@@ -3592,11 +3686,11 @@
               </node>
             </node>
           </node>
-          <node concept="2ZW3vV" id="7qx2SEVljgh" role="3clFbw">
-            <node concept="3uibUv" id="7qx2SEVmfaJ" role="2ZW6by">
-              <ref role="3uigEE" to="33ny:~Set" resolve="Set" />
+          <node concept="2ZW3vV" id="2$eQdABmyMT" role="3clFbw">
+            <node concept="3uibUv" id="2$eQdABm_Mb" role="2ZW6by">
+              <ref role="3uigEE" to="9aa5:~Mutable" resolve="Mutable" />
             </node>
-            <node concept="37vLTw" id="7qx2SEVljgj" role="2ZW6bz">
+            <node concept="37vLTw" id="2$eQdABmvvT" role="2ZW6bz">
               <ref role="3cqZAo" node="7qx2SEVljet" resolve="value" />
             </node>
           </node>
