@@ -27,7 +27,6 @@ import org.jetbrains.mps.openapi.language.SProperty;
 import org.jetbrains.mps.openapi.model.EditableSModel;
 import org.jetbrains.mps.openapi.model.SModel;
 import org.jetbrains.mps.openapi.model.SNode;
-import org.modelingvalue.collections.ContainingCollection;
 import org.modelingvalue.dclare.AbstractDerivationTransaction;
 import org.modelingvalue.dclare.Constant;
 import org.modelingvalue.dclare.LeafTransaction;
@@ -162,16 +161,6 @@ public interface DAttribute<O, T> extends DFeature {
                 return dClareMPS.imperativeState().derive(() -> super.get(object), dClareMPS.universeTransaction().constantState());
             }
             return super.get(object);
-        }
-
-        @SuppressWarnings("unchecked")
-        @Override
-        public V set(C object, V value) {
-            if (containment() && value instanceof ContainingCollection) {
-                ContainingCollection cc = (ContainingCollection) value;
-                value = (V) cc.clear().addAll(cc.notNull());
-            }
-            return super.set(object, value);
         }
 
         @Override
