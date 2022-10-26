@@ -40,10 +40,10 @@
     <import index="tp2q" ref="r:00000000-0000-4000-0000-011c8959032e(jetbrains.mps.baseLanguage.collections.structure)" />
     <import index="tpeu" ref="r:00000000-0000-4000-0000-011c895902fa(jetbrains.mps.lang.smodel.behavior)" />
     <import index="d6hs" ref="6ed54515-acc8-4d1e-a16c-9fd6cfe951ea/java:jetbrains.mps.errors.item(MPS.Core/)" />
-    <import index="zrbp" ref="55d6b6f5-8095-4cd0-a39b-779da8d12940/java:org.modelingvalue.collections(DclareMPSRuntime/)" />
     <import index="tpek" ref="r:00000000-0000-4000-0000-011c895902c0(jetbrains.mps.baseLanguage.behavior)" />
     <import index="pxpg" ref="r:5a550369-d6d9-4c89-a89b-1bb748dc20b3(jetbrains.mps.baseLanguage.checkedDots.structure)" />
     <import index="w1kc" ref="6ed54515-acc8-4d1e-a16c-9fd6cfe951ea/java:jetbrains.mps.smodel(MPS.Core/)" />
+    <import index="zrbp" ref="e584ff77-930e-4637-8df0-b4c8d3b6de91/java:org.modelingvalue.collections(DclareRuntime/)" />
     <import index="tpcu" ref="r:00000000-0000-4000-0000-011c89590282(jetbrains.mps.lang.core.behavior)" implicit="true" />
     <import index="tpcn" ref="r:00000000-0000-4000-0000-011c8959028b(jetbrains.mps.lang.structure.behavior)" implicit="true" />
     <import index="tpce" ref="r:00000000-0000-4000-0000-011c89590292(jetbrains.mps.lang.structure.structure)" implicit="true" />
@@ -14282,8 +14282,8 @@
       </node>
       <node concept="gft3U" id="x3aistFhlp" role="1lVwrX">
         <node concept="2YIFZM" id="5qNJ9l9R_0l" role="gfFT$">
-          <ref role="37wK5l" to="zrbp:~Set.of()" resolve="of" />
           <ref role="1Pybhc" to="zrbp:~Set" resolve="Set" />
+          <ref role="37wK5l" to="zrbp:~Set.of()" resolve="of" />
         </node>
       </node>
     </node>
@@ -14333,8 +14333,8 @@
       </node>
       <node concept="gft3U" id="5qNJ9l9R_in" role="1lVwrX">
         <node concept="2YIFZM" id="5qNJ9l9RDJQ" role="gfFT$">
-          <ref role="37wK5l" to="zrbp:~Collection.of(java.lang.Object...)" resolve="of" />
           <ref role="1Pybhc" to="zrbp:~Map" resolve="Map" />
+          <ref role="37wK5l" to="zrbp:~Map.of(org.modelingvalue.collections.Entry...)" resolve="of" />
         </node>
       </node>
     </node>

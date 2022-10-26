@@ -38,14 +38,11 @@
     <import index="z60i" ref="6354ebe7-c22a-4a0f-ac54-50b52ab9b065/java:java.awt(JDK/)" />
     <import index="25x5" ref="6354ebe7-c22a-4a0f-ac54-50b52ab9b065/java:java.text(JDK/)" />
     <import index="jtsr" ref="8865b7a8-5271-43d3-884c-6fd1d9cfdd34/java:org.jetbrains.mps.openapi.project(MPS.OpenAPI/)" />
-    <import index="42m3" ref="55d6b6f5-8095-4cd0-a39b-779da8d12940/java:org.modelingvalue.collections.util(DclareMPSRuntime/)" />
-    <import index="zrbp" ref="55d6b6f5-8095-4cd0-a39b-779da8d12940/java:org.modelingvalue.collections(DclareMPSRuntime/)" />
     <import index="71xd" ref="742f6602-5a2f-4313-aa6e-ae1cd4ffdc61/java:jetbrains.mps.ide.tools(MPS.Platform/)" />
     <import index="alof" ref="742f6602-5a2f-4313-aa6e-ae1cd4ffdc61/java:jetbrains.mps.ide.project(MPS.Platform/)" />
     <import index="wyt6" ref="6354ebe7-c22a-4a0f-ac54-50b52ab9b065/java:java.lang(JDK/)" />
     <import index="exr9" ref="1ed103c3-3aa6-49b7-9c21-6765ee11f224/java:jetbrains.mps.nodeEditor(MPS.Editor/)" />
     <import index="wknp" ref="r:9a42e459-6b0e-4c37-8fab-9b46bab588bd(DclareMessages.structure)" />
-    <import index="kag7" ref="55d6b6f5-8095-4cd0-a39b-779da8d12940/java:org.modelingvalue.dclare(DclareMPSRuntime/)" />
     <import index="u4ym" ref="r:1a96ceaa-2946-43e0-af3f-cd05d77ee6d1(DclareMPSRuntime.util)" />
     <import index="tqvn" ref="6ed54515-acc8-4d1e-a16c-9fd6cfe951ea/java:jetbrains.mps.smodel.tempmodel(MPS.Core/)" />
     <import index="7oz1" ref="1ed103c3-3aa6-49b7-9c21-6765ee11f224/java:jetbrains.mps.nodeEditor.configuration(MPS.Editor/)" />
@@ -66,6 +63,9 @@
     <import index="1ctc" ref="6354ebe7-c22a-4a0f-ac54-50b52ab9b065/java:java.util.stream(JDK/)" />
     <import index="k3nr" ref="1ed103c3-3aa6-49b7-9c21-6765ee11f224/java:jetbrains.mps.ide.editor(MPS.Editor/)" />
     <import index="s9o5" ref="498d89d2-c2e9-11e2-ad49-6cf049e62fe5/java:com.intellij.openapi.editor(MPS.IDEA/)" />
+    <import index="42m3" ref="e584ff77-930e-4637-8df0-b4c8d3b6de91/java:org.modelingvalue.collections.util(DclareRuntime/)" />
+    <import index="zrbp" ref="e584ff77-930e-4637-8df0-b4c8d3b6de91/java:org.modelingvalue.collections(DclareRuntime/)" />
+    <import index="kag7" ref="e584ff77-930e-4637-8df0-b4c8d3b6de91/java:org.modelingvalue.dclare(DclareRuntime/)" />
     <import index="tpck" ref="r:00000000-0000-4000-0000-011c89590288(jetbrains.mps.lang.core.structure)" implicit="true" />
     <import index="7ggn" ref="r:38c3b7db-3776-47fb-ba27-a4f002c4edc7(DclareMPS.structure)" implicit="true" />
     <import index="1m72" ref="498d89d2-c2e9-11e2-ad49-6cf049e62fe5/java:com.intellij.openapi.components(MPS.IDEA/)" implicit="true" />
@@ -5360,7 +5360,7 @@
               </node>
               <node concept="2OqwBi" id="4CAxamAtmjG" role="33vP2m">
                 <node concept="2ShNRf" id="6g03R83qohS" role="2Oq$k0">
-                  <node concept="1pGfFk" id="6g03R83qMmh" role="2ShVmc">
+                  <node concept="1pGfFk" id="1OC_PYb18Ju" role="2ShVmc">
                     <ref role="37wK5l" to="kag7:~DclareConfig.&lt;init&gt;()" resolve="DclareConfig" />
                   </node>
                 </node>
@@ -7971,7 +7971,7 @@
                 <node concept="2OqwBi" id="L7IJdKrIpi" role="37vLTJ">
                   <node concept="2WthIp" id="L7IJdKrIpj" role="2Oq$k0" />
                   <node concept="34pFcN" id="L7IJdKrIpk" role="2OqNvi">
-                    <ref role="2WH_rO" node="L7IJdKpPMi" resolve="traceMpsModelChanges" />
+                    <ref role="2WH_rO" node="L7IJdKpPMi" resolve="traceMPSModelChanges" />
                   </node>
                 </node>
               </node>
@@ -10297,7 +10297,7 @@
                                 </node>
                               </node>
                               <node concept="37vLTw" id="4CAxamAx6vm" role="1Xdeiu">
-                                <ref role="3cqZAo" node="4CAxamAAOVS" resolve="function" />
+                                <ref role="3cqZAo" node="4CAxamAAOVS" resolve="whenDone" />
                               </node>
                             </node>
                           </node>
@@ -14309,8 +14309,8 @@
         <node concept="3clFbF" id="2L64EL1OU0u" role="3cqZAp">
           <node concept="3K4zz7" id="2L64EL1P07U" role="3clFbG">
             <node concept="2YIFZM" id="2L64EL1P52k" role="3K4E3e">
-              <ref role="37wK5l" to="zrbp:~List.of(java.lang.Object...)" resolve="of" />
               <ref role="1Pybhc" to="zrbp:~List" resolve="List" />
+              <ref role="37wK5l" to="zrbp:~List.of(java.lang.Object...)" resolve="of" />
               <node concept="3uibUv" id="2L64EL1PeiU" role="3PaCim">
                 <ref role="3uigEE" node="3gm2YTwElRb" resolve="AspectPref" />
               </node>
@@ -14322,10 +14322,10 @@
               </node>
             </node>
             <node concept="2OqwBi" id="22ExA6giWSs" role="3K4GZi">
-              <node concept="2YIFZM" id="22ExA6giVP1" role="2Oq$k0">
-                <ref role="1Pybhc" to="zrbp:~Collection" resolve="Collection" />
+              <node concept="2YIFZM" id="1OC_PYbhmVY" role="2Oq$k0">
                 <ref role="37wK5l" to="zrbp:~Collection.of(java.lang.Object...)" resolve="of" />
-                <node concept="37vLTw" id="22ExA6giVP2" role="37wK5m">
+                <ref role="1Pybhc" to="zrbp:~Collection" resolve="Collection" />
+                <node concept="37vLTw" id="1OC_PYbhmVZ" role="37wK5m">
                   <ref role="3cqZAo" node="3gm2YTwEpWH" resolve="aspects" />
                 </node>
               </node>
@@ -15241,14 +15241,14 @@
         <node concept="3clFbF" id="4vGS3uVe5y" role="3cqZAp">
           <node concept="3K4zz7" id="4vGS3uVf_e" role="3clFbG">
             <node concept="2YIFZM" id="4vGS3uVgly" role="3K4E3e">
-              <ref role="37wK5l" to="zrbp:~List.of(java.lang.Object...)" resolve="of" />
               <ref role="1Pybhc" to="zrbp:~List" resolve="List" />
+              <ref role="37wK5l" to="zrbp:~List.of(java.lang.Object...)" resolve="of" />
               <node concept="17QB3L" id="4vGS3uVqe9" role="3PaCim" />
             </node>
-            <node concept="2YIFZM" id="4vGS3uVhyf" role="3K4GZi">
+            <node concept="2YIFZM" id="1OC_PYaZKAy" role="3K4GZi">
               <ref role="37wK5l" to="zrbp:~List.of(java.lang.Object...)" resolve="of" />
               <ref role="1Pybhc" to="zrbp:~List" resolve="List" />
-              <node concept="37vLTw" id="4vGS3uViFd" role="37wK5m">
+              <node concept="37vLTw" id="1OC_PYaZKAz" role="37wK5m">
                 <ref role="3cqZAo" node="4vGS3ubHNU" resolve="dependencies" />
               </node>
             </node>

@@ -15,7 +15,6 @@
     <dependency reexport="true">55d6b6f5-8095-4cd0-a39b-779da8d12940(DclareMPSRuntime)</dependency>
     <dependency reexport="false">498d89d2-c2e9-11e2-ad49-6cf049e62fe5(MPS.IDEA)</dependency>
     <dependency reexport="false">742f6602-5a2f-4313-aa6e-ae1cd4ffdc61(MPS.Platform)</dependency>
-    <dependency reexport="false">6354ebe7-c22a-4a0f-ac54-50b52ab9b065(JDK)</dependency>
     <dependency reexport="false">c72da2b9-7cce-4447-8389-f407dc1158b7(jetbrains.mps.lang.structure)</dependency>
     <dependency reexport="false">8865b7a8-5271-43d3-884c-6fd1d9cfdd34(MPS.OpenAPI)</dependency>
     <dependency reexport="false">c32b788d-8e4b-4023-97f5-3e90d04ed77b(DclareMPS)</dependency>
@@ -57,6 +56,7 @@
     <module reference="a33d2b79-6adc-4ccd-8599-3af01a93f23c(DclareMPSPlugin)" version="0" />
     <module reference="55d6b6f5-8095-4cd0-a39b-779da8d12940(DclareMPSRuntime)" version="0" />
     <module reference="15ef76ea-e875-4ecb-ba93-f3d16cc9b71a(DclareMessages)" version="0" />
+    <module reference="e584ff77-930e-4637-8df0-b4c8d3b6de91(DclareRuntime)" version="0" />
     <module reference="49ab02a1-40fa-4a23-af69-4944ff38ae30(DclareTrace)" version="0" />
     <module reference="6354ebe7-c22a-4a0f-ac54-50b52ab9b065(JDK)" version="0" />
     <module reference="6ed54515-acc8-4d1e-a16c-9fd6cfe951ea(MPS.Core)" version="0" />

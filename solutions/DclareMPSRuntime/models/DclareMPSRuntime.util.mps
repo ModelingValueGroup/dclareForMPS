@@ -16,9 +16,7 @@
     <import index="lui2" ref="8865b7a8-5271-43d3-884c-6fd1d9cfdd34/java:org.jetbrains.mps.openapi.module(MPS.OpenAPI/)" />
     <import index="33ny" ref="6354ebe7-c22a-4a0f-ac54-50b52ab9b065/java:java.util(JDK/)" />
     <import index="82uw" ref="6354ebe7-c22a-4a0f-ac54-50b52ab9b065/java:java.util.function(JDK/)" />
-    <import index="zrbp" ref="55d6b6f5-8095-4cd0-a39b-779da8d12940/java:org.modelingvalue.collections(DclareMPSRuntime/)" />
     <import index="1ctc" ref="6354ebe7-c22a-4a0f-ac54-50b52ab9b065/java:java.util.stream(JDK/)" />
-    <import index="kag7" ref="55d6b6f5-8095-4cd0-a39b-779da8d12940/java:org.modelingvalue.dclare(DclareMPSRuntime/)" />
     <import index="d6hs" ref="6ed54515-acc8-4d1e-a16c-9fd6cfe951ea/java:jetbrains.mps.errors.item(MPS.Core/)" />
     <import index="2gg1" ref="6ed54515-acc8-4d1e-a16c-9fd6cfe951ea/java:jetbrains.mps.errors(MPS.Core/)" />
     <import index="zavc" ref="6ed54515-acc8-4d1e-a16c-9fd6cfe951ea/java:jetbrains.mps.errors.messageTargets(MPS.Core/)" />
@@ -31,7 +29,10 @@
     <import index="alof" ref="742f6602-5a2f-4313-aa6e-ae1cd4ffdc61/java:jetbrains.mps.ide.project(MPS.Platform/)" />
     <import index="tpce" ref="r:00000000-0000-4000-0000-011c89590292(jetbrains.mps.lang.structure.structure)" />
     <import index="i8bi" ref="r:c3548bac-30eb-4a2a-937c-0111d5697309(jetbrains.mps.lang.smodel.generator.smodelAdapter)" />
-    <import index="9aa5" ref="55d6b6f5-8095-4cd0-a39b-779da8d12940/java:org.modelingvalue.collections.mutable(DclareMPSRuntime/)" />
+    <import index="zrbp" ref="e584ff77-930e-4637-8df0-b4c8d3b6de91/java:org.modelingvalue.collections(DclareRuntime/)" />
+    <import index="42m3" ref="e584ff77-930e-4637-8df0-b4c8d3b6de91/java:org.modelingvalue.collections.util(DclareRuntime/)" />
+    <import index="kag7" ref="e584ff77-930e-4637-8df0-b4c8d3b6de91/java:org.modelingvalue.dclare(DclareRuntime/)" />
+    <import index="9aa5" ref="e584ff77-930e-4637-8df0-b4c8d3b6de91/java:org.modelingvalue.collections.mutable(DclareRuntime/)" />
     <import index="z1c4" ref="6ed54515-acc8-4d1e-a16c-9fd6cfe951ea/java:jetbrains.mps.project(MPS.Core/)" implicit="true" />
   </imports>
   <registry>
@@ -3155,8 +3156,8 @@
                     <node concept="2OqwBi" id="6Ct1cXsyFO_" role="10QFUP">
                       <node concept="2OqwBi" id="2$eQdABlYKn" role="2Oq$k0">
                         <node concept="2YIFZM" id="6Ct1cXsyFOA" role="2Oq$k0">
-                          <ref role="37wK5l" to="zrbp:~Collection.of(java.lang.Iterable)" resolve="of" />
                           <ref role="1Pybhc" to="zrbp:~Collection" resolve="Collection" />
+                          <ref role="37wK5l" to="zrbp:~Collection.of(java.lang.Iterable)" resolve="of" />
                           <node concept="10QFUN" id="6Ct1cXsyFOB" role="37wK5m">
                             <node concept="3uibUv" id="6Ct1cXsyFOC" role="10QFUM">
                               <ref role="3uigEE" to="wyt6:~Iterable" resolve="Iterable" />
@@ -3227,8 +3228,8 @@
                     <node concept="2OqwBi" id="2$eQdABlN1S" role="10QFUP">
                       <node concept="2OqwBi" id="1cUpE405m$X" role="2Oq$k0">
                         <node concept="2YIFZM" id="3DB41z9GPhM" role="2Oq$k0">
-                          <ref role="37wK5l" to="zrbp:~Collection.of(java.lang.Iterable)" resolve="of" />
                           <ref role="1Pybhc" to="zrbp:~Collection" resolve="Collection" />
+                          <ref role="37wK5l" to="zrbp:~Collection.of(java.lang.Iterable)" resolve="of" />
                           <node concept="10QFUN" id="3DB41z9GPhN" role="37wK5m">
                             <node concept="3uibUv" id="3DB41z9GPhO" role="10QFUM">
                               <ref role="3uigEE" to="wyt6:~Iterable" resolve="Iterable" />
@@ -3284,8 +3285,8 @@
                     <node concept="2OqwBi" id="3DB41z9GPi1" role="10QFUP">
                       <node concept="2OqwBi" id="2$eQdABloz6" role="2Oq$k0">
                         <node concept="2YIFZM" id="3DB41z9GPi2" role="2Oq$k0">
-                          <ref role="37wK5l" to="zrbp:~Collection.of(java.lang.Iterable)" resolve="of" />
                           <ref role="1Pybhc" to="zrbp:~Collection" resolve="Collection" />
+                          <ref role="37wK5l" to="zrbp:~Collection.of(java.lang.Iterable)" resolve="of" />
                           <node concept="2OqwBi" id="3DB41z9GPi3" role="37wK5m">
                             <node concept="1eOMI4" id="3DB41z9GPi4" role="2Oq$k0">
                               <node concept="10QFUN" id="3DB41z9GPi5" role="1eOMHV">
@@ -3318,8 +3319,8 @@
                           <node concept="3clFbS" id="3DB41z9GPib" role="1bW5cS">
                             <node concept="3clFbF" id="3DB41z9GPic" role="3cqZAp">
                               <node concept="2YIFZM" id="3DB41z9GPid" role="3clFbG">
-                                <ref role="37wK5l" to="zrbp:~Entry.of(java.lang.Object,java.lang.Object)" resolve="of" />
                                 <ref role="1Pybhc" to="zrbp:~Entry" resolve="Entry" />
+                                <ref role="37wK5l" to="zrbp:~Entry.of(java.lang.Object,java.lang.Object)" resolve="of" />
                                 <node concept="2OqwBi" id="3DB41z9GPie" role="37wK5m">
                                   <node concept="37vLTw" id="3DB41z9GPif" role="2Oq$k0">
                                     <ref role="3cqZAo" node="3DB41z9GPik" resolve="e" />
@@ -3583,7 +3584,7 @@
                         <node concept="37vLTG" id="7qx2SEVljg0" role="1bW2Oz">
                           <property role="TrG5h" value="e" />
                           <node concept="3uibUv" id="7qx2SEVljg1" role="1tU5fm">
-                            <ref role="3uigEE" to="33ny:~Map$Entry" resolve="Entry" />
+                            <ref role="3uigEE" to="33ny:~Map$Entry" resolve="Map.Entry" />
                             <node concept="3uibUv" id="7qx2SEVntF1" role="11_B2D">
                               <ref role="3uigEE" to="wyt6:~Object" resolve="Object" />
                             </node>
@@ -4521,8 +4522,8 @@
               <ref role="3uigEE" to="kag7:~LeafTransaction" resolve="LeafTransaction" />
             </node>
             <node concept="2YIFZM" id="3czWNc2p5aX" role="33vP2m">
-              <ref role="37wK5l" to="kag7:~LeafTransaction.getCurrent()" resolve="getCurrent" />
               <ref role="1Pybhc" to="kag7:~LeafTransaction" resolve="LeafTransaction" />
+              <ref role="37wK5l" to="kag7:~LeafTransaction.getCurrent()" resolve="getCurrent" />
             </node>
           </node>
         </node>
@@ -4622,8 +4623,8 @@
           <node concept="3y3z36" id="3CVeTM7RR7R" role="3clFbw">
             <node concept="10Nm6u" id="3CVeTM7RR7S" role="3uHU7w" />
             <node concept="2YIFZM" id="3CVeTM7RR7T" role="3uHU7B">
-              <ref role="37wK5l" to="kag7:~LeafTransaction.getCurrent()" resolve="getCurrent" />
               <ref role="1Pybhc" to="kag7:~LeafTransaction" resolve="LeafTransaction" />
+              <ref role="37wK5l" to="kag7:~LeafTransaction.getCurrent()" resolve="getCurrent" />
             </node>
           </node>
           <node concept="3clFbS" id="3CVeTM7RR7U" role="3clFbx">
@@ -5978,8 +5979,8 @@
                 <property role="Xl_RC" value="TRACE" />
               </node>
               <node concept="2YIFZM" id="2$eQdAB2$pz" role="37wK5m">
-                <ref role="37wK5l" to="kag7:~LeafTransaction.getCurrent()" resolve="getCurrent" />
                 <ref role="1Pybhc" to="kag7:~LeafTransaction" resolve="LeafTransaction" />
+                <ref role="37wK5l" to="kag7:~LeafTransaction.getCurrent()" resolve="getCurrent" />
               </node>
             </node>
           </node>

@@ -610,7 +610,7 @@
                 <node concept="liA8E" id="L7IJdKggaL" role="2OqNvi">
                   <ref role="37wK5l" to="33ny:~List.add(int,java.lang.Object)" resolve="add" />
                   <node concept="37vLTw" id="L7IJdKggm3" role="37wK5m">
-                    <ref role="3cqZAo" node="L7IJdKfPT7" resolve="indexInRuleSet" />
+                    <ref role="3cqZAo" node="L7IJdKfPT7" resolve="targetIndexInRuleSet" />
                   </node>
                   <node concept="37vLTw" id="L7IJdKghfL" role="37wK5m">
                     <ref role="3cqZAo" node="18IIFqBwImS" resolve="attribute" />
@@ -621,7 +621,7 @@
           </node>
           <node concept="3y3z36" id="L7IJdKhkJn" role="3clFbw">
             <node concept="37vLTw" id="L7IJdKgjtK" role="3uHU7B">
-              <ref role="3cqZAo" node="L7IJdKfPT7" resolve="index" />
+              <ref role="3cqZAo" node="L7IJdKfPT7" resolve="targetIndexInRuleSet" />
             </node>
             <node concept="3cmrfG" id="L7IJdKglhv" role="3uHU7w">
               <property role="3cmrfH" value="-1" />
