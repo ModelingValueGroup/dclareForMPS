@@ -219,19 +219,19 @@ public class DclareForMpsConfig {
     }
 
     public boolean isTraceDclare() {
-        return traceDclare;
+        return isDevMode() && traceDclare;
     }
 
     public boolean isTraceActivation() {
-        return traceActivation;
+        return isDevMode() && traceActivation;
     }
 
     public boolean isTraceMPSModelChanges() {
-        return traceMPSModelChanges;
+        return isDevMode() && traceMPSModelChanges;
     }
 
     public boolean isDisableAutoModelCheck() {
-        return disableAutoModelCheck;
+        return isDevMode() && disableAutoModelCheck;
     }
 
     public String[] getInactiveAspects() {
