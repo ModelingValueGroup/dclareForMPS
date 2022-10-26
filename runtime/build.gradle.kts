@@ -40,12 +40,14 @@ publishing {
     }
 }
 
+
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // gather jars:
-val libDir = rootProject.projectDir.toPath().resolve("solutions/DclareMPSRuntime/lib")
-val gatherTask = tasks.register<Copy>("gatherRuntimeJars") {
+val libDir1 = rootProject.projectDir.toPath().resolve("solutions/DclareMPSRuntime/lib")
+val libDir2 = rootProject.projectDir.toPath().resolve("solutions/DclareRuntime/lib")
+val gatherTask1 = tasks.register<Copy>("gatherRuntimeJars-part1") {
+    into(libDir1)
     group = "+++gather"
-    into(libDir)
     from(
         tasks["jar"].outputs,
         configurations.runtimeClasspath,
@@ -64,8 +66,35 @@ val gatherTask = tasks.register<Copy>("gatherRuntimeJars") {
         println(String.format("   - TO     %s", destinationDir))
     }
 }
+val gatherTask2 = tasks.register<Copy>("gatherRuntimeJars-part2") {
+    into(libDir2)
+    group = "+++gather"
+    from(
+        tasks["jar"].outputs,
+        configurations.runtimeClasspath,
+        configurations.runtimeClasspath.get().allArtifacts.files
+    )
+    rename {
+        it
+            .replaceFirst(Regex("[a-zA-Z_]*-[0-9a-z]*-SNAPSHOT[.]jar"), ".jar") // for backwards compat.... remove later
+            .replaceFirst(Regex("[0-9a-zA-Z_]*-[0-9a-zA-Z_]*-[0-9a-zA-Z_]*-SNAPSHOT[.]jar"), ".jar")
+            .replaceFirst(Regex("-[0-9.]*[.]jar"), ".jar")
+    }
+    eachFile {
+        println(String.format("   - GATHER %s", relativePath))
+    }
+    doLast {
+        println(String.format("   - TO     %s", destinationDir))
+    }
+}
+
+val gatherTask = tasks.register<GradleBuild>("gatherRuntimeJars") {
+    group = "+++gather"
+    tasks = listOf("gatherRuntimeJars-part1", "gatherRuntimeJars-part2")
+}
 tasks.getByName("assemble").finalizedBy(gatherTask)
 tasks.getByName("publish").finalizedBy(gatherTask)
 tasks.getByName<Delete>("clean") {
-    delete.add(libDir)
+    delete.add(libDir1)
+    delete.add(libDir2)
 }

@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <solution name="DclareRuntime" uuid="e584ff77-930e-4637-8df0-b4c8d3b6de91" moduleVersion="0" compileInMPS="true">
   <models>
-    <modelRoot contentPath="${module}" type="default">
-      <sourceRoot location="models" />
-    </modelRoot>
-    <modelRoot contentPath="C:/Users/wimba/git/dclareForMPS/solutions/DclareMPSRuntime/lib" type="java_classes">
-      <sourceRoot location="immutable-collections.jar" />
+    <modelRoot contentPath="${module}" type="default" />
+    <modelRoot contentPath="${module}/lib" type="java_classes">
+      <sourceRoot location="." />
       <sourceRoot location="dclare.jar" />
+      <sourceRoot location="immutable-collections.jar" />
       <sourceRoot location="mvg-json.jar" />
     </modelRoot>
   </models>
@@ -16,9 +15,9 @@
     </facet>
   </facets>
   <stubModelEntries>
-    <stubModelEntry path="C:/Users/wimba/git/dclareForMPS/solutions/DclareMPSRuntime/lib/immutable-collections.jar" />
-    <stubModelEntry path="C:/Users/wimba/git/dclareForMPS/solutions/DclareMPSRuntime/lib/dclare.jar" />
-    <stubModelEntry path="C:/Users/wimba/git/dclareForMPS/solutions/DclareMPSRuntime/lib/mvg-json.jar" />
+    <stubModelEntry path="${module}/lib/dclare.jar" />
+    <stubModelEntry path="${module}/lib/immutable-collections.jar" />
+    <stubModelEntry path="${module}/lib/mvg-json.jar" />
   </stubModelEntries>
   <sourcePath />
   <dependencies>
