@@ -171,6 +171,15 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                                   return p != null ? MODEL.get(p) : o.getAncestor(DModel.class);
                                                                                                                                               });
 
+    @SuppressWarnings("unchecked")
+    private static final Observer<DNode>                                                                     ACTIVATE_RULE                    = DObject.observer("$NODE_ACTIVATE_RULE", n -> {
+                                                                                                                                                  if (!n.isExternal() && n.isShared()) {
+                                                                                                                                                      DNode.INDEX.triggerInitRead(n);
+                                                                                                                                                      DNode.ROOT.triggerInitRead(n);
+                                                                                                                                                      DNode.CONCEPT_DOBSERVEDS.get(n.getConcept()).forEachOrdered(o -> o.triggerInitRead(n));
+                                                                                                                                                  }
+                                                                                                                                              });
+
     private static final Observer<DNode>                                                                     ROOT_RULE                        = DObject.observer(ROOT, o -> {
                                                                                                                                                   DNode p = o.getParent();
                                                                                                                                                   return p != null ? ROOT.get(p) : o;
@@ -260,7 +269,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                               });
 
     @SuppressWarnings("rawtypes")
-    protected static final Set<Observer>                                                                     OBSERVERS                        = DNewableObject.OBSERVERS.addAll(Set.of(ROOT_RULE, MODEL_RULE, INDEX_RULE));
+    protected static final Set<Observer>                                                                     OBSERVERS                        = DNewableObject.OBSERVERS.addAll(Set.of(ROOT_RULE, MODEL_RULE, INDEX_RULE, ACTIVATE_RULE));
 
     @SuppressWarnings("rawtypes")
     protected static final Set<Setable>                                                                      SETABLES                         = DNewableObject.SETABLES.addAll(Set.of(ROOT, MODEL, USER_OBJECTS, ALL_MPS_ISSUES, INDEX));
@@ -1097,11 +1106,15 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
     @Override
     protected void read() {
         DNode.CONCEPT_INIT_DOBSERVEDS.get(getConcept()).forEachOrdered(o -> o.triggerInitRead(this));
+        MODEL.triggerInitRead(this);
+        if (isINamedConcept) {
+            PROPERTY.get(SNodeUtil.property_INamedConcept_name).triggerInitRead(this);
+        }
     }
 
     @Override
     @SuppressWarnings({"unchecked", "rawtypes"})
-    protected void readDeep() {
+    protected void readObservedDeep() {
         Set<Observed> read = DNewableObject.READ_OBSERVEDS.get(this);
         readObserved(read, INDEX);
         readObserved(read, ROOT);
@@ -1153,6 +1166,11 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
                 return null;
             }
         }
+    }
+
+    public boolean isShared() {
+        DModel model = MODEL.get(this);
+        return model != null && model.isShared();
     }
 
 }

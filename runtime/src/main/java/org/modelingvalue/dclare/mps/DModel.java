@@ -144,10 +144,16 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
 
     private static final Observer<DModel>                                        USED_DCLARE_LANGUAGES_RULE = DObject.observer(USED_DCLARE_LANGUAGES, DModel::allUsedDClareLanguages);
 
-    private static final Observer<DModel>                                        ACTIVATE_RULE              = DObject.observer("$ACTIVATE_RULE", m -> {
+    private static final Observer<DModel>                                        ACTIVATE_RULE              = DObject.observer("$MODEL_ACTIVATE_RULE", m -> {
                                                                                                                 if (!m.isExternal()) {
-                                                                                                                    if (SHARED.get(m) || (!USED_DCLARE_LANGUAGES.get(m).isEmpty() && LOADED.get(m))) {
+                                                                                                                    boolean shared = SHARED.get(m);
+                                                                                                                    if (shared || (!USED_DCLARE_LANGUAGES.get(m).isEmpty() && LOADED.get(m))) {
                                                                                                                         DModel.ROOTS.triggerInitRead(m);
+                                                                                                                        if (shared) {
+                                                                                                                            USED_LANGUAGES.triggerInitRead(m);
+                                                                                                                            USED_DEVKITS.triggerInitRead(m);
+                                                                                                                            USED_MODELS.triggerInitRead(m);
+                                                                                                                        }
                                                                                                                     }
                                                                                                                 }
                                                                                                             });
@@ -163,7 +169,7 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
     }
 
     protected void triggerAddRoot(DNode root) {
-        Action.of(Pair.of("$ADD_ROOT", root), INIT_ROOT_CONSUMER, LeafModifier.preserved).trigger(this);
+        Action.of(Pair.of("$ADD_ROOT", root), INIT_ROOT_CONSUMER, LeafModifier.preserved, LeafModifier.read).trigger(this);
     }
 
     private Object addRoot(DNode b) {
@@ -327,7 +333,7 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
 
     @Override
     @SuppressWarnings("rawtypes")
-    protected void readDeep() {
+    protected void readObservedDeep() {
         Set<Observed> read = DNewableObject.READ_OBSERVEDS.get(this);
         readObserved(read, NAME);
         readObserved(read, LOADED);

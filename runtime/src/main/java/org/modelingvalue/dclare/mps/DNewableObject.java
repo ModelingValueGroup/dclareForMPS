@@ -27,14 +27,14 @@ import org.modelingvalue.dclare.mps.DAttribute.DIdentifyingAttribute;
 @SuppressWarnings("rawtypes")
 public abstract class DNewableObject<T extends DNewableObject, R, S> extends DIdentifiedObject implements Newable {
 
-    private static final Constant<DNewableObject, Object> ORIGINAL  = Constant.of("$ORIGINAL", null);
+    private static final Constant<DNewableObject, Object> ORIGINAL           = Constant.of("$ORIGINAL", null);
 
-    protected static final Action<DNewableObject>         READ_DEEP = Action.of("$READ_DEEP", DNewableObject::readDeep);
+    protected static final Action<DNewableObject>         READ_OBSERVED_DEEP = Action.of("$READ_OBSERVED_DEEP", DNewableObject::readObservedDeep);
 
     @SuppressWarnings("unchecked")
-    protected static final Set<Observer>                  OBSERVERS = DObject.OBSERVERS;
+    protected static final Set<Observer>                  OBSERVERS          = DObject.OBSERVERS;
 
-    protected static final Set<Setable>                   SETABLES  = DObject.SETABLES;
+    protected static final Set<Setable>                   SETABLES           = DObject.SETABLES;
 
     protected static <D extends DNewableObject> D quotationConstruct(IRuleSet ruleSet, String anonymousType, Object[] ctx, Supplier<D> supplier) {
         LeafTransaction tx = LeafTransaction.getCurrent();
@@ -201,7 +201,7 @@ public abstract class DNewableObject<T extends DNewableObject, R, S> extends DId
             if (dObserved.containment()) {
                 for (Object child : dObserved.collection(dObserved.fromMPS(this))) {
                     if (child instanceof DNewableObject) {
-                        READ_DEEP.trigger((DNewableObject) child);
+                        READ_OBSERVED_DEEP.trigger((DNewableObject) child);
                     }
                 }
             }
@@ -209,7 +209,7 @@ public abstract class DNewableObject<T extends DNewableObject, R, S> extends DId
             Set<Object> set = dObserved.collection(dObserved.fromMPS(this)).toSet();
             for (Object child : dObserved.getCollection(this)) {
                 if (child instanceof DNewableObject && set.contains(child)) {
-                    READ_DEEP.trigger((DNewableObject) child);
+                    READ_OBSERVED_DEEP.trigger((DNewableObject) child);
                 } else {
                     dObserved.remove(this, child);
                 }
@@ -219,7 +219,7 @@ public abstract class DNewableObject<T extends DNewableObject, R, S> extends DId
 
     protected abstract void read();
 
-    protected abstract void readDeep();
+    protected abstract void readObservedDeep();
 
     protected abstract void init(DClareMPS dClareMPS, S original);
 

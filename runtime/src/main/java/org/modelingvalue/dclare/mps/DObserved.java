@@ -80,8 +80,8 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
     protected final void setFromToMPS(Function<O, T> fromMPS, TriConsumer<O, T, T> toMPS) {
         this.fromMPS = fromMPS;
         this.toMPS = toMPS;
-        this.initReadAction = fromMPS != null ? Action.<O> of(Pair.of("$INIT_READ", id), this::initRead, LeafModifier.preserved) : null;
-        this.reReadAction = fromMPS != null ? Action.<O> of(Pair.of("$RE_READ", id), this::reRead, LeafModifier.preserved) : null;
+        this.initReadAction = fromMPS != null ? Action.<O> of(Pair.of("$INIT_READ", id), this::initRead, LeafModifier.preserved, LeafModifier.read) : null;
+        this.reReadAction = fromMPS != null ? Action.<O> of(Pair.of("$RE_READ", id), this::reRead, LeafModifier.preserved, LeafModifier.read) : null;
     }
 
     public boolean isComposite() {

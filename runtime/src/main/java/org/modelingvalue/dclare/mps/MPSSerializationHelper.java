@@ -50,7 +50,7 @@ public class MPSSerializationHelper extends SerializationHelperWithPool<DObjectT
             boolean ret = false;
             DModel model = m.dAncestor(DModel.class);
             if (model == null || model.isShared()) {
-                ret = (m instanceof DModule || m instanceof DModel || m instanceof DNode || m instanceof DServerMetaData) && ((DObject) m).isActive() && !((DObject) m).isDclareOnly();
+                ret = (m instanceof DModel || m instanceof DNode || m instanceof DServerMetaData) && ((DObject) m).isActive() && !((DObject) m).isDclareOnly();
             }
             return ret;
         };
@@ -60,7 +60,7 @@ public class MPSSerializationHelper extends SerializationHelperWithPool<DObjectT
     @Override
     public Predicate<Setable<DObject, ?>> setableFilter() {
         return s -> {
-            return s instanceof DObserved && ((Setable) s) != DModel.USED_DEVKITS && ((Setable) s) != DObject.DCLARE_ISSUES && !(s instanceof DObservedAttribute) && !((DObserved) s).isDclareOnly();
+            return s instanceof DObserved && ((Setable) s) != DObject.DCLARE_ISSUES && !(s instanceof DObservedAttribute) && !((DObserved) s).isDclareOnly();
         };
     }
 
