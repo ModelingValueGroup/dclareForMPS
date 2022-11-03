@@ -251,7 +251,7 @@ public class DclareForMpsConfig {
     }
 
     public boolean isRemoteModelSynchronization() {
-        return remoteModelSynchronization;
+        return isDevMode() && remoteModelSynchronization;
     }
 
     public String getRemoteModelSynchronizationServer() {

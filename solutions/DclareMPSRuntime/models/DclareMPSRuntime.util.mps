@@ -1075,6 +1075,24 @@
         <node concept="10Oyi0" id="2HLAWGTl1Z8" role="1tU5fm" />
       </node>
     </node>
+    <node concept="2YIFZL" id="5lm94DJqGCT" role="jymVt">
+      <property role="TrG5h" value="separatorHeight" />
+      <node concept="3clFbS" id="5lm94DJqGCU" role="3clF47">
+        <node concept="3clFbF" id="5lm94DJqGCV" role="3cqZAp">
+          <node concept="3cmrfG" id="5lm94DJPunN" role="3clFbG">
+            <property role="3cmrfH" value="3" />
+          </node>
+        </node>
+      </node>
+      <node concept="3Tm1VV" id="5lm94DJqGD1" role="1B3o_S" />
+      <node concept="10Oyi0" id="5lm94DJqGD2" role="3clF45" />
+      <node concept="37vLTG" id="5lm94DJqGD3" role="3clF46">
+        <property role="TrG5h" value="editorContext" />
+        <node concept="3uibUv" id="5lm94DJqGD4" role="1tU5fm">
+          <ref role="3uigEE" to="cj4x:~EditorContext" resolve="EditorContext" />
+        </node>
+      </node>
+    </node>
     <node concept="2tJIrI" id="2HLAWGTiBM_" role="jymVt" />
     <node concept="2YIFZL" id="4Y8BM43o88y" role="jymVt">
       <property role="TrG5h" value="getAttributes" />
