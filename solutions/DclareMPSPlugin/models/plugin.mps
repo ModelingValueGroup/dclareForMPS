@@ -843,6 +843,14 @@
       <property role="TrG5h" value="maxNrOfObservers" />
       <node concept="10Oyi0" id="1RIwjuNzsTm" role="1tU5fm" />
     </node>
+    <node concept="34jfKJ" id="2jKRHi3ha5M" role="34lFYf">
+      <property role="TrG5h" value="remoteModelSynchronization" />
+      <node concept="10P_77" id="2jKRHi3huED" role="1tU5fm" />
+    </node>
+    <node concept="34jfKJ" id="2jKRHi3id27" role="34lFYf">
+      <property role="TrG5h" value="remoteModelSynchronizationServer" />
+      <node concept="17QB3L" id="2jKRHi3irCY" role="1tU5fm" />
+    </node>
     <node concept="3yqqq6" id="4Y8BM43M7ZW" role="3yq$HY">
       <property role="TrG5h" value="Dclare" />
       <property role="3EcmCg" value="dclare related settings" />
@@ -1221,6 +1229,48 @@
                   <node concept="3yMSdA" id="4FbMPtUYab8" role="37wK5m" />
                   <node concept="Xl_RD" id="4FbMPtUYab9" role="37wK5m">
                     <property role="Xl_RC" value="maxNrOfObservers" />
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+          <node concept="3cpWs8" id="2jKRHi3pacA" role="3cqZAp">
+            <node concept="3cpWsn" id="2jKRHi3pacB" role="3cpWs9">
+              <property role="TrG5h" value="remoteModelSynchronization" />
+              <node concept="3uibUv" id="2jKRHi3pacC" role="1tU5fm">
+                <ref role="3uigEE" to="dxuu:~JCheckBox" resolve="JCheckBox" />
+              </node>
+              <node concept="10QFUN" id="2jKRHi3pacD" role="33vP2m">
+                <node concept="3uibUv" id="2jKRHi3pacE" role="10QFUM">
+                  <ref role="3uigEE" to="dxuu:~JCheckBox" resolve="JCheckBox" />
+                </node>
+                <node concept="2YIFZM" id="2jKRHi3pacF" role="10QFUP">
+                  <ref role="37wK5l" node="4FbMPtUXPIn" resolve="findComponentByName" />
+                  <ref role="1Pybhc" node="4FbMPtUH_vD" resolve="PrefsUtils" />
+                  <node concept="3yMSdA" id="2jKRHi3pacG" role="37wK5m" />
+                  <node concept="Xl_RD" id="2jKRHi3pacH" role="37wK5m">
+                    <property role="Xl_RC" value="remoteModelSynchronization" />
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+          <node concept="3cpWs8" id="2jKRHi3pjoO" role="3cqZAp">
+            <node concept="3cpWsn" id="2jKRHi3pjoP" role="3cpWs9">
+              <property role="TrG5h" value="remoteModelSynchronizationServer" />
+              <node concept="3uibUv" id="2jKRHi3pjoQ" role="1tU5fm">
+                <ref role="3uigEE" to="dxuu:~JTextField" resolve="JTextField" />
+              </node>
+              <node concept="10QFUN" id="2jKRHi3pjoR" role="33vP2m">
+                <node concept="3uibUv" id="2jKRHi3pjoS" role="10QFUM">
+                  <ref role="3uigEE" to="dxuu:~JTextField" resolve="JTextField" />
+                </node>
+                <node concept="2YIFZM" id="2jKRHi3pjoT" role="10QFUP">
+                  <ref role="37wK5l" node="4FbMPtUXPIn" resolve="findComponentByName" />
+                  <ref role="1Pybhc" node="4FbMPtUH_vD" resolve="PrefsUtils" />
+                  <node concept="3yMSdA" id="2jKRHi3pjoU" role="37wK5m" />
+                  <node concept="Xl_RD" id="2jKRHi3pjoV" role="37wK5m">
+                    <property role="Xl_RC" value="remoteModelSynchronizationServer" />
                   </node>
                 </node>
               </node>
@@ -1759,6 +1809,62 @@
               </node>
             </node>
           </node>
+          <node concept="3clFbF" id="2jKRHi3qqr6" role="3cqZAp">
+            <node concept="37vLTI" id="2jKRHi3qqr7" role="3clFbG">
+              <node concept="22lmx$" id="2jKRHi3qqr8" role="37vLTx">
+                <node concept="37vLTw" id="2jKRHi3qqr9" role="3uHU7B">
+                  <ref role="3cqZAo" node="BvxLt1Bbn$" resolve="diff" />
+                </node>
+                <node concept="3y3z36" id="2jKRHi3stcf" role="3uHU7w">
+                  <node concept="2OqwBi" id="2jKRHi3qqrd" role="3uHU7B">
+                    <node concept="37vLTw" id="2jKRHi3qqre" role="2Oq$k0">
+                      <ref role="3cqZAo" node="2jKRHi3pacB" resolve="remoteModelSynchronization" />
+                    </node>
+                    <node concept="liA8E" id="2jKRHi3qqrf" role="2OqNvi">
+                      <ref role="37wK5l" to="dxuu:~AbstractButton.isSelected()" resolve="isSelected" />
+                    </node>
+                  </node>
+                  <node concept="2OqwBi" id="2jKRHi3qqrg" role="3uHU7w">
+                    <node concept="2WthIp" id="2jKRHi3qqrh" role="2Oq$k0" />
+                    <node concept="34pFcN" id="2jKRHi3qqri" role="2OqNvi">
+                      <ref role="2WH_rO" node="2jKRHi3ha5M" resolve="remoteModelSynchronization" />
+                    </node>
+                  </node>
+                </node>
+              </node>
+              <node concept="37vLTw" id="2jKRHi3qqrj" role="37vLTJ">
+                <ref role="3cqZAo" node="BvxLt1Bbn$" resolve="diff" />
+              </node>
+            </node>
+          </node>
+          <node concept="3clFbF" id="2jKRHi3qveH" role="3cqZAp">
+            <node concept="37vLTI" id="2jKRHi3qveI" role="3clFbG">
+              <node concept="22lmx$" id="2jKRHi3qveJ" role="37vLTx">
+                <node concept="37vLTw" id="2jKRHi3qveK" role="3uHU7B">
+                  <ref role="3cqZAo" node="BvxLt1Bbn$" resolve="diff" />
+                </node>
+                <node concept="17QLQc" id="2jKRHi3qveL" role="3uHU7w">
+                  <node concept="2OqwBi" id="2jKRHi3qveO" role="3uHU7B">
+                    <node concept="37vLTw" id="2jKRHi3qveP" role="2Oq$k0">
+                      <ref role="3cqZAo" node="2jKRHi3pjoP" resolve="remoteModelSynchronizationServer" />
+                    </node>
+                    <node concept="liA8E" id="2jKRHi3qveQ" role="2OqNvi">
+                      <ref role="37wK5l" to="r791:~JTextComponent.getText()" resolve="getText" />
+                    </node>
+                  </node>
+                  <node concept="2OqwBi" id="2jKRHi3qveR" role="3uHU7w">
+                    <node concept="2WthIp" id="2jKRHi3qveS" role="2Oq$k0" />
+                    <node concept="34pFcN" id="2jKRHi3qveT" role="2OqNvi">
+                      <ref role="2WH_rO" node="2jKRHi3id27" resolve="remoteModelSynchronizationServer" />
+                    </node>
+                  </node>
+                </node>
+              </node>
+              <node concept="37vLTw" id="2jKRHi3qveU" role="37vLTJ">
+                <ref role="3cqZAo" node="BvxLt1Bbn$" resolve="diff" />
+              </node>
+            </node>
+          </node>
           <node concept="3clFbH" id="BvxLt1yRP2" role="3cqZAp" />
           <node concept="3cpWs6" id="4FbMPtV0OuC" role="3cqZAp">
             <node concept="37vLTw" id="BvxLt1C6Rc" role="3cqZAk">
@@ -2202,6 +2308,42 @@
                   </node>
                 </node>
               </node>
+              <node concept="3clFbF" id="2jKRHi3jbbG" role="3cqZAp">
+                <node concept="37vLTI" id="2jKRHi3jbbH" role="3clFbG">
+                  <node concept="2OqwBi" id="2jKRHi3jbbI" role="37vLTx">
+                    <node concept="37vLTw" id="2jKRHi3jbbJ" role="2Oq$k0">
+                      <ref role="3cqZAo" node="WZuJ8h1BlC" resolve="config" />
+                    </node>
+                    <node concept="liA8E" id="2jKRHi3jbbK" role="2OqNvi">
+                      <ref role="37wK5l" to="t4tl:~DclareForMpsConfig.isRemoteModelSynchronization()" resolve="isRemoteModelSynchronization" />
+                    </node>
+                  </node>
+                  <node concept="2OqwBi" id="2jKRHi3jbbL" role="37vLTJ">
+                    <node concept="2WthIp" id="2jKRHi3jbbM" role="2Oq$k0" />
+                    <node concept="34pFcN" id="2jKRHi3jbbN" role="2OqNvi">
+                      <ref role="2WH_rO" node="2jKRHi3ha5M" resolve="remoteModelSynchronization" />
+                    </node>
+                  </node>
+                </node>
+              </node>
+              <node concept="3clFbF" id="2jKRHi3jgUP" role="3cqZAp">
+                <node concept="37vLTI" id="2jKRHi3jgUQ" role="3clFbG">
+                  <node concept="2OqwBi" id="2jKRHi3jgUR" role="37vLTx">
+                    <node concept="37vLTw" id="2jKRHi3jgUS" role="2Oq$k0">
+                      <ref role="3cqZAo" node="WZuJ8h1BlC" resolve="config" />
+                    </node>
+                    <node concept="liA8E" id="2jKRHi3jgUT" role="2OqNvi">
+                      <ref role="37wK5l" to="t4tl:~DclareForMpsConfig.getRemoteModelSynchronizationServer()" resolve="getRemoteModelSynchronizationServer" />
+                    </node>
+                  </node>
+                  <node concept="2OqwBi" id="2jKRHi3jgUU" role="37vLTJ">
+                    <node concept="2WthIp" id="2jKRHi3jgUV" role="2Oq$k0" />
+                    <node concept="34pFcN" id="2jKRHi3jgUW" role="2OqNvi">
+                      <ref role="2WH_rO" node="2jKRHi3id27" resolve="remoteModelSynchronizationServer" />
+                    </node>
+                  </node>
+                </node>
+              </node>
             </node>
           </node>
           <node concept="3clFbH" id="WZuJ8h5djY" role="3cqZAp" />
@@ -2595,6 +2737,37 @@
               </node>
             </node>
           </node>
+          <node concept="3cpWs8" id="2jKRHi3jWRV" role="3cqZAp">
+            <node concept="3cpWsn" id="2jKRHi3jWRW" role="3cpWs9">
+              <property role="TrG5h" value="remoteModelSynchronization" />
+              <property role="3TUv4t" value="true" />
+              <node concept="3uibUv" id="2jKRHi3jWRX" role="1tU5fm">
+                <ref role="3uigEE" to="dxuu:~JCheckBox" resolve="JCheckBox" />
+              </node>
+              <node concept="2ShNRf" id="2jKRHi3jWRY" role="33vP2m">
+                <node concept="1pGfFk" id="2jKRHi3jWRZ" role="2ShVmc">
+                  <ref role="37wK5l" to="dxuu:~JCheckBox.&lt;init&gt;(java.lang.String)" resolve="JCheckBox" />
+                  <node concept="Xl_RD" id="2jKRHi3jWS0" role="37wK5m">
+                    <property role="Xl_RC" value="Remote Model Synchronization (experimental)" />
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+          <node concept="3cpWs8" id="2jKRHi3jKtW" role="3cqZAp">
+            <node concept="3cpWsn" id="2jKRHi3jKtX" role="3cpWs9">
+              <property role="TrG5h" value="remoteModelSynchronizationServer" />
+              <property role="3TUv4t" value="true" />
+              <node concept="3uibUv" id="2jKRHi3jKtY" role="1tU5fm">
+                <ref role="3uigEE" to="dxuu:~JTextField" resolve="JTextField" />
+              </node>
+              <node concept="2ShNRf" id="2jKRHi3jKtZ" role="33vP2m">
+                <node concept="1pGfFk" id="2jKRHi3jKu0" role="2ShVmc">
+                  <ref role="37wK5l" to="dxuu:~JTextField.&lt;init&gt;()" resolve="JTextField" />
+                </node>
+              </node>
+            </node>
+          </node>
           <node concept="3clFbH" id="2HLAWGSt3QT" role="3cqZAp" />
           <node concept="3clFbF" id="4FbMPtUXiEl" role="3cqZAp">
             <node concept="2OqwBi" id="4FbMPtUXiEm" role="3clFbG">
@@ -2830,6 +3003,32 @@
               </node>
             </node>
           </node>
+          <node concept="3clFbF" id="2jKRHi3kQpt" role="3cqZAp">
+            <node concept="2OqwBi" id="2jKRHi3kQpu" role="3clFbG">
+              <node concept="37vLTw" id="2jKRHi3kQpv" role="2Oq$k0">
+                <ref role="3cqZAo" node="2jKRHi3jWRW" resolve="remoteModelSynchronization" />
+              </node>
+              <node concept="liA8E" id="2jKRHi3kQpw" role="2OqNvi">
+                <ref role="37wK5l" to="z60i:~Component.setName(java.lang.String)" resolve="setName" />
+                <node concept="Xl_RD" id="2jKRHi3kQpx" role="37wK5m">
+                  <property role="Xl_RC" value="remoteModelSynchronization" />
+                </node>
+              </node>
+            </node>
+          </node>
+          <node concept="3clFbF" id="2jKRHi3kW8H" role="3cqZAp">
+            <node concept="2OqwBi" id="2jKRHi3kW8I" role="3clFbG">
+              <node concept="37vLTw" id="2jKRHi3kW8J" role="2Oq$k0">
+                <ref role="3cqZAo" node="2jKRHi3jKtX" resolve="remoteModelSynchronizationServer" />
+              </node>
+              <node concept="liA8E" id="2jKRHi3kW8K" role="2OqNvi">
+                <ref role="37wK5l" to="z60i:~Component.setName(java.lang.String)" resolve="setName" />
+                <node concept="Xl_RD" id="2jKRHi3kW8L" role="37wK5m">
+                  <property role="Xl_RC" value="remoteModelSynchronizationServer" />
+                </node>
+              </node>
+            </node>
+          </node>
           <node concept="3clFbH" id="2HLAWGSt3la" role="3cqZAp" />
           <node concept="3clFbF" id="2HLAWGSsZCF" role="3cqZAp">
             <node concept="2OqwBi" id="2HLAWGSsZCG" role="3clFbG">
@@ -2985,6 +3184,23 @@
                   <ref role="37wK5l" to="dxuu:~JLabel.&lt;init&gt;(java.lang.String)" resolve="JLabel" />
                   <node concept="Xl_RD" id="L7IJdLlhGQ" role="37wK5m">
                     <property role="Xl_RC" value="Trace settings (will only affect MPS-log):" />
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+          <node concept="3cpWs8" id="2jKRHi3l8IG" role="3cqZAp">
+            <node concept="3cpWsn" id="2jKRHi3l8IH" role="3cpWs9">
+              <property role="3TUv4t" value="true" />
+              <property role="TrG5h" value="label7" />
+              <node concept="3uibUv" id="2jKRHi3l8II" role="1tU5fm">
+                <ref role="3uigEE" to="dxuu:~JLabel" resolve="JLabel" />
+              </node>
+              <node concept="2ShNRf" id="2jKRHi3l8IJ" role="33vP2m">
+                <node concept="1pGfFk" id="2jKRHi3l8IK" role="2ShVmc">
+                  <ref role="37wK5l" to="dxuu:~JLabel.&lt;init&gt;(java.lang.String)" resolve="JLabel" />
+                  <node concept="Xl_RD" id="2jKRHi3l8IL" role="37wK5m">
+                    <property role="Xl_RC" value="Remote Model Synchronization Server (host:port):" />
                   </node>
                 </node>
               </node>
@@ -3231,7 +3447,7 @@
                   <node concept="1pGfFk" id="4FbMPtUMbCF" role="2ShVmc">
                     <ref role="37wK5l" to="dwmc:~GridLayoutManager.&lt;init&gt;(int,int,java.awt.Insets,int,int)" resolve="GridLayoutManager" />
                     <node concept="3cmrfG" id="4FbMPtUMevG" role="37wK5m">
-                      <property role="3cmrfH" value="16" />
+                      <property role="3cmrfH" value="18" />
                     </node>
                     <node concept="3cmrfG" id="4FbMPtUMbCH" role="37wK5m">
                       <property role="3cmrfH" value="2" />
@@ -4922,6 +5138,181 @@
               </node>
             </node>
           </node>
+          <node concept="3clFbF" id="2jKRHi3t13G" role="3cqZAp">
+            <node concept="2OqwBi" id="2jKRHi3t13H" role="3clFbG">
+              <node concept="37vLTw" id="2jKRHi3t13I" role="2Oq$k0">
+                <ref role="3cqZAo" node="4FbMPtUL6I1" resolve="developerPanel" />
+              </node>
+              <node concept="liA8E" id="2jKRHi3t13J" role="2OqNvi">
+                <ref role="37wK5l" to="z60i:~Container.add(java.awt.Component,java.lang.Object)" resolve="add" />
+                <node concept="37vLTw" id="2jKRHi3t13K" role="37wK5m">
+                  <ref role="3cqZAo" node="2jKRHi3jWRW" resolve="remoteModelSynchronization" />
+                </node>
+                <node concept="2ShNRf" id="2jKRHi3t13L" role="37wK5m">
+                  <node concept="1pGfFk" id="2jKRHi3t13M" role="2ShVmc">
+                    <ref role="37wK5l" to="dwmc:~GridConstraints.&lt;init&gt;(int,int,int,int,int,int,int,int,java.awt.Dimension,java.awt.Dimension,java.awt.Dimension,int,boolean)" resolve="GridConstraints" />
+                    <node concept="3cmrfG" id="2jKRHi3t13N" role="37wK5m">
+                      <property role="3cmrfH" value="16" />
+                    </node>
+                    <node concept="3cmrfG" id="2jKRHi3thQv" role="37wK5m">
+                      <property role="3cmrfH" value="0" />
+                    </node>
+                    <node concept="3cmrfG" id="2jKRHi3t13P" role="37wK5m">
+                      <property role="3cmrfH" value="1" />
+                    </node>
+                    <node concept="3cmrfG" id="2jKRHi3tjwT" role="37wK5m">
+                      <property role="3cmrfH" value="2" />
+                    </node>
+                    <node concept="10M0yZ" id="2jKRHi3t13R" role="37wK5m">
+                      <ref role="3cqZAo" to="dwmc:~GridConstraints.ANCHOR_WEST" resolve="ANCHOR_WEST" />
+                      <ref role="1PxDUh" to="dwmc:~GridConstraints" resolve="GridConstraints" />
+                    </node>
+                    <node concept="10M0yZ" id="2jKRHi3t13S" role="37wK5m">
+                      <ref role="3cqZAo" to="dwmc:~GridConstraints.FILL_NONE" resolve="FILL_NONE" />
+                      <ref role="1PxDUh" to="dwmc:~GridConstraints" resolve="GridConstraints" />
+                    </node>
+                    <node concept="pVOtf" id="2jKRHi3t13T" role="37wK5m">
+                      <node concept="10M0yZ" id="2jKRHi3t13U" role="3uHU7B">
+                        <ref role="3cqZAo" to="dwmc:~GridConstraints.SIZEPOLICY_CAN_SHRINK" resolve="SIZEPOLICY_CAN_SHRINK" />
+                        <ref role="1PxDUh" to="dwmc:~GridConstraints" resolve="GridConstraints" />
+                      </node>
+                      <node concept="10M0yZ" id="2jKRHi3t13V" role="3uHU7w">
+                        <ref role="3cqZAo" to="dwmc:~GridConstraints.SIZEPOLICY_CAN_GROW" resolve="SIZEPOLICY_CAN_GROW" />
+                        <ref role="1PxDUh" to="dwmc:~GridConstraints" resolve="GridConstraints" />
+                      </node>
+                    </node>
+                    <node concept="10M0yZ" id="2jKRHi3t13W" role="37wK5m">
+                      <ref role="3cqZAo" to="dwmc:~GridConstraints.SIZEPOLICY_FIXED" resolve="SIZEPOLICY_FIXED" />
+                      <ref role="1PxDUh" to="dwmc:~GridConstraints" resolve="GridConstraints" />
+                    </node>
+                    <node concept="10Nm6u" id="2jKRHi3t13X" role="37wK5m" />
+                    <node concept="10Nm6u" id="2jKRHi3t13Y" role="37wK5m" />
+                    <node concept="10Nm6u" id="2jKRHi3t13Z" role="37wK5m" />
+                    <node concept="3cmrfG" id="2jKRHi3t140" role="37wK5m">
+                      <property role="3cmrfH" value="0" />
+                    </node>
+                    <node concept="3clFbT" id="2jKRHi3t141" role="37wK5m" />
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+          <node concept="3clFbF" id="2jKRHi3tm$M" role="3cqZAp">
+            <node concept="2OqwBi" id="2jKRHi3tm$N" role="3clFbG">
+              <node concept="37vLTw" id="2jKRHi3tm$O" role="2Oq$k0">
+                <ref role="3cqZAo" node="4FbMPtUL6I1" resolve="developerPanel" />
+              </node>
+              <node concept="liA8E" id="2jKRHi3tm$P" role="2OqNvi">
+                <ref role="37wK5l" to="z60i:~Container.add(java.awt.Component,java.lang.Object)" resolve="add" />
+                <node concept="37vLTw" id="2jKRHi3tm$Q" role="37wK5m">
+                  <ref role="3cqZAo" node="2jKRHi3l8IH" resolve="label7" />
+                </node>
+                <node concept="2ShNRf" id="2jKRHi3tm$R" role="37wK5m">
+                  <node concept="1pGfFk" id="2jKRHi3tm$S" role="2ShVmc">
+                    <ref role="37wK5l" to="dwmc:~GridConstraints.&lt;init&gt;(int,int,int,int,int,int,int,int,java.awt.Dimension,java.awt.Dimension,java.awt.Dimension,int,boolean)" resolve="GridConstraints" />
+                    <node concept="3cmrfG" id="2jKRHi3tm$T" role="37wK5m">
+                      <property role="3cmrfH" value="17" />
+                    </node>
+                    <node concept="3cmrfG" id="2jKRHi3tm$U" role="37wK5m">
+                      <property role="3cmrfH" value="0" />
+                    </node>
+                    <node concept="3cmrfG" id="2jKRHi3tm$V" role="37wK5m">
+                      <property role="3cmrfH" value="1" />
+                    </node>
+                    <node concept="3cmrfG" id="2jKRHi3tm$W" role="37wK5m">
+                      <property role="3cmrfH" value="1" />
+                    </node>
+                    <node concept="10M0yZ" id="2jKRHi3yxP6" role="37wK5m">
+                      <ref role="3cqZAo" to="dwmc:~GridConstraints.ANCHOR_EAST" resolve="ANCHOR_EAST" />
+                      <ref role="1PxDUh" to="dwmc:~GridConstraints" resolve="GridConstraints" />
+                    </node>
+                    <node concept="10M0yZ" id="2jKRHi3tm$Y" role="37wK5m">
+                      <ref role="3cqZAo" to="dwmc:~GridConstraints.FILL_NONE" resolve="FILL_NONE" />
+                      <ref role="1PxDUh" to="dwmc:~GridConstraints" resolve="GridConstraints" />
+                    </node>
+                    <node concept="10M0yZ" id="2jKRHi3tPS_" role="37wK5m">
+                      <ref role="3cqZAo" to="dwmc:~GridConstraints.SIZEPOLICY_FIXED" resolve="SIZEPOLICY_FIXED" />
+                      <ref role="1PxDUh" to="dwmc:~GridConstraints" resolve="GridConstraints" />
+                    </node>
+                    <node concept="10M0yZ" id="2jKRHi3tm_2" role="37wK5m">
+                      <ref role="3cqZAo" to="dwmc:~GridConstraints.SIZEPOLICY_FIXED" resolve="SIZEPOLICY_FIXED" />
+                      <ref role="1PxDUh" to="dwmc:~GridConstraints" resolve="GridConstraints" />
+                    </node>
+                    <node concept="10Nm6u" id="2jKRHi3tm_3" role="37wK5m" />
+                    <node concept="10Nm6u" id="2jKRHi3tm_4" role="37wK5m" />
+                    <node concept="10Nm6u" id="2jKRHi3tm_5" role="37wK5m" />
+                    <node concept="3cmrfG" id="2jKRHi3tm_6" role="37wK5m">
+                      <property role="3cmrfH" value="0" />
+                    </node>
+                    <node concept="3clFbT" id="2jKRHi3tm_7" role="37wK5m" />
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+          <node concept="3clFbF" id="2jKRHi3t$j$" role="3cqZAp">
+            <node concept="2OqwBi" id="2jKRHi3t$j_" role="3clFbG">
+              <node concept="37vLTw" id="2jKRHi3t$jA" role="2Oq$k0">
+                <ref role="3cqZAo" node="4FbMPtUL6I1" resolve="developerPanel" />
+              </node>
+              <node concept="liA8E" id="2jKRHi3t$jB" role="2OqNvi">
+                <ref role="37wK5l" to="z60i:~Container.add(java.awt.Component,java.lang.Object)" resolve="add" />
+                <node concept="37vLTw" id="2jKRHi3t$jC" role="37wK5m">
+                  <ref role="3cqZAo" node="2jKRHi3jKtX" resolve="remoteModelSynchronizationServer" />
+                </node>
+                <node concept="2ShNRf" id="2jKRHi3t$jD" role="37wK5m">
+                  <node concept="1pGfFk" id="2jKRHi3t$jE" role="2ShVmc">
+                    <ref role="37wK5l" to="dwmc:~GridConstraints.&lt;init&gt;(int,int,int,int,int,int,int,int,java.awt.Dimension,java.awt.Dimension,java.awt.Dimension,int,boolean)" resolve="GridConstraints" />
+                    <node concept="3cmrfG" id="2jKRHi3t$jF" role="37wK5m">
+                      <property role="3cmrfH" value="17" />
+                    </node>
+                    <node concept="3cmrfG" id="2jKRHi3t$jG" role="37wK5m">
+                      <property role="3cmrfH" value="1" />
+                    </node>
+                    <node concept="3cmrfG" id="2jKRHi3t$jH" role="37wK5m">
+                      <property role="3cmrfH" value="1" />
+                    </node>
+                    <node concept="3cmrfG" id="2jKRHi3t$jI" role="37wK5m">
+                      <property role="3cmrfH" value="1" />
+                    </node>
+                    <node concept="10M0yZ" id="2jKRHi3t$jJ" role="37wK5m">
+                      <ref role="3cqZAo" to="dwmc:~GridConstraints.ANCHOR_WEST" resolve="ANCHOR_WEST" />
+                      <ref role="1PxDUh" to="dwmc:~GridConstraints" resolve="GridConstraints" />
+                    </node>
+                    <node concept="10M0yZ" id="2jKRHi3tNOh" role="37wK5m">
+                      <ref role="3cqZAo" to="dwmc:~GridConstraints.FILL_HORIZONTAL" resolve="FILL_HORIZONTAL" />
+                      <ref role="1PxDUh" to="dwmc:~GridConstraints" resolve="GridConstraints" />
+                    </node>
+                    <node concept="10M0yZ" id="2jKRHi3tOl9" role="37wK5m">
+                      <ref role="3cqZAo" to="dwmc:~GridConstraints.SIZEPOLICY_WANT_GROW" resolve="SIZEPOLICY_WANT_GROW" />
+                      <ref role="1PxDUh" to="dwmc:~GridConstraints" resolve="GridConstraints" />
+                    </node>
+                    <node concept="10M0yZ" id="2jKRHi3t$jO" role="37wK5m">
+                      <ref role="3cqZAo" to="dwmc:~GridConstraints.SIZEPOLICY_FIXED" resolve="SIZEPOLICY_FIXED" />
+                      <ref role="1PxDUh" to="dwmc:~GridConstraints" resolve="GridConstraints" />
+                    </node>
+                    <node concept="10Nm6u" id="2jKRHi3t$jP" role="37wK5m" />
+                    <node concept="2ShNRf" id="2jKRHi3tOTU" role="37wK5m">
+                      <node concept="1pGfFk" id="2jKRHi3tOTV" role="2ShVmc">
+                        <ref role="37wK5l" to="z60i:~Dimension.&lt;init&gt;(int,int)" resolve="Dimension" />
+                        <node concept="3cmrfG" id="2jKRHi3tOTW" role="37wK5m">
+                          <property role="3cmrfH" value="150" />
+                        </node>
+                        <node concept="3cmrfG" id="2jKRHi3tOTX" role="37wK5m">
+                          <property role="3cmrfH" value="-1" />
+                        </node>
+                      </node>
+                    </node>
+                    <node concept="10Nm6u" id="2jKRHi3t$jR" role="37wK5m" />
+                    <node concept="3cmrfG" id="2jKRHi3t$jS" role="37wK5m">
+                      <property role="3cmrfH" value="0" />
+                    </node>
+                    <node concept="3clFbT" id="2jKRHi3t$jT" role="37wK5m" />
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
           <node concept="3clFbH" id="2HLAWGSjte8" role="3cqZAp" />
           <node concept="3clFbF" id="L7IJdLltO9" role="3cqZAp">
             <node concept="2OqwBi" id="L7IJdLltOa" role="3clFbG">
@@ -5340,6 +5731,78 @@
                           </node>
                         </node>
                         <node concept="2AHcQZ" id="4FbMPtUPYhX" role="2AJF6D">
+                          <ref role="2AI5Lk" to="wyt6:~Override" resolve="Override" />
+                        </node>
+                      </node>
+                    </node>
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+          <node concept="3clFbF" id="2jKRHi3lV$7" role="3cqZAp">
+            <node concept="2OqwBi" id="2jKRHi3lV$8" role="3clFbG">
+              <node concept="37vLTw" id="2jKRHi3lV$9" role="2Oq$k0">
+                <ref role="3cqZAo" node="2jKRHi3jWRW" resolve="remoteModelSynchronization" />
+              </node>
+              <node concept="liA8E" id="2jKRHi3lV$a" role="2OqNvi">
+                <ref role="37wK5l" to="dxuu:~AbstractButton.addActionListener(java.awt.event.ActionListener)" resolve="addActionListener" />
+                <node concept="2ShNRf" id="2jKRHi3lV$b" role="37wK5m">
+                  <node concept="YeOm9" id="2jKRHi3lV$c" role="2ShVmc">
+                    <node concept="1Y3b0j" id="2jKRHi3lV$d" role="YeSDq">
+                      <property role="2bfB8j" value="true" />
+                      <ref role="1Y3XeK" to="hyam:~ActionListener" resolve="ActionListener" />
+                      <ref role="37wK5l" to="wyt6:~Object.&lt;init&gt;()" resolve="Object" />
+                      <node concept="3Tm1VV" id="2jKRHi3lV$e" role="1B3o_S" />
+                      <node concept="3clFb_" id="2jKRHi3lV$f" role="jymVt">
+                        <property role="TrG5h" value="actionPerformed" />
+                        <node concept="3Tm1VV" id="2jKRHi3lV$g" role="1B3o_S" />
+                        <node concept="3cqZAl" id="2jKRHi3lV$h" role="3clF45" />
+                        <node concept="37vLTG" id="2jKRHi3lV$i" role="3clF46">
+                          <property role="TrG5h" value="p1" />
+                          <node concept="3uibUv" id="2jKRHi3lV$j" role="1tU5fm">
+                            <ref role="3uigEE" to="hyam:~ActionEvent" resolve="ActionEvent" />
+                          </node>
+                        </node>
+                        <node concept="3clFbS" id="2jKRHi3lV$k" role="3clF47">
+                          <node concept="3clFbF" id="2jKRHi3lV$l" role="3cqZAp">
+                            <node concept="2OqwBi" id="2jKRHi3lV$m" role="3clFbG">
+                              <node concept="37vLTw" id="2jKRHi3lV$n" role="2Oq$k0">
+                                <ref role="3cqZAo" node="2jKRHi3jKtX" resolve="remoteModelSynchronizationServer" />
+                              </node>
+                              <node concept="liA8E" id="2jKRHi3lV$o" role="2OqNvi">
+                                <ref role="37wK5l" to="dxuu:~JComponent.setVisible(boolean)" resolve="setVisible" />
+                                <node concept="2OqwBi" id="2jKRHi3lV$p" role="37wK5m">
+                                  <node concept="37vLTw" id="2jKRHi3lV$q" role="2Oq$k0">
+                                    <ref role="3cqZAo" node="2jKRHi3jWRW" resolve="remoteModelSynchronization" />
+                                  </node>
+                                  <node concept="liA8E" id="2jKRHi3lV$r" role="2OqNvi">
+                                    <ref role="37wK5l" to="dxuu:~AbstractButton.isSelected()" resolve="isSelected" />
+                                  </node>
+                                </node>
+                              </node>
+                            </node>
+                          </node>
+                          <node concept="3clFbF" id="2jKRHi3ytTf" role="3cqZAp">
+                            <node concept="2OqwBi" id="2jKRHi3yuYT" role="3clFbG">
+                              <node concept="37vLTw" id="2jKRHi3ytTd" role="2Oq$k0">
+                                <ref role="3cqZAo" node="2jKRHi3l8IH" resolve="label7" />
+                              </node>
+                              <node concept="liA8E" id="2jKRHi3ywAN" role="2OqNvi">
+                                <ref role="37wK5l" to="dxuu:~JComponent.setVisible(boolean)" resolve="setVisible" />
+                                <node concept="2OqwBi" id="2jKRHi3yx$H" role="37wK5m">
+                                  <node concept="37vLTw" id="2jKRHi3yx$I" role="2Oq$k0">
+                                    <ref role="3cqZAo" node="2jKRHi3jWRW" resolve="remoteModelSynchronization" />
+                                  </node>
+                                  <node concept="liA8E" id="2jKRHi3yx$J" role="2OqNvi">
+                                    <ref role="37wK5l" to="dxuu:~AbstractButton.isSelected()" resolve="isSelected" />
+                                  </node>
+                                </node>
+                              </node>
+                            </node>
+                          </node>
+                        </node>
+                        <node concept="2AHcQZ" id="2jKRHi3lV$s" role="2AJF6D">
                           <ref role="2AI5Lk" to="wyt6:~Override" resolve="Override" />
                         </node>
                       </node>
@@ -6416,6 +6879,38 @@
               </node>
             </node>
           </node>
+          <node concept="3clFbF" id="2jKRHi3lnjR" role="3cqZAp">
+            <node concept="2OqwBi" id="2jKRHi3lnjS" role="3clFbG">
+              <node concept="37vLTw" id="2jKRHi3lnjT" role="2Oq$k0">
+                <ref role="3cqZAo" node="2jKRHi3jWRW" resolve="remoteModelSynchronization" />
+              </node>
+              <node concept="liA8E" id="2jKRHi3lnjU" role="2OqNvi">
+                <ref role="37wK5l" to="dxuu:~AbstractButton.setSelected(boolean)" resolve="setSelected" />
+                <node concept="2OqwBi" id="2jKRHi3lnjV" role="37wK5m">
+                  <node concept="2WthIp" id="2jKRHi3lnjW" role="2Oq$k0" />
+                  <node concept="34pFcN" id="2jKRHi3lnjX" role="2OqNvi">
+                    <ref role="2WH_rO" node="2jKRHi3ha5M" resolve="remoteModelSynchronization" />
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+          <node concept="3clFbF" id="2jKRHi3lnL8" role="3cqZAp">
+            <node concept="2OqwBi" id="2jKRHi3lnL9" role="3clFbG">
+              <node concept="37vLTw" id="2jKRHi3lnLa" role="2Oq$k0">
+                <ref role="3cqZAo" node="2jKRHi3jKtX" resolve="remoteModelSynchronizationServer" />
+              </node>
+              <node concept="liA8E" id="2jKRHi3lnLb" role="2OqNvi">
+                <ref role="37wK5l" to="r791:~JTextComponent.setText(java.lang.String)" resolve="setText" />
+                <node concept="2OqwBi" id="2jKRHi3lnLc" role="37wK5m">
+                  <node concept="2WthIp" id="2jKRHi3lnLd" role="2Oq$k0" />
+                  <node concept="34pFcN" id="2jKRHi3lnLe" role="2OqNvi">
+                    <ref role="2WH_rO" node="2jKRHi3id27" resolve="remoteModelSynchronizationServer" />
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
           <node concept="3clFbH" id="4FbMPtV0Bpu" role="3cqZAp" />
           <node concept="3clFbF" id="4FbMPtUT8UH" role="3cqZAp">
             <node concept="2OqwBi" id="4FbMPtUT8UI" role="3clFbG">
@@ -6817,6 +7312,48 @@
               </node>
             </node>
           </node>
+          <node concept="3cpWs8" id="2jKRHi3maG0" role="3cqZAp">
+            <node concept="3cpWsn" id="2jKRHi3maG1" role="3cpWs9">
+              <property role="TrG5h" value="remoteModelSynchronization" />
+              <node concept="3uibUv" id="2jKRHi3maG2" role="1tU5fm">
+                <ref role="3uigEE" to="dxuu:~JCheckBox" resolve="JCheckBox" />
+              </node>
+              <node concept="10QFUN" id="2jKRHi3maG3" role="33vP2m">
+                <node concept="3uibUv" id="2jKRHi3maG4" role="10QFUM">
+                  <ref role="3uigEE" to="dxuu:~JCheckBox" resolve="JCheckBox" />
+                </node>
+                <node concept="2YIFZM" id="2jKRHi3maG5" role="10QFUP">
+                  <ref role="1Pybhc" node="4FbMPtUH_vD" resolve="PrefsUtils" />
+                  <ref role="37wK5l" node="4FbMPtUXPIn" resolve="findComponentByName" />
+                  <node concept="3yMSdA" id="2jKRHi3maG6" role="37wK5m" />
+                  <node concept="Xl_RD" id="2jKRHi3maG7" role="37wK5m">
+                    <property role="Xl_RC" value="remoteModelSynchronization" />
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+          <node concept="3cpWs8" id="2jKRHi3mgjJ" role="3cqZAp">
+            <node concept="3cpWsn" id="2jKRHi3mgjK" role="3cpWs9">
+              <property role="TrG5h" value="remoteModelSynchronizationServer" />
+              <node concept="3uibUv" id="2jKRHi3mgjL" role="1tU5fm">
+                <ref role="3uigEE" to="dxuu:~JTextField" resolve="JTextField" />
+              </node>
+              <node concept="10QFUN" id="2jKRHi3mgjM" role="33vP2m">
+                <node concept="3uibUv" id="2jKRHi3mgjN" role="10QFUM">
+                  <ref role="3uigEE" to="dxuu:~JTextField" resolve="JTextField" />
+                </node>
+                <node concept="2YIFZM" id="2jKRHi3mgjO" role="10QFUP">
+                  <ref role="1Pybhc" node="4FbMPtUH_vD" resolve="PrefsUtils" />
+                  <ref role="37wK5l" node="4FbMPtUXPIn" resolve="findComponentByName" />
+                  <node concept="3yMSdA" id="2jKRHi3mgjP" role="37wK5m" />
+                  <node concept="Xl_RD" id="2jKRHi3mgjQ" role="37wK5m">
+                    <property role="Xl_RC" value="remoteModelSynchronizationServer" />
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
           <node concept="3clFbH" id="1RIwjuN$t0m" role="3cqZAp" />
           <node concept="3clFbF" id="4__tE4VSj94" role="3cqZAp">
             <node concept="37vLTI" id="4__tE4VSnEE" role="3clFbG">
@@ -7158,6 +7695,42 @@
                   <node concept="37vLTw" id="1iXkhsJ_dXr" role="2Oq$k0">
                     <ref role="3cqZAo" node="4FbMPtUXTQW" resolve="maxNrOfObservers" />
                   </node>
+                </node>
+              </node>
+            </node>
+          </node>
+          <node concept="3clFbF" id="2jKRHi3nqZo" role="3cqZAp">
+            <node concept="37vLTI" id="2jKRHi3nqZp" role="3clFbG">
+              <node concept="2OqwBi" id="2jKRHi3nqZq" role="37vLTJ">
+                <node concept="2WthIp" id="2jKRHi3nqZr" role="2Oq$k0" />
+                <node concept="34pFcN" id="2jKRHi3nqZs" role="2OqNvi">
+                  <ref role="2WH_rO" node="2jKRHi3ha5M" resolve="remoteModelSynchronization" />
+                </node>
+              </node>
+              <node concept="2OqwBi" id="2jKRHi3nqZv" role="37vLTx">
+                <node concept="liA8E" id="2jKRHi3nqZw" role="2OqNvi">
+                  <ref role="37wK5l" to="dxuu:~AbstractButton.isSelected()" resolve="isSelected" />
+                </node>
+                <node concept="37vLTw" id="2jKRHi3nqZx" role="2Oq$k0">
+                  <ref role="3cqZAo" node="2jKRHi3maG1" resolve="remoteModelSynchronization" />
+                </node>
+              </node>
+            </node>
+          </node>
+          <node concept="3clFbF" id="2jKRHi3nr7M" role="3cqZAp">
+            <node concept="37vLTI" id="2jKRHi3nr7N" role="3clFbG">
+              <node concept="2OqwBi" id="2jKRHi3nr7O" role="37vLTJ">
+                <node concept="2WthIp" id="2jKRHi3nr7P" role="2Oq$k0" />
+                <node concept="34pFcN" id="2jKRHi3nr7Q" role="2OqNvi">
+                  <ref role="2WH_rO" node="2jKRHi3id27" resolve="remoteModelSynchronizationServer" />
+                </node>
+              </node>
+              <node concept="2OqwBi" id="2jKRHi3nr7T" role="37vLTx">
+                <node concept="liA8E" id="2jKRHi3nr7U" role="2OqNvi">
+                  <ref role="37wK5l" to="r791:~JTextComponent.getText()" resolve="getText" />
+                </node>
+                <node concept="37vLTw" id="2jKRHi3nr7V" role="2Oq$k0">
+                  <ref role="3cqZAo" node="2jKRHi3mgjK" resolve="remoteModelSynchronizationServer" />
                 </node>
               </node>
             </node>
@@ -7610,6 +8183,48 @@
                 </node>
               </node>
               <node concept="37vLTw" id="1iXkhsJ_Mek" role="37vLTJ">
+                <ref role="3cqZAo" node="1iXkhsJy5mU" resolve="config" />
+              </node>
+            </node>
+          </node>
+          <node concept="3clFbF" id="2jKRHi3o$2U" role="3cqZAp">
+            <node concept="37vLTI" id="2jKRHi3o$2V" role="3clFbG">
+              <node concept="2OqwBi" id="2jKRHi3o$2W" role="37vLTx">
+                <node concept="liA8E" id="2jKRHi3o$2X" role="2OqNvi">
+                  <ref role="37wK5l" to="t4tl:~DclareForMpsConfig.withRemoteModelSynchronization(boolean)" resolve="withRemoteModelSynchronization" />
+                  <node concept="2OqwBi" id="2jKRHi3o$2Y" role="37wK5m">
+                    <node concept="2WthIp" id="2jKRHi3o$2Z" role="2Oq$k0" />
+                    <node concept="34pFcN" id="2jKRHi3o$30" role="2OqNvi">
+                      <ref role="2WH_rO" node="2jKRHi3ha5M" resolve="remoteModelSynchronization" />
+                    </node>
+                  </node>
+                </node>
+                <node concept="37vLTw" id="2jKRHi3o$31" role="2Oq$k0">
+                  <ref role="3cqZAo" node="1iXkhsJy5mU" resolve="config" />
+                </node>
+              </node>
+              <node concept="37vLTw" id="2jKRHi3o$32" role="37vLTJ">
+                <ref role="3cqZAo" node="1iXkhsJy5mU" resolve="config" />
+              </node>
+            </node>
+          </node>
+          <node concept="3clFbF" id="2jKRHi3oD8d" role="3cqZAp">
+            <node concept="37vLTI" id="2jKRHi3oD8e" role="3clFbG">
+              <node concept="2OqwBi" id="2jKRHi3oD8f" role="37vLTx">
+                <node concept="liA8E" id="2jKRHi3oD8g" role="2OqNvi">
+                  <ref role="37wK5l" to="t4tl:~DclareForMpsConfig.withRemoteModelSynchronizationServer(java.lang.String)" resolve="withRemoteModelSynchronizationServer" />
+                  <node concept="2OqwBi" id="2jKRHi3oD8h" role="37wK5m">
+                    <node concept="2WthIp" id="2jKRHi3oD8i" role="2Oq$k0" />
+                    <node concept="34pFcN" id="2jKRHi3oD8j" role="2OqNvi">
+                      <ref role="2WH_rO" node="2jKRHi3id27" resolve="remoteModelSynchronizationServer" />
+                    </node>
+                  </node>
+                </node>
+                <node concept="37vLTw" id="2jKRHi3oD8k" role="2Oq$k0">
+                  <ref role="3cqZAo" node="1iXkhsJy5mU" resolve="config" />
+                </node>
+              </node>
+              <node concept="37vLTw" id="2jKRHi3oD8l" role="37vLTJ">
                 <ref role="3cqZAo" node="1iXkhsJy5mU" resolve="config" />
               </node>
             </node>
@@ -8097,6 +8712,42 @@
                   <node concept="2WthIp" id="50egtBYQSNM" role="2Oq$k0" />
                   <node concept="34pFcN" id="50egtBYRd$M" role="2OqNvi">
                     <ref role="2WH_rO" node="1RIwjuNzsTl" resolve="maxNrOfObservers" />
+                  </node>
+                </node>
+              </node>
+            </node>
+            <node concept="3clFbF" id="2jKRHi3h_0T" role="3cqZAp">
+              <node concept="37vLTI" id="2jKRHi3h_0U" role="3clFbG">
+                <node concept="2OqwBi" id="2jKRHi3h_0V" role="37vLTx">
+                  <node concept="37vLTw" id="2jKRHi3h_0W" role="2Oq$k0">
+                    <ref role="3cqZAo" node="1iXkhsJzrw5" resolve="config" />
+                  </node>
+                  <node concept="liA8E" id="2jKRHi3h_0X" role="2OqNvi">
+                    <ref role="37wK5l" to="t4tl:~DclareForMpsConfig.isRemoteModelSynchronization()" resolve="isRemoteModelSynchronization" />
+                  </node>
+                </node>
+                <node concept="2OqwBi" id="2jKRHi3h_0Y" role="37vLTJ">
+                  <node concept="2WthIp" id="2jKRHi3h_0Z" role="2Oq$k0" />
+                  <node concept="34pFcN" id="2jKRHi3h_10" role="2OqNvi">
+                    <ref role="2WH_rO" node="2jKRHi3ha5M" resolve="xx" />
+                  </node>
+                </node>
+              </node>
+            </node>
+            <node concept="3clFbF" id="2jKRHi3izfE" role="3cqZAp">
+              <node concept="37vLTI" id="2jKRHi3izfF" role="3clFbG">
+                <node concept="2OqwBi" id="2jKRHi3izfG" role="37vLTx">
+                  <node concept="37vLTw" id="2jKRHi3izfH" role="2Oq$k0">
+                    <ref role="3cqZAo" node="1iXkhsJzrw5" resolve="config" />
+                  </node>
+                  <node concept="liA8E" id="2jKRHi3izfI" role="2OqNvi">
+                    <ref role="37wK5l" to="t4tl:~DclareForMpsConfig.getRemoteModelSynchronizationServer()" resolve="getRemoteModelSynchronizationServer" />
+                  </node>
+                </node>
+                <node concept="2OqwBi" id="2jKRHi3izfJ" role="37vLTJ">
+                  <node concept="2WthIp" id="2jKRHi3izfK" role="2Oq$k0" />
+                  <node concept="34pFcN" id="2jKRHi3izfL" role="2OqNvi">
+                    <ref role="2WH_rO" node="2jKRHi3id27" resolve="yy" />
                   </node>
                 </node>
               </node>
@@ -13838,6 +14489,20 @@
     </node>
     <node concept="tnohg" id="7mQEauLqCEl" role="tncku">
       <node concept="3clFbS" id="7mQEauLqCEm" role="2VODD2">
+        <node concept="3cpWs8" id="2jKRHi3vPsg" role="3cqZAp">
+          <node concept="3cpWsn" id="2jKRHi3vPsh" role="3cpWs9">
+            <property role="TrG5h" value="project" />
+            <node concept="3uibUv" id="2jKRHi3vGmg" role="1tU5fm">
+              <ref role="3uigEE" to="4nm9:~Project" resolve="Project" />
+            </node>
+            <node concept="2OqwBi" id="2jKRHi3vPsi" role="33vP2m">
+              <node concept="tl45R" id="2jKRHi3vPsj" role="2Oq$k0" />
+              <node concept="liA8E" id="2jKRHi3vPsk" role="2OqNvi">
+                <ref role="37wK5l" to="qkt:~AnActionEvent.getProject()" resolve="getProject" />
+              </node>
+            </node>
+          </node>
+        </node>
         <node concept="3cpWs8" id="4f_r0qDC31b" role="3cqZAp">
           <node concept="3cpWsn" id="4f_r0qDC31c" role="3cpWs9">
             <property role="TrG5h" value="prefs" />
@@ -13847,11 +14512,8 @@
             <node concept="2YIFZM" id="4f_r0qDC31d" role="33vP2m">
               <ref role="1Pybhc" node="4f_r0qDun_n" resolve="ModelPrefs" />
               <ref role="37wK5l" node="4f_r0qDuKfG" resolve="getOrCreatePrefs" />
-              <node concept="2OqwBi" id="4f_r0qDC31e" role="37wK5m">
-                <node concept="tl45R" id="4f_r0qDC31f" role="2Oq$k0" />
-                <node concept="liA8E" id="4f_r0qDC31g" role="2OqNvi">
-                  <ref role="37wK5l" to="qkt:~AnActionEvent.getProject()" resolve="getProject" />
-                </node>
+              <node concept="37vLTw" id="2jKRHi3vPsl" role="37wK5m">
+                <ref role="3cqZAo" node="2jKRHi3vPsh" resolve="project" />
               </node>
             </node>
           </node>
@@ -13901,11 +14563,8 @@
           <node concept="2YIFZM" id="4wENxdCMUFS" role="3clFbG">
             <ref role="37wK5l" to="u4ym:RraJETi2e9" resolve="share" />
             <ref role="1Pybhc" to="u4ym:30fQumnG8Au" resolve="DclareUtil" />
-            <node concept="2OqwBi" id="4wENxdCMVG9" role="37wK5m">
-              <node concept="tl45R" id="4wENxdCMVs6" role="2Oq$k0" />
-              <node concept="liA8E" id="4wENxdCMVZd" role="2OqNvi">
-                <ref role="37wK5l" to="qkt:~AnActionEvent.getProject()" resolve="getProject" />
-              </node>
+            <node concept="37vLTw" id="2jKRHi3vPsm" role="37wK5m">
+              <ref role="3cqZAo" node="2jKRHi3vPsh" resolve="project" />
             </node>
             <node concept="2OqwBi" id="4wENxdCMV4X" role="37wK5m">
               <node concept="2WthIp" id="4wENxdCMUMN" role="2Oq$k0" />
@@ -13928,11 +14587,8 @@
               <node concept="LR4U6" id="4F3UNbw4iLg" role="2OqNvi">
                 <ref role="LR4U5" node="3OqCb4$v3q7" resolve="DClareMessages" />
               </node>
-              <node concept="2OqwBi" id="4F3UNbw4jea" role="2Oq$k0">
-                <node concept="tl45R" id="4F3UNbw4jeb" role="2Oq$k0" />
-                <node concept="liA8E" id="4F3UNbw4jec" role="2OqNvi">
-                  <ref role="37wK5l" to="qkt:~AnActionEvent.getProject()" resolve="getProject" />
-                </node>
+              <node concept="37vLTw" id="2jKRHi3vPsn" role="2Oq$k0">
+                <ref role="3cqZAo" node="2jKRHi3vPsh" resolve="project" />
               </node>
             </node>
           </node>
@@ -13964,13 +14620,52 @@
     </node>
     <node concept="tkhdA" id="4f_r0qDpgmk" role="tmbBb">
       <node concept="3clFbS" id="4f_r0qDpgml" role="2VODD2">
+        <node concept="3cpWs8" id="2jKRHi3vKvg" role="3cqZAp">
+          <node concept="3cpWsn" id="2jKRHi3vKvh" role="3cpWs9">
+            <property role="TrG5h" value="project" />
+            <node concept="3uibUv" id="2jKRHi3vGm$" role="1tU5fm">
+              <ref role="3uigEE" to="4nm9:~Project" resolve="Project" />
+            </node>
+            <node concept="2OqwBi" id="2jKRHi3vKvi" role="33vP2m">
+              <node concept="tl45R" id="2jKRHi3vKvj" role="2Oq$k0" />
+              <node concept="liA8E" id="2jKRHi3vKvk" role="2OqNvi">
+                <ref role="37wK5l" to="qkt:~AnActionEvent.getProject()" resolve="getProject" />
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="3clFbH" id="2jKRHi3vPSk" role="3cqZAp" />
+        <node concept="3cpWs8" id="2jKRHi3vPEm" role="3cqZAp">
+          <node concept="3cpWsn" id="2jKRHi3vPEn" role="3cpWs9">
+            <property role="TrG5h" value="config" />
+            <node concept="3uibUv" id="2jKRHi3vOhs" role="1tU5fm">
+              <ref role="3uigEE" to="t4tl:~DclareForMpsConfig" resolve="DclareForMpsConfig" />
+            </node>
+            <node concept="2OqwBi" id="2jKRHi3vPEo" role="33vP2m">
+              <node concept="2YIFZM" id="2jKRHi3vPEp" role="2Oq$k0">
+                <ref role="1Pybhc" to="u4ym:30fQumnG8Au" resolve="DclareUtil" />
+                <ref role="37wK5l" to="u4ym:3z4syYPRmGX" resolve="getEngine" />
+                <node concept="37vLTw" id="2jKRHi3vPEq" role="37wK5m">
+                  <ref role="3cqZAo" node="2jKRHi3vKvh" resolve="project" />
+                </node>
+              </node>
+              <node concept="liA8E" id="2jKRHi3vPEr" role="2OqNvi">
+                <ref role="37wK5l" to="t4tl:~DclareForMPSEngine.getConfig()" resolve="getConfig" />
+              </node>
+            </node>
+          </node>
+        </node>
         <node concept="3cpWs8" id="69sQFvzr98P" role="3cqZAp">
           <node concept="3cpWsn" id="69sQFvzr98S" role="3cpWs9">
             <property role="TrG5h" value="isApplicable" />
             <node concept="10P_77" id="69sQFvzr98N" role="1tU5fm" />
-            <node concept="2YIFZM" id="69sQFvzvhnn" role="33vP2m">
-              <ref role="37wK5l" to="t4tl:~DClareMPS.isCollaberationEnabled()" resolve="isCollaberationEnabled" />
-              <ref role="1Pybhc" to="t4tl:~DClareMPS" resolve="DClareMPS" />
+            <node concept="2OqwBi" id="2jKRHi3vN7B" role="33vP2m">
+              <node concept="37vLTw" id="2jKRHi3vPEs" role="2Oq$k0">
+                <ref role="3cqZAo" node="2jKRHi3vPEn" resolve="config" />
+              </node>
+              <node concept="liA8E" id="2jKRHi3vNMk" role="2OqNvi">
+                <ref role="37wK5l" to="t4tl:~DclareForMpsConfig.isRemoteModelSynchronization()" resolve="isRemoteModelSynchronization" />
+              </node>
             </node>
           </node>
         </node>
@@ -13999,11 +14694,8 @@
                 <node concept="2YIFZM" id="4f_r0qDC3e_" role="33vP2m">
                   <ref role="37wK5l" node="4f_r0qDuKfG" resolve="getOrCreatePrefs" />
                   <ref role="1Pybhc" node="4f_r0qDun_n" resolve="ModelPrefs" />
-                  <node concept="2OqwBi" id="4f_r0qDC3eA" role="37wK5m">
-                    <node concept="tl45R" id="4f_r0qDC3eB" role="2Oq$k0" />
-                    <node concept="liA8E" id="4f_r0qDC3eC" role="2OqNvi">
-                      <ref role="37wK5l" to="qkt:~AnActionEvent.getProject()" resolve="getProject" />
-                    </node>
+                  <node concept="37vLTw" id="2jKRHi3vKvl" role="37wK5m">
+                    <ref role="3cqZAo" node="2jKRHi3vKvh" resolve="project" />
                   </node>
                 </node>
               </node>
