@@ -398,7 +398,7 @@
           <ref role="3uigEE" to="4nm9:~Project" resolve="Project" />
         </node>
         <node concept="3uibUv" id="3z4syYPPQ7a" role="11_B2D">
-          <ref role="3uigEE" node="3z4syYPQlIm" resolve="ISharingPrefs" />
+          <ref role="3uigEE" node="3z4syYPQlIm" resolve="IModelPrefs" />
         </node>
       </node>
       <node concept="2ShNRf" id="3z4syYPPQ7b" role="33vP2m">
@@ -408,7 +408,7 @@
             <ref role="3uigEE" to="4nm9:~Project" resolve="Project" />
           </node>
           <node concept="3uibUv" id="3z4syYPPQ7e" role="1pMfVU">
-            <ref role="3uigEE" node="3z4syYPQlIm" resolve="ISharingPrefs" />
+            <ref role="3uigEE" node="3z4syYPQlIm" resolve="IModelPrefs" />
           </node>
         </node>
       </node>
@@ -468,7 +468,7 @@
       </node>
       <node concept="3Tm1VV" id="3z4syYPRc49" role="1B3o_S" />
       <node concept="3uibUv" id="3z4syYPRc4a" role="3clF45">
-        <ref role="3uigEE" node="3z4syYPQlIm" resolve="ISharingPrefs" />
+        <ref role="3uigEE" node="3z4syYPQlIm" resolve="IModelPrefs" />
       </node>
     </node>
     <node concept="2tJIrI" id="3z4syYPRhbi" role="jymVt" />

@@ -285,7 +285,7 @@
   <node concept="1TIwiD" id="RraJETgzZW">
     <property role="EcuMT" value="998438998731014140" />
     <property role="TrG5h" value="ModelSettings" />
-    <ref role="1TJDcQ" to="tpck:gw2VY9q" />
+    <ref role="1TJDcQ" to="tpck:gw2VY9q" resolve="BaseConcept" />
     <node concept="1TJgyi" id="RraJETg$06" role="1TKVEl">
       <property role="IQ2nx" value="998438998731014150" />
       <property role="TrG5h" value="shared" />
