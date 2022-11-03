@@ -66,6 +66,8 @@
     <import index="42m3" ref="e584ff77-930e-4637-8df0-b4c8d3b6de91/java:org.modelingvalue.collections.util(DclareRuntime/)" />
     <import index="zrbp" ref="e584ff77-930e-4637-8df0-b4c8d3b6de91/java:org.modelingvalue.collections(DclareRuntime/)" />
     <import index="kag7" ref="e584ff77-930e-4637-8df0-b4c8d3b6de91/java:org.modelingvalue.dclare(DclareRuntime/)" />
+    <import index="rw00" ref="r:d910d08e-4a00-41f9-ac8b-b7c374586874(jetbrains.mps.debug.api.breakpoints)" />
+    <import index="1l1h" ref="r:c02662c0-67c5-4c3a-8d3a-cd7ffe189340(jetbrains.mps.debug.api)" />
     <import index="tpck" ref="r:00000000-0000-4000-0000-011c89590288(jetbrains.mps.lang.core.structure)" implicit="true" />
     <import index="7ggn" ref="r:38c3b7db-3776-47fb-ba27-a4f002c4edc7(DclareMPS.structure)" implicit="true" />
     <import index="1m72" ref="498d89d2-c2e9-11e2-ad49-6cf049e62fe5/java:com.intellij.openapi.components(MPS.IDEA/)" implicit="true" />
@@ -464,6 +466,7 @@
       <concept id="8064396509828172209" name="jetbrains.mps.baseLanguage.structure.UnaryMinus" flags="nn" index="1ZRNhn" />
     </language>
     <language id="fd392034-7849-419d-9071-12563d152375" name="jetbrains.mps.baseLanguage.closures">
+      <concept id="2524418899405758586" name="jetbrains.mps.baseLanguage.closures.structure.InferredClosureParameterDeclaration" flags="ig" index="gl6BB" />
       <concept id="1199542442495" name="jetbrains.mps.baseLanguage.closures.structure.FunctionType" flags="in" index="1ajhzC">
         <child id="1199542457201" name="resultType" index="1ajl9A" />
         <child id="1199542501692" name="parameterType" index="1ajw0F" />
@@ -11551,6 +11554,13 @@
         <ref role="3uigEE" to="exr9:~NodeEditorComponent" resolve="NodeEditorComponent" />
       </node>
     </node>
+    <node concept="312cEg" id="aH0K4olbbk" role="jymVt">
+      <property role="TrG5h" value="project" />
+      <node concept="3Tm6S6" id="aH0K4okLJ8" role="1B3o_S" />
+      <node concept="3uibUv" id="aH0K4ola9k" role="1tU5fm">
+        <ref role="3uigEE" to="z1c3:~MPSProject" resolve="MPSProject" />
+      </node>
+    </node>
     <node concept="2tJIrI" id="7e_PmaZAmrL" role="jymVt" />
     <node concept="3clFbW" id="1sOlkZtGfbv" role="jymVt">
       <node concept="37vLTG" id="3La3n2rHGBG" role="3clF46">
@@ -11727,6 +11737,19 @@
             </node>
           </node>
         </node>
+        <node concept="3clFbF" id="aH0K4olEIm" role="3cqZAp">
+          <node concept="37vLTI" id="aH0K4omFzj" role="3clFbG">
+            <node concept="37vLTw" id="aH0K4omYgf" role="37vLTx">
+              <ref role="3cqZAo" node="22ExA6fHmyG" resolve="project" />
+            </node>
+            <node concept="2OqwBi" id="aH0K4olS7$" role="37vLTJ">
+              <node concept="Xjq3P" id="aH0K4olEIk" role="2Oq$k0" />
+              <node concept="2OwXpG" id="aH0K4om9ue" role="2OqNvi">
+                <ref role="2Oxat5" node="aH0K4olbbk" resolve="project" />
+              </node>
+            </node>
+          </node>
+        </node>
         <node concept="3clFbF" id="5ED0xB6QlU4" role="3cqZAp">
           <node concept="2OqwBi" id="5ED0xB6QmCs" role="3clFbG">
             <node concept="37vLTw" id="5ED0xB6QlU2" role="2Oq$k0">
@@ -11785,6 +11808,48 @@
               </node>
               <node concept="3TrcHB" id="61KkDbfrPvC" role="2OqNvi">
                 <ref role="3TsBF5" to="wknp:1DUQ$OwrN1P" resolve="on" />
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="3clFbF" id="aH0K4ofFil" role="3cqZAp">
+          <node concept="2OqwBi" id="aH0K4ooKti" role="3clFbG">
+            <node concept="2OqwBi" id="aH0K4ooiG_" role="2Oq$k0">
+              <node concept="2YIFZM" id="aH0K4ogbfq" role="2Oq$k0">
+                <ref role="37wK5l" to="1l1h:3SnNvqCaJLp" resolve="getInstance" />
+                <ref role="1Pybhc" to="1l1h:3SnNvqCaJJB" resolve="BreakpointManagerComponent" />
+                <node concept="2OqwBi" id="aH0K4onNro" role="37wK5m">
+                  <node concept="37vLTw" id="aH0K4onsSZ" role="2Oq$k0">
+                    <ref role="3cqZAo" node="aH0K4olbbk" resolve="project" />
+                  </node>
+                  <node concept="liA8E" id="aH0K4oo3gu" role="2OqNvi">
+                    <ref role="37wK5l" to="z1c3:~MPSProject.getProject()" resolve="getProject" />
+                  </node>
+                </node>
+              </node>
+              <node concept="liA8E" id="aH0K4ooyjI" role="2OqNvi">
+                <ref role="37wK5l" to="1l1h:3SnNvqCaJSu" resolve="getAllIBreakpoints" />
+              </node>
+            </node>
+            <node concept="liA8E" id="aH0K4ooXKs" role="2OqNvi">
+              <ref role="37wK5l" to="wyt6:~Iterable.forEach(java.util.function.Consumer)" resolve="forEach" />
+              <node concept="1bVj0M" id="aH0K4opGOx" role="37wK5m">
+                <node concept="3clFbS" id="aH0K4opGOy" role="1bW5cS">
+                  <node concept="3clFbF" id="aH0K4oqtKc" role="3cqZAp">
+                    <node concept="2OqwBi" id="aH0K4ouGpr" role="3clFbG">
+                      <node concept="37vLTw" id="aH0K4ousW$" role="2Oq$k0">
+                        <ref role="3cqZAo" node="aH0K4opWvR" resolve="it" />
+                      </node>
+                      <node concept="liA8E" id="aH0K4ouWLG" role="2OqNvi">
+                        <ref role="37wK5l" to="rw00:3SnNvqCaK3q" resolve="getPresentation" />
+                      </node>
+                    </node>
+                  </node>
+                </node>
+                <node concept="gl6BB" id="aH0K4opWvR" role="1bW2Oz">
+                  <property role="TrG5h" value="it" />
+                  <node concept="2jxLKc" id="aH0K4opWvS" role="1tU5fm" />
+                </node>
               </node>
             </node>
           </node>
