@@ -1086,6 +1086,16 @@
             <ref role="3bR37D" to="ffeo:4IP11oWmB07" resolve="jetbrains.mps.ide.modelchecker.platform" />
           </node>
         </node>
+        <node concept="1SiIV0" id="aH0K4o0G3l" role="3bR37C">
+          <node concept="3bR9La" id="aH0K4o0G3m" role="1SiIV1">
+            <ref role="3bR37D" to="ffeo:7gdoTYdo$et" resolve="jetbrains.mps.debugger.api.api" />
+          </node>
+        </node>
+        <node concept="1SiIV0" id="aH0K4ouckJ" role="3bR37C">
+          <node concept="3bR9La" id="aH0K4ouckK" role="1SiIV1">
+            <ref role="3bR37D" to="ffeo:mXGwHwhVPj" resolve="JDK" />
+          </node>
+        </node>
       </node>
       <node concept="1E1JtA" id="6dxB28$ZXGd" role="2G$12L">
         <property role="TrG5h" value="DclareForMPS.build" />
