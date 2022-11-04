@@ -15,22 +15,22 @@
 
 package org.modelingvalue.dclare.mps;
 
-import org.modelingvalue.dclare.DclareConfig;
-
 import java.util.Arrays;
 import java.util.Objects;
 
+import org.modelingvalue.dclare.DclareConfig;
+
 @SuppressWarnings("unused")
 public class DclareForMpsConfig {
-    private static final boolean  ON_MODE_DEFAULT                             = Boolean.getBoolean("ON_MODE");
-    private static final boolean  COLORFUL_EDITORS_DEFAULT                    = Boolean.getBoolean("COLORFUL_EDITORS");
-    private static final boolean  TRACE_DCLARE_DEFAULT                        = Boolean.getBoolean("DCLARE_TRACE");
-    private static final boolean  TRACE_ACTIVATION_DEFAULT                    = Boolean.getBoolean("TRACE_ACTIVATION");
-    private static final boolean  TRACE_MPS_MODEL_CHANGES_DEFAULT             = Boolean.getBoolean("TRACE_MPS_MODEL_CHANGES");
-    private static final boolean  AUTO_MODEL_CHECK_DEFAULT                    = Boolean.getBoolean("AUTO_MODEL_CHECK");
-    private static final boolean  REMOTE_MODEL_SYNCHRONIZATION_DEFAULT        = Boolean.getBoolean("REMOTE_MODEL_SYNCHRONIZATION");
-    private static final String   REMOTE_MODEL_SYNCHRONIZATION_SERVER_DEFAULT = System.getProperty("REMOTE_MODEL_SYNCHRONIZATION_SERVER");
-    private static final String[] INACTIVE_ASPECTS_DEFAULT                    = Arrays.stream(System.getProperty("INACTIVE_ASPECTS", "").replaceAll("\\s+", "").split("[,;/|]")).filter(s -> !s.isBlank()).toArray(String[]::new);
+    private static final boolean      ON_MODE_DEFAULT                             = Boolean.getBoolean("ON_MODE");
+    private static final boolean      COLORFUL_EDITORS_DEFAULT                    = Boolean.getBoolean("COLORFUL_EDITORS");
+    private static final boolean      TRACE_DCLARE_DEFAULT                        = Boolean.getBoolean("DCLARE_TRACE");
+    private static final boolean      TRACE_ACTIVATION_DEFAULT                    = Boolean.getBoolean("TRACE_ACTIVATION");
+    private static final boolean      TRACE_MPS_MODEL_CHANGES_DEFAULT             = Boolean.getBoolean("TRACE_MPS_MODEL_CHANGES");
+    private static final boolean      AUTO_MODEL_CHECK_DEFAULT                    = Boolean.getBoolean("AUTO_MODEL_CHECK");
+    private static final boolean      REMOTE_MODEL_SYNCHRONIZATION_DEFAULT        = Boolean.getBoolean("REMOTE_MODEL_SYNCHRONIZATION");
+    private static final String       REMOTE_MODEL_SYNCHRONIZATION_SERVER_DEFAULT = System.getProperty("REMOTE_MODEL_SYNCHRONIZATION_SERVER");
+    private static final String[]     INACTIVE_ASPECTS_DEFAULT                    = Arrays.stream(System.getProperty("INACTIVE_ASPECTS", "").replaceAll("\\s+", "").split("[,;/|]")).filter(s -> !s.isBlank()).toArray(String[]::new);
 
     private final DclareConfig        config;
     private final EngineStatusHandler statusHandler;
@@ -46,32 +46,32 @@ public class DclareForMpsConfig {
 
     //============================================================================
     public DclareForMpsConfig() {
-        config                           = new DclareConfig();
-        statusHandler                    = null;
-        onMode                           = ON_MODE_DEFAULT;
-        colorfulEditors                  = COLORFUL_EDITORS_DEFAULT;
-        traceDclare                      = TRACE_DCLARE_DEFAULT;
-        traceActivation                  = TRACE_ACTIVATION_DEFAULT;
-        traceMPSModelChanges             = TRACE_MPS_MODEL_CHANGES_DEFAULT;
-        disableAutoModelCheck            = AUTO_MODEL_CHECK_DEFAULT;
-        remoteModelSynchronization       = REMOTE_MODEL_SYNCHRONIZATION_DEFAULT;
+        config = new DclareConfig();
+        statusHandler = null;
+        onMode = ON_MODE_DEFAULT;
+        colorfulEditors = COLORFUL_EDITORS_DEFAULT;
+        traceDclare = TRACE_DCLARE_DEFAULT;
+        traceActivation = TRACE_ACTIVATION_DEFAULT;
+        traceMPSModelChanges = TRACE_MPS_MODEL_CHANGES_DEFAULT;
+        disableAutoModelCheck = AUTO_MODEL_CHECK_DEFAULT;
+        remoteModelSynchronization = REMOTE_MODEL_SYNCHRONIZATION_DEFAULT;
         remoteModelSynchronizationServer = REMOTE_MODEL_SYNCHRONIZATION_SERVER_DEFAULT;
-        inactiveAspects                  = INACTIVE_ASPECTS_DEFAULT;
+        inactiveAspects = INACTIVE_ASPECTS_DEFAULT;
     }
 
     //============================================================================
     private DclareForMpsConfig(DclareConfig config, EngineStatusHandler statusHandler, boolean onMode, boolean colorfulEditors, boolean traceDclare, boolean dclareActivation, boolean traceMPSModelChanges, boolean disableAutoModelCheck, boolean remoteModelSynchronization, String remoteModelSynchronizationServer, String[] inactiveAspects) {
-        this.config                           = config;
-        this.statusHandler                    = statusHandler;
-        this.onMode                           = onMode;
-        this.colorfulEditors                  = colorfulEditors;
-        this.traceDclare                      = traceDclare;
-        this.traceActivation                  = dclareActivation;
-        this.traceMPSModelChanges             = traceMPSModelChanges;
-        this.disableAutoModelCheck            = disableAutoModelCheck;
-        this.remoteModelSynchronization       = remoteModelSynchronization;
+        this.config = config;
+        this.statusHandler = statusHandler;
+        this.onMode = onMode;
+        this.colorfulEditors = colorfulEditors;
+        this.traceDclare = traceDclare;
+        this.traceActivation = dclareActivation;
+        this.traceMPSModelChanges = traceMPSModelChanges;
+        this.disableAutoModelCheck = disableAutoModelCheck;
+        this.remoteModelSynchronization = remoteModelSynchronization;
         this.remoteModelSynchronizationServer = remoteModelSynchronizationServer;
-        this.inactiveAspects                  = inactiveAspects;
+        this.inactiveAspects = inactiveAspects;
     }
 
     protected DclareForMpsConfig create(DclareConfig config, EngineStatusHandler statusHandler, boolean onMode, boolean colorfulEditors, boolean dclareTrace, boolean dclareActivation, boolean traceMPSModelChanges, boolean disableAutoModelCheck, boolean remoteModelSynchronization, String remoteModelSynchronizationServer, String[] inactiveAspects) {
@@ -88,20 +88,13 @@ public class DclareForMpsConfig {
             return false;
         }
         DclareForMpsConfig that = (DclareForMpsConfig) o;
-        return Objects.equals(config, that.config)
-               && Objects.equals(statusHandler, that.statusHandler)
-               && Objects.equals(onMode, that.onMode)
-               && Objects.equals(colorfulEditors, that.colorfulEditors)
-               && Objects.equals(traceDclare, that.traceDclare)
-               && Objects.equals(traceActivation, that.traceActivation)
-               && Objects.equals(traceMPSModelChanges, that.traceMPSModelChanges)
-               && Objects.equals(disableAutoModelCheck, that.disableAutoModelCheck)
-               && Arrays.equals(inactiveAspects, that.inactiveAspects);
+        return Objects.equals(config, that.config) && Objects.equals(statusHandler, that.statusHandler) && Objects.equals(onMode, that.onMode) && Objects.equals(colorfulEditors, that.colorfulEditors) && Objects.equals(traceDclare, that.traceDclare) && Objects.equals(traceActivation, that.traceActivation) && //
+                Objects.equals(traceMPSModelChanges, that.traceMPSModelChanges) && Objects.equals(disableAutoModelCheck, that.disableAutoModelCheck) && Objects.equals(remoteModelSynchronization, that.remoteModelSynchronization) && Objects.equals(remoteModelSynchronizationServer, that.remoteModelSynchronizationServer) && Arrays.equals(inactiveAspects, that.inactiveAspects);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, Arrays.hashCode(inactiveAspects));
+        return Objects.hash(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, remoteModelSynchronization, remoteModelSynchronizationServer, Arrays.hashCode(inactiveAspects));
     }
 
     //============================================================================
