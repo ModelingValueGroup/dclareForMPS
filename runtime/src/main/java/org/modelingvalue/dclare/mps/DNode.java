@@ -173,7 +173,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
 
     @SuppressWarnings("unchecked")
     private static final Observer<DNode>                                                                     ACTIVATE_RULE                    = DObject.observer("$NODE_ACTIVATE_RULE", n -> {
-                                                                                                                                                  if (!n.isExternal() && n.isShared()) {
+                                                                                                                                                  if (!n.isExternal() && n.isShared() && n.isRead()) {
                                                                                                                                                       DNode.INDEX.triggerInitRead(n);
                                                                                                                                                       DNode.ROOT.triggerInitRead(n);
                                                                                                                                                       DNode.CONCEPT_DOBSERVEDS.get(n.getConcept()).forEachOrdered(o -> o.triggerInitRead(n));

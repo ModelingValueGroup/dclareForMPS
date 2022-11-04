@@ -148,11 +148,13 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
                                                                                                                 if (!m.isExternal()) {
                                                                                                                     boolean shared = SHARED.get(m);
                                                                                                                     if (shared || (!USED_DCLARE_LANGUAGES.get(m).isEmpty() && LOADED.get(m))) {
-                                                                                                                        DModel.ROOTS.triggerInitRead(m);
-                                                                                                                        if (shared) {
-                                                                                                                            USED_LANGUAGES.triggerInitRead(m);
-                                                                                                                            USED_DEVKITS.triggerInitRead(m);
-                                                                                                                            USED_MODELS.triggerInitRead(m);
+                                                                                                                        if (m.isRead()) {
+                                                                                                                            DModel.ROOTS.triggerInitRead(m);
+                                                                                                                            if (shared) {
+                                                                                                                                USED_LANGUAGES.triggerInitRead(m);
+                                                                                                                                USED_DEVKITS.triggerInitRead(m);
+                                                                                                                                USED_MODELS.triggerInitRead(m);
+                                                                                                                            }
                                                                                                                         }
                                                                                                                     }
                                                                                                                 }
