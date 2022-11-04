@@ -123,7 +123,7 @@ public abstract class DNewableObject<T extends DNewableObject, R, S> extends DId
 
     @Override
     protected boolean isRead() {
-        return tryOriginal() != null;
+        return ORIGINAL.isSet(this) && ORIGINAL.get(this) != null;
     }
 
     @SuppressWarnings("unchecked")
