@@ -9203,6 +9203,48 @@
             </node>
           </node>
         </node>
+        <node concept="3clFbF" id="2$6wvVJ$xFK" role="3cqZAp">
+          <node concept="37vLTI" id="2$6wvVJ$xFL" role="3clFbG">
+            <node concept="2OqwBi" id="2$6wvVJ$xFM" role="37vLTx">
+              <node concept="liA8E" id="2$6wvVJ$xFN" role="2OqNvi">
+                <ref role="37wK5l" to="t4tl:~DclareForMpsConfig.withRemoteModelSynchronization(boolean)" resolve="withRemoteModelSynchronization" />
+                <node concept="2OqwBi" id="2$6wvVJ$xFO" role="37wK5m">
+                  <node concept="2WthIp" id="2$6wvVJ$xFP" role="2Oq$k0" />
+                  <node concept="34pFcN" id="2$6wvVJ$xFQ" role="2OqNvi">
+                    <ref role="2WH_rO" node="2jKRHi3ha5M" resolve="remoteModelSynchronization" />
+                  </node>
+                </node>
+              </node>
+              <node concept="37vLTw" id="2$6wvVJ$xFR" role="2Oq$k0">
+                <ref role="3cqZAo" node="1iXkhsJzrw5" resolve="config" />
+              </node>
+            </node>
+            <node concept="37vLTw" id="2$6wvVJ$xFS" role="37vLTJ">
+              <ref role="3cqZAo" node="1iXkhsJzrw5" resolve="config" />
+            </node>
+          </node>
+        </node>
+        <node concept="3clFbF" id="2$6wvVJ$xFT" role="3cqZAp">
+          <node concept="37vLTI" id="2$6wvVJ$xFU" role="3clFbG">
+            <node concept="2OqwBi" id="2$6wvVJ$xFV" role="37vLTx">
+              <node concept="liA8E" id="2$6wvVJ$xFW" role="2OqNvi">
+                <ref role="37wK5l" to="t4tl:~DclareForMpsConfig.withRemoteModelSynchronizationServer(java.lang.String)" resolve="withRemoteModelSynchronizationServer" />
+                <node concept="2OqwBi" id="2$6wvVJ$xFX" role="37wK5m">
+                  <node concept="2WthIp" id="2$6wvVJ$xFY" role="2Oq$k0" />
+                  <node concept="34pFcN" id="2$6wvVJ$xFZ" role="2OqNvi">
+                    <ref role="2WH_rO" node="2jKRHi3id27" resolve="remoteModelSynchronizationServer" />
+                  </node>
+                </node>
+              </node>
+              <node concept="37vLTw" id="2$6wvVJ$xG0" role="2Oq$k0">
+                <ref role="3cqZAo" node="1iXkhsJzrw5" resolve="config" />
+              </node>
+            </node>
+            <node concept="37vLTw" id="2$6wvVJ$xG1" role="37vLTJ">
+              <ref role="3cqZAo" node="1iXkhsJzrw5" resolve="config" />
+            </node>
+          </node>
+        </node>
         <node concept="3clFbF" id="3_wkb9emwfT" role="3cqZAp">
           <node concept="37vLTI" id="3_wkb9emwfU" role="3clFbG">
             <node concept="2OqwBi" id="3_wkb9emwfV" role="37vLTx">
