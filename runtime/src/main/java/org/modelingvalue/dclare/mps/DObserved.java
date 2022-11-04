@@ -149,11 +149,16 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
     @SuppressWarnings("rawtypes")
     @Override
     public T get(O object) {
-        if (isRead() && object.isRead()) {
-            if (object.readConstant()) {
-                return fromMPS(object);
-            } else if (!isDclareOnly() && object.isObserving() && !DObject.READ_OBSERVEDS.get(object).contains(this)) {
-                triggerInitRead(object);
+        if (isRead()) {
+            if (object.isRead()) {
+                if (object.readConstant()) {
+                    return fromMPS(object);
+                } else if (!isDclareOnly() && object.isObserving() && !DObject.READ_OBSERVEDS.get(object).contains(this)) {
+                    triggerInitRead(object);
+                }
+            } else if (!isDclareOnly() && object.isObserving() && !DObject.READ_OBSERVEDS.add(object, this).contains(this) && DClareMPS.instance().getConfig().isTraceActivation()) {
+                LeafTransaction current = LeafTransaction.getCurrent();
+                current.runNonObserving(() -> System.err.println(DclareTrace.getLineStart("ACTIVATE", current) + object + "." + this));
             }
         }
         object.activate();
