@@ -27,11 +27,9 @@ import org.jetbrains.mps.openapi.language.SProperty;
 import org.jetbrains.mps.openapi.model.EditableSModel;
 import org.jetbrains.mps.openapi.model.SModel;
 import org.jetbrains.mps.openapi.model.SNode;
-import org.modelingvalue.collections.ContainingCollection;
 import org.modelingvalue.dclare.AbstractDerivationTransaction;
 import org.modelingvalue.dclare.Constant;
 import org.modelingvalue.dclare.LeafTransaction;
-import org.modelingvalue.dclare.ReadOnlyTransaction;
 import org.modelingvalue.dclare.Setable;
 import org.modelingvalue.dclare.SetableModifier;
 
@@ -79,13 +77,15 @@ public interface DAttribute<O, T> extends DFeature {
 
     boolean isComposite();
 
-    boolean isConstant();
-
     boolean isIndetifying();
 
     boolean isMandatory();
 
     Class<?> cls();
+
+    default SProperty getSProperty() {
+        return null;
+    }
 
     final class DObservedAttribute<C extends DObject, V> extends DObserved<C, V> implements DAttribute<C, V> {
 
@@ -152,29 +152,15 @@ public interface DAttribute<O, T> extends DFeature {
 
         @Override
         public V get(C object) {
+            if (sProperty != null && object instanceof SNode && DClareMPS.GET_FROM_MPS.get() && !AbstractDerivationTransaction.isDeriving()) {
+                ((SNode) object).getProperty(sProperty);
+            }
             LeafTransaction tx = LeafTransaction.getCurrent();
-            DClareMPS dClareMPS = DClareMPS.instance(tx);
-            if (sProperty != null && object instanceof DNode && tx instanceof ReadOnlyTransaction && !(tx instanceof AbstractDerivationTransaction) && dClareMPS.isRunningRead()) {
-                SNode sNode = ((DNode) object).tryOriginal();
-                if (sNode != null) {
-                    sNode.getProperty(sProperty);
-                }
+            if (!(tx instanceof AbstractDerivationTransaction) && object.isExternal()) {
+                DClareMPS dClareMPS = DClareMPS.instance(tx);
+                return dClareMPS.imperativeState().derive(() -> super.get(object), dClareMPS.universeTransaction().constantState());
             }
-            if (!(tx instanceof AbstractDerivationTransaction) && !object.isActive()) {
-                return dClareMPS.derive(() -> super.get(object));
-            } else {
-                return super.get(object);
-            }
-        }
-
-        @SuppressWarnings("unchecked")
-        @Override
-        public V set(C object, V value) {
-            if (containment() && value instanceof ContainingCollection) {
-                ContainingCollection cc = (ContainingCollection) value;
-                value = (V) cc.clear().addAll(cc.notNull());
-            }
-            return super.set(object, value);
+            return super.get(object);
         }
 
         @Override
@@ -190,6 +176,11 @@ public interface DAttribute<O, T> extends DFeature {
         @Override
         public void activate(C object) {
             throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public SProperty getSProperty() {
+            return sProperty;
         }
 
     }
@@ -242,7 +233,7 @@ public interface DAttribute<O, T> extends DFeature {
 
         @Override
         public boolean isConstant() {
-            return false;
+            return true;
         }
 
         @Override

@@ -29,12 +29,7 @@ import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.collections.util.QuadConsumer;
 import org.modelingvalue.collections.util.TriConsumer;
-import org.modelingvalue.dclare.Action;
-import org.modelingvalue.dclare.LeafModifier;
-import org.modelingvalue.dclare.LeafTransaction;
-import org.modelingvalue.dclare.Observed;
-import org.modelingvalue.dclare.Setable;
-import org.modelingvalue.dclare.SetableModifier;
+import org.modelingvalue.dclare.*;
 import org.modelingvalue.dclare.ex.ThrowableError;
 
 @SuppressWarnings("unused")
@@ -66,25 +61,27 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
 
     private Function<O, T>        fromMPS;
     private TriConsumer<O, T, T>  toMPS;
+    private Action<O>             initReadAction;
+    private Action<O>             reReadAction;
     private final Supplier<SNode> source;
-    private final Action<O>       readAction;
 
     private DObserved(Object id, T def, Supplier<Setable<?, ?>> opposite, Function<O, T> fromMPS, TriConsumer<O, T, T> toMPS, QuadConsumer<LeafTransaction, O, T, T> changed, Supplier<SNode> source, SetableModifier... modifiers) {
         super(id, def, opposite, null, changed, modifiers);
         this.source = source;
-        this.readAction = fromMPS != null ? new ReadAction<O>(Pair.of("$READ", id), this::read, LeafModifier.preserved) : null;
         setFromToMPS(fromMPS, toMPS);
     }
 
     protected DObserved(Object id, T def, Supplier<Setable<?, ?>> opposite, QuadConsumer<LeafTransaction, O, T, T> changed, Supplier<SNode> source, SetableModifier... modifiers) {
         super(id, def, opposite, null, changed, modifiers);
         this.source = source;
-        this.readAction = null;
     }
 
+    @SuppressWarnings({"unchecked", "rawtypes"})
     protected final void setFromToMPS(Function<O, T> fromMPS, TriConsumer<O, T, T> toMPS) {
         this.fromMPS = fromMPS;
         this.toMPS = toMPS;
+        this.initReadAction = fromMPS != null ? Action.<O> of(Pair.of("$INIT_READ", id), this::initRead, LeafModifier.preserved, LeafModifier.read) : null;
+        this.reReadAction = fromMPS != null ? Action.<O> of(Pair.of("$RE_READ", id), this::reRead, LeafModifier.preserved, LeafModifier.read) : null;
     }
 
     public boolean isComposite() {
@@ -92,12 +89,38 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
     }
 
     @Override
+    public boolean isConstant() {
+        return false;
+    }
+
+    @Override
     public SNode getSource() {
         return source != null ? source.get() : null;
     }
 
-    private void read(O object) {
+    @SuppressWarnings("rawtypes")
+    private void initRead(O object) {
+        if (!DObject.READ_OBSERVEDS.add(object, this).contains(this)) {
+            if (DClareMPS.instance().getConfig().isTraceActivation()) {
+                LeafTransaction current = LeafTransaction.getCurrent();
+                current.runNonObserving(() -> System.err.println(DclareTrace.getLineStart("ACTIVATE", current) + object + "." + this));
+            }
+            set(object, fromMPS(object));
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    protected void triggerInitRead(O object) {
+        initReadAction.trigger(object);
+    }
+
+    private void reRead(O object) {
         set(object, fromMPS(object));
+    }
+
+    @SuppressWarnings("unchecked")
+    protected void triggerReRead(O object) {
+        reReadAction.trigger(object);
     }
 
     protected final void toMPS(O object, T pre, T post) {
@@ -113,7 +136,7 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
     }
 
     protected final T fromMPS(O object, T def) {
-        if (fromMPS != null) {
+        if (isRead()) {
             try {
                 return fromMPS.apply(object);
             } catch (Throwable t) {
@@ -123,17 +146,46 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
         return def;
     }
 
-    protected Action<O> readAction() {
-        return readAction;
-    }
-
+    @SuppressWarnings("rawtypes")
     @Override
     public T get(O object) {
-        if (fromMPS != null && object.deriveFromMPS()) {
-            return fromMPS(object);
-        } else {
-            return super.get(object);
+        if (isRead()) {
+            if (object.isRead()) {
+                if (object.readConstant()) {
+                    return fromMPS(object);
+                } else if (!isDclareOnly() && object.isObserving() && !DObject.READ_OBSERVEDS.get(object).contains(this)) {
+                    triggerInitRead(object);
+                }
+            } else if (!isDclareOnly() && object.isObserving() && !DObject.READ_OBSERVEDS.add(object, this).contains(this) && DClareMPS.instance().getConfig().isTraceActivation()) {
+                LeafTransaction current = LeafTransaction.getCurrent();
+                current.runNonObserving(() -> System.err.println(DclareTrace.getLineStart("ACTIVATE", current) + object + "." + this));
+            }
         }
+        object.activate();
+        return super.get(object);
+    }
+
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    @Override
+    public T set(O object, T value) {
+        if (isRead() && !isDclareOnly() && object.isObserving()) {
+            LeafTransaction current = LeafTransaction.getCurrent();
+            if (object.isRead()) {
+                if (!DObject.READ_OBSERVEDS.get(object).contains(this)) {
+                    triggerInitRead(object);
+                    ((ObserverTransaction) current).retrigger(Priority.inner);
+                    return super.get(object);
+                }
+            } else if (!DObject.READ_OBSERVEDS.add(object, this).contains(this) && DClareMPS.instance().getConfig().isTraceActivation()) {
+                current.runNonObserving(() -> System.err.println(DclareTrace.getLineStart("ACTIVATE", current) + object + "." + this));
+            }
+        }
+        if (isReference() && object.isObserving()) {
+            for (DObject r : collection(value).filter(DObject.class)) {
+                r.activate();
+            }
+        }
+        return super.set(object, value);
     }
 
     public static <T> void map(Set<T> ist, Set<T> soll, Consumer<T> add, Consumer<T> remove) {
@@ -205,14 +257,6 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
     @Override
     public IRuleSet ruleSet() {
         return null;
-    }
-
-    public static class ReadAction<O extends DObject> extends Action<O> {
-
-        protected ReadAction(Object id, Consumer<O> action, LeafModifier... modifiers) {
-            super(id, action, modifiers);
-        }
-
     }
 
 }

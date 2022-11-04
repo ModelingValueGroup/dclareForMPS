@@ -53,13 +53,13 @@ public class DStructObject extends DIdentifiedObject implements SStructObject {
 
     @Override
     protected DStructClass getType() {
-        return CLASS_OBJECT_TYPE.get(Pair.of(Set.of(getSClass().getLanguage()), getSClass()));
-    }
-
-    @Override
-    protected boolean isActive() {
-        DObject parent = dObjectParent();
-        return parent != null ? parent.isActive() : super.isActive();
+        DObject dParent = dObjectParent();
+        Set<SLanguage> ls = dParent != null ? TYPE.get(dParent).getLanguages() : Set.of();
+        SLanguage lang = getSClass().getLanguage();
+        if (!DClareMPS.ACTIVE_RULE_SETS.get(lang).isEmpty()) {
+            ls = ls.add(lang);
+        }
+        return CLASS_OBJECT_TYPE.get(Pair.of(ls, getSClass()));
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
@@ -90,6 +90,16 @@ public class DStructObject extends DIdentifiedObject implements SStructObject {
     @Override
     public boolean isDclareOnly() {
         return true;
+    }
+
+    @Override
+    protected boolean isRead() {
+        return false;
+    }
+
+    @Override
+    protected Pair<DObject, DObserved<DObject, ?>> readParent() {
+        throw new UnsupportedOperationException();
     }
 
 }

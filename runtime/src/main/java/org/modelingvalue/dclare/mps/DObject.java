@@ -15,8 +15,7 @@
 
 package org.modelingvalue.dclare.mps;
 
-import static org.modelingvalue.dclare.SetableModifier.containment;
-import static org.modelingvalue.dclare.SetableModifier.plumbing;
+import static org.modelingvalue.dclare.SetableModifier.*;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -26,7 +25,6 @@ import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
-import org.modelingvalue.collections.util.Triple;
 import org.modelingvalue.dclare.*;
 
 import jetbrains.mps.errors.item.IssueKindReportItem;
@@ -72,20 +70,9 @@ public abstract class DObject implements Mutable {
     protected static final Observed<DObject, DAttribute>                               CONTAINING_ATTRIBUTE      = Observed.of("$CONTAINING_ATTRIBUTE", null, plumbing);
 
     protected static final Observer<DObject>                                           CONTAINING_ATTRIBUTE_RULE = observer(CONTAINING_ATTRIBUTE, o -> {
-                                                                                                                     Pair<Mutable, Setable<Mutable, ?>> pc = Mutable.D_PARENT_CONTAINING.get(o);
+                                                                                                                     Pair<Mutable, Setable<Mutable, ?>> pc = o.dParentContaining();
                                                                                                                      return pc == null || pc.a() instanceof DClareMPS ? null :                                                       //
                                                                                                                              pc.b() instanceof DAttribute ? (DAttribute) pc.b() : CONTAINING_ATTRIBUTE.get((DObject) pc.a());
-                                                                                                                 });
-
-    protected static final Action<DObject>                                             REFRESH_CHILDREN          = Action.of("$REFRESH_CHILDREN", o -> {
-                                                                                                                     for (DObject c : o.getAllChildren()) {
-                                                                                                                         DObject.REFRESH.trigger(c);
-                                                                                                                     }
-                                                                                                                 });
-
-    protected static final Action<DObject>                                             REFRESH                   = Action.of("$REFRESH", o -> {
-                                                                                                                     o.read(dClareMPS());
-                                                                                                                     DObject.REFRESH_CHILDREN.trigger(o);
                                                                                                                  });
 
     protected static final DObserved<DObject, Set<Pair<DObject, IssueKindReportItem>>> MPS_ISSUES                = DObserved.of("$MPS_ISSUES", Set.of(), null, null, (tx, o, pre, post) -> {
@@ -110,9 +97,11 @@ public abstract class DObject implements Mutable {
     protected static final DObserved<DObject, Boolean>                                 CONTAINED                 = DObserved.of("$CONTAINED", Boolean.FALSE, null, (dObject, pre, post) -> {
                                                                                                                  }, plumbing);
 
+    protected static final Setable<DObject, Set<Observed>>                             READ_OBSERVEDS            = Setable.of("$READ_OBSERVEDS", Set.of(), plumbing, preserved);
+
     protected static final Set<Observer>                                               OBSERVERS                 = Set.of(TYPE_RULE, CONTAINING_ATTRIBUTE_RULE);
 
-    protected static final Set<Setable>                                                SETABLES                  = Set.of(TYPE, MPS_ISSUES, DCLARE_ISSUES, CONTAINING_ATTRIBUTE, CONTAINED);
+    protected static final Set<Setable>                                                SETABLES                  = Set.of(TYPE, MPS_ISSUES, DCLARE_ISSUES, CONTAINING_ATTRIBUTE, CONTAINED, READ_OBSERVEDS);
 
     public static DClareMPS dClareMPS() {
         return DClareMPS.instance();
@@ -153,11 +142,6 @@ public abstract class DObject implements Mutable {
         } else {
             return v == null ? Set.of() : Set.of((DObject) v);
         }
-    }
-
-    @SuppressWarnings("unchecked")
-    public <R> R callMethod(DMethod called, Object[] arguments) {
-        return (R) DMethod.D_METHOD.get(Triple.of(TYPE.get(this).getLanguages(), called.name(), Signature.of(called.signature(), arguments))).call(arguments);
     }
 
     @Override
@@ -205,17 +189,17 @@ public abstract class DObject implements Mutable {
     }
 
     public boolean isDclareOnly() {
-        return Mutable.D_PARENT_CONTAINING.get(this) == null || CONTAINING_ATTRIBUTE.get(this) != null;
+        return CONTAINING_ATTRIBUTE.get(this) != null;
     }
 
     @Override
     public boolean dCheckConsistency() {
-        return isActive();
+        return !isExternal();
     }
 
     @Override
-    public boolean dIsConstant() {
-        return isExternal();
+    public ConstantState dMemoization(AbstractDerivationTransaction tx) {
+        return isExternal() ? tx.universeTransaction().constantState() : Mutable.super.dMemoization(tx);
     }
 
     public abstract boolean isExternal();
@@ -224,21 +208,51 @@ public abstract class DObject implements Mutable {
         return false;
     }
 
-    protected boolean isActive() {
-        return !isExternal();
+    protected boolean readConstant() {
+        return isExternal() || Constant.DERIVED.get() != null || LeafTransaction.getCurrent() instanceof DerivationTransaction;
     }
 
-    public boolean deriveFromMPS() {
-        LeafTransaction tx = LeafTransaction.getCurrent();
-        return (tx instanceof DerivationTransaction || (tx instanceof IdentityDerivationTransaction && isRead()) || !isActive());
+    protected boolean isObserving() {
+        return LeafTransaction.getCurrent() instanceof ObserverTransaction && ObserverTransaction.OBSERVE.get();
+    }
+
+    protected boolean isAction() {
+        return LeafTransaction.getCurrent() instanceof ActionTransaction;
     }
 
     protected abstract boolean isRead();
 
     @SuppressWarnings("unchecked")
     @Override
+    public Pair<Mutable, Setable<Mutable, ?>> dParentContaining() {
+        if (isRead() && readConstant()) {
+            return (Pair) readParent();
+        }
+        activate();
+        return Mutable.super.dParentContaining();
+    }
+
+    @Override
+    public void dChangedParentContaining(Pair<Mutable, Setable<Mutable, ?>> pre, Pair<Mutable, Setable<Mutable, ?>> post) {
+        if (post != null && post.a() instanceof DObject) {
+            ((DObject) post.a()).activate();
+        }
+        Mutable.super.dChangedParentContaining(pre, post);
+    }
+
+    protected void activate() {
+    }
+
+    protected abstract Pair<DObject, DObserved<DObject, ?>> readParent();
+
+    @SuppressWarnings("unchecked")
+    @Override
     public Collection<? extends Observer<?>> dAllObservers() {
-        return isActive() ? Mutable.super.dAllObservers() : (Collection) dClass().observers();
+        return !isExternal() ? Mutable.super.dAllObservers() : (Collection) dClass().observers();
+    }
+
+    protected boolean isActive() {
+        return !isExternal() && LeafTransaction.getCurrent().current().get(this, Mutable.D_PARENT_CONTAINING) != null;
     }
 
 }

@@ -20,24 +20,21 @@ import java.util.function.Supplier;
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
-import org.modelingvalue.dclare.Constant;
-import org.modelingvalue.dclare.Construction;
+import org.modelingvalue.dclare.*;
 import org.modelingvalue.dclare.Construction.Reason;
-import org.modelingvalue.dclare.LeafTransaction;
-import org.modelingvalue.dclare.Newable;
-import org.modelingvalue.dclare.Observer;
-import org.modelingvalue.dclare.Setable;
 import org.modelingvalue.dclare.mps.DAttribute.DIdentifyingAttribute;
 
 @SuppressWarnings("rawtypes")
 public abstract class DNewableObject<T extends DNewableObject, R, S> extends DIdentifiedObject implements Newable {
 
-    private static final Constant<DNewableObject, Object> ORIGINAL  = Constant.of("$ORIGINAL", null);
+    private static final Constant<DNewableObject, Object> ORIGINAL           = Constant.of("$ORIGINAL", null);
+
+    protected static final Action<DNewableObject>         READ_OBSERVED_DEEP = Action.of("$READ_OBSERVED_DEEP", DNewableObject::readObservedDeep);
 
     @SuppressWarnings("unchecked")
-    protected static final Set<Observer>                  OBSERVERS = DObject.OBSERVERS;
+    protected static final Set<Observer>                  OBSERVERS          = DObject.OBSERVERS;
 
-    protected static final Set<Setable>                   SETABLES  = DObject.SETABLES;
+    protected static final Set<Setable>                   SETABLES           = DObject.SETABLES;
 
     protected static <D extends DNewableObject> D quotationConstruct(IRuleSet ruleSet, String anonymousType, Object[] ctx, Supplier<D> supplier) {
         LeafTransaction tx = LeafTransaction.getCurrent();
@@ -88,17 +85,12 @@ public abstract class DNewableObject<T extends DNewableObject, R, S> extends DId
     }
 
     private Construction getQuotationConstruction(String anonymousType) {
-        for (Construction c : dDerivedConstructions()) {
+        for (Construction c : dConstructions()) {
             if (c.reason() instanceof DQuotation && ((DQuotation) c.reason()).anonymousType() == anonymousType) {
                 return c;
             }
         }
         return null;
-    }
-
-    @Override
-    protected void read(DClareMPS dClareMPS) {
-        read();
     }
 
     @SuppressWarnings("unchecked")
@@ -114,15 +106,15 @@ public abstract class DNewableObject<T extends DNewableObject, R, S> extends DId
     }
 
     protected Collection<Reason> deriveReasons() {
-        return dDerivedConstructions().map(Construction::reason);
+        return dConstructions().map(Construction::reason);
     }
 
     public Set<String> getAnonymousTypes() {
         return deriveReasons().filter(DQuotation.class).map(DDerive::anonymousType).notNull().toSet();
     }
 
-    public IAspect getCopyAspect() {
-        return deriveReasons().filter(DCopy.class).map(DDerive::aspect).findFirst().orElse(null);
+    public Set<IAspect> getCopyAspects() {
+        return deriveReasons().filter(DCopy.class).map(DDerive::aspect).toSet();
     }
 
     public Set<SLanguage> getAnonymousLanguages() {
@@ -131,7 +123,7 @@ public abstract class DNewableObject<T extends DNewableObject, R, S> extends DId
 
     @Override
     protected boolean isRead() {
-        return tryOriginal() != null;
+        return ORIGINAL.isSet(this);
     }
 
     @SuppressWarnings("unchecked")
@@ -166,7 +158,7 @@ public abstract class DNewableObject<T extends DNewableObject, R, S> extends DId
     }
 
     @Override
-    protected void init(DClareMPS dClareMPS) {
+    protected final void init(DClareMPS dClareMPS) {
         super.init(dClareMPS);
         S original = tryOriginal();
         if (original != null) {
@@ -175,11 +167,18 @@ public abstract class DNewableObject<T extends DNewableObject, R, S> extends DId
     }
 
     @Override
-    protected void exit(DClareMPS dClareMPS) {
+    protected final void exit(DClareMPS dClareMPS) {
         super.exit(dClareMPS);
         S original = tryOriginal();
         if (original != null) {
             exit(dClareMPS, original);
+        }
+    }
+
+    @Override
+    protected final void read(DClareMPS dClareMPS) {
+        if (isRead()) {
+            read();
         }
     }
 
@@ -195,11 +194,36 @@ public abstract class DNewableObject<T extends DNewableObject, R, S> extends DId
         stop(dClareMPS());
     }
 
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    protected void readObserved(Set<Observed> read, DObserved dObserved) {
+        if (read.contains(dObserved)) {
+            dObserved.triggerReRead(this);
+            if (dObserved.containment()) {
+                for (Object child : dObserved.collection(dObserved.fromMPS(this))) {
+                    if (child instanceof DNewableObject) {
+                        READ_OBSERVED_DEEP.trigger((DNewableObject) child);
+                    }
+                }
+            }
+        } else if (dObserved.containment()) {
+            Set<Object> set = dObserved.collection(dObserved.fromMPS(this)).toSet();
+            for (Object child : dObserved.getCollection(this)) {
+                if (child instanceof DNewableObject && set.contains(child)) {
+                    READ_OBSERVED_DEEP.trigger((DNewableObject) child);
+                } else {
+                    dObserved.remove(this, child);
+                }
+            }
+        }
+    }
+
+    protected abstract void read();
+
+    protected abstract void readObservedDeep();
+
     protected abstract void init(DClareMPS dClareMPS, S original);
 
     protected abstract void exit(DClareMPS dClareMPS, S original);
-
-    protected abstract void read();
 
     protected abstract R reference(S read);
 

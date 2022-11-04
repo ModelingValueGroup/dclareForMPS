@@ -25,9 +25,9 @@ import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.Setable;
 
 @SuppressWarnings("unused")
-public class DNodeType extends DObjectType<Quadruple<Set<SLanguage>, SConcept, Set<String>, IAspect>> {
+public class DNodeType extends DObjectType<Quadruple<Set<SLanguage>, SConcept, Set<String>, Set<IAspect>>> {
 
-    public DNodeType(Quadruple<Set<SLanguage>, SConcept, Set<String>, IAspect> q) {
+    public DNodeType(Quadruple<Set<SLanguage>, SConcept, Set<String>, Set<IAspect>> q) {
         super(q);
     }
 
@@ -56,7 +56,7 @@ public class DNodeType extends DObjectType<Quadruple<Set<SLanguage>, SConcept, S
         return id().c();
     }
 
-    public IAspect copyAspect() {
+    public Set<IAspect> copyAspects() {
         return id().d();
     }
 
@@ -70,8 +70,10 @@ public class DNodeType extends DObjectType<Quadruple<Set<SLanguage>, SConcept, S
     @Override
     protected Collection<Observer> observers() {
         Set<Observer> conceptObservers = DNode.OBSERVERS.addAll(DNode.CONCEPT_OBSERVERS.get(getConcept()));
-        IAspect aspect = copyAspect();
-        return aspect != null ? conceptObservers.addAll(DNode.COPY_CONCEPT_OBSERVERS.get(Pair.of(getConcept(), aspect))) : conceptObservers;
+        for (IAspect aspect : copyAspects()) {
+            conceptObservers = conceptObservers.addAll(DNode.COPY_CONCEPT_OBSERVERS.get(Pair.of(getConcept(), aspect)));
+        }
+        return conceptObservers;
     }
 
 }

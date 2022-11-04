@@ -8,10 +8,10 @@
   <imports>
     <import index="t4tl" ref="55d6b6f5-8095-4cd0-a39b-779da8d12940/java:org.modelingvalue.dclare.mps(DclareMPSRuntime/)" />
     <import index="wknp" ref="r:9a42e459-6b0e-4c37-8fab-9b46bab588bd(DclareMessages.structure)" />
-    <import index="zrbp" ref="55d6b6f5-8095-4cd0-a39b-779da8d12940/java:org.modelingvalue.collections(DclareMPSRuntime/)" />
     <import index="wyt6" ref="6354ebe7-c22a-4a0f-ac54-50b52ab9b065/java:java.lang(JDK/)" />
     <import index="u4ym" ref="r:1a96ceaa-2946-43e0-af3f-cd05d77ee6d1(DclareMPSRuntime.util)" />
-    <import index="kag7" ref="55d6b6f5-8095-4cd0-a39b-779da8d12940/java:org.modelingvalue.dclare(DclareMPSRuntime/)" />
+    <import index="zrbp" ref="e584ff77-930e-4637-8df0-b4c8d3b6de91/java:org.modelingvalue.collections(DclareRuntime/)" />
+    <import index="kag7" ref="e584ff77-930e-4637-8df0-b4c8d3b6de91/java:org.modelingvalue.dclare(DclareRuntime/)" />
     <import index="mhbf" ref="8865b7a8-5271-43d3-884c-6fd1d9cfdd34/java:org.jetbrains.mps.openapi.model(MPS.OpenAPI/)" implicit="true" />
   </imports>
   <registry>
@@ -398,7 +398,7 @@
               <ref role="3uigEE" to="t4tl:~DclareForMpsStatus" resolve="DclareForMpsStatus" />
             </node>
             <node concept="BsUDl" id="5j905zHgyHX" role="33vP2m">
-              <ref role="37wK5l" node="5j905zH3nNX" resolve="getter" />
+              <ref role="37wK5l" node="5j905zH3nNX" resolve="status" />
             </node>
           </node>
         </node>
@@ -581,7 +581,7 @@
             </node>
             <node concept="2OqwBi" id="5MBAdvC69an" role="33vP2m">
               <node concept="37vLTw" id="5MBAdvC691u" role="2Oq$k0">
-                <ref role="3cqZAo" node="1KqhpdFNfb8" resolve="getter" />
+                <ref role="3cqZAo" node="1KqhpdFNfb8" resolve="status" />
               </node>
               <node concept="liA8E" id="5MBAdvC69zU" role="2OqNvi">
                 <ref role="37wK5l" to="t4tl:~DclareForMpsStatus.get(java.util.function.Supplier)" resolve="get" />
@@ -745,7 +745,7 @@
                 <property role="Xl_RC" value="D_STATUS" />
               </node>
               <node concept="37vLTw" id="1KqhpdFNfbQ" role="37wK5m">
-                <ref role="3cqZAo" node="1KqhpdFNfb8" resolve="getter" />
+                <ref role="3cqZAo" node="1KqhpdFNfb8" resolve="status" />
               </node>
             </node>
           </node>

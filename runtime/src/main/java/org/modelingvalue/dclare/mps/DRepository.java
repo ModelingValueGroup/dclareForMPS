@@ -31,7 +31,9 @@ import org.jetbrains.mps.openapi.module.SModuleId;
 import org.jetbrains.mps.openapi.module.SRepository;
 import org.jetbrains.mps.openapi.module.SRepositoryListener;
 import org.modelingvalue.collections.Collection;
+import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.Set;
+import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.collections.util.TriConsumer;
 import org.modelingvalue.dclare.Constant;
 import org.modelingvalue.dclare.Observer;
@@ -43,23 +45,31 @@ import jetbrains.mps.project.ProjectRepository;
 @SuppressWarnings("deprecation")
 public class DRepository extends DFromOriginalObject<ProjectRepository> implements SRepository {
 
-    private static final Constant<Set<SLanguage>, DRepositoryType>        REPOSITORY_TYPE = Constant.of("REPOSITORY_TYPE", DRepositoryType::new);
+    private static final Constant<Set<SLanguage>, DRepositoryType>        REPOSITORY_TYPE          = Constant.of("REPOSITORY_TYPE", DRepositoryType::new);
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    protected static final DObserved<DRepository, Set<DModule>>           MODULES         = DObserved.of("MODULES", Set.of(), r -> {
-                                                                                              return Collection.of(dClareMPS().project.getProjectModules()).map(DModule::of).toSet();
-                                                                                          }, null, containment);
+    protected static final DObserved<DRepository, Set<DModule>>           MODULES                  = DObserved.of("MODULES", Set.of(), r -> {
+                                                                                                       return Collection.of(dClareMPS().project.getProjectModules()).map(DModule::of).toSet();
+                                                                                                   }, null, containment);
+
+    public static final Constant<DRepository, Set<SLanguage>>             ALL_LANGUAGES_WITH_RULES = Constant.of("ALL_LANGUAGES_WITH_RULES", Set.of(), r -> {
+                                                                                                       return MODULES.get(r).flatMap(m -> DModule.LANGUAGES_WITH_RULES.get(m)).toSet();
+                                                                                                   });
+
+    public static final Constant<DRepository, List<IAspect>>              ALL_ASPECTS              = Constant.of("ALL_ASPECTS", List.of(), r -> {
+                                                                                                       return ALL_LANGUAGES_WITH_RULES.get(r).flatMap(l -> DClareMPS.ASPECTS.get(l)).sortedBy(IAspect::getName).toList();
+                                                                                                   });
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    protected static final DObserved<DRepository, Set<?>>                 EXCEPTIONS      = DObserved.of("EXCEPTIONS", Set.of(), (Function) null, (TriConsumer) null, plumbing);
+    protected static final DObserved<DRepository, Set<?>>                 EXCEPTIONS               = DObserved.of("EXCEPTIONS", Set.of(), (Function) null, (TriConsumer) null, plumbing);
 
-    protected static final Setable<DRepository, Set<IssueKindReportItem>> ALL_MPS_ISSUES  = Setable.of("$ALL_MPS_ISSUES", Set.of());
-
-    @SuppressWarnings("rawtypes")
-    protected static final Set<Observer>                                  OBSERVERS       = DObject.OBSERVERS;
+    protected static final Setable<DRepository, Set<IssueKindReportItem>> ALL_MPS_ISSUES           = Setable.of("$ALL_MPS_ISSUES", Set.of());
 
     @SuppressWarnings("rawtypes")
-    protected static final Set<Setable>                                   SETABLES        = DObject.SETABLES.addAll(Set.of(MODULES, ALL_MPS_ISSUES));
+    protected static final Set<Observer>                                  OBSERVERS                = DObject.OBSERVERS;
+
+    @SuppressWarnings("rawtypes")
+    protected static final Set<Setable>                                   SETABLES                 = DObject.SETABLES.addAll(Set.of(MODULES, ALL_MPS_ISSUES));
 
     protected DRepository(ProjectRepository original) {
         super(original);
@@ -73,12 +83,12 @@ public class DRepository extends DFromOriginalObject<ProjectRepository> implemen
 
     @Override
     protected DRepositoryType getType() {
-        return REPOSITORY_TYPE.get(DClareMPS.ALL_LANGUAGES.get(dClareMPS()));
+        return REPOSITORY_TYPE.get(ALL_LANGUAGES_WITH_RULES.get(this));
     }
 
     @Override
     protected void read(DClareMPS dClareMPS) {
-        MODULES.readAction().trigger(this);
+        MODULES.triggerInitRead(this);
     }
 
     @Override
@@ -150,6 +160,12 @@ public class DRepository extends DFromOriginalObject<ProjectRepository> implemen
     @Override
     public String toString() {
         return original().getProject().getName();
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    @Override
+    protected Pair<DObject, DObserved<DObject, ?>> readParent() {
+        return (Pair) Pair.of(dClareMPS(), DClareMPS.REPOSITORY_CONTAINER);
     }
 
 }

@@ -22,6 +22,7 @@ import org.jetbrains.mps.openapi.model.SModel;
 import org.jetbrains.mps.openapi.model.SNode;
 import org.jetbrains.mps.openapi.module.SModule;
 import org.modelingvalue.collections.Set;
+import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.dclare.Constant;
 import org.modelingvalue.dclare.LeafTransaction;
 import org.modelingvalue.dclare.Observer;
@@ -162,6 +163,16 @@ public class DIssue extends DIdentifiedObject {
     @Override
     public String toString() {
         return "DIssue" + super.toString();
+    }
+
+    @Override
+    protected boolean isRead() {
+        return false;
+    }
+
+    @Override
+    protected Pair<DObject, DObserved<DObject, ?>> readParent() {
+        throw new UnsupportedOperationException();
     }
 
 }

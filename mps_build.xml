@@ -364,6 +364,37 @@
       <zipfileset file="${basedir}/languages/DclareMessages/DclareMessages.mpl" prefix="module" />
       <zipfileset dir="${build.tmp}/customProcessors/copyModels/languages-DclareMessages-models" prefix="module/models" />
     </jar>
+    <mkdir dir="${build.tmp}/default/DclareRuntime.jar" />
+    <mkdir dir="${build.tmp}/default/DclareRuntime.jar/META-INF" />
+    <echoxml file="${build.tmp}/default/DclareRuntime.jar/META-INF/module.xml">
+      <module namespace="DclareRuntime" type="solution" uuid="e584ff77-930e-4637-8df0-b4c8d3b6de91">
+        <dependencies>
+          <module ref="6354ebe7-c22a-4a0f-ac54-50b52ab9b065(JDK)" kind="cl" />
+        </dependencies>
+        <uses />
+        <library jar="../../dclare.jar" />
+        <library jar="../../immutable-collections.jar" />
+        <library jar="../../mvg-json.jar" />
+        <classpath>
+          <entry path="." />
+        </classpath>
+        <sources jar="DclareRuntime-src.jar" descriptor="DclareRuntime.msd" />
+      </module>
+    </echoxml>
+    <jar destfile="${build.tmp}/default/DclareForMPS.zip/DclareForMPS/languages/DclareForMPS/DclareRuntime.jar" duplicate="preserve">
+      <fileset dir="${build.tmp}/java/out/DclareRuntime" />
+      <fileset dir="${dclare_home}/solutions/DclareRuntime/source_gen" includes="**/trace.info, **/exports, **/*.mps, **/checkpoints" />
+      <fileset dir="${build.tmp}/default/DclareRuntime.jar" />
+    </jar>
+    <jar destfile="${build.tmp}/default/DclareForMPS.zip/DclareForMPS/languages/DclareForMPS/DclareRuntime-src.jar" duplicate="preserve">
+      <fileset dir="${dclare_home}/solutions/DclareRuntime/source_gen">
+        <exclude name="**/trace.info" />
+        <exclude name="**/exports" />
+        <exclude name="**/checkpoints" />
+        <exclude name="**/*.mps" />
+      </fileset>
+      <zipfileset file="${basedir}/solutions/DclareRuntime/DclareRuntime.msd" prefix="module" />
+    </jar>
     <mkdir dir="${build.tmp}/default/DclareMPSRuntime.jar" />
     <mkdir dir="${build.tmp}/default/DclareMPSRuntime.jar/META-INF" />
     <echoxml file="${build.tmp}/default/DclareMPSRuntime.jar/META-INF/module.xml">
@@ -379,7 +410,7 @@
           <module ref="d936855b-48da-4812-a8a0-2bfddd633ac5(jetbrains.mps.lang.behavior.api)" kind="rt" />
           <module ref="d936855b-48da-4812-a8a0-2bfddd633ac4(jetbrains.mps.lang.behavior.runtime)" kind="rt" />
           <module ref="9a4afe51-f114-4595-b5df-048ce3c596be(jetbrains.mps.runtime)" kind="rt" />
-          <module ref="6354ebe7-c22a-4a0f-ac54-50b52ab9b065(JDK)" kind="cl" />
+          <module ref="e584ff77-930e-4637-8df0-b4c8d3b6de91(DclareRuntime)" kind="cl" />
           <module ref="6ed54515-acc8-4d1e-a16c-9fd6cfe951ea(MPS.Core)" kind="cl" />
           <module ref="1ed103c3-3aa6-49b7-9c21-6765ee11f224(MPS.Editor)" kind="cl" />
           <module ref="498d89d2-c2e9-11e2-ad49-6cf049e62fe5(MPS.IDEA)" kind="cl" />
@@ -394,10 +425,7 @@
           <language id="l:760a0a8c-eabb-4521-8bfd-65db761a9ba3:jetbrains.mps.baseLanguage.logging" />
           <language id="l:7866978e-a0f0-4cc7-81bc-4d213d9375e1:jetbrains.mps.lang.smodel" />
         </uses>
-        <library jar="../../dclare.jar" />
-        <library jar="../../immutable-collections.jar" />
         <library jar="../../runtime.jar" />
-        <library jar="../../mvg-json.jar" />
         <classpath>
           <entry path="." />
         </classpath>
@@ -454,6 +482,7 @@
           <module ref="498d89d2-c2e9-11e2-ad49-6cf049e62fe5(MPS.IDEA)" kind="cl" />
           <module ref="8865b7a8-5271-43d3-884c-6fd1d9cfdd34(MPS.OpenAPI)" kind="cl" />
           <module ref="742f6602-5a2f-4313-aa6e-ae1cd4ffdc61(MPS.Platform)" kind="cl" />
+          <module ref="cc7da2f6-419f-4133-a811-31fcd3295a85(jetbrains.mps.debugger.api.api)" kind="cl" />
           <module ref="bfbdd672-7ff5-403f-af4f-16da5226f34c(jetbrains.mps.findUsages.runtime)" kind="cl" />
           <module ref="cae9c33a-938f-42e8-8f0f-26f001c0af63(jetbrains.mps.ide.devkit.editor)" kind="cl" />
           <module ref="a381759b-acec-4e2e-8745-7bf905520fca(jetbrains.mps.ide.modelchecker.platform)" kind="cl" />
@@ -469,6 +498,7 @@
           <language id="l:760a0a8c-eabb-4521-8bfd-65db761a9ba3:jetbrains.mps.baseLanguage.logging" />
           <language id="l:a247e09e-2435-45ba-b8d2-07e93feba96a:jetbrains.mps.baseLanguage.tuples" />
           <language id="l:aee9cad2-acd4-4608-aef2-0004f6a1cdbd:jetbrains.mps.lang.actions" />
+          <language id="l:18bc6592-03a6-4e29-a83a-7ff23bde13ba:jetbrains.mps.lang.editor" />
           <language id="l:28f9e497-3b42-4291-aeba-0a1039153ab1:jetbrains.mps.lang.plugin" />
           <language id="l:ef7bf5ac-d06c-4342-b11d-e42104eb9343:jetbrains.mps.lang.plugin.standalone" />
           <language id="l:3a13115c-633c-4c5c-bbcc-75c4219e9555:jetbrains.mps.lang.quotation" />
@@ -541,9 +571,9 @@
     </jar>
     <zip destfile="${build.layout}/DclareForMPS.zip">
       <zipfileset dir="${dclare_home}/languages/DclareMPS/icons" prefix="DclareForMPS" />
-      <zipfileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/dclare.jar" prefix="DclareForMPS" />
-      <zipfileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/immutable-collections.jar" prefix="DclareForMPS" />
-      <zipfileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/mvg-json.jar" prefix="DclareForMPS" />
+      <zipfileset file="${dclare_home}/solutions/DclareRuntime/lib/dclare.jar" prefix="DclareForMPS" />
+      <zipfileset file="${dclare_home}/solutions/DclareRuntime/lib/immutable-collections.jar" prefix="DclareForMPS" />
+      <zipfileset file="${dclare_home}/solutions/DclareRuntime/lib/mvg-json.jar" prefix="DclareForMPS" />
       <zipfileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/runtime.jar" prefix="DclareForMPS" />
       <fileset dir="${build.tmp}/default/DclareForMPS.zip" />
     </zip>
@@ -561,7 +591,7 @@
     <delete dir="${build.layout}" />
   </target>
   
-  <target name="compileJava" depends="java.compile.DclareMPS, java.compile.DclareMPS#01, java.compile.DclareMessages, java.compile.DclareMPSRuntime, java.compile.DclareMPSPlugin, java.compile.DclareForMPS.build" />
+  <target name="compileJava" depends="java.compile.DclareMPS, java.compile.DclareMPS#01, java.compile.DclareMessages, java.compile.DclareRuntime, java.compile.DclareMPSRuntime, java.compile.DclareMPSPlugin, java.compile.DclareForMPS.build" />
   
   <target name="processResources" />
   
@@ -575,8 +605,11 @@
     <echo message="generating" />
     <generate fork="true" targetJavaVersion="11" logLevel="${mps.ant.log}">      
       <settings refid="m2m-defaults" />
+      <plugin path="${artifacts.mps}/lib/mps-workbench.jar" />
       <plugin path="${artifacts.mps}/plugins/mps-build" />
       <plugin path="${artifacts.mps}/plugins/mps-core" />
+      <plugin path="${artifacts.mps}/plugins/mps-debugger-api" />
+      <plugin path="${artifacts.mps}/plugins/mps-execution-api" />
       <plugin path="${artifacts.mps}/plugins/mps-modelchecker" />
       <library file="${artifacts.mps}/languages/baseLanguage/closures.runtime.jar" />
       <library file="${artifacts.mps}/languages/baseLanguage/collections.runtime.jar" />
@@ -711,6 +744,7 @@
         <module file="${basedir}/solutions/DclareMPSPlugin/DclareMPSPlugin.msd" />
         <module file="${basedir}/solutions/DclareMPSRuntime/DclareMPSRuntime.msd" />
         <module file="${basedir}/languages/DclareMessages/DclareMessages.mpl" />
+        <module file="${basedir}/solutions/DclareRuntime/DclareRuntime.msd" />
       </chunk>
       <jvmargs>
         <arg value="-ea" />
@@ -725,7 +759,7 @@
   
   <target name="makeDependents" />
   
-  <target name="java.compile.DclareMPS" depends="java.compile.DclareMPSRuntime, fetchDependencies">
+  <target name="java.compile.DclareMPS" depends="java.compile.DclareMPSRuntime, java.compile.DclareRuntime, fetchDependencies">
     <mkdir dir="${dclare_home}/languages/DclareMPS/source_gen" />
     <mkdir dir="${build.tmp}/java/out/DclareMPS" />
     <javac destdir="${build.tmp}/java/out/DclareMPS" fork="false" encoding="utf8" includeantruntime="false" source="11" target="11">
@@ -758,14 +792,15 @@
         <fileset file="${artifacts.mps}/lib/mps-project-check.jar" />
         <fileset file="${artifacts.mps}/lib/mps-textgen.jar" />
         <pathelement path="${build.tmp}/java/out/DclareMPSRuntime" />
+        <pathelement path="${build.tmp}/java/out/DclareRuntime" />
         <fileset file="${artifacts.mps}/lib/mps-problem.jar" />
         <fileset file="${artifacts.mps}/lib/mps-feedback-api.jar" />
         <fileset file="${artifacts.mps}/lib/mps-messages-api.jar" />
         <fileset file="${artifacts.mps}/lib/mps-messages-for-rules.jar" />
-        <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/dclare.jar" />
-        <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/immutable-collections.jar" />
         <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/runtime.jar" />
-        <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/mvg-json.jar" />
+        <fileset file="${dclare_home}/solutions/DclareRuntime/lib/dclare.jar" />
+        <fileset file="${dclare_home}/solutions/DclareRuntime/lib/immutable-collections.jar" />
+        <fileset file="${dclare_home}/solutions/DclareRuntime/lib/mvg-json.jar" />
         <fileset dir="${artifacts.mps}/lib" includes="*.jar" />
         <fileset file="${artifacts.mps}/lib/annotations.jar" />
         <fileset file="${artifacts.mps}/lib/util.jar" />
@@ -799,7 +834,7 @@
     </javac>
   </target>
   
-  <target name="java.compile.DclareMPS#01" depends="java.compile.DclareMPS, java.compile.DclareMPSRuntime, fetchDependencies">
+  <target name="java.compile.DclareMPS#01" depends="java.compile.DclareMPS, java.compile.DclareMPSRuntime, java.compile.DclareRuntime, fetchDependencies">
     <mkdir dir="${dclare_home}/languages/DclareMPS/generator/source_gen" />
     <mkdir dir="${build.tmp}/java/out/DclareMPS#01" />
     <javac destdir="${build.tmp}/java/out/DclareMPS#01" fork="false" encoding="utf8" includeantruntime="false" source="11" target="11">
@@ -837,10 +872,11 @@
         <fileset file="${artifacts.mps}/lib/mps-textgen.jar" />
         <pathelement path="${build.tmp}/java/out/DclareMPS" />
         <pathelement path="${build.tmp}/java/out/DclareMPSRuntime" />
-        <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/dclare.jar" />
-        <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/immutable-collections.jar" />
+        <pathelement path="${build.tmp}/java/out/DclareRuntime" />
         <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/runtime.jar" />
-        <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/mvg-json.jar" />
+        <fileset file="${dclare_home}/solutions/DclareRuntime/lib/dclare.jar" />
+        <fileset file="${dclare_home}/solutions/DclareRuntime/lib/immutable-collections.jar" />
+        <fileset file="${dclare_home}/solutions/DclareRuntime/lib/mvg-json.jar" />
         <fileset file="${artifacts.mps}/lib/annotations.jar" />
         <fileset dir="${artifacts.mps}/lib" includes="*.jar" />
         <fileset file="${artifacts.mps}/lib/util.jar" />
@@ -869,7 +905,7 @@
     </javac>
   </target>
   
-  <target name="java.compile.DclareMessages" depends="java.compile.DclareMPSRuntime, fetchDependencies">
+  <target name="java.compile.DclareMessages" depends="java.compile.DclareMPSRuntime, java.compile.DclareRuntime, fetchDependencies">
     <mkdir dir="${dclare_home}/languages/DclareMessages/source_gen" />
     <mkdir dir="${build.tmp}/java/out/DclareMessages" />
     <javac destdir="${build.tmp}/java/out/DclareMessages" fork="false" encoding="utf8" includeantruntime="false" source="11" target="11">
@@ -902,14 +938,15 @@
         <fileset file="${artifacts.mps}/lib/mps-project-check.jar" />
         <fileset file="${artifacts.mps}/lib/mps-textgen.jar" />
         <pathelement path="${build.tmp}/java/out/DclareMPSRuntime" />
+        <pathelement path="${build.tmp}/java/out/DclareRuntime" />
         <fileset file="${artifacts.mps}/lib/mps-problem.jar" />
         <fileset file="${artifacts.mps}/lib/mps-feedback-api.jar" />
         <fileset file="${artifacts.mps}/lib/mps-messages-api.jar" />
         <fileset file="${artifacts.mps}/lib/mps-messages-for-rules.jar" />
-        <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/dclare.jar" />
-        <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/immutable-collections.jar" />
         <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/runtime.jar" />
-        <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/mvg-json.jar" />
+        <fileset file="${dclare_home}/solutions/DclareRuntime/lib/dclare.jar" />
+        <fileset file="${dclare_home}/solutions/DclareRuntime/lib/immutable-collections.jar" />
+        <fileset file="${dclare_home}/solutions/DclareRuntime/lib/mvg-json.jar" />
         <fileset dir="${artifacts.mps}/lib" includes="*.jar" />
         <fileset file="${artifacts.mps}/lib/annotations.jar" />
         <fileset file="${artifacts.mps}/lib/util.jar" />
@@ -927,7 +964,23 @@
     </javac>
   </target>
   
-  <target name="java.compile.DclareMPSRuntime" depends="fetchDependencies">
+  <target name="java.compile.DclareRuntime">
+    <mkdir dir="${dclare_home}/solutions/DclareRuntime/source_gen" />
+    <mkdir dir="${build.tmp}/java/out/DclareRuntime" />
+    <javac destdir="${build.tmp}/java/out/DclareRuntime" fork="false" encoding="utf8" includeantruntime="false" source="11" target="11">
+      <compilerarg value="-Xlint:none" />
+      <src>
+        <path location="${dclare_home}/solutions/DclareRuntime/source_gen" />
+      </src>
+      <classpath>
+        <fileset file="${dclare_home}/solutions/DclareRuntime/lib/dclare.jar" />
+        <fileset file="${dclare_home}/solutions/DclareRuntime/lib/immutable-collections.jar" />
+        <fileset file="${dclare_home}/solutions/DclareRuntime/lib/mvg-json.jar" />
+      </classpath>
+    </javac>
+  </target>
+  
+  <target name="java.compile.DclareMPSRuntime" depends="java.compile.DclareRuntime, fetchDependencies">
     <mkdir dir="${dclare_home}/solutions/DclareMPSRuntime/source_gen" />
     <mkdir dir="${build.tmp}/java/out/DclareMPSRuntime" />
     <javac destdir="${build.tmp}/java/out/DclareMPSRuntime" fork="false" encoding="utf8" includeantruntime="false" source="11" target="11">
@@ -936,6 +989,7 @@
         <path location="${dclare_home}/solutions/DclareMPSRuntime/source_gen" />
       </src>
       <classpath>
+        <pathelement path="${build.tmp}/java/out/DclareRuntime" />
         <fileset file="${artifacts.mps}/lib/mps-core.jar" />
         <fileset file="${artifacts.mps}/lib/mps-platform.jar" />
         <fileset file="${artifacts.mps}/lib/mps-annotations.jar" />
@@ -959,10 +1013,10 @@
         <fileset file="${artifacts.mps}/lib/mps-environment.jar" />
         <fileset file="${artifacts.mps}/lib/mps-project-check.jar" />
         <fileset file="${artifacts.mps}/lib/mps-textgen.jar" />
-        <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/dclare.jar" />
-        <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/immutable-collections.jar" />
         <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/runtime.jar" />
-        <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/mvg-json.jar" />
+        <fileset file="${dclare_home}/solutions/DclareRuntime/lib/dclare.jar" />
+        <fileset file="${dclare_home}/solutions/DclareRuntime/lib/immutable-collections.jar" />
+        <fileset file="${dclare_home}/solutions/DclareRuntime/lib/mvg-json.jar" />
         <fileset dir="${artifacts.mps}/lib" includes="*.jar" />
         <fileset file="${artifacts.mps}/lib/annotations.jar" />
         <fileset file="${artifacts.mps}/lib/util.jar" />
@@ -977,7 +1031,7 @@
     </javac>
   </target>
   
-  <target name="java.compile.DclareMPSPlugin" depends="java.compile.DclareMPS, java.compile.DclareMPSRuntime, java.compile.DclareMessages, fetchDependencies">
+  <target name="java.compile.DclareMPSPlugin" depends="java.compile.DclareMPS, java.compile.DclareMPSRuntime, java.compile.DclareMessages, java.compile.DclareRuntime, fetchDependencies">
     <mkdir dir="${dclare_home}/solutions/DclareMPSPlugin/source_gen" />
     <mkdir dir="${build.tmp}/java/out/DclareMPSPlugin" />
     <javac destdir="${build.tmp}/java/out/DclareMPSPlugin" fork="false" encoding="utf8" includeantruntime="false" source="11" target="11">
@@ -1016,13 +1070,16 @@
         <pathelement path="${build.tmp}/java/out/DclareMPS" />
         <pathelement path="${build.tmp}/java/out/DclareMPSRuntime" />
         <pathelement path="${build.tmp}/java/out/DclareMessages" />
-        <fileset file="${artifacts.mps}/plugins/mps-modelchecker/lib/modelchecker.jar" />
+        <pathelement path="${build.tmp}/java/out/DclareRuntime" />
+        <fileset file="${artifacts.mps}/plugins/mps-execution-api/lib/execution-api.jar" />
         <fileset file="${artifacts.mps}/lib/mps-icons.jar" />
         <fileset file="${artifacts.mps}/lib/mps-workbench.jar" />
-        <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/dclare.jar" />
-        <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/immutable-collections.jar" />
+        <fileset file="${artifacts.mps}/plugins/mps-debugger-api/lib/debugger-api.jar" />
+        <fileset file="${artifacts.mps}/plugins/mps-modelchecker/lib/modelchecker.jar" />
         <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/runtime.jar" />
-        <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/mvg-json.jar" />
+        <fileset file="${dclare_home}/solutions/DclareRuntime/lib/dclare.jar" />
+        <fileset file="${dclare_home}/solutions/DclareRuntime/lib/immutable-collections.jar" />
+        <fileset file="${dclare_home}/solutions/DclareRuntime/lib/mvg-json.jar" />
         <fileset file="${artifacts.mps}/lib/annotations.jar" />
         <fileset dir="${artifacts.mps}/lib" includes="*.jar" />
         <fileset file="${artifacts.mps}/lib/util.jar" />
@@ -1068,5 +1125,6 @@
     <delete dir="${dclare_home}/solutions/DclareMPSPlugin/source_gen" />
     <delete dir="${dclare_home}/solutions/DclareMPSRuntime/source_gen" />
     <delete dir="${dclare_home}/languages/DclareMessages/source_gen" />
+    <delete dir="${dclare_home}/solutions/DclareRuntime/source_gen" />
   </target>
 </project>

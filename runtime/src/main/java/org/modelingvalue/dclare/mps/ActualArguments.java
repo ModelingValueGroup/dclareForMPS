@@ -15,12 +15,23 @@
 
 package org.modelingvalue.dclare.mps;
 
-public interface DclareTracer {
-	
-	public void onModelActive(DModel m);
-	
-	public void onRuleSetActive(IRuleSet r);
-	
-	public void notifyTraceComponent(DclareTraceComponent c);
+import java.util.Arrays;
+
+import org.modelingvalue.collections.util.IdentifiedByArray;
+
+public class ActualArguments extends IdentifiedByArray {
+
+    public static ActualArguments of(Object[] args) {
+        return new ActualArguments(args);
+    }
+
+    private ActualArguments(Object[] id) {
+        super(id);
+    }
+
+    @Override
+    public String toString() {
+        return Arrays.toString(identity()).replace('[', '(').replace(']', ')');
+    }
 
 }

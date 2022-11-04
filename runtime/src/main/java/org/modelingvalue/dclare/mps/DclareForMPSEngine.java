@@ -43,7 +43,7 @@ import jetbrains.mps.project.ProjectBase;
 public class DclareForMPSEngine implements DeployListener {
 
     private static final boolean                           TRACE_ENGINE              = Boolean.getBoolean("TRACE_ENGINE");
-    public static final int                                MAX_NR_OF_HISTORY_FOR_MPS = 4;
+    public static final int                                MAX_NR_OF_HISTORY_FOR_MPS = Integer.getInteger("MAX_NR_OF_HISTORY_FOR_MPS", 4) + 3;
     protected static final CopyOnWriteArrayList<DClareMPS> ALL_DCLARE_MPS            = new CopyOnWriteArrayList<>();
     private static final AtomicInteger                     COUNTER                   = new AtomicInteger(0);
     //
@@ -54,7 +54,6 @@ public class DclareForMPSEngine implements DeployListener {
     private final MoodUpdaterThread                        moodUpdaterThread;
     //
     private DClareMPS                                      dClareMPS;
-    private DclareTracer                                   tracer;
 
     public DclareForMPSEngine(ProjectBase project, EngineStatusHandler engineStatusHandler) {
         this.nr = COUNTER.getAndIncrement();
@@ -79,7 +78,6 @@ public class DclareForMPSEngine implements DeployListener {
             dClareMPS = new DClareMPS(this, project, config, COUNTER.getAndIncrement(), startStatus);
             ALL_DCLARE_MPS.add(dClareMPS);
             moodUpdaterThread.putDClareMPS(dClareMPS, startStatus[0]);
-            syncTracer();
         }
         if (config.isOnMode()) {
             dClareMPS.start();
@@ -97,19 +95,6 @@ public class DclareForMPSEngine implements DeployListener {
 
     public DClareMPS getDClareMPS() {
         return dClareMPS;
-    }
-
-    public void registerTracer(DclareTracer tracer) {
-        this.tracer = tracer;
-        if (tracer != null) {
-            tracer.notifyTraceComponent(new DclareTraceComponent(this, dClareMPS));
-        }
-    }
-
-    private void syncTracer() {
-        if (this.tracer != null) {
-            tracer.notifyTraceComponent(new DclareTraceComponent(this, dClareMPS));
-        }
     }
 
     public void setConfig(DclareForMpsConfig config) {
@@ -141,8 +126,8 @@ public class DclareForMPSEngine implements DeployListener {
     }
 
     private void startDCLareMPS(DclareForMpsConfig config) {
-        stopDClareMPS();
         synchronized (ALL_DCLARE_MPS) {
+            stopDClareMPS();
             ALL_DCLARE_MPS.remove(dClareMPS);
             newDClareMPS(project, config);
         }
@@ -162,8 +147,8 @@ public class DclareForMPSEngine implements DeployListener {
             System.err.println("--- DCLARE FOR MPS --- PROJECT STOP " + project + ":" + nr);
         }
         classLoaderManager.removeListener(this);
-        stopDClareMPS();
         synchronized (ALL_DCLARE_MPS) {
+            stopDClareMPS();
             ALL_DCLARE_MPS.remove(dClareMPS);
             moodUpdaterThread.stop = true;
         }
@@ -177,10 +162,14 @@ public class DclareForMPSEngine implements DeployListener {
                 if (TRACE_ENGINE) {
                     System.err.println("--- DCLARE FOR MPS --- LOADED " + project + ":" + nr);
                 }
-                startDCLareMPS(getConfig());
+                restart();
                 break;
             }
         }
+    }
+
+    protected void restart() {
+        startDCLareMPS(getConfig());
     }
 
     public static void breakpoint() {
@@ -250,10 +239,11 @@ public class DclareForMPSEngine implements DeployListener {
 
         private void updateStatus(Status status, DClareMPS current) {
             DclareForMpsStatus dclareForMpsStatus = new DclareForMpsStatus(status, current);
-            List<IAspect> aspects = status.mood == idle || status.mood == stopped ? current.getAllAspects() : prevAspects;
+            List<IAspect> aspects = status.mood == starting ? current.getAllAspects() : prevAspects;
             Map<DMessageType, QualifiedSet<Triple<DObject, DFeature, String>, DMessage>> messages = status.mood == starting || status.mood == idle || status.mood == stopped ? current.getMessages() : prevMessages;
             current.readInEDT(() -> engineStatusHandler.status(dclareForMpsStatus));
-            if (!aspects.equals(prevAspects)) {
+            if (status.mood == starting) {
+                current.writeInEDT(() -> engineStatusHandler.start(dclareForMpsStatus));
                 current.writeInEDT(() -> engineStatusHandler.aspects(aspects, dclareForMpsStatus));
             }
             if (!messages.equals(prevMessages)) {

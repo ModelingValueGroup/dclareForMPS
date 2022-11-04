@@ -26,4 +26,6 @@ public interface DFeature extends Internable {
 
     IRuleSet ruleSet();
 
+    boolean isConstant();
+
 }
