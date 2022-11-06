@@ -307,7 +307,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
 
         @SuppressWarnings("unchecked")
         public DObserved<DNode, ?> dObserved() {
-            return (DObserved<DNode, ?>) id();
+            return ((Pair<IAspect, DObserved<DNode, ?>>) id()).b();
         }
 
         @Override
