@@ -53,6 +53,9 @@ val gatherTask1 = tasks.register<Copy>("gatherRuntimeJars-part1") {
         configurations.runtimeClasspath,
         configurations.runtimeClasspath.get().allArtifacts.files
     )
+    // The following jars are excluded here because they should not be included by MPS from here.
+    // Otherwise MPS will have the classes imported through multiple class loaders and that causes havoc.
+    exclude("dclare*.jar", "immutable-collections*.jar", "mvg-json*.jar")
     rename {
         it
             .replaceFirst(Regex("[a-zA-Z_]*-[0-9a-z]*-SNAPSHOT[.]jar"), ".jar") // for backwards compat.... remove later
@@ -74,6 +77,9 @@ val gatherTask2 = tasks.register<Copy>("gatherRuntimeJars-part2") {
         configurations.runtimeClasspath,
         configurations.runtimeClasspath.get().allArtifacts.files
     )
+    // The following jars are excluded here because they should not be included by MPS from here.
+    // Otherwise MPS will have the classes imported through multiple class loaders and that causes havoc.
+    exclude("runtime*.jar")
     rename {
         it
             .replaceFirst(Regex("[a-zA-Z_]*-[0-9a-z]*-SNAPSHOT[.]jar"), ".jar") // for backwards compat.... remove later
