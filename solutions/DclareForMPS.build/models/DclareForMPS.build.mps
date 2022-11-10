@@ -969,6 +969,12 @@
             <ref role="3bR37D" node="1OC_PYbrjI5" resolve="DclareRuntime" />
           </node>
         </node>
+        <node concept="1SiIV0" id="27yHvP_JSRo" role="3bR37C">
+          <node concept="3bR9La" id="27yHvP_JSRp" role="1SiIV1">
+            <property role="3bR36h" value="true" />
+            <ref role="3bR37D" to="ffeo:7gdoTYdo$et" resolve="jetbrains.mps.debugger.api.api" />
+          </node>
+        </node>
       </node>
       <node concept="1E1JtA" id="5TmHY1kYrb4" role="2G$12L">
         <property role="TrG5h" value="DclareMPSPlugin" />
@@ -1084,11 +1090,6 @@
         <node concept="1SiIV0" id="4fajGPAMiWL" role="3bR37C">
           <node concept="3bR9La" id="4fajGPAMiWM" role="1SiIV1">
             <ref role="3bR37D" to="ffeo:4IP11oWmB07" resolve="jetbrains.mps.ide.modelchecker.platform" />
-          </node>
-        </node>
-        <node concept="1SiIV0" id="aH0K4o0G3l" role="3bR37C">
-          <node concept="3bR9La" id="aH0K4o0G3m" role="1SiIV1">
-            <ref role="3bR37D" to="ffeo:7gdoTYdo$et" resolve="jetbrains.mps.debugger.api.api" />
           </node>
         </node>
         <node concept="1SiIV0" id="aH0K4ouckJ" role="3bR37C">

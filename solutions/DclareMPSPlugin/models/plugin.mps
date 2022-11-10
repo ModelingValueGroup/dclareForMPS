@@ -466,7 +466,6 @@
       <concept id="8064396509828172209" name="jetbrains.mps.baseLanguage.structure.UnaryMinus" flags="nn" index="1ZRNhn" />
     </language>
     <language id="fd392034-7849-419d-9071-12563d152375" name="jetbrains.mps.baseLanguage.closures">
-      <concept id="2524418899405758586" name="jetbrains.mps.baseLanguage.closures.structure.InferredClosureParameterDeclaration" flags="ig" index="gl6BB" />
       <concept id="1199542442495" name="jetbrains.mps.baseLanguage.closures.structure.FunctionType" flags="in" index="1ajhzC">
         <child id="1199542457201" name="resultType" index="1ajl9A" />
         <child id="1199542501692" name="parameterType" index="1ajw0F" />
@@ -608,13 +607,6 @@
       <concept id="4222318806802425298" name="jetbrains.mps.lang.core.structure.SuppressErrorsAnnotation" flags="ng" index="15s5l7">
         <property id="8575328350543493365" name="message" index="huDt6" />
         <property id="2423417345669755629" name="filter" index="1eyWvh" />
-      </concept>
-      <concept id="709746936026466394" name="jetbrains.mps.lang.core.structure.ChildAttribute" flags="ng" index="3VBwX9">
-        <property id="709746936026609031" name="linkId" index="3V$3ak" />
-        <property id="709746936026609029" name="role_DebugInfo" index="3V$3am" />
-      </concept>
-      <concept id="4452961908202556907" name="jetbrains.mps.lang.core.structure.BaseCommentAttribute" flags="ng" index="1X3_iC">
-        <child id="3078666699043039389" name="commentedNode" index="8Wnug" />
       </concept>
     </language>
     <language id="c7fb639f-be78-4307-89b0-b5959c3fa8c8" name="jetbrains.mps.lang.text">
@@ -8731,7 +8723,7 @@
                 <node concept="2OqwBi" id="2jKRHi3h_0Y" role="37vLTJ">
                   <node concept="2WthIp" id="2jKRHi3h_0Z" role="2Oq$k0" />
                   <node concept="34pFcN" id="2jKRHi3h_10" role="2OqNvi">
-                    <ref role="2WH_rO" node="2jKRHi3ha5M" resolve="xx" />
+                    <ref role="2WH_rO" node="2jKRHi3ha5M" resolve="remoteModelSynchronization" />
                   </node>
                 </node>
               </node>
@@ -8749,7 +8741,7 @@
                 <node concept="2OqwBi" id="2jKRHi3izfJ" role="37vLTJ">
                   <node concept="2WthIp" id="2jKRHi3izfK" role="2Oq$k0" />
                   <node concept="34pFcN" id="2jKRHi3izfL" role="2OqNvi">
-                    <ref role="2WH_rO" node="2jKRHi3id27" resolve="yy" />
+                    <ref role="2WH_rO" node="2jKRHi3id27" resolve="remoteModelSynchronizationServer" />
                   </node>
                 </node>
               </node>
@@ -12508,52 +12500,6 @@
               </node>
               <node concept="3TrcHB" id="61KkDbfrPvC" role="2OqNvi">
                 <ref role="3TsBF5" to="wknp:1DUQ$OwrN1P" resolve="on" />
-              </node>
-            </node>
-          </node>
-        </node>
-        <node concept="1X3_iC" id="4Bo0jeyF2$s" role="lGtFl">
-          <property role="3V$3am" value="statement" />
-          <property role="3V$3ak" value="f3061a53-9226-4cc5-a443-f952ceaf5816/1068580123136/1068581517665" />
-          <node concept="3clFbF" id="aH0K4ofFil" role="8Wnug">
-            <node concept="2OqwBi" id="aH0K4ooKti" role="3clFbG">
-              <node concept="2OqwBi" id="aH0K4ooiG_" role="2Oq$k0">
-                <node concept="2YIFZM" id="aH0K4ogbfq" role="2Oq$k0">
-                  <ref role="37wK5l" to="1l1h:3SnNvqCaJLp" resolve="getInstance" />
-                  <ref role="1Pybhc" to="1l1h:3SnNvqCaJJB" resolve="BreakpointManagerComponent" />
-                  <node concept="2OqwBi" id="aH0K4onNro" role="37wK5m">
-                    <node concept="37vLTw" id="aH0K4onsSZ" role="2Oq$k0">
-                      <ref role="3cqZAo" node="aH0K4olbbk" resolve="project" />
-                    </node>
-                    <node concept="liA8E" id="aH0K4oo3gu" role="2OqNvi">
-                      <ref role="37wK5l" to="z1c3:~MPSProject.getProject()" resolve="getProject" />
-                    </node>
-                  </node>
-                </node>
-                <node concept="liA8E" id="aH0K4ooyjI" role="2OqNvi">
-                  <ref role="37wK5l" to="1l1h:3SnNvqCaJSu" resolve="getAllIBreakpoints" />
-                </node>
-              </node>
-              <node concept="liA8E" id="aH0K4ooXKs" role="2OqNvi">
-                <ref role="37wK5l" to="wyt6:~Iterable.forEach(java.util.function.Consumer)" resolve="forEach" />
-                <node concept="1bVj0M" id="aH0K4opGOx" role="37wK5m">
-                  <node concept="3clFbS" id="aH0K4opGOy" role="1bW5cS">
-                    <node concept="3clFbF" id="aH0K4oqtKc" role="3cqZAp">
-                      <node concept="2OqwBi" id="aH0K4ouGpr" role="3clFbG">
-                        <node concept="37vLTw" id="aH0K4ousW$" role="2Oq$k0">
-                          <ref role="3cqZAo" node="aH0K4opWvR" resolve="it" />
-                        </node>
-                        <node concept="liA8E" id="aH0K4ouWLG" role="2OqNvi">
-                          <ref role="37wK5l" to="rw00:3SnNvqCaK3q" resolve="getPresentation" />
-                        </node>
-                      </node>
-                    </node>
-                  </node>
-                  <node concept="gl6BB" id="aH0K4opWvR" role="1bW2Oz">
-                    <property role="TrG5h" value="it" />
-                    <node concept="2jxLKc" id="aH0K4opWvS" role="1tU5fm" />
-                  </node>
-                </node>
               </node>
             </node>
           </node>

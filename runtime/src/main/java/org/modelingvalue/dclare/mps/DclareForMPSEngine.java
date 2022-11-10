@@ -34,13 +34,17 @@ import org.modelingvalue.dclare.UniverseTransaction.Status;
 
 import jetbrains.mps.classloading.ClassLoaderManager;
 import jetbrains.mps.classloading.DeployListener;
+import jetbrains.mps.debug.api.BreakpointManagerComponent;
+import jetbrains.mps.debug.api.BreakpointManagerComponent.IBreakpointManagerListener;
+import jetbrains.mps.debug.api.breakpoints.IBreakpoint;
+import jetbrains.mps.debug.api.breakpoints.ILocationBreakpoint;
 import jetbrains.mps.errors.item.IssueKindReportItem;
 import jetbrains.mps.ide.MPSCoreComponents;
 import jetbrains.mps.module.ReloadableModule;
 import jetbrains.mps.project.ProjectBase;
 
 @SuppressWarnings("unused")
-public class DclareForMPSEngine implements DeployListener {
+public class DclareForMPSEngine implements DeployListener, IBreakpointManagerListener {
 
     private static final boolean                           TRACE_ENGINE              = Boolean.getBoolean("TRACE_ENGINE");
     public static final int                                MAX_NR_OF_HISTORY_FOR_MPS = Integer.getInteger("MAX_NR_OF_HISTORY_FOR_MPS", 4) + 3;
@@ -52,6 +56,7 @@ public class DclareForMPSEngine implements DeployListener {
     private final EngineStatusHandler                      engineStatusHandler;
     private final int                                      nr;
     private final MoodUpdaterThread                        moodUpdaterThread;
+    private final BreakpointManagerComponent               breakpointManagerComponent;
     //
     private DClareMPS                                      dClareMPS;
 
@@ -64,6 +69,7 @@ public class DclareForMPSEngine implements DeployListener {
         }
         classLoaderManager = Objects.requireNonNull(MPSCoreComponents.getInstance().getPlatform().findComponent(ClassLoaderManager.class));
         classLoaderManager.addListener(this);
+        breakpointManagerComponent = project.getComponent(BreakpointManagerComponent.class);
         moodUpdaterThread = new MoodUpdaterThread();
         newDClareMPS(project, new DclareForMpsConfig().withMaxNrOfHistory(MAX_NR_OF_HISTORY_FOR_MPS).withStatusHandler(engineStatusHandler));
         moodUpdaterThread.start();
@@ -77,11 +83,23 @@ public class DclareForMPSEngine implements DeployListener {
             Status[] startStatus = new Status[1];
             dClareMPS = new DClareMPS(this, project, config, COUNTER.getAndIncrement(), startStatus);
             ALL_DCLARE_MPS.add(dClareMPS);
+            startBreakPoints();
             moodUpdaterThread.putDClareMPS(dClareMPS, startStatus[0]);
         }
         if (config.isOnMode()) {
             dClareMPS.start();
         }
+    }
+
+    void startBreakPoints() {
+        breakpointManagerComponent.addChangeListener(this);
+        for (IBreakpoint bp : breakpointManagerComponent.getAllIBreakpoints()) {
+            breakpointAdded(bp);
+        }
+    }
+
+    void stopBreakPoints() {
+        breakpointManagerComponent.removeChangeListener(this);
     }
 
     @Override
@@ -128,6 +146,7 @@ public class DclareForMPSEngine implements DeployListener {
     private void startDCLareMPS(DclareForMpsConfig config) {
         synchronized (ALL_DCLARE_MPS) {
             stopDClareMPS();
+            stopBreakPoints();
             ALL_DCLARE_MPS.remove(dClareMPS);
             newDClareMPS(project, config);
         }
@@ -149,6 +168,7 @@ public class DclareForMPSEngine implements DeployListener {
         classLoaderManager.removeListener(this);
         synchronized (ALL_DCLARE_MPS) {
             stopDClareMPS();
+            stopBreakPoints();
             ALL_DCLARE_MPS.remove(dClareMPS);
             moodUpdaterThread.stop = true;
         }
@@ -251,6 +271,20 @@ public class DclareForMPSEngine implements DeployListener {
             }
             prevAspects = aspects;
             prevMessages = messages;
+        }
+    }
+
+    @Override
+    public void breakpointAdded(IBreakpoint bp) {
+        if (bp instanceof ILocationBreakpoint) {
+
+        }
+    }
+
+    @Override
+    public void breakpointRemoved(IBreakpoint bp) {
+        if (bp instanceof ILocationBreakpoint) {
+
         }
     }
 }

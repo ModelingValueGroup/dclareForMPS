@@ -31,6 +31,8 @@ dependencies {
     compileOnly(mpsJar("platform-api"))
     compileOnly(mpsJar("util"))
     compileOnly(mpsJar("mps-behavior-runtime"))
+    compileOnly(mpsJar("debugger-api"))
+    compileOnly(mpsJar("mps-debugger-api"))
 }
 publishing {
     publications {
