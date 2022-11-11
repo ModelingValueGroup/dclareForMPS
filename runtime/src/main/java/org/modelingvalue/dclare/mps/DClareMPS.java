@@ -171,7 +171,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
     //
     private final int                                                                                   nr;
     private final ContextPool                                                                           thePool                  = ContextThread.createPool(this);
-    private final UniverseTransaction                                                                   universeTransaction;
+    private final MPSUniverseTransaction                                                                universeTransaction;
     private final DclareForMpsConfig                                                                    config;
     protected final ProjectBase                                                                         project;
     private final ModelAccess                                                                           modelAccess;
@@ -497,6 +497,12 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
 
     protected Map<DMessageType, QualifiedSet<Triple<DObject, DFeature, String>, DMessage>> getMessages() {
         return messages;
+    }
+
+    protected void removeDebugMessages(DFeature feature) {
+        universeTransaction.clearErrors();
+        messages = messages.toMap(e -> e.getKey() == DMessageType.debug ? Entry.of(e.getKey(), //
+                e.getValue().filter(t -> !feature.equals(t.b())).toQualifiedSet(e.getValue().qualifier())) : e);
     }
 
     @Override
@@ -831,7 +837,13 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
         @Override
         protected void handleExceptions(Set<Throwable> errors) {
             clearErrors();
+            messages = MESSAGE_QSET_MAP;
             addMessages(errors);
+        }
+
+        @Override
+        public void clearErrors() {
+            super.clearErrors();
         }
 
         @Override

@@ -300,6 +300,7 @@ public class DclareForMPSEngine implements DeployListener, IBreakpointManagerLis
                 DRule<?> rule = DClareMPS.RULE_MAP.get(dClareMPS).get(nodeRef);
                 if (rule != null) {
                     DRule.OBSERVER.get(rule).setTracing(false);
+                    dClareMPS.removeDebugMessages(rule);
                 }
             });
         }
