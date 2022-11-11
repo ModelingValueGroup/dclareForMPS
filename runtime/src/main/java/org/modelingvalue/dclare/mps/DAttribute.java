@@ -15,13 +15,6 @@
 
 package org.modelingvalue.dclare.mps;
 
-import static org.modelingvalue.dclare.SetableModifier.*;
-
-import java.util.Collections;
-import java.util.function.BiFunction;
-import java.util.function.Function;
-import java.util.function.Supplier;
-
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.jetbrains.mps.openapi.language.SProperty;
 import org.jetbrains.mps.openapi.model.EditableSModel;
@@ -34,7 +27,16 @@ import org.modelingvalue.dclare.LeafTransaction;
 import org.modelingvalue.dclare.Setable;
 import org.modelingvalue.dclare.SetableModifier;
 
+import java.util.Collections;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.function.Supplier;
+
 import jetbrains.mps.smodel.adapter.structure.property.InvalidProperty;
+
+import static org.modelingvalue.dclare.SetableModifier.containment;
+import static org.modelingvalue.dclare.SetableModifier.mandatory;
+import static org.modelingvalue.dclare.SetableModifier.synthetic;
 
 @SuppressWarnings({"rawtypes", "unused"})
 public interface DAttribute<O, T> extends DFeature {
@@ -153,6 +155,9 @@ public interface DAttribute<O, T> extends DFeature {
 
         @Override
         public V get(C object) {
+            if (object == null) {
+                throw new NullPointerException("attempt to read null." + this);
+            }
             if (sProperty != null && object instanceof SNode && DClareMPS.GET_FROM_MPS.get() && !AbstractDerivationTransaction.isDeriving()) {
                 ((SNode) object).getProperty(sProperty);
             }
