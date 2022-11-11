@@ -34,6 +34,7 @@ import org.jetbrains.mps.openapi.language.SLanguage;
 import org.jetbrains.mps.openapi.language.SReferenceLink;
 import org.jetbrains.mps.openapi.model.SModel;
 import org.jetbrains.mps.openapi.model.SNode;
+import org.jetbrains.mps.openapi.model.SNodeReference;
 import org.jetbrains.mps.openapi.module.ModelAccess;
 import org.jetbrains.mps.openapi.module.SModule;
 import org.jetbrains.mps.openapi.module.SRepository;
@@ -113,6 +114,10 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
                                                                                                                                      Collection<DMethod<?>> methods = DClareMPS.RULE_SETS.get(l).flatMap(rs -> Collection.of(rs.getAllMethods()));
                                                                                                                                      return methods.toMap(m -> Entry.of(m.id(), m));
                                                                                                                                  });
+    protected static Constant<SLanguage, Map<SNodeReference, DRule<?>>>                                 ALL_RULES_MAP            = Constant.of("ALL_RULES_MAP", l -> {
+                                                                                                                                     Collection<DRule<?>> rules = DClareMPS.RULE_SETS.get(l).flatMap(rs -> Collection.of(rs.getAllRules()));
+                                                                                                                                     return rules.toMap(m -> Entry.of(m.getSource(), m));
+                                                                                                                                 });
     protected static Constant<SLanguage, Set<SReferenceLink>>                                           REFERENCES_WITH_OPPOSITE = Constant.of("REFERENCES_WITH_OPPOSITE", l -> {
                                                                                                                                      IRuleAspect aspect = RULE_ASPECT.get(l);
                                                                                                                                      return aspect != null ? Collection.of(aspect.getReferencesWithOpposite()).toSet() : Set.of();
@@ -127,6 +132,9 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
                                                                                                                                      }
                                                                                                                                      return map.toDefaultMap(EMPTY_METHOD_MAP.defaultFunction(),                                                          //
                                                                                                                                              e -> Entry.of(e.getKey(), e.getValue().sorted(Comparator.comparing(DMethod::signature)).toList()));
+                                                                                                                                 });
+    protected static Constant<DClareMPS, Map<SNodeReference, DRule<?>>>                                 RULE_MAP                 = Constant.of("RULE_MAP", dClareMPS -> {
+                                                                                                                                     return DRepository.ALL_LANGUAGES_WITH_RULES.get(dClareMPS.getRepository()).flatMap(ALL_RULES_MAP::get).toMap(e -> e);
                                                                                                                                  });
     private static final Set<DMessageType>                                                              MESSAGE_TYPES            = Collection.of(DMessageType.values()).toSet();
     private static final QualifiedSet<Triple<DObject, DFeature, String>, DMessage>                      MESSAGE_QSET             = QualifiedSet.of(m -> Triple.of(m.context(), m.feature(), m.id()));
@@ -348,7 +356,9 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
                     }
                 }
             });
-            engine.stopDClareMPS();
+            if (throwables.anyMatch(t -> !(t instanceof DebugTrace))) {
+                engine.stopDClareMPS();
+            }
         }
     }
 
@@ -373,8 +383,10 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
             addTooManyObservedExceptionMessage(object, feature, (TooManyObservedException) t);
         } else if (t instanceof TooManyObserversException) {
             addTooManyObserversExceptionMessage(object, feature, (TooManyObserversException) t);
+        } else if (t instanceof DebugTrace) {
+            addDebugTraceMessage(object, feature, (DebugTrace) t);
         } else if (t instanceof ThrowableError) {
-            addThrowableMessage(object, feature, t.getCause());
+            addThrowableMessage(object, feature, t);
         } else {
             addThrowableMessage(object, feature, t);
         }
@@ -390,7 +402,23 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
                         "read : " + s.mutable() + "." + s.observed() + "=" + r.read().get(s))), //
                 (m, w, s) -> m.subMessages().last().addSubMessage(new DMessage((DObject) s.mutable(), (DObserved) s.observed(), DMessageType.error, " ", //
                         "write: " + s.mutable() + "." + s.observed() + "=" + w.written().get(s))), //
-                m -> m.subMessages().last(), tmce.getState().universeTransaction().stats().maxNrOfChanges());
+                m -> m.subMessages().last(), universeTransaction().stats().maxNrOfChanges());
+        addMessage(message);
+    }
+
+    @SuppressWarnings("rawtypes")
+    private void addDebugTraceMessage(DObject object, DFeature feature, DebugTrace dt) {
+        DMessage message = new DMessage(object, feature, DMessageType.debug, "DEBUG_TRACE_" + dt.nr(), "Run nr " + dt.nr() + " of " + feature);
+        for (Entry<ObservedInstance, Object> read : dt.trace().read().filter(e -> !e.getKey().observed().isPlumbing())) {
+            ObservedInstance s = read.getKey();
+            message.addSubMessage(new DMessage((DObject) s.mutable(), (DObserved) s.observed(), DMessageType.debug, " ", //
+                    "read : " + s.mutable() + "." + s.observed() + "=" + read.getValue()));
+        }
+        for (Entry<ObservedInstance, Object> write : dt.trace().written().filter(e -> !e.getKey().observed().isPlumbing())) {
+            ObservedInstance s = write.getKey();
+            message.addSubMessage(new DMessage((DObject) s.mutable(), (DObserved) s.observed(), DMessageType.debug, " ", //
+                    "write: " + s.mutable() + "." + s.observed() + "=" + write.getValue()));
+        }
         addMessage(message);
     }
 

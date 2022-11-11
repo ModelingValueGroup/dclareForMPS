@@ -15,12 +15,12 @@
 
 package org.modelingvalue.dclare.mps;
 
-import org.jetbrains.mps.openapi.model.SNode;
+import org.jetbrains.mps.openapi.model.SNodeReference;
 import org.modelingvalue.collections.util.Internable;
 
 public interface DFeature extends Internable {
 
-    SNode getSource();
+    SNodeReference getSource();
 
     boolean isSynthetic();
 

@@ -15,7 +15,7 @@
 
 package org.modelingvalue.dclare.mps;
 
-import org.jetbrains.mps.openapi.model.SNode;
+import org.jetbrains.mps.openapi.model.SNodeReference;
 import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.util.Triple;
 
@@ -52,7 +52,7 @@ public class DMessage extends Triple<DObject, DFeature, String> {
         return content;
     }
 
-    public SNode source() {
+    public SNodeReference source() {
         return feature().getSource();
     }
 

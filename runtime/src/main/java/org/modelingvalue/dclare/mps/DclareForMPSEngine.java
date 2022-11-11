@@ -23,6 +23,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import org.jetbrains.mps.openapi.model.SNodeReference;
 import org.jetbrains.mps.openapi.util.ProgressMonitor;
 import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.Map;
@@ -36,6 +37,7 @@ import jetbrains.mps.classloading.ClassLoaderManager;
 import jetbrains.mps.classloading.DeployListener;
 import jetbrains.mps.debug.api.BreakpointManagerComponent;
 import jetbrains.mps.debug.api.BreakpointManagerComponent.IBreakpointManagerListener;
+import jetbrains.mps.debug.api.breakpoints.BreakpointLocation;
 import jetbrains.mps.debug.api.breakpoints.IBreakpoint;
 import jetbrains.mps.debug.api.breakpoints.ILocationBreakpoint;
 import jetbrains.mps.errors.item.IssueKindReportItem;
@@ -83,10 +85,10 @@ public class DclareForMPSEngine implements DeployListener, IBreakpointManagerLis
             Status[] startStatus = new Status[1];
             dClareMPS = new DClareMPS(this, project, config, COUNTER.getAndIncrement(), startStatus);
             ALL_DCLARE_MPS.add(dClareMPS);
-            startBreakPoints();
             moodUpdaterThread.putDClareMPS(dClareMPS, startStatus[0]);
         }
         if (config.isOnMode()) {
+            startBreakPoints();
             dClareMPS.start();
         }
     }
@@ -146,7 +148,6 @@ public class DclareForMPSEngine implements DeployListener, IBreakpointManagerLis
     private void startDCLareMPS(DclareForMpsConfig config) {
         synchronized (ALL_DCLARE_MPS) {
             stopDClareMPS();
-            stopBreakPoints();
             ALL_DCLARE_MPS.remove(dClareMPS);
             newDClareMPS(project, config);
         }
@@ -155,6 +156,9 @@ public class DclareForMPSEngine implements DeployListener, IBreakpointManagerLis
     protected void stopDClareMPS() {
         if (TRACE_ENGINE) {
             System.err.println("--- DCLARE FOR MPS --- STOP " + project + ":" + nr);
+        }
+        if (dClareMPS.getConfig().isOnMode()) {
+            stopBreakPoints();
         }
         synchronized (ALL_DCLARE_MPS) {
             dClareMPS.stop();
@@ -168,7 +172,6 @@ public class DclareForMPSEngine implements DeployListener, IBreakpointManagerLis
         classLoaderManager.removeListener(this);
         synchronized (ALL_DCLARE_MPS) {
             stopDClareMPS();
-            stopBreakPoints();
             ALL_DCLARE_MPS.remove(dClareMPS);
             moodUpdaterThread.stop = true;
         }
@@ -277,14 +280,28 @@ public class DclareForMPSEngine implements DeployListener, IBreakpointManagerLis
     @Override
     public void breakpointAdded(IBreakpoint bp) {
         if (bp instanceof ILocationBreakpoint) {
-
+            BreakpointLocation location = ((ILocationBreakpoint) bp).getLocation();
+            SNodeReference nodeRef = location.getNodePointer();
+            dClareMPS.imperativeState().run(() -> {
+                DRule<?> rule = DClareMPS.RULE_MAP.get(dClareMPS).get(nodeRef);
+                if (rule != null) {
+                    DRule.OBSERVER.get(rule).setTracing(true);
+                }
+            });
         }
     }
 
     @Override
     public void breakpointRemoved(IBreakpoint bp) {
         if (bp instanceof ILocationBreakpoint) {
-
+            BreakpointLocation location = ((ILocationBreakpoint) bp).getLocation();
+            SNodeReference nodeRef = location.getNodePointer();
+            dClareMPS.imperativeState().run(() -> {
+                DRule<?> rule = DClareMPS.RULE_MAP.get(dClareMPS).get(nodeRef);
+                if (rule != null) {
+                    DRule.OBSERVER.get(rule).setTracing(false);
+                }
+            });
         }
     }
 }

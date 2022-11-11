@@ -75,13 +75,13 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                               });
 
     protected static final Constant<SConcept, Set<SReferenceLink>>                                           SINGLE_REFERENCES                = Constant.of("SINGLE_REFERENCES", c -> {
-                                                                                                                                                  return Collection.of(c.getReferenceLinks()).exclude(SReferenceLink::isOptional).                                                                           //
+                                                                                                                                                  return Collection.of(c.getReferenceLinks()).exclude(SReferenceLink::isOptional).                                                                                                 //
                                                                                                                                                           exclude(SNodeUtil.concept_BaseConcept.getReferenceLinks()::contains).toSet();
                                                                                                                                               });
 
     @SuppressWarnings("unlikely-arg-type")
     protected static final Constant<SConcept, Set<SContainmentLink>>                                         SINGLE_CONTAINMENTS              = Constant.of("SINGLE_CONTAINMENTS", c -> {
-                                                                                                                                                  return Collection.of(c.getContainmentLinks()).exclude(SContainmentLink::isMultiple).exclude(SContainmentLink::isOptional).                                 //
+                                                                                                                                                  return Collection.of(c.getContainmentLinks()).exclude(SContainmentLink::isMultiple).exclude(SContainmentLink::isOptional).                                                       //
                                                                                                                                                           exclude(SNodeUtil.concept_BaseConcept.getContainmentLinks()::contains).toSet();
                                                                                                                                               });
 
@@ -114,7 +114,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                               }, (dNode, pre, post) -> {
                                                                                                                                                   SNode sNode = dNode.tryOriginal();
                                                                                                                                                   sNode.setProperty(sp, post);
-                                                                                                                                              }, sp::getDeclarationNode));
+                                                                                                                                              }, () -> sp.getDeclarationNode().getReference()));
 
     @SuppressWarnings("deprecation")
     public static final Constant<SContainmentLink, DObserved<DNode, List<DNode>>>                            MANY_CONTAINMENT                 = Constant.of("MANY_CONTAINMENT", mc -> DObserved.of(mc, List.of(), dNode -> {
@@ -131,7 +131,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                                       SNode s = r.tryOriginal();
                                                                                                                                                       sNode.removeChild(s);
                                                                                                                                                   });
-                                                                                                                                              }, mc::getDeclarationNode, containment));
+                                                                                                                                              }, () -> mc.getDeclarationNode().getReference(), containment));
 
     @SuppressWarnings("deprecation")
     public static final Constant<SContainmentLink, DObserved<DNode, DNode>>                                  SINGLE_CONTAINMENT               = Constant.of("SINGLE_CONTAINMENT", sc -> DObserved.of(sc, null, dNode -> {
@@ -150,7 +150,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                                       sNode.addChild(sc, s);
                                                                                                                                                       post.init(s);
                                                                                                                                                   }
-                                                                                                                                              }, sc::getDeclarationNode, containment));
+                                                                                                                                              }, () -> sc.getDeclarationNode().getReference(), containment));
 
     @SuppressWarnings("deprecation")
     public static final Constant<SReferenceLink, DObserved<DNode, DNode>>                                    REFERENCE                        = Constant.of("REFERENCE", sr -> DObserved.of(sr, null, hasOpposite(sr) ? () -> DNode.OPPOSITE.get(sr) : null, dNode -> {
@@ -162,9 +162,9 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                                   SNode sNode = dNode.tryOriginal();
                                                                                                                                                   SNode soll = post != null ? post.tryOriginal() : null;
                                                                                                                                                   sNode.setReferenceTarget(sr, soll);
-                                                                                                                                              }, sr::getDeclarationNode, orphansAllowed));
+                                                                                                                                              }, () -> sr.getDeclarationNode().getReference(), orphansAllowed));
     @SuppressWarnings("deprecation")
-    public static final Constant<SReferenceLink, DObserved<DNode, Set<DNode>>>                               OPPOSITE                         = Constant.of("OPPOSITE", sr -> DObserved.of(Pair.of(sr, "OPPOSITE"), Set.of(), () -> DNode.REFERENCE.get(sr), null, null, sr::getDeclarationNode, synthetic));
+    public static final Constant<SReferenceLink, DObserved<DNode, Set<DNode>>>                               OPPOSITE                         = Constant.of("OPPOSITE", sr -> DObserved.of(Pair.of(sr, "OPPOSITE"), Set.of(), () -> DNode.REFERENCE.get(sr), null, null, () -> sr.getDeclarationNode().getReference(), synthetic));
 
     private static final Observer<DNode>                                                                     MODEL_RULE                       = DObject.observer(MODEL, o -> {
                                                                                                                                                   DNode p = o.getAncestor(DNode.class);
@@ -229,14 +229,14 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                               });
 
     @SuppressWarnings("rawtypes")
-    protected static final Constant<SConcept, Set<DObserved>>                                                CONCEPT_DOBSERVEDS               = Constant.of("$CONCEPT_DOBSERVEDS", c -> Collection.concat(                                                                                                   //
-            Collection.of(c.getProperties()),                                                                                                                                                                                                                                                                //
-            Collection.of(c.getContainmentLinks()),                                                                                                                                                                                                                                                          //
+    protected static final Constant<SConcept, Set<DObserved>>                                                CONCEPT_DOBSERVEDS               = Constant.of("$CONCEPT_DOBSERVEDS", c -> Collection.concat(                                                                                                                         //
+            Collection.of(c.getProperties()),                                                                                                                                                                                                                                                                                      //
+            Collection.of(c.getContainmentLinks()),                                                                                                                                                                                                                                                                                //
             Collection.of(c.getReferenceLinks())).map(DNode::dObserved).toSet());
 
     @SuppressWarnings("rawtypes")
-    private static final Constant<SConcept, Set<DObserved>>                                                  CONCEPT_INIT_DOBSERVEDS          = Constant.of("$CONCEPT_INIT_DOBSERVEDS", c -> Collection.concat(                                                                                              //
-            Collection.of(c.getContainmentLinks()),                                                                                                                                                                                                                                                          //
+    private static final Constant<SConcept, Set<DObserved>>                                                  CONCEPT_INIT_DOBSERVEDS          = Constant.of("$CONCEPT_INIT_DOBSERVEDS", c -> Collection.concat(                                                                                                                    //
+            Collection.of(c.getContainmentLinks()),                                                                                                                                                                                                                                                                                //
             Collection.of(c.getReferenceLinks()).filter(DNode::hasOpposite)).map(DNode::dObserved).toSet());
 
     @SuppressWarnings("rawtypes")
@@ -244,11 +244,11 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
 
     protected static final Setable<DNode, Set<Pair<DObject, IssueKindReportItem>>>                           ALL_MPS_ISSUES                   = Setable.of("$ALL_MPS_ISSUES", Set.of(), (tx, o, pre, post) -> {
                                                                                                                                                   DRepository repos = DClareMPS.instance().getRepository();
-                                                                                                                                                  Setable.<Set<Pair<DObject, IssueKindReportItem>>, Pair<DObject, IssueKindReportItem>> diff(pre, post,                                                      //
+                                                                                                                                                  Setable.<Set<Pair<DObject, IssueKindReportItem>>, Pair<DObject, IssueKindReportItem>> diff(pre, post,                                                                            //
                                                                                                                                                           a -> {
                                                                                                                                                               DObject.MPS_ISSUES.set(a.a(), Set::add, a);
                                                                                                                                                               DRepository.ALL_MPS_ISSUES.set(repos, Set::add, a.b());
-                                                                                                                                                          },                                                                                                                                                 //
+                                                                                                                                                          },                                                                                                                                                                       //
                                                                                                                                                           r -> {
                                                                                                                                                               DObject.MPS_ISSUES.set(r.a(), Set::remove, r);
                                                                                                                                                               DRepository.ALL_MPS_ISSUES.set(repos, Set::remove, r.b());

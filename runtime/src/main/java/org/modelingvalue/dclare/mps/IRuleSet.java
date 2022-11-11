@@ -49,6 +49,8 @@ public interface IRuleSet {
 
     List<DAttribute<?, ?>> getAllAttributes();
 
+    List<DRule<?>> getAllRules();
+
     IAspect getAspect();
 
     String getAnonymousType();

@@ -137,7 +137,7 @@ public class DIssue extends DIdentifiedObject {
     }
 
     private TypesystemRuleId ruleId() {
-        return new TypesystemRuleId(rule.getSource().getReference());
+        return new TypesystemRuleId(rule.getSource());
     }
 
     @Override
