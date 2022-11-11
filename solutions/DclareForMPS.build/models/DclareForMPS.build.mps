@@ -711,6 +711,11 @@
             <ref role="1E1Vl2" to="ffeo:7Kfy9QB6KZc" resolve="jetbrains.mps.baseLanguage.checkedDots" />
           </node>
         </node>
+        <node concept="1SiIV0" id="2raIci1ujJw" role="3bR37C">
+          <node concept="3bR9La" id="2raIci1ujJx" role="1SiIV1">
+            <ref role="3bR37D" to="ffeo:7gdoTYdo$eB" resolve="jetbrains.mps.debugger.api.runtime" />
+          </node>
+        </node>
       </node>
       <node concept="1E1JtD" id="3_CqF4vomJJ" role="2G$12L">
         <property role="TrG5h" value="DclareMessages" />
