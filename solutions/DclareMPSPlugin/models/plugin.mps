@@ -11,6 +11,7 @@
     <use id="3ecd7c84-cde3-45de-886c-135ecc69b742" name="jetbrains.mps.lang.refactoring" version="0" />
     <use id="982eb8df-2c96-4bd7-9963-11712ea622e5" name="jetbrains.mps.lang.resources" version="2" />
     <use id="18bc6592-03a6-4e29-a83a-7ff23bde13ba" name="jetbrains.mps.lang.editor" version="14" />
+    <use id="fbc14279-5e2a-4c87-a5d1-5f7061e6c456" name="jetbrains.mps.debugger.api.lang" version="1" />
     <devkit ref="fbc25dd2-5da4-483a-8b19-70928e1b62d7(jetbrains.mps.devkit.general-purpose)" />
   </languages>
   <imports>
@@ -68,8 +69,10 @@
     <import index="kag7" ref="e584ff77-930e-4637-8df0-b4c8d3b6de91/java:org.modelingvalue.dclare(DclareRuntime/)" />
     <import index="rw00" ref="r:d910d08e-4a00-41f9-ac8b-b7c374586874(jetbrains.mps.debug.api.breakpoints)" />
     <import index="1l1h" ref="r:c02662c0-67c5-4c3a-8d3a-cd7ffe189340(jetbrains.mps.debug.api)" />
+    <import index="tp3r" ref="r:00000000-0000-4000-0000-011c8959034b(jetbrains.mps.lang.quotation.structure)" />
+    <import index="guwi" ref="6354ebe7-c22a-4a0f-ac54-50b52ab9b065/java:java.io(JDK/)" />
+    <import index="7ggn" ref="r:38c3b7db-3776-47fb-ba27-a4f002c4edc7(DclareMPS.structure)" />
     <import index="tpck" ref="r:00000000-0000-4000-0000-011c89590288(jetbrains.mps.lang.core.structure)" implicit="true" />
-    <import index="7ggn" ref="r:38c3b7db-3776-47fb-ba27-a4f002c4edc7(DclareMPS.structure)" implicit="true" />
     <import index="1m72" ref="498d89d2-c2e9-11e2-ad49-6cf049e62fe5/java:com.intellij.openapi.components(MPS.IDEA/)" implicit="true" />
     <import index="tprs" ref="r:00000000-0000-4000-0000-011c895904a4(jetbrains.mps.ide.actions)" implicit="true" />
     <import index="7bx7" ref="742f6602-5a2f-4313-aa6e-ae1cd4ffdc61/java:jetbrains.mps.workbench.action(MPS.Platform/)" implicit="true" />
@@ -530,6 +533,34 @@
         <child id="8182547171709752112" name="expression" index="36biLW" />
       </concept>
     </language>
+    <language id="fbc14279-5e2a-4c87-a5d1-5f7061e6c456" name="jetbrains.mps.debugger.api.lang">
+      <concept id="1270798772176052876" name="jetbrains.mps.debugger.api.lang.structure.ConceptFunctionParameter_Debug_Project" flags="nn" index="5baDc" />
+      <concept id="1270798772176052880" name="jetbrains.mps.debugger.api.lang.structure.ConceptFunctionParameter_DebuggableNode" flags="nn" index="5baDg" />
+      <concept id="3104811047188253540" name="jetbrains.mps.debugger.api.lang.structure.ConceptFunction_IsApplicableBreakpoint" flags="in" index="2xiWDm" />
+      <concept id="3157158168562219319" name="jetbrains.mps.debugger.api.lang.structure.BreakpointableNodeItem" flags="ng" index="2F3Wen">
+        <property id="8751745335399632086" name="isComplex" index="3KmjVl" />
+        <child id="3104811047188238838" name="isApplicableBreakpoint" index="2xiT34" />
+        <child id="3157158168562219320" name="createBreakpoint" index="2F3Weo" />
+        <child id="5789575999242884576" name="conceptsToCreateBreakpoint" index="MDQ5i" />
+      </concept>
+      <concept id="3157158168562219322" name="jetbrains.mps.debugger.api.lang.structure.ConceptFunction_CreateBreakpoint" flags="in" index="2F3Weq" />
+      <concept id="3157158168562217892" name="jetbrains.mps.debugger.api.lang.structure.BreakpointCreator" flags="ng" index="2F3W$4">
+        <child id="1270798772176052787" name="breakpointableConcepts" index="5baFN" />
+      </concept>
+      <concept id="5789575999242884574" name="jetbrains.mps.debugger.api.lang.structure.ConceptDeclarationReference" flags="ng" index="MDQ5G">
+        <reference id="5789575999242884575" name="conceptDeclaration" index="MDQ5H" />
+      </concept>
+      <concept id="2569394751387978473" name="jetbrains.mps.debugger.api.lang.structure.CreateBreakpointOperation" flags="nn" index="3B$Tw0">
+        <property id="2569394751387978475" name="kindName" index="3B$Tw2" />
+        <property id="2569394751387978476" name="kindPresentation" index="3B$Tw5" />
+        <child id="2569394751387978493" name="projectExpression" index="3B$Twk" />
+        <child id="2569394751387978492" name="nodeExpression" index="3B$Twl" />
+      </concept>
+      <concept id="8751745335399632077" name="jetbrains.mps.debugger.api.lang.structure.ConceptFunctionParameter_Concept" flags="nn" index="3KmjVe" />
+      <concept id="1104094430779068753" name="jetbrains.mps.debugger.api.lang.structure.DebuggerReference" flags="nn" index="3Qg5_p">
+        <property id="1104094430779068757" name="debuggerName" index="3Qg5_t" />
+      </concept>
+    </language>
     <language id="7866978e-a0f0-4cc7-81bc-4d213d9375e1" name="jetbrains.mps.lang.smodel">
       <concept id="1177026924588" name="jetbrains.mps.lang.smodel.structure.RefConcept_Reference" flags="nn" index="chp4Y">
         <reference id="1177026940964" name="conceptDeclaration" index="cht4Q" />
@@ -565,6 +596,9 @@
         <child id="1145567471833" name="createdType" index="2T96Bj" />
       </concept>
       <concept id="1171407110247" name="jetbrains.mps.lang.smodel.structure.Node_GetAncestorOperation" flags="nn" index="2Xjw5R" />
+      <concept id="1180031783296" name="jetbrains.mps.lang.smodel.structure.Concept_IsSubConceptOfOperation" flags="nn" index="2Zo12i">
+        <child id="1180031783297" name="conceptArgument" index="2Zo12j" />
+      </concept>
       <concept id="2644386474300074836" name="jetbrains.mps.lang.smodel.structure.ConceptIdRefExpression" flags="nn" index="35c_gC">
         <reference id="2644386474300074837" name="conceptDeclaration" index="35c_gD" />
       </concept>
@@ -17337,6 +17371,72 @@
       <node concept="10P_77" id="4wENxdDcnkt" role="1tU5fm" />
     </node>
     <node concept="3Tm1VV" id="4wENxdDclir" role="1B3o_S" />
+  </node>
+  <node concept="2F3W$4" id="m$UVvC$9sL">
+    <node concept="2F3Wen" id="m$UVvC$9sM" role="5baFN">
+      <property role="3KmjVl" value="true" />
+      <node concept="2F3Weq" id="m$UVvC$9sN" role="2F3Weo">
+        <node concept="3clFbS" id="m$UVvC$9sO" role="2VODD2">
+          <node concept="3cpWs6" id="m$UVvC$9yl" role="3cqZAp">
+            <node concept="2OqwBi" id="m$UVvC$9N3" role="3cqZAk">
+              <node concept="3Qg5_p" id="m$UVvC$9JZ" role="2Oq$k0">
+                <property role="3Qg5_t" value="Java" />
+              </node>
+              <node concept="3B$Tw0" id="m$UVvC$9Rq" role="2OqNvi">
+                <property role="3B$Tw2" value="JAVA_LINE_BREAKPOINT" />
+                <property role="3B$Tw5" value="Java Line Breakpoint" />
+                <node concept="5baDg" id="m$UVvC$9SK" role="3B$Twl" />
+                <node concept="5baDc" id="m$UVvC$9Vv" role="3B$Twk" />
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+      <node concept="MDQ5G" id="m$UVvC$9JT" role="MDQ5i">
+        <ref role="MDQ5H" to="tp3r:4IP40Bi2KcT" resolve="NodeBuilderInitPart" />
+      </node>
+      <node concept="2xiWDm" id="4o8uGO6LZvc" role="2xiT34">
+        <node concept="3clFbS" id="4o8uGO6LZvd" role="2VODD2">
+          <node concept="3clFbF" id="4o8uGO6M1aC" role="3cqZAp">
+            <node concept="1Wc70l" id="4o8uGO6MnaJ" role="3clFbG">
+              <node concept="1eOMI4" id="4GWaWvOU4F" role="3uHU7B">
+                <node concept="22lmx$" id="4GWaWvOUap" role="1eOMHV">
+                  <node concept="2OqwBi" id="4o8uGO6M1Fr" role="3uHU7w">
+                    <node concept="3KmjVe" id="4o8uGO6M1aB" role="2Oq$k0" />
+                    <node concept="2Zo12i" id="4o8uGO6M27F" role="2OqNvi">
+                      <node concept="chp4Y" id="4o8uGO6Mmr9" role="2Zo12j">
+                        <ref role="cht4Q" to="tp3r:4IP40Bi2KcT" resolve="NodeBuilderInitPart" />
+                      </node>
+                    </node>
+                  </node>
+                  <node concept="2OqwBi" id="4GWaWvOUj3" role="3uHU7B">
+                    <node concept="3KmjVe" id="4GWaWvOUj4" role="2Oq$k0" />
+                    <node concept="2Zo12i" id="4GWaWvOUj5" role="2OqNvi">
+                      <node concept="chp4Y" id="4GWaWvOUj6" role="2Zo12j">
+                        <ref role="cht4Q" to="7ggn:lSgC6t_tvD" resolve="ModelBuilderPart" />
+                      </node>
+                    </node>
+                  </node>
+                </node>
+              </node>
+              <node concept="3y3z36" id="4o8uGO6Moaw" role="3uHU7w">
+                <node concept="10Nm6u" id="4o8uGO6Mol6" role="3uHU7w" />
+                <node concept="2OqwBi" id="4o8uGO6Mns8" role="3uHU7B">
+                  <node concept="5baDg" id="4o8uGO6MnbQ" role="2Oq$k0" />
+                  <node concept="2Xjw5R" id="4o8uGO6MnF0" role="2OqNvi">
+                    <node concept="1xMEDy" id="4o8uGO6MnF2" role="1xVPHs">
+                      <node concept="chp4Y" id="4o8uGO6MnOc" role="ri$Ld">
+                        <ref role="cht4Q" to="7ggn:61p65V8x$6I" resolve="ThisContext" />
+                      </node>
+                    </node>
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
   </node>
 </model>
 

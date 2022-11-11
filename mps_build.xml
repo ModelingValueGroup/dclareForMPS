@@ -131,6 +131,8 @@
           <module ref="774bf8a0-62e5-41e1-af63-f4812e60e48b(jetbrains.mps.baseLanguage.checkedDots)" kind="cl" />
           <module ref="83888646-71ce-4f1c-9c53-c54016f6ad4f(jetbrains.mps.baseLanguage.collections)" kind="cl" />
           <module ref="c7d01124-66d5-486d-8b50-7fdccb60b839(jetbrains.mps.baseLanguage.util)" kind="cl" />
+          <module ref="cc7da2f6-419f-4133-a811-31fcd3295a85(jetbrains.mps.debugger.api.api)" kind="cl" />
+          <module ref="fbc14279-5e2a-4c87-a5d1-5f7061e6c456(jetbrains.mps.debugger.api.lang)" kind="cl" />
           <module ref="25891414-2b70-48c7-b1cc-8dc0c127d669(jetbrains.mps.debugger.api.runtime)" kind="cl" />
           <module ref="2d3c70e9-aab2-4870-8d8d-6036800e4103(jetbrains.mps.kernel)" kind="cl" />
           <module ref="f159adf4-3c93-40f9-9c5a-1f245a8697af(jetbrains.mps.lang.aspect)" kind="cl" />
@@ -168,6 +170,7 @@
           <language id="l:18bc6592-03a6-4e29-a83a-7ff23bde13ba:jetbrains.mps.lang.editor" />
           <language id="l:d7a92d38-f7db-40d0-8431-763b0c3c9f20:jetbrains.mps.lang.intentions" />
           <language id="l:90746344-04fd-4286-97d5-b46ae6a81709:jetbrains.mps.lang.migration" />
+          <language id="l:9882f4ad-1955-46fe-8269-94189e5dbbf2:jetbrains.mps.lang.migration.util" />
           <language id="l:d4615e3b-d671-4ba9-af01-2b78369b0ba7:jetbrains.mps.lang.pattern" />
           <language id="l:28f9e497-3b42-4291-aeba-0a1039153ab1:jetbrains.mps.lang.plugin" />
           <language id="l:3a13115c-633c-4c5c-bbcc-75c4219e9555:jetbrains.mps.lang.quotation" />
@@ -469,6 +472,7 @@
           <module ref="a3e4657f-a76c-45bb-bbda-c764596ecc65(jetbrains.mps.baseLanguage.logging.runtime)" kind="rt" />
           <module ref="52b81ac7-93fd-4e9e-b972-4995882da6d4(jetbrains.mps.baseLanguage.references.runtime)" kind="rt" />
           <module ref="d44dab97-aaac-44cb-9745-8a14db674c03(jetbrains.mps.baseLanguage.tuples.runtime)" kind="rt" />
+          <module ref="cc7da2f6-419f-4133-a811-31fcd3295a85(jetbrains.mps.debugger.api.api)" kind="rt" />
           <module ref="2d3c70e9-aab2-4870-8d8d-6036800e4103(jetbrains.mps.kernel)" kind="rt" />
           <module ref="d936855b-48da-4812-a8a0-2bfddd633ac5(jetbrains.mps.lang.behavior.api)" kind="rt" />
           <module ref="d936855b-48da-4812-a8a0-2bfddd633ac4(jetbrains.mps.lang.behavior.runtime)" kind="rt" />
@@ -484,6 +488,8 @@
           <module ref="498d89d2-c2e9-11e2-ad49-6cf049e62fe5(MPS.IDEA)" kind="cl" />
           <module ref="8865b7a8-5271-43d3-884c-6fd1d9cfdd34(MPS.OpenAPI)" kind="cl" />
           <module ref="742f6602-5a2f-4313-aa6e-ae1cd4ffdc61(MPS.Platform)" kind="cl" />
+          <module ref="cc7da2f6-419f-4133-a811-31fcd3295a85(jetbrains.mps.debugger.api.api)" kind="cl" />
+          <module ref="fbc14279-5e2a-4c87-a5d1-5f7061e6c456(jetbrains.mps.debugger.api.lang)" kind="cl" />
           <module ref="bfbdd672-7ff5-403f-af4f-16da5226f34c(jetbrains.mps.findUsages.runtime)" kind="cl" />
           <module ref="cae9c33a-938f-42e8-8f0f-26f001c0af63(jetbrains.mps.ide.devkit.editor)" kind="cl" />
           <module ref="a381759b-acec-4e2e-8745-7bf905520fca(jetbrains.mps.ide.modelchecker.platform)" kind="cl" />
@@ -498,6 +504,7 @@
           <language id="l:f2801650-65d5-424e-bb1b-463a8781b786:jetbrains.mps.baseLanguage.javadoc" />
           <language id="l:760a0a8c-eabb-4521-8bfd-65db761a9ba3:jetbrains.mps.baseLanguage.logging" />
           <language id="l:a247e09e-2435-45ba-b8d2-07e93feba96a:jetbrains.mps.baseLanguage.tuples" />
+          <language id="l:fbc14279-5e2a-4c87-a5d1-5f7061e6c456:jetbrains.mps.debugger.api.lang" />
           <language id="l:aee9cad2-acd4-4608-aef2-0004f6a1cdbd:jetbrains.mps.lang.actions" />
           <language id="l:18bc6592-03a6-4e29-a83a-7ff23bde13ba:jetbrains.mps.lang.editor" />
           <language id="l:28f9e497-3b42-4291-aeba-0a1039153ab1:jetbrains.mps.lang.plugin" />
@@ -819,6 +826,7 @@
         <fileset file="${artifacts.mps}/languages/baseLanguage/jetbrains.mps.baseLanguage.logging.runtime.jar" />
         <fileset file="${artifacts.mps}/languages/baseLanguage/jetbrains.mps.baseLanguage.scopes.jar" />
         <fileset file="${artifacts.mps}/languages/baseLanguage/jetbrains.mps.baseLanguage.util.jar" />
+        <fileset file="${artifacts.mps}/plugins/mps-debugger-api/languages/jetbrains.mps.debugger.api.lang.jar" />
         <fileset file="${artifacts.mps}/languages/languageDesign/jetbrains.mps.lang.aspect.jar" />
         <fileset file="${artifacts.mps}/languages/languageDesign/jetbrains.mps.lang.core.jar" />
         <fileset file="${artifacts.mps}/languages/languageDesign/jetbrains.mps.lang.descriptor.jar" />
@@ -1109,6 +1117,7 @@
         <fileset file="${artifacts.mps}/languages/baseLanguage/jetbrains.mps.baseLanguage.collections.jar" />
         <fileset file="${artifacts.mps}/languages/baseLanguage/jetbrains.mps.baseLanguage.logging.runtime.jar" />
         <fileset file="${artifacts.mps}/languages/baseLanguage/jetbrains.mps.baseLanguage.scopes.jar" />
+        <fileset file="${artifacts.mps}/plugins/mps-debugger-api/languages/jetbrains.mps.debugger.api.lang.jar" />
         <fileset file="${artifacts.mps}/plugins/mps-devkit/languages/jetbrains.mps.ide.devkit.editor.jar" />
         <fileset file="${artifacts.mps}/languages/languageDesign/jetbrains.mps.lang.core.jar" />
         <fileset file="${artifacts.mps}/languages/languageDesign/jetbrains.mps.lang.generator.jar" />

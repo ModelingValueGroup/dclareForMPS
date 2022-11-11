@@ -7,6 +7,7 @@
     <use id="f3061a53-9226-4cc5-a443-f952ceaf5816" name="jetbrains.mps.baseLanguage" version="12" />
     <use id="28f9e497-3b42-4291-aeba-0a1039153ab1" name="jetbrains.mps.lang.plugin" version="5" />
     <use id="d4615e3b-d671-4ba9-af01-2b78369b0ba7" name="jetbrains.mps.lang.pattern" version="2" />
+    <use id="9882f4ad-1955-46fe-8269-94189e5dbbf2" name="jetbrains.mps.lang.migration.util" version="0" />
     <devkit ref="2787ae0c-1f54-4fbf-b0b7-caf2b5beecbc(jetbrains.mps.devkit.aspect.migration)" />
   </languages>
   <imports>
@@ -228,11 +229,36 @@
       </concept>
     </language>
     <language id="ceab5195-25ea-4f22-9b92-103b95ca8c0c" name="jetbrains.mps.lang.core">
+      <concept id="1133920641626" name="jetbrains.mps.lang.core.structure.BaseConcept" flags="ng" index="2VYdi">
+        <property id="1193676396447" name="virtualPackage" index="3GE5qa" />
+      </concept>
       <concept id="1169194658468" name="jetbrains.mps.lang.core.structure.INamedConcept" flags="ng" index="TrEIO">
         <property id="1169194664001" name="name" index="TrG5h" />
       </concept>
     </language>
     <language id="90746344-04fd-4286-97d5-b46ae6a81709" name="jetbrains.mps.lang.migration">
+      <concept id="3116305438947553624" name="jetbrains.mps.lang.migration.structure.RefactoringPart" flags="ng" index="7amoh">
+        <property id="3628660716136424362" name="participant" index="hSBgo" />
+        <child id="3628660716136424366" name="finalState" index="hSBgs" />
+        <child id="3628660716136424364" name="initialState" index="hSBgu" />
+      </concept>
+      <concept id="2864063292004102367" name="jetbrains.mps.lang.migration.structure.ReflectionNodeReference" flags="ng" index="2pBcaW">
+        <property id="2864063292004102809" name="nodeName" index="2pBc3U" />
+        <property id="2864063292004103235" name="modelRef" index="2pBcow" />
+        <property id="2864063292004103247" name="nodeId" index="2pBcoG" />
+      </concept>
+      <concept id="2015900981881695631" name="jetbrains.mps.lang.migration.structure.RefactoringLog" flags="ng" index="W$Crc">
+        <property id="2015900981881695633" name="fromVersion" index="W$Cri" />
+        <child id="2015900981881695634" name="part" index="W$Crh" />
+        <child id="3597905718825595708" name="options" index="1w76sc" />
+      </concept>
+      <concept id="3597905718825595712" name="jetbrains.mps.lang.migration.structure.RefactoringOptions" flags="ng" index="1w76tK">
+        <child id="3597905718825595718" name="options" index="1w76tQ" />
+      </concept>
+      <concept id="3597905718825595715" name="jetbrains.mps.lang.migration.structure.RefactoringOption" flags="ng" index="1w76tN">
+        <property id="3597905718825595716" name="optionId" index="1w76tO" />
+        <property id="3597905718825650036" name="description" index="1w7ld4" />
+      </concept>
       <concept id="8352104482584315555" name="jetbrains.mps.lang.migration.structure.MigrationScript" flags="ig" index="3SyAh_">
         <property id="5820409521797704727" name="fromVersion" index="qMTe8" />
       </concept>
@@ -1811,6 +1837,454 @@
     </node>
     <node concept="3uibUv" id="4fD99RQo4BX" role="1zkMxy">
       <ref role="3uigEE" to="slm6:5TUCQr2ybBO" resolve="HasMigrationScriptReference" />
+    </node>
+  </node>
+  <node concept="W$Crc" id="4GWaWvsTld">
+    <property role="3GE5qa" value="refactoring" />
+    <property role="W$Cri" value="0" />
+    <property role="TrG5h" value="Update References: breakpoint creators-&gt;breakpoint creators" />
+    <node concept="1w76tK" id="4GWaWvsTle" role="1w76sc">
+      <node concept="1w76tN" id="4GWaWvsTlf" role="1w76tQ">
+        <property role="1w76tO" value="moveNode.options.updateModelImports" />
+        <property role="1w7ld4" value="Update model imports" />
+      </node>
+      <node concept="1w76tN" id="4GWaWvsTlg" role="1w76tQ">
+        <property role="1w76tO" value="moveNode.options.updateReferencesParticipant" />
+        <property role="1w7ld4" value="Update references" />
+      </node>
+      <node concept="1w76tN" id="4GWaWvsTlh" role="1w76tQ">
+        <property role="1w76tO" value="moveNode.options.writeRefactoringLog" />
+        <property role="1w7ld4" value="Write refactoring log" />
+      </node>
+    </node>
+    <node concept="7amoh" id="4GWaWvsTlj" role="W$Crh">
+      <property role="hSBgo" value="moveNode.updateReferences" />
+      <node concept="2pBcaW" id="4GWaWvsTkb" role="hSBgu">
+        <property role="2pBcoG" value="406709041483519793" />
+        <property role="2pBcow" value="r:76834813-368a-40cb-b154-43230d04bc7e(DclareMPS.plugin)" />
+        <property role="2pBc3U" value="BreakpointCreator@92602" />
+      </node>
+      <node concept="2pBcaW" id="4GWaWvsTli" role="hSBgs">
+        <property role="2pBcoG" value="406709041483519793" />
+        <property role="2pBcow" value="r:484d68ee-91ab-4199-84e9-f43210a9918b(DclareMPSPlugin.plugin)" />
+        <property role="2pBc3U" value="BreakpointCreator@92602" />
+      </node>
+    </node>
+    <node concept="7amoh" id="4GWaWvsTll" role="W$Crh">
+      <property role="hSBgo" value="moveNode.updateReferences" />
+      <node concept="2pBcaW" id="4GWaWvsTkc" role="hSBgu">
+        <property role="2pBcoG" value="406709041483519794" />
+        <property role="2pBcow" value="r:76834813-368a-40cb-b154-43230d04bc7e(DclareMPS.plugin)" />
+        <property role="2pBc3U" value="BreakpointableNodeItem@92601" />
+      </node>
+      <node concept="2pBcaW" id="4GWaWvsTlk" role="hSBgs">
+        <property role="2pBcoG" value="406709041483519794" />
+        <property role="2pBcow" value="r:484d68ee-91ab-4199-84e9-f43210a9918b(DclareMPSPlugin.plugin)" />
+        <property role="2pBc3U" value="BreakpointableNodeItem@92601" />
+      </node>
+    </node>
+    <node concept="7amoh" id="4GWaWvsTln" role="W$Crh">
+      <property role="hSBgo" value="moveNode.updateReferences" />
+      <node concept="2pBcaW" id="4GWaWvsTkd" role="hSBgu">
+        <property role="2pBcoG" value="406709041483519795" />
+        <property role="2pBcow" value="r:76834813-368a-40cb-b154-43230d04bc7e(DclareMPS.plugin)" />
+        <property role="2pBc3U" value="ConceptFunction_CreateBreakpoint@92600" />
+      </node>
+      <node concept="2pBcaW" id="4GWaWvsTlm" role="hSBgs">
+        <property role="2pBcoG" value="406709041483519795" />
+        <property role="2pBcow" value="r:484d68ee-91ab-4199-84e9-f43210a9918b(DclareMPSPlugin.plugin)" />
+        <property role="2pBc3U" value="ConceptFunction_CreateBreakpoint@92600" />
+      </node>
+    </node>
+    <node concept="7amoh" id="4GWaWvsTlp" role="W$Crh">
+      <property role="hSBgo" value="moveNode.updateReferences" />
+      <node concept="2pBcaW" id="4GWaWvsTke" role="hSBgu">
+        <property role="2pBcoG" value="406709041483519796" />
+        <property role="2pBcow" value="r:76834813-368a-40cb-b154-43230d04bc7e(DclareMPS.plugin)" />
+        <property role="2pBc3U" value="StatementList@92599" />
+      </node>
+      <node concept="2pBcaW" id="4GWaWvsTlo" role="hSBgs">
+        <property role="2pBcoG" value="406709041483519796" />
+        <property role="2pBcow" value="r:484d68ee-91ab-4199-84e9-f43210a9918b(DclareMPSPlugin.plugin)" />
+        <property role="2pBc3U" value="StatementList@92599" />
+      </node>
+    </node>
+    <node concept="7amoh" id="4GWaWvsTlr" role="W$Crh">
+      <property role="hSBgo" value="moveNode.updateReferences" />
+      <node concept="2pBcaW" id="4GWaWvsTkf" role="hSBgu">
+        <property role="2pBcoG" value="406709041483520149" />
+        <property role="2pBcow" value="r:76834813-368a-40cb-b154-43230d04bc7e(DclareMPS.plugin)" />
+        <property role="2pBc3U" value="ReturnStatement@90198" />
+      </node>
+      <node concept="2pBcaW" id="4GWaWvsTlq" role="hSBgs">
+        <property role="2pBcoG" value="406709041483520149" />
+        <property role="2pBcow" value="r:484d68ee-91ab-4199-84e9-f43210a9918b(DclareMPSPlugin.plugin)" />
+        <property role="2pBc3U" value="ReturnStatement@90198" />
+      </node>
+    </node>
+    <node concept="7amoh" id="4GWaWvsTlt" role="W$Crh">
+      <property role="hSBgo" value="moveNode.updateReferences" />
+      <node concept="2pBcaW" id="4GWaWvsTkg" role="hSBgu">
+        <property role="2pBcoG" value="406709041483521219" />
+        <property role="2pBcow" value="r:76834813-368a-40cb-b154-43230d04bc7e(DclareMPS.plugin)" />
+        <property role="2pBc3U" value="DotExpression@91304" />
+      </node>
+      <node concept="2pBcaW" id="4GWaWvsTls" role="hSBgs">
+        <property role="2pBcoG" value="406709041483521219" />
+        <property role="2pBcow" value="r:484d68ee-91ab-4199-84e9-f43210a9918b(DclareMPSPlugin.plugin)" />
+        <property role="2pBc3U" value="DotExpression@91304" />
+      </node>
+    </node>
+    <node concept="7amoh" id="4GWaWvsTlv" role="W$Crh">
+      <property role="hSBgo" value="moveNode.updateReferences" />
+      <node concept="2pBcaW" id="4GWaWvsTkh" role="hSBgu">
+        <property role="2pBcoG" value="406709041483521023" />
+        <property role="2pBcow" value="r:76834813-368a-40cb-b154-43230d04bc7e(DclareMPS.plugin)" />
+        <property role="2pBc3U" value="Java" />
+      </node>
+      <node concept="2pBcaW" id="4GWaWvsTlu" role="hSBgs">
+        <property role="2pBcoG" value="406709041483521023" />
+        <property role="2pBcow" value="r:484d68ee-91ab-4199-84e9-f43210a9918b(DclareMPSPlugin.plugin)" />
+        <property role="2pBc3U" value="Java" />
+      </node>
+    </node>
+    <node concept="7amoh" id="4GWaWvsTlx" role="W$Crh">
+      <property role="hSBgo" value="moveNode.updateReferences" />
+      <node concept="2pBcaW" id="4GWaWvsTki" role="hSBgu">
+        <property role="2pBcoG" value="406709041483521498" />
+        <property role="2pBcow" value="r:76834813-368a-40cb-b154-43230d04bc7e(DclareMPS.plugin)" />
+        <property role="2pBc3U" value="CreateBreakpointOperation@91041" />
+      </node>
+      <node concept="2pBcaW" id="4GWaWvsTlw" role="hSBgs">
+        <property role="2pBcoG" value="406709041483521498" />
+        <property role="2pBcow" value="r:484d68ee-91ab-4199-84e9-f43210a9918b(DclareMPSPlugin.plugin)" />
+        <property role="2pBc3U" value="CreateBreakpointOperation@91041" />
+      </node>
+    </node>
+    <node concept="7amoh" id="4GWaWvsTlz" role="W$Crh">
+      <property role="hSBgo" value="moveNode.updateReferences" />
+      <node concept="2pBcaW" id="4GWaWvsTkj" role="hSBgu">
+        <property role="2pBcoG" value="406709041483521584" />
+        <property role="2pBcow" value="r:76834813-368a-40cb-b154-43230d04bc7e(DclareMPS.plugin)" />
+        <property role="2pBc3U" value="ConceptFunctionParameter_DebuggableNode@90811" />
+      </node>
+      <node concept="2pBcaW" id="4GWaWvsTly" role="hSBgs">
+        <property role="2pBcoG" value="406709041483521584" />
+        <property role="2pBcow" value="r:484d68ee-91ab-4199-84e9-f43210a9918b(DclareMPSPlugin.plugin)" />
+        <property role="2pBc3U" value="ConceptFunctionParameter_DebuggableNode@90811" />
+      </node>
+    </node>
+    <node concept="7amoh" id="4GWaWvsTl_" role="W$Crh">
+      <property role="hSBgo" value="moveNode.updateReferences" />
+      <node concept="2pBcaW" id="4GWaWvsTkk" role="hSBgu">
+        <property role="2pBcoG" value="406709041483521759" />
+        <property role="2pBcow" value="r:76834813-368a-40cb-b154-43230d04bc7e(DclareMPS.plugin)" />
+        <property role="2pBc3U" value="ConceptFunctionParameter_Debug_Project@90780" />
+      </node>
+      <node concept="2pBcaW" id="4GWaWvsTl$" role="hSBgs">
+        <property role="2pBcoG" value="406709041483521759" />
+        <property role="2pBcow" value="r:484d68ee-91ab-4199-84e9-f43210a9918b(DclareMPSPlugin.plugin)" />
+        <property role="2pBc3U" value="ConceptFunctionParameter_Debug_Project@90780" />
+      </node>
+    </node>
+    <node concept="7amoh" id="4GWaWvsTlB" role="W$Crh">
+      <property role="hSBgo" value="moveNode.updateReferences" />
+      <node concept="2pBcaW" id="4GWaWvsTkl" role="hSBgu">
+        <property role="2pBcoG" value="406709041483521017" />
+        <property role="2pBcow" value="r:76834813-368a-40cb-b154-43230d04bc7e(DclareMPS.plugin)" />
+        <property role="2pBc3U" value="ConceptDeclarationReference@89474" />
+      </node>
+      <node concept="2pBcaW" id="4GWaWvsTlA" role="hSBgs">
+        <property role="2pBcoG" value="406709041483521017" />
+        <property role="2pBcow" value="r:484d68ee-91ab-4199-84e9-f43210a9918b(DclareMPSPlugin.plugin)" />
+        <property role="2pBc3U" value="ConceptDeclarationReference@89474" />
+      </node>
+    </node>
+    <node concept="7amoh" id="4GWaWvsTlD" role="W$Crh">
+      <property role="hSBgo" value="moveNode.updateReferences" />
+      <node concept="2pBcaW" id="4GWaWvsTkm" role="hSBgu">
+        <property role="2pBcoG" value="5046418403469293516" />
+        <property role="2pBcow" value="r:76834813-368a-40cb-b154-43230d04bc7e(DclareMPS.plugin)" />
+        <property role="2pBc3U" value="ConceptFunction_IsApplicableBreakpoint@52688" />
+      </node>
+      <node concept="2pBcaW" id="4GWaWvsTlC" role="hSBgs">
+        <property role="2pBcoG" value="5046418403469293516" />
+        <property role="2pBcow" value="r:484d68ee-91ab-4199-84e9-f43210a9918b(DclareMPSPlugin.plugin)" />
+        <property role="2pBc3U" value="ConceptFunction_IsApplicableBreakpoint@52688" />
+      </node>
+    </node>
+    <node concept="7amoh" id="4GWaWvsTlF" role="W$Crh">
+      <property role="hSBgo" value="moveNode.updateReferences" />
+      <node concept="2pBcaW" id="4GWaWvsTkn" role="hSBgu">
+        <property role="2pBcoG" value="5046418403469293517" />
+        <property role="2pBcow" value="r:76834813-368a-40cb-b154-43230d04bc7e(DclareMPS.plugin)" />
+        <property role="2pBc3U" value="StatementList@52687" />
+      </node>
+      <node concept="2pBcaW" id="4GWaWvsTlE" role="hSBgs">
+        <property role="2pBcoG" value="5046418403469293517" />
+        <property role="2pBcow" value="r:484d68ee-91ab-4199-84e9-f43210a9918b(DclareMPSPlugin.plugin)" />
+        <property role="2pBc3U" value="StatementList@52687" />
+      </node>
+    </node>
+    <node concept="7amoh" id="4GWaWvsTlH" role="W$Crh">
+      <property role="hSBgo" value="moveNode.updateReferences" />
+      <node concept="2pBcaW" id="4GWaWvsTko" role="hSBgu">
+        <property role="2pBcoG" value="6802896129716156001" />
+        <property role="2pBcow" value="r:76834813-368a-40cb-b154-43230d04bc7e(DclareMPS.plugin)" />
+        <property role="2pBc3U" value="ExpressionStatement@103825" />
+      </node>
+      <node concept="2pBcaW" id="4GWaWvsTlG" role="hSBgs">
+        <property role="2pBcoG" value="6802896129716156001" />
+        <property role="2pBcow" value="r:484d68ee-91ab-4199-84e9-f43210a9918b(DclareMPSPlugin.plugin)" />
+        <property role="2pBc3U" value="ExpressionStatement@103825" />
+      </node>
+    </node>
+    <node concept="7amoh" id="4GWaWvsTlJ" role="W$Crh">
+      <property role="hSBgo" value="moveNode.updateReferences" />
+      <node concept="2pBcaW" id="4GWaWvsTkp" role="hSBgu">
+        <property role="2pBcoG" value="6802896129716158039" />
+        <property role="2pBcow" value="r:76834813-368a-40cb-b154-43230d04bc7e(DclareMPS.plugin)" />
+        <property role="2pBc3U" value="DotExpression@101791" />
+      </node>
+      <node concept="2pBcaW" id="4GWaWvsTlI" role="hSBgs">
+        <property role="2pBcoG" value="6802896129716158039" />
+        <property role="2pBcow" value="r:484d68ee-91ab-4199-84e9-f43210a9918b(DclareMPSPlugin.plugin)" />
+        <property role="2pBc3U" value="DotExpression@101791" />
+      </node>
+    </node>
+    <node concept="7amoh" id="4GWaWvsTlL" role="W$Crh">
+      <property role="hSBgo" value="moveNode.updateReferences" />
+      <node concept="2pBcaW" id="4GWaWvsTkq" role="hSBgu">
+        <property role="2pBcoG" value="6802896129716156495" />
+        <property role="2pBcow" value="r:76834813-368a-40cb-b154-43230d04bc7e(DclareMPS.plugin)" />
+        <property role="2pBc3U" value="StaticFieldReference@102311" />
+      </node>
+      <node concept="2pBcaW" id="4GWaWvsTlK" role="hSBgs">
+        <property role="2pBcoG" value="6802896129716156495" />
+        <property role="2pBcow" value="r:484d68ee-91ab-4199-84e9-f43210a9918b(DclareMPSPlugin.plugin)" />
+        <property role="2pBc3U" value="StaticFieldReference@102311" />
+      </node>
+    </node>
+    <node concept="7amoh" id="4GWaWvsTlN" role="W$Crh">
+      <property role="hSBgo" value="moveNode.updateReferences" />
+      <node concept="2pBcaW" id="4GWaWvsTkr" role="hSBgu">
+        <property role="2pBcoG" value="6802896129716163687" />
+        <property role="2pBcow" value="r:76834813-368a-40cb-b154-43230d04bc7e(DclareMPS.plugin)" />
+        <property role="2pBc3U" value="InstanceMethodCallOperation@62351" />
+      </node>
+      <node concept="2pBcaW" id="4GWaWvsTlM" role="hSBgs">
+        <property role="2pBcoG" value="6802896129716163687" />
+        <property role="2pBcow" value="r:484d68ee-91ab-4199-84e9-f43210a9918b(DclareMPSPlugin.plugin)" />
+        <property role="2pBc3U" value="InstanceMethodCallOperation@62351" />
+      </node>
+    </node>
+    <node concept="7amoh" id="4GWaWvsTlP" role="W$Crh">
+      <property role="hSBgo" value="moveNode.updateReferences" />
+      <node concept="2pBcaW" id="4GWaWvsTks" role="hSBgu">
+        <property role="2pBcoG" value="6802896129716169155" />
+        <property role="2pBcow" value="r:76834813-368a-40cb-b154-43230d04bc7e(DclareMPS.plugin)" />
+        <property role="2pBc3U" value="PlusExpression@56883" />
+      </node>
+      <node concept="2pBcaW" id="4GWaWvsTlO" role="hSBgs">
+        <property role="2pBcoG" value="6802896129716169155" />
+        <property role="2pBcow" value="r:484d68ee-91ab-4199-84e9-f43210a9918b(DclareMPSPlugin.plugin)" />
+        <property role="2pBc3U" value="PlusExpression@56883" />
+      </node>
+    </node>
+    <node concept="7amoh" id="4GWaWvsTlR" role="W$Crh">
+      <property role="hSBgo" value="moveNode.updateReferences" />
+      <node concept="2pBcaW" id="4GWaWvsTkt" role="hSBgu">
+        <property role="2pBcoG" value="6802896129716169662" />
+        <property role="2pBcow" value="r:76834813-368a-40cb-b154-43230d04bc7e(DclareMPS.plugin)" />
+        <property role="2pBc3U" value="ConceptFunctionParameter_DebuggableNode@57398" />
+      </node>
+      <node concept="2pBcaW" id="4GWaWvsTlQ" role="hSBgs">
+        <property role="2pBcoG" value="6802896129716169662" />
+        <property role="2pBcow" value="r:484d68ee-91ab-4199-84e9-f43210a9918b(DclareMPSPlugin.plugin)" />
+        <property role="2pBc3U" value="ConceptFunctionParameter_DebuggableNode@57398" />
+      </node>
+    </node>
+    <node concept="7amoh" id="4GWaWvsTlT" role="W$Crh">
+      <property role="hSBgo" value="moveNode.updateReferences" />
+      <node concept="2pBcaW" id="4GWaWvsTku" role="hSBgu">
+        <property role="2pBcoG" value="6802896129716166528" />
+        <property role="2pBcow" value="r:76834813-368a-40cb-b154-43230d04bc7e(DclareMPS.plugin)" />
+        <property role="2pBc3U" value="!!!!!!!!!!!!!!!!!!!!!!! " />
+      </node>
+      <node concept="2pBcaW" id="4GWaWvsTlS" role="hSBgs">
+        <property role="2pBcoG" value="6802896129716166528" />
+        <property role="2pBcow" value="r:484d68ee-91ab-4199-84e9-f43210a9918b(DclareMPSPlugin.plugin)" />
+        <property role="2pBc3U" value="!!!!!!!!!!!!!!!!!!!!!!! " />
+      </node>
+    </node>
+    <node concept="7amoh" id="4GWaWvsTlV" role="W$Crh">
+      <property role="hSBgo" value="moveNode.updateReferences" />
+      <node concept="2pBcaW" id="4GWaWvsTkv" role="hSBgu">
+        <property role="2pBcoG" value="5046418403469300392" />
+        <property role="2pBcow" value="r:76834813-368a-40cb-b154-43230d04bc7e(DclareMPS.plugin)" />
+        <property role="2pBc3U" value="ExpressionStatement@43301" />
+      </node>
+      <node concept="2pBcaW" id="4GWaWvsTlU" role="hSBgs">
+        <property role="2pBcoG" value="5046418403469300392" />
+        <property role="2pBcow" value="r:484d68ee-91ab-4199-84e9-f43210a9918b(DclareMPSPlugin.plugin)" />
+        <property role="2pBc3U" value="ExpressionStatement@43301" />
+      </node>
+    </node>
+    <node concept="7amoh" id="4GWaWvsTlX" role="W$Crh">
+      <property role="hSBgo" value="moveNode.updateReferences" />
+      <node concept="2pBcaW" id="4GWaWvsTkw" role="hSBgu">
+        <property role="2pBcoG" value="5046418403469390511" />
+        <property role="2pBcow" value="r:76834813-368a-40cb-b154-43230d04bc7e(DclareMPS.plugin)" />
+        <property role="2pBc3U" value="AndExpression@18723" />
+      </node>
+      <node concept="2pBcaW" id="4GWaWvsTlW" role="hSBgs">
+        <property role="2pBcoG" value="5046418403469390511" />
+        <property role="2pBcow" value="r:484d68ee-91ab-4199-84e9-f43210a9918b(DclareMPSPlugin.plugin)" />
+        <property role="2pBc3U" value="AndExpression@18723" />
+      </node>
+    </node>
+    <node concept="7amoh" id="4GWaWvsTlZ" role="W$Crh">
+      <property role="hSBgo" value="moveNode.updateReferences" />
+      <node concept="2pBcaW" id="4GWaWvsTkx" role="hSBgu">
+        <property role="2pBcoG" value="5046418403469302491" />
+        <property role="2pBcow" value="r:76834813-368a-40cb-b154-43230d04bc7e(DclareMPS.plugin)" />
+        <property role="2pBc3U" value="DotExpression@41174" />
+      </node>
+      <node concept="2pBcaW" id="4GWaWvsTlY" role="hSBgs">
+        <property role="2pBcoG" value="5046418403469302491" />
+        <property role="2pBcow" value="r:484d68ee-91ab-4199-84e9-f43210a9918b(DclareMPSPlugin.plugin)" />
+        <property role="2pBc3U" value="DotExpression@41174" />
+      </node>
+    </node>
+    <node concept="7amoh" id="4GWaWvsTm1" role="W$Crh">
+      <property role="hSBgo" value="moveNode.updateReferences" />
+      <node concept="2pBcaW" id="4GWaWvsTky" role="hSBgu">
+        <property role="2pBcoG" value="5046418403469300391" />
+        <property role="2pBcow" value="r:76834813-368a-40cb-b154-43230d04bc7e(DclareMPS.plugin)" />
+        <property role="2pBc3U" value="ConceptFunctionParameter_Concept@43306" />
+      </node>
+      <node concept="2pBcaW" id="4GWaWvsTm0" role="hSBgs">
+        <property role="2pBcoG" value="5046418403469300391" />
+        <property role="2pBcow" value="r:484d68ee-91ab-4199-84e9-f43210a9918b(DclareMPSPlugin.plugin)" />
+        <property role="2pBc3U" value="ConceptFunctionParameter_Concept@43306" />
+      </node>
+    </node>
+    <node concept="7amoh" id="4GWaWvsTm3" role="W$Crh">
+      <property role="hSBgo" value="moveNode.updateReferences" />
+      <node concept="2pBcaW" id="4GWaWvsTkz" role="hSBgu">
+        <property role="2pBcoG" value="5046418403469304299" />
+        <property role="2pBcow" value="r:76834813-368a-40cb-b154-43230d04bc7e(DclareMPS.plugin)" />
+        <property role="2pBc3U" value="Concept_IsSubConceptOfOperation@39910" />
+      </node>
+      <node concept="2pBcaW" id="4GWaWvsTm2" role="hSBgs">
+        <property role="2pBcoG" value="5046418403469304299" />
+        <property role="2pBcow" value="r:484d68ee-91ab-4199-84e9-f43210a9918b(DclareMPSPlugin.plugin)" />
+        <property role="2pBc3U" value="Concept_IsSubConceptOfOperation@39910" />
+      </node>
+    </node>
+    <node concept="7amoh" id="4GWaWvsTm5" role="W$Crh">
+      <property role="hSBgo" value="moveNode.updateReferences" />
+      <node concept="2pBcaW" id="4GWaWvsTk$" role="hSBgu">
+        <property role="2pBcoG" value="5046418403469387465" />
+        <property role="2pBcow" value="r:76834813-368a-40cb-b154-43230d04bc7e(DclareMPS.plugin)" />
+        <property role="2pBc3U" value="RefConcept_Reference@23749" />
+      </node>
+      <node concept="2pBcaW" id="4GWaWvsTm4" role="hSBgs">
+        <property role="2pBcoG" value="5046418403469387465" />
+        <property role="2pBcow" value="r:484d68ee-91ab-4199-84e9-f43210a9918b(DclareMPSPlugin.plugin)" />
+        <property role="2pBc3U" value="RefConcept_Reference@23749" />
+      </node>
+    </node>
+    <node concept="7amoh" id="4GWaWvsTm7" role="W$Crh">
+      <property role="hSBgo" value="moveNode.updateReferences" />
+      <node concept="2pBcaW" id="4GWaWvsTk_" role="hSBgu">
+        <property role="2pBcoG" value="5046418403469394592" />
+        <property role="2pBcow" value="r:76834813-368a-40cb-b154-43230d04bc7e(DclareMPS.plugin)" />
+        <property role="2pBc3U" value="NotEqualsExpression@80174" />
+      </node>
+      <node concept="2pBcaW" id="4GWaWvsTm6" role="hSBgs">
+        <property role="2pBcoG" value="5046418403469394592" />
+        <property role="2pBcow" value="r:484d68ee-91ab-4199-84e9-f43210a9918b(DclareMPSPlugin.plugin)" />
+        <property role="2pBc3U" value="NotEqualsExpression@80174" />
+      </node>
+    </node>
+    <node concept="7amoh" id="4GWaWvsTm9" role="W$Crh">
+      <property role="hSBgo" value="moveNode.updateReferences" />
+      <node concept="2pBcaW" id="4GWaWvsTkA" role="hSBgu">
+        <property role="2pBcoG" value="5046418403469395270" />
+        <property role="2pBcow" value="r:76834813-368a-40cb-b154-43230d04bc7e(DclareMPS.plugin)" />
+        <property role="2pBc3U" value="NullLiteral@81996" />
+      </node>
+      <node concept="2pBcaW" id="4GWaWvsTm8" role="hSBgs">
+        <property role="2pBcoG" value="5046418403469395270" />
+        <property role="2pBcow" value="r:484d68ee-91ab-4199-84e9-f43210a9918b(DclareMPSPlugin.plugin)" />
+        <property role="2pBc3U" value="NullLiteral@81996" />
+      </node>
+    </node>
+    <node concept="7amoh" id="4GWaWvsTmb" role="W$Crh">
+      <property role="hSBgo" value="moveNode.updateReferences" />
+      <node concept="2pBcaW" id="4GWaWvsTkB" role="hSBgu">
+        <property role="2pBcoG" value="5046418403469391624" />
+        <property role="2pBcow" value="r:76834813-368a-40cb-b154-43230d04bc7e(DclareMPS.plugin)" />
+        <property role="2pBc3U" value="DotExpression@20102" />
+      </node>
+      <node concept="2pBcaW" id="4GWaWvsTma" role="hSBgs">
+        <property role="2pBcoG" value="5046418403469391624" />
+        <property role="2pBcow" value="r:484d68ee-91ab-4199-84e9-f43210a9918b(DclareMPSPlugin.plugin)" />
+        <property role="2pBc3U" value="DotExpression@20102" />
+      </node>
+    </node>
+    <node concept="7amoh" id="4GWaWvsTmd" role="W$Crh">
+      <property role="hSBgo" value="moveNode.updateReferences" />
+      <node concept="2pBcaW" id="4GWaWvsTkC" role="hSBgu">
+        <property role="2pBcoG" value="5046418403469390582" />
+        <property role="2pBcow" value="r:76834813-368a-40cb-b154-43230d04bc7e(DclareMPS.plugin)" />
+        <property role="2pBc3U" value="ConceptFunctionParameter_DebuggableNode@18684" />
+      </node>
+      <node concept="2pBcaW" id="4GWaWvsTmc" role="hSBgs">
+        <property role="2pBcoG" value="5046418403469390582" />
+        <property role="2pBcow" value="r:484d68ee-91ab-4199-84e9-f43210a9918b(DclareMPSPlugin.plugin)" />
+        <property role="2pBc3U" value="ConceptFunctionParameter_DebuggableNode@18684" />
+      </node>
+    </node>
+    <node concept="7amoh" id="4GWaWvsTmf" role="W$Crh">
+      <property role="hSBgo" value="moveNode.updateReferences" />
+      <node concept="2pBcaW" id="4GWaWvsTkD" role="hSBgu">
+        <property role="2pBcoG" value="5046418403469392576" />
+        <property role="2pBcow" value="r:76834813-368a-40cb-b154-43230d04bc7e(DclareMPS.plugin)" />
+        <property role="2pBc3U" value="Node_GetAncestorOperation@16590" />
+      </node>
+      <node concept="2pBcaW" id="4GWaWvsTme" role="hSBgs">
+        <property role="2pBcoG" value="5046418403469392576" />
+        <property role="2pBcow" value="r:484d68ee-91ab-4199-84e9-f43210a9918b(DclareMPSPlugin.plugin)" />
+        <property role="2pBc3U" value="Node_GetAncestorOperation@16590" />
+      </node>
+    </node>
+    <node concept="7amoh" id="4GWaWvsTmh" role="W$Crh">
+      <property role="hSBgo" value="moveNode.updateReferences" />
+      <node concept="2pBcaW" id="4GWaWvsTkE" role="hSBgu">
+        <property role="2pBcoG" value="5046418403469392578" />
+        <property role="2pBcow" value="r:76834813-368a-40cb-b154-43230d04bc7e(DclareMPS.plugin)" />
+        <property role="2pBc3U" value="OperationParm_Concept@16592" />
+      </node>
+      <node concept="2pBcaW" id="4GWaWvsTmg" role="hSBgs">
+        <property role="2pBcoG" value="5046418403469392578" />
+        <property role="2pBcow" value="r:484d68ee-91ab-4199-84e9-f43210a9918b(DclareMPSPlugin.plugin)" />
+        <property role="2pBc3U" value="OperationParm_Concept@16592" />
+      </node>
+    </node>
+    <node concept="7amoh" id="4GWaWvsTmj" role="W$Crh">
+      <property role="hSBgo" value="moveNode.updateReferences" />
+      <node concept="2pBcaW" id="4GWaWvsTkF" role="hSBgu">
+        <property role="2pBcoG" value="5046418403469393164" />
+        <property role="2pBcow" value="r:76834813-368a-40cb-b154-43230d04bc7e(DclareMPS.plugin)" />
+        <property role="2pBc3U" value="RefConcept_Reference@18562" />
+      </node>
+      <node concept="2pBcaW" id="4GWaWvsTmi" role="hSBgs">
+        <property role="2pBcoG" value="5046418403469393164" />
+        <property role="2pBcow" value="r:484d68ee-91ab-4199-84e9-f43210a9918b(DclareMPSPlugin.plugin)" />
+        <property role="2pBc3U" value="RefConcept_Reference@18562" />
+      </node>
     </node>
   </node>
 </model>
