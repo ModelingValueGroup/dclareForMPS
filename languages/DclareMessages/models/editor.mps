@@ -920,7 +920,7 @@
         <node concept="3EZMnI" id="30f$n$3iAK2" role="3EZMnx">
           <node concept="2iRfu4" id="30f$n$3iAK3" role="2iSdaV" />
           <node concept="3F0ifn" id="5FinwQP4W2d" role="3EZMnx">
-            <property role="3F0ifm" value="in" />
+            <property role="3F0ifm" value="of" />
             <ref role="1k5W1q" to="tpen:hgVS8CF" resolve="KeyWord" />
             <node concept="3yfXC2" id="4DDgtvGUdQB" role="3F10Kt">
               <ref role="3ygfmf" to="wknp:7e_PmaZxfxC" resolve="source" />
