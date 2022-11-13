@@ -18,6 +18,9 @@ package org.modelingvalue.dclare.mps;
 import static org.modelingvalue.dclare.SetableModifier.containment;
 
 import java.lang.Thread.UncaughtExceptionHandler;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -397,27 +400,28 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
         DMessage message = new DMessage(context, feature, DMessageType.error, "TOO_MANY_CHANGES", "Too many changes, running " + feature + " changes=" + tmce.getNrOfChanges());
         tmce.getLast().trace(message, //
                 (m, r) -> m.addSubMessage(new DMessage((DObject) r.mutable(), feature(r.observer()), DMessageType.error, " ", //
-                        "run  : " + r.mutable() + "." + feature(r.observer()) + " nr: " + r.nrOfChanges())), //
+                        "run  : " + feature(r.observer()) + " nr: " + r.nrOfChanges())), //
                 (m, r, s) -> m.addSubMessage(new DMessage((DObject) s.mutable(), (DObserved) s.observed(), DMessageType.error, " ", //
-                        "read : " + s.mutable() + "." + s.observed() + "=" + r.read().get(s))), //
+                        "read : " + s.observed() + "=" + r.read().get(s))), //
                 (m, w, s) -> m.subMessages().last().addSubMessage(new DMessage((DObject) s.mutable(), (DObserved) s.observed(), DMessageType.error, " ", //
-                        "write: " + s.mutable() + "." + s.observed() + "=" + w.written().get(s))), //
+                        "write: " + s.observed() + "=" + w.written().get(s))), //
                 m -> m.subMessages().last(), universeTransaction().stats().maxNrOfChanges());
         addMessage(message);
     }
 
     @SuppressWarnings("rawtypes")
     private void addDebugTraceMessage(DObject object, DFeature feature, DebugTrace dt) {
-        DMessage message = new DMessage(object, feature, DMessageType.debug, "DEBUG_TRACE_" + dt.nr(), "Run nr " + dt.nr() + " of " + feature);
+        String time = DateTimeFormatter.ISO_LOCAL_TIME.format(ZonedDateTime.ofInstant(dt.trace().time(), ZoneId.systemDefault()));
+        DMessage message = new DMessage(object, feature, DMessageType.debug, "DEBUG_TRACE " + time, "Run " + feature);
         for (Entry<ObservedInstance, Object> read : dt.trace().read().filter(e -> !e.getKey().observed().isPlumbing())) {
             ObservedInstance s = read.getKey();
             message.addSubMessage(new DMessage((DObject) s.mutable(), (DObserved) s.observed(), DMessageType.debug, " ", //
-                    "read : " + s.mutable() + "." + s.observed() + "=" + read.getValue()));
+                    "read : " + s.observed() + "=" + read.getValue()));
         }
         for (Entry<ObservedInstance, Object> write : dt.trace().written().filter(e -> !e.getKey().observed().isPlumbing())) {
             ObservedInstance s = write.getKey();
             message.addSubMessage(new DMessage((DObject) s.mutable(), (DObserved) s.observed(), DMessageType.debug, " ", //
-                    "write: " + s.mutable() + "." + s.observed() + "=" + write.getValue()));
+                    "write: " + s.observed() + "=" + write.getValue()));
         }
         addMessage(message);
     }
@@ -500,7 +504,6 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
     }
 
     protected void removeDebugMessages(DFeature feature) {
-        universeTransaction.clearErrors();
         messages = messages.toMap(e -> e.getKey() == DMessageType.debug ? Entry.of(e.getKey(), //
                 e.getValue().filter(t -> !feature.equals(t.b())).toQualifiedSet(e.getValue().qualifier())) : e);
     }
@@ -835,15 +838,15 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
         }
 
         @Override
-        protected void handleExceptions(Set<Throwable> errors) {
-            clearErrors();
+        protected void handleInconsistencies(Set<Throwable> inconsistencies) {
             messages = MESSAGE_QSET_MAP;
-            addMessages(errors);
+            addMessages(inconsistencies);
         }
 
         @Override
-        public void clearErrors() {
-            super.clearErrors();
+        protected void handleExceptions() {
+            messages = MESSAGE_QSET_MAP;
+            addMessages(errors.getAndUpdate(es -> Set.of()));
         }
 
         @Override
