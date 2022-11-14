@@ -48,7 +48,6 @@ import org.modelingvalue.collections.DefaultMap;
 import org.modelingvalue.collections.Entry;
 import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.Map;
-import org.modelingvalue.collections.QualifiedSet;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Concurrent;
 import org.modelingvalue.collections.util.Context;
@@ -61,6 +60,7 @@ import org.modelingvalue.dclare.UniverseTransaction.Status;
 import org.modelingvalue.dclare.ex.*;
 import org.modelingvalue.dclare.mps.DAttribute.DObservedAttribute;
 import org.modelingvalue.dclare.mps.DRule.DObserver;
+import org.modelingvalue.dclare.mps.DRule.DObserverTransaction;
 import org.modelingvalue.dclare.mps.DclareModelCheckerBuilder.RootItemsToCheck;
 import org.modelingvalue.dclare.sync.DeltaAdaptor;
 import org.modelingvalue.dclare.sync.SyncConnectionHandler;
@@ -88,118 +88,117 @@ import jetbrains.mps.smodel.language.LanguageRuntime;
 @SuppressWarnings({"unused", "RedundantSuppression"})
 public class DClareMPS implements StateDeltaHandler, Universe, UncaughtExceptionHandler {
 
-    public static final Context<Boolean>                                                                RUNNING_DCLARE           = Context.of(false);
-    protected static final Context<Boolean>                                                             GET_FROM_MPS             = Context.of(false);
+    public static final Context<Boolean>                                                            RUNNING_DCLARE           = Context.of(false);
+    protected static final Context<Boolean>                                                         GET_FROM_MPS             = Context.of(false);
 
     @SuppressWarnings("rawtypes")
-    protected static final DefaultMap<Pair<String, Integer>, List<DMethod>>                             EMPTY_METHOD_MAP         = DefaultMap.of(k -> List.of());
+    protected static final DefaultMap<Pair<String, Integer>, List<DMethod>>                         EMPTY_METHOD_MAP         = DefaultMap.of(k -> List.of());
 
-    private static final Constant<SLanguage, IRuleAspect>                                               RULE_ASPECT              = Constant.of("RULE_ASPECT", l -> {
-                                                                                                                                     LanguageRuntime rtLang = registry().getLanguage(l);
-                                                                                                                                     return rtLang != null ? rtLang.getAspect(IRuleAspect.class) : null;
-                                                                                                                                 });
-    protected static Constant<SLanguage, Map<String, DAttribute<?, ?>>>                                 ATTRIBUTE_MAP            = Constant.of("ATTRIBUTE_MAP", l -> {
-                                                                                                                                     Collection<DAttribute<?, ?>> attrs1 = DClareMPS.STRUCT_CLASS_MAP.get(l).flatMap(e -> e.getValue().getIdentity());
-                                                                                                                                     Collection<DAttribute<?, ?>> attrs2 = DClareMPS.RULE_SETS.get(l).flatMap(rs -> Collection.of(rs.getAllAttributes()));
-                                                                                                                                     return Collection.concat(attrs1, attrs2).toMap(a -> Entry.of(a.id(), a));
-                                                                                                                                 });
-    protected static Constant<SLanguage, Map<String, SStructClass>>                                     STRUCT_CLASS_MAP         = Constant.of("STRUCT_CLASS_MAP", l -> {
-                                                                                                                                     IRuleAspect aspect = RULE_ASPECT.get(l);
-                                                                                                                                     Set<SStructClass> structClasses = aspect != null ? Collection.of(aspect.getStructClasses()).toSet() : Set.of();
-                                                                                                                                     return structClasses.toMap(s -> Entry.of(s.id(), s));
-                                                                                                                                 });
-    protected static Constant<SLanguage, Map<String, IAspect>>                                          ASPECT_MAP               = Constant.of("ASPECT_MAP", l -> {
-                                                                                                                                     IRuleAspect aspect = RULE_ASPECT.get(l);
-                                                                                                                                     Set<IAspect> aspects = aspect != null ? Collection.of(aspect.getAspects()).toSet() : Set.of();
-                                                                                                                                     return aspects.toMap(a -> Entry.of(a.getId(), a));
-                                                                                                                                 });
-    protected static Constant<SLanguage, Map<String, DMethod<?>>>                                       ALL_METHODS_MAP          = Constant.of("ALL_METHODS_MAP", l -> {
-                                                                                                                                     Collection<DMethod<?>> methods = DClareMPS.RULE_SETS.get(l).flatMap(rs -> Collection.of(rs.getAllMethods()));
-                                                                                                                                     return methods.toMap(m -> Entry.of(m.id(), m));
-                                                                                                                                 });
-    protected static Constant<SLanguage, Map<SNodeReference, DRule<?>>>                                 ALL_RULES_MAP            = Constant.of("ALL_RULES_MAP", l -> {
-                                                                                                                                     Collection<DRule<?>> rules = DClareMPS.RULE_SETS.get(l).flatMap(rs -> Collection.of(rs.getAllRules()));
-                                                                                                                                     return rules.toMap(m -> Entry.of(m.getSource(), m));
-                                                                                                                                 });
-    protected static Constant<SLanguage, Set<SReferenceLink>>                                           REFERENCES_WITH_OPPOSITE = Constant.of("REFERENCES_WITH_OPPOSITE", l -> {
-                                                                                                                                     IRuleAspect aspect = RULE_ASPECT.get(l);
-                                                                                                                                     return aspect != null ? Collection.of(aspect.getReferencesWithOpposite()).toSet() : Set.of();
-                                                                                                                                 });
+    private static final Constant<SLanguage, IRuleAspect>                                           RULE_ASPECT              = Constant.of("RULE_ASPECT", l -> {
+                                                                                                                                 LanguageRuntime rtLang = registry().getLanguage(l);
+                                                                                                                                 return rtLang != null ? rtLang.getAspect(IRuleAspect.class) : null;
+                                                                                                                             });
+    protected static Constant<SLanguage, Map<String, DAttribute<?, ?>>>                             ATTRIBUTE_MAP            = Constant.of("ATTRIBUTE_MAP", l -> {
+                                                                                                                                 Collection<DAttribute<?, ?>> attrs1 = DClareMPS.STRUCT_CLASS_MAP.get(l).flatMap(e -> e.getValue().getIdentity());
+                                                                                                                                 Collection<DAttribute<?, ?>> attrs2 = DClareMPS.RULE_SETS.get(l).flatMap(rs -> Collection.of(rs.getAllAttributes()));
+                                                                                                                                 return Collection.concat(attrs1, attrs2).toMap(a -> Entry.of(a.id(), a));
+                                                                                                                             });
+    protected static Constant<SLanguage, Map<String, SStructClass>>                                 STRUCT_CLASS_MAP         = Constant.of("STRUCT_CLASS_MAP", l -> {
+                                                                                                                                 IRuleAspect aspect = RULE_ASPECT.get(l);
+                                                                                                                                 Set<SStructClass> structClasses = aspect != null ? Collection.of(aspect.getStructClasses()).toSet() : Set.of();
+                                                                                                                                 return structClasses.toMap(s -> Entry.of(s.id(), s));
+                                                                                                                             });
+    protected static Constant<SLanguage, Map<String, IAspect>>                                      ASPECT_MAP               = Constant.of("ASPECT_MAP", l -> {
+                                                                                                                                 IRuleAspect aspect = RULE_ASPECT.get(l);
+                                                                                                                                 Set<IAspect> aspects = aspect != null ? Collection.of(aspect.getAspects()).toSet() : Set.of();
+                                                                                                                                 return aspects.toMap(a -> Entry.of(a.getId(), a));
+                                                                                                                             });
+    protected static Constant<SLanguage, Map<String, DMethod<?>>>                                   ALL_METHODS_MAP          = Constant.of("ALL_METHODS_MAP", l -> {
+                                                                                                                                 Collection<DMethod<?>> methods = DClareMPS.RULE_SETS.get(l).flatMap(rs -> Collection.of(rs.getAllMethods()));
+                                                                                                                                 return methods.toMap(m -> Entry.of(m.id(), m));
+                                                                                                                             });
+    protected static Constant<SLanguage, Map<SNodeReference, DRule<?>>>                             ALL_RULES_MAP            = Constant.of("ALL_RULES_MAP", l -> {
+                                                                                                                                 Collection<DRule<?>> rules = DClareMPS.RULE_SETS.get(l).flatMap(rs -> Collection.of(rs.getAllRules()));
+                                                                                                                                 return rules.toMap(m -> Entry.of(m.getSource(), m));
+                                                                                                                             });
+    protected static Constant<SLanguage, Set<SReferenceLink>>                                       REFERENCES_WITH_OPPOSITE = Constant.of("REFERENCES_WITH_OPPOSITE", l -> {
+                                                                                                                                 IRuleAspect aspect = RULE_ASPECT.get(l);
+                                                                                                                                 return aspect != null ? Collection.of(aspect.getReferencesWithOpposite()).toSet() : Set.of();
+                                                                                                                             });
     @SuppressWarnings("rawtypes")
-    protected static Constant<Set<SLanguage>, DefaultMap<Pair<String, Integer>, List<DMethod>>>         METHOD_MAP               = Constant.of("METHOD_MAP", ls -> {
-                                                                                                                                     Set<IRuleSet> ruleSets = ls.flatMap(DClareMPS.ACTIVE_RULE_SETS::get).toSet();
-                                                                                                                                     DefaultMap<Pair<String, Integer>, List<DMethod>> map = EMPTY_METHOD_MAP;
-                                                                                                                                     for (DMethod m : ruleSets.flatMap(rs -> Collection.of(rs.getAllMethods()))) {
-                                                                                                                                         Pair<String, Integer> k = Pair.of(m.name(), m.signature().size());
-                                                                                                                                         map = map.put(k, map.get(k).add(m));
-                                                                                                                                     }
-                                                                                                                                     return map.toDefaultMap(EMPTY_METHOD_MAP.defaultFunction(),                                                          //
-                                                                                                                                             e -> Entry.of(e.getKey(), e.getValue().sorted(Comparator.comparing(DMethod::signature)).toList()));
-                                                                                                                                 });
-    protected static Constant<DClareMPS, Map<SNodeReference, DRule<?>>>                                 RULE_MAP                 = Constant.of("RULE_MAP", dClareMPS -> {
-                                                                                                                                     return DRepository.ALL_LANGUAGES_WITH_RULES.get(dClareMPS.getRepository()).flatMap(ALL_RULES_MAP::get).toMap(e -> e);
-                                                                                                                                 });
-    private static final Set<DMessageType>                                                              MESSAGE_TYPES            = Collection.of(DMessageType.values()).toSet();
-    private static final QualifiedSet<Triple<DObject, DFeature, String>, DMessage>                      MESSAGE_QSET             = QualifiedSet.of(m -> Triple.of(m.context(), m.feature(), m.id()));
-    protected static final Map<DMessageType, QualifiedSet<Triple<DObject, DFeature, String>, DMessage>> MESSAGE_QSET_MAP         = MESSAGE_TYPES.sequential().toMap(t -> Entry.of(t, MESSAGE_QSET));
-    private static final MutableClass                                                                   UNIVERSE_CLASS           = new MutableClass() {
-                                                                                                                                     @Override
-                                                                                                                                     public Collection<? extends Observer<?>> dObservers() {
-                                                                                                                                         return Collection.of();
-                                                                                                                                     }
+    protected static Constant<Set<SLanguage>, DefaultMap<Pair<String, Integer>, List<DMethod>>>     METHOD_MAP               = Constant.of("METHOD_MAP", ls -> {
+                                                                                                                                 Set<IRuleSet> ruleSets = ls.flatMap(DClareMPS.ACTIVE_RULE_SETS::get).toSet();
+                                                                                                                                 DefaultMap<Pair<String, Integer>, List<DMethod>> map = EMPTY_METHOD_MAP;
+                                                                                                                                 for (DMethod m : ruleSets.flatMap(rs -> Collection.of(rs.getAllMethods()))) {
+                                                                                                                                     Pair<String, Integer> k = Pair.of(m.name(), m.signature().size());
+                                                                                                                                     map = map.put(k, map.get(k).add(m));
+                                                                                                                                 }
+                                                                                                                                 return map.toDefaultMap(EMPTY_METHOD_MAP.defaultFunction(),                                                          //
+                                                                                                                                         e -> Entry.of(e.getKey(), e.getValue().sorted(Comparator.comparing(DMethod::signature)).toList()));
+                                                                                                                             });
+    protected static Constant<DClareMPS, Map<SNodeReference, DRule<?>>>                             RULE_MAP                 = Constant.of("RULE_MAP", dClareMPS -> {
+                                                                                                                                 return DRepository.ALL_LANGUAGES_WITH_RULES.get(dClareMPS.getRepository()).flatMap(ALL_RULES_MAP::get).toMap(e -> e);
+                                                                                                                             });
+    protected static final DefaultMap<DMessageType, List<DMessage>>                                 EMPTY_MESSAGE_LIST_MAP   = DefaultMap.of(t -> List.of());
+    private static final MutableClass                                                               UNIVERSE_CLASS           = new MutableClass() {
+                                                                                                                                 @Override
+                                                                                                                                 public Collection<? extends Observer<?>> dObservers() {
+                                                                                                                                     return Collection.of();
+                                                                                                                                 }
 
-                                                                                                                                     @Override
-                                                                                                                                     public Collection<? extends Setable<? extends Mutable, ?>> dSetables() {
-                                                                                                                                         return SETABLES;
-                                                                                                                                     }
-                                                                                                                                 };
-    private static final Constant<SLanguage, Set<IRuleSet>>                                             RULE_SETS                = Constant.of("RULE_SETS", Set.of(), l -> {
-                                                                                                                                     IRuleAspect aspect = RULE_ASPECT.get(l);
-                                                                                                                                     return aspect != null ? Collection.of(aspect.getRuleSets()).toSet() : Set.of();
-                                                                                                                                 });
-    public static final Constant<SLanguage, Set<IRuleSet>>                                              ACTIVE_RULE_SETS         = Constant.of("ACTIVE_RULE_SETS", Set.of(), l -> {
-                                                                                                                                     DClareMPS dclareMPS = DClareMPS.instance();
-                                                                                                                                     return RULE_SETS.get(l).filter(rs -> dclareMPS.isActiveAspect(rs.getAspect())).toSet();
-                                                                                                                                 });
-    public static final Constant<SLanguage, Set<IAspect>>                                               ASPECTS                  = Constant.of("ASPECTS", Set.of(), l -> {
-                                                                                                                                     IRuleAspect aspect = RULE_ASPECT.get(l);
-                                                                                                                                     return aspect != null ? Collection.of(aspect.getAspects()).toSet() : Set.of();
-                                                                                                                                 });
-    public static final Constant<SAbstractConcept, SLanguage>                                           LANGUAGE                 = Constant.of("LANGUAGE", null, SAbstractConcept::getLanguage);
+                                                                                                                                 @Override
+                                                                                                                                 public Collection<? extends Setable<? extends Mutable, ?>> dSetables() {
+                                                                                                                                     return SETABLES;
+                                                                                                                                 }
+                                                                                                                             };
+    private static final Constant<SLanguage, Set<IRuleSet>>                                         RULE_SETS                = Constant.of("RULE_SETS", Set.of(), l -> {
+                                                                                                                                 IRuleAspect aspect = RULE_ASPECT.get(l);
+                                                                                                                                 return aspect != null ? Collection.of(aspect.getRuleSets()).toSet() : Set.of();
+                                                                                                                             });
+    public static final Constant<SLanguage, Set<IRuleSet>>                                          ACTIVE_RULE_SETS         = Constant.of("ACTIVE_RULE_SETS", Set.of(), l -> {
+                                                                                                                                 DClareMPS dclareMPS = DClareMPS.instance();
+                                                                                                                                 return RULE_SETS.get(l).filter(rs -> dclareMPS.isActiveAspect(rs.getAspect())).toSet();
+                                                                                                                             });
+    public static final Constant<SLanguage, Set<IAspect>>                                           ASPECTS                  = Constant.of("ASPECTS", Set.of(), l -> {
+                                                                                                                                 IRuleAspect aspect = RULE_ASPECT.get(l);
+                                                                                                                                 return aspect != null ? Collection.of(aspect.getAspects()).toSet() : Set.of();
+                                                                                                                             });
+    public static final Constant<SAbstractConcept, SLanguage>                                       LANGUAGE                 = Constant.of("LANGUAGE", null, SAbstractConcept::getLanguage);
 
-    public static final Constant<DevKit, Set<SLanguage>>                                                DEVKIT_LANGUAGES         = Constant.of("DEVKIT_LANGUAGES", Set.of(), devkit -> Collection.of(devkit.getAllExportedLanguageIds()).toSet());
-    protected static final Setable<DClareMPS, DRepository>                                              REPOSITORY_CONTAINER     = Setable.of("REPOSITORY_CONTAINER", null, containment);
-    private static final Setable<DClareMPS, DServerMetaData>                                            DSERVER_METADATA         = Setable.of("SERVER_METADATA", null, containment);
-    protected static final Set<? extends Setable<? extends Mutable, ?>>                                 SETABLES                 = Set.of(REPOSITORY_CONTAINER, DSERVER_METADATA);
+    public static final Constant<DevKit, Set<SLanguage>>                                            DEVKIT_LANGUAGES         = Constant.of("DEVKIT_LANGUAGES", Set.of(), devkit -> Collection.of(devkit.getAllExportedLanguageIds()).toSet());
+    protected static final Setable<DClareMPS, DRepository>                                          REPOSITORY_CONTAINER     = Setable.of("REPOSITORY_CONTAINER", null, containment);
+    private static final Setable<DClareMPS, DServerMetaData>                                        DSERVER_METADATA         = Setable.of("SERVER_METADATA", null, containment);
+    protected static final Set<? extends Setable<? extends Mutable, ?>>                             SETABLES                 = Set.of(REPOSITORY_CONTAINER, DSERVER_METADATA);
     //
-    private final int                                                                                   nr;
-    private final ContextPool                                                                           thePool                  = ContextThread.createPool(this);
-    private final MPSUniverseTransaction                                                                universeTransaction;
-    private final DclareForMpsConfig                                                                    config;
-    protected final ProjectBase                                                                         project;
-    private final ModelAccess                                                                           modelAccess;
-    protected final Concurrent<ReusableTransaction<DRule.DObserver<?>, DRule.DObserverTransaction>>     dObserverTransactions;
-    protected final Concurrent<ReusableTransaction<DNode.DCopyObserver, DNode.DCopyTransaction>>        dCopyObserverTransactions;
-    private final DclareForMPSEngine                                                                    engine;
-    private final AtomicLong                                                                            counter                  = new AtomicLong(0L);
-    private final DRepository                                                                           dRepository;
-    private final DServerMetaData                                                                       dServerMetaData;
+    private final int                                                                               nr;
+    private final ContextPool                                                                       thePool                  = ContextThread.createPool(this);
+    private final MPSUniverseTransaction                                                            universeTransaction;
+    private final DclareForMpsConfig                                                                config;
+    protected final ProjectBase                                                                     project;
+    private final ModelAccess                                                                       modelAccess;
+    protected final Concurrent<ReusableTransaction<DRule.DObserver<?>, DRule.DObserverTransaction>> dObserverTransactions;
+    protected final Concurrent<ReusableTransaction<DNode.DCopyObserver, DNode.DCopyTransaction>>    dCopyObserverTransactions;
+    private final DclareForMPSEngine                                                                engine;
+    private final AtomicLong                                                                        counter                  = new AtomicLong(0L);
+    private final DRepository                                                                       dRepository;
+    private final DServerMetaData                                                                   dServerMetaData;
+    private final Comparator<? super Triple<DObject, DFeature, Throwable>>                          messageComparator        = (a, b) -> universeTransaction().compareThrowable(a.c(), b.c());
     //
-    private Map<DMessageType, QualifiedSet<Triple<DObject, DFeature, String>, DMessage>>                messages                 = MESSAGE_QSET_MAP;
-    private boolean                                                                                     running                  = false;
-    private ImperativeTransaction                                                                       imperativeTransaction;
-    private Thread                                                                                      commandThread;
-    private ModuleChecker                                                                               moduleChecker;
-    private ModelChecker                                                                                modelChecker;
-    private NodeChecker                                                                                 nodeChecker;
-    private LanguageEditorChecker                                                                       languageEditorChecker;
-    private IAbstractChecker<ItemsToCheck, IssueKindReportItem>                                         mpsChecker;
-    private SyncConnectionHandler                                                                       syncConnectionHandler;
-    private Concurrent<Set<SModel>>                                                                     changedModels;
-    private Concurrent<Set<SModule>>                                                                    changedModules;
-    private Concurrent<Set<SNode>>                                                                      changedRoots;
-    private ConstantState                                                                               derivationState;
-    private int                                                                                         modelCheckNr;
+    private DefaultMap<DMessageType, List<DMessage>>                                                messages                 = EMPTY_MESSAGE_LIST_MAP;
+    private boolean                                                                                 running                  = false;
+    private ImperativeTransaction                                                                   imperativeTransaction;
+    private Thread                                                                                  commandThread;
+    private ModuleChecker                                                                           moduleChecker;
+    private ModelChecker                                                                            modelChecker;
+    private NodeChecker                                                                             nodeChecker;
+    private LanguageEditorChecker                                                                   languageEditorChecker;
+    private IAbstractChecker<ItemsToCheck, IssueKindReportItem>                                     mpsChecker;
+    private SyncConnectionHandler                                                                   syncConnectionHandler;
+    private Concurrent<Set<SModel>>                                                                 changedModels;
+    private Concurrent<Set<SModule>>                                                                changedModules;
+    private Concurrent<Set<SNode>>                                                                  changedRoots;
+    private ConstantState                                                                           derivationState;
+    private int                                                                                     modelCheckNr;
 
     protected DClareMPS(DclareForMPSEngine engine, ProjectBase project, DclareForMpsConfig config, int nr, Status[] startStatus) {
         this.nr = nr;
@@ -328,8 +327,15 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
     }
 
     @SuppressWarnings("unused") // called from MPS
-    public void addTraceMessage(String txType, Object node, String msg) {
-        addMessage(new DMessage(getRepository(), DRepository.MODULES, DMessageType.info, Long.toHexString(System.nanoTime()), txType + " " + msg + ": " + node));
+    public void addInfoMessage(String txType, Object object, String msg) {
+        DObject context = getRepository();
+        DFeature feature = DObject.INFOS;
+        LeafTransaction ltx = LeafTransaction.getCurrent();
+        if (ltx instanceof DObserverTransaction) {
+            context = ((DObserverTransaction) ltx).mutable();
+            feature = ((DObserverTransaction) ltx).rule();
+        }
+        prependMessage(new DMessage(context, feature, DMessageType.info, txType + " " + msg + ": " + object));
     }
 
     protected void addMessage(Throwable throwable) {
@@ -340,9 +346,9 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
     protected void addMessages(Set<Throwable> throwables) {
         if (!universeTransaction.isKilled()) {
             universeTransaction.currentState().run(() -> {
-                DObject object = getRepository();
-                DFeature feature = DRepository.EXCEPTIONS;
-                for (Throwable t : throwables.sorted(universeTransaction::compareThrowable)) {
+                Collection<Triple<DObject, DFeature, Throwable>> withContext = throwables.map(t -> {
+                    DObject object = getRepository();
+                    DFeature feature = DRepository.EXCEPTIONS;
                     while (t instanceof TransactionException) {
                         if (((TransactionException) t).getTransactionClass() instanceof DObserver) {
                             feature = ((DObserver) ((TransactionException) t).getTransactionClass()).rule();
@@ -353,10 +359,15 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
                         t = t.getCause();
                     }
                     if (t instanceof ConsistencyError) {
-                        addMessage((ConsistencyError) t);
-                    } else {
-                        addThrowableMessage(object, feature, t);
+                        ConsistencyError ce = (ConsistencyError) t;
+                        object = ce.getObject() instanceof DObject ? (DObject) ce.getObject() : object;
+                        feature = ce.getFeature() instanceof DObserver ? ((DObserver) ce.getFeature()).rule() : //
+                                ce.getFeature() instanceof DFeature ? (DFeature) ce.getFeature() : feature;
                     }
+                    return Triple.of(object, feature, t);
+                });
+                for (Triple<DObject, DFeature, Throwable> t : withContext.sorted(messageComparator).sequential()) {
+                    addMessage(t.a(), t.b(), t.c());
                 }
             });
             if (throwables.anyMatch(t -> !(t instanceof DebugTrace))) {
@@ -366,10 +377,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
     }
 
     @SuppressWarnings("rawtypes")
-    private void addMessage(ConsistencyError t) {
-        DObject object = t.getObject() instanceof DObject ? (DObject) t.getObject() : getRepository();
-        DFeature feature = t.getFeature() instanceof DRule.DObserver ? ((DRule.DObserver) t.getFeature()).rule() : //
-                t.getFeature() instanceof DFeature ? (DFeature) t.getFeature() : DRepository.EXCEPTIONS;
+    private void addMessage(DObject object, DFeature feature, Throwable t) {
         if (t instanceof OutOfScopeException) {
             addOutOfScopeExceptionMessage(object, feature, (OutOfScopeException) t);
         } else if (t instanceof NonDeterministicException) {
@@ -397,13 +405,13 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
 
     @SuppressWarnings("rawtypes")
     private void addTooManyChangesExceptionMessage(DObject context, DFeature feature, TooManyChangesException tmce) {
-        DMessage message = new DMessage(context, feature, DMessageType.error, "TOO_MANY_CHANGES", "Too many changes, running " + feature + " changes=" + tmce.getNrOfChanges());
+        DMessage message = new DMessage(context, feature, DMessageType.error, "Too many changes, running " + feature + " changes=" + tmce.getNrOfChanges());
         tmce.getLast().trace(message, //
-                (m, r) -> m.addSubMessage(new DMessage((DObject) r.mutable(), feature(r.observer()), DMessageType.error, " ", //
+                (m, r) -> m.addSubMessage(new DMessage((DObject) r.mutable(), feature(r.observer()), DMessageType.error, //
                         "run  : " + feature(r.observer()) + " nr: " + r.nrOfChanges())), //
-                (m, r, s) -> m.addSubMessage(new DMessage((DObject) s.mutable(), (DObserved) s.observed(), DMessageType.error, " ", //
+                (m, r, s) -> m.addSubMessage(new DMessage((DObject) s.mutable(), (DObserved) s.observed(), DMessageType.error, //
                         "read : " + s.observed() + "=" + r.read().get(s))), //
-                (m, w, s) -> m.subMessages().last().addSubMessage(new DMessage((DObject) s.mutable(), (DObserved) s.observed(), DMessageType.error, " ", //
+                (m, w, s) -> m.subMessages().last().addSubMessage(new DMessage((DObject) s.mutable(), (DObserved) s.observed(), DMessageType.error, //
                         "write: " + s.observed() + "=" + w.written().get(s))), //
                 m -> m.subMessages().last(), universeTransaction().stats().maxNrOfChanges());
         addMessage(message);
@@ -412,15 +420,15 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
     @SuppressWarnings("rawtypes")
     private void addDebugTraceMessage(DObject object, DFeature feature, DebugTrace dt) {
         String time = DateTimeFormatter.ISO_LOCAL_TIME.format(ZonedDateTime.ofInstant(dt.trace().time(), ZoneId.systemDefault()));
-        DMessage message = new DMessage(object, feature, DMessageType.debug, "DEBUG_TRACE " + time, "Run " + feature);
+        DMessage message = new DMessage(object, feature, DMessageType.debug, "Run " + feature + ", at " + time);
         for (Entry<ObservedInstance, Object> read : dt.trace().read().filter(e -> !e.getKey().observed().isPlumbing())) {
             ObservedInstance s = read.getKey();
-            message.addSubMessage(new DMessage((DObject) s.mutable(), (DObserved) s.observed(), DMessageType.debug, " ", //
+            message.addSubMessage(new DMessage((DObject) s.mutable(), (DObserved) s.observed(), DMessageType.debug, //
                     "read : " + s.observed() + "=" + read.getValue()));
         }
         for (Entry<ObservedInstance, Object> write : dt.trace().written().filter(e -> !e.getKey().observed().isPlumbing())) {
             ObservedInstance s = write.getKey();
-            message.addSubMessage(new DMessage((DObject) s.mutable(), (DObserved) s.observed(), DMessageType.debug, " ", //
+            message.addSubMessage(new DMessage((DObject) s.mutable(), (DObserved) s.observed(), DMessageType.debug, //
                     "write: " + s.observed() + "=" + write.getValue()));
         }
         addMessage(message);
@@ -433,13 +441,13 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
 
     @SuppressWarnings("rawtypes")
     private void addTooManyObservedExceptionMessage(DObject context, DFeature feature, TooManyObservedException tmse) {
-        DMessage message = new DMessage(context, feature, DMessageType.error, "TOO_MANY_OBSERVED", tmse.getSimpleMessage());
+        DMessage message = new DMessage(context, feature, DMessageType.error, tmse.getSimpleMessage());
         for (Entry<Observed, Set<Mutable>> e : tmse.getObserved()) {
             if (e.getKey() instanceof DObserved) {
                 DObserved observed = (DObserved) e.getKey();
                 for (Mutable o : e.getValue()) {
                     if (o.dResolve(context) instanceof DObject) {
-                        message.addSubMessage(new DMessage((DObject) o.dResolve(context), observed, DMessageType.error, " ", "Observed: " + observed));
+                        message.addSubMessage(new DMessage((DObject) o.dResolve(context), observed, DMessageType.error, "Observed: " + observed));
                     }
                 }
             }
@@ -449,13 +457,13 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
 
     @SuppressWarnings("rawtypes")
     private void addTooManyObserversExceptionMessage(DObject context, DFeature feature, TooManyObserversException tmse) {
-        DMessage message = new DMessage(context, feature, DMessageType.error, "TOO_MANY_OBSERVERS", tmse.getSimpleMessage());
+        DMessage message = new DMessage(context, feature, DMessageType.error, tmse.getSimpleMessage());
         for (Entry<Observer, Set<Mutable>> e : tmse.getObservers()) {
             if (e.getKey() instanceof DRule.DObserver) {
                 DRule rule = ((DRule.DObserver) e.getKey()).rule();
                 for (Mutable o : e.getValue()) {
                     if (o.dResolve(context) instanceof DObject) {
-                        message.addSubMessage(new DMessage((DObject) o.dResolve(context), rule, DMessageType.error, " ", "Rule: " + rule));
+                        message.addSubMessage(new DMessage((DObject) o.dResolve(context), rule, DMessageType.error, "Rule: " + rule));
                     }
                 }
             }
@@ -464,33 +472,33 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
     }
 
     private void addUnidentifiedExceptionMessage(DObject context, DFeature feature, UnidentifiedException uie) {
-        addMessage(new DMessage(context, feature, DMessageType.error, "UNIDENTIFIED", uie.getMessage()));
+        addMessage(new DMessage(context, feature, DMessageType.error, uie.getMessage()));
     }
 
     private void addReferencedOrphanExceptionMessage(DObject context, DFeature feature, ReferencedOrphanException roe) {
-        addMessage(new DMessage(context, feature, DMessageType.error, "REFERENCED_ORPHAN", roe.getMessage()));
+        addMessage(new DMessage(context, feature, DMessageType.error, roe.getMessage()));
     }
 
     private void addEmptyMandatoryExceptionMessage(DObject context, DFeature feature, EmptyMandatoryException eme) {
-        addMessage(new DMessage(context, feature, DMessageType.error, "EMPTY_MANDATORY", eme.getMessage()));
+        addMessage(new DMessage(context, feature, DMessageType.error, eme.getMessage()));
     }
 
     private void addNonDeterministicExceptionMessage(DObject context, DFeature feature, NonDeterministicException nde) {
-        DMessage message = new DMessage(context, feature, DMessageType.error, "NON_DETERMINISTIC", nde.getMessage());
+        DMessage message = new DMessage(context, feature, DMessageType.error, nde.getMessage());
         for (StackTraceElement ste : nde.getStackTrace()) {
-            message.addSubMessage(new DMessage(context, feature, DMessageType.error, " ", ste));
+            message.addSubMessage(new DMessage(context, feature, DMessageType.error, ste));
         }
         addMessage(message);
     }
 
     private void addOutOfScopeExceptionMessage(DObject context, DFeature feature, OutOfScopeException oose) {
-        addMessage(new DMessage(context, feature, DMessageType.error, "OUT_OF_SCOPE", oose.getMessage()));
+        addMessage(new DMessage(context, feature, DMessageType.error, oose.getMessage()));
     }
 
     private void addThrowableMessage(DObject context, DFeature feature, Throwable t) {
-        DMessage message = new DMessage(context, feature, DMessageType.error, "EXCEPTION", t);
+        DMessage message = new DMessage(context, feature, DMessageType.error, t);
         for (StackTraceElement ste : t.getStackTrace()) {
-            message.addSubMessage(new DMessage(context, feature, DMessageType.error, " ", ste));
+            message.addSubMessage(new DMessage(context, feature, DMessageType.error, ste));
         }
         addMessage(message);
     }
@@ -499,13 +507,12 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
         messages = messages.put(message.type(), messages.get(message.type()).add(message));
     }
 
-    protected Map<DMessageType, QualifiedSet<Triple<DObject, DFeature, String>, DMessage>> getMessages() {
-        return messages;
+    private synchronized void prependMessage(DMessage message) {
+        messages = messages.put(message.type(), messages.get(message.type()).prepend(message));
     }
 
-    protected void removeDebugMessages(DFeature feature) {
-        messages = messages.toMap(e -> e.getKey() == DMessageType.debug ? Entry.of(e.getKey(), //
-                e.getValue().filter(t -> !feature.equals(t.b())).toQualifiedSet(e.getValue().qualifier())) : e);
+    protected DefaultMap<DMessageType, List<DMessage>> getMessages() {
+        return messages;
     }
 
     @Override
@@ -839,13 +846,13 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
 
         @Override
         protected void handleInconsistencies(Set<Throwable> inconsistencies) {
-            messages = MESSAGE_QSET_MAP;
+            messages = EMPTY_MESSAGE_LIST_MAP;
             addMessages(inconsistencies);
         }
 
         @Override
         protected void handleExceptions() {
-            messages = MESSAGE_QSET_MAP;
+            messages = EMPTY_MESSAGE_LIST_MAP;
             addMessages(errors.getAndUpdate(es -> Set.of()));
         }
 

@@ -25,12 +25,16 @@ import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
+import org.modelingvalue.collections.util.TriConsumer;
 import org.modelingvalue.dclare.*;
 
 import jetbrains.mps.errors.item.IssueKindReportItem;
 
 @SuppressWarnings({"rawtypes", "unused"})
 public abstract class DObject implements Mutable {
+
+    @SuppressWarnings("unchecked")
+    protected static final DObserved<DObject, Set<?>>                                  INFOS                     = DObserved.of("INFOS", Set.of(), (Function) null, (TriConsumer) null, plumbing);
 
     private static final Runnable                                                      DUMMY_RUNNABLE            = () -> {
                                                                                                                  };

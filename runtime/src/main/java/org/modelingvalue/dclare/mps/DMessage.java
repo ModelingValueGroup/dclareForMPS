@@ -17,31 +17,29 @@ package org.modelingvalue.dclare.mps;
 
 import org.jetbrains.mps.openapi.model.SNodeReference;
 import org.modelingvalue.collections.List;
-import org.modelingvalue.collections.util.Triple;
 
-public class DMessage extends Triple<DObject, DFeature, String> {
+public class DMessage {
     private static final long  serialVersionUID = -303368640776089669L;
 
     private final Object       content;
-    private List<DMessage>     subMessages      = List.of();
     private final DMessageType type;
+    private final DObject      context;
+    private final DFeature     feature;
+    private List<DMessage>     subMessages      = List.of();
 
-    public DMessage(DObject context, DFeature feature, DMessageType type, String id, Object content) {
-        super(context, feature, id);
-        this.content = content;
+    public DMessage(DObject context, DFeature feature, DMessageType type, Object content) {
+        this.context = context;
+        this.feature = feature;
         this.type = type;
+        this.content = content;
     }
 
     public DObject context() {
-        return a();
+        return context;
     }
 
     public DFeature feature() {
-        return b();
-    }
-
-    public String id() {
-        return c();
+        return feature;
     }
 
     public DMessageType type() {

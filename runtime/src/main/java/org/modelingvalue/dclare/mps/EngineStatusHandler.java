@@ -15,10 +15,8 @@
 
 package org.modelingvalue.dclare.mps;
 
+import org.modelingvalue.collections.DefaultMap;
 import org.modelingvalue.collections.List;
-import org.modelingvalue.collections.Map;
-import org.modelingvalue.collections.QualifiedSet;
-import org.modelingvalue.collections.util.Triple;
 
 public interface EngineStatusHandler {
 
@@ -26,7 +24,7 @@ public interface EngineStatusHandler {
 
     void aspects(List<IAspect> apects, DclareForMpsStatus status);
 
-    void messages(Map<DMessageType, QualifiedSet<Triple<DObject, DFeature, String>, DMessage>> messages, DclareForMpsStatus status);
+    void messages(DefaultMap<DMessageType, List<DMessage>> messages, DclareForMpsStatus status);
 
     void start(DclareForMpsStatus status);
 

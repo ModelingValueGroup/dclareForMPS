@@ -6000,7 +6000,7 @@
               <ref role="37wK5l" to="t4tl:~DClareMPS.instance()" resolve="instance" />
             </node>
             <node concept="liA8E" id="1eooSyZP6NC" role="2OqNvi">
-              <ref role="37wK5l" to="t4tl:~DClareMPS.addTraceMessage(java.lang.String,java.lang.Object,java.lang.String)" resolve="addTraceMessage" />
+              <ref role="37wK5l" to="t4tl:~DClareMPS.addInfoMessage(java.lang.String,java.lang.Object,java.lang.String)" resolve="addInfoMessage" />
               <node concept="37vLTw" id="7lWcteUzu44" role="37wK5m">
                 <ref role="3cqZAo" node="3ioQSqQLsdW" resolve="pre" />
               </node>

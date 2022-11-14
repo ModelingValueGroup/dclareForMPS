@@ -25,12 +25,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import org.jetbrains.mps.openapi.model.SNodeReference;
 import org.jetbrains.mps.openapi.util.ProgressMonitor;
+import org.modelingvalue.collections.DefaultMap;
 import org.modelingvalue.collections.List;
-import org.modelingvalue.collections.Map;
-import org.modelingvalue.collections.QualifiedSet;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.collections.util.StatusProvider.StatusIterator;
-import org.modelingvalue.collections.util.Triple;
 import org.modelingvalue.dclare.UniverseTransaction.Status;
 
 import jetbrains.mps.classloading.ClassLoaderManager;
@@ -206,11 +204,11 @@ public class DclareForMPSEngine implements DeployListener, IBreakpointManagerLis
 
     private class MoodUpdaterThread extends Thread {
 
-        private final BlockingQueue<Pair<DClareMPS, StatusIterator<Status>>>                 queue        = new LinkedBlockingQueue<>(3);
-        private boolean                                                                      stop;
-        private List<IAspect>                                                                prevAspects  = List.of();
+        private final BlockingQueue<Pair<DClareMPS, StatusIterator<Status>>> queue        = new LinkedBlockingQueue<>(3);
+        private boolean                                                      stop;
+        private List<IAspect>                                                prevAspects  = List.of();
         @SuppressWarnings("static-access")
-        private Map<DMessageType, QualifiedSet<Triple<DObject, DFeature, String>, DMessage>> prevMessages = dClareMPS.MESSAGE_QSET_MAP;
+        private DefaultMap<DMessageType, List<DMessage>>                     prevMessages = dClareMPS.EMPTY_MESSAGE_LIST_MAP;
 
         public MoodUpdaterThread() {
             super("dclare-moods-" + project.getName());
@@ -263,7 +261,7 @@ public class DclareForMPSEngine implements DeployListener, IBreakpointManagerLis
         private void updateStatus(Status status, DClareMPS current) {
             DclareForMpsStatus dclareForMpsStatus = new DclareForMpsStatus(status, current);
             List<IAspect> aspects = status.mood == starting ? current.getAllAspects() : prevAspects;
-            Map<DMessageType, QualifiedSet<Triple<DObject, DFeature, String>, DMessage>> messages = status.mood == starting || status.mood == idle || status.mood == stopped ? current.getMessages() : prevMessages;
+            DefaultMap<DMessageType, List<DMessage>> messages = status.mood == starting || status.mood == idle || status.mood == stopped ? current.getMessages() : prevMessages;
             current.readInEDT(() -> engineStatusHandler.status(dclareForMpsStatus));
             if (status.mood == starting) {
                 current.writeInEDT(() -> engineStatusHandler.start(dclareForMpsStatus));
@@ -300,7 +298,6 @@ public class DclareForMPSEngine implements DeployListener, IBreakpointManagerLis
                 DRule<?> rule = DClareMPS.RULE_MAP.get(dClareMPS).get(nodeRef);
                 if (rule != null) {
                     DRule.OBSERVER.get(rule).setTracing(false);
-                    dClareMPS.removeDebugMessages(rule);
                 }
             });
         }
