@@ -397,7 +397,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
         } else if (t instanceof DebugTrace) {
             addDebugTraceMessage(object, feature, (DebugTrace) t);
         } else if (t instanceof ThrowableError) {
-            addThrowableMessage(object, feature, t);
+            addThrowableMessage(object, feature, ((ThrowableError) t).getCause());
         } else {
             addThrowableMessage(object, feature, t);
         }
