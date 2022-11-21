@@ -203,7 +203,8 @@ public abstract class DObject implements Mutable {
 
     @Override
     public ConstantState dMemoization(AbstractDerivationTransaction tx) {
-        return isExternal() ? tx.universeTransaction().constantState() : Mutable.super.dMemoization(tx);
+        ConstantState constantState = tx.universeTransaction().constantState();
+        return constantState.isSet(tx, this, Mutable.D_PARENT_CONTAINING.constant()) || isExternal() ? constantState : Mutable.super.dMemoization(tx);
     }
 
     public abstract boolean isExternal();
