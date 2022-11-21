@@ -149,6 +149,11 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
     @SuppressWarnings("rawtypes")
     @Override
     public T get(O object) {
+        LeafTransaction tx = LeafTransaction.getCurrent();
+        if (!(tx instanceof AbstractDerivationTransaction) && tx.universeTransaction().constantState().isSet(tx, object, Mutable.D_PARENT_CONTAINING.constant())) {
+            DClareMPS dClareMPS = DClareMPS.instance(tx);
+            return dClareMPS.imperativeState().derive(() -> super.get(object), dClareMPS.universeTransaction().constantState());
+        }
         if (isRead()) {
             if (object.isRead()) {
                 if (object.readConstant()) {
@@ -157,8 +162,7 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
                     triggerInitRead(object);
                 }
             } else if (!isDclareOnly() && object.isObserving() && !DObject.READ_OBSERVEDS.add(object, this).contains(this) && DClareMPS.instance().getConfig().isTraceActivation()) {
-                LeafTransaction current = LeafTransaction.getCurrent();
-                current.runNonObserving(() -> System.err.println(DclareTrace.getLineStart("ACTIVATE", current) + object + "." + this));
+                tx.runNonObserving(() -> System.err.println(DclareTrace.getLineStart("ACTIVATE", tx) + object + "." + this));
             }
         }
         object.activate();
@@ -169,15 +173,15 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
     @Override
     public T set(O object, T value) {
         if (isRead() && !isDclareOnly() && object.isObserving()) {
-            LeafTransaction current = LeafTransaction.getCurrent();
+            LeafTransaction tx = LeafTransaction.getCurrent();
             if (object.isRead()) {
                 if (!DObject.READ_OBSERVEDS.get(object).contains(this)) {
                     triggerInitRead(object);
-                    ((ObserverTransaction) current).retrigger(Priority.inner);
+                    ((ObserverTransaction) tx).retrigger(Priority.inner);
                     return super.get(object);
                 }
             } else if (!DObject.READ_OBSERVEDS.add(object, this).contains(this) && DClareMPS.instance().getConfig().isTraceActivation()) {
-                current.runNonObserving(() -> System.err.println(DclareTrace.getLineStart("ACTIVATE", current) + object + "." + this));
+                tx.runNonObserving(() -> System.err.println(DclareTrace.getLineStart("ACTIVATE", tx) + object + "." + this));
             }
         }
         if (isReference() && object.isObserving()) {
