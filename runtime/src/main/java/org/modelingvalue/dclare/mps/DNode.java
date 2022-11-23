@@ -268,11 +268,13 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                                   return o.equals(children) ? 0 : children instanceof List ? ((List) children).firstIndexOf(o) : -1;
                                                                                                                                               });
 
+    private static final Setable<DNode, SNodeId>                                                             NODE_ID                          = Setable.of("NODE_ID", null);
+
     @SuppressWarnings("rawtypes")
     protected static final Set<Observer>                                                                     OBSERVERS                        = DNewableObject.OBSERVERS.addAll(Set.of(ROOT_RULE, MODEL_RULE, INDEX_RULE, ACTIVATE_RULE));
 
     @SuppressWarnings("rawtypes")
-    protected static final Set<Setable>                                                                      SETABLES                         = DNewableObject.SETABLES.addAll(Set.of(ROOT, MODEL, USER_OBJECTS, ALL_MPS_ISSUES, INDEX));
+    protected static final Set<Setable>                                                                      SETABLES                         = DNewableObject.SETABLES.addAll(Set.of(ROOT, MODEL, USER_OBJECTS, ALL_MPS_ISSUES, INDEX, NODE_ID));
 
     private static void removeWhenAllreadyContained(SNode newParent, SContainmentLink link, SNode node) {
         SNode oldParent = node.getParent();
@@ -419,7 +421,8 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
         SConcept concept = getConcept();
         DModel dModel = getModel();
         SModel sModel = dModel.tryOriginal();
-        return ref != null ? sModel.createNode(concept, ref.getNodeId()) : sModel.createNode(concept);
+        SNodeId nodeId = ref != null ? ref.getNodeId() : NODE_ID.get(this);
+        return nodeId != null ? sModel.createNode(concept, nodeId) : sModel.createNode(concept);
     }
 
     private void setMPSName(SNode sNode) {
@@ -542,8 +545,17 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
 
     @Override
     public SNodeId getNodeId() {
-        SNode sNode = tryOriginal();
-        return sNode != null ? sNode.getNodeId() : null;
+        SNodeReference ref = reference();
+        if (ref != null) {
+            return ref.getNodeId();
+        } else {
+            SNodeId nodeId = NODE_ID.current(this);
+            if (nodeId == null) {
+                nodeId = jetbrains.mps.smodel.SModel.generateUniqueId();
+                NODE_ID.set(this, nodeId);
+            }
+            return nodeId;
+        }
     }
 
     @Override
