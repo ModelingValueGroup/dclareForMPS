@@ -17024,7 +17024,7 @@
     </node>
   </node>
   <node concept="sE7Ow" id="2M0pTEEA2iO">
-    <property role="TrG5h" value="ExtractAttributeFromNamed" />
+    <property role="TrG5h" value="ExtractAttributeFromQuoted" />
     <property role="72QZ$" value="true" />
     <property role="2uzpH1" value="Extract Attribute" />
     <node concept="2S4$dB" id="2M0pTEEA2iP" role="1NuT2Z">

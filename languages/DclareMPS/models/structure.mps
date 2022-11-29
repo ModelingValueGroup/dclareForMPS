@@ -44,6 +44,7 @@
         <child id="3348158742936976577" name="members" index="25R1y" />
       </concept>
       <concept id="1224240836180" name="jetbrains.mps.lang.structure.structure.DeprecatedNodeAnnotation" flags="ig" index="asaX9" />
+      <concept id="6054523464626862044" name="jetbrains.mps.lang.structure.structure.AttributeInfo_IsMultiple" flags="ng" index="tn0Fv" />
       <concept id="6054523464627964745" name="jetbrains.mps.lang.structure.structure.AttributeInfo_AttributedConcept" flags="ng" index="trNpa">
         <reference id="6054523464627965081" name="concept" index="trN6q" />
       </concept>
@@ -53,6 +54,7 @@
       <concept id="2992811758677295509" name="jetbrains.mps.lang.structure.structure.AttributeInfo" flags="ng" index="M6xJ_">
         <property id="7588428831955550663" name="role" index="Hh88m" />
         <child id="7588428831947959310" name="attributed" index="EQaZv" />
+        <child id="7588428831955550186" name="multiple" index="HhnKV" />
       </concept>
       <concept id="1169125787135" name="jetbrains.mps.lang.structure.structure.AbstractConceptDeclaration" flags="ig" index="PkWjJ">
         <property id="6714410169261853888" name="conceptId" index="EcuMT" />
@@ -1400,6 +1402,80 @@
       <property role="20kJfa" value="type" />
       <property role="20lbJX" value="fLJekj4/_1" />
       <ref role="20lvS9" to="tpee:fz3vP1H" resolve="Type" />
+    </node>
+  </node>
+  <node concept="1TIwiD" id="OIpsC9ypoX">
+    <property role="EcuMT" value="949808489839564349" />
+    <property role="TrG5h" value="QuotedReference" />
+    <property role="3GE5qa" value="quotations" />
+    <ref role="1TJDcQ" to="tpee:fz3vP1J" resolve="Expression" />
+    <node concept="1TJgyj" id="OIpsC9Sbrs" role="1TKVEi">
+      <property role="IQ2ns" value="949808489845274332" />
+      <property role="20kJfa" value="quoted" />
+      <property role="20lbJX" value="fLJekj4/_1" />
+      <ref role="20lvS9" to="tpck:h0TrEE$" resolve="INamedConcept" />
+    </node>
+    <node concept="PrWs8" id="OIpsC9Sbst" role="PzmwI">
+      <ref role="PrY4T" node="OIpsC9Sbsm" resolve="IQuotedSource" />
+    </node>
+  </node>
+  <node concept="1TIwiD" id="OIpsC9Sbri">
+    <property role="EcuMT" value="949808489845274322" />
+    <property role="3GE5qa" value="quotations" />
+    <property role="TrG5h" value="QuotedOperation" />
+    <ref role="1TJDcQ" to="tpck:gw2VY9q" />
+    <node concept="1TJgyj" id="OIpsC9Sbru" role="1TKVEi">
+      <property role="IQ2ns" value="949808489845274334" />
+      <property role="20kJfa" value="quoted" />
+      <property role="20lbJX" value="fLJekj4/_1" />
+      <ref role="20lvS9" to="tpck:h0TrEE$" resolve="INamedConcept" />
+    </node>
+    <node concept="PrWs8" id="OIpsC9Sbrm" role="PzmwI">
+      <ref role="PrY4T" to="tpee:hqOqG0K" resolve="IOperation" />
+    </node>
+    <node concept="PrWs8" id="OIpsC9Sbsq" role="PzmwI">
+      <ref role="PrY4T" node="OIpsC9Sbsm" resolve="IQuotedSource" />
+    </node>
+  </node>
+  <node concept="1TIwiD" id="OIpsC9Sbrj">
+    <property role="EcuMT" value="949808489845274323" />
+    <property role="3GE5qa" value="quotations" />
+    <property role="TrG5h" value="QuotedImplicitSelect" />
+    <ref role="1TJDcQ" to="tpck:gw2VY9q" />
+    <node concept="1TJgyj" id="OIpsC9Sbrw" role="1TKVEi">
+      <property role="IQ2ns" value="949808489845274336" />
+      <property role="20kJfa" value="quoted" />
+      <property role="20lbJX" value="fLJekj4/_1" />
+      <ref role="20lvS9" to="tpck:h0TrEE$" resolve="INamedConcept" />
+    </node>
+    <node concept="PrWs8" id="OIpsC9Sbrk" role="PzmwI">
+      <ref role="PrY4T" to="tpee:hqOqG0K" resolve="IOperation" />
+    </node>
+    <node concept="PrWs8" id="OIpsC9Sbsn" role="PzmwI">
+      <ref role="PrY4T" node="OIpsC9Sbsm" resolve="IQuotedSource" />
+    </node>
+  </node>
+  <node concept="PlHQZ" id="OIpsC9Sbsm">
+    <property role="EcuMT" value="949808489845274390" />
+    <property role="3GE5qa" value="quotations" />
+    <property role="TrG5h" value="IQuotedSource" />
+  </node>
+  <node concept="1TIwiD" id="OIpsC9Sbv6">
+    <property role="EcuMT" value="949808489845274566" />
+    <property role="3GE5qa" value="quotations" />
+    <property role="TrG5h" value="QuotedLabel" />
+    <ref role="1TJDcQ" to="tpck:2ULFgo8_XDk" resolve="NodeAttribute" />
+    <node concept="M6xJ_" id="OIpsC9Sbvx" role="lGtFl">
+      <property role="Hh88m" value="label" />
+      <node concept="trNpa" id="OIpsC9SbvZ" role="EQaZv">
+        <ref role="trN6q" to="tpck:h0TrEE$" resolve="INamedConcept" />
+      </node>
+      <node concept="tn0Fv" id="OIpsC9Sbw1" role="HhnKV" />
+    </node>
+    <node concept="1TJgyi" id="OIpsC9Sb_m" role="1TKVEl">
+      <property role="IQ2nx" value="949808489845274966" />
+      <property role="TrG5h" value="label" />
+      <ref role="AX2Wp" to="tpck:fKAOsGN" resolve="string" />
     </node>
   </node>
 </model>
