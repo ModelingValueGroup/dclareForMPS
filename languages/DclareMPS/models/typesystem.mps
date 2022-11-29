@@ -7942,9 +7942,7 @@
       <node concept="3cpWs8" id="OIpsCaDOGz" role="3cqZAp">
         <node concept="3cpWsn" id="OIpsCaDOG$" role="3cpWs9">
           <property role="TrG5h" value="quoted" />
-          <node concept="3Tqbb2" id="OIpsCaDOty" role="1tU5fm">
-            <ref role="ehGHo" to="tpck:h0TrEE$" resolve="INamedConcept" />
-          </node>
+          <node concept="3Tqbb2" id="OIpsCaDOty" role="1tU5fm" />
           <node concept="2OqwBi" id="OIpsCaDOG_" role="33vP2m">
             <node concept="1YBJjd" id="OIpsCaDOGA" role="2Oq$k0">
               <ref role="1YBMHb" node="OIpsCaDNPJ" resolve="quotedImplicitSelect" />
@@ -8103,9 +8101,7 @@
       <node concept="3cpWs8" id="OIpsCaE09$" role="3cqZAp">
         <node concept="3cpWsn" id="OIpsCaE09_" role="3cpWs9">
           <property role="TrG5h" value="quoted" />
-          <node concept="3Tqbb2" id="OIpsCaE09A" role="1tU5fm">
-            <ref role="ehGHo" to="tpck:h0TrEE$" resolve="INamedConcept" />
-          </node>
+          <node concept="3Tqbb2" id="OIpsCaE09A" role="1tU5fm" />
           <node concept="2OqwBi" id="OIpsCaE09B" role="33vP2m">
             <node concept="1YBJjd" id="OIpsCaE09C" role="2Oq$k0">
               <ref role="1YBMHb" node="OIpsCaDZV7" resolve="quotedReference" />
@@ -8207,9 +8203,7 @@
       <node concept="3cpWs8" id="OIpsCaE0Bt" role="3cqZAp">
         <node concept="3cpWsn" id="OIpsCaE0Bu" role="3cpWs9">
           <property role="TrG5h" value="quoted" />
-          <node concept="3Tqbb2" id="OIpsCaE0Bv" role="1tU5fm">
-            <ref role="ehGHo" to="tpck:h0TrEE$" resolve="INamedConcept" />
-          </node>
+          <node concept="3Tqbb2" id="OIpsCaE0Bv" role="1tU5fm" />
           <node concept="2OqwBi" id="OIpsCaE0Bw" role="33vP2m">
             <node concept="1YBJjd" id="OIpsCaE0Bx" role="2Oq$k0">
               <ref role="1YBMHb" node="OIpsCaE0Bf" resolve="quotedOperation" />
