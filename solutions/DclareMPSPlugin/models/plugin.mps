@@ -17602,7 +17602,7 @@
   <node concept="sE7Ow" id="6z2Ms7rUHzI">
     <property role="TrG5h" value="ExtractLabeledQuotedFromAttribute" />
     <property role="72QZ$" value="true" />
-    <property role="2uzpH1" value="Extract Labeled Quoted" />
+    <property role="2uzpH1" value="Inline Attribute" />
     <node concept="2S4$dB" id="6z2Ms7rUHzJ" role="1NuT2Z">
       <property role="TrG5h" value="named" />
       <node concept="3Tm6S6" id="6z2Ms7rUHzK" role="1B3o_S" />

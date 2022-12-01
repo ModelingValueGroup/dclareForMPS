@@ -2258,7 +2258,7 @@
   </node>
   <node concept="3SMa$L" id="6z2Ms7r_2OZ">
     <property role="TrG5h" value="AttributeToQuoted" />
-    <property role="3SMaAB" value="Extract Label" />
+    <property role="3SMaAB" value="Inline Attribute" />
     <node concept="3SM$Og" id="6z2Ms7r_2Q6" role="3SMaAG">
       <property role="TrG5h" value="ruleset" />
       <node concept="3Tqbb2" id="6z2Ms7r_2Q7" role="1tU5fm">
