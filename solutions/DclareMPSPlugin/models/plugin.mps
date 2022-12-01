@@ -11143,6 +11143,14 @@
           </node>
           <node concept="3clFbJ" id="6aMI9gHDZVh" role="3cqZAp">
             <node concept="3clFbS" id="6aMI9gHDZVj" role="3clFbx">
+              <node concept="2JFkCU" id="67hNZsaOdnd" role="3cqZAp">
+                <node concept="tCFHf" id="67hNZsaOdOa" role="2JFLmv">
+                  <ref role="tCJdB" node="67hNZsaNCxb" resolve="ToQuotation" />
+                  <node concept="37vLTw" id="67hNZsaOe1X" role="2J__8u">
+                    <ref role="3cqZAo" node="6aMI9gHDZEA" resolve="ruleSet" />
+                  </node>
+                </node>
+              </node>
               <node concept="2JFkCU" id="5cgilv1DMhS" role="3cqZAp">
                 <node concept="tCFHf" id="5cgilv1DMPT" role="2JFLmv">
                   <ref role="tCJdB" node="18IIFqBWWhG" resolve="ExtractAttributeFromExpression" />
@@ -17733,6 +17741,144 @@
       </node>
       <node concept="3Tm6S6" id="6z2Ms7rUH$U" role="1B3o_S" />
       <node concept="3Tqbb2" id="6z2Ms7rUH$V" role="1tU5fm">
+        <ref role="ehGHo" to="7ggn:29R9$zZUovD" resolve="RuleSet" />
+      </node>
+    </node>
+  </node>
+  <node concept="sE7Ow" id="67hNZsaNCxb">
+    <property role="TrG5h" value="ToQuotation" />
+    <property role="72QZ$" value="true" />
+    <property role="2uzpH1" value="To Quotation" />
+    <node concept="2S4$dB" id="67hNZsaNCxc" role="1NuT2Z">
+      <property role="TrG5h" value="nodeBuilder" />
+      <node concept="3Tm6S6" id="67hNZsaNCxd" role="1B3o_S" />
+      <node concept="3Tqbb2" id="67hNZsaNCxe" role="1tU5fm" />
+      <node concept="1oajcY" id="67hNZsaNCxf" role="1oa70y" />
+    </node>
+    <node concept="1DS2jV" id="67hNZsaNCxg" role="1NuT2Z">
+      <property role="TrG5h" value="project" />
+      <ref role="1DUlNI" to="qq03:~MPSCommonDataKeys.MPS_PROJECT" resolve="MPS_PROJECT" />
+      <node concept="1oajcY" id="67hNZsaNCxh" role="1oa70y" />
+    </node>
+    <node concept="tnohg" id="67hNZsaNCxk" role="tncku">
+      <node concept="3clFbS" id="67hNZsaNCxl" role="2VODD2">
+        <node concept="3clFbF" id="67hNZsaNCxm" role="3cqZAp">
+          <node concept="2OqwBi" id="67hNZsaNCxn" role="3clFbG">
+            <node concept="liA8E" id="67hNZsaNCxo" role="2OqNvi">
+              <ref role="37wK5l" to="lui2:~ModelAccess.runReadInEDT(java.lang.Runnable)" resolve="runReadInEDT" />
+              <node concept="2ShNRf" id="67hNZsaNCxp" role="37wK5m">
+                <node concept="YeOm9" id="67hNZsaNCxq" role="2ShVmc">
+                  <node concept="1Y3b0j" id="67hNZsaNCxr" role="YeSDq">
+                    <property role="2bfB8j" value="true" />
+                    <ref role="37wK5l" to="wyt6:~Object.&lt;init&gt;()" resolve="Object" />
+                    <ref role="1Y3XeK" to="wyt6:~Runnable" resolve="Runnable" />
+                    <node concept="3Tm1VV" id="67hNZsaNCxs" role="1B3o_S" />
+                    <node concept="3clFb_" id="67hNZsaNCxt" role="jymVt">
+                      <property role="1EzhhJ" value="false" />
+                      <property role="TrG5h" value="run" />
+                      <property role="DiZV1" value="false" />
+                      <node concept="3Tm1VV" id="67hNZsaNCxu" role="1B3o_S" />
+                      <node concept="3cqZAl" id="67hNZsaNCxv" role="3clF45" />
+                      <node concept="3clFbS" id="67hNZsaNCxw" role="3clF47">
+                        <node concept="3clFbJ" id="67hNZsaNCxx" role="3cqZAp">
+                          <node concept="2YIFZM" id="67hNZsaNCxy" role="3clFbw">
+                            <ref role="37wK5l" to="mhbf:~SNodeUtil.isAccessible(org.jetbrains.mps.openapi.model.SNode,org.jetbrains.mps.openapi.module.SRepository)" resolve="isAccessible" />
+                            <ref role="1Pybhc" to="mhbf:~SNodeUtil" resolve="SNodeUtil" />
+                            <node concept="2OqwBi" id="67hNZsaNCxz" role="37wK5m">
+                              <node concept="2WthIp" id="67hNZsaNCx$" role="2Oq$k0">
+                                <ref role="32nkFo" node="67hNZsaNCxb" resolve="ExtractAttributeFromExpression" />
+                              </node>
+                              <node concept="3gHZIF" id="67hNZsaNCx_" role="2OqNvi">
+                                <ref role="2WH_rO" node="67hNZsaNCxc" resolve="expression" />
+                              </node>
+                            </node>
+                            <node concept="2OqwBi" id="67hNZsaNCxA" role="37wK5m">
+                              <node concept="2OqwBi" id="67hNZsaNCxB" role="2Oq$k0">
+                                <node concept="2WthIp" id="67hNZsaNCxC" role="2Oq$k0">
+                                  <ref role="32nkFo" node="67hNZsaNCxb" resolve="ExtractAttributeFromExpression" />
+                                </node>
+                                <node concept="1DTwFV" id="67hNZsaNCxD" role="2OqNvi">
+                                  <ref role="2WH_rO" node="67hNZsaNCxg" resolve="project" />
+                                </node>
+                              </node>
+                              <node concept="liA8E" id="67hNZsaNCxE" role="2OqNvi">
+                                <ref role="37wK5l" to="z1c4:~Project.getRepository()" resolve="getRepository" />
+                              </node>
+                            </node>
+                          </node>
+                          <node concept="3clFbS" id="67hNZsaNCxF" role="3clFbx">
+                            <node concept="1Xdei3" id="67hNZsaNCxX" role="3cqZAp">
+                              <ref role="1Xdeis" to="8a6h:67hNZsaNNDp" resolve="ToQuotation" />
+                              <node concept="2OqwBi" id="67hNZsaNCxY" role="1Xdeiv">
+                                <node concept="2WthIp" id="67hNZsaNCxZ" role="2Oq$k0" />
+                                <node concept="3gHZIF" id="67hNZsaNCy0" role="2OqNvi">
+                                  <ref role="2WH_rO" node="67hNZsaNCxc" resolve="expression" />
+                                </node>
+                              </node>
+                              <node concept="2OqwBi" id="67hNZsaNCy1" role="1Xdeit">
+                                <node concept="2WthIp" id="67hNZsaNCy2" role="2Oq$k0" />
+                                <node concept="1DTwFV" id="67hNZsaNCy3" role="2OqNvi">
+                                  <ref role="2WH_rO" node="67hNZsaNCxg" resolve="project" />
+                                </node>
+                              </node>
+                              <node concept="2OqwBi" id="67hNZsaNCy4" role="1Xdeiu">
+                                <node concept="2WthIp" id="67hNZsaNCy5" role="2Oq$k0">
+                                  <ref role="32nkFo" node="67hNZsaNCxb" resolve="ExtractAttributeFromExpression" />
+                                </node>
+                                <node concept="2BZ7hE" id="67hNZsaNCy6" role="2OqNvi">
+                                  <ref role="2WH_rO" node="67hNZsaNCyl" resolve="ruleSet" />
+                                </node>
+                              </node>
+                            </node>
+                          </node>
+                        </node>
+                      </node>
+                      <node concept="2AHcQZ" id="67hNZsaNCy8" role="2AJF6D">
+                        <ref role="2AI5Lk" to="wyt6:~Override" resolve="Override" />
+                      </node>
+                    </node>
+                  </node>
+                </node>
+              </node>
+            </node>
+            <node concept="2OqwBi" id="67hNZsaNCy9" role="2Oq$k0">
+              <node concept="2OqwBi" id="67hNZsaNCya" role="2Oq$k0">
+                <node concept="2WthIp" id="67hNZsaNCyb" role="2Oq$k0" />
+                <node concept="1DTwFV" id="67hNZsaNCyc" role="2OqNvi">
+                  <ref role="2WH_rO" node="67hNZsaNCxg" resolve="project" />
+                </node>
+              </node>
+              <node concept="liA8E" id="67hNZsaNCyd" role="2OqNvi">
+                <ref role="37wK5l" to="z1c4:~Project.getModelAccess()" resolve="getModelAccess" />
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+    <node concept="2ScWuX" id="67hNZsaNCye" role="tmbBb">
+      <node concept="3clFbS" id="67hNZsaNCyf" role="2VODD2">
+        <node concept="3clFbF" id="67hNZsaNCyg" role="3cqZAp">
+          <node concept="3trCAK" id="67hNZsaNCyh" role="3clFbG">
+            <ref role="3trCAN" to="8a6h:67hNZsaNNDp" resolve="ToQuotation" />
+            <node concept="2OqwBi" id="67hNZsaNCyi" role="3trCLF">
+              <node concept="2WthIp" id="67hNZsaNCyj" role="2Oq$k0" />
+              <node concept="3gHZIF" id="67hNZsaNCyk" role="2OqNvi">
+                <ref role="2WH_rO" node="67hNZsaNCxc" resolve="expression" />
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+    <node concept="2JriF1" id="67hNZsaNCyl" role="2JrayB">
+      <property role="TrG5h" value="ruleSet" />
+      <node concept="15s5l7" id="67hNZsaNCym" role="lGtFl">
+        <property role="1eyWvh" value="FLAVOUR_ISSUE_KIND=&quot;typesystem (typesystem)&quot;;FLAVOUR_MESSAGE=&quot;Error: toString should be specified for parameters of non-primitive type&quot;;FLAVOUR_RULE_ID=&quot;[r:00000000-0000-4000-0000-011c89590364(jetbrains.mps.lang.plugin.typesystem)/1227020617850]&quot;;" />
+        <property role="huDt6" value="Error: toString should be specified for parameters of non-primitive type" />
+      </node>
+      <node concept="3Tm6S6" id="67hNZsaNCyn" role="1B3o_S" />
+      <node concept="3Tqbb2" id="67hNZsaNCyo" role="1tU5fm">
         <ref role="ehGHo" to="7ggn:29R9$zZUovD" resolve="RuleSet" />
       </node>
     </node>
