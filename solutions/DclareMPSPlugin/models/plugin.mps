@@ -12317,31 +12317,25 @@
                 <node concept="2OqwBi" id="6$WcHcpJReP" role="37wK5m">
                   <node concept="2OqwBi" id="6$WcHcpJjgc" role="2Oq$k0">
                     <node concept="2OqwBi" id="6$WcHcpIKOW" role="2Oq$k0">
-                      <node concept="2OqwBi" id="6q369Il2S7G" role="2Oq$k0">
-                        <node concept="2OqwBi" id="4CcGleaTOZj" role="2Oq$k0">
-                          <node concept="2OqwBi" id="3rY1IQ9ZYQ8" role="2Oq$k0">
-                            <node concept="2ShNRf" id="3rY1IQ9ZhNY" role="2Oq$k0">
-                              <node concept="1pGfFk" id="3rY1IQ9ZYDv" role="2ShVmc">
-                                <ref role="37wK5l" to="7oz1:~EditorConfigurationBuilder.&lt;init&gt;()" resolve="EditorConfigurationBuilder" />
-                              </node>
-                            </node>
-                            <node concept="liA8E" id="3rY1IQ9ZZ7F" role="2OqNvi">
-                              <ref role="37wK5l" to="7oz1:~EditorConfigurationBuilder.showLeftHighlighter(boolean)" resolve="showLeftHighlighter" />
-                              <node concept="3clFbT" id="6$WcHcpHtOX" role="37wK5m">
-                                <property role="3clFbU" value="true" />
-                              </node>
+                      <node concept="2OqwBi" id="4CcGleaTOZj" role="2Oq$k0">
+                        <node concept="2OqwBi" id="3rY1IQ9ZYQ8" role="2Oq$k0">
+                          <node concept="2ShNRf" id="3rY1IQ9ZhNY" role="2Oq$k0">
+                            <node concept="1pGfFk" id="3rY1IQ9ZYDv" role="2ShVmc">
+                              <ref role="37wK5l" to="7oz1:~EditorConfigurationBuilder.&lt;init&gt;()" resolve="EditorConfigurationBuilder" />
                             </node>
                           </node>
-                          <node concept="liA8E" id="4CcGleaTPpp" role="2OqNvi">
-                            <ref role="37wK5l" to="7oz1:~EditorConfigurationBuilder.readOnly(boolean)" resolve="readOnly" />
-                            <node concept="3clFbT" id="4CcGleaTPQ_" role="37wK5m">
+                          <node concept="liA8E" id="3rY1IQ9ZZ7F" role="2OqNvi">
+                            <ref role="37wK5l" to="7oz1:~EditorConfigurationBuilder.showLeftHighlighter(boolean)" resolve="showLeftHighlighter" />
+                            <node concept="3clFbT" id="6$WcHcpHtOX" role="37wK5m">
                               <property role="3clFbU" value="true" />
                             </node>
                           </node>
                         </node>
-                        <node concept="liA8E" id="6q369Il2TIS" role="2OqNvi">
-                          <ref role="37wK5l" to="7oz1:~EditorConfigurationBuilder.showLightBulb(boolean)" resolve="showLightBulb" />
-                          <node concept="3clFbT" id="6q369Il35Nc" role="37wK5m" />
+                        <node concept="liA8E" id="4CcGleaTPpp" role="2OqNvi">
+                          <ref role="37wK5l" to="7oz1:~EditorConfigurationBuilder.readOnly(boolean)" resolve="readOnly" />
+                          <node concept="3clFbT" id="4CcGleaTPQ_" role="37wK5m">
+                            <property role="3clFbU" value="true" />
+                          </node>
                         </node>
                       </node>
                       <node concept="liA8E" id="6$WcHcpILj_" role="2OqNvi">
