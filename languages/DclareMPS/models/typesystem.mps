@@ -135,6 +135,7 @@
         <child id="1081773367580" name="leftExpression" index="3uHU7B" />
       </concept>
       <concept id="1214918800624" name="jetbrains.mps.baseLanguage.structure.PostfixIncrementExpression" flags="nn" index="3uNrnE" />
+      <concept id="1204200696010" name="jetbrains.mps.baseLanguage.structure.NullType" flags="in" index="1vX6Bi" />
       <concept id="1073239437375" name="jetbrains.mps.baseLanguage.structure.NotEqualsExpression" flags="nn" index="3y3z36" />
       <concept id="1081855346303" name="jetbrains.mps.baseLanguage.structure.BreakStatement" flags="nn" index="3zACq4" />
       <concept id="1144226303539" name="jetbrains.mps.baseLanguage.structure.ForeachStatement" flags="nn" index="1DcWWT">
@@ -8296,6 +8297,30 @@
     <node concept="1YaCAy" id="OIpsCaE0Bf" role="1YuTPh">
       <property role="TrG5h" value="quotedOperation" />
       <ref role="1YaFvo" to="7ggn:OIpsC9Sbri" resolve="QuotedOperation" />
+    </node>
+  </node>
+  <node concept="1YbPZF" id="2keqoSP6WLq">
+    <property role="TrG5h" value="typeof_AnythingLiteral" />
+    <property role="3GE5qa" value="expressions" />
+    <node concept="3clFbS" id="2keqoSP6WLr" role="18ibNy">
+      <node concept="1Z5TYs" id="hxvXJG3" role="3cqZAp">
+        <node concept="mw_s8" id="hxvXJG4" role="1ZfhK$">
+          <node concept="1Z2H0r" id="hxvXJG5" role="mwGJk">
+            <node concept="1YBJjd" id="h84_lrv" role="1Z2MuG">
+              <ref role="1YBMHb" node="2keqoSP6WLt" resolve="anythingLiteral" />
+            </node>
+          </node>
+        </node>
+        <node concept="mw_s8" id="hxvXJG6" role="1ZfhKB">
+          <node concept="2c44tf" id="hxvXCi6" role="mwGJk">
+            <node concept="1vX6Bi" id="hxvXGcB" role="2c44tc" />
+          </node>
+        </node>
+      </node>
+    </node>
+    <node concept="1YaCAy" id="2keqoSP6WLt" role="1YuTPh">
+      <property role="TrG5h" value="anythingLiteral" />
+      <ref role="1YaFvo" to="7ggn:2keqoSP5Zgz" resolve="AnythingLiteral" />
     </node>
   </node>
 </model>
