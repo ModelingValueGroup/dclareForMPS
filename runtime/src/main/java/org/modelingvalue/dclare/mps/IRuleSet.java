@@ -45,11 +45,23 @@ public interface IRuleSet {
 
     List<DRule<SStructObject>> getStructRules(SStructClass cls);
 
+    List<INative<SNode>> getNodeNatives(SAbstractConcept concept, Set<String> anonymousTypes);
+
+    List<INative<SModel>> getModelNatives(Set<String> anonymousTypes);
+
+    List<INative<DModule>> getModuleNatives();
+
+    List<INative<DRepository>> getRepositoryNatives();
+
+    List<INative<SStructObject>> getStructNatives(SStructClass cls);
+
     List<DMethod<?>> getAllMethods();
 
     List<DAttribute<?, ?>> getAllAttributes();
 
     List<DRule<?>> getAllRules();
+
+    List<INative<?>> getAllNatives();
 
     IAspect getAspect();
 

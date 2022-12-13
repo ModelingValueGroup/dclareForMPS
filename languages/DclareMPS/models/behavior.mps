@@ -18684,5 +18684,23 @@
       <node concept="3clFbS" id="2keqoSP6Vi4" role="2VODD2" />
     </node>
   </node>
+  <node concept="13h7C7" id="3ANOQoVR8Jk">
+    <property role="3GE5qa" value="native" />
+    <ref role="13h7C2" to="7ggn:5Hwm38JY5Mc" resolve="NativeDeclaration" />
+    <node concept="13hLZK" id="3ANOQoVR8Jl" role="13h7CW">
+      <node concept="3clFbS" id="3ANOQoVR8Jm" role="2VODD2" />
+    </node>
+    <node concept="13i0hz" id="3ANOQoVR8Jv" role="13h7CS">
+      <property role="TrG5h" value="isConstant" />
+      <ref role="13i0hy" node="64dupBmWpM2" resolve="isConstant" />
+      <node concept="3Tm1VV" id="3ANOQoVR8Jw" role="1B3o_S" />
+      <node concept="3clFbS" id="3ANOQoVR8Jz" role="3clF47">
+        <node concept="3clFbF" id="3ANOQoVR8JA" role="3cqZAp">
+          <node concept="3clFbT" id="3ANOQoVR8J_" role="3clFbG" />
+        </node>
+      </node>
+      <node concept="10P_77" id="3ANOQoVR8J$" role="3clF45" />
+    </node>
+  </node>
 </model>
 

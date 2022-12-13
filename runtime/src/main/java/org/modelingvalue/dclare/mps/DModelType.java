@@ -40,6 +40,12 @@ public class DModelType extends DObjectType<Pair<Set<SLanguage>, Set<String>>> {
         return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getModelAttributes(getAnonymousTypes()))).toSet();
     }
 
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    @Override
+    public Set<INative> getNatives(Set<IRuleSet> ruleSets) {
+        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getModelNatives(getAnonymousTypes()))).toSet();
+    }
+
     @Override
     public Set<SLanguage> getLanguages() {
         return id().a();

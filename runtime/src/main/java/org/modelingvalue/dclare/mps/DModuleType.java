@@ -39,6 +39,12 @@ public class DModuleType extends DObjectType<Set<SLanguage>> {
         return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getModuleAttributes())).toSet();
     }
 
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    @Override
+    public Set<INative> getNatives(Set<IRuleSet> ruleSets) {
+        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getModuleNatives())).toSet();
+    }
+
     @Override
     public Set<SLanguage> getLanguages() {
         return id();

@@ -44,9 +44,16 @@ import jetbrains.mps.errors.item.NodeReportItem;
 import jetbrains.mps.lang.smodel.generator.smodelAdapter.SNodeOperations;
 import jetbrains.mps.smodel.DynamicReference;
 import jetbrains.mps.smodel.SNodeUtil;
+import jetbrains.mps.smodel.adapter.structure.MetaAdapterFactory;
 
 @SuppressWarnings("unused")
 public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implements SNode {
+
+    private static final SConcept                                                                            QUOTATION_CONCEPT                = MetaAdapterFactory.getConcept(0x3a13115c633c4c5cL, 0xbbcc75c4219e9555L, 0x1168c104659L, "jetbrains.mps.lang.quotation.structure.Quotation");
+    private static final SConcept                                                                            ANTI_QUOTATION_CONCEPT           = MetaAdapterFactory.getConcept(0x3a13115c633c4c5cL, 0xbbcc75c4219e9555L, 0x1168c104658L, "jetbrains.mps.lang.quotation.structure.Antiquotation");
+    private static final SConcept                                                                            LIST_ANTI_QUOTATION_CONCEPT      = MetaAdapterFactory.getConcept(0x3a13115c633c4c5cL, 0xbbcc75c4219e9555L, 0x1168c10465eL, "jetbrains.mps.lang.quotation.structure.ListAntiquotation");
+    private static final SConcept                                                                            PROPERTY_ANTI_QUOTATION_CONCEPT  = MetaAdapterFactory.getConcept(0x3a13115c633c4c5cL, 0xbbcc75c4219e9555L, 0x116aac96587L, "jetbrains.mps.lang.quotation.structure.PropertyAntiquotation");
+    private static final SConcept                                                                            REFERENCE_ANTI_QUOTATION_CONCEPT = MetaAdapterFactory.getConcept(0x3a13115c633c4c5cL, 0xbbcc75c4219e9555L, 0x1168c10465dL, "jetbrains.mps.lang.quotation.structure.ReferenceAntiquotation");
 
     @SuppressWarnings("rawtypes")
     protected static Constant<SAbstractConcept, Set<DRule<SNode>>>                                           RULES                            = Constant.of("RULES", c -> {
@@ -268,13 +275,22 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                                   return o.equals(children) ? 0 : children instanceof List ? ((List) children).firstIndexOf(o) : -1;
                                                                                                                                               });
 
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    protected static final Observed<DNode, Boolean>                                                          QUOTED                           = Observed.of("QUOTED", Boolean.FALSE, plumbing);
+
+    @SuppressWarnings("rawtypes")
+    private static final Observer<DNode>                                                                     QUOTED_RULE                      = DObject.observer(QUOTED, o -> {
+                                                                                                                                                  DNode p = o.getParent();
+                                                                                                                                                  return p != null && (p.isQuotation() || (!p.isAntiQuotation() && QUOTED.get(p)));
+                                                                                                                                              });
+
     private static final Setable<DNode, SNodeId>                                                             NODE_ID                          = Setable.of("NODE_ID", null);
 
     @SuppressWarnings("rawtypes")
-    protected static final Set<Observer>                                                                     OBSERVERS                        = DNewableObject.OBSERVERS.addAll(Set.of(ROOT_RULE, MODEL_RULE, INDEX_RULE, ACTIVATE_RULE));
+    protected static final Set<Observer>                                                                     OBSERVERS                        = DNewableObject.OBSERVERS.addAll(Set.of(ROOT_RULE, MODEL_RULE, INDEX_RULE, ACTIVATE_RULE, QUOTED_RULE));
 
     @SuppressWarnings("rawtypes")
-    protected static final Set<Setable>                                                                      SETABLES                         = DNewableObject.SETABLES.addAll(Set.of(ROOT, MODEL, USER_OBJECTS, ALL_MPS_ISSUES, INDEX, NODE_ID));
+    protected static final Set<Setable>                                                                      SETABLES                         = DNewableObject.SETABLES.addAll(Set.of(ROOT, MODEL, USER_OBJECTS, ALL_MPS_ISSUES, INDEX, NODE_ID, QUOTED));
 
     private static void removeWhenAllreadyContained(SNode newParent, SContainmentLink link, SNode node) {
         SNode oldParent = node.getParent();
@@ -453,12 +469,16 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
     protected DNodeType getType() {
         DObject dParent = dObjectParent();
         Set<SLanguage> ls = dParent != null ? TYPE.get(dParent).getLanguages() : Set.of();
-        SLanguage lang = DClareMPS.LANGUAGE.get(getConcept());
-        if (!DClareMPS.ACTIVE_RULE_SETS.get(lang).isEmpty()) {
-            ls = ls.add(lang);
+        if (QUOTED.get(this)) {
+            return NODE_TYPE.get(Quadruple.of(ls, SNodeUtil.concept_BaseConcept, Set.of(), Set.of()));
+        } else {
+            SLanguage lang = DClareMPS.LANGUAGE.get(getConcept());
+            if (!DClareMPS.ACTIVE_RULE_SETS.get(lang).isEmpty()) {
+                ls = ls.add(lang);
+            }
+            ls = ls.addAll(getAnonymousLanguages());
+            return NODE_TYPE.get(Quadruple.of(ls, getConcept(), getAnonymousTypes(), getCopyAspects()));
         }
-        ls = ls.addAll(getAnonymousLanguages());
-        return NODE_TYPE.get(Quadruple.of(ls, getConcept(), getAnonymousTypes(), getCopyAspects()));
     }
 
     @Override
@@ -1183,6 +1203,15 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
     public boolean isShared() {
         DModel model = MODEL.get(this);
         return model != null && model.isShared();
+    }
+
+    private boolean isQuotation() {
+        return getConcept().equals(QUOTATION_CONCEPT);
+    }
+
+    private boolean isAntiQuotation() {
+        return getConcept().equals(ANTI_QUOTATION_CONCEPT) || getConcept().equals(LIST_ANTI_QUOTATION_CONCEPT) || //
+                getConcept().equals(PROPERTY_ANTI_QUOTATION_CONCEPT) || getConcept().equals(REFERENCE_ANTI_QUOTATION_CONCEPT);
     }
 
 }

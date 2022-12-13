@@ -8323,5 +8323,145 @@
       <ref role="1YaFvo" to="7ggn:2keqoSP5Zgz" resolve="AnythingLiteral" />
     </node>
   </node>
+  <node concept="1YbPZF" id="3ANOQoW2Yvt">
+    <property role="TrG5h" value="typeof_NativePost" />
+    <property role="3GE5qa" value="native" />
+    <node concept="3clFbS" id="3ANOQoW2Yvu" role="18ibNy">
+      <node concept="3cpWs8" id="3ANOQoW2ZTT" role="3cqZAp">
+        <node concept="3cpWsn" id="3ANOQoW2ZTU" role="3cpWs9">
+          <property role="TrG5h" value="handler" />
+          <node concept="3Tqbb2" id="3ANOQoW2ZOg" role="1tU5fm">
+            <ref role="ehGHo" to="7ggn:5Hwm38JY5Md" resolve="NativeAttributeHandler" />
+          </node>
+          <node concept="2OqwBi" id="3ANOQoW2ZTV" role="33vP2m">
+            <node concept="1YBJjd" id="3ANOQoW2ZTW" role="2Oq$k0">
+              <ref role="1YBMHb" node="3ANOQoW2Yvw" resolve="nativePost" />
+            </node>
+            <node concept="2Xjw5R" id="3ANOQoW2ZTX" role="2OqNvi">
+              <node concept="1xMEDy" id="3ANOQoW2ZTY" role="1xVPHs">
+                <node concept="chp4Y" id="3ANOQoW2ZTZ" role="ri$Ld">
+                  <ref role="cht4Q" to="7ggn:5Hwm38JY5Md" resolve="NativeAttributeHandler" />
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+      <node concept="1Z5TYs" id="3ANOQoW2ZmZ" role="3cqZAp">
+        <node concept="mw_s8" id="3ANOQoW31JG" role="1ZfhKB">
+          <node concept="2OqwBi" id="3ANOQoW32hK" role="mwGJk">
+            <node concept="2OqwBi" id="3ANOQoW31QX" role="2Oq$k0">
+              <node concept="37vLTw" id="3ANOQoW31JE" role="2Oq$k0">
+                <ref role="3cqZAo" node="3ANOQoW2ZTU" resolve="handler" />
+              </node>
+              <node concept="3TrEf2" id="3ANOQoW31Yc" role="2OqNvi">
+                <ref role="3Tt5mk" to="7ggn:5Hwm38JY5Me" resolve="attribute" />
+              </node>
+            </node>
+            <node concept="3TrEf2" id="3ANOQoW32JX" role="2OqNvi">
+              <ref role="3Tt5mk" to="tpee:4VkOLwjf83e" resolve="type" />
+            </node>
+          </node>
+        </node>
+        <node concept="mw_s8" id="3ANOQoW2Zn2" role="1ZfhK$">
+          <node concept="1Z2H0r" id="3ANOQoW2ZiU" role="mwGJk">
+            <node concept="1YBJjd" id="3ANOQoW2ZkN" role="1Z2MuG">
+              <ref role="1YBMHb" node="3ANOQoW2Yvw" resolve="nativePost" />
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+    <node concept="1YaCAy" id="3ANOQoW2Yvw" role="1YuTPh">
+      <property role="TrG5h" value="nativePost" />
+      <ref role="1YaFvo" to="7ggn:5Hwm38JY61k" resolve="NativePost" />
+    </node>
+  </node>
+  <node concept="1YbPZF" id="3ANOQoW2YvY">
+    <property role="TrG5h" value="typeof_NativePre" />
+    <property role="3GE5qa" value="native" />
+    <node concept="3clFbS" id="3ANOQoW2YvZ" role="18ibNy">
+      <node concept="3cpWs8" id="3ANOQoW32XS" role="3cqZAp">
+        <node concept="3cpWsn" id="3ANOQoW32XT" role="3cpWs9">
+          <property role="TrG5h" value="handler" />
+          <node concept="3Tqbb2" id="3ANOQoW32XU" role="1tU5fm">
+            <ref role="ehGHo" to="7ggn:5Hwm38JY5Md" resolve="NativeAttributeHandler" />
+          </node>
+          <node concept="2OqwBi" id="3ANOQoW32XV" role="33vP2m">
+            <node concept="1YBJjd" id="3ANOQoW32XW" role="2Oq$k0">
+              <ref role="1YBMHb" node="3ANOQoW2Yw1" resolve="nativePre" />
+            </node>
+            <node concept="2Xjw5R" id="3ANOQoW32XX" role="2OqNvi">
+              <node concept="1xMEDy" id="3ANOQoW32XY" role="1xVPHs">
+                <node concept="chp4Y" id="3ANOQoW32XZ" role="ri$Ld">
+                  <ref role="cht4Q" to="7ggn:5Hwm38JY5Md" resolve="NativeAttributeHandler" />
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+      <node concept="1Z5TYs" id="3ANOQoW32Y0" role="3cqZAp">
+        <node concept="mw_s8" id="3ANOQoW32Y1" role="1ZfhKB">
+          <node concept="2OqwBi" id="3ANOQoW32Y2" role="mwGJk">
+            <node concept="2OqwBi" id="3ANOQoW32Y3" role="2Oq$k0">
+              <node concept="37vLTw" id="3ANOQoW32Y4" role="2Oq$k0">
+                <ref role="3cqZAo" node="3ANOQoW32XT" resolve="handler" />
+              </node>
+              <node concept="3TrEf2" id="3ANOQoW32Y5" role="2OqNvi">
+                <ref role="3Tt5mk" to="7ggn:5Hwm38JY5Me" resolve="attribute" />
+              </node>
+            </node>
+            <node concept="3TrEf2" id="3ANOQoW32Y6" role="2OqNvi">
+              <ref role="3Tt5mk" to="tpee:4VkOLwjf83e" resolve="type" />
+            </node>
+          </node>
+        </node>
+        <node concept="mw_s8" id="3ANOQoW32Y7" role="1ZfhK$">
+          <node concept="1Z2H0r" id="3ANOQoW32Y8" role="mwGJk">
+            <node concept="1YBJjd" id="3ANOQoW32Y9" role="1Z2MuG">
+              <ref role="1YBMHb" node="3ANOQoW2Yw1" resolve="nativePre" />
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+    <node concept="1YaCAy" id="3ANOQoW2Yw1" role="1YuTPh">
+      <property role="TrG5h" value="nativePre" />
+      <ref role="1YaFvo" to="7ggn:5Hwm38JY61j" resolve="NativePre" />
+    </node>
+  </node>
+  <node concept="1YbPZF" id="3ANOQoW2Ywv">
+    <property role="TrG5h" value="typeof_NativeParent" />
+    <property role="3GE5qa" value="native" />
+    <node concept="3clFbS" id="3ANOQoW2Yww" role="18ibNy">
+      <node concept="1Z5TYs" id="3ANOQoW2YLD" role="3cqZAp">
+        <node concept="mw_s8" id="3ANOQoW2YM5" role="1ZfhKB">
+          <node concept="2pJPEk" id="3ANOQoW2YM1" role="mwGJk">
+            <node concept="2pJPED" id="3ANOQoW2YM3" role="2pJPEn">
+              <ref role="2pJxaS" to="tpee:g7uibYu" resolve="ClassifierType" />
+              <node concept="2pIpSj" id="3ANOQoW2YN4" role="2pJxcM">
+                <ref role="2pIpSl" to="tpee:g7uigIF" resolve="classifier" />
+                <node concept="36bGnv" id="3ANOQoW2ZiH" role="28nt2d">
+                  <ref role="36bGnp" to="t4tl:~DObject" resolve="DObject" />
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="mw_s8" id="3ANOQoW2YLG" role="1ZfhK$">
+          <node concept="1Z2H0r" id="3ANOQoW2YwA" role="mwGJk">
+            <node concept="1YBJjd" id="3ANOQoW2Yyv" role="1Z2MuG">
+              <ref role="1YBMHb" node="3ANOQoW2Ywy" resolve="nativeParent" />
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+    <node concept="1YaCAy" id="3ANOQoW2Ywy" role="1YuTPh">
+      <property role="TrG5h" value="nativeParent" />
+      <ref role="1YaFvo" to="7ggn:5Hwm38JY61i" resolve="NativeParent" />
+    </node>
+  </node>
 </model>
 

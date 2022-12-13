@@ -93,6 +93,8 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
 
     @SuppressWarnings("rawtypes")
     protected static final DefaultMap<Pair<String, Integer>, List<DMethod>>                         EMPTY_METHOD_MAP         = DefaultMap.of(k -> List.of());
+    @SuppressWarnings("rawtypes")
+    protected static final DefaultMap<DAttribute, List<IChangeHandler>>                             EMPTY_HANDLER_MAP        = DefaultMap.of(h -> List.of());
 
     private static final Constant<SLanguage, IRuleAspect>                                           RULE_ASPECT              = Constant.of("RULE_ASPECT", l -> {
                                                                                                                                  LanguageRuntime rtLang = registry().getLanguage(l);
@@ -135,6 +137,18 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
                                                                                                                                  }
                                                                                                                                  return map.toDefaultMap(EMPTY_METHOD_MAP.defaultFunction(),                                                          //
                                                                                                                                          e -> Entry.of(e.getKey(), e.getValue().sorted(Comparator.comparing(DMethod::signature)).toList()));
+                                                                                                                             });
+    @SuppressWarnings("rawtypes")
+    protected static Constant<DClareMPS, DefaultMap<DAttribute, List<IChangeHandler>>>              HANDLER_MAP              = Constant.of("HANDLER_MAP", d -> {
+                                                                                                                                 Set<SLanguage> ls = DRepository.ALL_LANGUAGES_WITH_RULES.get(d.getRepository());
+                                                                                                                                 Set<IRuleSet> ruleSets = ls.flatMap(DClareMPS.ACTIVE_RULE_SETS::get).toSet();
+                                                                                                                                 DefaultMap<DAttribute, List<IChangeHandler>> map = EMPTY_HANDLER_MAP;
+                                                                                                                                 for (INative<?> n : ruleSets.flatMap(rs -> Collection.of(rs.getAllNatives()))) {
+                                                                                                                                     for (IChangeHandler h : INative.ALL_HANDLERS.get(n)) {
+                                                                                                                                         map = map.put(h.attribute(), map.get(h.attribute()).add(h));
+                                                                                                                                     }
+                                                                                                                                 }
+                                                                                                                                 return map;
                                                                                                                              });
     protected static Constant<DClareMPS, Map<SNodeReference, DRule<?>>>                             RULE_MAP                 = Constant.of("RULE_MAP", dClareMPS -> {
                                                                                                                                  return DRepository.ALL_LANGUAGES_WITH_RULES.get(dClareMPS.getRepository()).flatMap(ALL_RULES_MAP::get).toMap(e -> e);
@@ -666,6 +680,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
         if (delta != null) {
             diff[0] = diff[0].removeKey(dObject);
             parentToMPS(pre, post, diff, dObject);
+            boolean nativeHandled = handleNativeExistence(pre, post, dObject);
             boolean changed = false;
             for (Entry<DObserved, Pair<Object, Object>> e : delta) {
                 DObserved dObserved = e.getKey();
@@ -681,9 +696,11 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
                         }, r -> {
                         });
                     }
-                    dObserved.toMPS(dObject, preVal, postVal);
-                    if (getConfig().isTraceMPSModelChanges() && !(dObserved instanceof DObservedAttribute) && dObserved != DObject.CONTAINED) {
-                        System.err.println(DclareTrace.getLineStart("MPS", imperativeTransaction) + "MODEL CHANGE " + dObject + "." + dObserved + " = " + State.shortValueDiffString(preVal, postVal));
+                    if (!(dObserved instanceof DObservedAttribute) || ((DObservedAttribute) dObserved).isPublic() || !nativeHandled) {
+                        dObserved.toMPS(dObject, preVal, postVal);
+                        if (getConfig().isTraceMPSModelChanges() && !(dObserved instanceof DObservedAttribute) && dObserved != DObject.CONTAINED) {
+                            System.err.println(DclareTrace.getLineStart("MPS", imperativeTransaction) + "MODEL CHANGE " + dObject + "." + dObserved + " = " + State.shortValueDiffString(preVal, postVal));
+                        }
                     }
                 }
             }
@@ -693,11 +710,39 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
         }
     }
 
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private boolean handleNativeExistence(State pre, State post, DObject dObject) {
+        Pair<Mutable, Setable<Mutable, ?>> prePc = pre.get(dObject, Mutable.D_PARENT_CONTAINING);
+        Pair<Mutable, Setable<Mutable, ?>> postPc = post.get(dObject, Mutable.D_PARENT_CONTAINING);
+        if (prePc == null && postPc != null) {
+            for (INative<DObject> n : post.get(dObject, DObject.TYPE).getNatives()) {
+                n.init((DObject) postPc.a());
+                for (IChangeHandler h : INative.ALL_HANDLERS.get(n)) {
+                    if (h.attribute() instanceof DObservedAttribute) {
+                        Object b = pre.get(dObject, (DObservedAttribute) h.attribute());
+                        Object a = post.get(dObject, (DObservedAttribute) h.attribute());
+                        h.handle(b, a);
+                    } else {
+                        h.handle(null, h.attribute().get(dObject));
+                    }
+                }
+            }
+            return true;
+        } else if (prePc != null && postPc == null) {
+            for (INative n : pre.get(dObject, DObject.TYPE).getNatives()) {
+                n.exit((DObject) prePc.a());
+            }
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     @SuppressWarnings({"rawtypes"})
     private void parentToMPS(State imper, State dclare, Map<DObject, Map<DObserved, Pair<Object, Object>>>[] diff, DObject dObject) {
-        Pair<Mutable, Setable<Mutable, ?>> pair = dclare.get(dObject, Mutable.D_PARENT_CONTAINING);
-        if (pair != null && pair.a() instanceof DObject && pair.b() instanceof DObserved) {
-            toMPS(imper, dclare, diff, (DObject) pair.a());
+        Pair<Mutable, Setable<Mutable, ?>> pc = dclare.get(dObject, Mutable.D_PARENT_CONTAINING);
+        if (pc != null && pc.a() instanceof DObject && pc.b() instanceof DObserved) {
+            toMPS(imper, dclare, diff, (DObject) pc.a());
         }
     }
 

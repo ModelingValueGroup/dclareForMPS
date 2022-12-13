@@ -15,28 +15,27 @@
 
 package org.modelingvalue.dclare.mps;
 
-import org.jetbrains.mps.openapi.language.SLanguage;
-import org.jetbrains.mps.openapi.language.SProperty;
-import org.jetbrains.mps.openapi.model.EditableSModel;
-import org.jetbrains.mps.openapi.model.SModel;
-import org.jetbrains.mps.openapi.model.SNode;
-import org.jetbrains.mps.openapi.model.SNodeReference;
-import org.modelingvalue.dclare.AbstractDerivationTransaction;
-import org.modelingvalue.dclare.Constant;
-import org.modelingvalue.dclare.LeafTransaction;
-import org.modelingvalue.dclare.Setable;
-import org.modelingvalue.dclare.SetableModifier;
+import static org.modelingvalue.dclare.SetableModifier.*;
 
 import java.util.Collections;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import jetbrains.mps.smodel.adapter.structure.property.InvalidProperty;
+import org.jetbrains.mps.openapi.language.SLanguage;
+import org.jetbrains.mps.openapi.language.SProperty;
+import org.jetbrains.mps.openapi.model.EditableSModel;
+import org.jetbrains.mps.openapi.model.SModel;
+import org.jetbrains.mps.openapi.model.SNode;
+import org.jetbrains.mps.openapi.model.SNodeReference;
+import org.modelingvalue.collections.List;
+import org.modelingvalue.dclare.AbstractDerivationTransaction;
+import org.modelingvalue.dclare.Constant;
+import org.modelingvalue.dclare.LeafTransaction;
+import org.modelingvalue.dclare.Setable;
+import org.modelingvalue.dclare.SetableModifier;
 
-import static org.modelingvalue.dclare.SetableModifier.containment;
-import static org.modelingvalue.dclare.SetableModifier.mandatory;
-import static org.modelingvalue.dclare.SetableModifier.synthetic;
+import jetbrains.mps.smodel.adapter.structure.property.InvalidProperty;
 
 @SuppressWarnings({"rawtypes", "unused"})
 public interface DAttribute<O, T> extends DFeature {
@@ -54,6 +53,11 @@ public interface DAttribute<O, T> extends DFeature {
     static <C, V> DAttribute<C, V> of(SLanguage language, String id) {
         return (DAttribute<C, V>) DClareMPS.ATTRIBUTE_MAP.get(language).get(id);
     }
+
+    @SuppressWarnings("rawtypes")
+    final static Constant<DAttribute, List<IChangeHandler>> D_HANDLERS = Constant.of("D_HANDLERS", a -> {
+        return DClareMPS.HANDLER_MAP.get(DClareMPS.instance()).get(a);
+    });
 
     void activate(O object);
 
@@ -84,6 +88,10 @@ public interface DAttribute<O, T> extends DFeature {
 
     boolean isMandatory();
 
+    default List<IChangeHandler> handlers() {
+        return D_HANDLERS.get(this);
+    }
+
     Class<?> cls();
 
     default SProperty getSProperty() {
@@ -97,13 +105,22 @@ public interface DAttribute<O, T> extends DFeature {
         private final SProperty sProperty;
         private final boolean   indetifying;
         private final IRuleSet  ruleSet;
+        private final boolean   isPublic;
+        private final boolean   hasHandlers;
 
+        @SuppressWarnings("unchecked")
         public DObservedAttribute(Object id, String name, IRuleSet ruleSet, boolean indetifying, boolean isPublic, V def, Class<?> cls, Supplier<Setable<?, ?>> opposite, Supplier<SNodeReference> source, SetableModifier... modifiers) {
             super(id, def, opposite, null, source, modifiers);
-            if (isPublic) {
-                this.sProperty = new InvalidProperty(id.toString(), name);
+            this.sProperty = isPublic ? new InvalidProperty(id.toString(), name) : null;
+            this.name = name;
+            this.cls = cls;
+            this.indetifying = indetifying;
+            this.ruleSet = ruleSet;
+            this.isPublic = isPublic;
+            this.hasHandlers = !handlers().isEmpty();
+            if (isPublic || hasHandlers) {
                 setFromToMPS(null, (o, b, a) -> {
-                    if (o instanceof DNode) {
+                    if (this.isPublic && o instanceof DNode) {
                         SNode sNode = ((DNode) o).tryOriginal();
                         SModel sModel = sNode != null ? sNode.getModel() : null;
                         if (sNode != null && sModel instanceof EditableSModel) {
@@ -113,14 +130,13 @@ public interface DAttribute<O, T> extends DFeature {
                             ((EditableSModel) sModel).setChanged(changed);
                         }
                     }
+                    if (hasHandlers) {
+                        for (IChangeHandler h : handlers()) {
+                            h.handle(b, a);
+                        }
+                    }
                 });
-            } else {
-                this.sProperty = null;
             }
-            this.name = name;
-            this.cls = cls;
-            this.indetifying = indetifying;
-            this.ruleSet = ruleSet;
         }
 
         @Override
@@ -187,6 +203,14 @@ public interface DAttribute<O, T> extends DFeature {
         @Override
         public SProperty getSProperty() {
             return sProperty;
+        }
+
+        public boolean hasNativeHandlers() {
+            return hasHandlers;
+        }
+
+        public boolean isPublic() {
+            return isPublic;
         }
 
     }

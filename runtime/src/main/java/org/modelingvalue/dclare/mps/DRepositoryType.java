@@ -39,6 +39,12 @@ public class DRepositoryType extends DObjectType<Set<SLanguage>> {
         return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getRepositoryAttributes())).toSet();
     }
 
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    @Override
+    public Set<INative> getNatives(Set<IRuleSet> ruleSets) {
+        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getRepositoryNatives())).toSet();
+    }
+
     @Override
     public Set<SLanguage> getLanguages() {
         return id();

@@ -1485,5 +1485,118 @@
     <property role="34LRSv" value="anything" />
     <ref role="1TJDcQ" to="tpee:fz3vP1J" resolve="Expression" />
   </node>
+  <node concept="1TIwiD" id="5Hwm38JY5Mc">
+    <property role="EcuMT" value="6584359627792080012" />
+    <property role="TrG5h" value="NativeDeclaration" />
+    <property role="3GE5qa" value="native" />
+    <property role="34LRSv" value="native" />
+    <ref role="1TJDcQ" to="tpck:gw2VY9q" />
+    <node concept="1TJgyj" id="5Hwm38JY60x" role="1TKVEi">
+      <property role="IQ2ns" value="6584359627792080929" />
+      <property role="20lmBu" value="fLJjDmT/aggregation" />
+      <property role="20lbJX" value="fLJekj5/_0__n" />
+      <property role="20kJfa" value="fields" />
+      <ref role="20lvS9" node="5Hwm38JY60Z" resolve="NativeFieldDeclaration" />
+    </node>
+    <node concept="1TJgyj" id="5Hwm38JY5Mg" role="1TKVEi">
+      <property role="IQ2ns" value="6584359627792080016" />
+      <property role="20lmBu" value="fLJjDmT/aggregation" />
+      <property role="20kJfa" value="init" />
+      <property role="20lbJX" value="fLJekj4/_1" />
+      <ref role="20lvS9" to="tpee:fzclF80" resolve="StatementList" />
+    </node>
+    <node concept="1TJgyj" id="5Hwm38JY5Mi" role="1TKVEi">
+      <property role="IQ2ns" value="6584359627792080018" />
+      <property role="20lmBu" value="fLJjDmT/aggregation" />
+      <property role="20kJfa" value="exit" />
+      <property role="20lbJX" value="fLJekj4/_1" />
+      <ref role="20lvS9" to="tpee:fzclF80" resolve="StatementList" />
+    </node>
+    <node concept="1TJgyj" id="5Hwm38JY61d" role="1TKVEi">
+      <property role="IQ2ns" value="6584359627792080973" />
+      <property role="20lmBu" value="fLJjDmT/aggregation" />
+      <property role="20kJfa" value="handlers" />
+      <property role="20lbJX" value="fLJekj5/_0__n" />
+      <ref role="20lvS9" node="5Hwm38JY5Md" resolve="NativeAttributeHandler" />
+    </node>
+    <node concept="PrWs8" id="5Hwm38JY61l" role="PzmwI">
+      <ref role="PrY4T" node="4WFClUM1rSw" resolve="Feature" />
+    </node>
+  </node>
+  <node concept="1TIwiD" id="5Hwm38JY5Md">
+    <property role="EcuMT" value="6584359627792080013" />
+    <property role="3GE5qa" value="native" />
+    <property role="TrG5h" value="NativeAttributeHandler" />
+    <ref role="1TJDcQ" to="tpck:gw2VY9q" />
+    <node concept="1TJgyj" id="5Hwm38JY5Ml" role="1TKVEi">
+      <property role="IQ2ns" value="6584359627792080021" />
+      <property role="20lmBu" value="fLJjDmT/aggregation" />
+      <property role="20kJfa" value="body" />
+      <property role="20lbJX" value="fLJekj4/_1" />
+      <ref role="20lvS9" to="tpee:fzclF80" resolve="StatementList" />
+    </node>
+    <node concept="1TJgyj" id="5Hwm38JY5Me" role="1TKVEi">
+      <property role="IQ2ns" value="6584359627792080014" />
+      <property role="20kJfa" value="attribute" />
+      <property role="20lbJX" value="fLJekj4/_1" />
+      <ref role="20lvS9" node="4$MeK2bmw9s" resolve="Attribute" />
+    </node>
+  </node>
+  <node concept="1TIwiD" id="5Hwm38JY60Z">
+    <property role="EcuMT" value="6584359627792080959" />
+    <property role="3GE5qa" value="native" />
+    <property role="TrG5h" value="NativeFieldDeclaration" />
+    <ref role="1TJDcQ" to="tpee:fz3uBXI" resolve="VariableDeclaration" />
+  </node>
+  <node concept="1TIwiD" id="5Hwm38JY610">
+    <property role="EcuMT" value="6584359627792080960" />
+    <property role="3GE5qa" value="native" />
+    <property role="TrG5h" value="NativeFieldOperation" />
+    <ref role="1TJDcQ" to="tpee:fz7vLUo" resolve="VariableReference" />
+    <node concept="PrWs8" id="5Hwm38JY611" role="PzmwI">
+      <ref role="PrY4T" to="tpee:hqOqG0K" resolve="IOperation" />
+    </node>
+    <node concept="1TJgyj" id="5Hwm38JY613" role="1TKVEi">
+      <property role="IQ2ns" value="6584359627792080963" />
+      <property role="20kJfa" value="nativeField" />
+      <property role="20lbJX" value="fLJekj4/_1" />
+      <ref role="20lvS9" node="5Hwm38JY60Z" resolve="NativeFieldDeclaration" />
+      <ref role="20ksaX" to="tpee:fzcqZ_w" resolve="variableDeclaration" />
+    </node>
+  </node>
+  <node concept="1TIwiD" id="5Hwm38JY61i">
+    <property role="EcuMT" value="6584359627792080978" />
+    <property role="3GE5qa" value="native" />
+    <property role="TrG5h" value="NativeParent" />
+    <property role="34LRSv" value="parent" />
+    <ref role="1TJDcQ" to="tpee:fz3vP1J" resolve="Expression" />
+  </node>
+  <node concept="1TIwiD" id="5Hwm38JY61j">
+    <property role="EcuMT" value="6584359627792080979" />
+    <property role="3GE5qa" value="native" />
+    <property role="TrG5h" value="NativePre" />
+    <property role="34LRSv" value="pre" />
+    <ref role="1TJDcQ" to="tpee:fz3vP1J" resolve="Expression" />
+  </node>
+  <node concept="1TIwiD" id="5Hwm38JY61k">
+    <property role="EcuMT" value="6584359627792080980" />
+    <property role="3GE5qa" value="native" />
+    <property role="TrG5h" value="NativePost" />
+    <property role="34LRSv" value="post" />
+    <ref role="1TJDcQ" to="tpee:fz3vP1J" resolve="Expression" />
+  </node>
+  <node concept="1TIwiD" id="3ANOQoW2vOk">
+    <property role="EcuMT" value="4157899317040512276" />
+    <property role="3GE5qa" value="native" />
+    <property role="TrG5h" value="NativeFieldReference" />
+    <ref role="1TJDcQ" to="tpee:fz7vLUo" resolve="VariableReference" />
+    <node concept="1TJgyj" id="3ANOQoW2vOl" role="1TKVEi">
+      <property role="IQ2ns" value="4157899317040512277" />
+      <property role="20kJfa" value="nativeField" />
+      <property role="20lbJX" value="fLJekj4/_1" />
+      <ref role="20lvS9" node="5Hwm38JY60Z" resolve="NativeFieldDeclaration" />
+      <ref role="20ksaX" to="tpee:fzcqZ_w" resolve="variableDeclaration" />
+    </node>
+  </node>
 </model>
 

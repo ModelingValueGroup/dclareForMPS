@@ -89,7 +89,7 @@ public class DStructObject extends DIdentifiedObject implements SStructObject {
 
     @Override
     public boolean isDclareOnly() {
-        return true;
+        return TYPE.get(this).getNatives().isEmpty();
     }
 
     @Override

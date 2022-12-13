@@ -38,6 +38,12 @@ public class DStructClass extends DObjectType<Pair<Set<SLanguage>, SStructClass>
         return (Set) Collection.concat(id().b().getIdentity(), ruleSets.flatMap(rs -> Collection.of(rs.getStructAttributes(id().b())))).toSet();
     }
 
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    @Override
+    public Set<INative> getNatives(Set<IRuleSet> ruleSets) {
+        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getStructNatives(id().b()))).toSet();
+    }
+
     @Override
     public Set<SLanguage> getLanguages() {
         return id().a();

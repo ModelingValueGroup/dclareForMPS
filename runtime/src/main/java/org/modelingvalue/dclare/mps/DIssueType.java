@@ -41,6 +41,12 @@ public class DIssueType extends DObjectType<MessageStatus> {
         return Set.of();
     }
 
+    @SuppressWarnings("rawtypes")
+    @Override
+    public Set<INative> getNatives(Set<IRuleSet> ruleSets) {
+        return Set.of();
+    }
+
     @Override
     public Set<SLanguage> getLanguages() {
         return Set.of();

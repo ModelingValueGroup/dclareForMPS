@@ -65,6 +65,11 @@ public abstract class DObject implements Mutable {
                                                                                                                          return Set.of(DObject.TYPE);
                                                                                                                      }
 
+                                                                                                                     @Override
+                                                                                                                     public Set<INative> getNatives(Set<IRuleSet> ruleSets) {
+                                                                                                                         return Set.of();
+                                                                                                                     }
+
                                                                                                                  };
 
     public static final DObserved<DObject, DObjectType<?>>                             TYPE                      = DObserved.of("$TYPE", DUMMY_TYPE, DObject::getType, null, plumbing);
