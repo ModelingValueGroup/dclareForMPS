@@ -10,9 +10,9 @@ public interface INative<O> extends DFeature {
         return List.of(n.getChangeHandlers());
     });
 
-    void init(DObject parent);
+    void init(O context, DObject parent);
 
-    void exit(DObject parent);
+    void exit(O context, DObject parent);
 
     @SuppressWarnings("rawtypes")
     java.util.List<IChangeHandler> getChangeHandlers();

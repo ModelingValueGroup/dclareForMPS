@@ -4,6 +4,6 @@ public interface IChangeHandler<O, T> {
 
     DAttribute<O, T> attribute();
 
-    void handle(T pre, T post);
+    void handle(O context, T pre, T post);
 
 }

@@ -123,11 +123,13 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
         reReadAction.trigger(object);
     }
 
-    protected final void toMPS(O object, T pre, T post) {
-        try {
-            toMPS.accept(object, pre, post);
-        } catch (Throwable t) {
-            DObject.dClareMPS().addMessage(new ThrowableError(object, this, Instant.now(), t));
+    protected void toMPS(O object, T pre, T post) {
+        if (toMPS != null) {
+            try {
+                toMPS.accept(object, pre, post);
+            } catch (Throwable t) {
+                DObject.dClareMPS().addMessage(new ThrowableError(object, this, Instant.now(), t));
+            }
         }
     }
 

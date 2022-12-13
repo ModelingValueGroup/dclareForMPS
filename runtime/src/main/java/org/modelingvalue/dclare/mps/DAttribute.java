@@ -106,7 +106,6 @@ public interface DAttribute<O, T> extends DFeature {
         private final boolean   indetifying;
         private final IRuleSet  ruleSet;
         private final boolean   isPublic;
-        private final boolean   hasHandlers;
 
         @SuppressWarnings("unchecked")
         public DObservedAttribute(Object id, String name, IRuleSet ruleSet, boolean indetifying, boolean isPublic, V def, Class<?> cls, Supplier<Setable<?, ?>> opposite, Supplier<SNodeReference> source, SetableModifier... modifiers) {
@@ -117,10 +116,9 @@ public interface DAttribute<O, T> extends DFeature {
             this.indetifying = indetifying;
             this.ruleSet = ruleSet;
             this.isPublic = isPublic;
-            this.hasHandlers = !handlers().isEmpty();
-            if (isPublic || hasHandlers) {
+            if (isPublic) {
                 setFromToMPS(null, (o, b, a) -> {
-                    if (this.isPublic && o instanceof DNode) {
+                    if (o instanceof DNode) {
                         SNode sNode = ((DNode) o).tryOriginal();
                         SModel sModel = sNode != null ? sNode.getModel() : null;
                         if (sNode != null && sModel instanceof EditableSModel) {
@@ -130,12 +128,21 @@ public interface DAttribute<O, T> extends DFeature {
                             ((EditableSModel) sModel).setChanged(changed);
                         }
                     }
-                    if (hasHandlers) {
-                        for (IChangeHandler h : handlers()) {
-                            h.handle(b, a);
-                        }
-                    }
                 });
+            }
+        }
+
+        @Override
+        public boolean isDclareOnly() {
+            return super.isDclareOnly() && handlers().isEmpty();
+        }
+
+        @SuppressWarnings("unchecked")
+        @Override
+        protected void toMPS(C object, V pre, V post) {
+            super.toMPS(object, pre, post);
+            for (IChangeHandler h : handlers()) {
+                h.handle(object, pre, post);
             }
         }
 
@@ -203,10 +210,6 @@ public interface DAttribute<O, T> extends DFeature {
         @Override
         public SProperty getSProperty() {
             return sProperty;
-        }
-
-        public boolean hasNativeHandlers() {
-            return hasHandlers;
         }
 
         public boolean isPublic() {

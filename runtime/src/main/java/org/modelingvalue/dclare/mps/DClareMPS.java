@@ -696,11 +696,9 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
                         }, r -> {
                         });
                     }
-                    if (!(dObserved instanceof DObservedAttribute) || ((DObservedAttribute) dObserved).isPublic() || !nativeHandled) {
-                        dObserved.toMPS(dObject, preVal, postVal);
-                        if (getConfig().isTraceMPSModelChanges() && !(dObserved instanceof DObservedAttribute) && dObserved != DObject.CONTAINED) {
-                            System.err.println(DclareTrace.getLineStart("MPS", imperativeTransaction) + "MODEL CHANGE " + dObject + "." + dObserved + " = " + State.shortValueDiffString(preVal, postVal));
-                        }
+                    dObserved.toMPS(dObject, preVal, postVal);
+                    if (getConfig().isTraceMPSModelChanges() && !(dObserved instanceof DObservedAttribute) && dObserved != DObject.CONTAINED) {
+                        System.err.println(DclareTrace.getLineStart("MPS", imperativeTransaction) + "MODEL CHANGE " + dObject + "." + dObserved + " = " + State.shortValueDiffString(preVal, postVal));
                     }
                 }
             }
@@ -716,21 +714,21 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
         Pair<Mutable, Setable<Mutable, ?>> postPc = post.get(dObject, Mutable.D_PARENT_CONTAINING);
         if (prePc == null && postPc != null) {
             for (INative<DObject> n : post.get(dObject, DObject.TYPE).getNatives()) {
-                n.init((DObject) postPc.a());
+                n.init(dObject, (DObject) postPc.a());
                 for (IChangeHandler h : INative.ALL_HANDLERS.get(n)) {
                     if (h.attribute() instanceof DObservedAttribute) {
                         Object b = pre.get(dObject, (DObservedAttribute) h.attribute());
                         Object a = post.get(dObject, (DObservedAttribute) h.attribute());
-                        h.handle(b, a);
+                        h.handle(dObject, b, a);
                     } else {
-                        h.handle(null, h.attribute().get(dObject));
+                        h.handle(dObject, null, h.attribute().get(dObject));
                     }
                 }
             }
             return true;
         } else if (prePc != null && postPc == null) {
             for (INative n : pre.get(dObject, DObject.TYPE).getNatives()) {
-                n.exit((DObject) prePc.a());
+                n.exit(dObject, (DObject) prePc.a());
             }
             return true;
         } else {
