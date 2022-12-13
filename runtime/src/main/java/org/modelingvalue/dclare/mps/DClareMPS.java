@@ -696,7 +696,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
                         }, r -> {
                         });
                     }
-                    dObserved.toMPS(dObject, preVal, postVal);
+                    dObserved.toMPS(dObject, preVal, postVal, !nativeHandled);
                     if (getConfig().isTraceMPSModelChanges() && !(dObserved instanceof DObservedAttribute) && dObserved != DObject.CONTAINED) {
                         System.err.println(DclareTrace.getLineStart("MPS", imperativeTransaction) + "MODEL CHANGE " + dObject + "." + dObserved + " = " + State.shortValueDiffString(preVal, postVal));
                     }
