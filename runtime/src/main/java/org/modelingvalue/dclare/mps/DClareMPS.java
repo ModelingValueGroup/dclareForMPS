@@ -632,8 +632,8 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
             }
             boolean changed = false;
             Map<DObject, Map<DObserved, Pair<Object, Object>>>[] diff = new Map[]{imper.diff(dclare, //
-                    o -> o instanceof DObject && ((DObject) o).isActive() && !((DObject) o).isDclareOnly(), //
-                    s -> s instanceof DObserved && !((DObserved) s).isDclareOnly()).toMap(e -> (Entry) e)};
+                    o -> o instanceof DObject && ((((DObject) o).isActive() && !((DObject) o).isDclareOnly()) || ((DObject) o).isNative() || !imper.get((DObject) o, DObject.TYPE).getNatives().isEmpty()), //
+                    s -> s instanceof DObserved && (!((DObserved) s).isDclareOnly() || ((DObserved) s).isNative())).toMap(e -> (Entry) e)};
             if (!diff[0].isEmpty()) {
                 changed = true;
                 command(() -> {
@@ -710,37 +710,43 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     private boolean handleNativeExistence(State pre, State post, DObject dObject) {
-        Pair<Mutable, Setable<Mutable, ?>> prePc = pre.get(dObject, Mutable.D_PARENT_CONTAINING);
-        Pair<Mutable, Setable<Mutable, ?>> postPc = post.get(dObject, Mutable.D_PARENT_CONTAINING);
-        if (prePc == null && postPc != null) {
-            for (INative<DObject> n : post.get(dObject, DObject.TYPE).getNatives()) {
-                n.init(dObject, (DObject) postPc.a());
-                for (IChangeHandler h : INative.ALL_HANDLERS.get(n)) {
-                    if (h.attribute() instanceof DObservedAttribute) {
-                        Object b = pre.get(dObject, (DObservedAttribute) h.attribute());
-                        Object a = post.get(dObject, (DObservedAttribute) h.attribute());
-                        h.handle(dObject, b, a);
-                    } else {
-                        h.handle(dObject, null, h.attribute().get(dObject));
+        if (dObject.isNative() || !pre.get(dObject, DObject.TYPE).getNatives().isEmpty()) {
+            boolean preC = pre.get(dObject, DObject.CONTAINED);
+            boolean postC = post.get(dObject, DObject.CONTAINED);
+            if (!preC && postC) {
+                DObject parent = (DObject) post.get(dObject, Mutable.D_PARENT_CONTAINING).a();
+                for (INative<DObject> n : post.get(dObject, DObject.TYPE).getNatives()) {
+                    n.init(dObject, parent);
+                    for (IChangeHandler h : INative.ALL_HANDLERS.get(n)) {
+                        if (h.attribute() instanceof DObservedAttribute) {
+                            Object b = pre.get(dObject, (DObservedAttribute) h.attribute());
+                            Object a = post.get(dObject, (DObservedAttribute) h.attribute());
+                            h.handle(dObject, b, a);
+                        } else {
+                            h.handle(dObject, null, h.attribute().get(dObject));
+                        }
                     }
                 }
+                return true;
+            } else if (preC && !postC) {
+                DObject parent = (DObject) pre.get(dObject, Mutable.D_PARENT_CONTAINING).a();
+                for (INative n : pre.get(dObject, DObject.TYPE).getNatives()) {
+                    n.exit(dObject, parent);
+                }
+                return true;
+            } else {
+                return false;
             }
-            return true;
-        } else if (prePc != null && postPc == null) {
-            for (INative n : pre.get(dObject, DObject.TYPE).getNatives()) {
-                n.exit(dObject, (DObject) prePc.a());
-            }
-            return true;
         } else {
-            return false;
+            return true;
         }
     }
 
     @SuppressWarnings({"rawtypes"})
     private void parentToMPS(State imper, State dclare, Map<DObject, Map<DObserved, Pair<Object, Object>>>[] diff, DObject dObject) {
-        Pair<Mutable, Setable<Mutable, ?>> pc = dclare.get(dObject, Mutable.D_PARENT_CONTAINING);
-        if (pc != null && pc.a() instanceof DObject && pc.b() instanceof DObserved) {
-            toMPS(imper, dclare, diff, (DObject) pc.a());
+        Pair<Mutable, Setable<Mutable, ?>> pair = dclare.get(dObject, Mutable.D_PARENT_CONTAINING);
+        if (pair != null && pair.a() instanceof DObject && pair.b() instanceof DObserved) {
+            toMPS(imper, dclare, diff, (DObject) pair.a());
         }
     }
 

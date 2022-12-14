@@ -133,8 +133,8 @@ public interface DAttribute<O, T> extends DFeature {
         }
 
         @Override
-        public boolean isDclareOnly() {
-            return super.isDclareOnly() && handlers().isEmpty();
+        public boolean isNative() {
+            return !handlers().isEmpty();
         }
 
         @SuppressWarnings("unchecked")

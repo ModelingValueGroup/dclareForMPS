@@ -252,8 +252,12 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
         return result == null;
     }
 
-    public boolean isDclareOnly() {
+    public final boolean isDclareOnly() {
         return toMPS == null;
+    }
+
+    public boolean isNative() {
+        return false;
     }
 
     protected boolean isRead() {

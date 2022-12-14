@@ -329,6 +329,7 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
 
     @Override
     protected void read() {
+        CONTAINED.set(this, Boolean.TRUE);
         LOADED.triggerInitRead(this);
         NAME.triggerInitRead(this);
     }

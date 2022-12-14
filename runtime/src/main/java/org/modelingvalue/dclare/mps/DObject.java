@@ -72,7 +72,11 @@ public abstract class DObject implements Mutable {
 
                                                                                                                  };
 
-    public static final DObserved<DObject, DObjectType<?>>                             TYPE                      = DObserved.of("$TYPE", DUMMY_TYPE, DObject::getType, null, plumbing);
+    public static final DObserved<DObject, DObjectType<?>>                             TYPE                      = DObserved.of("$TYPE", DUMMY_TYPE, DObject::getType, null, (t, o, b, a) -> {
+                                                                                                                     if (!a.getNatives().isEmpty()) {
+                                                                                                                         DObject.CONTAINED.set(o, true);
+                                                                                                                     }
+                                                                                                                 }, plumbing);
 
     protected static final Observer<DObject>                                           TYPE_RULE                 = observer(TYPE, DObject::getType);
 
@@ -263,6 +267,10 @@ public abstract class DObject implements Mutable {
 
     protected boolean isActive() {
         return !isExternal() && LeafTransaction.getCurrent().current().get(this, Mutable.D_PARENT_CONTAINING) != null;
+    }
+
+    protected boolean isNative() {
+        return !isExternal() && !TYPE.get(this).getNatives().isEmpty();
     }
 
 }
