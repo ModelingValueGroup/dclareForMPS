@@ -784,6 +784,72 @@
           </node>
         </node>
       </node>
+      <node concept="1E1JtD" id="WHdioYVEvo" role="2G$12L">
+        <property role="TrG5h" value="DclareGui" />
+        <property role="3LESm3" value="ce36526d-d793-4b8b-88e9-d1815f616441" />
+        <node concept="55IIr" id="WHdioYVEAZ" role="3LF7KH">
+          <node concept="2Ry0Ak" id="WHdioYVECl" role="iGT6I">
+            <property role="2Ry0Am" value="languages" />
+            <node concept="2Ry0Ak" id="WHdioYVEDE" role="2Ry0An">
+              <property role="2Ry0Am" value="DclareGui" />
+              <node concept="2Ry0Ak" id="WHdioYVEEZ" role="2Ry0An">
+                <property role="2Ry0Am" value="DclareGui.mpl" />
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="1BupzO" id="WHdioYVEGb" role="3bR31x">
+          <property role="3ZfqAx" value="models" />
+          <property role="1Hdu6h" value="true" />
+          <property role="1HemKv" value="true" />
+          <node concept="3LXTmp" id="WHdioYVEGc" role="1HemKq">
+            <node concept="398BVA" id="WHdioYVEG3" role="3LXTmr">
+              <ref role="398BVh" node="3Lt_N8a$ptU" resolve="dclare_home" />
+              <node concept="2Ry0Ak" id="WHdioYVEG4" role="iGT6I">
+                <property role="2Ry0Am" value="languages" />
+                <node concept="2Ry0Ak" id="WHdioYVEG5" role="2Ry0An">
+                  <property role="2Ry0Am" value="DclareGui" />
+                  <node concept="2Ry0Ak" id="WHdioYVEG6" role="2Ry0An">
+                    <property role="2Ry0Am" value="models" />
+                  </node>
+                </node>
+              </node>
+            </node>
+            <node concept="3qWCbU" id="WHdioYVEGd" role="3LXTna">
+              <property role="3qWCbO" value="**/*.mps, **/*.mpsr, **/.model" />
+            </node>
+          </node>
+        </node>
+        <node concept="1yeLz9" id="WHdioYVEGe" role="1TViLv">
+          <property role="TrG5h" value="DclareGui.generator" />
+          <property role="3LESm3" value="8ec8474a-b9dd-4149-a9ff-9bf9e9046520" />
+          <node concept="1BupzO" id="WHdioYVEGp" role="3bR31x">
+            <property role="3ZfqAx" value="generator/templates" />
+            <property role="1Hdu6h" value="true" />
+            <property role="1HemKv" value="true" />
+            <node concept="3LXTmp" id="WHdioYVEGq" role="1HemKq">
+              <node concept="398BVA" id="WHdioYVEGf" role="3LXTmr">
+                <ref role="398BVh" node="3Lt_N8a$ptU" resolve="dclare_home" />
+                <node concept="2Ry0Ak" id="WHdioYVEGg" role="iGT6I">
+                  <property role="2Ry0Am" value="languages" />
+                  <node concept="2Ry0Ak" id="WHdioYVEGh" role="2Ry0An">
+                    <property role="2Ry0Am" value="DclareGui" />
+                    <node concept="2Ry0Ak" id="WHdioYVEGi" role="2Ry0An">
+                      <property role="2Ry0Am" value="generator" />
+                      <node concept="2Ry0Ak" id="WHdioYVEGj" role="2Ry0An">
+                        <property role="2Ry0Am" value="templates" />
+                      </node>
+                    </node>
+                  </node>
+                </node>
+              </node>
+              <node concept="3qWCbU" id="WHdioYVEGr" role="3LXTna">
+                <property role="3qWCbO" value="**/*.mps, **/*.mpsr, **/.model" />
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
       <node concept="1E1JtA" id="1OC_PYbrjI5" role="2G$12L">
         <property role="TrG5h" value="DclareRuntime" />
         <property role="3LESm3" value="e584ff77-930e-4637-8df0-b4c8d3b6de91" />
@@ -1115,6 +1181,12 @@
         <node concept="1SiIV0" id="7cBAjmZkC4o" role="3bR37C">
           <node concept="3bR9La" id="7cBAjmZkC4p" role="1SiIV1">
             <ref role="3bR37D" to="ffeo:l1L199LeP5" resolve="jetbrains.mps.ide.refactoring" />
+          </node>
+        </node>
+        <node concept="1SiIV0" id="3qTPEnMVq6u" role="3bR37C">
+          <node concept="3bR9La" id="3qTPEnMVq6v" role="1SiIV1">
+            <property role="3bR36h" value="true" />
+            <ref role="3bR37D" node="WHdioYVEvo" resolve="DclareGui" />
           </node>
         </node>
       </node>

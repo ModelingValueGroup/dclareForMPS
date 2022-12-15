@@ -30,6 +30,7 @@
     <dependency reexport="false">fbc14279-5e2a-4c87-a5d1-5f7061e6c456(jetbrains.mps.debugger.api.lang)</dependency>
     <dependency reexport="false">8d29d73f-ed99-4652-ae0a-083cdfe53c34(jetbrains.mps.ide.platform)</dependency>
     <dependency reexport="false">f606fec0-cf31-457c-9d51-9af1682cc4c2(jetbrains.mps.ide.refactoring)</dependency>
+    <dependency reexport="true">ce36526d-d793-4b8b-88e9-d1815f616441(DclareGui)</dependency>
   </dependencies>
   <languageVersions>
     <language slang="l:f3061a53-9226-4cc5-a443-f952ceaf5816:jetbrains.mps.baseLanguage" version="12" />
@@ -58,6 +59,7 @@
   </languageVersions>
   <dependencyVersions>
     <module reference="3f233e7f-b8a6-46d2-a57f-795d56775243(Annotations)" version="0" />
+    <module reference="ce36526d-d793-4b8b-88e9-d1815f616441(DclareGui)" version="0" />
     <module reference="c32b788d-8e4b-4023-97f5-3e90d04ed77b(DclareMPS)" version="1" />
     <module reference="a33d2b79-6adc-4ccd-8599-3af01a93f23c(DclareMPSPlugin)" version="0" />
     <module reference="55d6b6f5-8095-4cd0-a39b-779da8d12940(DclareMPSRuntime)" version="0" />
