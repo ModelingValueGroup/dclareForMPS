@@ -22,21 +22,22 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 
 public class BulkRenameDialog extends JDialog {
-    private       JPanel                      contentPane;
-    private       JButton                     renameButton;
-    private       JButton                     doneButton;
-    private       JTable                      table;
-    private       JTable                      resultTable;
-    private       JButton                     loadButton;
-    private       JButton                     saveButton;
-    private       JButton                     plusButton;
-    private       JButton                     minButton;
-    private       JCheckBox                   inamedConceptsCheckbox;
-    private       JCheckBox                   allPropertiesCheckbox;
-    private       JCheckBox                   stringLiteralsCheckbox;
-    private       JButton                     dryRunButton;
-    private       JPanel                      resultPane;
-    private final Consumer<BulkRenameCommand> commandHandler;
+    private static final String                      SEPARATOR = "|";
+    private              JPanel                      contentPane;
+    private              JButton                     renameButton;
+    private              JButton                     doneButton;
+    private              JTable                      table;
+    private              JTable                      resultTable;
+    private              JButton                     loadButton;
+    private              JButton                     saveButton;
+    private              JButton                     plusButton;
+    private              JButton                     minButton;
+    private              JCheckBox                   inamedConceptsCheckbox;
+    private              JCheckBox                   allPropertiesCheckbox;
+    private              JCheckBox                   stringLiteralsCheckbox;
+    private              JButton                     dryRunButton;
+    private              JPanel                      resultPane;
+    private final        Consumer<BulkRenameCommand> commandHandler;
 
     public static class HeaderRenderer extends JLabel implements TableCellRenderer {
         @Override
@@ -179,7 +180,7 @@ public class BulkRenameDialog extends JDialog {
         if (f != null) {
             try (Stream<String> lines = Files.lines(f)) {
                 lines.forEach(l -> {
-                    String[] split = l.split(" +");
+                    String[] split = l.split("[" + SEPARATOR + "]");
                     if (split.length == 2) {
                         DefaultTableModel model = (DefaultTableModel) table.getModel();
                         model.addRow(new Object[]{split[0], split[1], "-"});
@@ -220,7 +221,7 @@ public class BulkRenameDialog extends JDialog {
                 DefaultTableModel      model = (DefaultTableModel) table.getModel();
                 java.util.List<String> lines = new ArrayList<>();
                 for (int i = 0; i < model.getRowCount(); i++) {
-                    lines.add(model.getValueAt(i, 0) + " " + model.getValueAt(i, 1));
+                    lines.add(model.getValueAt(i, 0) + SEPARATOR + model.getValueAt(i, 1));
                 }
                 Files.write(f, lines, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
                 rememberDetailsFile(f);
