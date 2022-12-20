@@ -715,8 +715,11 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
             boolean postC = post.get(dObject, DObject.CONTAINED);
             if (!preC && postC) {
                 DObject parent = (DObject) post.get(dObject, Mutable.D_PARENT_CONTAINING).a();
-                for (INative<DObject> n : post.get(dObject, DObject.TYPE).getNatives()) {
+                List<INative> natives = post.get(dObject, DObject.TYPE).getNatives();
+                for (INative<DObject> n : natives) {
                     n.init(dObject, parent);
+                }
+                for (INative<DObject> n : natives) {
                     for (IChangeHandler h : INative.ALL_HANDLERS.get(n)) {
                         if (h.attribute() instanceof DObservedAttribute) {
                             Object b = pre.get(dObject, (DObservedAttribute) h.attribute());
@@ -730,7 +733,8 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
                 return true;
             } else if (preC && !postC) {
                 DObject parent = (DObject) pre.get(dObject, Mutable.D_PARENT_CONTAINING).a();
-                for (INative n : pre.get(dObject, DObject.TYPE).getNatives()) {
+                List<INative> natives = pre.get(dObject, DObject.TYPE).getNatives();
+                for (INative n : natives) {
                     n.exit(dObject, parent);
                 }
                 return true;

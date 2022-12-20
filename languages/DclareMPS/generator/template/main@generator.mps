@@ -100,6 +100,10 @@
       <concept id="1197029447546" name="jetbrains.mps.baseLanguage.structure.FieldReferenceOperation" flags="nn" index="2OwXpG">
         <reference id="1197029500499" name="fieldDeclaration" index="2Oxat5" />
       </concept>
+      <concept id="1083260308424" name="jetbrains.mps.baseLanguage.structure.EnumConstantReference" flags="nn" index="Rm8GO">
+        <reference id="1083260308426" name="enumConstantDeclaration" index="Rm8GQ" />
+        <reference id="1144432896254" name="enumClass" index="1Px2BO" />
+      </concept>
       <concept id="1145552977093" name="jetbrains.mps.baseLanguage.structure.GenericNewExpression" flags="nn" index="2ShNRf">
         <child id="1145553007750" name="creator" index="2ShVmc" />
       </concept>
@@ -1421,6 +1425,24 @@
             </node>
             <node concept="3uibUv" id="25AJqx26gJv" role="3g7fb8">
               <ref role="3uigEE" to="t4tl:~SStructClass" resolve="SStructClass" />
+            </node>
+          </node>
+        </node>
+        <node concept="3clFbT" id="5JHZE0wOlSo" role="37wK5m">
+          <node concept="17Uvod" id="5JHZE0wOnYF" role="lGtFl">
+            <property role="2qtEX9" value="value" />
+            <property role="P4ACc" value="f3061a53-9226-4cc5-a443-f952ceaf5816/1068580123137/1068580123138" />
+            <node concept="3zFVjK" id="5JHZE0wOnYG" role="3zH0cK">
+              <node concept="3clFbS" id="5JHZE0wOnYH" role="2VODD2">
+                <node concept="3clFbF" id="5JHZE0wOp9N" role="3cqZAp">
+                  <node concept="2OqwBi" id="5JHZE0wOpqI" role="3clFbG">
+                    <node concept="30H73N" id="5JHZE0wOp9M" role="2Oq$k0" />
+                    <node concept="3TrcHB" id="5JHZE0wOqJW" role="2OqNvi">
+                      <ref role="3TsBF5" to="7ggn:5JHZE0wKKUr" resolve="isValueClass" />
+                    </node>
+                  </node>
+                </node>
+              </node>
             </node>
           </node>
         </node>
@@ -13517,6 +13539,10 @@
               </node>
             </node>
           </node>
+          <node concept="Rm8GO" id="2gyk5RZ04$k" role="37wK5m">
+            <ref role="Rm8GQ" to="kag7:~SetableModifier.doNotClear" resolve="doNotClear" />
+            <ref role="1Px2BO" to="kag7:~SetableModifier" resolve="SetableModifier" />
+          </node>
         </node>
         <node concept="1WS0z7" id="5LBfqS_nLkK" role="lGtFl">
           <ref role="2rW$FS" node="5LBfqS_o1VR" resolve="nativeFieldField" />
@@ -14426,6 +14452,7 @@
           <ref role="2AI5Lk" to="wyt6:~Override" resolve="Override" />
         </node>
       </node>
+      <node concept="2tJIrI" id="5JHZE0wP0fA" role="jymVt" />
       <node concept="3uibUv" id="5LBfqS_bKz3" role="EKbjA">
         <ref role="3uigEE" to="t4tl:~INative" resolve="INative" />
         <node concept="3uibUv" id="5LBfqSziwQv" role="11_B2D">
@@ -14495,6 +14522,38 @@
               </node>
             </node>
           </node>
+        </node>
+      </node>
+      <node concept="3clFb_" id="2gyk5RYzChG" role="jymVt">
+        <property role="TrG5h" value="type" />
+        <node concept="3Tm1VV" id="2gyk5RYzChH" role="1B3o_S" />
+        <node concept="3uibUv" id="2gyk5RYzChJ" role="3clF45">
+          <ref role="3uigEE" to="wyt6:~Object" resolve="Object" />
+        </node>
+        <node concept="3clFbS" id="2gyk5RYzChK" role="3clF47">
+          <node concept="3cpWs6" id="2gyk5RY$NdJ" role="3cqZAp">
+            <node concept="3VsKOn" id="2gyk5RY_ajF" role="3cqZAk">
+              <ref role="3VsUkX" to="wyt6:~Object" resolve="Object" />
+              <node concept="1sPUBX" id="2gyk5RY_ajG" role="lGtFl">
+                <ref role="v9R2y" node="4riIXkXUTHT" resolve="TypeObject" />
+                <node concept="3NFfHV" id="2gyk5RY_ajH" role="1sPUBK">
+                  <node concept="3clFbS" id="2gyk5RY_ajI" role="2VODD2">
+                    <node concept="3clFbF" id="2gyk5RY_ajJ" role="3cqZAp">
+                      <node concept="2OqwBi" id="2gyk5RY_ajK" role="3clFbG">
+                        <node concept="30H73N" id="2gyk5RY_ajL" role="2Oq$k0" />
+                        <node concept="2qgKlT" id="2gyk5RY_ajM" role="2OqNvi">
+                          <ref role="37wK5l" to="us1s:29R9$zZWsRH" resolve="getContextType" />
+                        </node>
+                      </node>
+                    </node>
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="2AHcQZ" id="2gyk5RYzChL" role="2AJF6D">
+          <ref role="2AI5Lk" to="wyt6:~Override" />
         </node>
       </node>
     </node>

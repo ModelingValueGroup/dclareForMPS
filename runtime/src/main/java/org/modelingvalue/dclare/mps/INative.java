@@ -15,6 +15,7 @@
 
 package org.modelingvalue.dclare.mps;
 
+import org.jetbrains.mps.openapi.language.SConcept;
 import org.modelingvalue.collections.List;
 import org.modelingvalue.dclare.Constant;
 
@@ -31,5 +32,43 @@ public interface INative<O> extends DFeature {
 
     @SuppressWarnings("rawtypes")
     java.util.List<IChangeHandler> getChangeHandlers();
+
+    Object type();
+
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    static int compare(INative a, INative b) {
+        if (a.equals(b)) {
+            return 0;
+        } else {
+            Object at = a.type();
+            Object bt = b.type();
+            if (at instanceof SConcept && bt instanceof SConcept) {
+                SConcept ac = (SConcept) at;
+                SConcept bc = (SConcept) bt;
+                if (ac.isSubConceptOf(bc)) {
+                    return -1;
+                } else if (bc.isSubConceptOf(ac)) {
+                    return 1;
+                }
+            } else if (at instanceof SStructClass && bt instanceof SStructClass) {
+                SStructClass ac = (SStructClass) at;
+                SStructClass bc = (SStructClass) bt;
+                if (ac.isAssignableFrom(bc)) {
+                    return 1;
+                } else if (bc.isAssignableFrom(ac)) {
+                    return -1;
+                }
+            } else if (at instanceof Class && bt instanceof Class) {
+                Class ac = (Class) at;
+                Class bc = (Class) bt;
+                if (ac.isAssignableFrom(bc)) {
+                    return 1;
+                } else if (bc.isAssignableFrom(ac)) {
+                    return -1;
+                }
+            }
+            return Integer.compare(a.hashCode(), b.hashCode());
+        }
+    }
 
 }

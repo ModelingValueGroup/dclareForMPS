@@ -23,6 +23,7 @@
       </concept>
       <concept id="5858913584106642961" name="DclareMPS.structure.Aspect" flags="ng" index="2Rb1jd" />
       <concept id="5263414693702615530" name="DclareMPS.structure.StructClass" flags="ng" index="2UJ2oG">
+        <property id="6624230590629744283" name="isValueClass" index="1VbJ0V" />
         <child id="5263414693702618949" name="identity" index="2UJ2y3" />
         <child id="5263414693702617674" name="extends" index="2UJ2Qc" />
       </concept>
@@ -860,6 +861,7 @@
   <node concept="2UJ2oG" id="4NMtPTvGW7r">
     <property role="3GE5qa" value="structs" />
     <property role="TrG5h" value="DPoint" />
+    <property role="1VbJ0V" value="true" />
     <node concept="32q3_s" id="4NMtPTvGW7s" role="2UJ2y3">
       <property role="TrG5h" value="x" />
       <node concept="10P55v" id="4NMtPTvGW7$" role="1tU5fm" />
@@ -872,6 +874,7 @@
   <node concept="2UJ2oG" id="4NMtPTvGXY5">
     <property role="3GE5qa" value="structs" />
     <property role="TrG5h" value="DDimension" />
+    <property role="1VbJ0V" value="true" />
     <node concept="32q3_s" id="4NMtPTvGXY6" role="2UJ2y3">
       <property role="TrG5h" value="width" />
       <node concept="10P55v" id="4NMtPTvGXYg" role="1tU5fm" />

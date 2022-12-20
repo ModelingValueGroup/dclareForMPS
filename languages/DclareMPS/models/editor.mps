@@ -6586,6 +6586,42 @@
     <ref role="1XX52x" to="7ggn:4$bpWrNHO7E" resolve="StructClass" />
     <node concept="3EZMnI" id="4$bpWrNHSyy" role="2wV5jI">
       <node concept="l2Vlx" id="4$bpWrNHSyz" role="2iSdaV" />
+      <node concept="3F0ifn" id="5JHZE0wLbyU" role="3EZMnx">
+        <property role="3F0ifm" value="value" />
+        <ref role="1k5W1q" to="tpen:hgVS8CF" resolve="KeyWord" />
+        <node concept="pkWqt" id="5JHZE0wLbyV" role="pqm2j">
+          <node concept="3clFbS" id="5JHZE0wLbyW" role="2VODD2">
+            <node concept="3clFbF" id="5JHZE0wLbyX" role="3cqZAp">
+              <node concept="2OqwBi" id="5JHZE0wLbyY" role="3clFbG">
+                <node concept="pncrf" id="5JHZE0wLbyZ" role="2Oq$k0" />
+                <node concept="3TrcHB" id="5JHZE0wLbz0" role="2OqNvi">
+                  <ref role="3TsBF5" to="7ggn:5JHZE0wKKUr" resolve="isValueClass" />
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="Veino" id="5JHZE0wLbz1" role="3F10Kt">
+          <node concept="3ZlJ5R" id="5JHZE0wLbz2" role="VblUZ">
+            <node concept="3clFbS" id="5JHZE0wLbz3" role="2VODD2">
+              <node concept="3clFbF" id="5JHZE0wLbz4" role="3cqZAp">
+                <node concept="2YIFZM" id="5JHZE0wLbz5" role="3clFbG">
+                  <ref role="1Pybhc" to="u4ym:30fQumnG8Au" resolve="DclareUtil" />
+                  <ref role="37wK5l" to="u4ym:2HLAWGSyups" resolve="ifColor" />
+                  <node concept="1Q80Hx" id="5JHZE0wLbz6" role="37wK5m" />
+                  <node concept="2nou5x" id="5JHZE0wLbz7" role="37wK5m">
+                    <property role="2noCCI" value="71F496" />
+                  </node>
+                  <node concept="10M0yZ" id="5JHZE0wLbz8" role="37wK5m">
+                    <ref role="3cqZAo" to="z60i:~Color.white" resolve="white" />
+                    <ref role="1PxDUh" to="z60i:~Color" resolve="Color" />
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
       <node concept="3F0ifn" id="4$bpWrNHSy$" role="3EZMnx">
         <property role="3F0ifm" value="struct" />
         <ref role="1k5W1q" to="tpen:hgVS8CF" resolve="KeyWord" />

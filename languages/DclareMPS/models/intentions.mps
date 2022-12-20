@@ -1394,5 +1394,52 @@
       </node>
     </node>
   </node>
+  <node concept="2S6QgY" id="5JHZE0wMlDO">
+    <property role="3GE5qa" value="structs" />
+    <property role="TrG5h" value="SwitchValueClass" />
+    <ref role="2ZfgGC" to="7ggn:4$bpWrNHO7E" resolve="StructClass" />
+    <node concept="2S6ZIM" id="5JHZE0wMlDP" role="2ZfVej">
+      <node concept="3clFbS" id="5JHZE0wMlDQ" role="2VODD2">
+        <node concept="3clFbF" id="5JHZE0wMnmz" role="3cqZAp">
+          <node concept="3K4zz7" id="5JHZE0wMobW" role="3clFbG">
+            <node concept="Xl_RD" id="5JHZE0wMojo" role="3K4E3e">
+              <property role="Xl_RC" value="make stateful class" />
+            </node>
+            <node concept="Xl_RD" id="5JHZE0wMp19" role="3K4GZi">
+              <property role="Xl_RC" value="make value class" />
+            </node>
+            <node concept="2OqwBi" id="5JHZE0wMn_7" role="3K4Cdx">
+              <node concept="2Sf5sV" id="5JHZE0wMnmy" role="2Oq$k0" />
+              <node concept="3TrcHB" id="5JHZE0wMnMz" role="2OqNvi">
+                <ref role="3TsBF5" to="7ggn:5JHZE0wKKUr" resolve="isValueClass" />
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+    <node concept="2Sbjvc" id="5JHZE0wMlDR" role="2ZfgGD">
+      <node concept="3clFbS" id="5JHZE0wMlDS" role="2VODD2">
+        <node concept="3clFbF" id="5JHZE0wMp2V" role="3cqZAp">
+          <node concept="37vLTI" id="5JHZE0wMpMk" role="3clFbG">
+            <node concept="3fqX7Q" id="5JHZE0wMpUj" role="37vLTx">
+              <node concept="2OqwBi" id="5JHZE0wMqbe" role="3fr31v">
+                <node concept="2Sf5sV" id="5JHZE0wMpYE" role="2Oq$k0" />
+                <node concept="3TrcHB" id="5JHZE0wMqH_" role="2OqNvi">
+                  <ref role="3TsBF5" to="7ggn:5JHZE0wKKUr" resolve="isValueClass" />
+                </node>
+              </node>
+            </node>
+            <node concept="2OqwBi" id="5JHZE0wMpft" role="37vLTJ">
+              <node concept="2Sf5sV" id="5JHZE0wMp2U" role="2Oq$k0" />
+              <node concept="3TrcHB" id="5JHZE0wMpsJ" role="2OqNvi">
+                <ref role="3TsBF5" to="7ggn:5JHZE0wKKUr" resolve="isValueClass" />
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+  </node>
 </model>
 

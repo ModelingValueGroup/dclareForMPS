@@ -43,7 +43,7 @@ public class DStructObject extends DIdentifiedObject implements SStructObject {
 
     @Override
     public boolean isExternal() {
-        return false;
+        return getSClass().isValueClass();
     }
 
     @Override

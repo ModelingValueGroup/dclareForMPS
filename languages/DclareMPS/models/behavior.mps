@@ -10497,6 +10497,28 @@
         <ref role="ehGHo" to="7ggn:4kJ$pn7gUED" resolve="ContextType" />
       </node>
     </node>
+    <node concept="13i0hz" id="2gyk5RYUFhd" role="13h7CS">
+      <property role="13i0it" value="true" />
+      <property role="TrG5h" value="isConstant" />
+      <ref role="13i0hy" node="64dupBmWpM2" resolve="isConstant" />
+      <node concept="3clFbS" id="2gyk5RYUFhe" role="3clF47">
+        <node concept="3cpWs6" id="2gyk5RYUFhf" role="3cqZAp">
+          <node concept="2OqwBi" id="2gyk5RYUOiC" role="3cqZAk">
+            <node concept="2OqwBi" id="2gyk5RYUNCN" role="2Oq$k0">
+              <node concept="13iPFW" id="2gyk5RYUNsp" role="2Oq$k0" />
+              <node concept="3TrEf2" id="2gyk5RYUNPI" role="2OqNvi">
+                <ref role="3Tt5mk" to="7ggn:4$bpWrNHODe" resolve="structClass" />
+              </node>
+            </node>
+            <node concept="3TrcHB" id="2gyk5RYUO$f" role="2OqNvi">
+              <ref role="3TsBF5" to="7ggn:5JHZE0wKKUr" resolve="isValueClass" />
+            </node>
+          </node>
+        </node>
+      </node>
+      <node concept="10P_77" id="2gyk5RYUFhh" role="3clF45" />
+      <node concept="3Tm1VV" id="2gyk5RYUFhi" role="1B3o_S" />
+    </node>
   </node>
   <node concept="13h7C7" id="3Qetf3dk3dk">
     <property role="3GE5qa" value="structs" />

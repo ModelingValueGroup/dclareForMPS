@@ -23,8 +23,8 @@ import org.modelingvalue.collections.Set;
 public class SStructClass {
 
     @SuppressWarnings("rawtypes")
-    public static SStructClass of(String id, String name, SLanguage language, DAttribute[] identity, SStructClass[] supers) {
-        return new SStructClass(id, name, language, List.of(identity), Set.of(supers));
+    public static SStructClass of(String id, String name, SLanguage language, DAttribute[] identity, SStructClass[] supers, boolean isValueClass) {
+        return new SStructClass(id, name, language, List.of(identity), Set.of(supers), isValueClass);
     }
 
     public static <C, V> SStructClass of(SLanguage language, String id) {
@@ -36,14 +36,16 @@ public class SStructClass {
     private final List<DAttribute<?, ?>> identity;
     private final Set<SStructClass>      supers;
     private final SLanguage              language;
+    private final boolean                isValueClass;
 
-    private SStructClass(String id, String name, SLanguage language, List<DAttribute<?, ?>> identity, Set<SStructClass> supers) {
+    private SStructClass(String id, String name, SLanguage language, List<DAttribute<?, ?>> identity, Set<SStructClass> supers, boolean isValueClass) {
         super();
         this.id = id;
         this.name = name;
         this.language = language;
         this.supers = supers;
         this.identity = identity;
+        this.isValueClass = isValueClass;
     }
 
     @Override
@@ -88,6 +90,10 @@ public class SStructClass {
 
     public Set<SStructClass> getSupers() {
         return supers;
+    }
+
+    public boolean isValueClass() {
+        return isValueClass;
     }
 
 }

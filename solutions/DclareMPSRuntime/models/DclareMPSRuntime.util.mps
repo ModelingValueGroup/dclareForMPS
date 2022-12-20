@@ -5104,7 +5104,7 @@
         <node concept="3clFbF" id="3Qetf3dBlui" role="3cqZAp">
           <node concept="2YIFZM" id="25AJqx1X2r1" role="3clFbG">
             <ref role="1Pybhc" to="t4tl:~SStructClass" resolve="SStructClass" />
-            <ref role="37wK5l" to="t4tl:~SStructClass.of(java.lang.String,java.lang.String,org.jetbrains.mps.openapi.language.SLanguage,org.modelingvalue.dclare.mps.DAttribute[],org.modelingvalue.dclare.mps.SStructClass[])" resolve="of" />
+            <ref role="37wK5l" to="t4tl:~SStructClass.of(java.lang.String,java.lang.String,org.jetbrains.mps.openapi.language.SLanguage,org.modelingvalue.dclare.mps.DAttribute[],org.modelingvalue.dclare.mps.SStructClass[],boolean)" resolve="of" />
             <node concept="37vLTw" id="25AJqx1X2r2" role="37wK5m">
               <ref role="3cqZAo" node="3Qetf3dBlad" resolve="classId" />
             </node>
@@ -5119,6 +5119,9 @@
             </node>
             <node concept="37vLTw" id="25AJqx1X2r5" role="37wK5m">
               <ref role="3cqZAo" node="3Qetf3dBljs" resolve="supers" />
+            </node>
+            <node concept="37vLTw" id="2gyk5RYNVRd" role="37wK5m">
+              <ref role="3cqZAo" node="2gyk5RYNPrl" resolve="isValueClass" />
             </node>
           </node>
         </node>
@@ -5156,6 +5159,10 @@
             <ref role="3uigEE" to="t4tl:~SStructClass" resolve="SStructClass" />
           </node>
         </node>
+      </node>
+      <node concept="37vLTG" id="2gyk5RYNPrl" role="3clF46">
+        <property role="TrG5h" value="isValueClass" />
+        <node concept="10P_77" id="2gyk5RYNQar" role="1tU5fm" />
       </node>
     </node>
     <node concept="2tJIrI" id="4xaBPI8RiQJ" role="jymVt" />

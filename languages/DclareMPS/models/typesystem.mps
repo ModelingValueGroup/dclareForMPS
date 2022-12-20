@@ -8463,5 +8463,168 @@
       <ref role="1YaFvo" to="7ggn:5Hwm38JY61i" resolve="NativeParent" />
     </node>
   </node>
+  <node concept="18kY7G" id="5JHZE0wLT1g">
+    <property role="TrG5h" value="check_StructClassReference" />
+    <property role="3GE5qa" value="structs" />
+    <node concept="3clFbS" id="5JHZE0wLT1h" role="18ibNy">
+      <node concept="3cpWs8" id="5JHZE0wLT1o" role="3cqZAp">
+        <node concept="3cpWsn" id="5JHZE0wLT1r" role="3cpWs9">
+          <property role="TrG5h" value="sub" />
+          <node concept="3Tqbb2" id="5JHZE0wLT1n" role="1tU5fm">
+            <ref role="ehGHo" to="7ggn:4$bpWrNHO7E" resolve="StructClass" />
+          </node>
+          <node concept="1PxgMI" id="5JHZE0wLT_O" role="33vP2m">
+            <property role="1BlNFB" value="true" />
+            <node concept="chp4Y" id="5JHZE0wLTAw" role="3oSUPX">
+              <ref role="cht4Q" to="7ggn:4$bpWrNHO7E" resolve="StructClass" />
+            </node>
+            <node concept="2OqwBi" id="5JHZE0wLTaX" role="1m5AlR">
+              <node concept="1YBJjd" id="5JHZE0wLT1O" role="2Oq$k0">
+                <ref role="1YBMHb" node="5JHZE0wLT1j" resolve="structClassReference" />
+              </node>
+              <node concept="1mfA1w" id="5JHZE0wLTi8" role="2OqNvi" />
+            </node>
+          </node>
+        </node>
+      </node>
+      <node concept="3cpWs8" id="5JHZE0wLTBH" role="3cqZAp">
+        <node concept="3cpWsn" id="5JHZE0wLTBK" role="3cpWs9">
+          <property role="TrG5h" value="sup" />
+          <node concept="3Tqbb2" id="5JHZE0wLTBF" role="1tU5fm">
+            <ref role="ehGHo" to="7ggn:4$bpWrNHO7E" resolve="StructClass" />
+          </node>
+          <node concept="2OqwBi" id="5JHZE0wLTOo" role="33vP2m">
+            <node concept="1YBJjd" id="5JHZE0wLTFf" role="2Oq$k0">
+              <ref role="1YBMHb" node="5JHZE0wLT1j" resolve="structClassReference" />
+            </node>
+            <node concept="3TrEf2" id="5JHZE0wLTWk" role="2OqNvi">
+              <ref role="3Tt5mk" to="7ggn:4$bpWrNHOD8" resolve="class" />
+            </node>
+          </node>
+        </node>
+      </node>
+      <node concept="3clFbJ" id="5JHZE0wLU6s" role="3cqZAp">
+        <node concept="3clFbS" id="5JHZE0wLU6u" role="3clFbx">
+          <node concept="2MkqsV" id="5JHZE0wLWaw" role="3cqZAp">
+            <node concept="Xl_RD" id="5JHZE0wLWaJ" role="2MkJ7o">
+              <property role="Xl_RC" value="Super Class must be a Value Class" />
+            </node>
+            <node concept="1YBJjd" id="5JHZE0wLWcJ" role="1urrMF">
+              <ref role="1YBMHb" node="5JHZE0wLT1j" resolve="structClassReference" />
+            </node>
+          </node>
+        </node>
+        <node concept="1Wc70l" id="5JHZE0wLVyH" role="3clFbw">
+          <node concept="3fqX7Q" id="5JHZE0wLW8H" role="3uHU7w">
+            <node concept="2OqwBi" id="5JHZE0wLW8J" role="3fr31v">
+              <node concept="37vLTw" id="5JHZE0wLW8K" role="2Oq$k0">
+                <ref role="3cqZAo" node="5JHZE0wLTBK" resolve="sup" />
+              </node>
+              <node concept="3TrcHB" id="5JHZE0wLW8L" role="2OqNvi">
+                <ref role="3TsBF5" to="7ggn:5JHZE0wKKUr" resolve="isValueClass" />
+              </node>
+            </node>
+          </node>
+          <node concept="1Wc70l" id="5JHZE0wLUJx" role="3uHU7B">
+            <node concept="1Wc70l" id="5JHZE0wLUqv" role="3uHU7B">
+              <node concept="3y3z36" id="5JHZE0wLUjb" role="3uHU7B">
+                <node concept="37vLTw" id="5JHZE0wLU6U" role="3uHU7B">
+                  <ref role="3cqZAo" node="5JHZE0wLT1r" resolve="sub" />
+                </node>
+                <node concept="10Nm6u" id="5JHZE0wLUq9" role="3uHU7w" />
+              </node>
+              <node concept="3y3z36" id="5JHZE0wLUBB" role="3uHU7w">
+                <node concept="37vLTw" id="5JHZE0wLUr4" role="3uHU7B">
+                  <ref role="3cqZAo" node="5JHZE0wLTBK" resolve="sup" />
+                </node>
+                <node concept="10Nm6u" id="5JHZE0wLUIS" role="3uHU7w" />
+              </node>
+            </node>
+            <node concept="2OqwBi" id="5JHZE0wLUXs" role="3uHU7w">
+              <node concept="37vLTw" id="5JHZE0wLUK$" role="2Oq$k0">
+                <ref role="3cqZAo" node="5JHZE0wLT1r" resolve="sub" />
+              </node>
+              <node concept="3TrcHB" id="5JHZE0wLVcG" role="2OqNvi">
+                <ref role="3TsBF5" to="7ggn:5JHZE0wKKUr" resolve="isValueClass" />
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+    <node concept="1YaCAy" id="5JHZE0wLT1j" role="1YuTPh">
+      <property role="TrG5h" value="structClassReference" />
+      <ref role="1YaFvo" to="7ggn:4$bpWrNHOD7" resolve="StructClassReference" />
+    </node>
+  </node>
+  <node concept="18kY7G" id="2gyk5RYUQd_">
+    <property role="TrG5h" value="check_StructRuleSet" />
+    <property role="3GE5qa" value="structs" />
+    <node concept="3clFbS" id="2gyk5RYUQdA" role="18ibNy">
+      <node concept="3clFbJ" id="2gyk5RYUZ45" role="3cqZAp">
+        <node concept="3clFbS" id="2gyk5RYUZ47" role="3clFbx">
+          <node concept="1DcWWT" id="2gyk5RYUQdG" role="3cqZAp">
+            <node concept="3cpWsn" id="2gyk5RYUQdH" role="1Duv9x">
+              <property role="TrG5h" value="feature" />
+              <node concept="3Tqbb2" id="2gyk5RYUSu8" role="1tU5fm">
+                <ref role="ehGHo" to="7ggn:4WFClUM1rSw" resolve="Feature" />
+              </node>
+            </node>
+            <node concept="2OqwBi" id="2gyk5RYUXdg" role="1DdaDG">
+              <node concept="2OqwBi" id="2gyk5RYUR32" role="2Oq$k0">
+                <node concept="1YBJjd" id="2gyk5RYUQHe" role="2Oq$k0">
+                  <ref role="1YBMHb" node="2gyk5RYUQdC" resolve="structRuleSet" />
+                </node>
+                <node concept="3Tsc0h" id="2gyk5RYURoL" role="2OqNvi">
+                  <ref role="3TtcxE" to="7ggn:6_R8J$2ChSl" resolve="members" />
+                </node>
+              </node>
+              <node concept="v3k3i" id="2gyk5RYUYxa" role="2OqNvi">
+                <node concept="chp4Y" id="2gyk5RYUYF0" role="v3oSu">
+                  <ref role="cht4Q" to="7ggn:4WFClUM1rSw" resolve="Feature" />
+                </node>
+              </node>
+            </node>
+            <node concept="3clFbS" id="2gyk5RYUQdJ" role="2LFqv$">
+              <node concept="3clFbJ" id="2gyk5RYUZRP" role="3cqZAp">
+                <node concept="3fqX7Q" id="2gyk5RYV0jb" role="3clFbw">
+                  <node concept="2OqwBi" id="2gyk5RYV0jd" role="3fr31v">
+                    <node concept="37vLTw" id="2gyk5RYV0je" role="2Oq$k0">
+                      <ref role="3cqZAo" node="2gyk5RYUQdH" resolve="feature" />
+                    </node>
+                    <node concept="2qgKlT" id="2gyk5RYV0jf" role="2OqNvi">
+                      <ref role="37wK5l" to="us1s:64dupBmWpM2" resolve="isConstant" />
+                    </node>
+                  </node>
+                </node>
+                <node concept="3clFbS" id="2gyk5RYUZRR" role="3clFbx">
+                  <node concept="2MkqsV" id="2gyk5RYV0jI" role="3cqZAp">
+                    <node concept="Xl_RD" id="2gyk5RYV0jU" role="2MkJ7o">
+                      <property role="Xl_RC" value="Feature is not Constant in Value Class" />
+                    </node>
+                    <node concept="37vLTw" id="2gyk5RYV0lR" role="1urrMF">
+                      <ref role="3cqZAo" node="2gyk5RYUQdH" resolve="feature" />
+                    </node>
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="2OqwBi" id="2gyk5RYUZgD" role="3clFbw">
+          <node concept="1YBJjd" id="2gyk5RYUZ4u" role="2Oq$k0">
+            <ref role="1YBMHb" node="2gyk5RYUQdC" resolve="structRuleSet" />
+          </node>
+          <node concept="2qgKlT" id="2gyk5RYUZAC" role="2OqNvi">
+            <ref role="37wK5l" to="us1s:64dupBmWpM2" resolve="isConstant" />
+          </node>
+        </node>
+      </node>
+    </node>
+    <node concept="1YaCAy" id="2gyk5RYUQdC" role="1YuTPh">
+      <property role="TrG5h" value="structRuleSet" />
+      <ref role="1YaFvo" to="7ggn:3Qetf3cPkTM" resolve="StructRuleSet" />
+    </node>
+  </node>
 </model>
 

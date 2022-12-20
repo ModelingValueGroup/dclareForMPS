@@ -17,6 +17,7 @@ package org.modelingvalue.dclare.mps;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.Collection;
+import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.dclare.Constant;
 import org.modelingvalue.dclare.Mutable;
@@ -30,7 +31,7 @@ public abstract class DObjectType<I> implements MutableClass {
 
     private static final Constant<DObjectType<?>, Set<IRuleSet>>                                TYPE_RULE_SETS = Constant.of("TYPE_RULE_SETS", Set.of(), t -> t.getLanguages().flatMap(DClareMPS.ACTIVE_RULE_SETS::get).toSet());
     private static final Constant<DObjectType<?>, Set<DObserver>>                               OBSERVERS      = Constant.of("OBSERVERS", Set.of(), t -> t.getRules(TYPE_RULE_SETS.get(t)).map(DRule.OBSERVER::get).toSet());
-    private static final Constant<DObjectType<?>, Set<INative>>                                 NATIVES        = Constant.of("NATIVES", Set.of(), t -> t.getNatives(TYPE_RULE_SETS.get(t)).toSet());
+    private static final Constant<DObjectType<?>, List<INative>>                                NATIVES        = Constant.of("NATIVES", List.of(), t -> t.getNatives(TYPE_RULE_SETS.get(t)).sorted(INative::compare).toList());
     private static final Constant<DObjectType<?>, Set<DAttribute>>                              ATTRIBUTES     = Constant.of("ATTRIBUTES", Set.of(), t -> t.getAttributes(TYPE_RULE_SETS.get(t)).toSet());
     private static final Constant<DObjectType<?>, Set<DAttribute>>                              CONTAINERS     = Constant.of("CONTAINERS", Set.of(), t -> ATTRIBUTES.get(t).filter(DAttribute::isComposite).toSet());
     private static final Constant<DObjectType<?>, Set<DAttribute>>                              NON_SYNTHETICS = Constant.of("NON_SYNTHETICS", Set.of(), t -> ATTRIBUTES.get(t).filter(a -> !a.isSynthetic()).toSet());
@@ -59,7 +60,7 @@ public abstract class DObjectType<I> implements MutableClass {
         return ATTRIBUTES.get(this);
     }
 
-    public Set<INative> getNatives() {
+    public List<INative> getNatives() {
         return NATIVES.get(this);
     }
 
