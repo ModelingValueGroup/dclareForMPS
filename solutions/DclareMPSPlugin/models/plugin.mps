@@ -11228,7 +11228,7 @@
               </node>
               <node concept="2JFkCU" id="2M0pTEEA9I8" role="3cqZAp">
                 <node concept="tCFHf" id="2M0pTEEA9I9" role="2JFLmv">
-                  <ref role="tCJdB" node="2M0pTEEA2iO" resolve="ExtractAttributeFromNamed" />
+                  <ref role="tCJdB" node="2M0pTEEA2iO" resolve="ExtractAttributeFromQuoted" />
                   <node concept="37vLTw" id="2M0pTEEA9Ia" role="2J__8u">
                     <ref role="3cqZAo" node="6aMI9gHDZEA" resolve="ruleSet" />
                   </node>
@@ -13995,7 +13995,7 @@
       </node>
     </node>
     <node concept="Zd509" id="2M0pTEEA9Nd" role="Zd508">
-      <ref role="1bYAoF" node="2M0pTEEA2iO" resolve="ExtractAttributeFromNamed" />
+      <ref role="1bYAoF" node="2M0pTEEA2iO" resolve="ExtractAttributeFromQuoted" />
       <node concept="pLAjd" id="2M0pTEEA9No" role="Zd501">
         <property role="pLAjf" value="VK_A" />
         <property role="pLAjc" value="ctrl+alt" />
@@ -17152,7 +17152,7 @@
                             <ref role="37wK5l" to="mhbf:~SNodeUtil.isAccessible(org.jetbrains.mps.openapi.model.SNode,org.jetbrains.mps.openapi.module.SRepository)" resolve="isAccessible" />
                             <node concept="2OqwBi" id="2M0pTEEA2jc" role="37wK5m">
                               <node concept="2WthIp" id="2M0pTEEA2jd" role="2Oq$k0">
-                                <ref role="32nkFo" node="2M0pTEEA2iO" resolve="ExtractAttributeFromNamed" />
+                                <ref role="32nkFo" node="2M0pTEEA2iO" resolve="ExtractAttributeFromQuoted" />
                               </node>
                               <node concept="3gHZIF" id="2M0pTEEA2je" role="2OqNvi">
                                 <ref role="2WH_rO" node="2M0pTEEA2iP" resolve="named" />
@@ -17161,7 +17161,7 @@
                             <node concept="2OqwBi" id="2M0pTEEA2jf" role="37wK5m">
                               <node concept="2OqwBi" id="2M0pTEEA2jg" role="2Oq$k0">
                                 <node concept="2WthIp" id="2M0pTEEA2jh" role="2Oq$k0">
-                                  <ref role="32nkFo" node="2M0pTEEA2iO" resolve="ExtractAttributeFromNamed" />
+                                  <ref role="32nkFo" node="2M0pTEEA2iO" resolve="ExtractAttributeFromQuoted" />
                                 </node>
                                 <node concept="1DTwFV" id="2M0pTEEA2ji" role="2OqNvi">
                                   <ref role="2WH_rO" node="2M0pTEEA2iT" resolve="project" />
@@ -17192,7 +17192,7 @@
                                         <node concept="1OKiuA" id="2M0pTEEA2jv" role="2OqNvi">
                                           <node concept="2OqwBi" id="2M0pTEEA2jw" role="lBI5i">
                                             <node concept="2WthIp" id="2M0pTEEA2jx" role="2Oq$k0">
-                                              <ref role="32nkFo" node="2M0pTEEA2iO" resolve="ExtractAttributeFromNamed" />
+                                              <ref role="32nkFo" node="2M0pTEEA2iO" resolve="ExtractAttributeFromQuoted" />
                                             </node>
                                             <node concept="1DTwFV" id="2M0pTEEA2jy" role="2OqNvi">
                                               <ref role="2WH_rO" node="2M0pTEEA2iV" resolve="editorContext" />
@@ -17215,7 +17215,7 @@
                               </node>
                             </node>
                             <node concept="1Xdei3" id="2M0pTEEA2jA" role="3cqZAp">
-                              <ref role="1Xdeis" to="8a6h:2M0pTEE_cjA" resolve="NamedToAttribute" />
+                              <ref role="1Xdeis" to="8a6h:2M0pTEE_cjA" resolve="QuotedToAttribute" />
                               <node concept="2OqwBi" id="2M0pTEEA2jB" role="1Xdeiv">
                                 <node concept="2WthIp" id="2M0pTEEA2jC" role="2Oq$k0" />
                                 <node concept="3gHZIF" id="2M0pTEEA2jD" role="2OqNvi">
@@ -17230,7 +17230,7 @@
                               </node>
                               <node concept="2OqwBi" id="2M0pTEEA2jH" role="1Xdeiu">
                                 <node concept="2WthIp" id="2M0pTEEA2jI" role="2Oq$k0">
-                                  <ref role="32nkFo" node="2M0pTEEA2iO" resolve="ExtractAttributeFromNamed" />
+                                  <ref role="32nkFo" node="2M0pTEEA2iO" resolve="ExtractAttributeFromQuoted" />
                                 </node>
                                 <node concept="2BZ7hE" id="2M0pTEEA2jJ" role="2OqNvi">
                                   <ref role="2WH_rO" node="2M0pTEEA2jY" resolve="ruleSet" />
@@ -17270,7 +17270,7 @@
       <node concept="3clFbS" id="2M0pTEEA2jS" role="2VODD2">
         <node concept="3clFbF" id="2M0pTEEA2jT" role="3cqZAp">
           <node concept="3trCAK" id="2M0pTEEA2jU" role="3clFbG">
-            <ref role="3trCAN" to="8a6h:2M0pTEE_cjA" resolve="NamedToAttribute" />
+            <ref role="3trCAN" to="8a6h:2M0pTEE_cjA" resolve="QuotedToAttribute" />
             <node concept="2OqwBi" id="2M0pTEEA2jV" role="3trCLF">
               <node concept="2WthIp" id="2M0pTEEA2jW" role="2Oq$k0" />
               <node concept="3gHZIF" id="2M0pTEEA2jX" role="2OqNvi">
@@ -17715,7 +17715,7 @@
                             <ref role="1Pybhc" to="mhbf:~SNodeUtil" resolve="SNodeUtil" />
                             <node concept="2OqwBi" id="6z2Ms7rUH$6" role="37wK5m">
                               <node concept="2WthIp" id="6z2Ms7rUH$7" role="2Oq$k0">
-                                <ref role="32nkFo" node="6z2Ms7rUHzI" resolve="ExtractAttributeFromQuoted" />
+                                <ref role="32nkFo" node="6z2Ms7rUHzI" resolve="ExtractLabeledQuotedFromAttribute" />
                               </node>
                               <node concept="3gHZIF" id="6z2Ms7rUH$8" role="2OqNvi">
                                 <ref role="2WH_rO" node="6z2Ms7rUHzJ" resolve="named" />
@@ -17724,7 +17724,7 @@
                             <node concept="2OqwBi" id="6z2Ms7rUH$9" role="37wK5m">
                               <node concept="2OqwBi" id="6z2Ms7rUH$a" role="2Oq$k0">
                                 <node concept="2WthIp" id="6z2Ms7rUH$b" role="2Oq$k0">
-                                  <ref role="32nkFo" node="6z2Ms7rUHzI" resolve="ExtractAttributeFromQuoted" />
+                                  <ref role="32nkFo" node="6z2Ms7rUHzI" resolve="ExtractLabeledQuotedFromAttribute" />
                                 </node>
                                 <node concept="1DTwFV" id="6z2Ms7rUH$c" role="2OqNvi">
                                   <ref role="2WH_rO" node="6z2Ms7rUHzN" resolve="project" />
@@ -17752,7 +17752,7 @@
                               </node>
                               <node concept="2OqwBi" id="6z2Ms7rUH$B" role="1Xdeiu">
                                 <node concept="2WthIp" id="6z2Ms7rUH$C" role="2Oq$k0">
-                                  <ref role="32nkFo" node="6z2Ms7rUHzI" resolve="ExtractAttributeFromQuoted" />
+                                  <ref role="32nkFo" node="6z2Ms7rUHzI" resolve="ExtractLabeledQuotedFromAttribute" />
                                 </node>
                                 <node concept="2BZ7hE" id="6z2Ms7rUH$D" role="2OqNvi">
                                   <ref role="2WH_rO" node="6z2Ms7rUH$S" resolve="ruleSet" />
@@ -17853,16 +17853,16 @@
                             <ref role="1Pybhc" to="mhbf:~SNodeUtil" resolve="SNodeUtil" />
                             <node concept="2OqwBi" id="67hNZsaNCxz" role="37wK5m">
                               <node concept="2WthIp" id="67hNZsaNCx$" role="2Oq$k0">
-                                <ref role="32nkFo" node="67hNZsaNCxb" resolve="ExtractAttributeFromExpression" />
+                                <ref role="32nkFo" node="67hNZsaNCxb" resolve="ToQuotation" />
                               </node>
                               <node concept="3gHZIF" id="67hNZsaNCx_" role="2OqNvi">
-                                <ref role="2WH_rO" node="67hNZsaNCxc" resolve="expression" />
+                                <ref role="2WH_rO" node="67hNZsaNCxc" resolve="nodeBuilder" />
                               </node>
                             </node>
                             <node concept="2OqwBi" id="67hNZsaNCxA" role="37wK5m">
                               <node concept="2OqwBi" id="67hNZsaNCxB" role="2Oq$k0">
                                 <node concept="2WthIp" id="67hNZsaNCxC" role="2Oq$k0">
-                                  <ref role="32nkFo" node="67hNZsaNCxb" resolve="ExtractAttributeFromExpression" />
+                                  <ref role="32nkFo" node="67hNZsaNCxb" resolve="ToQuotation" />
                                 </node>
                                 <node concept="1DTwFV" id="67hNZsaNCxD" role="2OqNvi">
                                   <ref role="2WH_rO" node="67hNZsaNCxg" resolve="project" />
@@ -17879,7 +17879,7 @@
                               <node concept="2OqwBi" id="67hNZsaNCxY" role="1Xdeiv">
                                 <node concept="2WthIp" id="67hNZsaNCxZ" role="2Oq$k0" />
                                 <node concept="3gHZIF" id="67hNZsaNCy0" role="2OqNvi">
-                                  <ref role="2WH_rO" node="67hNZsaNCxc" resolve="expression" />
+                                  <ref role="2WH_rO" node="67hNZsaNCxc" resolve="nodeBuilder" />
                                 </node>
                               </node>
                               <node concept="2OqwBi" id="67hNZsaNCy1" role="1Xdeit">
@@ -17890,7 +17890,7 @@
                               </node>
                               <node concept="2OqwBi" id="67hNZsaNCy4" role="1Xdeiu">
                                 <node concept="2WthIp" id="67hNZsaNCy5" role="2Oq$k0">
-                                  <ref role="32nkFo" node="67hNZsaNCxb" resolve="ExtractAttributeFromExpression" />
+                                  <ref role="32nkFo" node="67hNZsaNCxb" resolve="ToQuotation" />
                                 </node>
                                 <node concept="2BZ7hE" id="67hNZsaNCy6" role="2OqNvi">
                                   <ref role="2WH_rO" node="67hNZsaNCyl" resolve="ruleSet" />
@@ -17931,7 +17931,7 @@
             <node concept="2OqwBi" id="67hNZsaNCyi" role="3trCLF">
               <node concept="2WthIp" id="67hNZsaNCyj" role="2Oq$k0" />
               <node concept="3gHZIF" id="67hNZsaNCyk" role="2OqNvi">
-                <ref role="2WH_rO" node="67hNZsaNCxc" resolve="expression" />
+                <ref role="2WH_rO" node="67hNZsaNCxc" resolve="nodeBuilder" />
               </node>
             </node>
           </node>
@@ -17991,7 +17991,7 @@
                             <ref role="37wK5l" to="mhbf:~SNodeUtil.isAccessible(org.jetbrains.mps.openapi.model.SNode,org.jetbrains.mps.openapi.module.SRepository)" resolve="isAccessible" />
                             <node concept="2OqwBi" id="6DCjLl3eyJ0" role="37wK5m">
                               <node concept="2WthIp" id="6DCjLl3eyJ1" role="2Oq$k0">
-                                <ref role="32nkFo" node="6DCjLl3eyIE" resolve="ToQuotation" />
+                                <ref role="32nkFo" node="6DCjLl3eyIE" resolve="ToLightQuotation" />
                               </node>
                               <node concept="3gHZIF" id="6DCjLl3eyJ2" role="2OqNvi">
                                 <ref role="2WH_rO" node="6DCjLl3eyIF" resolve="nodeBuilder" />
@@ -18000,7 +18000,7 @@
                             <node concept="2OqwBi" id="6DCjLl3eyJ3" role="37wK5m">
                               <node concept="2OqwBi" id="6DCjLl3eyJ4" role="2Oq$k0">
                                 <node concept="2WthIp" id="6DCjLl3eyJ5" role="2Oq$k0">
-                                  <ref role="32nkFo" node="6DCjLl3eyIE" resolve="ToQuotation" />
+                                  <ref role="32nkFo" node="6DCjLl3eyIE" resolve="ToLightQuotation" />
                                 </node>
                                 <node concept="1DTwFV" id="6DCjLl3eyJ6" role="2OqNvi">
                                   <ref role="2WH_rO" node="6DCjLl3eyIJ" resolve="project" />
@@ -18028,7 +18028,7 @@
                               </node>
                               <node concept="2OqwBi" id="6DCjLl3eyJg" role="1Xdeiu">
                                 <node concept="2WthIp" id="6DCjLl3eyJh" role="2Oq$k0">
-                                  <ref role="32nkFo" node="6DCjLl3eyIE" resolve="ToQuotation" />
+                                  <ref role="32nkFo" node="6DCjLl3eyIE" resolve="ToLightQuotation" />
                                 </node>
                                 <node concept="2BZ7hE" id="6DCjLl3eyJi" role="2OqNvi">
                                   <ref role="2WH_rO" node="6DCjLl3eyJw" resolve="ruleSet" />
