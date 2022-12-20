@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="org.modelingvalue.dclare.mps.BulkRenameDialog">
+  <grid id="cbd77" binding="contentPane" layout-manager="GridBagLayout">
+    <constraints>
+      <xy x="48" y="54" width="649" height="552"/>
+    </constraints>
+    <properties/>
+    <border type="empty">
+      <size top="5" left="5" bottom="5" right="5"/>
+    </border>
+    <children>
+      <grid id="6bbf4" layout-manager="BorderLayout" hgap="0" vgap="0">
+        <constraints>
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <gridbag top="10" left="10" bottom="10" right="10" weightx="0.0" weighty="0.0"/>
+        </constraints>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <grid id="6216a" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+            <constraints border-constraint="West"/>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="a5fc" class="javax.swing.JButton" binding="plusButton">
+                <constraints/>
+                <properties>
+                  <iconTextGap value="0"/>
+                  <maximumSize width="36" height="36"/>
+                  <minimumSize width="36" height="36"/>
+                  <preferredSize width="36" height="36"/>
+                  <text value="+"/>
+                </properties>
+              </component>
+              <component id="717e1" class="javax.swing.JButton" binding="minButton">
+                <constraints/>
+                <properties>
+                  <maximumSize width="36" height="36"/>
+                  <minimumSize width="36" height="36"/>
+                  <preferredSize width="36" height="36"/>
+                  <text value="-"/>
+                </properties>
+              </component>
+            </children>
+          </grid>
+          <grid id="e8f2" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+            <constraints border-constraint="East"/>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="90101" class="javax.swing.JButton" binding="loadButton">
+                <constraints/>
+                <properties>
+                  <preferredSize width="78" height="36"/>
+                  <text value="Load..."/>
+                </properties>
+              </component>
+              <component id="cb04" class="javax.swing.JButton" binding="saveButton" default-binding="true">
+                <constraints/>
+                <properties>
+                  <preferredSize width="78" height="36"/>
+                  <text value="Save..."/>
+                </properties>
+              </component>
+            </children>
+          </grid>
+          <grid id="b2941" layout-manager="BorderLayout" hgap="0" vgap="0">
+            <constraints border-constraint="Center"/>
+            <properties/>
+            <border type="empty">
+              <size top="10" left="10" bottom="10" right="10"/>
+            </border>
+            <children>
+              <component id="8afdf" class="javax.swing.JCheckBox" binding="allPropertiesCheckbox">
+                <constraints border-constraint="Center"/>
+                <properties>
+                  <text value="all String properties of all Concepts"/>
+                </properties>
+              </component>
+              <component id="b543a" class="javax.swing.JCheckBox" binding="stringLiteralsCheckbox">
+                <constraints border-constraint="South"/>
+                <properties>
+                  <text value="all baselanguage StringLiterals"/>
+                </properties>
+              </component>
+              <component id="cac27" class="javax.swing.JCheckBox" binding="inamedConceptsCheckbox">
+                <constraints border-constraint="North"/>
+                <properties>
+                  <selected value="true"/>
+                  <text value="all names of all INamedConcepts"/>
+                </properties>
+              </component>
+            </children>
+          </grid>
+        </children>
+      </grid>
+      <grid id="e3588" layout-manager="GridBagLayout">
+        <constraints>
+          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <gridbag top="0" left="10" bottom="0" right="10" weightx="1.0" weighty="1.0"/>
+        </constraints>
+        <properties/>
+        <border type="line"/>
+        <children>
+          <scrollpane id="cd3ea">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="1.0" weighty="1.0"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="eb321" class="javax.swing.JTable" binding="table">
+                <constraints/>
+                <properties/>
+              </component>
+            </children>
+          </scrollpane>
+        </children>
+      </grid>
+      <grid id="9538f" layout-manager="BorderLayout" hgap="0" vgap="0">
+        <constraints>
+          <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <gridbag top="10" left="0" bottom="10" right="0" weightx="1.0" weighty="0.0"/>
+        </constraints>
+        <properties/>
+        <border type="empty">
+          <size top="5" left="5" bottom="5" right="5"/>
+        </border>
+        <children>
+          <component id="5723f" class="javax.swing.JButton" binding="doneButton">
+            <constraints border-constraint="East"/>
+            <properties>
+              <maximumSize width="78" height="36"/>
+              <minimumSize width="78" height="36"/>
+              <preferredSize width="78" height="36"/>
+              <text value="Done"/>
+            </properties>
+          </component>
+          <grid id="5826e" layout-manager="FlowLayout" hgap="0" vgap="0" flow-align="1">
+            <constraints border-constraint="West"/>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="e7465" class="javax.swing.JButton" binding="renameButton">
+                <constraints/>
+                <properties>
+                  <minimumSize width="102" height="36"/>
+                  <preferredSize width="111" height="36"/>
+                  <text value="Bulk Rename"/>
+                </properties>
+              </component>
+              <component id="df975" class="javax.swing.JButton" binding="dryRunButton" default-binding="true">
+                <constraints/>
+                <properties>
+                  <preferredSize width="83" height="36"/>
+                  <text value="Dry Run"/>
+                </properties>
+              </component>
+            </children>
+          </grid>
+        </children>
+      </grid>
+      <grid id="7aecc" binding="resultPane" layout-manager="GridBagLayout">
+        <constraints>
+          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <gridbag top="5" left="10" bottom="0" right="10" weightx="1.0" weighty="1.0"/>
+        </constraints>
+        <properties/>
+        <border type="line"/>
+        <children>
+          <scrollpane id="1ba71">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="1.0" weighty="1.0"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="30b32" class="javax.swing.JTable" binding="resultTable">
+                <constraints/>
+                <properties/>
+              </component>
+            </children>
+          </scrollpane>
+        </children>
+      </grid>
+    </children>
+  </grid>
+</form>
