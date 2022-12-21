@@ -17,7 +17,7 @@ package org.modelingvalue.dclare.mps;
 
 import java.util.Arrays;
 
-import org.jetbrains.mps.openapi.language.SConcept;
+import org.jetbrains.mps.openapi.language.SAbstractConcept;
 import org.jetbrains.mps.openapi.model.SNode;
 import org.modelingvalue.collections.util.IdentifiedByArray;
 
@@ -58,8 +58,8 @@ public class Signature extends IdentifiedByArray implements Comparable<Signature
             return false;
         } else {
             for (int i = 0; i < size(); i++) {
-                if (get(i) instanceof SConcept && sup.get(i) instanceof SConcept) {
-                    if (!((SConcept) get(i)).isSubConceptOf((SConcept) sup.get(i))) {
+                if (get(i) instanceof SAbstractConcept && sup.get(i) instanceof SAbstractConcept) {
+                    if (!((SAbstractConcept) get(i)).isSubConceptOf((SAbstractConcept) sup.get(i))) {
                         return false;
                     }
                 } else if (get(i) instanceof SStructClass && sup.get(i) instanceof SStructClass) {

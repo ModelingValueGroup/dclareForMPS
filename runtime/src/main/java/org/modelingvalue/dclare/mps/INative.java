@@ -15,7 +15,7 @@
 
 package org.modelingvalue.dclare.mps;
 
-import org.jetbrains.mps.openapi.language.SConcept;
+import org.jetbrains.mps.openapi.language.SAbstractConcept;
 import org.modelingvalue.collections.List;
 import org.modelingvalue.dclare.Constant;
 
@@ -42,9 +42,9 @@ public interface INative<O> extends DFeature {
         } else {
             Object at = a.type();
             Object bt = b.type();
-            if (at instanceof SConcept && bt instanceof SConcept) {
-                SConcept ac = (SConcept) at;
-                SConcept bc = (SConcept) bt;
+            if (at instanceof SAbstractConcept && bt instanceof SAbstractConcept) {
+                SAbstractConcept ac = (SAbstractConcept) at;
+                SAbstractConcept bc = (SAbstractConcept) bt;
                 if (ac.isSubConceptOf(bc)) {
                     return -1;
                 } else if (bc.isSubConceptOf(ac)) {
