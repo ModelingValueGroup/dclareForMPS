@@ -899,7 +899,7 @@
       <property role="TrG5h" value="deviceInput" />
       <property role="3K1B09" value="true" />
       <node concept="3LmiP1" id="76QCTJD2RNi" role="1tU5fm">
-        <ref role="2XDbjv" node="2gyk5S1Dvn0" resolve="DInputDevice" />
+        <ref role="2XDbjv" node="2gyk5S1Dvn0" resolve="DDeviceInput" />
       </node>
       <node concept="3KEV6E" id="76QCTJD2Tym" role="33vP2m">
         <ref role="2UJ2yc" node="2gyk5S1Dvn0" resolve="DDeviceInput" />
@@ -997,7 +997,7 @@
                       </node>
                     </node>
                     <node concept="2AHcQZ" id="76QCTJD3zaJ" role="2AJF6D">
-                      <ref role="2AI5Lk" to="wyt6:~Override" />
+                      <ref role="2AI5Lk" to="wyt6:~Override" resolve="Override" />
                     </node>
                   </node>
                   <node concept="3clFb_" id="76QCTJD3zbb" role="jymVt">
@@ -1111,7 +1111,7 @@
                       </node>
                     </node>
                     <node concept="2AHcQZ" id="76QCTJD3zaV" role="2AJF6D">
-                      <ref role="2AI5Lk" to="wyt6:~Override" />
+                      <ref role="2AI5Lk" to="wyt6:~Override" resolve="Override" />
                     </node>
                   </node>
                   <node concept="3clFb_" id="76QCTJD3zaZ" role="jymVt">
@@ -1184,7 +1184,7 @@
                       </node>
                     </node>
                     <node concept="2AHcQZ" id="76QCTJD3zb7" role="2AJF6D">
-                      <ref role="2AI5Lk" to="wyt6:~Override" />
+                      <ref role="2AI5Lk" to="wyt6:~Override" resolve="Override" />
                     </node>
                   </node>
                 </node>
@@ -1226,7 +1226,7 @@
                       </node>
                     </node>
                     <node concept="2AHcQZ" id="76QCTJD3$U4" role="2AJF6D">
-                      <ref role="2AI5Lk" to="wyt6:~Override" />
+                      <ref role="2AI5Lk" to="wyt6:~Override" resolve="Override" />
                     </node>
                   </node>
                   <node concept="3clFb_" id="76QCTJD3$U8" role="jymVt">
@@ -1250,7 +1250,7 @@
                       </node>
                     </node>
                     <node concept="2AHcQZ" id="76QCTJD3$Ug" role="2AJF6D">
-                      <ref role="2AI5Lk" to="wyt6:~Override" />
+                      <ref role="2AI5Lk" to="wyt6:~Override" resolve="Override" />
                     </node>
                   </node>
                 </node>
@@ -1537,7 +1537,7 @@
   </node>
   <node concept="3LmNE2" id="2gyk5S1Dvnj">
     <property role="3GE5qa" value="gui" />
-    <ref role="2UJ2Q8" node="2gyk5S1Dvn0" resolve="DInputDevice" />
+    <ref role="2UJ2Q8" node="2gyk5S1Dvn0" resolve="DDeviceInput" />
     <ref role="2RaPBF" node="WHdioYVYbd" resolve="GUI" />
     <node concept="32q3_s" id="76QCTJD2e4Z" role="1FPzNG">
       <property role="TrG5h" value="mousePosition" />
