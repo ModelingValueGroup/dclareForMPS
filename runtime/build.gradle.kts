@@ -33,6 +33,7 @@ dependencies {
     compileOnly(mpsJar("mps-behavior-runtime"))
     compileOnly(mpsJar("debugger-api"))
     compileOnly(mpsJar("mps-debugger-api"))
+    compileOnly(mpsJar("forms_rt"))
 }
 publishing {
     publications {

@@ -15,32 +15,49 @@
 
 package org.modelingvalue.dclare.mps;
 
-import org.modelingvalue.collections.util.QuadConsumer;
+import org.modelingvalue.collections.List;
+import org.modelingvalue.collections.util.Triple;
+
+import java.util.function.Consumer;
 
 public class BulkRenameCommand {
-    public final boolean                                       dry;
-    public final boolean                                       inamedConcepts;
-    public final boolean                                       allProperties;
-    public final boolean                                       stringLiterals;
-    public final int                                           row;
-    public final String                                        fromPattern;
-    public final String                                        toPattern;
-    public final QuadConsumer<Integer, String, String, String> resultHandler;
+    public final boolean                               dry;
+    public final boolean                               inamedConcepts;
+    public final boolean                               allProperties;
+    public final boolean                               stringLiterals;
+    public final List<Triple<Integer, String, String>> renames;
+    public final Consumer<RenameResult>                resultHandler;
 
-    public BulkRenameCommand(boolean dry, boolean inamedConcepts, boolean allProperties, boolean stringLiterals, int row, String fromPattern, String toPattern, QuadConsumer<Integer, String, String, String> resultHandler) {
+    public static class RenameResult {
+        public final List<Integer> rows;
+        public final String        type;
+        public final String        from;
+        public final String        to;
+        public final String        modelName;
+        public final String        nodeName;
+
+        public RenameResult(List<Integer> rows, String type, String from, String to, String modelName, String nodeName) {
+            this.rows      = rows;
+            this.type      = type;
+            this.from      = from;
+            this.to        = to;
+            this.modelName = modelName;
+            this.nodeName  = nodeName;
+        }
+    }
+
+    public BulkRenameCommand(boolean dry, boolean inamedConcepts, boolean allProperties, boolean stringLiterals, List<Triple<Integer, String, String>> renames, Consumer<RenameResult> resultHandler) {
         this.dry            = dry;
         this.inamedConcepts = inamedConcepts;
         this.allProperties  = allProperties;
         this.stringLiterals = stringLiterals;
-        this.row            = row;
-        this.fromPattern    = fromPattern;
-        this.toPattern      = toPattern;
+        this.renames        = renames;
         this.resultHandler  = resultHandler;
     }
 
     @SuppressWarnings("unused")
-    public void change(String type, String from, String to) {
-        resultHandler.accept(row, type, from, to);
-        System.err.printf("  - %4d: %-20s: %-32s -> %s\n", row, type, from, to);
+    public void change(List<Integer> rows, String type, String from, String to, String modelName, String nodeName) {
+        resultHandler.accept(new RenameResult(rows, type, from, to, modelName, nodeName));
+        System.err.printf("  - %32s: %-20s: %-32s -> %-32s  [%s - %s]\n", rows, type, from, to, modelName, nodeName);
     }
 }
