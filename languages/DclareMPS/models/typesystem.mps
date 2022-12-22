@@ -8626,5 +8626,44 @@
       <ref role="1YaFvo" to="7ggn:3Qetf3cPkTM" resolve="StructRuleSet" />
     </node>
   </node>
+  <node concept="1YbPZF" id="2xAA8jfRLLv">
+    <property role="TrG5h" value="typeof_StructAncestorOperation" />
+    <property role="3GE5qa" value="structs" />
+    <node concept="3clFbS" id="2xAA8jfRLLw" role="18ibNy">
+      <node concept="1Z5TYs" id="2xAA8jfRLQX" role="3cqZAp">
+        <node concept="mw_s8" id="2xAA8jfRLR1" role="1ZfhK$">
+          <node concept="1Z2H0r" id="2xAA8jfRLR2" role="mwGJk">
+            <node concept="1YBJjd" id="2xAA8jfRLR3" role="1Z2MuG">
+              <ref role="1YBMHb" node="2xAA8jfRLLy" resolve="structAncestorOperation" />
+            </node>
+          </node>
+        </node>
+        <node concept="mw_s8" id="2xAA8jfRMED" role="1ZfhKB">
+          <node concept="2pJPEk" id="2xAA8jfRMEE" role="mwGJk">
+            <node concept="2pJPED" id="2xAA8jfRMEF" role="2pJPEn">
+              <ref role="2pJxaS" to="7ggn:3Qetf3cPPAL" resolve="StructType" />
+              <node concept="2pIpSj" id="2xAA8jfRMEG" role="2pJxcM">
+                <ref role="2pIpSl" to="7ggn:4$bpWrOFXcp" resolve="class" />
+                <node concept="36biLy" id="2xAA8jfRMEH" role="28nt2d">
+                  <node concept="2OqwBi" id="2xAA8jfRMEI" role="36biLW">
+                    <node concept="1YBJjd" id="2xAA8jfRMEJ" role="2Oq$k0">
+                      <ref role="1YBMHb" node="2xAA8jfRLLy" resolve="structAncestorOperation" />
+                    </node>
+                    <node concept="3TrEf2" id="2xAA8jfRMEK" role="2OqNvi">
+                      <ref role="3Tt5mk" to="7ggn:2xAA8jfP4pi" resolve="class" />
+                    </node>
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+    <node concept="1YaCAy" id="2xAA8jfRLLy" role="1YuTPh">
+      <property role="TrG5h" value="structAncestorOperation" />
+      <ref role="1YaFvo" to="7ggn:2xAA8jfON9c" resolve="StructAncestorOperation" />
+    </node>
+  </node>
 </model>
 

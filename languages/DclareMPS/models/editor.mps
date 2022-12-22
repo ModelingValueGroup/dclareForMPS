@@ -8298,5 +8298,53 @@
       </node>
     </node>
   </node>
+  <node concept="24kQdi" id="2xAA8jfP41s">
+    <property role="3GE5qa" value="structs" />
+    <ref role="1XX52x" to="7ggn:2xAA8jfON9c" resolve="StructAncestorOperation" />
+    <node concept="3EZMnI" id="2xAA8jfP4p6" role="2wV5jI">
+      <node concept="2iRfu4" id="2xAA8jfP4p7" role="2iSdaV" />
+      <node concept="PMmxH" id="2xAA8jfP423" role="3EZMnx">
+        <ref role="PMmxG" to="tpco:2wZex4PafBj" resolve="alias" />
+        <node concept="Vb9p2" id="2xAA8jfP424" role="3F10Kt">
+          <property role="Vbekb" value="g1_k_vY/BOLD" />
+        </node>
+      </node>
+      <node concept="3F0ifn" id="2xAA8jfP4pB" role="3EZMnx">
+        <property role="3F0ifm" value="&lt;" />
+        <ref role="1k5W1q" to="tpen:hY9fg1G" resolve="LeftParenAfterName" />
+        <node concept="11LMrY" id="2xAA8jfP79H" role="3F10Kt">
+          <property role="VOm3f" value="true" />
+        </node>
+        <node concept="11L4FC" id="2xAA8jfP7a2" role="3F10Kt">
+          <property role="VOm3f" value="true" />
+        </node>
+      </node>
+      <node concept="1iCGBv" id="2xAA8jfP4pC" role="3EZMnx">
+        <property role="1cu_pB" value="gtgu$YJ/attractsFocus" />
+        <property role="39s7Ar" value="true" />
+        <ref role="1k5W1q" to="tpd3:hwSE21y" resolve="ReferenceOnConcept" />
+        <ref role="1NtTu8" to="7ggn:2xAA8jfP4pi" resolve="class" />
+        <node concept="1sVBvm" id="2xAA8jfP4pD" role="1sWHZn">
+          <node concept="3F0A7n" id="2xAA8jfP4pE" role="2wV5jI">
+            <property role="1Intyy" value="true" />
+            <ref role="1NtTu8" to="tpck:h0TrG11" resolve="name" />
+            <node concept="3$7jql" id="2xAA8jfP4pF" role="3F10Kt">
+              <property role="3$6WeP" value="0.0" />
+            </node>
+          </node>
+        </node>
+        <node concept="3$7jql" id="2xAA8jfP4pG" role="3F10Kt">
+          <property role="3$6WeP" value="0.0" />
+        </node>
+      </node>
+      <node concept="3F0ifn" id="2xAA8jfP4pH" role="3EZMnx">
+        <property role="3F0ifm" value="&gt;" />
+        <ref role="1k5W1q" to="tpen:hFCSUmN" resolve="RightParen" />
+        <node concept="11L4FC" id="2xAA8jfP79F" role="3F10Kt">
+          <property role="VOm3f" value="true" />
+        </node>
+      </node>
+    </node>
+  </node>
 </model>
 

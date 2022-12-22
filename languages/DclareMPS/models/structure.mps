@@ -1611,5 +1611,21 @@
       <ref role="20ksaX" to="tpee:fzcqZ_w" resolve="variableDeclaration" />
     </node>
   </node>
+  <node concept="1TIwiD" id="2xAA8jfON9c">
+    <property role="EcuMT" value="2911181905331434060" />
+    <property role="3GE5qa" value="structs" />
+    <property role="TrG5h" value="StructAncestorOperation" />
+    <property role="34LRSv" value="ancestor" />
+    <ref role="1TJDcQ" to="tpck:gw2VY9q" resolve="BaseConcept" />
+    <node concept="PrWs8" id="2xAA8jfP40U" role="PzmwI">
+      <ref role="PrY4T" to="tpee:hqOqG0K" resolve="IOperation" />
+    </node>
+    <node concept="1TJgyj" id="2xAA8jfP4pi" role="1TKVEi">
+      <property role="IQ2ns" value="2911181905331504722" />
+      <property role="20kJfa" value="class" />
+      <property role="20lbJX" value="fLJekj4/_1" />
+      <ref role="20lvS9" node="4$bpWrNHO7E" resolve="StructClass" />
+    </node>
+  </node>
 </model>
 
