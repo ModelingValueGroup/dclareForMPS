@@ -1441,5 +1441,52 @@
       </node>
     </node>
   </node>
+  <node concept="2S6QgY" id="2xAA8jfaXuo">
+    <property role="3GE5qa" value="native" />
+    <property role="TrG5h" value="SwitchDeferred" />
+    <ref role="2ZfgGC" to="7ggn:5Hwm38JY5Md" resolve="NativeAttributeHandler" />
+    <node concept="2S6ZIM" id="2xAA8jfaXup" role="2ZfVej">
+      <node concept="3clFbS" id="2xAA8jfaXuq" role="2VODD2">
+        <node concept="3clFbF" id="2xAA8jfaZ9v" role="3cqZAp">
+          <node concept="3K4zz7" id="2xAA8jfaZ9w" role="3clFbG">
+            <node concept="Xl_RD" id="2xAA8jfaZ9x" role="3K4E3e">
+              <property role="Xl_RC" value="make immediate" />
+            </node>
+            <node concept="Xl_RD" id="2xAA8jfaZ9y" role="3K4GZi">
+              <property role="Xl_RC" value="make deferred" />
+            </node>
+            <node concept="2OqwBi" id="2xAA8jfaZ9z" role="3K4Cdx">
+              <node concept="2Sf5sV" id="2xAA8jfaZ9$" role="2Oq$k0" />
+              <node concept="3TrcHB" id="2xAA8jfaZ9_" role="2OqNvi">
+                <ref role="3TsBF5" to="7ggn:2xAA8jfa$$q" resolve="deferred" />
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+    <node concept="2Sbjvc" id="2xAA8jfaXur" role="2ZfgGD">
+      <node concept="3clFbS" id="2xAA8jfaXus" role="2VODD2">
+        <node concept="3clFbF" id="2xAA8jfaXzs" role="3cqZAp">
+          <node concept="37vLTI" id="2xAA8jfaYia" role="3clFbG">
+            <node concept="3fqX7Q" id="2xAA8jfaYq9" role="37vLTx">
+              <node concept="2OqwBi" id="2xAA8jfaYCB" role="3fr31v">
+                <node concept="2Sf5sV" id="2xAA8jfaYuw" role="2Oq$k0" />
+                <node concept="3TrcHB" id="2xAA8jfaYSb" role="2OqNvi">
+                  <ref role="3TsBF5" to="7ggn:2xAA8jfa$$q" resolve="deferred" />
+                </node>
+              </node>
+            </node>
+            <node concept="2OqwBi" id="2xAA8jfaXFH" role="37vLTJ">
+              <node concept="2Sf5sV" id="2xAA8jfaXzr" role="2Oq$k0" />
+              <node concept="3TrcHB" id="2xAA8jfaXOt" role="2OqNvi">
+                <ref role="3TsBF5" to="7ggn:2xAA8jfa$$q" resolve="deferred" />
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+  </node>
 </model>
 

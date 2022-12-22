@@ -123,7 +123,7 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
         reReadAction.trigger(object);
     }
 
-    protected void toMPS(O object, T pre, T post, boolean handleChanges) {
+    protected final void toMPS(O object, T pre, T post) {
         if (toMPS != null) {
             try {
                 toMPS.accept(object, pre, post);

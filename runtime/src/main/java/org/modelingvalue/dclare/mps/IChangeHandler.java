@@ -21,4 +21,6 @@ public interface IChangeHandler<O, T> {
 
     void handle(O context, T pre, T post);
 
+    boolean deferred();
+
 }

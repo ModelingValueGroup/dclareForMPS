@@ -137,17 +137,6 @@ public interface DAttribute<O, T> extends DFeature {
             return !handlers().isEmpty();
         }
 
-        @SuppressWarnings("unchecked")
-        @Override
-        protected void toMPS(C object, V pre, V post, boolean handleChanges) {
-            super.toMPS(object, pre, post, handleChanges);
-            if (handleChanges) {
-                for (IChangeHandler h : handlers()) {
-                    h.handle(object, pre, post);
-                }
-            }
-        }
-
         @Override
         public String id() {
             return (String) super.id();

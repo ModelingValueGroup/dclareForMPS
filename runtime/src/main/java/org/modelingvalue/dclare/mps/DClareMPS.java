@@ -212,6 +212,10 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
     private Concurrent<Set<SModule>>                                                                changedModules;
     private Concurrent<Set<SNode>>                                                                  changedRoots;
     private ConstantState                                                                           derivationState;
+    @SuppressWarnings("rawtypes")
+    private Concurrent<Map<Pair<Object, IChangeHandler>, Pair<Object, Object>>>                     queuedChangeHandlers;
+    @SuppressWarnings("rawtypes")
+    private Concurrent<Map<Pair<Object, IChangeHandler>, Pair<Object, Object>>>                     deferredChangeHandlers;
     private int                                                                                     modelCheckNr;
 
     protected DClareMPS(DclareForMPSEngine engine, ProjectBase project, DclareForMpsConfig config, int nr, Status[] startStatus) {
@@ -289,6 +293,8 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
         if (config.isTraceDclare()) {
             System.err.println(DclareTrace.getLineStart("START", null) + this);
         }
+        queuedChangeHandlers = Concurrent.of(Map.of());
+        deferredChangeHandlers = Concurrent.of(Map.of());
         changedModels = Concurrent.of(Set.of());
         changedModules = Concurrent.of(Set.of());
         changedRoots = Concurrent.of(Set.of());
@@ -642,7 +648,9 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
                     } while (!diff[0].isEmpty());
                 });
             }
+            runChangeHandlers(queuedChangeHandlers);
             if (last) {
+                runChangeHandlers(deferredChangeHandlers);
                 if (!setted.isEmpty()) {
                     changed = true;
                     read(() -> {
@@ -696,7 +704,10 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
                         }, r -> {
                         });
                     }
-                    dObserved.toMPS(dObject, preVal, postVal, !nativeHandled);
+                    dObserved.toMPS(dObject, preVal, postVal);
+                    if (!nativeHandled && dObserved instanceof DAttribute) {
+                        handleNativeChanges(dObject, (DAttribute<?, ?>) dObserved, preVal, postVal);
+                    }
                     if (getConfig().isTraceMPSModelChanges() && !(dObserved instanceof DObservedAttribute) && dObserved != DObject.CONTAINED) {
                         System.err.println(DclareTrace.getLineStart("MPS", imperativeTransaction) + "MODEL CHANGE " + dObject + "." + dObserved + " = " + State.shortValueDiffString(preVal, postVal));
                     }
@@ -708,6 +719,14 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
         }
     }
 
+    @SuppressWarnings({"rawtypes"})
+    private void parentToMPS(State imper, State dclare, Map<DObject, Map<DObserved, Pair<Object, Object>>>[] diff, DObject dObject) {
+        Pair<Mutable, Setable<Mutable, ?>> pair = dclare.get(dObject, Mutable.D_PARENT_CONTAINING);
+        if (pair != null && pair.a() instanceof DObject && pair.b() instanceof DObserved) {
+            toMPS(imper, dclare, diff, (DObject) pair.a());
+        }
+    }
+
     @SuppressWarnings({"unchecked", "rawtypes"})
     private boolean handleNativeExistence(State pre, State post, DObject dObject) {
         if (dObject.isNative() || !pre.get(dObject, DObject.TYPE).getNatives().isEmpty()) {
@@ -715,26 +734,22 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
             boolean postC = post.get(dObject, DObject.CONTAINED);
             if (!preC && postC) {
                 DObject parent = (DObject) post.get(dObject, Mutable.D_PARENT_CONTAINING).a();
-                List<INative> natives = post.get(dObject, DObject.TYPE).getNatives();
-                for (INative<DObject> n : natives) {
+                for (INative<DObject> n : post.get(dObject, DObject.TYPE).getNatives()) {
                     n.init(dObject, parent);
-                }
-                for (INative<DObject> n : natives) {
                     for (IChangeHandler h : INative.ALL_HANDLERS.get(n)) {
                         if (h.attribute() instanceof DObservedAttribute) {
                             Object b = pre.get(dObject, (DObservedAttribute) h.attribute());
                             Object a = post.get(dObject, (DObservedAttribute) h.attribute());
-                            h.handle(dObject, b, a);
+                            nativeChange(dObject, h, b, a);
                         } else {
-                            h.handle(dObject, null, h.attribute().get(dObject));
+                            nativeChange(dObject, h, null, h.attribute().get(dObject));
                         }
                     }
                 }
                 return true;
             } else if (preC && !postC) {
                 DObject parent = (DObject) pre.get(dObject, Mutable.D_PARENT_CONTAINING).a();
-                List<INative> natives = pre.get(dObject, DObject.TYPE).getNatives();
-                for (INative n : natives) {
+                for (INative n : pre.get(dObject, DObject.TYPE).getNatives()) {
                     n.exit(dObject, parent);
                 }
                 return true;
@@ -746,12 +761,32 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
         }
     }
 
-    @SuppressWarnings({"rawtypes"})
-    private void parentToMPS(State imper, State dclare, Map<DObject, Map<DObserved, Pair<Object, Object>>>[] diff, DObject dObject) {
-        Pair<Mutable, Setable<Mutable, ?>> pair = dclare.get(dObject, Mutable.D_PARENT_CONTAINING);
-        if (pair != null && pair.a() instanceof DObject && pair.b() instanceof DObserved) {
-            toMPS(imper, dclare, diff, (DObject) pair.a());
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    private void handleNativeChanges(DObject dObject, DAttribute<?, ?> dAttribute, Object pre, Object post) {
+        for (IChangeHandler h : dAttribute.handlers()) {
+            nativeChange(dObject, h, pre, post);
         }
+    }
+
+    @SuppressWarnings("rawtypes")
+    private <O, T> void nativeChange(O obj, IChangeHandler<O, T> ch, T pre, T post) {
+        Pair<Object, IChangeHandler> key = Pair.of(obj, ch);
+        if (ch.deferred()) {
+            deferredChangeHandlers.change(m -> {
+                Pair<Object, Object> old = m.get(key);
+                return m.put(key, Pair.of(old != null ? old.a() : pre, post));
+            });
+        } else {
+            queuedChangeHandlers.change(m -> m.put(key, Pair.of(pre, post)));
+        }
+    }
+
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    private void runChangeHandlers(Concurrent<Map<Pair<Object, IChangeHandler>, Pair<Object, Object>>> changeHandlers) {
+        for (Entry<Pair<Object, IChangeHandler>, Pair<Object, Object>> ch : changeHandlers.result()) {
+            ch.getKey().b().handle(ch.getKey().a(), ch.getValue().a(), ch.getValue().a());
+        }
+        changeHandlers.init(Map.of());
     }
 
     private void addToChanged(DObject dObject) {
