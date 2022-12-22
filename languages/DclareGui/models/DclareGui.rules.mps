@@ -61,6 +61,7 @@
         <child id="6584359627792080973" name="handlers" index="1OA3xZ" />
       </concept>
       <concept id="6584359627792080013" name="DclareMPS.structure.NativeAttributeHandler" flags="ng" index="1OA0iZ">
+        <property id="2911181905320364314" name="deferred" index="3Bjd6u" />
         <reference id="6584359627792080014" name="attribute" index="1OA0iW" />
         <child id="6584359627792080021" name="body" index="1OA0iB" />
       </concept>
@@ -530,6 +531,7 @@
         </node>
       </node>
       <node concept="1OA0iZ" id="46vl3mDURIU" role="1OA3xZ">
+        <property role="3Bjd6u" value="true" />
         <ref role="1OA0iW" node="46vl3mDwqIr" resolve="preferredSize" />
         <node concept="3clFbS" id="46vl3mDURIV" role="1OA0iB">
           <node concept="3clFbJ" id="46vl3mDVjWm" role="3cqZAp">
