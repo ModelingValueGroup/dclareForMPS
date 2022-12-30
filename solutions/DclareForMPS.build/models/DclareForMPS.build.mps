@@ -1165,6 +1165,11 @@
             <ref role="3bR37D" node="WHdioYVEvo" resolve="DclareGui" />
           </node>
         </node>
+        <node concept="1SiIV0" id="72KG8qFrw7G" role="3bR37C">
+          <node concept="3bR9La" id="72KG8qFrw7H" role="1SiIV1">
+            <ref role="3bR37D" to="ffeo:2eDSGe9d1q1" resolve="MPS.Workbench" />
+          </node>
+        </node>
       </node>
       <node concept="1E1JtA" id="6dxB28$ZXGd" role="2G$12L">
         <property role="TrG5h" value="DclareForMPS.build" />

@@ -16,17 +16,17 @@
 package org.modelingvalue.dclare.mps;
 
 import org.modelingvalue.collections.List;
-import org.modelingvalue.collections.util.Triple;
+import org.modelingvalue.collections.util.Pair;
 
 import java.util.function.Consumer;
 
 public class BulkRenameCommand {
-    public final boolean                               dry;
-    public final boolean                               inamedConcepts;
-    public final boolean                               allProperties;
-    public final boolean                               stringLiterals;
-    public final List<Triple<Integer, String, String>> renames;
-    public final Consumer<RenameResult>                resultHandler;
+    public final boolean                     dry;
+    public final boolean                     inamedConcepts;
+    public final boolean                     allProperties;
+    public final boolean                     stringLiterals;
+    public final List<Pair<Integer, Rename>> renames;
+    public final Consumer<RenameResult>      resultHandler;
 
     public static class RenameResult {
         public final List<Integer> rows;
@@ -46,7 +46,37 @@ public class BulkRenameCommand {
         }
     }
 
-    public BulkRenameCommand(boolean dry, boolean inamedConcepts, boolean allProperties, boolean stringLiterals, List<Triple<Integer, String, String>> renames, Consumer<RenameResult> resultHandler) {
+    public static class Rename {
+        public boolean enabled;
+        public boolean regexp;
+        public String  from;
+        public String  to;
+
+        @SuppressWarnings("unused")
+        public Rename() {
+            this(false, false, "", "");
+        }
+
+        public Rename(boolean enabled, boolean regexp, String from, String to) {
+            this.enabled = enabled;
+            this.regexp  = regexp;
+            this.from    = from;
+            this.to      = to;
+        }
+
+        @SuppressWarnings("FieldMayBeFinal")
+        private static java.util.List<Rename> dummy = null;
+
+        public static java.lang.reflect.Type getListType() {
+            try {
+                return Rename.class.getDeclaredField("dummy").getGenericType();
+            } catch (NoSuchFieldException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public BulkRenameCommand(boolean dry, boolean inamedConcepts, boolean allProperties, boolean stringLiterals, List<Pair<Integer, Rename>> renames, Consumer<RenameResult> resultHandler) {
         this.dry            = dry;
         this.inamedConcepts = inamedConcepts;
         this.allProperties  = allProperties;
