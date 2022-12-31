@@ -109,6 +109,10 @@ public class BulkRenameDialog extends JDialog {
             return rows.get(r);
         }
 
+        public List<Rename> getRows() {
+            return rows;
+        }
+
         @Override
         public Class<?> getColumnClass(int columnIndex) {
             switch (columnIndex) {
@@ -349,7 +353,7 @@ public class BulkRenameDialog extends JDialog {
         if (!dry) {
             try {
                 Path f = projectDir.toPath().resolve(ACCU_FILE);
-                Files.writeString(f, getSelectionAsJson(), WRITE, APPEND, CREATE);
+                Files.writeString(f, getEnabledAsJson(), WRITE, APPEND, CREATE);
                 System.err.println("INFO: bulk changes appended to: " + f.toAbsolutePath());
             } catch (IOException e) {
                 e.printStackTrace();
@@ -418,13 +422,23 @@ public class BulkRenameDialog extends JDialog {
     }
 
     private void bulkCopy() {
-        getToolkit().getSystemClipboard().setContents(new StringSelection(getSelectionAsJson()), null);
+        getToolkit().getSystemClipboard().setContents(new StringSelection(getSelectedAsJson()), null);
     }
 
-    private String getSelectionAsJson() {
+    private String getSelectedAsJson() {
         List<Rename> l = List.of();
         for (int row : matchTable.getSelectedRows()) {
             l = l.add(getChangeModel().getRow(row));
+        }
+        return JsonPrettyfier.pretty(Json.toJson(l));
+    }
+
+    private String getEnabledAsJson() {
+        List<Rename> l = List.of();
+        for (Rename r : getChangeModel().getRows()) {
+            if (r.enabled) {
+                l = l.add(r);
+            }
         }
         return JsonPrettyfier.pretty(Json.toJson(l));
     }
