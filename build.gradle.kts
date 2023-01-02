@@ -21,7 +21,7 @@ defaultTasks(
 )
 plugins {
     id("org.modelingvalue.gradle.mvgplugin") version "1.1.3"
-    id("com.dorongold.task-tree") version "2.1.0" // to get a task-tree generation task
+    id("com.dorongold.task-tree") version "2.1.1" // to get a task-tree generation task
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
