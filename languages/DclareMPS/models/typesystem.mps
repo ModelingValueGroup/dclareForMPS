@@ -8665,5 +8665,37 @@
       <ref role="1YaFvo" to="7ggn:2xAA8jfON9c" resolve="StructAncestorOperation" />
     </node>
   </node>
+  <node concept="1YbPZF" id="71LbkF4S6d5">
+    <property role="TrG5h" value="typeof_NativeRunner" />
+    <property role="3GE5qa" value="native" />
+    <node concept="3clFbS" id="71LbkF4S6d6" role="18ibNy">
+      <node concept="1Z5TYs" id="71LbkF4S6dS" role="3cqZAp">
+        <node concept="mw_s8" id="71LbkF4S6dT" role="1ZfhKB">
+          <node concept="2pJPEk" id="71LbkF4S6dU" role="mwGJk">
+            <node concept="2pJPED" id="71LbkF4S6dV" role="2pJPEn">
+              <ref role="2pJxaS" to="tpee:g7uibYu" resolve="ClassifierType" />
+              <node concept="2pIpSj" id="71LbkF4S6dW" role="2pJxcM">
+                <ref role="2pIpSl" to="tpee:g7uigIF" resolve="classifier" />
+                <node concept="36bGnv" id="71LbkF4S6dX" role="28nt2d">
+                  <ref role="36bGnp" to="t4tl:~INativeRunner" resolve="INativeRunner" />
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="mw_s8" id="71LbkF4S6dY" role="1ZfhK$">
+          <node concept="1Z2H0r" id="71LbkF4S6dZ" role="mwGJk">
+            <node concept="1YBJjd" id="71LbkF4S6e0" role="1Z2MuG">
+              <ref role="1YBMHb" node="71LbkF4S6d8" resolve="nativeRunner" />
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+    <node concept="1YaCAy" id="71LbkF4S6d8" role="1YuTPh">
+      <property role="TrG5h" value="nativeRunner" />
+      <ref role="1YaFvo" to="7ggn:71LbkF4S5P_" resolve="NativeRunner" />
+    </node>
+  </node>
 </model>
 

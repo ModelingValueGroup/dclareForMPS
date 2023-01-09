@@ -5785,5 +5785,45 @@
       </node>
     </node>
   </node>
+  <node concept="1M2fIO" id="71LbkF4S60N">
+    <property role="3GE5qa" value="native" />
+    <ref role="1M2myG" to="7ggn:71LbkF4S5P_" resolve="NativeRunner" />
+    <node concept="9S07l" id="71LbkF4S60O" role="9Vyp8">
+      <node concept="3clFbS" id="71LbkF4S60P" role="2VODD2">
+        <node concept="3clFbF" id="71LbkF4S64N" role="3cqZAp">
+          <node concept="1Wc70l" id="71LbkF4S64O" role="3clFbG">
+            <node concept="3y3z36" id="71LbkF4S64P" role="3uHU7B">
+              <node concept="2OqwBi" id="71LbkF4S64Q" role="3uHU7B">
+                <node concept="nLn13" id="71LbkF4S64R" role="2Oq$k0" />
+                <node concept="2Xjw5R" id="71LbkF4S64S" role="2OqNvi">
+                  <node concept="1xMEDy" id="71LbkF4S64T" role="1xVPHs">
+                    <node concept="chp4Y" id="71LbkF4S64U" role="ri$Ld">
+                      <ref role="cht4Q" to="7ggn:5Hwm38JY5Mc" resolve="NativeDeclaration" />
+                    </node>
+                  </node>
+                  <node concept="1xIGOp" id="71LbkF4S64V" role="1xVPHs" />
+                </node>
+              </node>
+              <node concept="10Nm6u" id="71LbkF4S64W" role="3uHU7w" />
+            </node>
+            <node concept="3clFbC" id="71LbkF4S64X" role="3uHU7w">
+              <node concept="2OqwBi" id="71LbkF4S64Y" role="3uHU7B">
+                <node concept="nLn13" id="71LbkF4S64Z" role="2Oq$k0" />
+                <node concept="2Xjw5R" id="71LbkF4S650" role="2OqNvi">
+                  <node concept="1xMEDy" id="71LbkF4S651" role="1xVPHs">
+                    <node concept="chp4Y" id="71LbkF4S652" role="ri$Ld">
+                      <ref role="cht4Q" to="7ggn:5Hwm38JY5Md" resolve="NativeAttributeHandler" />
+                    </node>
+                  </node>
+                  <node concept="1xIGOp" id="71LbkF4S653" role="1xVPHs" />
+                </node>
+              </node>
+              <node concept="10Nm6u" id="71LbkF4S654" role="3uHU7w" />
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+  </node>
 </model>
 

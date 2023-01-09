@@ -197,6 +197,12 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
     private final DRepository                                                                       dRepository;
     private final DServerMetaData                                                                   dServerMetaData;
     private final Comparator<? super Triple<DObject, DFeature, Throwable>>                          messageComparator        = (a, b) -> universeTransaction().compareThrowable(a.c(), b.c());
+    private final INativeRunner                                                                     nativeRunner             = new INativeRunner() {
+                                                                                                                                 @Override
+                                                                                                                                 public void run(Runnable runable) {
+                                                                                                                                     handleMPSChange(runable);
+                                                                                                                                 }
+                                                                                                                             };
     //
     private DefaultMap<DMessageType, List<DMessage>>                                                messages                 = EMPTY_MESSAGE_LIST_MAP;
     private boolean                                                                                 running                  = false;
@@ -735,7 +741,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
             if (!preC && postC) {
                 DObject parent = (DObject) post.get(dObject, Mutable.D_PARENT_CONTAINING).a();
                 for (INative<DObject> n : post.get(dObject, DObject.TYPE).getNatives()) {
-                    n.init(dObject, parent);
+                    n.init(dObject, parent, nativeRunner);
                     for (IChangeHandler h : INative.ALL_HANDLERS.get(n)) {
                         if (h.attribute() instanceof DObservedAttribute) {
                             Object b = pre.get(dObject, (DObservedAttribute) h.attribute());
@@ -750,7 +756,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
             } else if (preC && !postC) {
                 DObject parent = (DObject) pre.get(dObject, Mutable.D_PARENT_CONTAINING).a();
                 for (INative n : pre.get(dObject, DObject.TYPE).getNatives()) {
-                    n.exit(dObject, parent);
+                    n.exit(dObject, parent, nativeRunner);
                 }
                 return true;
             } else {
