@@ -17501,7 +17501,7 @@
                       <node concept="2OqwBi" id="4VsFtW6MVjZ" role="2Oq$k0">
                         <node concept="2OqwBi" id="4VsFtW6MVk0" role="2Oq$k0">
                           <node concept="37vLTw" id="4VsFtW6MVk1" role="2Oq$k0">
-                            <ref role="3cqZAo" node="4VsFtW6LjVz" resolve="qq" />
+                            <ref role="3cqZAo" node="4VsFtW6LjVz" resolve="modelList" />
                           </node>
                           <node concept="3$u5V9" id="4VsFtW6MVk2" role="2OqNvi">
                             <node concept="1bVj0M" id="4VsFtW6MVk3" role="23t8la">
@@ -18367,7 +18367,7 @@
                     <ref role="3uigEE" to="wyt6:~Integer" resolve="Integer" />
                   </node>
                   <node concept="3uibUv" id="7u1tU5vYKKb" role="11_B2D">
-                    <ref role="3uigEE" to="t4tl:~BulkRenameCommand$Rename" resolve="Rename" />
+                    <ref role="3uigEE" to="t4tl:~BulkRenameCommand$Rename" resolve="BulkRenameCommand.Rename" />
                   </node>
                 </node>
               </node>

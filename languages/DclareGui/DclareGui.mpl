@@ -15,6 +15,7 @@
   <dependencies>
     <dependency reexport="false">e584ff77-930e-4637-8df0-b4c8d3b6de91(DclareRuntime)</dependency>
     <dependency reexport="false">55d6b6f5-8095-4cd0-a39b-779da8d12940(DclareMPSRuntime)</dependency>
+    <dependency reexport="false">6354ebe7-c22a-4a0f-ac54-50b52ab9b065(JDK)</dependency>
   </dependencies>
   <languageVersions>
     <language slang="l:c32b788d-8e4b-4023-97f5-3e90d04ed77b:DclareMPS" version="5" />
