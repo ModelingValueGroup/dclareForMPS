@@ -441,7 +441,6 @@
       <concept id="1225797177491" name="jetbrains.mps.baseLanguage.closures.structure.InvokeFunctionOperation" flags="nn" index="1Bd96e">
         <child id="1225797361612" name="parameter" index="1BdPVh" />
       </concept>
-      <concept id="8992394414545679616" name="jetbrains.mps.baseLanguage.closures.structure.ClosureVarType" flags="ig" index="3VYd8j" />
     </language>
     <language id="69b8a993-9b87-4d96-bf0c-3559f4bb0c63" name="jetbrains.mps.lang.slanguage">
       <concept id="2030416617761226491" name="jetbrains.mps.lang.slanguage.structure.Model_IsAspectOperation" flags="nn" index="3zA4fs">
@@ -15129,15 +15128,11 @@
                           </node>
                         </node>
                         <node concept="1bVj0M" id="6dwatD5F8pm" role="37wK5m">
-                          <node concept="37vLTG" id="6dwatD5F8pn" role="1bW2Oz">
-                            <property role="TrG5h" value="_base_" />
-                            <node concept="3VYd8j" id="6dwatD5F8po" role="1tU5fm" />
-                          </node>
                           <node concept="3clFbS" id="6dwatD5F8pp" role="1bW5cS">
                             <node concept="3clFbF" id="6dwatD5F8pq" role="3cqZAp">
                               <node concept="2OqwBi" id="6dwatD5F8pr" role="3clFbG">
                                 <node concept="37vLTw" id="6dwatD5F8ps" role="2Oq$k0">
-                                  <ref role="3cqZAo" node="6dwatD5F8pn" resolve="_base_" />
+                                  <ref role="3cqZAo" node="5bgsBw2U5wc" resolve="_base_" />
                                 </node>
                                 <node concept="1B$H19" id="6dwatD5F8pt" role="2OqNvi">
                                   <node concept="2c44te" id="6dwatD5F8pu" role="lGtFl">
@@ -15153,6 +15148,10 @@
                                 </node>
                               </node>
                             </node>
+                          </node>
+                          <node concept="Rh6nW" id="5bgsBw2U5wc" role="1bW2Oz">
+                            <property role="TrG5h" value="_base_" />
+                            <node concept="2jxLKc" id="5bgsBw2U5wd" role="1tU5fm" />
                           </node>
                         </node>
                       </node>
