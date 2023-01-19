@@ -790,9 +790,29 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
     @SuppressWarnings({"rawtypes", "unchecked"})
     private void runChangeHandlers(Concurrent<Map<Pair<Object, IChangeHandler>, Pair<Object, Object>>> changeHandlers) {
         for (Entry<Pair<Object, IChangeHandler>, Pair<Object, Object>> ch : changeHandlers.result()) {
-            ch.getKey().b().handle(ch.getKey().a(), ch.getValue().a(), ch.getValue().a());
+            IChangeHandler handler = ch.getKey().b();
+            handler.handle(ch.getKey().a(), //
+                    toMutable(handler.attribute(), ch.getValue().a()), //
+                    toMutable(handler.attribute(), ch.getValue().b()));
         }
         changeHandlers.init(Map.of());
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T> T toMutable(DAttribute<?, T> attr, Object value) {
+        Class<?> cls = attr.cls();
+        if (cls == java.util.List.class && value instanceof List) {
+            value = (T) ((List<Object>) value).toMutable();
+        } else if (cls == java.util.List.class && value instanceof Collection) {
+            value = (T) ((Collection<Object>) value).collect(Collectors.toList());
+        } else if (cls == java.util.Set.class && value instanceof Set) {
+            value = (T) ((Set<Object>) value).toMutable();
+        } else if (cls == java.util.Set.class && value instanceof Collection) {
+            value = (T) ((Collection<Object>) value).collect(Collectors.toSet());
+        } else if (cls == java.util.Map.class && value instanceof Map) {
+            value = (T) ((Map<Object, Object>) value).toMutable();
+        }
+        return (T) value;
     }
 
     private void addToChanged(DObject dObject) {

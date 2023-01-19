@@ -22,6 +22,7 @@ import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.dclare.Constant;
+import org.modelingvalue.dclare.State;
 
 @SuppressWarnings("unused")
 public class DStructObject extends DIdentifiedObject implements SStructObject {
@@ -44,6 +45,12 @@ public class DStructObject extends DIdentifiedObject implements SStructObject {
     @Override
     public boolean isExternal() {
         return getSClass().isValueClass();
+    }
+
+    @SuppressWarnings("rawtypes")
+    @Override
+    public boolean dIsOrphan(State state) {
+        return !isExternal() && super.dIsOrphan(state);
     }
 
     @Override
