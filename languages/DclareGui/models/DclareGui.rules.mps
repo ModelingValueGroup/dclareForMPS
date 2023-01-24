@@ -26,6 +26,7 @@
       <concept id="4157899317040512276" name="DclareMPS.structure.NativeFieldReference" flags="ng" index="5IyTM" />
       <concept id="4122011871452503133" name="DclareMPS.structure.Method" flags="ig" index="kUGYC">
         <property id="6993379498019360941" name="constant" index="2RZe$O" />
+        <property id="6750683335363385218" name="native" index="1ePe$S" />
       </concept>
       <concept id="7503535305242222763" name="DclareMPS.structure.MethodCallOperation" flags="ng" index="2$Gk$L" />
       <concept id="3943890974580131286" name="DclareMPS.structure.Equation" flags="ng" index="E34o$" />
@@ -144,6 +145,14 @@
       <concept id="1197029447546" name="jetbrains.mps.baseLanguage.structure.FieldReferenceOperation" flags="nn" index="2OwXpG">
         <reference id="1197029500499" name="fieldDeclaration" index="2Oxat5" />
       </concept>
+      <concept id="1083245097125" name="jetbrains.mps.baseLanguage.structure.EnumClass" flags="ig" index="Qs71p">
+        <child id="1083245396908" name="enumConstant" index="Qtgdg" />
+      </concept>
+      <concept id="1083245299891" name="jetbrains.mps.baseLanguage.structure.EnumConstantDeclaration" flags="ig" index="QsSxf" />
+      <concept id="1083260308424" name="jetbrains.mps.baseLanguage.structure.EnumConstantReference" flags="nn" index="Rm8GO">
+        <reference id="1083260308426" name="enumConstantDeclaration" index="Rm8GQ" />
+        <reference id="1144432896254" name="enumClass" index="1Px2BO" />
+      </concept>
       <concept id="1145552977093" name="jetbrains.mps.baseLanguage.structure.GenericNewExpression" flags="nn" index="2ShNRf">
         <child id="1145553007750" name="creator" index="2ShVmc" />
       </concept>
@@ -192,6 +201,7 @@
       <concept id="1068498886294" name="jetbrains.mps.baseLanguage.structure.AssignmentExpression" flags="nn" index="37vLTI" />
       <concept id="1225271177708" name="jetbrains.mps.baseLanguage.structure.StringType" flags="in" index="17QB3L" />
       <concept id="1225271221393" name="jetbrains.mps.baseLanguage.structure.NPENotEqualsExpression" flags="nn" index="17QLQc" />
+      <concept id="1225271283259" name="jetbrains.mps.baseLanguage.structure.NPEEqualsExpression" flags="nn" index="17R0WA" />
       <concept id="4972933694980447171" name="jetbrains.mps.baseLanguage.structure.BaseVariableDeclaration" flags="ng" index="19Szcq">
         <child id="5680397130376446158" name="type" index="1tU5fm" />
       </concept>
@@ -550,6 +560,7 @@
     </node>
     <node concept="kUGYC" id="3HJBHAQJd$h" role="1FPzNG">
       <property role="TrG5h" value="paint" />
+      <property role="1ePe$S" value="true" />
       <node concept="37vLTG" id="3HJBHAQJd$i" role="3clF46">
         <property role="TrG5h" value="g" />
         <node concept="3uibUv" id="3HJBHAQJd$j" role="1tU5fm">
@@ -849,9 +860,304 @@
     <property role="3GE5qa" value="gui" />
     <ref role="2UJ2Q8" node="skgx$J4Z3o" resolve="DSplitPane" />
     <ref role="2RaPBF" node="WHdioYVYbd" resolve="GUI" />
+    <node concept="32q3_s" id="5QJfFCjNfXX" role="1FPzNG">
+      <property role="TrG5h" value="leftComponent" />
+      <property role="3K1B09" value="true" />
+      <node concept="3LmiP1" id="5QJfFCjNgvj" role="1tU5fm">
+        <ref role="2XDbjv" node="skgx$J4Z2F" resolve="DComponent" />
+      </node>
+    </node>
+    <node concept="32q3_s" id="5QJfFCjNj4W" role="1FPzNG">
+      <property role="TrG5h" value="rightComponent" />
+      <property role="3K1B09" value="true" />
+      <node concept="3LmiP1" id="5QJfFCjNj6U" role="1tU5fm">
+        <ref role="2XDbjv" node="skgx$J4Z2F" resolve="DComponent" />
+      </node>
+    </node>
+    <node concept="32q3_s" id="5QJfFCjNjAF" role="1FPzNG">
+      <property role="TrG5h" value="splitOrientation" />
+      <node concept="3uibUv" id="5QJfFCjNkRH" role="1tU5fm">
+        <ref role="3uigEE" node="5QJfFCjNkzU" resolve="SplitDimension" />
+      </node>
+    </node>
+    <node concept="32q3_s" id="5QJfFCjNOaN" role="1FPzNG">
+      <property role="TrG5h" value="dividerSize" />
+      <node concept="10Oyi0" id="5QJfFCjNOj2" role="1tU5fm" />
+    </node>
+    <node concept="32q3_s" id="5QJfFCjNmPt" role="1FPzNG">
+      <property role="TrG5h" value="resizeWeight" />
+      <node concept="10P55v" id="5QJfFCjNmT_" role="1tU5fm" />
+    </node>
+    <node concept="1FPxxo" id="5QJfFCjNkwO" role="1FPzNG" />
     <node concept="1OA0iY" id="3ySjgkDG3vh" role="1FPzNG">
-      <node concept="3clFbS" id="3ySjgkDG3vi" role="1OA0iy" />
-      <node concept="3clFbS" id="3ySjgkDG3vj" role="1OA0iw" />
+      <node concept="1OA3wd" id="5QJfFCjNnde" role="1OA3wj">
+        <property role="TrG5h" value="splitPane" />
+        <node concept="3uibUv" id="5QJfFCjNnhe" role="1tU5fm">
+          <ref role="3uigEE" to="dxuu:~JSplitPane" resolve="JSplitPane" />
+        </node>
+      </node>
+      <node concept="3clFbS" id="3ySjgkDG3vi" role="1OA0iy">
+        <node concept="3clFbF" id="5QJfFCjNp23" role="3cqZAp">
+          <node concept="37vLTI" id="5QJfFCjNpxe" role="3clFbG">
+            <node concept="2ShNRf" id="5QJfFCjNrMb" role="37vLTx">
+              <node concept="1pGfFk" id="5QJfFCjNrKr" role="2ShVmc">
+                <ref role="37wK5l" to="dxuu:~JSplitPane.&lt;init&gt;(int,boolean)" resolve="JSplitPane" />
+                <node concept="3K4zz7" id="5QJfFCjNtWq" role="37wK5m">
+                  <node concept="10M0yZ" id="5QJfFCjNuc0" role="3K4E3e">
+                    <ref role="3cqZAo" to="dxuu:~JSplitPane.VERTICAL_SPLIT" resolve="VERTICAL_SPLIT" />
+                    <ref role="1PxDUh" to="dxuu:~JSplitPane" resolve="JSplitPane" />
+                  </node>
+                  <node concept="10M0yZ" id="5QJfFCjNunu" role="3K4GZi">
+                    <ref role="3cqZAo" to="dxuu:~JSplitPane.HORIZONTAL_SPLIT" resolve="HORIZONTAL_SPLIT" />
+                    <ref role="1PxDUh" to="dxuu:~JSplitPane" resolve="JSplitPane" />
+                  </node>
+                  <node concept="17R0WA" id="5QJfFCjNtcY" role="3K4Cdx">
+                    <node concept="Rm8GO" id="5QJfFCjNtxE" role="3uHU7w">
+                      <ref role="Rm8GQ" node="5QJfFCjNkEm" resolve="vertical" />
+                      <ref role="1Px2BO" node="5QJfFCjNkzU" resolve="SplitOrientation" />
+                    </node>
+                    <node concept="1SfVH9" id="5QJfFCjNrOE" role="3uHU7B">
+                      <ref role="3cqZAo" node="5QJfFCjNjAF" resolve="splitOrientation" />
+                    </node>
+                  </node>
+                </node>
+                <node concept="3clFbT" id="5QJfFCjNuvE" role="37wK5m">
+                  <property role="3clFbU" value="true" />
+                </node>
+              </node>
+            </node>
+            <node concept="5IyTM" id="5QJfFCjNp22" role="37vLTJ">
+              <ref role="3cqZAo" node="5QJfFCjNnde" resolve="splitPane" />
+            </node>
+          </node>
+        </node>
+        <node concept="3clFbF" id="5QJfFCjNq$8" role="3cqZAp">
+          <node concept="37vLTI" id="5QJfFCjNqXJ" role="3clFbG">
+            <node concept="5IyTM" id="5QJfFCjNqZP" role="37vLTx">
+              <ref role="3cqZAo" node="5QJfFCjNnde" resolve="splitPane" />
+            </node>
+            <node concept="5IyTM" id="5QJfFCjNq$6" role="37vLTJ">
+              <ref role="3cqZAo" node="76QCTJD2Tzy" resolve="component" />
+            </node>
+          </node>
+        </node>
+      </node>
+      <node concept="3clFbS" id="3ySjgkDG3vj" role="1OA0iw">
+        <node concept="3clFbF" id="5QJfFCjNr2E" role="3cqZAp">
+          <node concept="37vLTI" id="5QJfFCjNrxJ" role="3clFbG">
+            <node concept="10Nm6u" id="5QJfFCjNrK8" role="37vLTx" />
+            <node concept="5IyTM" id="5QJfFCjNr2D" role="37vLTJ">
+              <ref role="3cqZAo" node="5QJfFCjNnde" resolve="splitPane" />
+            </node>
+          </node>
+        </node>
+      </node>
+      <node concept="1OA0iZ" id="5QJfFCjNvd6" role="1OA3xZ">
+        <ref role="1OA0iW" node="5QJfFCjNfXX" resolve="leftComponent" />
+        <node concept="3clFbS" id="5QJfFCjNvd7" role="1OA0iB">
+          <node concept="3clFbF" id="5QJfFCjNvFX" role="3cqZAp">
+            <node concept="2OqwBi" id="5QJfFCjNwb3" role="3clFbG">
+              <node concept="5IyTM" id="5QJfFCjNvFW" role="2Oq$k0">
+                <ref role="3cqZAo" node="5QJfFCjNnde" resolve="splitPane" />
+              </node>
+              <node concept="liA8E" id="5QJfFCjNyvV" role="2OqNvi">
+                <ref role="37wK5l" to="dxuu:~JSplitPane.setLeftComponent(java.awt.Component)" resolve="setLeftComponent" />
+                <node concept="2OqwBi" id="5QJfFCjNyIB" role="37wK5m">
+                  <node concept="1OA3xA" id="5QJfFCjO17M" role="2Oq$k0" />
+                  <node concept="1OA3xM" id="5QJfFCjNza$" role="2OqNvi">
+                    <ref role="3cqZAo" node="76QCTJD2Tzy" resolve="component" />
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+          <node concept="3clFbF" id="5QJfFCjNCqD" role="3cqZAp">
+            <node concept="2OqwBi" id="5QJfFCjNCXr" role="3clFbG">
+              <node concept="5IyTM" id="5QJfFCjNCqB" role="2Oq$k0">
+                <ref role="3cqZAo" node="5QJfFCjNnde" resolve="splitPane" />
+              </node>
+              <node concept="liA8E" id="5QJfFCjNEBP" role="2OqNvi">
+                <ref role="37wK5l" to="z60i:~Container.invalidate()" resolve="invalidate" />
+              </node>
+            </node>
+          </node>
+          <node concept="3clFbF" id="5QJfFCjNEIw" role="3cqZAp">
+            <node concept="2OqwBi" id="5QJfFCjNFhW" role="3clFbG">
+              <node concept="5IyTM" id="5QJfFCjNEIu" role="2Oq$k0">
+                <ref role="3cqZAo" node="5QJfFCjNnde" resolve="splitPane" />
+              </node>
+              <node concept="liA8E" id="5QJfFCjNGWm" role="2OqNvi">
+                <ref role="37wK5l" to="z60i:~Component.repaint()" resolve="repaint" />
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+      <node concept="1OA0iZ" id="5QJfFCjNvhw" role="1OA3xZ">
+        <ref role="1OA0iW" node="5QJfFCjNj4W" resolve="rightComponent" />
+        <node concept="3clFbS" id="5QJfFCjNvhx" role="1OA0iB">
+          <node concept="3clFbF" id="5QJfFCjNzfJ" role="3cqZAp">
+            <node concept="2OqwBi" id="5QJfFCjNA6W" role="3clFbG">
+              <node concept="5IyTM" id="5QJfFCjN_$3" role="2Oq$k0">
+                <ref role="3cqZAo" node="5QJfFCjNnde" resolve="splitPane" />
+              </node>
+              <node concept="liA8E" id="5QJfFCjNBLm" role="2OqNvi">
+                <ref role="37wK5l" to="dxuu:~JSplitPane.setRightComponent(java.awt.Component)" resolve="setRightComponent" />
+                <node concept="2OqwBi" id="5QJfFCjNBX9" role="37wK5m">
+                  <node concept="1OA3xA" id="5QJfFCjO0Xy" role="2Oq$k0" />
+                  <node concept="1OA3xM" id="5QJfFCjNChI" role="2OqNvi">
+                    <ref role="3cqZAo" node="76QCTJD2Tzy" resolve="component" />
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+          <node concept="3clFbF" id="5QJfFCjNH2D" role="3cqZAp">
+            <node concept="2OqwBi" id="5QJfFCjNH_s" role="3clFbG">
+              <node concept="5IyTM" id="5QJfFCjNH2B" role="2Oq$k0">
+                <ref role="3cqZAo" node="5QJfFCjNnde" resolve="splitPane" />
+              </node>
+              <node concept="liA8E" id="5QJfFCjNJfQ" role="2OqNvi">
+                <ref role="37wK5l" to="z60i:~Container.invalidate()" resolve="invalidate" />
+              </node>
+            </node>
+          </node>
+          <node concept="3clFbF" id="5QJfFCjNJmy" role="3cqZAp">
+            <node concept="2OqwBi" id="5QJfFCjNJTZ" role="3clFbG">
+              <node concept="5IyTM" id="5QJfFCjNJmw" role="2Oq$k0">
+                <ref role="3cqZAo" node="5QJfFCjNnde" resolve="splitPane" />
+              </node>
+              <node concept="liA8E" id="5QJfFCjNL$p" role="2OqNvi">
+                <ref role="37wK5l" to="z60i:~Component.repaint()" resolve="repaint" />
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+      <node concept="1OA0iZ" id="5QJfFCjNvxY" role="1OA3xZ">
+        <ref role="1OA0iW" node="5QJfFCjNjAF" resolve="splitDimension" />
+        <node concept="3clFbS" id="5QJfFCjNvxZ" role="1OA0iB">
+          <node concept="3clFbF" id="5QJfFCjNPMx" role="3cqZAp">
+            <node concept="2OqwBi" id="5QJfFCjNQhC" role="3clFbG">
+              <node concept="5IyTM" id="5QJfFCjNPMw" role="2Oq$k0">
+                <ref role="3cqZAo" node="5QJfFCjNnde" resolve="splitPane" />
+              </node>
+              <node concept="liA8E" id="5QJfFCjNX57" role="2OqNvi">
+                <ref role="37wK5l" to="dxuu:~JSplitPane.setOrientation(int)" resolve="setOrientation" />
+                <node concept="3K4zz7" id="5QJfFCjNX68" role="37wK5m">
+                  <node concept="10M0yZ" id="5QJfFCjNX69" role="3K4E3e">
+                    <ref role="1PxDUh" to="dxuu:~JSplitPane" resolve="JSplitPane" />
+                    <ref role="3cqZAo" to="dxuu:~JSplitPane.VERTICAL_SPLIT" resolve="VERTICAL_SPLIT" />
+                  </node>
+                  <node concept="10M0yZ" id="5QJfFCjNX6a" role="3K4GZi">
+                    <ref role="3cqZAo" to="dxuu:~JSplitPane.HORIZONTAL_SPLIT" resolve="HORIZONTAL_SPLIT" />
+                    <ref role="1PxDUh" to="dxuu:~JSplitPane" resolve="JSplitPane" />
+                  </node>
+                  <node concept="17R0WA" id="5QJfFCjNX6b" role="3K4Cdx">
+                    <node concept="Rm8GO" id="5QJfFCjNX6c" role="3uHU7w">
+                      <ref role="1Px2BO" node="5QJfFCjNkzU" resolve="SplitOrientation" />
+                      <ref role="Rm8GQ" node="5QJfFCjNkEm" resolve="vertical" />
+                    </node>
+                    <node concept="1OA3xA" id="5QJfFCjO0OT" role="3uHU7B" />
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+          <node concept="3clFbF" id="5QJfFCjNXh6" role="3cqZAp">
+            <node concept="2OqwBi" id="5QJfFCjNXh7" role="3clFbG">
+              <node concept="5IyTM" id="5QJfFCjNXh8" role="2Oq$k0">
+                <ref role="3cqZAo" node="5QJfFCjNnde" resolve="splitPane" />
+              </node>
+              <node concept="liA8E" id="5QJfFCjNXh9" role="2OqNvi">
+                <ref role="37wK5l" to="z60i:~Container.invalidate()" resolve="invalidate" />
+              </node>
+            </node>
+          </node>
+          <node concept="3clFbF" id="5QJfFCjNXlL" role="3cqZAp">
+            <node concept="2OqwBi" id="5QJfFCjNXlM" role="3clFbG">
+              <node concept="5IyTM" id="5QJfFCjNXlN" role="2Oq$k0">
+                <ref role="3cqZAo" node="5QJfFCjNnde" resolve="splitPane" />
+              </node>
+              <node concept="liA8E" id="5QJfFCjNXlO" role="2OqNvi">
+                <ref role="37wK5l" to="z60i:~Component.repaint()" resolve="repaint" />
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+      <node concept="1OA0iZ" id="5QJfFCjNvpL" role="1OA3xZ">
+        <ref role="1OA0iW" node="5QJfFCjNmPt" resolve="resizeWeight" />
+        <node concept="3clFbS" id="5QJfFCjNvpM" role="1OA0iB">
+          <node concept="3clFbF" id="5QJfFCjO1jk" role="3cqZAp">
+            <node concept="2OqwBi" id="5QJfFCjO1tO" role="3clFbG">
+              <node concept="5IyTM" id="5QJfFCjO1ji" role="2Oq$k0">
+                <ref role="3cqZAo" node="5QJfFCjNnde" resolve="splitPane" />
+              </node>
+              <node concept="liA8E" id="5QJfFCjO2OO" role="2OqNvi">
+                <ref role="37wK5l" to="dxuu:~JSplitPane.setResizeWeight(double)" resolve="setResizeWeight" />
+                <node concept="1OA3xA" id="5QJfFCjO2RE" role="37wK5m" />
+              </node>
+            </node>
+          </node>
+          <node concept="3clFbF" id="5QJfFCjNXYW" role="3cqZAp">
+            <node concept="2OqwBi" id="5QJfFCjNXYX" role="3clFbG">
+              <node concept="5IyTM" id="5QJfFCjNXYY" role="2Oq$k0">
+                <ref role="3cqZAo" node="5QJfFCjNnde" resolve="splitPane" />
+              </node>
+              <node concept="liA8E" id="5QJfFCjNXYZ" role="2OqNvi">
+                <ref role="37wK5l" to="z60i:~Container.invalidate()" resolve="invalidate" />
+              </node>
+            </node>
+          </node>
+          <node concept="3clFbF" id="5QJfFCjNXZ0" role="3cqZAp">
+            <node concept="2OqwBi" id="5QJfFCjNXZ1" role="3clFbG">
+              <node concept="5IyTM" id="5QJfFCjNXZ2" role="2Oq$k0">
+                <ref role="3cqZAo" node="5QJfFCjNnde" resolve="splitPane" />
+              </node>
+              <node concept="liA8E" id="5QJfFCjNXZ3" role="2OqNvi">
+                <ref role="37wK5l" to="z60i:~Component.repaint()" resolve="repaint" />
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+      <node concept="1OA0iZ" id="5QJfFCjNY2v" role="1OA3xZ">
+        <ref role="1OA0iW" node="5QJfFCjNOaN" resolve="dividerSize" />
+        <node concept="3clFbS" id="5QJfFCjNY2w" role="1OA0iB">
+          <node concept="3clFbF" id="5QJfFCjNY_a" role="3cqZAp">
+            <node concept="2OqwBi" id="5QJfFCjNZ5j" role="3clFbG">
+              <node concept="5IyTM" id="5QJfFCjNY_8" role="2Oq$k0">
+                <ref role="3cqZAo" node="5QJfFCjNnde" resolve="splitPane" />
+              </node>
+              <node concept="liA8E" id="5QJfFCjO0sj" role="2OqNvi">
+                <ref role="37wK5l" to="dxuu:~JSplitPane.setDividerSize(int)" resolve="setDividerSize" />
+                <node concept="1OA3xA" id="5QJfFCjO0MC" role="37wK5m" />
+              </node>
+            </node>
+          </node>
+          <node concept="3clFbF" id="5QJfFCjNYvb" role="3cqZAp">
+            <node concept="2OqwBi" id="5QJfFCjNYvc" role="3clFbG">
+              <node concept="5IyTM" id="5QJfFCjNYvd" role="2Oq$k0">
+                <ref role="3cqZAo" node="5QJfFCjNnde" resolve="splitPane" />
+              </node>
+              <node concept="liA8E" id="5QJfFCjNYve" role="2OqNvi">
+                <ref role="37wK5l" to="z60i:~Container.invalidate()" resolve="invalidate" />
+              </node>
+            </node>
+          </node>
+          <node concept="3clFbF" id="5QJfFCjNYvf" role="3cqZAp">
+            <node concept="2OqwBi" id="5QJfFCjNYvg" role="3clFbG">
+              <node concept="5IyTM" id="5QJfFCjNYvh" role="2Oq$k0">
+                <ref role="3cqZAo" node="5QJfFCjNnde" resolve="splitPane" />
+              </node>
+              <node concept="liA8E" id="5QJfFCjNYvi" role="2OqNvi">
+                <ref role="37wK5l" to="z60i:~Component.repaint()" resolve="repaint" />
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
     </node>
   </node>
   <node concept="3LmNE2" id="skgx$J4Z4D">
@@ -1045,6 +1351,7 @@
     <node concept="kUGYC" id="7nNrlO1FWHs" role="1FPzNG">
       <property role="1EzhhJ" value="true" />
       <property role="TrG5h" value="paint" />
+      <property role="1ePe$S" value="true" />
       <node concept="37vLTG" id="7nNrlO1FWXh" role="3clF46">
         <property role="TrG5h" value="g" />
         <node concept="3uibUv" id="7nNrlO1FX0r" role="1tU5fm">
@@ -1313,6 +1620,7 @@
     </node>
     <node concept="kUGYC" id="3HJBHAQJ9kW" role="1FPzNG">
       <property role="TrG5h" value="paint" />
+      <property role="1ePe$S" value="true" />
       <node concept="37vLTG" id="3HJBHAQJ9kX" role="3clF46">
         <property role="TrG5h" value="g" />
         <node concept="3uibUv" id="3HJBHAQJ9kY" role="1tU5fm">
@@ -1993,6 +2301,7 @@
     </node>
     <node concept="kUGYC" id="6lHrNJlyQ9I" role="1FPzNG">
       <property role="TrG5h" value="paint" />
+      <property role="1ePe$S" value="true" />
       <node concept="37vLTG" id="6lHrNJlyQ9J" role="3clF46">
         <property role="TrG5h" value="g" />
         <node concept="3uibUv" id="6lHrNJlyQ9K" role="1tU5fm">
@@ -2132,6 +2441,7 @@
     <node concept="kUGYC" id="2xAA8jfoS7Y" role="1FPzNG">
       <property role="TrG5h" value="closedByUser" />
       <property role="1EzhhJ" value="true" />
+      <property role="1ePe$S" value="true" />
       <node concept="3Tm1VV" id="2xAA8jfoS7Z" role="1B3o_S" />
       <node concept="3clFbS" id="2xAA8jfoS80" role="3clF47" />
       <node concept="3cqZAl" id="2xAA8jfoSfI" role="3clF45" />
@@ -3359,6 +3669,7 @@
     </node>
     <node concept="kUGYC" id="76QCTJD3B7E" role="1FPzNG">
       <property role="TrG5h" value="popup" />
+      <property role="1ePe$S" value="true" />
       <node concept="37vLTG" id="76QCTJD3BHF" role="3clF46">
         <property role="TrG5h" value="x" />
         <node concept="10Oyi0" id="76QCTJD3BKb" role="1tU5fm" />
@@ -4047,6 +4358,7 @@
     </node>
     <node concept="kUGYC" id="3nsHMGrYCVS" role="1FPzNG">
       <property role="TrG5h" value="paint" />
+      <property role="1ePe$S" value="true" />
       <node concept="37vLTG" id="3nsHMGrYCVT" role="3clF46">
         <property role="TrG5h" value="g" />
         <node concept="3uibUv" id="3nsHMGrYCVU" role="1tU5fm">
@@ -5464,6 +5776,7 @@
     <node concept="kUGYC" id="2xAA8jfquh$" role="1FPzNG">
       <property role="TrG5h" value="action" />
       <property role="1EzhhJ" value="true" />
+      <property role="1ePe$S" value="true" />
       <node concept="37vLTG" id="2xAA8jfquBA" role="3clF46">
         <property role="TrG5h" value="e" />
         <node concept="3uibUv" id="2xAA8jfquDX" role="1tU5fm">
@@ -6992,6 +7305,19 @@
         </node>
       </node>
     </node>
+  </node>
+  <node concept="Qs71p" id="5QJfFCjNkzU">
+    <property role="3GE5qa" value="gui" />
+    <property role="TrG5h" value="SplitOrientation" />
+    <node concept="QsSxf" id="5QJfFCjNkEm" role="Qtgdg">
+      <property role="TrG5h" value="vertical" />
+      <ref role="37wK5l" to="wyt6:~Object.&lt;init&gt;()" resolve="Object" />
+    </node>
+    <node concept="QsSxf" id="5QJfFCjNkAq" role="Qtgdg">
+      <property role="TrG5h" value="horizontal" />
+      <ref role="37wK5l" to="wyt6:~Object.&lt;init&gt;()" />
+    </node>
+    <node concept="3Tm1VV" id="5QJfFCjNkzV" role="1B3o_S" />
   </node>
 </model>
 
