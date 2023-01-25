@@ -1859,7 +1859,7 @@
       </node>
     </node>
     <node concept="kUGYC" id="1bLYJ3eE75b" role="1FPzNG">
-      <property role="TrG5h" value="intersetion" />
+      <property role="TrG5h" value="intersection" />
       <node concept="37vLTG" id="1bLYJ3eE75c" role="3clF46">
         <property role="TrG5h" value="other" />
         <node concept="3LmiP1" id="1bLYJ3eE75d" role="1tU5fm">
@@ -2619,7 +2619,7 @@
       </node>
     </node>
     <node concept="kUGYC" id="1bLYJ3eE1O6" role="1FPzNG">
-      <property role="TrG5h" value="intersetion" />
+      <property role="TrG5h" value="intersection" />
       <node concept="37vLTG" id="1bLYJ3eE3I5" role="3clF46">
         <property role="TrG5h" value="other" />
         <node concept="3LmiP1" id="1bLYJ3eE4h5" role="1tU5fm">
