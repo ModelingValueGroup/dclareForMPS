@@ -14078,6 +14078,74 @@
                   <ref role="2AI5Lk" to="wyt6:~Override" resolve="Override" />
                 </node>
               </node>
+              <node concept="2tJIrI" id="12b_f7w1XKb" role="jymVt" />
+              <node concept="3clFb_" id="12b_f7w3bmA" role="jymVt">
+                <property role="TrG5h" value="iNative" />
+                <node concept="3clFbS" id="12b_f7w3bmD" role="3clF47">
+                  <node concept="3clFbF" id="6YJvVULFx0K" role="3cqZAp">
+                    <node concept="37vLTw" id="6YJvVULFx0J" role="3clFbG">
+                      <ref role="3cqZAo" node="5LBfqSz9RNA" resolve="NATIVE" />
+                      <node concept="1ZhdrF" id="6YJvVULGcva" role="lGtFl">
+                        <property role="2qtEX8" value="variableDeclaration" />
+                        <property role="P3scX" value="f3061a53-9226-4cc5-a443-f952ceaf5816/1068498886296/1068581517664" />
+                        <node concept="3$xsQk" id="6YJvVULGcvb" role="3$ytzL">
+                          <node concept="3clFbS" id="6YJvVULGcvc" role="2VODD2">
+                            <node concept="3clFbF" id="6YJvVULGCuV" role="3cqZAp">
+                              <node concept="2OqwBi" id="6YJvVULGCuW" role="3clFbG">
+                                <node concept="1iwH7S" id="6YJvVULGCuX" role="2Oq$k0" />
+                                <node concept="1iwH70" id="6YJvVULGCuY" role="2OqNvi">
+                                  <ref role="1iwH77" node="5LBfqSzggrM" resolve="nativeField" />
+                                  <node concept="1PxgMI" id="6YJvVULJGZO" role="1iwH7V">
+                                    <node concept="chp4Y" id="6YJvVULK8mN" role="3oSUPX">
+                                      <ref role="cht4Q" to="7ggn:5Hwm38JY5Mc" resolve="NativeDeclaration" />
+                                    </node>
+                                    <node concept="2OqwBi" id="6YJvVULH42G" role="1m5AlR">
+                                      <node concept="30H73N" id="6YJvVULGCuZ" role="2Oq$k0" />
+                                      <node concept="1mfA1w" id="6YJvVULJi8x" role="2OqNvi" />
+                                    </node>
+                                  </node>
+                                </node>
+                              </node>
+                            </node>
+                          </node>
+                        </node>
+                      </node>
+                    </node>
+                  </node>
+                </node>
+                <node concept="3uibUv" id="12b_f7w2Fkz" role="3clF45">
+                  <ref role="3uigEE" to="t4tl:~INative" resolve="INative" />
+                  <node concept="3uibUv" id="12b_f7w37X7" role="11_B2D">
+                    <ref role="3uigEE" to="wyt6:~Object" resolve="Object" />
+                    <node concept="29HgVG" id="12b_f7w37X8" role="lGtFl">
+                      <node concept="3NFfHV" id="12b_f7w37X9" role="3NFExx">
+                        <node concept="3clFbS" id="12b_f7w37Xa" role="2VODD2">
+                          <node concept="3clFbF" id="12b_f7w37Xb" role="3cqZAp">
+                            <node concept="2OqwBi" id="12b_f7w37Xc" role="3clFbG">
+                              <node concept="1PxgMI" id="12b_f7w37Xd" role="2Oq$k0">
+                                <node concept="chp4Y" id="12b_f7w37Xe" role="3oSUPX">
+                                  <ref role="cht4Q" to="7ggn:5Hwm38JY5Mc" resolve="NativeDeclaration" />
+                                </node>
+                                <node concept="2OqwBi" id="12b_f7w37Xf" role="1m5AlR">
+                                  <node concept="30H73N" id="12b_f7w37Xg" role="2Oq$k0" />
+                                  <node concept="1mfA1w" id="12b_f7w37Xh" role="2OqNvi" />
+                                </node>
+                              </node>
+                              <node concept="2qgKlT" id="12b_f7w37Xi" role="2OqNvi">
+                                <ref role="37wK5l" to="us1s:29R9$zZWsRH" resolve="getContextType" />
+                              </node>
+                            </node>
+                          </node>
+                        </node>
+                      </node>
+                    </node>
+                  </node>
+                </node>
+                <node concept="3Tm1VV" id="12b_f7w3zzh" role="1B3o_S" />
+                <node concept="2AHcQZ" id="6YJvVULF4Cc" role="2AJF6D">
+                  <ref role="2AI5Lk" to="wyt6:~Override" />
+                </node>
+              </node>
             </node>
           </node>
         </node>

@@ -23,4 +23,6 @@ public interface IChangeHandler<O, T> {
 
     boolean deferred();
 
+    INative<O> iNative();
+
 }

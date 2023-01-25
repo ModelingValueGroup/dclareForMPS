@@ -712,7 +712,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
                     }
                     dObserved.toMPS(dObject, preVal, postVal);
                     if (!nativeHandled && dObserved instanceof DAttribute) {
-                        handleNativeChanges(dObject, (DAttribute<?, ?>) dObserved, preVal, postVal);
+                        handleNativeChanges(dObject, (DAttribute<?, ?>) dObserved, preVal, postVal, post.get(dObject, DObject.TYPE).getNatives());
                     }
                     if (getConfig().isTraceMPSModelChanges() && !(dObserved instanceof DObservedAttribute) && dObserved != DObject.CONTAINED) {
                         System.err.println(DclareTrace.getLineStart("MPS", imperativeTransaction) + "MODEL CHANGE " + dObject + "." + dObserved + " = " + State.shortValueDiffString(preVal, postVal));
@@ -768,9 +768,11 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    private void handleNativeChanges(DObject dObject, DAttribute<?, ?> dAttribute, Object pre, Object post) {
+    private void handleNativeChanges(DObject dObject, DAttribute<?, ?> dAttribute, Object pre, Object post, List<INative> natives) {
         for (IChangeHandler h : dAttribute.handlers()) {
-            nativeChange(dObject, h, pre, post);
+            if (natives.contains(h.iNative())) {
+                nativeChange(dObject, h, pre, post);
+            }
         }
     }
 
