@@ -15,8 +15,12 @@
 
 package org.modelingvalue.dclare.mps;
 
+import jetbrains.mps.project.ProjectBase;
+
 public interface INativeRunner {
 
     void run(Runnable runable);
+
+    ProjectBase project();
 
 }

@@ -202,6 +202,11 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
                                                                                                                                  public void run(Runnable runable) {
                                                                                                                                      handleMPSChange(runable);
                                                                                                                                  }
+
+                                                                                                                                 @Override
+                                                                                                                                 public ProjectBase project() {
+                                                                                                                                     return project;
+                                                                                                                                 }
                                                                                                                              };
     //
     private DefaultMap<DMessageType, List<DMessage>>                                                messages                 = EMPTY_MESSAGE_LIST_MAP;
