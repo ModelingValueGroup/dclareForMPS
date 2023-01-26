@@ -4671,6 +4671,14 @@
                           </node>
                         </node>
                       </node>
+                      <node concept="3clFbF" id="3nsHMGrWG1z" role="3cqZAp">
+                        <node concept="3nyPlj" id="3nsHMGrWG1y" role="3clFbG">
+                          <ref role="37wK5l" to="dxuu:~JComponent.paintComponent(java.awt.Graphics)" resolve="paintComponent" />
+                          <node concept="37vLTw" id="3nsHMGrWG1x" role="37wK5m">
+                            <ref role="3cqZAo" node="3nsHMGrWG1q" resolve="g" />
+                          </node>
+                        </node>
+                      </node>
                       <node concept="3clFbF" id="3nsHMGrWV1O" role="3cqZAp">
                         <node concept="2OqwBi" id="3nsHMGrWVYj" role="3clFbG">
                           <node concept="2O$n0J" id="3nsHMGrWV1M" role="2Oq$k0" />
@@ -4710,14 +4718,6 @@
                                 </node>
                               </node>
                             </node>
-                          </node>
-                        </node>
-                      </node>
-                      <node concept="3clFbF" id="3nsHMGrWG1z" role="3cqZAp">
-                        <node concept="3nyPlj" id="3nsHMGrWG1y" role="3clFbG">
-                          <ref role="37wK5l" to="dxuu:~JComponent.paintComponent(java.awt.Graphics)" resolve="paintComponent" />
-                          <node concept="37vLTw" id="3nsHMGrWG1x" role="37wK5m">
-                            <ref role="3cqZAo" node="3nsHMGrWG1q" resolve="g" />
                           </node>
                         </node>
                       </node>
