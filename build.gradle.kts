@@ -21,14 +21,14 @@ defaultTasks(
 )
 plugins {
     id("org.modelingvalue.gradle.mvgplugin") version "1.1.3"
-    id("com.dorongold.task-tree") version "2.1.0" // to get a task-tree generation task
+    id("com.dorongold.task-tree") version "2.1.1" // to get a task-tree generation task
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // import ant file:
 try {
     if (!mvgmps.mpsInstallDir.isDirectory)
-        throw GradleException("You need to first run './gradlew --build-file bootstrap.gradle.kts' to download MPS");
+        throw GradleException("You need to first run './gradlew --build-file bootstrap.gradle.kts' to download MPS")
 
     ant.lifecycleLogLevel = AntBuilder.AntMessagePriority.INFO
     ant.setProperty("mps_home", mvgmps.mpsInstallDir.toString())
@@ -41,6 +41,7 @@ try {
         it + if (it.matches(Regex(".*<jvmargs>$"))) "<arg value=\"-Dfile.encoding=UTF8\"/>" else ""
     })
 // WORKAROUND END
+    @Suppress("UnstableApiUsage")
     ant.importBuild(antScript, gradle.rootProject.projectDir.absolutePath) {
         "mpsant-$it"
     }
@@ -64,11 +65,11 @@ try {
             ant.setProperty("versionStamp", mvgmps.versionStamp)
         }
     }
-    val clean_gen_dirs = tasks.create("clean_gen_dirs") {
+    val cleanGenDirs = tasks.create("clean_gen_dirs") {
         group = "build"
         doLast {
-            listOf("languages", "solutions").forEach {
-                File(it).walkTopDown().filter {
+            listOf("languages", "solutions").forEach { d ->
+                File(d).walkTopDown().filter {
                     it.name.contains("_gen")
                 }.forEach {
                     it.deleteRecursively()
@@ -82,14 +83,14 @@ try {
     }
     tasks.create("clean") {
         group = "build"
-        dependsOn(clean_gen_dirs)
+        dependsOn(cleanGenDirs)
     }
     tasks.create("publish") {
         group = "publishing"
         dependsOn(tasks.named("mpsant-assemble"))
     }
 } catch (e: Exception) {
-    println("problem with importing ant: " + e);
+    println("problem with importing ant: $e")
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // upload plugin to jetbrains
