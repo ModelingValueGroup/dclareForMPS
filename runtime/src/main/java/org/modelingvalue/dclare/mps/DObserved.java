@@ -128,7 +128,7 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
             try {
                 toMPS.accept(object, pre, post);
             } catch (Throwable t) {
-                DObject.dClareMPS().addMessage(new ThrowableError(object, this, Instant.now(), t));
+                DObject.dClareMPS().addThrowable(new ThrowableError(object, this, Instant.now(), t));
             }
         }
     }
@@ -142,7 +142,7 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
             try {
                 return fromMPS.apply(object);
             } catch (Throwable t) {
-                DClareMPS.instance().addMessage(new ThrowableError(object, this, Instant.now(), t));
+                DClareMPS.instance().addThrowable(new ThrowableError(object, this, Instant.now(), t));
             }
         }
         return def;

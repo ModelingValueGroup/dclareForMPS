@@ -369,12 +369,12 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
         prependMessage(new DMessage(context, feature, DMessageType.info, txType + " " + msg + ": " + object));
     }
 
-    protected void addMessage(Throwable throwable) {
-        addMessages(Set.of(throwable));
+    protected void addThrowable(Throwable throwable) {
+        addThrowables(Set.of(throwable));
     }
 
     @SuppressWarnings("rawtypes")
-    protected void addMessages(Set<Throwable> throwables) {
+    protected void addThrowables(Set<Throwable> throwables) {
         if (!universeTransaction.isKilled()) {
             universeTransaction.currentState().run(() -> {
                 Collection<Triple<DObject, DFeature, Throwable>> withContext = throwables.map(t -> {
@@ -398,7 +398,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
                     return Triple.of(object, feature, t);
                 });
                 for (Triple<DObject, DFeature, Throwable> t : withContext.sorted(messageComparator).sequential()) {
-                    addMessage(t.a(), t.b(), t.c());
+                    addThrowable(t.a(), t.b(), t.c());
                 }
             });
             if (throwables.anyMatch(t -> !(t instanceof DebugTrace))) {
@@ -408,7 +408,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
     }
 
     @SuppressWarnings("rawtypes")
-    private void addMessage(DObject object, DFeature feature, Throwable t) {
+    private void addThrowable(DObject object, DFeature feature, Throwable t) {
         if (t instanceof OutOfScopeException) {
             addOutOfScopeExceptionMessage(object, feature, (OutOfScopeException) t);
         } else if (t instanceof NonDeterministicException) {
@@ -568,7 +568,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
                     try {
                         LeafTransaction.getContext().run(imperativeTransaction, action);
                     } catch (Throwable t) {
-                        addMessage(t);
+                        addThrowable(t);
                     }
                 }
             } else {
@@ -590,7 +590,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
             try {
                 RUNNING_DCLARE.run(true, runnable);
             } catch (Throwable t) {
-                addMessage(t);
+                addThrowable(t);
             }
         });
     }
@@ -888,7 +888,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
                 try {
                     return supplier.get();
                 } catch (Throwable t) {
-                    dClareMPS.addMessage(t);
+                    dClareMPS.addThrowable(t);
                     return null;
                 }
             } else {
@@ -939,7 +939,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
 
     @Override
     public void uncaughtException(Thread thread, Throwable t) {
-        addMessage(t);
+        addThrowable(t);
     }
 
     @SuppressWarnings("RedundantSuppression")
@@ -966,15 +966,8 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
         }
 
         @Override
-        protected void handleInconsistencies(Set<Throwable> inconsistencies) {
-            messages = EMPTY_MESSAGE_LIST_MAP;
-            addMessages(inconsistencies);
-        }
-
-        @Override
-        protected void handleExceptions() {
-            messages = EMPTY_MESSAGE_LIST_MAP;
-            addMessages(errors.getAndUpdate(es -> Set.of()));
+        protected void handleExceptions(Set<Throwable> inconsistencies) {
+            addThrowables(inconsistencies);
         }
 
         @Override
