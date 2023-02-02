@@ -161,7 +161,9 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
                 if (object.readConstant()) {
                     return fromMPS(object);
                 } else if (!isDclareOnly() && object.isObserving() && !DObject.READ_OBSERVEDS.get(object).contains(this)) {
+                    object.activate(); // Temporary: First fix Ripple-out based on State history!!!
                     triggerInitRead(object);
+                    return fromMPS(object); // Temporary: First fix Ripple-out based on State history!!!
                 }
             } else if (!isDclareOnly() && object.isObserving() && !DObject.READ_OBSERVEDS.add(object, this).contains(this) && DClareMPS.instance().getConfig().isTraceActivation()) {
                 tx.runNonObserving(() -> System.err.println(DclareTrace.getLineStart("ACTIVATE", tx) + object + "." + this));
