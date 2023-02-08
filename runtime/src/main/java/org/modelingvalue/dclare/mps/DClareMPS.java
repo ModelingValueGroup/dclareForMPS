@@ -995,7 +995,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
 
         @SuppressWarnings("rawtypes")
         @Override
-        protected State createState(IState previous, DefaultMap<Object, DefaultMap<Setable, Object>> map) {
+        protected State createState(State previous, DefaultMap<Object, DefaultMap<Setable, Object>> map) {
             return new MPSState(this, previous, map);
         }
 
@@ -1013,7 +1013,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
         private static final long serialVersionUID = 4292875367058590190L;
 
         @SuppressWarnings("rawtypes")
-        private MPSState(UniverseTransaction universeTransaction, IState previous, DefaultMap<Object, DefaultMap<Setable, Object>> map) {
+        private MPSState(UniverseTransaction universeTransaction, State previous, DefaultMap<Object, DefaultMap<Setable, Object>> map) {
             super(universeTransaction, previous, map);
         }
 
