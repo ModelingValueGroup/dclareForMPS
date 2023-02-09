@@ -19671,6 +19671,25 @@
         <ref role="2AI5Lk" to="wyt6:~Override" resolve="Override" />
       </node>
     </node>
+    <node concept="2tJIrI" id="EPJciHXerL" role="jymVt" />
+    <node concept="3clFb_" id="EPJciHXdyX" role="jymVt">
+      <property role="TrG5h" value="getLanguage" />
+      <node concept="3Tm1VV" id="EPJciHXdyY" role="1B3o_S" />
+      <node concept="3uibUv" id="EPJciHXdz0" role="3clF45">
+        <ref role="3uigEE" to="c17a:~SLanguage" resolve="SLanguage" />
+      </node>
+      <node concept="3clFbS" id="EPJciHXdz1" role="3clF47">
+        <node concept="3clFbF" id="EPJciHXdz4" role="3cqZAp">
+          <node concept="10M0yZ" id="EPJciHYSHu" role="3clFbG">
+            <ref role="3cqZAo" node="7nZIX5TFwqq" resolve="_LANGUAGE_" />
+            <ref role="1PxDUh" node="1$veQIxm8RE" resolve="RuleAspect" />
+          </node>
+        </node>
+      </node>
+      <node concept="2AHcQZ" id="EPJciHXdz2" role="2AJF6D">
+        <ref role="2AI5Lk" to="wyt6:~Override" />
+      </node>
+    </node>
   </node>
   <node concept="jVnub" id="7cVLgROKz0A">
     <property role="TrG5h" value="DObservedFromTarget" />
