@@ -19,6 +19,7 @@ import java.util.List;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.Collection;
+import org.modelingvalue.collections.Set;
 import org.modelingvalue.dclare.Constant;
 import org.modelingvalue.dclare.Direction;
 
@@ -29,9 +30,13 @@ public interface IAspect {
         return DClareMPS.ASPECT_MAP.get(language).get(id);
     }
 
-    Constant<IAspect, Direction> DIRECTION = Constant.of("DIRECTION", a -> Direction.of(a, () -> {
-        return Collection.of(a.getOpposites()).sequential().map(o -> IAspect.DIRECTION.get(o)).toSet();
-    }));
+    Constant<IAspect, Direction>    DIRECTION        = Constant.of("DIRECTION", a -> Direction.of(a, () -> {
+                                                         return Collection.of(a.getOpposites()).sequential().map(o -> IAspect.DIRECTION.get(o)).toSet();
+                                                     }));
+
+    Constant<IAspect, Set<IAspect>> ALL_DEPENDENCIES = Constant.of("ALL_DEPENDENCIES", a -> {
+                                                         return Collection.of(a.getDependencies()).flatMap(d -> IAspect.ALL_DEPENDENCIES.get(d)).toSet().add(a);
+                                                     });
 
     String getId();
 
@@ -40,5 +45,7 @@ public interface IAspect {
     List<IAspect> getDependencies();
 
     List<IAspect> getOpposites();
+
+    SLanguage getLanguage();
 
 }

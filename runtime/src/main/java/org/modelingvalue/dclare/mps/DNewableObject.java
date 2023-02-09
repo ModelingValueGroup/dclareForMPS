@@ -118,7 +118,7 @@ public abstract class DNewableObject<T extends DNewableObject, R, S> extends DId
     }
 
     public Set<SLanguage> getAnonymousLanguages() {
-        return deriveReasons().filter(DQuotation.class).map(DDerive::language).notNull().toSet();
+        return deriveReasons().filter(DQuotation.class).map(DDerive::aspect).flatMap(d -> IAspect.ALL_DEPENDENCIES.get(d)).map(IAspect::getLanguage).toSet();
     }
 
     @Override

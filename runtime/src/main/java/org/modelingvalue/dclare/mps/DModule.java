@@ -100,6 +100,9 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
     @Override
     protected DModuleType getType() {
         Set<SLanguage> languages = LANGUAGES_WITH_RULES.get(this);
+        if (isLanguage() && !isExternal()) {
+            languages = languages.addAll(DRepository.CONTAINED_LANGUAGES_WITH_RULES.get(getRepository()));
+        }
         return MODULE_TYPE.get(languages);
     }
 

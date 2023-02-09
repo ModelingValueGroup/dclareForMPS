@@ -283,7 +283,9 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
     @Override
     protected DModelType getType() {
         Set<SLanguage> ls = USED_DCLARE_LANGUAGES.get(this);
-        ls = ls.addAll(getAnonymousLanguages());
+        if (!isExternal()) {
+            ls = ls.addAll(getAnonymousLanguages());
+        }
         return MODEL_TYPE.get(Pair.of(ls, getAnonymousTypes()));
     }
 
