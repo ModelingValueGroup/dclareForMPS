@@ -42,6 +42,7 @@ import jetbrains.mps.errors.item.ModuleReportItem;
 import jetbrains.mps.extapi.model.SModelBase;
 import jetbrains.mps.extapi.module.SModuleBase;
 import jetbrains.mps.model.ModelDeleteHelper;
+import jetbrains.mps.project.DevKit;
 import jetbrains.mps.project.Solution;
 import jetbrains.mps.smodel.Generator;
 import jetbrains.mps.smodel.Language;
@@ -269,6 +270,10 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
 
     public boolean isSolution() {
         return original() instanceof Solution;
+    }
+
+    public boolean isDevKit() {
+        return original() instanceof DevKit;
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
