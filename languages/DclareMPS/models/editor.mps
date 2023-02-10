@@ -6580,6 +6580,18 @@
       </node>
       <node concept="l2Vlx" id="2_SJ50nnPNs" role="2iSdaV" />
     </node>
+    <node concept="3EZMnI" id="7ypR2340Phe" role="6VMZX">
+      <node concept="2iRfu4" id="7ypR2340Phf" role="2iSdaV" />
+      <node concept="3F0ifn" id="7ypR2340Phn" role="3EZMnx">
+        <property role="3F0ifm" value="default values for primitive types" />
+      </node>
+      <node concept="3F0ifn" id="7ypR2340Phv" role="3EZMnx">
+        <property role="3F0ifm" value=":" />
+      </node>
+      <node concept="3F0A7n" id="7ypR2340Phc" role="3EZMnx">
+        <ref role="1NtTu8" to="7ggn:7ypR2340Pha" resolve="primitiveTypeDefaults" />
+      </node>
+    </node>
   </node>
   <node concept="24kQdi" id="4$bpWrNHP9b">
     <property role="3GE5qa" value="structs" />

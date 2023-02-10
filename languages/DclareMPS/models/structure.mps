@@ -1246,6 +1246,11 @@
     <property role="3GE5qa" value="aspects" />
     <property role="19KtqR" value="true" />
     <ref role="1TJDcQ" to="tpck:gw2VY9q" resolve="BaseConcept" />
+    <node concept="1TJgyi" id="7ypR2340Pha" role="1TKVEl">
+      <property role="IQ2nx" value="8690218989273699402" />
+      <property role="TrG5h" value="primitiveTypeDefaults" />
+      <ref role="AX2Wp" to="tpck:fKAQMTB" resolve="boolean" />
+    </node>
     <node concept="PrWs8" id="55f2HNAp5a8" role="PzmwI">
       <ref role="PrY4T" to="tpck:h0TrEE$" resolve="INamedConcept" />
     </node>
