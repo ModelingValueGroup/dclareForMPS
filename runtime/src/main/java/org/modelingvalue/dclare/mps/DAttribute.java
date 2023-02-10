@@ -391,6 +391,11 @@ public interface DAttribute<O, T> extends DFeature {
             throw new UnsupportedOperationException();
         }
 
+        @Override
+        public boolean checkConsistency() {
+            return !isSynthetic() && super.checkConsistency();
+        }
+
     }
 
 }

@@ -189,12 +189,21 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
                 tx.runNonObserving(() -> System.err.println(DclareTrace.getLineStart("ACTIVATE", tx) + object + "." + this));
             }
         }
+        activateReferenced(object, value);
+        return super.set(object, value);
+    }
+
+    private void activateReferenced(O object, T value) {
         if (isReference() && object.isObserving()) {
             for (DObject r : collection(value).filter(DObject.class)) {
                 r.activate();
             }
         }
-        return super.set(object, value);
+    }
+
+    @Override
+    public boolean checkConsistency() {
+        return !isSynthetic() && super.checkConsistency();
     }
 
     public static <T> void map(Set<T> ist, Set<T> soll, Consumer<T> add, Consumer<T> remove) {
