@@ -107,6 +107,11 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
     }
 
     @Override
+    protected DModuleType getBootstrapType() {
+        return MODULE_TYPE.get(Set.of());
+    }
+
+    @Override
     protected void init(DClareMPS dClareMPS) {
         super.init(dClareMPS);
         original().addModuleListener(new DModuleListener(this, dClareMPS));

@@ -61,12 +61,17 @@ public class DStructObject extends DIdentifiedObject implements SStructObject {
     @Override
     protected DStructClass getType() {
         DObject dParent = dObjectParent();
-        Set<SLanguage> ls = dParent != null ? TYPE.get(dParent).getLanguages() : Set.of();
+        Set<SLanguage> ls = (dParent != null && !dParent.isExternal() ? dParent : getContextObject()).dClass().getLanguages();
         SLanguage lang = getSClass().getLanguage();
         if (!DClareMPS.ACTIVE_RULE_SETS.get(lang).isEmpty()) {
             ls = ls.add(lang);
         }
         return CLASS_OBJECT_TYPE.get(Pair.of(ls, getSClass()));
+    }
+
+    @Override
+    protected DStructClass getBootstrapType() {
+        return CLASS_OBJECT_TYPE.get(Pair.of(Set.of(), getSClass()));
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})

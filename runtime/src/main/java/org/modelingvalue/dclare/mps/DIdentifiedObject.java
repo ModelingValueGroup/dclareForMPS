@@ -18,6 +18,9 @@ package org.modelingvalue.dclare.mps;
 import java.util.Arrays;
 
 import org.modelingvalue.collections.util.Age;
+import org.modelingvalue.dclare.ActionTransaction;
+import org.modelingvalue.dclare.IdentityDerivationTransaction;
+import org.modelingvalue.dclare.LeafTransaction;
 import org.modelingvalue.dclare.mps.DAttribute.DIdentifyingAttribute;
 
 public abstract class DIdentifiedObject extends DObject {
@@ -70,6 +73,13 @@ public abstract class DIdentifiedObject extends DObject {
 
     public Object[] getIdentity() {
         return identity;
+    }
+
+    protected DObject getContextObject() {
+        LeafTransaction tx = LeafTransaction.getCurrent();
+        return tx instanceof ActionTransaction && tx.mutable() instanceof DObject ? (DObject) tx.mutable() : //
+                tx instanceof IdentityDerivationTransaction && ((IdentityDerivationTransaction) tx).getContextMutable() instanceof DObject ? (DObject) ((IdentityDerivationTransaction) tx).getContextMutable() : //
+                        DClareMPS.instance(tx).getRepository();
     }
 
 }

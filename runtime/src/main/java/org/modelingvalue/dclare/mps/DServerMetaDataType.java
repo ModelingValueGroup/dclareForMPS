@@ -23,8 +23,8 @@ import org.modelingvalue.dclare.Setable;
 
 public class DServerMetaDataType extends DObjectType<String> {
 
-    protected DServerMetaDataType(String s) {
-        super(s);
+    protected DServerMetaDataType() {
+        super("SERVER_METADATA_TYPE");
     }
 
     @SuppressWarnings("rawtypes")

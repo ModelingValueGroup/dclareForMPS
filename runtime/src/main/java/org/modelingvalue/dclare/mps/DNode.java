@@ -468,17 +468,18 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
     @Override
     protected DNodeType getType() {
         DObject dParent = dObjectParent();
-        Set<SLanguage> ls = dParent != null ? TYPE.get(dParent).getLanguages() : Set.of();
+        Set<SLanguage> ls = (dParent != null && !dParent.isExternal() ? dParent : getContextObject()).dClass().getLanguages();
         if (QUOTED.get(this)) {
             return NODE_TYPE.get(Quadruple.of(ls, SNodeUtil.concept_BaseConcept, Set.of(), Set.of()));
         } else {
-            SLanguage lang = DClareMPS.LANGUAGE.get(getConcept());
-            if (!DClareMPS.ACTIVE_RULE_SETS.get(lang).isEmpty()) {
-                ls = ls.add(lang);
-            }
             ls = ls.addAll(getAnonymousLanguages());
             return NODE_TYPE.get(Quadruple.of(ls, getConcept(), getAnonymousTypes(), getCopyAspects()));
         }
+    }
+
+    @Override
+    protected DNodeType getBootstrapType() {
+        return NODE_TYPE.get(Quadruple.of(Set.of(), SNodeUtil.concept_BaseConcept, Set.of(), Set.of()));
     }
 
     @Override
@@ -592,7 +593,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
                 return copy.get().copied().dIdentity();
             }
         }
-        DObjectType<?> dObjectType = TYPE.get(this);
+        DObjectType<?> dObjectType = dClass();
         Set<DAttribute> id = dObjectType.getIdentifying();
         if (!id.isEmpty()) {
             Map<DAttribute, Object> map = Map.of();

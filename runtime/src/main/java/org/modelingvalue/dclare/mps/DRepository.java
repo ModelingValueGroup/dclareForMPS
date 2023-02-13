@@ -94,6 +94,11 @@ public class DRepository extends DFromOriginalObject<ProjectRepository> implemen
     }
 
     @Override
+    protected DRepositoryType getBootstrapType() {
+        return REPOSITORY_TYPE.get(Set.of());
+    }
+
+    @Override
     protected void read(DClareMPS dClareMPS) {
         MODULES.triggerInitRead(this);
     }

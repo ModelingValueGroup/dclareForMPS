@@ -147,6 +147,11 @@ public class DIssue extends DIdentifiedObject {
     }
 
     @Override
+    protected DIssueType getBootstrapType() {
+        return ISSUE_TYPE.get(MessageStatus.OK);
+    }
+
+    @Override
     protected void read(DClareMPS dClareMPS) {
     }
 

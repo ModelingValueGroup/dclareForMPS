@@ -35,7 +35,7 @@ import org.modelingvalue.dclare.sync.Util;
 
 import jetbrains.mps.project.ProjectRepository;
 
-public class MPSSerializationHelper extends SerializationHelperWithPool<DObjectType<DObject>, DObject, DObserved<DObject, Object>> {
+public class MPSSerializationHelper extends SerializationHelperWithPool<DObjectType<?>, DObject, DObserved<DObject, Object>> {
     public MPSSerializationHelper(ProjectRepository repos) {
         super(Converters.ALL.appendList(List.of(new DObservedConverter(), new DModuleConverter(repos), new DModelConverter(), new DNodeConverter(), new DServceMetaDataConverter(), new SConceptConverter(), new SLanguageConverter())));
     }
@@ -66,9 +66,8 @@ public class MPSSerializationHelper extends SerializationHelperWithPool<DObjectT
 
     @SuppressWarnings("unchecked")
     @Override
-    public DObjectType<DObject> getMutableClass(DObject s) {
-        DObjectType<DObject> type = (DObjectType<DObject>) DObject.TYPE.get(s);
-        return type != DObject.TYPE.getDefault() ? type : (DObjectType<DObject>) s.getType();
+    public DObjectType<?> getMutableClass(DObject s) {
+        return s.dClass();
     }
 
     private static class DModuleConverter extends BaseConverter<DModule> {

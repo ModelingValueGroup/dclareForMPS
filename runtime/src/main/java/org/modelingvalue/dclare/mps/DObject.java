@@ -57,12 +57,12 @@ public abstract class DObject implements Mutable {
 
                                                                                                                      @Override
                                                                                                                      protected Collection<Observer> observers() {
-                                                                                                                         return Set.of(DObject.TYPE_RULE);
+                                                                                                                         return Set.of();                                                                                            // Bootstrap
                                                                                                                      }
 
                                                                                                                      @Override
                                                                                                                      protected Collection<Setable> setables() {
-                                                                                                                         return Set.of(DObject.TYPE);
+                                                                                                                         return Set.of();                                                                                            // Bootstrap
                                                                                                                      }
 
                                                                                                                      @Override
@@ -72,13 +72,13 @@ public abstract class DObject implements Mutable {
 
                                                                                                                  };
 
-    public static final DObserved<DObject, DObjectType<?>>                             TYPE                      = DObserved.of("$TYPE", DUMMY_TYPE, DObject::getType, null, (t, o, b, a) -> {
+    protected static final Observed<DObject, DObjectType<?>>                           TYPE                      = Observed.of("$TYPE", DUMMY_TYPE, (t, o, b, a) -> {
                                                                                                                      if (!a.getNatives().isEmpty()) {
                                                                                                                          DObject.CONTAINED.set(o, true);
                                                                                                                      }
                                                                                                                  }, plumbing);
 
-    protected static final Observer<DObject>                                           TYPE_RULE                 = observer(TYPE, DObject::getType);
+    private static final Observer<DObject>                                             TYPE_RULE                 = observer(TYPE, DObject::getType);
 
     protected static final Observed<DObject, DAttribute>                               CONTAINING_ATTRIBUTE      = Observed.of("$CONTAINING_ATTRIBUTE", null, plumbing);
 
@@ -125,7 +125,7 @@ public abstract class DObject implements Mutable {
     }
 
     public java.util.List<DAttribute> getAttributes() {
-        return TYPE.get(this).getAttributes().collect(Collectors.toList());
+        return dClass().getAttributes().collect(Collectors.toList());
     }
 
     public java.util.Set<? extends IssueKindReportItem> getIssues() {
@@ -133,13 +133,16 @@ public abstract class DObject implements Mutable {
     }
 
     public java.util.List<DAttribute> getNonSyntheticAttributes() {
-        return TYPE.get(this).getNonSyntheticAttributes().collect(Collectors.toList());
+        return dClass().getNonSyntheticAttributes().collect(Collectors.toList());
     }
 
     @Override
     public DObjectType<?> dClass() {
-        return TYPE.get(this);
+        DObjectType<?> type = TYPE.get(this);
+        return type == TYPE.getDefault() ? getBootstrapType() : type;
     }
+
+    protected abstract DObjectType<?> getBootstrapType();
 
     @SuppressWarnings("unchecked")
     public Collection<DObject> getAllChildren() {
@@ -270,7 +273,7 @@ public abstract class DObject implements Mutable {
     }
 
     protected boolean isNative() {
-        return !isExternal() && !TYPE.get(this).getNatives().isEmpty();
+        return !isExternal() && !dClass().getNatives().isEmpty();
     }
 
 }
