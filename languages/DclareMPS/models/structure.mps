@@ -1644,5 +1644,62 @@
     <property role="34LRSv" value="native" />
     <ref role="1TJDcQ" to="tpee:fz3vP1J" resolve="Expression" />
   </node>
+  <node concept="1TIwiD" id="7QGAU2f1kbx">
+    <property role="EcuMT" value="9055784064631784161" />
+    <property role="3GE5qa" value="structs" />
+    <property role="TrG5h" value="StructTypeCastExpression" />
+    <property role="34LRSv" value=":" />
+    <ref role="1TJDcQ" to="tpee:fz3vP1J" resolve="Expression" />
+    <node concept="1TJgyj" id="7QGAU2f1E12" role="1TKVEi">
+      <property role="IQ2ns" value="9055784064631873602" />
+      <property role="20lmBu" value="fLJjDmT/aggregation" />
+      <property role="20kJfa" value="leftExpression" />
+      <property role="20lbJX" value="fLJekj4/_1" />
+      <ref role="20lvS9" to="tpee:fz3vP1J" resolve="Expression" />
+    </node>
+    <node concept="1TJgyj" id="7QGAU2f1tGQ" role="1TKVEi">
+      <property role="IQ2ns" value="9055784064631823158" />
+      <property role="20kJfa" value="class" />
+      <property role="20lbJX" value="fLJekj4/_1" />
+      <ref role="20lvS9" node="4$bpWrNHO7E" resolve="StructClass" />
+    </node>
+    <node concept="1TJgyi" id="i1BlNJ7" role="1TKVEl">
+      <property role="TrG5h" value="asCast" />
+      <property role="IQ2nx" value="1238684351431" />
+      <ref role="AX2Wp" to="tpck:fKAQMTB" resolve="boolean" />
+    </node>
+    <node concept="PrWs8" id="7QGAU2f1tIc" role="PzmwI">
+      <ref role="PrY4T" to="tpee:1wHCnsn58oY" resolve="IBinaryLike" />
+    </node>
+  </node>
+  <node concept="1TIwiD" id="7QGAU2f1kyq">
+    <property role="EcuMT" value="9055784064631785626" />
+    <property role="3GE5qa" value="structs" />
+    <property role="TrG5h" value="StructIsInstanceOfOperation" />
+    <property role="34LRSv" value="isInstanceOf" />
+    <ref role="1TJDcQ" to="tpck:gw2VY9q" resolve="BaseConcept" />
+    <node concept="1TJgyj" id="7QGAU2f1tGO" role="1TKVEi">
+      <property role="IQ2ns" value="9055784064631823156" />
+      <property role="20kJfa" value="class" />
+      <property role="20lbJX" value="fLJekj4/_1" />
+      <ref role="20lvS9" node="4$bpWrNHO7E" resolve="StructClass" />
+    </node>
+    <node concept="PrWs8" id="7QGAU2f1ldX" role="PzmwI">
+      <ref role="PrY4T" to="tpee:hqOqG0K" resolve="IOperation" />
+    </node>
+  </node>
+  <node concept="1TIwiD" id="7QGAU2f1le0">
+    <property role="EcuMT" value="9055784064631788416" />
+    <property role="3GE5qa" value="structs" />
+    <property role="TrG5h" value="OfStructTypeOperation" />
+    <property role="34LRSv" value="ofStructType" />
+    <ref role="1TJDcQ" to="tp2q:gKAMqbp" resolve="SequenceOperation" />
+    <node concept="1TJgyj" id="7QGAU2f1tGM" role="1TKVEi">
+      <property role="IQ2ns" value="9055784064631823154" />
+      <property role="20kJfa" value="class" />
+      <property role="20lbJX" value="fLJekj4/_1" />
+      <ref role="20lvS9" node="4$bpWrNHO7E" resolve="StructClass" />
+    </node>
+  </node>
 </model>
 

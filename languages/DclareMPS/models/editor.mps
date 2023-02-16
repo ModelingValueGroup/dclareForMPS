@@ -8405,5 +8405,52 @@
       </node>
     </node>
   </node>
+  <node concept="24kQdi" id="7QGAU2f1tHi">
+    <property role="3GE5qa" value="structs" />
+    <ref role="1XX52x" to="7ggn:7QGAU2f1kbx" resolve="StructTypeCastExpression" />
+    <node concept="3EYTF0" id="7QGAU2f1tHj" role="2wV5jI" />
+  </node>
+  <node concept="24kQdi" id="7QGAU2f1tHI">
+    <property role="3GE5qa" value="structs" />
+    <ref role="1XX52x" to="7ggn:7QGAU2f1le0" resolve="OfStructTypeOperation" />
+    <node concept="3EZMnI" id="7QGAU2f1tWO" role="2wV5jI">
+      <node concept="2iRfu4" id="7QGAU2f1tWP" role="2iSdaV" />
+      <node concept="PMmxH" id="7QGAU2f1tXc" role="3EZMnx">
+        <ref role="PMmxG" to="tpco:2wZex4PafBj" resolve="alias" />
+        <ref role="1k5W1q" to="tpen:hgVS8CF" resolve="KeyWord" />
+      </node>
+      <node concept="3F0ifn" id="7QGAU2f1tWT" role="3EZMnx">
+        <property role="3F0ifm" value="&lt;" />
+        <ref role="1k5W1q" to="tpen:hY9fg1G" resolve="LeftParenAfterName" />
+      </node>
+      <node concept="1iCGBv" id="7QGAU2f1tWU" role="3EZMnx">
+        <property role="1cu_pB" value="gtgu$YJ/attractsFocus" />
+        <property role="39s7Ar" value="true" />
+        <ref role="1k5W1q" to="tpd3:hwSE21y" resolve="ReferenceOnConcept" />
+        <ref role="1NtTu8" to="7ggn:7QGAU2f1tGM" resolve="class" />
+        <node concept="1sVBvm" id="7QGAU2f1tWV" role="1sWHZn">
+          <node concept="3F0A7n" id="7QGAU2f1tWW" role="2wV5jI">
+            <property role="1Intyy" value="true" />
+            <ref role="1NtTu8" to="tpck:h0TrG11" resolve="name" />
+            <node concept="3$7jql" id="7QGAU2f1tWX" role="3F10Kt">
+              <property role="3$6WeP" value="0.0" />
+            </node>
+          </node>
+        </node>
+        <node concept="3$7jql" id="7QGAU2f1tWY" role="3F10Kt">
+          <property role="3$6WeP" value="0.0" />
+        </node>
+      </node>
+      <node concept="3F0ifn" id="7QGAU2f1tWZ" role="3EZMnx">
+        <property role="3F0ifm" value="&gt;" />
+        <ref role="1k5W1q" to="tpen:hFCSUmN" resolve="RightParen" />
+      </node>
+    </node>
+  </node>
+  <node concept="24kQdi" id="7QGAU2f1tIa">
+    <property role="3GE5qa" value="structs" />
+    <ref role="1XX52x" to="7ggn:7QGAU2f1kyq" resolve="StructIsInstanceOfOperation" />
+    <node concept="3EYTF0" id="7QGAU2f1tIb" role="2wV5jI" />
+  </node>
 </model>
 
