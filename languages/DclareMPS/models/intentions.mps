@@ -1543,5 +1543,60 @@
       </node>
     </node>
   </node>
+  <node concept="2S6QgY" id="98RYWtZDxG">
+    <property role="3GE5qa" value="structs" />
+    <property role="TrG5h" value="ChangeAsCast" />
+    <ref role="2ZfgGC" to="7ggn:7QGAU2f1kbx" resolve="StructTypeCastExpression" />
+    <node concept="2S6ZIM" id="98RYWtZDxH" role="2ZfVej">
+      <node concept="3clFbS" id="98RYWtZDxI" role="2VODD2">
+        <node concept="3clFbJ" id="i1Bm90B" role="3cqZAp">
+          <node concept="2OqwBi" id="i1Bm9cC" role="3clFbw">
+            <node concept="2Sf5sV" id="i1Bm9ba" role="2Oq$k0" />
+            <node concept="3TrcHB" id="i1Bm9vJ" role="2OqNvi">
+              <ref role="3TsBF5" to="7ggn:i1BlNJ7" resolve="asCast" />
+            </node>
+          </node>
+          <node concept="3clFbS" id="i1Bm90D" role="3clFbx">
+            <node concept="3cpWs6" id="i1Bm9Oh" role="3cqZAp">
+              <node concept="Xl_RD" id="i1Bm9V8" role="3cqZAk">
+                <property role="Xl_RC" value="Convert to Regular Cast" />
+              </node>
+            </node>
+          </node>
+          <node concept="9aQIb" id="i1BmbAO" role="9aQIa">
+            <node concept="3clFbS" id="i1BmbAP" role="9aQI4">
+              <node concept="3cpWs6" id="i1BmbRW" role="3cqZAp">
+                <node concept="Xl_RD" id="i1BmbXP" role="3cqZAk">
+                  <property role="Xl_RC" value="Convert to 'as' Cast" />
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+    <node concept="2Sbjvc" id="98RYWtZDxJ" role="2ZfgGD">
+      <node concept="3clFbS" id="98RYWtZDxK" role="2VODD2">
+        <node concept="3clFbF" id="i1BmfsK" role="3cqZAp">
+          <node concept="37vLTI" id="i1BmfX_" role="3clFbG">
+            <node concept="3fqX7Q" id="i1BmgyJ" role="37vLTx">
+              <node concept="2OqwBi" id="i1BmgIJ" role="3fr31v">
+                <node concept="2Sf5sV" id="i1BmgHK" role="2Oq$k0" />
+                <node concept="3TrcHB" id="i1BmgR7" role="2OqNvi">
+                  <ref role="3TsBF5" to="7ggn:i1BlNJ7" resolve="asCast" />
+                </node>
+              </node>
+            </node>
+            <node concept="2OqwBi" id="i1BmftK" role="37vLTJ">
+              <node concept="2Sf5sV" id="i1BmfsL" role="2Oq$k0" />
+              <node concept="3TrcHB" id="i1BmfQu" role="2OqNvi">
+                <ref role="3TsBF5" to="7ggn:i1BlNJ7" resolve="asCast" />
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+  </node>
 </model>
 

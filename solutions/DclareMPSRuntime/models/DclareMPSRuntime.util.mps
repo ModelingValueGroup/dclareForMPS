@@ -75,6 +75,7 @@
         <property id="6468716278899126575" name="isVolatile" index="2dlcS1" />
         <property id="6468716278899125786" name="isTransient" index="2dld4O" />
       </concept>
+      <concept id="1070475587102" name="jetbrains.mps.baseLanguage.structure.SuperConstructorInvocation" flags="nn" index="XkiVB" />
       <concept id="1070475926800" name="jetbrains.mps.baseLanguage.structure.StringLiteral" flags="nn" index="Xl_RD">
         <property id="1070475926801" name="value" index="Xl_RC" />
       </concept>
@@ -105,7 +106,9 @@
         <child id="1070534934091" name="type" index="10QFUM" />
         <child id="1070534934092" name="expression" index="10QFUP" />
       </concept>
-      <concept id="1068390468198" name="jetbrains.mps.baseLanguage.structure.ClassConcept" flags="ig" index="312cEu" />
+      <concept id="1068390468198" name="jetbrains.mps.baseLanguage.structure.ClassConcept" flags="ig" index="312cEu">
+        <child id="1165602531693" name="superclass" index="1zkMxy" />
+      </concept>
       <concept id="1068431474542" name="jetbrains.mps.baseLanguage.structure.VariableDeclaration" flags="ng" index="33uBYm">
         <property id="1176718929932" name="isFinal" index="3TUv4t" />
         <child id="1068431790190" name="initializer" index="33vP2m" />
@@ -155,9 +158,11 @@
       <concept id="1068580123136" name="jetbrains.mps.baseLanguage.structure.StatementList" flags="sn" stub="5293379017992965193" index="3clFbS">
         <child id="1068581517665" name="statement" index="3cqZAp" />
       </concept>
+      <concept id="1068580123140" name="jetbrains.mps.baseLanguage.structure.ConstructorDeclaration" flags="ig" index="3clFbW" />
       <concept id="1068580320020" name="jetbrains.mps.baseLanguage.structure.IntegerConstant" flags="nn" index="3cmrfG">
         <property id="1068580320021" name="value" index="3cmrfH" />
       </concept>
+      <concept id="1068581242875" name="jetbrains.mps.baseLanguage.structure.PlusExpression" flags="nn" index="3cpWs3" />
       <concept id="1068581242878" name="jetbrains.mps.baseLanguage.structure.ReturnStatement" flags="nn" index="3cpWs6">
         <child id="1068581517676" name="expression" index="3cqZAk" />
       </concept>
@@ -327,6 +332,7 @@
       </concept>
       <concept id="1160666733551" name="jetbrains.mps.baseLanguage.collections.structure.AddAllElementsOperation" flags="nn" index="X8dFx" />
       <concept id="1240325842691" name="jetbrains.mps.baseLanguage.collections.structure.AsSequenceOperation" flags="nn" index="39bAoz" />
+      <concept id="1202120902084" name="jetbrains.mps.baseLanguage.collections.structure.WhereOperation" flags="nn" index="3zZkjj" />
     </language>
   </registry>
   <node concept="312cEu" id="30fQumnG8Au">
@@ -5346,7 +5352,254 @@
       </node>
       <node concept="3Tm1VV" id="2xAA8jguAQE" role="1B3o_S" />
     </node>
-    <node concept="2tJIrI" id="7S$pNDLb5pd" role="jymVt" />
+    <node concept="2tJIrI" id="98RYWubQmJ" role="jymVt" />
+    <node concept="2YIFZL" id="98RYWuc0IW" role="jymVt">
+      <property role="TrG5h" value="ofStructType" />
+      <node concept="3clFbS" id="98RYWuc0IX" role="3clF47">
+        <node concept="3cpWs6" id="98RYWuc0IY" role="3cqZAp">
+          <node concept="2OqwBi" id="98RYWucD0A" role="3cqZAk">
+            <node concept="37vLTw" id="98RYWucC3n" role="2Oq$k0">
+              <ref role="3cqZAo" node="98RYWuc0J6" resolve="seq" />
+            </node>
+            <node concept="3zZkjj" id="98RYWucDX2" role="2OqNvi">
+              <node concept="1bVj0M" id="98RYWucDX4" role="23t8la">
+                <node concept="3clFbS" id="98RYWucDX5" role="1bW5cS">
+                  <node concept="3clFbF" id="98RYWucF2g" role="3cqZAp">
+                    <node concept="2OqwBi" id="98RYWucJyM" role="3clFbG">
+                      <node concept="37vLTw" id="98RYWucHN4" role="2Oq$k0">
+                        <ref role="3cqZAo" node="98RYWuc0J8" resolve="cls" />
+                      </node>
+                      <node concept="liA8E" id="98RYWucK3p" role="2OqNvi">
+                        <ref role="37wK5l" to="t4tl:~SStructClass.isAssignableFrom(org.modelingvalue.dclare.mps.SStructClass)" resolve="isAssignableFrom" />
+                        <node concept="2OqwBi" id="98RYWucF9R" role="37wK5m">
+                          <node concept="37vLTw" id="98RYWucF2f" role="2Oq$k0">
+                            <ref role="3cqZAo" node="98RYWucDX6" resolve="s" />
+                          </node>
+                          <node concept="liA8E" id="98RYWucG7L" role="2OqNvi">
+                            <ref role="37wK5l" to="t4tl:~SStructObject.getSClass()" resolve="getSClass" />
+                          </node>
+                        </node>
+                      </node>
+                    </node>
+                  </node>
+                </node>
+                <node concept="Rh6nW" id="98RYWucDX6" role="1bW2Oz">
+                  <property role="TrG5h" value="s" />
+                  <node concept="2jxLKc" id="98RYWucDX7" role="1tU5fm" />
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+      <node concept="A3Dl8" id="98RYWucyC2" role="3clF45">
+        <node concept="3uibUv" id="98RYWuczpA" role="A3Ik2">
+          <ref role="3uigEE" to="t4tl:~SStructObject" resolve="SStructObject" />
+        </node>
+      </node>
+      <node concept="37vLTG" id="98RYWuc0J6" role="3clF46">
+        <property role="TrG5h" value="seq" />
+        <node concept="A3Dl8" id="98RYWuc$aE" role="1tU5fm">
+          <node concept="3uibUv" id="98RYWuc$aF" role="A3Ik2">
+            <ref role="3uigEE" to="t4tl:~SStructObject" resolve="SStructObject" />
+          </node>
+        </node>
+      </node>
+      <node concept="37vLTG" id="98RYWuc0J8" role="3clF46">
+        <property role="TrG5h" value="cls" />
+        <property role="3TUv4t" value="true" />
+        <node concept="3uibUv" id="98RYWuc0J9" role="1tU5fm">
+          <ref role="3uigEE" to="t4tl:~SStructClass" resolve="SStructClass" />
+        </node>
+      </node>
+      <node concept="3Tm1VV" id="98RYWuc0Ja" role="1B3o_S" />
+    </node>
+    <node concept="2tJIrI" id="98RYWu44c3" role="jymVt" />
+    <node concept="2YIFZL" id="98RYWu8q2L" role="jymVt">
+      <property role="TrG5h" value="instanceofStruct" />
+      <node concept="3clFbS" id="98RYWu8q2M" role="3clF47">
+        <node concept="3cpWs6" id="98RYWu8JpD" role="3cqZAp">
+          <node concept="2OqwBi" id="98RYWu8KMo" role="3cqZAk">
+            <node concept="37vLTw" id="98RYWu8KMp" role="2Oq$k0">
+              <ref role="3cqZAo" node="98RYWu8q3k" resolve="cls" />
+            </node>
+            <node concept="liA8E" id="98RYWu8KMq" role="2OqNvi">
+              <ref role="37wK5l" to="t4tl:~SStructClass.isAssignableFrom(org.modelingvalue.dclare.mps.SStructClass)" resolve="isAssignableFrom" />
+              <node concept="2OqwBi" id="98RYWu8KMr" role="37wK5m">
+                <node concept="37vLTw" id="98RYWu8KMs" role="2Oq$k0">
+                  <ref role="3cqZAo" node="98RYWu8q3i" resolve="obj" />
+                </node>
+                <node concept="liA8E" id="98RYWu8KMt" role="2OqNvi">
+                  <ref role="37wK5l" to="t4tl:~SStructObject.getSClass()" resolve="getSClass" />
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+      <node concept="10P_77" id="98RYWu8L$V" role="3clF45" />
+      <node concept="37vLTG" id="98RYWu8q3i" role="3clF46">
+        <property role="TrG5h" value="obj" />
+        <node concept="3uibUv" id="98RYWu8q3j" role="1tU5fm">
+          <ref role="3uigEE" to="t4tl:~SStructObject" resolve="SStructObject" />
+        </node>
+      </node>
+      <node concept="37vLTG" id="98RYWu8q3k" role="3clF46">
+        <property role="TrG5h" value="cls" />
+        <node concept="3uibUv" id="98RYWu8q3l" role="1tU5fm">
+          <ref role="3uigEE" to="t4tl:~SStructClass" resolve="SStructClass" />
+        </node>
+      </node>
+      <node concept="3Tm1VV" id="98RYWu8q3m" role="1B3o_S" />
+    </node>
+    <node concept="2tJIrI" id="98RYWu89wf" role="jymVt" />
+    <node concept="2YIFZL" id="98RYWu3IYC" role="jymVt">
+      <property role="TrG5h" value="cast" />
+      <node concept="3clFbS" id="98RYWu3IYD" role="3clF47">
+        <node concept="3clFbJ" id="98RYWu3IYM" role="3cqZAp">
+          <node concept="3clFbS" id="98RYWu3IYN" role="3clFbx">
+            <node concept="3cpWs6" id="98RYWu3IYO" role="3cqZAp">
+              <node concept="37vLTw" id="98RYWu3IYP" role="3cqZAk">
+                <ref role="3cqZAo" node="98RYWu3IZa" resolve="obj" />
+              </node>
+            </node>
+          </node>
+          <node concept="2OqwBi" id="98RYWu3IYQ" role="3clFbw">
+            <node concept="37vLTw" id="98RYWu3IYR" role="2Oq$k0">
+              <ref role="3cqZAo" node="98RYWu3IZc" resolve="cls" />
+            </node>
+            <node concept="liA8E" id="98RYWu3IYS" role="2OqNvi">
+              <ref role="37wK5l" to="t4tl:~SStructClass.isAssignableFrom(org.modelingvalue.dclare.mps.SStructClass)" resolve="isAssignableFrom" />
+              <node concept="2OqwBi" id="98RYWu3IYT" role="37wK5m">
+                <node concept="37vLTw" id="98RYWu3IYU" role="2Oq$k0">
+                  <ref role="3cqZAo" node="98RYWu3IZa" resolve="obj" />
+                </node>
+                <node concept="liA8E" id="98RYWu3IYV" role="2OqNvi">
+                  <ref role="37wK5l" to="t4tl:~SStructObject.getSClass()" resolve="getSClass" />
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="3cpWs8" id="98RYWu62ol" role="3cqZAp">
+          <node concept="3cpWsn" id="2a8jTI6sN1I" role="3cpWs9">
+            <property role="TrG5h" value="message" />
+            <node concept="17QB3L" id="2a8jTI6sN1A" role="1tU5fm" />
+            <node concept="3cpWs3" id="2a8jTI6sN1J" role="33vP2m">
+              <node concept="3cpWs3" id="2a8jTI6sN1K" role="3uHU7B">
+                <node concept="3cpWs3" id="2a8jTI6sN1L" role="3uHU7B">
+                  <node concept="2OqwBi" id="98RYWu6yqV" role="3uHU7w">
+                    <node concept="37vLTw" id="98RYWu6yqW" role="2Oq$k0">
+                      <ref role="3cqZAo" node="98RYWu3IZa" resolve="obj" />
+                    </node>
+                    <node concept="liA8E" id="98RYWu6yqX" role="2OqNvi">
+                      <ref role="37wK5l" to="t4tl:~SStructObject.getSClass()" resolve="getSClass" />
+                    </node>
+                  </node>
+                  <node concept="3cpWs3" id="2a8jTI6BTR5" role="3uHU7B">
+                    <node concept="Xl_RD" id="2a8jTI6BTRs" role="3uHU7w">
+                      <property role="Xl_RC" value=", with type " />
+                    </node>
+                    <node concept="3cpWs3" id="2a8jTI6BNnZ" role="3uHU7B">
+                      <node concept="Xl_RD" id="2a8jTI6BM4O" role="3uHU7B">
+                        <property role="Xl_RC" value="Can't cast struct " />
+                      </node>
+                      <node concept="37vLTw" id="2a8jTI6BNqw" role="3uHU7w">
+                        <ref role="3cqZAo" node="98RYWu3IZa" resolve="obj" />
+                      </node>
+                    </node>
+                  </node>
+                </node>
+                <node concept="Xl_RD" id="2a8jTI6sN1T" role="3uHU7w">
+                  <property role="Xl_RC" value=" to type " />
+                </node>
+              </node>
+              <node concept="37vLTw" id="2a8jTI6sN1U" role="3uHU7w">
+                <ref role="3cqZAo" node="98RYWu3IZc" resolve="cls" />
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="YS8fn" id="98RYWu5un_" role="3cqZAp">
+          <node concept="2ShNRf" id="98RYWu5vbM" role="YScLw">
+            <node concept="1pGfFk" id="98RYWu5KoF" role="2ShVmc">
+              <property role="373rjd" value="true" />
+              <ref role="37wK5l" node="98RYWu5OOR" resolve="StructCastException" />
+              <node concept="37vLTw" id="98RYWu6aGL" role="37wK5m">
+                <ref role="3cqZAo" node="2a8jTI6sN1I" resolve="message" />
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+      <node concept="3uibUv" id="98RYWu3IZ9" role="3clF45">
+        <ref role="3uigEE" to="t4tl:~SStructObject" resolve="SStructObject" />
+      </node>
+      <node concept="37vLTG" id="98RYWu3IZa" role="3clF46">
+        <property role="TrG5h" value="obj" />
+        <node concept="3uibUv" id="98RYWu3IZb" role="1tU5fm">
+          <ref role="3uigEE" to="t4tl:~SStructObject" resolve="SStructObject" />
+        </node>
+      </node>
+      <node concept="37vLTG" id="98RYWu3IZc" role="3clF46">
+        <property role="TrG5h" value="cls" />
+        <node concept="3uibUv" id="98RYWu3IZd" role="1tU5fm">
+          <ref role="3uigEE" to="t4tl:~SStructClass" resolve="SStructClass" />
+        </node>
+      </node>
+      <node concept="3Tm1VV" id="98RYWu3IZe" role="1B3o_S" />
+    </node>
+    <node concept="2tJIrI" id="98RYWu2M8y" role="jymVt" />
+    <node concept="2YIFZL" id="98RYWu30kN" role="jymVt">
+      <property role="TrG5h" value="as" />
+      <node concept="3clFbS" id="98RYWu30kO" role="3clF47">
+        <node concept="3clFbJ" id="98RYWu30kX" role="3cqZAp">
+          <node concept="3clFbS" id="98RYWu30kY" role="3clFbx">
+            <node concept="3cpWs6" id="98RYWu30kZ" role="3cqZAp">
+              <node concept="37vLTw" id="98RYWu30l0" role="3cqZAk">
+                <ref role="3cqZAo" node="98RYWu30ll" resolve="obj" />
+              </node>
+            </node>
+          </node>
+          <node concept="2OqwBi" id="98RYWu30l1" role="3clFbw">
+            <node concept="37vLTw" id="98RYWu30l2" role="2Oq$k0">
+              <ref role="3cqZAo" node="98RYWu30ln" resolve="cls" />
+            </node>
+            <node concept="liA8E" id="98RYWu30l3" role="2OqNvi">
+              <ref role="37wK5l" to="t4tl:~SStructClass.isAssignableFrom(org.modelingvalue.dclare.mps.SStructClass)" resolve="isAssignableFrom" />
+              <node concept="2OqwBi" id="98RYWu30l4" role="37wK5m">
+                <node concept="37vLTw" id="98RYWu30l5" role="2Oq$k0">
+                  <ref role="3cqZAo" node="98RYWu30ll" resolve="obj" />
+                </node>
+                <node concept="liA8E" id="98RYWu30l6" role="2OqNvi">
+                  <ref role="37wK5l" to="t4tl:~SStructObject.getSClass()" resolve="getSClass" />
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="3cpWs6" id="98RYWu30li" role="3cqZAp">
+          <node concept="10Nm6u" id="98RYWu30lj" role="3cqZAk" />
+        </node>
+      </node>
+      <node concept="3uibUv" id="98RYWu30lk" role="3clF45">
+        <ref role="3uigEE" to="t4tl:~SStructObject" resolve="SStructObject" />
+      </node>
+      <node concept="37vLTG" id="98RYWu30ll" role="3clF46">
+        <property role="TrG5h" value="obj" />
+        <node concept="3uibUv" id="98RYWu30lm" role="1tU5fm">
+          <ref role="3uigEE" to="t4tl:~SStructObject" resolve="SStructObject" />
+        </node>
+      </node>
+      <node concept="37vLTG" id="98RYWu30ln" role="3clF46">
+        <property role="TrG5h" value="cls" />
+        <node concept="3uibUv" id="98RYWu30lo" role="1tU5fm">
+          <ref role="3uigEE" to="t4tl:~SStructClass" resolve="SStructClass" />
+        </node>
+      </node>
+      <node concept="3Tm1VV" id="98RYWu30lp" role="1B3o_S" />
+    </node>
+    <node concept="2tJIrI" id="98RYWu2Rje" role="jymVt" />
     <node concept="1X3_iC" id="369NrSx7jW1" role="lGtFl">
       <property role="3V$3am" value="member" />
       <property role="3V$3ak" value="f3061a53-9226-4cc5-a443-f952ceaf5816/1107461130800/5375687026011219971" />
@@ -6675,7 +6928,7 @@
       <node concept="3Tm1VV" id="RraJEThJqr" role="1B3o_S" />
       <node concept="3cqZAl" id="RraJETikSZ" role="3clF45" />
     </node>
-    <node concept="2tJIrI" id="5_D06SY5_na" role="jymVt" />
+    <node concept="2tJIrI" id="98RYWu1Dqr" role="jymVt" />
   </node>
   <node concept="2ABs$o" id="rTfv3HeNOH">
     <property role="TrG5h" value="Synthetic" />
@@ -6783,6 +7036,33 @@
     </node>
     <node concept="2tJIrI" id="58x4jvplMU7" role="jymVt" />
     <node concept="3Tm1VV" id="3z4syYPQlIn" role="1B3o_S" />
+  </node>
+  <node concept="312cEu" id="98RYWu5NAw">
+    <property role="TrG5h" value="StructCastException" />
+    <node concept="2tJIrI" id="98RYWu5ONZ" role="jymVt" />
+    <node concept="3clFbW" id="98RYWu5OOR" role="jymVt">
+      <node concept="3cqZAl" id="98RYWu5OOT" role="3clF45" />
+      <node concept="3Tm1VV" id="98RYWu5OOU" role="1B3o_S" />
+      <node concept="3clFbS" id="98RYWu5OOV" role="3clF47">
+        <node concept="XkiVB" id="98RYWu5OTU" role="3cqZAp">
+          <ref role="37wK5l" to="wyt6:~RuntimeException.&lt;init&gt;(java.lang.String)" resolve="RuntimeException" />
+          <node concept="37vLTw" id="98RYWu5QNZ" role="37wK5m">
+            <ref role="3cqZAo" node="98RYWu5OSt" resolve="message" />
+          </node>
+        </node>
+      </node>
+      <node concept="37vLTG" id="98RYWu5OSt" role="3clF46">
+        <property role="TrG5h" value="message" />
+        <node concept="3uibUv" id="98RYWu5OSs" role="1tU5fm">
+          <ref role="3uigEE" to="wyt6:~String" resolve="String" />
+        </node>
+      </node>
+    </node>
+    <node concept="2tJIrI" id="98RYWu5OO7" role="jymVt" />
+    <node concept="3Tm1VV" id="98RYWu5NAx" role="1B3o_S" />
+    <node concept="3uibUv" id="98RYWu5ONR" role="1zkMxy">
+      <ref role="3uigEE" to="wyt6:~RuntimeException" resolve="RuntimeException" />
+    </node>
   </node>
 </model>
 
