@@ -16173,7 +16173,7 @@
           <node concept="17QLQc" id="2vEkERR35If" role="3clFbw">
             <node concept="2OqwBi" id="2vEkERR35Ij" role="3uHU7w">
               <node concept="37vLTw" id="2BHiRxglGzM" role="2Oq$k0">
-                <ref role="3cqZAo" node="hEwIB1U" resolve="checked" />
+                <ref role="3cqZAo" node="hEwIB1U" resolve="subMethod" />
               </node>
               <node concept="3TrcHB" id="2vEkERR35In" role="2OqNvi">
                 <ref role="3TsBF5" to="tpck:h0TrG11" resolve="name" />
@@ -16189,13 +16189,13 @@
         </node>
         <node concept="3cpWs6" id="JuSt8W5Wv0" role="3cqZAp">
           <node concept="BsUDl" id="3xwsMyQkEzi" role="3cqZAk">
-            <ref role="37wK5l" node="JuSt8W4$Q2" resolve="hasSuperParameters" />
+            <ref role="37wK5l" node="JuSt8W4$Q2" resolve="hasSuperParametersOf" />
             <node concept="1PxgMI" id="98RYWuzqwb" role="37wK5m">
               <node concept="chp4Y" id="98RYWuzr8K" role="3oSUPX">
                 <ref role="cht4Q" to="7ggn:3$OkZkHRDLt" resolve="Method" />
               </node>
               <node concept="37vLTw" id="2BHiRxghfK4" role="1m5AlR">
-                <ref role="3cqZAo" node="hEwIB1U" resolve="superMethod" />
+                <ref role="3cqZAo" node="hEwIB1U" resolve="subMethod" />
               </node>
             </node>
           </node>
@@ -16241,7 +16241,7 @@
             <node concept="2OqwBi" id="LxMtFEAJ6L" role="3uHU7w">
               <node concept="2OqwBi" id="LxMtFEAJ6M" role="2Oq$k0">
                 <node concept="37vLTw" id="LxMtFEAJ6N" role="2Oq$k0">
-                  <ref role="3cqZAo" node="JuSt8W4$RH" resolve="checked" />
+                  <ref role="3cqZAo" node="JuSt8W4$RH" resolve="subMethod" />
                 </node>
                 <node concept="3Tsc0h" id="LxMtFEAJ6O" role="2OqNvi">
                   <ref role="3TtcxE" to="tpee:fzclF7Y" resolve="parameter" />
@@ -16260,7 +16260,7 @@
                   <node concept="2OqwBi" id="JuSt8W4$QT" role="2Oq$k0">
                     <node concept="2OqwBi" id="JuSt8W4$QU" role="2Oq$k0">
                       <node concept="37vLTw" id="2BHiRxghg$S" role="2Oq$k0">
-                        <ref role="3cqZAo" node="JuSt8W4$RH" resolve="checked" />
+                        <ref role="3cqZAo" node="JuSt8W4$RH" resolve="subMethod" />
                       </node>
                       <node concept="3Tsc0h" id="JuSt8W4$QW" role="2OqNvi">
                         <ref role="3TtcxE" to="tpee:fzclF7Y" resolve="parameter" />
@@ -16319,12 +16319,12 @@
                 <node concept="3clFbC" id="4ULzEOThRHp" role="3uHU7w">
                   <node concept="10Nm6u" id="4ULzEOThRI5" role="3uHU7w" />
                   <node concept="37vLTw" id="4ULzEOThR_0" role="3uHU7B">
-                    <ref role="3cqZAo" node="JuSt8W4$R2" resolve="foundParamType" />
+                    <ref role="3cqZAo" node="JuSt8W4$R2" resolve="superParamType" />
                   </node>
                 </node>
                 <node concept="3clFbC" id="4ULzEOThRyR" role="3uHU7B">
                   <node concept="37vLTw" id="4ULzEOThRqb" role="3uHU7B">
-                    <ref role="3cqZAo" node="JuSt8W4$QP" resolve="searchedParamType" />
+                    <ref role="3cqZAo" node="JuSt8W4$QP" resolve="subParamType" />
                   </node>
                   <node concept="10Nm6u" id="4ULzEOThRzg" role="3uHU7w" />
                 </node>
@@ -19607,12 +19607,12 @@
         <node concept="3clFbF" id="1O90zDONTDy" role="3cqZAp">
           <node concept="Rm8GO" id="1O90zDONTDz" role="3clFbG">
             <ref role="Rm8GQ" to="tpcz:w4320ilFSj" resolve="ARRAY_OPERATIONS_AND_METHOD_CALLS" />
-            <ref role="1Px2BO" to="tpcz:18ik2d67I23" resolve="Precedence" />
+            <ref role="1Px2BO" to="tpcz:18ik2d67I23" resolve="PrecedenceUtil.Precedence" />
           </node>
         </node>
       </node>
       <node concept="3uibUv" id="1O90zDONTpK" role="3clF45">
-        <ref role="3uigEE" to="tpcz:18ik2d67I23" resolve="Precedence" />
+        <ref role="3uigEE" to="tpcz:18ik2d67I23" resolve="PrecedenceUtil.Precedence" />
       </node>
     </node>
     <node concept="13hLZK" id="98RYWtZaVR" role="13h7CW">

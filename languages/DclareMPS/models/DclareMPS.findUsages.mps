@@ -279,7 +279,7 @@
                   <node concept="3clFbS" id="2JJFdSR0zo4" role="3clFbx">
                     <node concept="1O1abz" id="2JJFdSR0zo5" role="3cqZAp">
                       <node concept="2GrUjf" id="2JJFdSR0zo6" role="1O1k6O">
-                        <ref role="2Gs0qQ" node="htYdZjo" resolve="sMethod" />
+                        <ref role="2Gs0qQ" node="htYdZjo" resolve="method" />
                       </node>
                     </node>
                   </node>

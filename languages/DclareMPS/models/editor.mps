@@ -8860,7 +8860,7 @@
               <node concept="3y3z36" id="1wEcoXjJMZB" role="3cqZAk">
                 <node concept="10Nm6u" id="1wEcoXjJMZC" role="3uHU7w" />
                 <node concept="37vLTw" id="1wEcoXjJMZD" role="3uHU7B">
-                  <ref role="3cqZAo" node="1wEcoXjJMZv" resolve="nodeType" />
+                  <ref role="3cqZAo" node="1wEcoXjJMZv" resolve="structType" />
                 </node>
               </node>
             </node>

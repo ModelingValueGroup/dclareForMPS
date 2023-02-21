@@ -8775,7 +8775,7 @@
               <node concept="1Z2H0r" id="5lV5P9FpSc0" role="mwGJk">
                 <node concept="2OqwBi" id="5lV5P9FpSc3" role="1Z2MuG">
                   <node concept="1YBJjd" id="5lV5P9FpSc4" role="2Oq$k0">
-                    <ref role="1YBMHb" node="7QGAU2f1u$G" resolve="ofConceptOperation" />
+                    <ref role="1YBMHb" node="7QGAU2f1u$G" resolve="ofStructTypeOperation" />
                   </node>
                   <node concept="2qgKlT" id="2gzehMfktRq" role="2OqNvi">
                     <ref role="37wK5l" to="tpek:hEwIP$m" resolve="getOperand" />
@@ -8802,7 +8802,7 @@
         <node concept="2OqwBi" id="5lV5P9FpBXD" role="3clFbw">
           <node concept="2OqwBi" id="5lV5P9FpqW4" role="2Oq$k0">
             <node concept="1YBJjd" id="5lV5P9FpqK1" role="2Oq$k0">
-              <ref role="1YBMHb" node="7QGAU2f1u$G" resolve="ofConceptOperation" />
+              <ref role="1YBMHb" node="7QGAU2f1u$G" resolve="ofStructTypeOperation" />
             </node>
             <node concept="1mfA1w" id="5lV5P9FpATv" role="2OqNvi" />
           </node>
@@ -8819,7 +8819,7 @@
                 <property role="Xl_RC" value="OfStructTypeOperation should be child of DotExpression" />
               </node>
               <node concept="1YBJjd" id="5lV5P9FpEvz" role="1urrMF">
-                <ref role="1YBMHb" node="7QGAU2f1u$G" resolve="ofConceptOperation" />
+                <ref role="1YBMHb" node="7QGAU2f1u$G" resolve="ofStructTypeOperation" />
               </node>
             </node>
           </node>
@@ -8891,7 +8891,7 @@
       <node concept="1Z5TYs" id="3oQEojIS2YN" role="3cqZAp">
         <node concept="mw_s8" id="3oQEojIS2YO" role="1ZfhK$">
           <node concept="1Z$b5t" id="3oQEojIS2YP" role="mwGJk">
-            <ref role="1Z$eMM" node="hgAMcq8" resolve="LeftType" />
+            <ref role="1Z$eMM" node="hgAMcq8" resolve="leftType" />
           </node>
         </node>
         <node concept="mw_s8" id="3oQEojIS2YQ" role="1ZfhKB">
@@ -8957,7 +8957,7 @@
           <node concept="1ZoVOM" id="4T16$5zbheb" role="3cqZAp">
             <node concept="mw_s8" id="4T16$5zbhec" role="1ZfhKB">
               <node concept="1Z$b5t" id="4T16$5zbhed" role="mwGJk">
-                <ref role="1Z$eMM" node="hgAMcq8" resolve="LeftType" />
+                <ref role="1Z$eMM" node="hgAMcq8" resolve="leftType" />
               </node>
             </node>
             <node concept="mw_s8" id="4T16$5zbhee" role="1ZfhK$">
@@ -8970,7 +8970,7 @@
           </node>
         </node>
         <node concept="1Z$b5t" id="hgAMmCz" role="nvjzm">
-          <ref role="1Z$eMM" node="hgAMcq8" resolve="LeftType" />
+          <ref role="1Z$eMM" node="hgAMcq8" resolve="leftType" />
         </node>
         <node concept="2X1qdy" id="i2gOFId" role="2X0Ygz">
           <property role="TrG5h" value="lType" />
