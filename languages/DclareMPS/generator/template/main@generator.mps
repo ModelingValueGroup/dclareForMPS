@@ -5873,7 +5873,7 @@
                     <node concept="2OqwBi" id="98RYWudu69" role="3clFbG">
                       <node concept="1PxgMI" id="98RYWudu6a" role="2Oq$k0">
                         <node concept="chp4Y" id="98RYWudu6b" role="3oSUPX">
-                          <ref role="cht4Q" to="7ggn:7QGAU2f1kyq" resolve="StructIsInstanceOfOperation" />
+                          <ref role="cht4Q" to="7ggn:7QGAU2f1le0" resolve="OfStructTypeOperation" />
                         </node>
                         <node concept="2OqwBi" id="98RYWudu6c" role="1m5AlR">
                           <node concept="30H73N" id="98RYWudu6d" role="2Oq$k0" />
@@ -5883,7 +5883,7 @@
                         </node>
                       </node>
                       <node concept="3TrEf2" id="98RYWudu6f" role="2OqNvi">
-                        <ref role="3Tt5mk" to="7ggn:7QGAU2f1tGO" resolve="class" />
+                        <ref role="3Tt5mk" to="7ggn:7QGAU2f1tGM" resolve="class" />
                       </node>
                     </node>
                   </node>
