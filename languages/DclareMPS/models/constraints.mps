@@ -5843,5 +5843,113 @@
       </node>
     </node>
   </node>
+  <node concept="1M2fIO" id="5x0Fo$W54sG">
+    <property role="3GE5qa" value="native" />
+    <ref role="1M2myG" to="7ggn:5Hwm38JY5Md" resolve="NativeAttributeHandler" />
+    <node concept="1N5Pfh" id="5x0Fo$W54wH" role="1Mr941">
+      <ref role="1N5Vy1" to="7ggn:5Hwm38JY5Me" resolve="attribute" />
+      <node concept="3dgokm" id="5x0Fo$W54Aa" role="1N6uqs">
+        <node concept="3clFbS" id="5x0Fo$W54Ac" role="2VODD2">
+          <node concept="3cpWs8" id="5x0Fo$W55hy" role="3cqZAp">
+            <node concept="3cpWsn" id="5x0Fo$W55hz" role="3cpWs9">
+              <property role="TrG5h" value="ancestor" />
+              <node concept="3Tqbb2" id="5x0Fo$W55h$" role="1tU5fm">
+                <ref role="ehGHo" to="7ggn:61p65V8x$6I" resolve="ThisContext" />
+              </node>
+              <node concept="2OqwBi" id="5x0Fo$W55h_" role="33vP2m">
+                <node concept="2rP1CM" id="5x0Fo$W55hA" role="2Oq$k0" />
+                <node concept="2Xjw5R" id="5x0Fo$W55hB" role="2OqNvi">
+                  <node concept="1xMEDy" id="5x0Fo$W55hC" role="1xVPHs">
+                    <node concept="chp4Y" id="5x0Fo$W55hD" role="ri$Ld">
+                      <ref role="cht4Q" to="7ggn:61p65V8x$6I" resolve="ThisContext" />
+                    </node>
+                  </node>
+                  <node concept="1xIGOp" id="5x0Fo$W55hE" role="1xVPHs" />
+                </node>
+              </node>
+            </node>
+          </node>
+          <node concept="3cpWs8" id="5x0Fo$W55hF" role="3cqZAp">
+            <node concept="3cpWsn" id="5x0Fo$W55hG" role="3cpWs9">
+              <property role="TrG5h" value="contextType" />
+              <node concept="3Tqbb2" id="5x0Fo$W55hH" role="1tU5fm">
+                <ref role="ehGHo" to="tpee:fz3vP1H" resolve="Type" />
+              </node>
+              <node concept="2OqwBi" id="5x0Fo$W55hI" role="33vP2m">
+                <node concept="37vLTw" id="5x0Fo$W55hJ" role="2Oq$k0">
+                  <ref role="3cqZAo" node="5x0Fo$W55hz" resolve="ancestor" />
+                </node>
+                <node concept="2qgKlT" id="5x0Fo$W55hK" role="2OqNvi">
+                  <ref role="37wK5l" to="us1s:29R9$zZWsRH" resolve="getContextType" />
+                </node>
+              </node>
+            </node>
+          </node>
+          <node concept="3cpWs8" id="5x0Fo$W55hL" role="3cqZAp">
+            <node concept="3cpWsn" id="5x0Fo$W55hM" role="3cpWs9">
+              <property role="TrG5h" value="attributes" />
+              <node concept="2I9FWS" id="5x0Fo$W55hN" role="1tU5fm">
+                <ref role="2I9WkF" to="7ggn:4$MeK2bmw9s" resolve="Attribute" />
+              </node>
+              <node concept="2OqwBi" id="5x0Fo$W55hO" role="33vP2m">
+                <node concept="35c_gC" id="5x0Fo$W55hP" role="2Oq$k0">
+                  <ref role="35c_gD" to="7ggn:29R9$zZUovD" resolve="RuleSet" />
+                </node>
+                <node concept="2qgKlT" id="5x0Fo$W55hQ" role="2OqNvi">
+                  <ref role="37wK5l" to="us1s:6aMI9gIOknz" resolve="visibleAttributes" />
+                  <node concept="2rP1CM" id="5x0Fo$W55hR" role="37wK5m" />
+                </node>
+              </node>
+            </node>
+          </node>
+          <node concept="3cpWs6" id="5x0Fo$W55hS" role="3cqZAp">
+            <node concept="2YIFZM" id="5x0Fo$W55hT" role="3cqZAk">
+              <ref role="37wK5l" to="o8zo:3jEbQoczdCs" resolve="forResolvableElements" />
+              <ref role="1Pybhc" to="o8zo:4IP40Bi3e_R" resolve="ListScope" />
+              <node concept="2OqwBi" id="5x0Fo$W55hU" role="37wK5m">
+                <node concept="37vLTw" id="5x0Fo$W55hV" role="2Oq$k0">
+                  <ref role="3cqZAo" node="5x0Fo$W55hM" resolve="attributes" />
+                </node>
+                <node concept="3zZkjj" id="5x0Fo$W55hW" role="2OqNvi">
+                  <node concept="1bVj0M" id="5x0Fo$W55hX" role="23t8la">
+                    <node concept="3clFbS" id="5x0Fo$W55hY" role="1bW5cS">
+                      <node concept="3clFbF" id="5x0Fo$W55hZ" role="3cqZAp">
+                        <node concept="1Wc70l" id="5x0Fo$W55i0" role="3clFbG">
+                          <node concept="2OqwBi" id="5x0Fo$W55i1" role="3uHU7B">
+                            <node concept="37vLTw" id="5x0Fo$W55i2" role="2Oq$k0">
+                              <ref role="3cqZAo" node="5x0Fo$W55i9" resolve="a" />
+                            </node>
+                            <node concept="2qgKlT" id="5x0Fo$W55i3" role="2OqNvi">
+                              <ref role="37wK5l" to="us1s:58RYP7nvur4" resolve="isTypeInScope" />
+                              <node concept="37vLTw" id="5x0Fo$W55i4" role="37wK5m">
+                                <ref role="3cqZAo" node="5x0Fo$W55hG" resolve="contextType" />
+                              </node>
+                            </node>
+                          </node>
+                          <node concept="2OqwBi" id="5x0Fo$W55i5" role="3uHU7w">
+                            <node concept="2qgKlT" id="5x0Fo$W55i6" role="2OqNvi">
+                              <ref role="37wK5l" to="us1s:64dupBntiWc" resolve="isConstantOk" />
+                              <node concept="2rP1CM" id="5x0Fo$W55i7" role="37wK5m" />
+                            </node>
+                            <node concept="37vLTw" id="5x0Fo$W55i8" role="2Oq$k0">
+                              <ref role="3cqZAo" node="5x0Fo$W55i9" resolve="a" />
+                            </node>
+                          </node>
+                        </node>
+                      </node>
+                    </node>
+                    <node concept="Rh6nW" id="5x0Fo$W55i9" role="1bW2Oz">
+                      <property role="TrG5h" value="a" />
+                      <node concept="2jxLKc" id="5x0Fo$W55ia" role="1tU5fm" />
+                    </node>
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+  </node>
 </model>
 
