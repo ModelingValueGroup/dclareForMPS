@@ -67,7 +67,8 @@ public class MPSSerializationHelper extends SerializationHelperWithPool<DObjectT
     @SuppressWarnings("unchecked")
     @Override
     public DObjectType<?> getMutableClass(DObject s) {
-        return s.dClass();
+        DObjectType<DObject> type = (DObjectType<DObject>) DObject.TYPE.get(s);
+        return type != DObject.TYPE.getDefault() ? type : (DObjectType<DObject>) s.getType();
     }
 
     private static class DModuleConverter extends BaseConverter<DModule> {
