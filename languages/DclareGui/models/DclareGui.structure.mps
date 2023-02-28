@@ -51,12 +51,12 @@
       <property role="20lmBu" value="fLJjDmT/aggregation" />
       <property role="20kJfa" value="nodes" />
       <property role="20lbJX" value="fLJekj5/_0__n" />
-      <ref role="20lvS9" node="31sbKqyPLDe" resolve="Node" />
+      <ref role="20lvS9" node="31sbKqyPLDe" resolve="NodeLayout" />
     </node>
   </node>
   <node concept="1TIwiD" id="31sbKqyPLDe">
     <property role="EcuMT" value="3484711917226236494" />
-    <property role="TrG5h" value="Node" />
+    <property role="TrG5h" value="NodeLayout" />
     <property role="3GE5qa" value="diagrams" />
     <ref role="1TJDcQ" to="tpck:gw2VY9q" resolve="BaseConcept" />
     <node concept="1TJgyi" id="31sbKqyPLDJ" role="1TKVEl">
@@ -73,19 +73,19 @@
       <property role="IQ2ns" value="3484711917226236495" />
       <property role="20kJfa" value="node" />
       <property role="20lbJX" value="fLJekj4/_1" />
-      <ref role="20lvS9" to="tpck:gw2VY9q" resolve="BaseConcept" />
+      <ref role="20lvS9" to="tpck:h0TrEE$" resolve="INamedConcept" />
     </node>
     <node concept="1TJgyj" id="31sbKqyPLEi" role="1TKVEi">
       <property role="IQ2ns" value="3484711917226236562" />
       <property role="20lmBu" value="fLJjDmT/aggregation" />
       <property role="20kJfa" value="edges" />
       <property role="20lbJX" value="fLJekj5/_0__n" />
-      <ref role="20lvS9" node="31sbKqyPLDj" resolve="Edge" />
+      <ref role="20lvS9" node="31sbKqyPLDj" resolve="EdgeLayout" />
     </node>
   </node>
   <node concept="1TIwiD" id="31sbKqyPLDj">
     <property role="EcuMT" value="3484711917226236499" />
-    <property role="TrG5h" value="Edge" />
+    <property role="TrG5h" value="EdgeLayout" />
     <property role="3GE5qa" value="diagrams" />
     <ref role="1TJDcQ" to="tpck:gw2VY9q" resolve="BaseConcept" />
     <node concept="1TJgyj" id="31sbKqyPMf4" role="1TKVEi">
@@ -93,18 +93,18 @@
       <property role="20lmBu" value="fLJjDmT/aggregation" />
       <property role="20kJfa" value="joints" />
       <property role="20lbJX" value="fLJekj5/_0__n" />
-      <ref role="20lvS9" node="31sbKqyPLDm" resolve="Joint" />
+      <ref role="20lvS9" node="31sbKqyPLDm" resolve="JointLayout" />
     </node>
     <node concept="1TJgyj" id="31sbKqyPLDk" role="1TKVEi">
       <property role="IQ2ns" value="3484711917226236500" />
       <property role="20kJfa" value="association" />
       <property role="20lbJX" value="fLJekj4/_1" />
-      <ref role="20lvS9" to="tpck:gw2VY9q" resolve="BaseConcept" />
+      <ref role="20lvS9" to="tpck:h0TrEE$" resolve="INamedConcept" />
     </node>
   </node>
   <node concept="1TIwiD" id="31sbKqyPLDm">
     <property role="EcuMT" value="3484711917226236502" />
-    <property role="TrG5h" value="Joint" />
+    <property role="TrG5h" value="JointLayout" />
     <property role="3GE5qa" value="diagrams" />
     <ref role="1TJDcQ" to="tpck:gw2VY9q" resolve="BaseConcept" />
     <node concept="1TJgyi" id="31sbKqyPMf7" role="1TKVEl">
