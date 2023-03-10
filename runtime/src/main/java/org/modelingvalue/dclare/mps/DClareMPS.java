@@ -659,9 +659,9 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
                     } while (!diff[0].isEmpty());
                 });
             }
-            runChangeHandlers(queuedChangeHandlers);
+            read(() -> runChangeHandlers(queuedChangeHandlers));
             if (last) {
-                runChangeHandlers(deferredChangeHandlers);
+                read(() -> runChangeHandlers(deferredChangeHandlers));
                 if (!setted.isEmpty()) {
                     changed = true;
                     read(() -> {

@@ -3,12 +3,12 @@
   <persistence version="9" />
   <languages>
     <use id="18bc6592-03a6-4e29-a83a-7ff23bde13ba" name="jetbrains.mps.lang.editor" version="14" />
-    <use id="aee9cad2-acd4-4608-aef2-0004f6a1cdbd" name="jetbrains.mps.lang.actions" version="4" />
     <use id="c32b788d-8e4b-4023-97f5-3e90d04ed77b" name="DclareMPS" version="5" />
     <devkit ref="fbc25dd2-5da4-483a-8b19-70928e1b62d7(jetbrains.mps.devkit.general-purpose)" />
   </languages>
   <imports>
     <import index="q3xn" ref="r:3ec44d77-eb4f-4600-add0-5e671af45a7b(DclareGui.rules)" />
+    <import index="u4ym" ref="r:1a96ceaa-2946-43e0-af3f-cd05d77ee6d1(DclareMPSRuntime.util)" />
     <import index="53d4" ref="r:0049729d-ba70-461b-8d8a-b0755e3bfabb(DclareGui.structure)" implicit="true" />
     <import index="tpck" ref="r:00000000-0000-4000-0000-011c89590288(jetbrains.mps.lang.core.structure)" implicit="true" />
   </imports>
@@ -198,31 +198,31 @@
     <property role="TrG5h" value="DiagramComponent" />
     <property role="3GE5qa" value="diagrams" />
     <ref role="1XX52x" to="53d4:31sbKqyPLDd" resolve="Diagram" />
-    <node concept="3EZMnI" id="4Oa6zO0B35r" role="2wV5jI">
-      <node concept="l2Vlx" id="4Oa6zO0B35s" role="2iSdaV" />
-      <node concept="3gTLQM" id="4Oa6zNZyZZB" role="3EZMnx">
-        <node concept="3Fmcul" id="4Oa6zNZyZZD" role="3FoqZy">
-          <node concept="3clFbS" id="4Oa6zNZyZZF" role="2VODD2">
-            <node concept="3clFbF" id="4Oa6zO0lNLc" role="3cqZAp">
-              <node concept="2OqwBi" id="3OZjsowqAjU" role="3clFbG">
-                <node concept="pncrf" id="4Oa6zO0ADn5" role="2Oq$k0" />
-                <node concept="32jkxy" id="3OZjsowqAD8" role="2OqNvi">
-                  <ref role="3cqZAo" to="q3xn:4Oa6zO0AAEF" resolve="jComponent" />
+    <node concept="3EZMnI" id="Vg5FswJUJu" role="2wV5jI">
+      <node concept="2iRfu4" id="Vg5FswJUJv" role="2iSdaV" />
+      <node concept="3gTLQM" id="Vg5FswJUDm" role="3EZMnx">
+        <node concept="3Fmcul" id="Vg5FswJUDo" role="3FoqZy">
+          <node concept="3clFbS" id="Vg5FswJUDq" role="2VODD2">
+            <node concept="3clFbF" id="Vg5FswK5a$" role="3cqZAp">
+              <node concept="2OqwBi" id="Vg5FswK5rs" role="3clFbG">
+                <node concept="pncrf" id="Vg5FswK5az" role="2Oq$k0" />
+                <node concept="32jkxy" id="Vg5FswK63N" role="2OqNvi">
+                  <ref role="3cqZAo" to="q3xn:Vg5FswJWWZ" resolve="jComponent" />
                 </node>
               </node>
             </node>
           </node>
         </node>
       </node>
-      <node concept="pkWqt" id="4Oa6zO0B3c8" role="pqm2j">
-        <node concept="3clFbS" id="4Oa6zO0B3c9" role="2VODD2">
-          <node concept="3clFbF" id="4Oa6zO0B3gL" role="3cqZAp">
-            <node concept="3y3z36" id="4Oa6zO0B4pl" role="3clFbG">
-              <node concept="10Nm6u" id="4Oa6zO0B4Jf" role="3uHU7w" />
-              <node concept="2OqwBi" id="4Oa6zO0B3gN" role="3uHU7B">
-                <node concept="pncrf" id="4Oa6zO0B3gO" role="2Oq$k0" />
-                <node concept="32jkxy" id="4Oa6zO0B3gP" role="2OqNvi">
-                  <ref role="3cqZAo" to="q3xn:4Oa6zO0AAEF" resolve="jComponent" />
+      <node concept="pkWqt" id="Vg5FswJUPB" role="pqm2j">
+        <node concept="3clFbS" id="Vg5FswJUPC" role="2VODD2">
+          <node concept="3clFbF" id="Vg5FswJUTD" role="3cqZAp">
+            <node concept="3y3z36" id="Vg5FswK4Tt" role="3clFbG">
+              <node concept="10Nm6u" id="Vg5FswK59A" role="3uHU7w" />
+              <node concept="2OqwBi" id="Vg5FswJV8e" role="3uHU7B">
+                <node concept="pncrf" id="Vg5FswJUTC" role="2Oq$k0" />
+                <node concept="32jkxy" id="Vg5FswK4a0" role="2OqNvi">
+                  <ref role="3cqZAo" to="q3xn:Vg5FswJWWZ" resolve="jComponent" />
                 </node>
               </node>
             </node>

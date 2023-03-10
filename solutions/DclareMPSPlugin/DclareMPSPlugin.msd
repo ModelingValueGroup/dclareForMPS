@@ -60,7 +60,7 @@
   </languageVersions>
   <dependencyVersions>
     <module reference="3f233e7f-b8a6-46d2-a57f-795d56775243(Annotations)" version="0" />
-    <module reference="ce36526d-d793-4b8b-88e9-d1815f616441(DclareGui)" version="0" />
+    <module reference="ce36526d-d793-4b8b-88e9-d1815f616441(DclareGui)" version="3" />
     <module reference="c32b788d-8e4b-4023-97f5-3e90d04ed77b(DclareMPS)" version="1" />
     <module reference="a33d2b79-6adc-4ccd-8599-3af01a93f23c(DclareMPSPlugin)" version="0" />
     <module reference="55d6b6f5-8095-4cd0-a39b-779da8d12940(DclareMPSRuntime)" version="0" />
