@@ -7199,7 +7199,7 @@
         </node>
       </node>
       <node concept="2AHcQZ" id="5nC4fNijbd4" role="2AJF6D">
-        <ref role="2AI5Lk" to="wyt6:~Override" />
+        <ref role="2AI5Lk" to="wyt6:~Override" resolve="Override" />
       </node>
     </node>
     <node concept="2tJIrI" id="5nC4fNipg58" role="jymVt" />
@@ -7422,7 +7422,7 @@
       </node>
       <node concept="3clFbS" id="5uiQOXm60dJ" role="3clF47" />
       <node concept="2AHcQZ" id="5uiQOXm60dK" role="2AJF6D">
-        <ref role="2AI5Lk" to="wyt6:~Override" />
+        <ref role="2AI5Lk" to="wyt6:~Override" resolve="Override" />
       </node>
     </node>
     <node concept="2tJIrI" id="5uiQOXm8DUP" role="jymVt" />
@@ -7443,10 +7443,10 @@
           <node concept="3nyPlj" id="5uiQOXm8Gva" role="3clFbG">
             <ref role="37wK5l" to="z60i:~Component.setSize(int,int)" resolve="setSize" />
             <node concept="37vLTw" id="5uiQOXm8Gvb" role="37wK5m">
-              <ref role="3cqZAo" node="5uiQOXm8Gv4" resolve="x" />
+              <ref role="3cqZAo" node="5uiQOXm8Gv4" resolve="w" />
             </node>
             <node concept="37vLTw" id="5uiQOXm8Gvc" role="37wK5m">
-              <ref role="3cqZAo" node="5uiQOXm8Gv6" resolve="y" />
+              <ref role="3cqZAo" node="5uiQOXm8Gv6" resolve="h" />
             </node>
           </node>
         </node>
@@ -8687,7 +8687,7 @@
         </node>
       </node>
       <node concept="2AHcQZ" id="5uiQOXmFXl$" role="2AJF6D">
-        <ref role="2AI5Lk" to="wyt6:~Override" />
+        <ref role="2AI5Lk" to="wyt6:~Override" resolve="Override" />
       </node>
     </node>
     <node concept="3clFb_" id="5uiQOXmFXlC" role="jymVt">
@@ -8711,7 +8711,7 @@
         </node>
       </node>
       <node concept="2AHcQZ" id="5uiQOXmFXlL" role="2AJF6D">
-        <ref role="2AI5Lk" to="wyt6:~Override" />
+        <ref role="2AI5Lk" to="wyt6:~Override" resolve="Override" />
       </node>
     </node>
     <node concept="3clFb_" id="5uiQOXmFXlP" role="jymVt">
@@ -8735,7 +8735,7 @@
         </node>
       </node>
       <node concept="2AHcQZ" id="5uiQOXmFXlY" role="2AJF6D">
-        <ref role="2AI5Lk" to="wyt6:~Override" />
+        <ref role="2AI5Lk" to="wyt6:~Override" resolve="Override" />
       </node>
     </node>
   </node>
