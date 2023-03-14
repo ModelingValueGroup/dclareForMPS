@@ -1045,6 +1045,9 @@
             </node>
             <node concept="3eNFk2" id="2ihDbyJQ8fe" role="3eNLev">
               <node concept="1Wc70l" id="2ihDbyJQ8ff" role="3eO9$A">
+                <node concept="1SfVH9" id="2ihDbyJQ8fs" role="3uHU7B">
+                  <ref role="3cqZAo" node="3nsHMGrYX5W" resolve="hit" />
+                </node>
                 <node concept="3fqX7Q" id="2ihDbyJQ8fi" role="3uHU7w">
                   <node concept="2OqwBi" id="2ihDbyJQ8fj" role="3fr31v">
                     <node concept="37vLTw" id="2ihDbyJQ8fk" role="2Oq$k0">
@@ -1054,9 +1057,6 @@
                       <ref role="3cqZAo" node="76QCTJD2lco" resolve="isLeftMouseDown" />
                     </node>
                   </node>
-                </node>
-                <node concept="1SfVH9" id="2ihDbyJQ8fs" role="3uHU7B">
-                  <ref role="3cqZAo" node="3nsHMGrYX5W" resolve="hit" />
                 </node>
               </node>
               <node concept="3clFbS" id="2ihDbyJQ8ft" role="3eOfB_">
@@ -4291,12 +4291,6 @@
           <ref role="3uigEE" to="hyam:~KeyAdapter" resolve="KeyAdapter" />
         </node>
       </node>
-      <node concept="1OA3wd" id="17hC4n5Oa$w" role="1OA3wj">
-        <property role="TrG5h" value="focusAdapter" />
-        <node concept="3uibUv" id="17hC4n5OdeZ" role="1tU5fm">
-          <ref role="3uigEE" to="hyam:~FocusAdapter" resolve="FocusAdapter" />
-        </node>
-      </node>
       <node concept="3clFbS" id="3ySjgkDG3w2" role="1OA0iy">
         <node concept="3clFbF" id="76QCTJD30Ub" role="3cqZAp">
           <node concept="37vLTI" id="76QCTJD32U6" role="3clFbG">
@@ -5410,6 +5404,12 @@
           </node>
         </node>
       </node>
+      <node concept="1OA3wd" id="17hC4n5Oa$w" role="1OA3wj">
+        <property role="TrG5h" value="focusAdapter" />
+        <node concept="3uibUv" id="17hC4n5OdeZ" role="1tU5fm">
+          <ref role="3uigEE" to="hyam:~FocusAdapter" resolve="FocusAdapter" />
+        </node>
+      </node>
     </node>
     <node concept="kUGYC" id="76QCTJD3B7E" role="1FPzNG">
       <property role="TrG5h" value="popup" />
@@ -5874,12 +5874,6 @@
         <property role="TrG5h" value="panel" />
         <node concept="3uibUv" id="3nsHMGrWrLE" role="1tU5fm">
           <ref role="3uigEE" to="u4ym:5uiQOXmFP5Y" resolve="DPanel" />
-        </node>
-      </node>
-      <node concept="1OA3wd" id="17hC4n5IwPm" role="1OA3wj">
-        <property role="TrG5h" value="autoFocus" />
-        <node concept="3uibUv" id="17hC4n5IGBm" role="1tU5fm">
-          <ref role="3uigEE" to="hyam:~MouseAdapter" resolve="MouseAdapter" />
         </node>
       </node>
       <node concept="3clFbS" id="3ySjgkDG3we" role="1OA0iy">
@@ -6447,6 +6441,12 @@
               </node>
             </node>
           </node>
+        </node>
+      </node>
+      <node concept="1OA3wd" id="17hC4n5IwPm" role="1OA3wj">
+        <property role="TrG5h" value="autoFocus" />
+        <node concept="3uibUv" id="17hC4n5IGBm" role="1tU5fm">
+          <ref role="3uigEE" to="hyam:~MouseAdapter" resolve="MouseAdapter" />
         </node>
       </node>
     </node>
