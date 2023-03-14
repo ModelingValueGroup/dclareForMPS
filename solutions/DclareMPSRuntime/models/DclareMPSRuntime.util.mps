@@ -366,6 +366,7 @@
       </concept>
       <concept id="1160666733551" name="jetbrains.mps.baseLanguage.collections.structure.AddAllElementsOperation" flags="nn" index="X8dFx" />
       <concept id="1240325842691" name="jetbrains.mps.baseLanguage.collections.structure.AsSequenceOperation" flags="nn" index="39bAoz" />
+      <concept id="1167380149909" name="jetbrains.mps.baseLanguage.collections.structure.RemoveElementOperation" flags="nn" index="3dhRuq" />
       <concept id="1202120902084" name="jetbrains.mps.baseLanguage.collections.structure.WhereOperation" flags="nn" index="3zZkjj" />
     </language>
   </registry>
@@ -7199,7 +7200,7 @@
         </node>
       </node>
       <node concept="2AHcQZ" id="5nC4fNijbd4" role="2AJF6D">
-        <ref role="2AI5Lk" to="wyt6:~Override" />
+        <ref role="2AI5Lk" to="wyt6:~Override" resolve="Override" />
       </node>
     </node>
     <node concept="2tJIrI" id="5nC4fNipg58" role="jymVt" />
@@ -7422,7 +7423,7 @@
       </node>
       <node concept="3clFbS" id="5uiQOXm60dJ" role="3clF47" />
       <node concept="2AHcQZ" id="5uiQOXm60dK" role="2AJF6D">
-        <ref role="2AI5Lk" to="wyt6:~Override" />
+        <ref role="2AI5Lk" to="wyt6:~Override" resolve="Override" />
       </node>
     </node>
     <node concept="2tJIrI" id="5uiQOXm8DUP" role="jymVt" />
@@ -7443,10 +7444,10 @@
           <node concept="3nyPlj" id="5uiQOXm8Gva" role="3clFbG">
             <ref role="37wK5l" to="z60i:~Component.setSize(int,int)" resolve="setSize" />
             <node concept="37vLTw" id="5uiQOXm8Gvb" role="37wK5m">
-              <ref role="3cqZAo" node="5uiQOXm8Gv4" resolve="x" />
+              <ref role="3cqZAo" node="5uiQOXm8Gv4" resolve="w" />
             </node>
             <node concept="37vLTw" id="5uiQOXm8Gvc" role="37wK5m">
-              <ref role="3cqZAo" node="5uiQOXm8Gv6" resolve="y" />
+              <ref role="3cqZAo" node="5uiQOXm8Gv6" resolve="h" />
             </node>
           </node>
         </node>
@@ -8687,7 +8688,7 @@
         </node>
       </node>
       <node concept="2AHcQZ" id="5uiQOXmFXl$" role="2AJF6D">
-        <ref role="2AI5Lk" to="wyt6:~Override" />
+        <ref role="2AI5Lk" to="wyt6:~Override" resolve="Override" />
       </node>
     </node>
     <node concept="3clFb_" id="5uiQOXmFXlC" role="jymVt">
@@ -8711,7 +8712,7 @@
         </node>
       </node>
       <node concept="2AHcQZ" id="5uiQOXmFXlL" role="2AJF6D">
-        <ref role="2AI5Lk" to="wyt6:~Override" />
+        <ref role="2AI5Lk" to="wyt6:~Override" resolve="Override" />
       </node>
     </node>
     <node concept="3clFb_" id="5uiQOXmFXlP" role="jymVt">
@@ -8735,9 +8736,251 @@
         </node>
       </node>
       <node concept="2AHcQZ" id="5uiQOXmFXlY" role="2AJF6D">
-        <ref role="2AI5Lk" to="wyt6:~Override" />
+        <ref role="2AI5Lk" to="wyt6:~Override" resolve="Override" />
       </node>
     </node>
+  </node>
+  <node concept="312cEu" id="17hC4n5BZ7$">
+    <property role="TrG5h" value="DGuiUtil" />
+    <node concept="2tJIrI" id="17hC4n5BZiN" role="jymVt" />
+    <node concept="2YIFZL" id="17hC4n5C4Pa" role="jymVt">
+      <property role="TrG5h" value="setModifiers" />
+      <node concept="3clFbS" id="17hC4n5C4Pd" role="3clF47">
+        <node concept="3clFbJ" id="17hC4n5C6v7" role="3cqZAp">
+          <node concept="3clFbS" id="17hC4n5C6v9" role="3clFbx">
+            <node concept="3clFbF" id="17hC4n5C7iC" role="3cqZAp">
+              <node concept="2OqwBi" id="17hC4n5C7B$" role="3clFbG">
+                <node concept="37vLTw" id="17hC4n5C7iA" role="2Oq$k0">
+                  <ref role="3cqZAo" node="17hC4n5C5rD" resolve="pressedKeys" />
+                </node>
+                <node concept="TSZUe" id="17hC4n5C8iF" role="2OqNvi">
+                  <node concept="10M0yZ" id="17hC4n5Cn2V" role="25WWJ7">
+                    <ref role="3cqZAo" to="hyam:~KeyEvent.VK_ALT" resolve="VK_ALT" />
+                    <ref role="1PxDUh" to="hyam:~KeyEvent" resolve="KeyEvent" />
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+          <node concept="2OqwBi" id="17hC4n5C6Up" role="3clFbw">
+            <node concept="37vLTw" id="17hC4n5C6$o" role="2Oq$k0">
+              <ref role="3cqZAo" node="17hC4n5C6c$" resolve="inputEvent" />
+            </node>
+            <node concept="liA8E" id="17hC4n5C7bn" role="2OqNvi">
+              <ref role="37wK5l" to="hyam:~InputEvent.isAltDown()" resolve="isAltDown" />
+            </node>
+          </node>
+          <node concept="9aQIb" id="17hC4n5C7cY" role="9aQIa">
+            <node concept="3clFbS" id="17hC4n5C7cZ" role="9aQI4">
+              <node concept="3clFbF" id="17hC4n5CoPl" role="3cqZAp">
+                <node concept="2OqwBi" id="17hC4n5CoPm" role="3clFbG">
+                  <node concept="37vLTw" id="17hC4n5CoPn" role="2Oq$k0">
+                    <ref role="3cqZAo" node="17hC4n5C5rD" resolve="pressedKeys" />
+                  </node>
+                  <node concept="3dhRuq" id="17hC4n5Cpjp" role="2OqNvi">
+                    <node concept="10M0yZ" id="17hC4n5Cpjr" role="25WWJ7">
+                      <ref role="1PxDUh" to="hyam:~KeyEvent" resolve="KeyEvent" />
+                      <ref role="3cqZAo" to="hyam:~KeyEvent.VK_ALT" resolve="VK_ALT" />
+                    </node>
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="3clFbJ" id="17hC4n5CqGJ" role="3cqZAp">
+          <node concept="3clFbS" id="17hC4n5CqGK" role="3clFbx">
+            <node concept="3clFbF" id="17hC4n5CqGL" role="3cqZAp">
+              <node concept="2OqwBi" id="17hC4n5CqGM" role="3clFbG">
+                <node concept="37vLTw" id="17hC4n5CqGN" role="2Oq$k0">
+                  <ref role="3cqZAo" node="17hC4n5C5rD" resolve="pressedKeys" />
+                </node>
+                <node concept="TSZUe" id="17hC4n5CqGO" role="2OqNvi">
+                  <node concept="10M0yZ" id="17hC4n5CvYf" role="25WWJ7">
+                    <ref role="3cqZAo" to="hyam:~KeyEvent.VK_ALT_GRAPH" resolve="VK_ALT_GRAPH" />
+                    <ref role="1PxDUh" to="hyam:~KeyEvent" resolve="KeyEvent" />
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+          <node concept="2OqwBi" id="17hC4n5CqGQ" role="3clFbw">
+            <node concept="37vLTw" id="17hC4n5CqGR" role="2Oq$k0">
+              <ref role="3cqZAo" node="17hC4n5C6c$" resolve="inputEvent" />
+            </node>
+            <node concept="liA8E" id="17hC4n5CqGS" role="2OqNvi">
+              <ref role="37wK5l" to="hyam:~InputEvent.isAltGraphDown()" resolve="isAltGraphDown" />
+            </node>
+          </node>
+          <node concept="9aQIb" id="17hC4n5CqGT" role="9aQIa">
+            <node concept="3clFbS" id="17hC4n5CqGU" role="9aQI4">
+              <node concept="3clFbF" id="17hC4n5CqGV" role="3cqZAp">
+                <node concept="2OqwBi" id="17hC4n5CqGW" role="3clFbG">
+                  <node concept="37vLTw" id="17hC4n5CqGX" role="2Oq$k0">
+                    <ref role="3cqZAo" node="17hC4n5C5rD" resolve="pressedKeys" />
+                  </node>
+                  <node concept="3dhRuq" id="17hC4n5CqGY" role="2OqNvi">
+                    <node concept="10M0yZ" id="17hC4n5CwhR" role="25WWJ7">
+                      <ref role="3cqZAo" to="hyam:~KeyEvent.VK_ALT_GRAPH" resolve="VK_ALT_GRAPH" />
+                      <ref role="1PxDUh" to="hyam:~KeyEvent" resolve="KeyEvent" />
+                    </node>
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="3clFbJ" id="17hC4n5CrM0" role="3cqZAp">
+          <node concept="3clFbS" id="17hC4n5CrM1" role="3clFbx">
+            <node concept="3clFbF" id="17hC4n5CrM2" role="3cqZAp">
+              <node concept="2OqwBi" id="17hC4n5CrM3" role="3clFbG">
+                <node concept="37vLTw" id="17hC4n5CrM4" role="2Oq$k0">
+                  <ref role="3cqZAo" node="17hC4n5C5rD" resolve="pressedKeys" />
+                </node>
+                <node concept="TSZUe" id="17hC4n5CrM5" role="2OqNvi">
+                  <node concept="10M0yZ" id="17hC4n5CwQs" role="25WWJ7">
+                    <ref role="3cqZAo" to="hyam:~KeyEvent.VK_CONTROL" resolve="VK_CONTROL" />
+                    <ref role="1PxDUh" to="hyam:~KeyEvent" resolve="KeyEvent" />
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+          <node concept="2OqwBi" id="17hC4n5CrM7" role="3clFbw">
+            <node concept="37vLTw" id="17hC4n5CrM8" role="2Oq$k0">
+              <ref role="3cqZAo" node="17hC4n5C6c$" resolve="inputEvent" />
+            </node>
+            <node concept="liA8E" id="17hC4n5CrM9" role="2OqNvi">
+              <ref role="37wK5l" to="hyam:~InputEvent.isControlDown()" resolve="isControlDown" />
+            </node>
+          </node>
+          <node concept="9aQIb" id="17hC4n5CrMa" role="9aQIa">
+            <node concept="3clFbS" id="17hC4n5CrMb" role="9aQI4">
+              <node concept="3clFbF" id="17hC4n5CrMc" role="3cqZAp">
+                <node concept="2OqwBi" id="17hC4n5CrMd" role="3clFbG">
+                  <node concept="37vLTw" id="17hC4n5CrMe" role="2Oq$k0">
+                    <ref role="3cqZAo" node="17hC4n5C5rD" resolve="pressedKeys" />
+                  </node>
+                  <node concept="3dhRuq" id="17hC4n5CrMf" role="2OqNvi">
+                    <node concept="10M0yZ" id="17hC4n5CwUK" role="25WWJ7">
+                      <ref role="3cqZAo" to="hyam:~KeyEvent.VK_CONTROL" resolve="VK_CONTROL" />
+                      <ref role="1PxDUh" to="hyam:~KeyEvent" resolve="KeyEvent" />
+                    </node>
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="3clFbJ" id="17hC4n5Ct71" role="3cqZAp">
+          <node concept="3clFbS" id="17hC4n5Ct72" role="3clFbx">
+            <node concept="3clFbF" id="17hC4n5Ct73" role="3cqZAp">
+              <node concept="2OqwBi" id="17hC4n5Ct74" role="3clFbG">
+                <node concept="37vLTw" id="17hC4n5Ct75" role="2Oq$k0">
+                  <ref role="3cqZAo" node="17hC4n5C5rD" resolve="pressedKeys" />
+                </node>
+                <node concept="TSZUe" id="17hC4n5Ct76" role="2OqNvi">
+                  <node concept="10M0yZ" id="17hC4n5Cxuj" role="25WWJ7">
+                    <ref role="3cqZAo" to="hyam:~KeyEvent.VK_META" resolve="VK_META" />
+                    <ref role="1PxDUh" to="hyam:~KeyEvent" resolve="KeyEvent" />
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+          <node concept="2OqwBi" id="17hC4n5Ct78" role="3clFbw">
+            <node concept="37vLTw" id="17hC4n5Ct79" role="2Oq$k0">
+              <ref role="3cqZAo" node="17hC4n5C6c$" resolve="inputEvent" />
+            </node>
+            <node concept="liA8E" id="17hC4n5Ct7a" role="2OqNvi">
+              <ref role="37wK5l" to="hyam:~InputEvent.isMetaDown()" resolve="isMetaDown" />
+            </node>
+          </node>
+          <node concept="9aQIb" id="17hC4n5Ct7b" role="9aQIa">
+            <node concept="3clFbS" id="17hC4n5Ct7c" role="9aQI4">
+              <node concept="3clFbF" id="17hC4n5Ct7d" role="3cqZAp">
+                <node concept="2OqwBi" id="17hC4n5Ct7e" role="3clFbG">
+                  <node concept="37vLTw" id="17hC4n5Ct7f" role="2Oq$k0">
+                    <ref role="3cqZAo" node="17hC4n5C5rD" resolve="pressedKeys" />
+                  </node>
+                  <node concept="3dhRuq" id="17hC4n5Ct7g" role="2OqNvi">
+                    <node concept="10M0yZ" id="17hC4n5CxyL" role="25WWJ7">
+                      <ref role="3cqZAo" to="hyam:~KeyEvent.VK_META" resolve="VK_META" />
+                      <ref role="1PxDUh" to="hyam:~KeyEvent" resolve="KeyEvent" />
+                    </node>
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="3clFbJ" id="17hC4n5CuGI" role="3cqZAp">
+          <node concept="3clFbS" id="17hC4n5CuGJ" role="3clFbx">
+            <node concept="3clFbF" id="17hC4n5CuGK" role="3cqZAp">
+              <node concept="2OqwBi" id="17hC4n5CuGL" role="3clFbG">
+                <node concept="37vLTw" id="17hC4n5CuGM" role="2Oq$k0">
+                  <ref role="3cqZAo" node="17hC4n5C5rD" resolve="pressedKeys" />
+                </node>
+                <node concept="TSZUe" id="17hC4n5CuGN" role="2OqNvi">
+                  <node concept="10M0yZ" id="17hC4n5Cy$M" role="25WWJ7">
+                    <ref role="3cqZAo" to="hyam:~KeyEvent.VK_SHIFT" resolve="VK_SHIFT" />
+                    <ref role="1PxDUh" to="hyam:~KeyEvent" resolve="KeyEvent" />
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+          <node concept="2OqwBi" id="17hC4n5CuGP" role="3clFbw">
+            <node concept="37vLTw" id="17hC4n5CuGQ" role="2Oq$k0">
+              <ref role="3cqZAo" node="17hC4n5C6c$" resolve="inputEvent" />
+            </node>
+            <node concept="liA8E" id="17hC4n5CuGR" role="2OqNvi">
+              <ref role="37wK5l" to="hyam:~InputEvent.isShiftDown()" resolve="isShiftDown" />
+            </node>
+          </node>
+          <node concept="9aQIb" id="17hC4n5CuGS" role="9aQIa">
+            <node concept="3clFbS" id="17hC4n5CuGT" role="9aQI4">
+              <node concept="3clFbF" id="17hC4n5CuGU" role="3cqZAp">
+                <node concept="2OqwBi" id="17hC4n5CuGV" role="3clFbG">
+                  <node concept="37vLTw" id="17hC4n5CuGW" role="2Oq$k0">
+                    <ref role="3cqZAo" node="17hC4n5C5rD" resolve="pressedKeys" />
+                  </node>
+                  <node concept="3dhRuq" id="17hC4n5CuGX" role="2OqNvi">
+                    <node concept="10M0yZ" id="17hC4n5CySE" role="25WWJ7">
+                      <ref role="3cqZAo" to="hyam:~KeyEvent.VK_SHIFT" resolve="VK_SHIFT" />
+                      <ref role="1PxDUh" to="hyam:~KeyEvent" resolve="KeyEvent" />
+                    </node>
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="3clFbF" id="17hC4n5C5An" role="3cqZAp">
+          <node concept="37vLTw" id="17hC4n5C5Am" role="3clFbG">
+            <ref role="3cqZAo" node="17hC4n5C5rD" resolve="pressedKeys" />
+          </node>
+        </node>
+      </node>
+      <node concept="3Tm1VV" id="17hC4n5C3v6" role="1B3o_S" />
+      <node concept="2hMVRd" id="17hC4n5C4OM" role="3clF45">
+        <node concept="10Oyi0" id="17hC4n5C4OO" role="2hN53Y" />
+      </node>
+      <node concept="37vLTG" id="17hC4n5C6c$" role="3clF46">
+        <property role="TrG5h" value="inputEvent" />
+        <node concept="3uibUv" id="17hC4n5C6pH" role="1tU5fm">
+          <ref role="3uigEE" to="hyam:~InputEvent" resolve="InputEvent" />
+        </node>
+      </node>
+      <node concept="37vLTG" id="17hC4n5C5rD" role="3clF46">
+        <property role="TrG5h" value="pressedKeys" />
+        <node concept="2hMVRd" id="17hC4n5C5rB" role="1tU5fm">
+          <node concept="10Oyi0" id="17hC4n5C5vu" role="2hN53Y" />
+        </node>
+      </node>
+    </node>
+    <node concept="2tJIrI" id="17hC4n5BZiZ" role="jymVt" />
+    <node concept="3Tm1VV" id="17hC4n5BZ7_" role="1B3o_S" />
   </node>
 </model>
 
