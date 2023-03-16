@@ -27,14 +27,15 @@ import org.modelingvalue.dclare.mps.DAttribute.DIdentifyingAttribute;
 @SuppressWarnings("rawtypes")
 public abstract class DNewableObject<T extends DNewableObject, R, S> extends DIdentifiedObject implements Newable {
 
-    private static final Constant<DNewableObject, Object> ORIGINAL           = Constant.of("$ORIGINAL", null);
+    private static final Constant<DNewableObject, Object>  ORIGINAL           = Constant.of("$ORIGINAL", null);
+    private static final Constant<DNewableObject, Boolean> ORPHAN             = Constant.of("$ORPHAN", Boolean.FALSE);
 
-    protected static final Action<DNewableObject>         READ_OBSERVED_DEEP = Action.of("$READ_OBSERVED_DEEP", DNewableObject::readObservedDeep);
+    protected static final Action<DNewableObject>          READ_OBSERVED_DEEP = Action.of("$READ_OBSERVED_DEEP", DNewableObject::readObservedDeep);
 
     @SuppressWarnings("unchecked")
-    protected static final Set<Observer>                  OBSERVERS          = DObject.OBSERVERS;
+    protected static final Set<Observer>                   OBSERVERS          = DObject.OBSERVERS;
 
-    protected static final Set<Setable>                   SETABLES           = DObject.SETABLES;
+    protected static final Set<Setable>                    SETABLES           = DObject.SETABLES;
 
     protected static <D extends DNewableObject> D quotationConstruct(IRuleSet ruleSet, String anonymousType, Object[] ctx, Supplier<D> supplier) {
         LeafTransaction tx = LeafTransaction.getCurrent();
@@ -123,7 +124,7 @@ public abstract class DNewableObject<T extends DNewableObject, R, S> extends DId
 
     @Override
     protected boolean isRead() {
-        return tryOriginal() != null;
+        return tryOriginal() != null && !ORPHAN.get(this);
     }
 
     @SuppressWarnings("unchecked")
@@ -171,6 +172,7 @@ public abstract class DNewableObject<T extends DNewableObject, R, S> extends DId
         super.exit(dClareMPS);
         S original = tryOriginal();
         if (original != null) {
+            ORPHAN.force(this, Boolean.TRUE);
             exit(dClareMPS, original);
         }
     }
