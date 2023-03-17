@@ -710,6 +710,10 @@
       <concept id="1160612413312" name="jetbrains.mps.baseLanguage.collections.structure.AddElementOperation" flags="nn" index="TSZUe" />
       <concept id="1160666733551" name="jetbrains.mps.baseLanguage.collections.structure.AddAllElementsOperation" flags="nn" index="X8dFx" />
       <concept id="1178286324487" name="jetbrains.mps.baseLanguage.collections.structure.SortDirection" flags="nn" index="1nlBCl" />
+      <concept id="1225621920911" name="jetbrains.mps.baseLanguage.collections.structure.InsertElementOperation" flags="nn" index="1sK_Qi">
+        <child id="1225621943565" name="element" index="1sKFgg" />
+        <child id="1225621960341" name="index" index="1sKJu8" />
+      </concept>
       <concept id="1165525191778" name="jetbrains.mps.baseLanguage.collections.structure.GetFirstOperation" flags="nn" index="1uHKPH" />
       <concept id="1225727723840" name="jetbrains.mps.baseLanguage.collections.structure.FindFirstOperation" flags="nn" index="1z4cxt" />
       <concept id="1202120902084" name="jetbrains.mps.baseLanguage.collections.structure.WhereOperation" flags="nn" index="3zZkjj" />
@@ -13972,6 +13976,40 @@
             <property role="TrG5h" value="e" />
           </node>
           <node concept="3clFbS" id="6omEkmwsXRi" role="2LFqv$">
+            <node concept="3SKdUt" id="7QVQfOyxHXZ" role="3cqZAp">
+              <node concept="1PaTwC" id="7QVQfOyxHY0" role="1aUNEU">
+                <node concept="3oM_SD" id="7QVQfOyxVI7" role="1PaTwD">
+                  <property role="3oM_SC" value="reverse" />
+                </node>
+                <node concept="3oM_SD" id="7QVQfOyxVI9" role="1PaTwD">
+                  <property role="3oM_SC" value="the" />
+                </node>
+                <node concept="3oM_SD" id="7QVQfOyxVIc" role="1PaTwD">
+                  <property role="3oM_SC" value="order" />
+                </node>
+                <node concept="3oM_SD" id="7QVQfOyxVIr" role="1PaTwD">
+                  <property role="3oM_SC" value="because" />
+                </node>
+                <node concept="3oM_SD" id="7QVQfOyxVIw" role="1PaTwD">
+                  <property role="3oM_SC" value="last" />
+                </node>
+                <node concept="3oM_SD" id="7QVQfOyxVIA" role="1PaTwD">
+                  <property role="3oM_SC" value="messages" />
+                </node>
+                <node concept="3oM_SD" id="7QVQfOyxVIH" role="1PaTwD">
+                  <property role="3oM_SC" value="are" />
+                </node>
+                <node concept="3oM_SD" id="7QVQfOyxVIP" role="1PaTwD">
+                  <property role="3oM_SC" value="the" />
+                </node>
+                <node concept="3oM_SD" id="7QVQfOyxVIY" role="1PaTwD">
+                  <property role="3oM_SC" value="most" />
+                </node>
+                <node concept="3oM_SD" id="7QVQfOyxVJ8" role="1PaTwD">
+                  <property role="3oM_SC" value="relevant" />
+                </node>
+              </node>
+            </node>
             <node concept="3clFbF" id="6omEkmwsXRj" role="3cqZAp">
               <node concept="2OqwBi" id="6omEkmwsXRk" role="3clFbG">
                 <node concept="2OqwBi" id="6omEkmwsXRl" role="2Oq$k0">
@@ -13982,8 +14020,11 @@
                     <ref role="3TtcxE" to="wknp:30f$n$3bYxM" resolve="debugs" />
                   </node>
                 </node>
-                <node concept="TSZUe" id="6omEkmwsXRo" role="2OqNvi">
-                  <node concept="2OqwBi" id="6omEkmwsXRp" role="25WWJ7">
+                <node concept="1sK_Qi" id="7QVQfOywJpm" role="2OqNvi">
+                  <node concept="3cmrfG" id="7QVQfOyx5vC" role="1sKJu8">
+                    <property role="3cmrfH" value="0" />
+                  </node>
+                  <node concept="2OqwBi" id="6omEkmwsXRp" role="1sKFgg">
                     <node concept="35c_gC" id="6omEkmwsXRq" role="2Oq$k0">
                       <ref role="35c_gD" to="wknp:7e_PmaZxfwQ" resolve="Message" />
                     </node>
