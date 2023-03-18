@@ -788,6 +788,11 @@
             <ref role="3bR37D" to="ffeo:1TaHNgiIbIZ" resolve="MPS.Editor" />
           </node>
         </node>
+        <node concept="1SiIV0" id="49ovYR6SWEQ" role="3bR37C">
+          <node concept="3bR9La" id="49ovYR6SWER" role="1SiIV1">
+            <ref role="3bR37D" node="5TmHY1kYraS" resolve="DclareMPS" />
+          </node>
+        </node>
       </node>
       <node concept="1E1JtD" id="WHdioYVEvo" role="2G$12L">
         <property role="TrG5h" value="DclareGui" />
