@@ -55,6 +55,7 @@ import org.modelingvalue.dclare.ObserverTransaction;
 import org.modelingvalue.dclare.ReusableTransaction;
 import org.modelingvalue.dclare.Setable;
 import org.modelingvalue.dclare.State;
+import org.modelingvalue.dclare.State.StateMap;
 import org.modelingvalue.dclare.StateDeltaHandler;
 import org.modelingvalue.dclare.Transaction;
 import org.modelingvalue.dclare.TransactionId;
@@ -267,7 +268,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
     private Concurrent<Map<Pair<Object, IChangeHandler>, Pair<Object, Object>>>                     deferredChangeHandlers;
     private int                                                                                     modelCheckNr;
 
-    protected DClareMPS(DclareForMPSEngine engine, ProjectBase project, DclareForMpsConfig config, int nr, Status[] startStatus) {
+    protected DClareMPS(DclareForMPSEngine engine, ProjectBase project, DclareForMpsConfig config, int nr, Consumer<Status> startStatusConsumer) {
         this.nr = nr;
         this.config = config;
         this.project = project;
@@ -279,7 +280,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
         if (config.isTraceDclare()) {
             System.err.println(DclareTrace.getLineStart("BEGIN", null) + this);
         }
-        universeTransaction = new MPSUniverseTransaction(this, thePool, startStatus, config);
+        universeTransaction = new MPSUniverseTransaction(this, thePool, startStatusConsumer, config);
         this.derivationState = new ConstantState("DERIVE", universeTransaction::handleException);
         this.dObserverTransactions = Concurrent.of(() -> new ReusableTransaction<>(universeTransaction));
         this.dCopyObserverTransactions = Concurrent.of(() -> new ReusableTransaction<>(universeTransaction));
@@ -596,6 +597,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
         return obj instanceof DClareMPS && project.equals(((DClareMPS) obj).project);
     }
 
+    @SuppressWarnings("removal")
     @Override
     public String toString() {
         return "Universe[" + project.getName() + ":" + nr + "]";
@@ -986,8 +988,8 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
     private final class MPSUniverseTransaction extends UniverseTransaction {
         private final DclareForMpsConfig config;
 
-        private MPSUniverseTransaction(Universe universe, ContextPool pool, Status[] startStatus, DclareForMpsConfig config) {
-            super(universe, pool, config.getDclareConfig(), startStatus);
+        private MPSUniverseTransaction(Universe universe, ContextPool pool, Consumer<Status> startStatusConsumer, DclareForMpsConfig config) {
+            super(universe, pool, config.getDclareConfig(), startStatusConsumer);
             this.config = config;
         }
 
@@ -1035,8 +1037,8 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
 
         @SuppressWarnings("rawtypes")
         @Override
-        protected State createState(DefaultMap<Object, DefaultMap<Setable, Object>> map) {
-            return new MPSState(this, map);
+        protected State createState(StateMap stateMap) {
+            return new MPSState(this, stateMap);
         }
 
         @Override
@@ -1053,8 +1055,8 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
         private static final long serialVersionUID = 4292875367058590190L;
 
         @SuppressWarnings("rawtypes")
-        private MPSState(UniverseTransaction universeTransaction, DefaultMap<Object, DefaultMap<Setable, Object>> map) {
-            super(universeTransaction, map);
+        private MPSState(UniverseTransaction universeTransaction, StateMap stateMap) {
+            super(universeTransaction, stateMap);
         }
 
         @SuppressWarnings({"unchecked", "rawtypes"})
@@ -1191,6 +1193,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
     }
 
     private class ShutdownHelperThread extends Thread {
+        @SuppressWarnings("removal")
         public ShutdownHelperThread() {
             super("dclare-waitForEnd-" + project.getName());
             setDaemon(true);

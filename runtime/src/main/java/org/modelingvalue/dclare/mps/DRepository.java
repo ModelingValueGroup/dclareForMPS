@@ -15,12 +15,6 @@
 
 package org.modelingvalue.dclare.mps;
 
-import static org.modelingvalue.dclare.SetableModifier.containment;
-import static org.modelingvalue.dclare.SetableModifier.plumbing;
-
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.jetbrains.mps.openapi.model.SModel;
 import org.jetbrains.mps.openapi.model.SModelId;
@@ -40,8 +34,14 @@ import org.modelingvalue.dclare.Observed;
 import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.Setable;
 
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 import jetbrains.mps.errors.item.IssueKindReportItem;
 import jetbrains.mps.project.ProjectRepository;
+
+import static org.modelingvalue.dclare.SetableModifier.containment;
+import static org.modelingvalue.dclare.SetableModifier.plumbing;
 
 @SuppressWarnings("deprecation")
 public class DRepository extends DFromOriginalObject<ProjectRepository> implements SRepository {
@@ -169,6 +169,7 @@ public class DRepository extends DFromOriginalObject<ProjectRepository> implemen
         return false;
     }
 
+    @SuppressWarnings("removal")
     @Override
     public String toString() {
         return original().getProject().getName();

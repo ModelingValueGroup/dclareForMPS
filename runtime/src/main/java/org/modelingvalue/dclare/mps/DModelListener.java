@@ -225,7 +225,7 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
         b().handleMPSChange(() -> {
             DModel dModel = DModel.of(event.getModel());
             if (a().isShared() || DObject.READ_OBSERVEDS.get(dModel).contains(DModel.USED_DEVKITS)) {
-                @SuppressWarnings("deprecation")
+                @SuppressWarnings({"deprecation", "removal"})
                 DevKit devkit = (DevKit) event.getDevkitNamespace().resolve(MPSModuleRepository.getInstance());
                 DModel.USED_DEVKITS.set(dModel, Set::add, devkit);
             }
@@ -237,7 +237,7 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
         b().handleMPSChange(() -> {
             DModel dModel = DModel.of(event.getModel());
             if (a().isShared() || DObject.READ_OBSERVEDS.get(dModel).contains(DModel.USED_DEVKITS)) {
-                @SuppressWarnings("deprecation")
+                @SuppressWarnings({"deprecation", "removal"})
                 DevKit devkit = (DevKit) event.getDevkitNamespace().resolve(MPSModuleRepository.getInstance());
                 DModel.USED_DEVKITS.set(dModel, Set::remove, devkit);
             }
