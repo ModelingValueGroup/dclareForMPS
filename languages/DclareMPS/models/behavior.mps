@@ -12715,8 +12715,8 @@
                           <node concept="3clFbF" id="4_6i6VA5eC8" role="3cqZAp">
                             <node concept="2OqwBi" id="4_6i6VA5eC5" role="3clFbG">
                               <node concept="10M0yZ" id="4_6i6VA5eC6" role="2Oq$k0">
-                                <ref role="1PxDUh" to="wyt6:~System" />
-                                <ref role="3cqZAo" to="wyt6:~System.err" />
+                                <ref role="1PxDUh" to="wyt6:~System" resolve="System" />
+                                <ref role="3cqZAo" to="wyt6:~System.err" resolve="err" />
                               </node>
                               <node concept="liA8E" id="4_6i6VA5eC7" role="2OqNvi">
                                 <ref role="37wK5l" to="guwi:~PrintStream.println(java.lang.String)" resolve="println" />
