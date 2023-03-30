@@ -15,11 +15,11 @@
 
 package org.modelingvalue.dclare.mps;
 
-import java.util.function.Predicate;
-
 import org.jetbrains.mps.openapi.language.SAbstractConcept;
 import org.jetbrains.mps.openapi.language.SConcept;
 import org.jetbrains.mps.openapi.language.SLanguage;
+import org.jetbrains.mps.openapi.model.SModelReference;
+import org.jetbrains.mps.openapi.model.SNode;
 import org.jetbrains.mps.openapi.model.SNodeReference;
 import org.jetbrains.mps.openapi.module.SModule;
 import org.jetbrains.mps.openapi.module.SModuleId;
@@ -33,11 +33,23 @@ import org.modelingvalue.dclare.sync.SerialisationPool.BaseConverter;
 import org.modelingvalue.dclare.sync.SerializationHelperWithPool;
 import org.modelingvalue.dclare.sync.Util;
 
+import java.util.function.Predicate;
+
+import jetbrains.mps.project.DevKit;
 import jetbrains.mps.project.ProjectRepository;
 
 public class MPSSerializationHelper extends SerializationHelperWithPool<DObjectType<?>, DObject, DObserved<DObject, Object>> {
     public MPSSerializationHelper(ProjectRepository repos) {
-        super(Converters.ALL.appendList(List.of(new DObservedConverter(), new DModuleConverter(repos), new DModelConverter(), new DNodeConverter(), new DServceMetaDataConverter(), new SConceptConverter(), new SLanguageConverter())));
+        super(Converters.ALL.appendList(List.of(    //
+                new DevKitConverter(repos),         //
+                new DModuleConverter(repos),        //
+                new DModelConverter(),              //
+                new DNodeConverter(),               //
+                new DServerMetaDataConverter(),     //
+                new SConceptConverter(),            //
+                new SLanguageConverter(),           //
+                new DObservedConverter()            //
+        )));
     }
 
     private static PersistenceFacade mpsPersist() {
@@ -47,8 +59,8 @@ public class MPSSerializationHelper extends SerializationHelperWithPool<DObjectT
     @Override
     public Predicate<Mutable> mutableFilter() {
         return m -> {
-            boolean ret = false;
-            DModel model = m.dAncestor(DModel.class);
+            boolean ret   = false;
+            DModel  model = m.dAncestor(DModel.class);
             if (model == null || model.isShared()) {
                 ret = (m instanceof DModel || m instanceof DNode || m instanceof DServerMetaData) && ((DObject) m).isActive() && !((DObject) m).isDclareOnly();
             }
@@ -59,9 +71,7 @@ public class MPSSerializationHelper extends SerializationHelperWithPool<DObjectT
     @SuppressWarnings("rawtypes")
     @Override
     public Predicate<Setable<DObject, ?>> setableFilter() {
-        return s -> {
-            return s instanceof DObserved && ((Setable) s) != DObject.DCLARE_ISSUES && !(s instanceof DObservedAttribute) && !((DObserved) s).isDclareOnly();
-        };
+        return s -> s instanceof DObserved && s != DObject.DCLARE_ISSUES && !(s instanceof DObservedAttribute) && !((DObserved) s).isDclareOnly();
     }
 
     @SuppressWarnings("unchecked")
@@ -69,6 +79,30 @@ public class MPSSerializationHelper extends SerializationHelperWithPool<DObjectT
     public DObjectType<?> getMutableClass(DObject s) {
         DObjectType<DObject> type = (DObjectType<DObject>) DObject.TYPE.get(s);
         return type != DObject.TYPE.getDefault() ? type : (DObjectType<DObject>) s.getType();
+    }
+
+    private static class DevKitConverter extends BaseConverter<DevKit> {
+        private final ProjectRepository repos;
+
+        public DevKitConverter(ProjectRepository repos) {
+            super(DevKit.class);
+            this.repos = repos;
+        }
+
+        @Override
+        public String serialize(DevKit dk, Object context) {
+            return mpsPersist().asString(dk.getModuleId());
+        }
+
+        @Override
+        public DevKit deserialize(String string, Object context) {
+            SModuleId id     = mpsPersist().createModuleId(string);
+            SModule   module = DObject.dClareMPS().read(() -> repos.getModule(id));
+            if (!(module instanceof DevKit)) {
+                throw new IllegalArgumentException("Module " + id + " is not a DevKit, it is " + (module == null ? "<null>" : "a " + module.getClass().getSimpleName() + "!"));
+            }
+            return (DevKit) module;
+        }
     }
 
     private static class DModuleConverter extends BaseConverter<DModule> {
@@ -86,8 +120,8 @@ public class MPSSerializationHelper extends SerializationHelperWithPool<DObjectT
 
         @Override
         public DModule deserialize(String string, Object context) {
-            SModuleId id = mpsPersist().createModuleId(string);
-            SModule module = DObject.dClareMPS().read(() -> repos.getModule(id));
+            SModuleId id     = mpsPersist().createModuleId(string);
+            SModule   module = DObject.dClareMPS().read(() -> repos.getModule(id));
             return DModule.of(module);
         }
     }
@@ -99,7 +133,11 @@ public class MPSSerializationHelper extends SerializationHelperWithPool<DObjectT
 
         @Override
         public String serialize(DModel m, Object context) {
-            return mpsPersist().asString(m.reference());
+            SModelReference ref = m.reference();
+            if (ref == null) {
+                throw new IllegalArgumentException("DModel " + m + " has <null> reference!");
+            }
+            return mpsPersist().asString(ref);
         }
 
         @Override
@@ -115,22 +153,26 @@ public class MPSSerializationHelper extends SerializationHelperWithPool<DObjectT
 
         @Override
         public String serialize(DNode n, Object context) {
+            SNode orig = n.tryOriginal();
+            if (orig == null) {
+                throw new IllegalArgumentException("DNode " + n + " has <null> original!");
+            }
             return Util.encodeWithLength(//
                     mpsPersist().asString(n.getConcept()), //
-                    mpsPersist().asString(n.tryOriginal().getReference()));
+                    mpsPersist().asString(orig.getReference()));
         }
 
         @Override
         public DNode deserialize(String string, Object context) {
-            String[] concRef = Util.decodeFromLength(string, 2);
-            SConcept con = (SConcept) mpsPersist().createConcept(concRef[0]);
-            SNodeReference ref = mpsPersist().createNodeReference(concRef[1]);
+            String[]       concRef = Util.decodeFromLength(string, 2);
+            SConcept       con     = (SConcept) mpsPersist().createConcept(concRef[0]);
+            SNodeReference ref     = mpsPersist().createNodeReference(concRef[1]);
             return DNode.of(con, ref);
         }
     }
 
-    private static class DServceMetaDataConverter extends BaseConverter<DServerMetaData> {
-        public DServceMetaDataConverter() {
+    private static class DServerMetaDataConverter extends BaseConverter<DServerMetaData> {
+        public DServerMetaDataConverter() {
             super(DServerMetaData.class);
         }
 
