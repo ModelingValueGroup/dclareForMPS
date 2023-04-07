@@ -302,7 +302,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
     public static Observer<DNode> copyObserver(IAspect aspect, DObserved<DNode, ?> observed, TriConsumer<DNode, DNode, DCopy> action) {
         Direction direction = IAspect.DIRECTION.get(aspect);
         return DCopyObserver.of(aspect, observed, node -> {
-            DCopy reason = (DCopy) node.dConstructions().get(direction).reason();
+            DCopy reason = (DCopy) node.dAllDerivations().get(direction).reason();
             action.accept(node, reason.copied(), reason.root());
         }, direction);
     }

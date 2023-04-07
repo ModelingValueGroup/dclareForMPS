@@ -86,7 +86,7 @@ public abstract class DNewableObject<T extends DNewableObject, R, S> extends DId
     }
 
     private Construction getQuotationConstruction(String anonymousType) {
-        for (Construction c : dConstructions()) {
+        for (Construction c : dAllDerivations()) {
             if (c.reason() instanceof DQuotation && ((DQuotation) c.reason()).anonymousType() == anonymousType) {
                 return c;
             }
@@ -102,12 +102,12 @@ public abstract class DNewableObject<T extends DNewableObject, R, S> extends DId
 
     @SuppressWarnings("unchecked")
     protected final DRead<R> referenceReason() {
-        Construction cons = dDirectConstruction();
-        return cons != null && cons.reason() instanceof DRead ? (DRead) cons.reason() : null;
+        Construction cons = dInitialConstruction();
+        return cons.reason() instanceof DRead ? (DRead) cons.reason() : null;
     }
 
     protected Collection<Reason> deriveReasons() {
-        return dConstructions().map(Construction::reason);
+        return dAllDerivations().map(Construction::reason);
     }
 
     public Set<String> getAnonymousTypes() {
