@@ -260,15 +260,8 @@
       </concept>
     </language>
     <language id="ceab5195-25ea-4f22-9b92-103b95ca8c0c" name="jetbrains.mps.lang.core">
-      <concept id="1133920641626" name="jetbrains.mps.lang.core.structure.BaseConcept" flags="ng" index="2VYdi">
-        <child id="5169995583184591170" name="smodelAttribute" index="lGtFl" />
-      </concept>
       <concept id="1169194658468" name="jetbrains.mps.lang.core.structure.INamedConcept" flags="ng" index="TrEIO">
         <property id="1169194664001" name="name" index="TrG5h" />
-      </concept>
-      <concept id="779128492853369165" name="jetbrains.mps.lang.core.structure.SideTransformInfo" flags="ng" index="1KehLL">
-        <property id="779128492853934523" name="cellId" index="1K8rM7" />
-        <property id="779128492853699361" name="side" index="1Kfyot" />
       </concept>
     </language>
     <language id="83888646-71ce-4f1c-9c53-c54016f6ad4f" name="jetbrains.mps.baseLanguage.collections">
@@ -994,11 +987,7 @@
                         <node concept="3cpWs6" id="7N5dIksZgPF" role="3cqZAp">
                           <node concept="3cpWs3" id="7N5dIksZgPG" role="3cqZAk">
                             <node concept="Xl_RD" id="7N5dIksZgPH" role="3uHU7B">
-                              <property role="Xl_RC" value="attr " />
-                              <node concept="1KehLL" id="7N5dIksZgPI" role="lGtFl">
-                                <property role="1K8rM7" value="Constant_fgt3_a0" />
-                                <property role="1Kfyot" value="Fg1jLUVyTf/left" />
-                              </node>
+                              <property role="Xl_RC" value=", attr " />
                             </node>
                             <node concept="37vLTw" id="7N5dIksZgPJ" role="3uHU7w">
                               <ref role="3cqZAo" node="7N5dIksZgP$" resolve="source" />
@@ -1030,19 +1019,15 @@
                         <node concept="3clFbS" id="7N5dIksZgPT" role="3eOfB_">
                           <node concept="3cpWs6" id="7N5dIksZgPU" role="3cqZAp">
                             <node concept="Xl_RD" id="7N5dIksZgPV" role="3cqZAk">
-                              <property role="Xl_RC" value="rule" />
+                              <property role="Xl_RC" value=", rule" />
                             </node>
                           </node>
                         </node>
                       </node>
-                      <node concept="9aQIb" id="7N5dIksZgPW" role="9aQIa">
-                        <node concept="3clFbS" id="7N5dIksZgPX" role="9aQI4">
-                          <node concept="3cpWs6" id="7N5dIksZgPY" role="3cqZAp">
-                            <node concept="Xl_RD" id="7N5dIksZgPZ" role="3cqZAk">
-                              <property role="Xl_RC" value="" />
-                            </node>
-                          </node>
-                        </node>
+                    </node>
+                    <node concept="3cpWs6" id="7N5dIksZgPY" role="3cqZAp">
+                      <node concept="Xl_RD" id="7N5dIksZgPZ" role="3cqZAk">
+                        <property role="Xl_RC" value="" />
                       </node>
                     </node>
                   </node>
@@ -1167,10 +1152,6 @@
                         <node concept="3cpWs3" id="7N5dIksZgOu" role="3cqZAk">
                           <node concept="Xl_RD" id="7N5dIksZgOv" role="3uHU7B">
                             <property role="Xl_RC" value=", attr " />
-                            <node concept="1KehLL" id="7N5dIksZgOw" role="lGtFl">
-                              <property role="1K8rM7" value="Constant_fgt3_a0" />
-                              <property role="1Kfyot" value="Fg1jLUVyTf/left" />
-                            </node>
                           </node>
                           <node concept="37vLTw" id="7N5dIksZgOx" role="3uHU7w">
                             <ref role="3cqZAo" node="7N5dIksZgOm" resolve="source" />
