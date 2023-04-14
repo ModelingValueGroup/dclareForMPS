@@ -228,6 +228,9 @@ public interface DAttribute<O, T> extends DFeature {
 
         @Override
         public V get(C object) {
+            if (object == null) {
+                throw new NullPointerException("attempt to read null." + this);
+            }
             return object.get(this);
         }
 
@@ -328,12 +331,18 @@ public interface DAttribute<O, T> extends DFeature {
 
         @Override
         public V get(C object) {
-            return object != null ? super.get(object) : null;
+            if (object == null) {
+                throw new NullPointerException("attempt to read null." + this);
+            }
+            return super.get(object);
         }
 
         @Override
         public V pre(C object) {
-            return object != null ? super.pre(object) : null;
+            if (object == null) {
+                throw new NullPointerException("attempt to read null." + this);
+            }
+            return super.pre(object);
         }
 
         @Override

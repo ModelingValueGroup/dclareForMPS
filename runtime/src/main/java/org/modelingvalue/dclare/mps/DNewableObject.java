@@ -76,7 +76,7 @@ public abstract class DNewableObject<T extends DNewableObject, R, S> extends DId
         if (c != null) {
             return (V) c.get(attr.index());
         } else {
-            return null;
+            throw new NullPointerException("No Aanonymous Type " + attr.anonymousType() + " found when trying to read " + this + "." + attr);
         }
     }
 
