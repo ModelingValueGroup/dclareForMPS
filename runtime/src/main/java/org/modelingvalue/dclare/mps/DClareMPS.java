@@ -55,7 +55,7 @@ import org.modelingvalue.dclare.ObserverTransaction;
 import org.modelingvalue.dclare.ReusableTransaction;
 import org.modelingvalue.dclare.Setable;
 import org.modelingvalue.dclare.State;
-import org.modelingvalue.dclare.State.StateMap;
+import org.modelingvalue.dclare.StateMap;
 import org.modelingvalue.dclare.StateDeltaHandler;
 import org.modelingvalue.dclare.Transaction;
 import org.modelingvalue.dclare.TransactionId;

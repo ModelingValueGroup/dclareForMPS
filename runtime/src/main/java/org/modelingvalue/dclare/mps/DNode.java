@@ -618,7 +618,11 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
         if (LeafTransaction.getCurrent() instanceof IdentityDerivationTransaction) {
             Optional<DCopy> copy = deriveReasons().filter(DCopy.class).findFirst();
             if (copy.isPresent()) {
-                return copy.get().copied().dIdentity();
+                DNode copied = copy.get().copied();
+                //TODO: this is a hack to prevent infinite recursion (is this ok @Wim?)
+                if (copied != this) {
+                    return copied.dIdentity();
+                }
             }
         }
         DObjectType<?>  dObjectType = dClass();
