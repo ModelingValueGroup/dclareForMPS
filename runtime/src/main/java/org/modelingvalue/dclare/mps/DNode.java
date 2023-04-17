@@ -619,10 +619,10 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
             Optional<DCopy> copy = deriveReasons().filter(DCopy.class).findFirst();
             if (copy.isPresent()) {
                 DNode copied = copy.get().copied();
-                //TODO: this is a hack to prevent infinite recursion (is this ok @Wim?)
                 if (copied != this) {
                     return copied.dIdentity();
                 }
+                System.err.println("INFO: prevented infinite recursion in dIdentity: " + this);
             }
         }
         DObjectType<?>  dObjectType = dClass();
