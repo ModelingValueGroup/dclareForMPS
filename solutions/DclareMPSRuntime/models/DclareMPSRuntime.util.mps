@@ -7137,16 +7137,14 @@
                       </node>
                       <node concept="liA8E" id="3rY1IQ9ZZ7F" role="2OqNvi">
                         <ref role="37wK5l" to="7oz1:~EditorConfigurationBuilder.showLeftHighlighter(boolean)" resolve="showLeftHighlighter" />
-                        <node concept="3clFbT" id="5nC4fNikCbI" role="37wK5m">
+                        <node concept="3clFbT" id="3$xSZ_im4S2" role="37wK5m">
                           <property role="3clFbU" value="true" />
                         </node>
                       </node>
                     </node>
                     <node concept="liA8E" id="4CcGleaTPpp" role="2OqNvi">
                       <ref role="37wK5l" to="7oz1:~EditorConfigurationBuilder.readOnly(boolean)" resolve="readOnly" />
-                      <node concept="3clFbT" id="5nC4fNioFrS" role="37wK5m">
-                        <property role="3clFbU" value="true" />
-                      </node>
+                      <node concept="3clFbT" id="6SQjciYqEse" role="37wK5m" />
                     </node>
                   </node>
                   <node concept="liA8E" id="6q369Il2TIS" role="2OqNvi">
@@ -7165,27 +7163,26 @@
               </node>
               <node concept="liA8E" id="6$WcHcpJjFF" role="2OqNvi">
                 <ref role="37wK5l" to="7oz1:~EditorConfigurationBuilder.withUI(boolean)" resolve="withUI" />
-                <node concept="3clFbT" id="6$WcHcpJkeb" role="37wK5m">
+                <node concept="3clFbT" id="6SQjciYqAOh" role="37wK5m">
                   <property role="3clFbU" value="true" />
                 </node>
               </node>
             </node>
             <node concept="liA8E" id="6$WcHcpJRG7" role="2OqNvi">
               <ref role="37wK5l" to="7oz1:~EditorConfigurationBuilder.hasContextMenu(boolean)" resolve="hasContextMenu" />
-              <node concept="3clFbT" id="5nC4fNikCWd" role="37wK5m">
+              <node concept="3clFbT" id="3$xSZ_im2cT" role="37wK5m">
                 <property role="3clFbU" value="true" />
               </node>
             </node>
           </node>
         </node>
-        <node concept="3clFbF" id="5nC4fNi6BKQ" role="3cqZAp">
-          <node concept="2OqwBi" id="5nC4fNi6Ccz" role="3clFbG">
-            <node concept="1rXfSq" id="5nC4fNi6BKO" role="2Oq$k0">
+        <node concept="3clFbF" id="6SQjciYqYHp" role="3cqZAp">
+          <node concept="2OqwBi" id="6SQjciYqZRk" role="3clFbG">
+            <node concept="1rXfSq" id="6SQjciYqYHr" role="2Oq$k0">
               <ref role="37wK5l" to="exr9:~EditorComponent.getExternalComponent()" resolve="getExternalComponent" />
             </node>
-            <node concept="liA8E" id="5nC4fNi6CS2" role="2OqNvi">
-              <ref role="37wK5l" to="z60i:~Container.remove(java.awt.Component)" resolve="remove" />
-              <node concept="Xjq3P" id="5nC4fNi6EM0" role="37wK5m" />
+            <node concept="liA8E" id="6SQjciYr0Zm" role="2OqNvi">
+              <ref role="37wK5l" to="z60i:~Container.removeAll()" resolve="removeAll" />
             </node>
           </node>
         </node>
@@ -7207,19 +7204,6 @@
       <node concept="2AHcQZ" id="5nC4fNijbd4" role="2AJF6D">
         <ref role="2AI5Lk" to="wyt6:~Override" resolve="Override" />
       </node>
-    </node>
-    <node concept="2tJIrI" id="5nC4fNipg58" role="jymVt" />
-    <node concept="3clFb_" id="5nC4fNipmcO" role="jymVt">
-      <property role="TrG5h" value="deSelectAll" />
-      <node concept="3clFbS" id="5nC4fNipmcR" role="3clF47">
-        <node concept="3clFbF" id="5nC4fNipNYr" role="3cqZAp">
-          <node concept="1rXfSq" id="5nC4fNipNYq" role="3clFbG">
-            <ref role="37wK5l" to="exr9:~EditorComponent.clearSelectionStack()" resolve="clearSelectionStack" />
-          </node>
-        </node>
-      </node>
-      <node concept="3Tm1VV" id="5nC4fNipjU0" role="1B3o_S" />
-      <node concept="3cqZAl" id="5nC4fNipm5z" role="3clF45" />
     </node>
     <node concept="2tJIrI" id="5nC4fNikLxR" role="jymVt" />
     <node concept="3clFb_" id="5nC4fNikMKK" role="jymVt">
