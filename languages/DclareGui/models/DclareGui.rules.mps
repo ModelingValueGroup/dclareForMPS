@@ -5998,6 +5998,19 @@
             </node>
           </node>
         </node>
+        <node concept="3clFbF" id="faO$66_4GI" role="3cqZAp">
+          <node concept="2OqwBi" id="faO$66_5yb" role="3clFbG">
+            <node concept="5IyTM" id="faO$66_4GG" role="2Oq$k0">
+              <ref role="3cqZAo" node="3nsHMGrWoxt" resolve="panel" />
+            </node>
+            <node concept="liA8E" id="faO$66_8Z8" role="2OqNvi">
+              <ref role="37wK5l" to="z60i:~Container.setFocusCycleRoot(boolean)" resolve="setFocusCycleRoot" />
+              <node concept="3clFbT" id="faO$66_9pa" role="37wK5m">
+                <property role="3clFbU" value="true" />
+              </node>
+            </node>
+          </node>
+        </node>
         <node concept="3clFbF" id="3nsHMGrWFjn" role="3cqZAp">
           <node concept="37vLTI" id="3nsHMGrWFLe" role="3clFbG">
             <node concept="5IyTM" id="3nsHMGrWFSo" role="37vLTx">
