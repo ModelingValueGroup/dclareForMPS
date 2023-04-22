@@ -4573,8 +4573,8 @@
                                 </node>
                               </node>
                               <node concept="3clFbC" id="5uiQOXmbbeM" role="3clFbw">
-                                <node concept="10M0yZ" id="5uiQOXmbdJk" role="3uHU7w">
-                                  <ref role="3cqZAo" to="hyam:~MouseEvent.BUTTON2" resolve="BUTTON2" />
+                                <node concept="10M0yZ" id="4EauV0Xf0V_" role="3uHU7w">
+                                  <ref role="3cqZAo" to="hyam:~MouseEvent.BUTTON3" resolve="BUTTON3" />
                                   <ref role="1PxDUh" to="hyam:~MouseEvent" resolve="MouseEvent" />
                                 </node>
                                 <node concept="2OqwBi" id="5uiQOXmbbeO" role="3uHU7B">
@@ -4773,8 +4773,8 @@
                                 </node>
                               </node>
                               <node concept="3clFbC" id="5uiQOXmbg8C" role="3clFbw">
-                                <node concept="10M0yZ" id="5uiQOXmbg8D" role="3uHU7w">
-                                  <ref role="3cqZAo" to="hyam:~MouseEvent.BUTTON2" resolve="BUTTON2" />
+                                <node concept="10M0yZ" id="4EauV0Xf2jl" role="3uHU7w">
+                                  <ref role="3cqZAo" to="hyam:~MouseEvent.BUTTON3" resolve="BUTTON3" />
                                   <ref role="1PxDUh" to="hyam:~MouseEvent" resolve="MouseEvent" />
                                 </node>
                                 <node concept="2OqwBi" id="5uiQOXmbg8E" role="3uHU7B">
