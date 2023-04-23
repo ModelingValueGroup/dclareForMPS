@@ -45,7 +45,7 @@
     <import index="7oz1" ref="1ed103c3-3aa6-49b7-9c21-6765ee11f224/java:jetbrains.mps.nodeEditor.configuration(MPS.Editor/)" />
     <import index="dxuu" ref="6354ebe7-c22a-4a0f-ac54-50b52ab9b065/java:javax.swing(JDK/)" />
     <import index="hyam" ref="6354ebe7-c22a-4a0f-ac54-50b52ab9b065/java:java.awt.event(JDK/)" />
-    <import index="wvnl" ref="1ed103c3-3aa6-49b7-9c21-6765ee11f224/java:jetbrains.mps.openapi.editor.extensions(MPS.Editor/)" implicit="true" />
+    <import index="wvnl" ref="1ed103c3-3aa6-49b7-9c21-6765ee11f224/java:jetbrains.mps.openapi.editor.extensions(MPS.Editor/)" />
   </imports>
   <registry>
     <language id="f3061a53-9226-4cc5-a443-f952ceaf5816" name="jetbrains.mps.baseLanguage">
@@ -7119,29 +7119,15 @@
       </node>
       <node concept="3clFbS" id="Vg5FswJdtX" role="3clF47">
         <node concept="XkiVB" id="2GFnA8g6IP4" role="3cqZAp">
-          <ref role="37wK5l" to="exr9:~EditorComponent.&lt;init&gt;(org.jetbrains.mps.openapi.module.SRepository)" resolve="EditorComponent" />
+          <ref role="37wK5l" to="exr9:~NodeEditorComponent.&lt;init&gt;(org.jetbrains.mps.openapi.module.SRepository)" resolve="NodeEditorComponent" />
           <node concept="37vLTw" id="2GFnA8g6Olv" role="37wK5m">
             <ref role="3cqZAo" node="Vg5FswJdtT" resolve="repository" />
           </node>
         </node>
-        <node concept="3clFbF" id="5De31zVJQXm" role="3cqZAp">
-          <node concept="2YIFZM" id="5De31zVJSlL" role="3clFbG">
-            <ref role="37wK5l" to="wvnl:~EditorExtensionUtil.extendUsingProject(jetbrains.mps.openapi.editor.EditorComponent,jetbrains.mps.project.IProject)" resolve="extendUsingProject" />
-            <ref role="1Pybhc" to="wvnl:~EditorExtensionUtil" resolve="EditorExtensionUtil" />
-            <node concept="Xjq3P" id="5De31zVJUr7" role="37wK5m" />
-            <node concept="2YIFZM" id="5De31zVOuur" role="37wK5m">
-              <ref role="37wK5l" to="alof:~ProjectHelper.getProject(org.jetbrains.mps.openapi.module.SRepository)" resolve="getProject" />
-              <ref role="1Pybhc" to="alof:~ProjectHelper" resolve="ProjectHelper" />
-              <node concept="37vLTw" id="5De31zVOvP4" role="37wK5m">
-                <ref role="3cqZAo" node="Vg5FswJdtT" resolve="repository" />
-              </node>
-            </node>
-          </node>
-        </node>
       </node>
     </node>
-    <node concept="3uibUv" id="2GFnA8g6DD0" role="1zkMxy">
-      <ref role="3uigEE" to="exr9:~EditorComponent" resolve="EditorComponent" />
+    <node concept="3uibUv" id="2cgTHFPCjSj" role="1zkMxy">
+      <ref role="3uigEE" to="exr9:~NodeEditorComponent" resolve="NodeEditorComponent" />
     </node>
     <node concept="2tJIrI" id="fazSmxsuuv" role="jymVt" />
     <node concept="3clFb_" id="5nC4fNijbcQ" role="jymVt">
