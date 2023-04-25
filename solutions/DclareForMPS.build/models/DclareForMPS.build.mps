@@ -851,6 +851,11 @@
             <ref role="3bR37D" to="ffeo:1TaHNgiIbIZ" resolve="MPS.Editor" />
           </node>
         </node>
+        <node concept="1SiIV0" id="7ITIZyUs$E8" role="3bR37C">
+          <node concept="3bR9La" id="7ITIZyUs$E9" role="1SiIV1">
+            <ref role="3bR37D" to="ffeo:1H905DlDUSw" resolve="MPS.OpenAPI" />
+          </node>
+        </node>
       </node>
       <node concept="1E1JtA" id="1OC_PYbrjI5" role="2G$12L">
         <property role="TrG5h" value="DclareRuntime" />
