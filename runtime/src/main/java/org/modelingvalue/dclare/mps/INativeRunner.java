@@ -21,6 +21,8 @@ public interface INativeRunner {
 
     void run(Runnable runable);
 
+    void runNow(Runnable runable);
+
     ProjectBase project();
 
 }
