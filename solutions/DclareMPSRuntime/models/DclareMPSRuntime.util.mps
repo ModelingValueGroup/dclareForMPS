@@ -4424,7 +4424,7 @@
             </node>
             <node concept="2OqwBi" id="p2Piothhte" role="3K4GZi">
               <node concept="37vLTw" id="21fkvY58NtS" role="2Oq$k0">
-                <ref role="3cqZAo" node="21fkvY58BuB" resolve="f" />
+                <ref role="3cqZAo" node="21fkvY58BuB" resolve="function" />
               </node>
               <node concept="1Bd96e" id="p2PiothilF" role="2OqNvi" />
             </node>
@@ -7451,7 +7451,7 @@
         </node>
       </node>
       <node concept="2AHcQZ" id="5De31zVtdWI" role="2AJF6D">
-        <ref role="2AI5Lk" to="wyt6:~Override" />
+        <ref role="2AI5Lk" to="wyt6:~Override" resolve="Override" />
       </node>
     </node>
     <node concept="2tJIrI" id="5De31zVP03p" role="jymVt" />
