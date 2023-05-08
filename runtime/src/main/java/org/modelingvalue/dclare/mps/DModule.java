@@ -1,5 +1,5 @@
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// (C) Copyright 2018-2022 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
+// (C) Copyright 2018-2023 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
 //                                                                                                                     ~
 // Licensed under the GNU Lesser General Public License v3.0 (the 'License'). You may not use this file except in      ~
 // compliance with the License. You may obtain a copy of the License at: https://choosealicense.com/licenses/lgpl-3.0  ~
@@ -42,6 +42,7 @@ import jetbrains.mps.errors.item.ModuleReportItem;
 import jetbrains.mps.extapi.model.SModelBase;
 import jetbrains.mps.extapi.module.SModuleBase;
 import jetbrains.mps.model.ModelDeleteHelper;
+import jetbrains.mps.project.DevKit;
 import jetbrains.mps.project.Solution;
 import jetbrains.mps.smodel.Generator;
 import jetbrains.mps.smodel.Language;
@@ -99,7 +100,15 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
     @Override
     protected DModuleType getType() {
         Set<SLanguage> languages = LANGUAGES_WITH_RULES.get(this);
+        if (isLanguage() && !isExternal()) {
+            languages = languages.addAll(DRepository.CONTAINED_LANGUAGES_WITH_RULES.get(getRepository()));
+        }
         return MODULE_TYPE.get(languages);
+    }
+
+    @Override
+    protected DModuleType getBootstrapType() {
+        return MODULE_TYPE.get(Set.of());
     }
 
     @Override
@@ -269,6 +278,10 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
 
     public boolean isSolution() {
         return original() instanceof Solution;
+    }
+
+    public boolean isDevKit() {
+        return original() instanceof DevKit;
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})

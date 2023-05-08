@@ -1,5 +1,5 @@
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// (C) Copyright 2018-2022 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
+// (C) Copyright 2018-2023 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
 //                                                                                                                     ~
 // Licensed under the GNU Lesser General Public License v3.0 (the 'License'). You may not use this file except in      ~
 // compliance with the License. You may obtain a copy of the License at: https://choosealicense.com/licenses/lgpl-3.0  ~
@@ -15,10 +15,8 @@
 
 package org.modelingvalue.dclare.mps;
 
+import org.modelingvalue.collections.DefaultMap;
 import org.modelingvalue.collections.List;
-import org.modelingvalue.collections.Map;
-import org.modelingvalue.collections.QualifiedSet;
-import org.modelingvalue.collections.util.Triple;
 
 public interface EngineStatusHandler {
 
@@ -26,7 +24,7 @@ public interface EngineStatusHandler {
 
     void aspects(List<IAspect> apects, DclareForMpsStatus status);
 
-    void messages(Map<DMessageType, QualifiedSet<Triple<DObject, DFeature, String>, DMessage>> messages, DclareForMpsStatus status);
+    void messages(DefaultMap<DMessageType, List<DMessage>> messages, DclareForMpsStatus status);
 
     void start(DclareForMpsStatus status);
 

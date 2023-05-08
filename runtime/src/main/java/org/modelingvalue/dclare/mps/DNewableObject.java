@@ -1,5 +1,5 @@
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// (C) Copyright 2018-2022 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
+// (C) Copyright 2018-2023 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
 //                                                                                                                     ~
 // Licensed under the GNU Lesser General Public License v3.0 (the 'License'). You may not use this file except in      ~
 // compliance with the License. You may obtain a copy of the License at: https://choosealicense.com/licenses/lgpl-3.0  ~
@@ -27,14 +27,15 @@ import org.modelingvalue.dclare.mps.DAttribute.DIdentifyingAttribute;
 @SuppressWarnings("rawtypes")
 public abstract class DNewableObject<T extends DNewableObject, R, S> extends DIdentifiedObject implements Newable {
 
-    private static final Constant<DNewableObject, Object> ORIGINAL           = Constant.of("$ORIGINAL", null);
+    private static final Constant<DNewableObject, Object>  ORIGINAL           = Constant.of("$ORIGINAL", null);
+    private static final Constant<DNewableObject, Boolean> ORPHAN             = Constant.of("$ORPHAN", Boolean.FALSE);
 
-    protected static final Action<DNewableObject>         READ_OBSERVED_DEEP = Action.of("$READ_OBSERVED_DEEP", DNewableObject::readObservedDeep);
+    protected static final Action<DNewableObject>          READ_OBSERVED_DEEP = Action.of("$READ_OBSERVED_DEEP", DNewableObject::readObservedDeep);
 
     @SuppressWarnings("unchecked")
-    protected static final Set<Observer>                  OBSERVERS          = DObject.OBSERVERS;
+    protected static final Set<Observer>                   OBSERVERS          = DObject.OBSERVERS;
 
-    protected static final Set<Setable>                   SETABLES           = DObject.SETABLES;
+    protected static final Set<Setable>                    SETABLES           = DObject.SETABLES;
 
     protected static <D extends DNewableObject> D quotationConstruct(IRuleSet ruleSet, String anonymousType, Object[] ctx, Supplier<D> supplier) {
         LeafTransaction tx = LeafTransaction.getCurrent();
@@ -75,7 +76,7 @@ public abstract class DNewableObject<T extends DNewableObject, R, S> extends DId
         if (c != null) {
             return (V) c.get(attr.index());
         } else {
-            return null;
+            throw new NullPointerException("No Aanonymous Type " + attr.anonymousType() + " found when trying to read " + this + "." + attr);
         }
     }
 
@@ -85,7 +86,7 @@ public abstract class DNewableObject<T extends DNewableObject, R, S> extends DId
     }
 
     private Construction getQuotationConstruction(String anonymousType) {
-        for (Construction c : dConstructions()) {
+        for (Construction c : dAllDerivations()) {
             if (c.reason() instanceof DQuotation && ((DQuotation) c.reason()).anonymousType() == anonymousType) {
                 return c;
             }
@@ -101,12 +102,12 @@ public abstract class DNewableObject<T extends DNewableObject, R, S> extends DId
 
     @SuppressWarnings("unchecked")
     protected final DRead<R> referenceReason() {
-        Construction cons = dDirectConstruction();
-        return cons != null && cons.reason() instanceof DRead ? (DRead) cons.reason() : null;
+        Construction cons = dInitialConstruction();
+        return cons.reason() instanceof DRead ? (DRead) cons.reason() : null;
     }
 
     protected Collection<Reason> deriveReasons() {
-        return dConstructions().map(Construction::reason);
+        return dAllDerivations().map(Construction::reason);
     }
 
     public Set<String> getAnonymousTypes() {
@@ -118,12 +119,12 @@ public abstract class DNewableObject<T extends DNewableObject, R, S> extends DId
     }
 
     public Set<SLanguage> getAnonymousLanguages() {
-        return deriveReasons().filter(DQuotation.class).map(DDerive::language).notNull().toSet();
+        return deriveReasons().filter(DQuotation.class).map(DDerive::aspect).flatMap(d -> IAspect.ALL_DEPENDENCIES.get(d)).map(IAspect::getLanguage).toSet();
     }
 
     @Override
     protected boolean isRead() {
-        return ORIGINAL.isSet(this);
+        return tryOriginal() != null && !ORPHAN.get(this);
     }
 
     @SuppressWarnings("unchecked")
@@ -171,6 +172,7 @@ public abstract class DNewableObject<T extends DNewableObject, R, S> extends DId
         super.exit(dClareMPS);
         S original = tryOriginal();
         if (original != null) {
+            ORPHAN.force(this, Boolean.TRUE);
             exit(dClareMPS, original);
         }
     }

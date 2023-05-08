@@ -1,5 +1,5 @@
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// (C) Copyright 2018-2022 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
+// (C) Copyright 2018-2023 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
 //                                                                                                                     ~
 // Licensed under the GNU Lesser General Public License v3.0 (the 'License'). You may not use this file except in      ~
 // compliance with the License. You may obtain a copy of the License at: https://choosealicense.com/licenses/lgpl-3.0  ~
@@ -17,7 +17,7 @@ package org.modelingvalue.dclare.mps;
 
 import java.util.Arrays;
 
-import org.jetbrains.mps.openapi.language.SConcept;
+import org.jetbrains.mps.openapi.language.SAbstractConcept;
 import org.jetbrains.mps.openapi.model.SNode;
 import org.modelingvalue.collections.util.IdentifiedByArray;
 
@@ -58,8 +58,8 @@ public class Signature extends IdentifiedByArray implements Comparable<Signature
             return false;
         } else {
             for (int i = 0; i < size(); i++) {
-                if (get(i) instanceof SConcept && sup.get(i) instanceof SConcept) {
-                    if (!((SConcept) get(i)).isSubConceptOf((SConcept) sup.get(i))) {
+                if (get(i) instanceof SAbstractConcept && sup.get(i) instanceof SAbstractConcept) {
+                    if (!((SAbstractConcept) get(i)).isSubConceptOf((SAbstractConcept) sup.get(i))) {
                         return false;
                     }
                 } else if (get(i) instanceof SStructClass && sup.get(i) instanceof SStructClass) {

@@ -1,5 +1,5 @@
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// (C) Copyright 2018-2022 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
+// (C) Copyright 2018-2023 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
 //                                                                                                                     ~
 // Licensed under the GNU Lesser General Public License v3.0 (the 'License'). You may not use this file except in      ~
 // compliance with the License. You may obtain a copy of the License at: https://choosealicense.com/licenses/lgpl-3.0  ~
@@ -22,6 +22,7 @@ import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.dclare.Constant;
+import org.modelingvalue.dclare.State;
 
 @SuppressWarnings("unused")
 public class DStructObject extends DIdentifiedObject implements SStructObject {
@@ -43,7 +44,13 @@ public class DStructObject extends DIdentifiedObject implements SStructObject {
 
     @Override
     public boolean isExternal() {
-        return false;
+        return getSClass().isValueClass();
+    }
+
+    @SuppressWarnings("rawtypes")
+    @Override
+    public boolean dIsOrphan(State state) {
+        return !isExternal() && super.dIsOrphan(state);
     }
 
     @Override
@@ -54,12 +61,17 @@ public class DStructObject extends DIdentifiedObject implements SStructObject {
     @Override
     protected DStructClass getType() {
         DObject dParent = dObjectParent();
-        Set<SLanguage> ls = dParent != null ? TYPE.get(dParent).getLanguages() : Set.of();
+        Set<SLanguage> ls = (dParent != null && !dParent.isExternal() ? dParent : getContextObject()).dClass().getLanguages();
         SLanguage lang = getSClass().getLanguage();
         if (!DClareMPS.ACTIVE_RULE_SETS.get(lang).isEmpty()) {
             ls = ls.add(lang);
         }
         return CLASS_OBJECT_TYPE.get(Pair.of(ls, getSClass()));
+    }
+
+    @Override
+    protected DStructClass getBootstrapType() {
+        return CLASS_OBJECT_TYPE.get(Pair.of(Set.of(), getSClass()));
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})

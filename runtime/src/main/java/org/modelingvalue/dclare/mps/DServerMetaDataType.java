@@ -1,5 +1,5 @@
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// (C) Copyright 2018-2022 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
+// (C) Copyright 2018-2023 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
 //                                                                                                                     ~
 // Licensed under the GNU Lesser General Public License v3.0 (the 'License'). You may not use this file except in      ~
 // compliance with the License. You may obtain a copy of the License at: https://choosealicense.com/licenses/lgpl-3.0  ~
@@ -23,8 +23,8 @@ import org.modelingvalue.dclare.Setable;
 
 public class DServerMetaDataType extends DObjectType<String> {
 
-    protected DServerMetaDataType(String s) {
-        super(s);
+    protected DServerMetaDataType() {
+        super("SERVER_METADATA_TYPE");
     }
 
     @SuppressWarnings("rawtypes")
@@ -36,6 +36,12 @@ public class DServerMetaDataType extends DObjectType<String> {
     @SuppressWarnings("rawtypes")
     @Override
     public Set<DAttribute> getAttributes(Set ruleSets) {
+        return Set.of();
+    }
+
+    @SuppressWarnings("rawtypes")
+    @Override
+    public Set<INative> getNatives(Set<IRuleSet> ruleSets) {
         return Set.of();
     }
 

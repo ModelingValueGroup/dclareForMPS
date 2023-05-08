@@ -1,5 +1,5 @@
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// (C) Copyright 2018-2022 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
+// (C) Copyright 2018-2023 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
 //                                                                                                                     ~
 // Licensed under the GNU Lesser General Public License v3.0 (the 'License'). You may not use this file except in      ~
 // compliance with the License. You may obtain a copy of the License at: https://choosealicense.com/licenses/lgpl-3.0  ~
@@ -15,33 +15,31 @@
 
 package org.modelingvalue.dclare.mps;
 
-import org.jetbrains.mps.openapi.model.SNode;
+import org.jetbrains.mps.openapi.model.SNodeReference;
 import org.modelingvalue.collections.List;
-import org.modelingvalue.collections.util.Triple;
 
-public class DMessage extends Triple<DObject, DFeature, String> {
+public class DMessage {
     private static final long  serialVersionUID = -303368640776089669L;
 
     private final Object       content;
-    private List<DMessage>     subMessages      = List.of();
     private final DMessageType type;
+    private final DObject      context;
+    private final DFeature     feature;
+    private List<DMessage>     subMessages      = List.of();
 
-    public DMessage(DObject context, DFeature feature, DMessageType type, String id, Object content) {
-        super(context, feature, id);
-        this.content = content;
+    public DMessage(DObject context, DFeature feature, DMessageType type, Object content) {
+        this.context = context;
+        this.feature = feature;
         this.type = type;
+        this.content = content;
     }
 
     public DObject context() {
-        return a();
+        return context;
     }
 
     public DFeature feature() {
-        return b();
-    }
-
-    public String id() {
-        return c();
+        return feature;
     }
 
     public DMessageType type() {
@@ -52,7 +50,7 @@ public class DMessage extends Triple<DObject, DFeature, String> {
         return content;
     }
 
-    public SNode source() {
+    public SNodeReference source() {
         return feature().getSource();
     }
 

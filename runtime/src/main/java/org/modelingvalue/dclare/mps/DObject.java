@@ -1,5 +1,5 @@
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// (C) Copyright 2018-2022 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
+// (C) Copyright 2018-2023 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
 //                                                                                                                     ~
 // Licensed under the GNU Lesser General Public License v3.0 (the 'License'). You may not use this file except in      ~
 // compliance with the License. You may obtain a copy of the License at: https://choosealicense.com/licenses/lgpl-3.0  ~
@@ -25,12 +25,16 @@ import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
+import org.modelingvalue.collections.util.TriConsumer;
 import org.modelingvalue.dclare.*;
 
 import jetbrains.mps.errors.item.IssueKindReportItem;
 
 @SuppressWarnings({"rawtypes", "unused"})
 public abstract class DObject implements Mutable {
+
+    @SuppressWarnings("unchecked")
+    protected static final DObserved<DObject, Set<?>>                                  INFOS                     = DObserved.of("INFOS", Set.of(), (Function) null, (TriConsumer) null, plumbing);
 
     private static final Runnable                                                      DUMMY_RUNNABLE            = () -> {
                                                                                                                  };
@@ -53,19 +57,28 @@ public abstract class DObject implements Mutable {
 
                                                                                                                      @Override
                                                                                                                      protected Collection<Observer> observers() {
-                                                                                                                         return Set.of(DObject.TYPE_RULE);
+                                                                                                                         return Set.of();                                                                                            // Bootstrap
                                                                                                                      }
 
                                                                                                                      @Override
                                                                                                                      protected Collection<Setable> setables() {
-                                                                                                                         return Set.of(DObject.TYPE);
+                                                                                                                         return Set.of();                                                                                            // Bootstrap
+                                                                                                                     }
+
+                                                                                                                     @Override
+                                                                                                                     public Set<INative> getNatives(Set<IRuleSet> ruleSets) {
+                                                                                                                         return Set.of();
                                                                                                                      }
 
                                                                                                                  };
 
-    public static final DObserved<DObject, DObjectType<?>>                             TYPE                      = DObserved.of("$TYPE", DUMMY_TYPE, DObject::getType, null, plumbing);
+    protected static final Observed<DObject, DObjectType<?>>                           TYPE                      = Observed.of("$TYPE", DUMMY_TYPE, (t, o, b, a) -> {
+                                                                                                                     if (!a.getNatives().isEmpty()) {
+                                                                                                                         DObject.CONTAINED.set(o, true);
+                                                                                                                     }
+                                                                                                                 }, plumbing);
 
-    protected static final Observer<DObject>                                           TYPE_RULE                 = observer(TYPE, DObject::getType);
+    private static final Observer<DObject>                                             TYPE_RULE                 = observer(TYPE, DObject::getType);
 
     protected static final Observed<DObject, DAttribute>                               CONTAINING_ATTRIBUTE      = Observed.of("$CONTAINING_ATTRIBUTE", null, plumbing);
 
@@ -92,7 +105,7 @@ public abstract class DObject implements Mutable {
                                                                                                                  });
 
     protected static final DObserved<DObject, Set<DIssue>>                             DCLARE_ISSUES             = DObserved.of("$DCLARE_ISSUES", Set.of(), null, (dObject, pre, post) -> {
-                                                                                                                 }, containment);
+                                                                                                                 }, plumbing, containment);
 
     protected static final DObserved<DObject, Boolean>                                 CONTAINED                 = DObserved.of("$CONTAINED", Boolean.FALSE, null, (dObject, pre, post) -> {
                                                                                                                  }, plumbing);
@@ -112,7 +125,7 @@ public abstract class DObject implements Mutable {
     }
 
     public java.util.List<DAttribute> getAttributes() {
-        return TYPE.get(this).getAttributes().collect(Collectors.toList());
+        return dClass().getAttributes().collect(Collectors.toList());
     }
 
     public java.util.Set<? extends IssueKindReportItem> getIssues() {
@@ -120,13 +133,16 @@ public abstract class DObject implements Mutable {
     }
 
     public java.util.List<DAttribute> getNonSyntheticAttributes() {
-        return TYPE.get(this).getNonSyntheticAttributes().collect(Collectors.toList());
+        return dClass().getNonSyntheticAttributes().collect(Collectors.toList());
     }
 
     @Override
     public DObjectType<?> dClass() {
-        return TYPE.get(this);
+        DObjectType<?> type = TYPE.get(this);
+        return type == TYPE.getDefault() ? getBootstrapType() : type;
     }
+
+    protected abstract DObjectType<?> getBootstrapType();
 
     @SuppressWarnings("unchecked")
     public Collection<DObject> getAllChildren() {
@@ -199,7 +215,8 @@ public abstract class DObject implements Mutable {
 
     @Override
     public ConstantState dMemoization(AbstractDerivationTransaction tx) {
-        return isExternal() ? tx.universeTransaction().constantState() : Mutable.super.dMemoization(tx);
+        ConstantState constantState = tx.universeTransaction().constantState();
+        return constantState.isSet(tx, this, Mutable.D_PARENT_CONTAINING.constant()) || isExternal() ? constantState : Mutable.super.dMemoization(tx);
     }
 
     public abstract boolean isExternal();
@@ -253,6 +270,10 @@ public abstract class DObject implements Mutable {
 
     protected boolean isActive() {
         return !isExternal() && LeafTransaction.getCurrent().current().get(this, Mutable.D_PARENT_CONTAINING) != null;
+    }
+
+    protected boolean isNative() {
+        return !isExternal() && !dClass().getNatives().isEmpty();
     }
 
 }

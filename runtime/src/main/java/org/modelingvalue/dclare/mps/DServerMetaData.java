@@ -1,5 +1,5 @@
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// (C) Copyright 2018-2022 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
+// (C) Copyright 2018-2023 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
 //                                                                                                                     ~
 // Licensed under the GNU Lesser General Public License v3.0 (the 'License'). You may not use this file except in      ~
 // compliance with the License. You may obtain a copy of the License at: https://choosealicense.com/licenses/lgpl-3.0  ~
@@ -19,13 +19,12 @@ import static org.modelingvalue.dclare.SetableModifier.plumbing;
 
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
-import org.modelingvalue.dclare.Constant;
 import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.Setable;
 
 public class DServerMetaData extends DObject {
 
-    protected static final Constant<String, DServerMetaDataType>   SERVER_METADATA_TYPE = Constant.of("SERVER_METADATA_TYPE", DServerMetaDataType::new);
+    protected static final DServerMetaDataType                     SERVER_METADATA_TYPE = new DServerMetaDataType();
 
     protected static final DObserved<DServerMetaData, Set<DModel>> SHARED_MODELS        = DObserved.of("SHARED_MODELS", Set.of(), null, (m, pre, post) -> {
                                                                                         }, plumbing);
@@ -44,8 +43,13 @@ public class DServerMetaData extends DObject {
     }
 
     @Override
-    protected DObjectType<?> getType() {
-        return SERVER_METADATA_TYPE.get("SERVER_METADATA_TYPE");
+    protected DServerMetaDataType getType() {
+        return SERVER_METADATA_TYPE;
+    }
+
+    @Override
+    protected DServerMetaDataType getBootstrapType() {
+        return SERVER_METADATA_TYPE;
     }
 
     @Override

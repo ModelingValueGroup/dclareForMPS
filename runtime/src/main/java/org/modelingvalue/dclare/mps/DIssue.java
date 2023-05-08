@@ -1,5 +1,5 @@
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// (C) Copyright 2018-2022 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
+// (C) Copyright 2018-2023 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
 //                                                                                                                     ~
 // Licensed under the GNU Lesser General Public License v3.0 (the 'License'). You may not use this file except in      ~
 // compliance with the License. You may obtain a copy of the License at: https://choosealicense.com/licenses/lgpl-3.0  ~
@@ -15,9 +15,6 @@
 
 package org.modelingvalue.dclare.mps;
 
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-
 import org.jetbrains.mps.openapi.model.SModel;
 import org.jetbrains.mps.openapi.model.SNode;
 import org.jetbrains.mps.openapi.module.SModule;
@@ -29,6 +26,9 @@ import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.Setable;
 import org.modelingvalue.dclare.mps.DRule.DObserver;
 import org.modelingvalue.dclare.mps.DRule.DObserverTransaction;
+
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import jetbrains.mps.errors.MessageStatus;
 import jetbrains.mps.errors.item.IssueKindReportItem;
@@ -69,9 +69,14 @@ public class DIssue extends DIdentifiedObject {
     protected static final Set<Setable>                      SETABLES         = DObject.SETABLES.addAll(Set.of(MESSAGE, DOBJECT, SEVERITY, FEATURE));
 
     public static DIssue of(Supplier<DObject> object, Supplier<MessageStatus> severity, Supplier<MessageTarget> feature, Supplier<String> message, Object[] identity) {
-        DObserverTransaction tx = (DObserverTransaction) LeafTransaction.getCurrent();
-        DIssue issue = new DIssue(((DObserver<?>) tx.cls()).rule(), object, severity, feature, message, identity);
-        tx.issues.change(s -> s.add(issue));
+        LeafTransaction tx = LeafTransaction.getCurrent();
+        if (!(tx instanceof DObserverTransaction)) {
+            // we can not store this issue, so we just return null
+            return null;
+        }
+        DObserverTransaction obTx    = (DObserverTransaction) tx;
+        DIssue               issue = new DIssue(((DObserver<?>) obTx.cls()).rule(), object, severity, feature, message, identity);
+        obTx.issues.change(s -> s.add(issue));
         return issue;
     }
 
@@ -137,13 +142,18 @@ public class DIssue extends DIdentifiedObject {
     }
 
     private TypesystemRuleId ruleId() {
-        return new TypesystemRuleId(rule.getSource().getReference());
+        return new TypesystemRuleId(rule.getSource());
     }
 
     @Override
     protected DIssueType getType() {
         MessageStatus severity = getSeverity();
         return ISSUE_TYPE.get(severity != null ? severity : MessageStatus.OK);
+    }
+
+    @Override
+    protected DIssueType getBootstrapType() {
+        return ISSUE_TYPE.get(MessageStatus.OK);
     }
 
     @Override

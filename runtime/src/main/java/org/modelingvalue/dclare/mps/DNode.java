@@ -1,5 +1,5 @@
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// (C) Copyright 2018-2022 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
+// (C) Copyright 2018-2023 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
 //                                                                                                                     ~
 // Licensed under the GNU Lesser General Public License v3.0 (the 'License'). You may not use this file except in      ~
 // compliance with the License. You may obtain a copy of the License at: https://choosealicense.com/licenses/lgpl-3.0  ~
@@ -22,6 +22,7 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.mps.openapi.language.*;
 import org.jetbrains.mps.openapi.model.ResolveInfo;
 import org.jetbrains.mps.openapi.model.SModel;
@@ -44,9 +45,16 @@ import jetbrains.mps.errors.item.NodeReportItem;
 import jetbrains.mps.lang.smodel.generator.smodelAdapter.SNodeOperations;
 import jetbrains.mps.smodel.DynamicReference;
 import jetbrains.mps.smodel.SNodeUtil;
+import jetbrains.mps.smodel.adapter.structure.MetaAdapterFactory;
 
 @SuppressWarnings("unused")
 public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implements SNode {
+
+    private static final SConcept                                                                            QUOTATION_CONCEPT                = MetaAdapterFactory.getConcept(0x3a13115c633c4c5cL, 0xbbcc75c4219e9555L, 0x1168c104659L, "jetbrains.mps.lang.quotation.structure.Quotation");
+    private static final SConcept                                                                            ANTI_QUOTATION_CONCEPT           = MetaAdapterFactory.getConcept(0x3a13115c633c4c5cL, 0xbbcc75c4219e9555L, 0x1168c104658L, "jetbrains.mps.lang.quotation.structure.Antiquotation");
+    private static final SConcept                                                                            LIST_ANTI_QUOTATION_CONCEPT      = MetaAdapterFactory.getConcept(0x3a13115c633c4c5cL, 0xbbcc75c4219e9555L, 0x1168c10465eL, "jetbrains.mps.lang.quotation.structure.ListAntiquotation");
+    private static final SConcept                                                                            PROPERTY_ANTI_QUOTATION_CONCEPT  = MetaAdapterFactory.getConcept(0x3a13115c633c4c5cL, 0xbbcc75c4219e9555L, 0x116aac96587L, "jetbrains.mps.lang.quotation.structure.PropertyAntiquotation");
+    private static final SConcept                                                                            REFERENCE_ANTI_QUOTATION_CONCEPT = MetaAdapterFactory.getConcept(0x3a13115c633c4c5cL, 0xbbcc75c4219e9555L, 0x1168c10465dL, "jetbrains.mps.lang.quotation.structure.ReferenceAntiquotation");
 
     @SuppressWarnings("rawtypes")
     protected static Constant<SAbstractConcept, Set<DRule<SNode>>>                                           RULES                            = Constant.of("RULES", c -> {
@@ -75,13 +83,13 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                               });
 
     protected static final Constant<SConcept, Set<SReferenceLink>>                                           SINGLE_REFERENCES                = Constant.of("SINGLE_REFERENCES", c -> {
-                                                                                                                                                  return Collection.of(c.getReferenceLinks()).exclude(SReferenceLink::isOptional).                                                                           //
+                                                                                                                                                  return Collection.of(c.getReferenceLinks()).exclude(SReferenceLink::isOptional).                                                                                                 //
                                                                                                                                                           exclude(SNodeUtil.concept_BaseConcept.getReferenceLinks()::contains).toSet();
                                                                                                                                               });
 
     @SuppressWarnings("unlikely-arg-type")
     protected static final Constant<SConcept, Set<SContainmentLink>>                                         SINGLE_CONTAINMENTS              = Constant.of("SINGLE_CONTAINMENTS", c -> {
-                                                                                                                                                  return Collection.of(c.getContainmentLinks()).exclude(SContainmentLink::isMultiple).exclude(SContainmentLink::isOptional).                                 //
+                                                                                                                                                  return Collection.of(c.getContainmentLinks()).exclude(SContainmentLink::isMultiple).exclude(SContainmentLink::isOptional).                                                       //
                                                                                                                                                           exclude(SNodeUtil.concept_BaseConcept.getContainmentLinks()::contains).toSet();
                                                                                                                                               });
 
@@ -107,16 +115,16 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
     @SuppressWarnings({"unchecked", "rawtypes"})
     protected static final DObserved<DNode, Map<Object, Object>>                                             USER_OBJECTS                     = DObserved.of("USER_OBJECTS", Map.of(), (Function) null, (TriConsumer) null);
 
-    @SuppressWarnings("deprecation")
+    @SuppressWarnings({"deprecation", "removal"})
     public static final Constant<SProperty, DObserved<DNode, String>>                                        PROPERTY                         = Constant.of("PROPERTY", sp -> DObserved.of(sp, null, dNode -> {
                                                                                                                                                   SNode sNode = dNode.tryOriginal();
                                                                                                                                                   return sNode != null ? sNode.getProperty(sp) : null;
                                                                                                                                               }, (dNode, pre, post) -> {
                                                                                                                                                   SNode sNode = dNode.tryOriginal();
                                                                                                                                                   sNode.setProperty(sp, post);
-                                                                                                                                              }, sp::getDeclarationNode));
+                                                                                                                                              }, () -> sp.getDeclarationNode().getReference()));
 
-    @SuppressWarnings("deprecation")
+    @SuppressWarnings({"deprecation", "removal"})
     public static final Constant<SContainmentLink, DObserved<DNode, List<DNode>>>                            MANY_CONTAINMENT                 = Constant.of("MANY_CONTAINMENT", mc -> DObserved.of(mc, List.of(), dNode -> {
                                                                                                                                                   SNode sNode = dNode.tryOriginal();
                                                                                                                                                   return sNode != null ? children(sNode, mc).map(DNode::of).toList() : List.of();
@@ -131,9 +139,9 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                                       SNode s = r.tryOriginal();
                                                                                                                                                       sNode.removeChild(s);
                                                                                                                                                   });
-                                                                                                                                              }, mc::getDeclarationNode, containment));
+                                                                                                                                              }, () -> mc.getDeclarationNode().getReference(), containment));
 
-    @SuppressWarnings("deprecation")
+    @SuppressWarnings({"deprecation", "removal"})
     public static final Constant<SContainmentLink, DObserved<DNode, DNode>>                                  SINGLE_CONTAINMENT               = Constant.of("SINGLE_CONTAINMENT", sc -> DObserved.of(sc, null, dNode -> {
                                                                                                                                                   SNode sNode = dNode.tryOriginal();
                                                                                                                                                   SNode child = sNode != null ? children(sNode, sc).first() : null;
@@ -150,9 +158,9 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                                       sNode.addChild(sc, s);
                                                                                                                                                       post.init(s);
                                                                                                                                                   }
-                                                                                                                                              }, sc::getDeclarationNode, containment));
+                                                                                                                                              }, () -> sc.getDeclarationNode().getReference(), containment));
 
-    @SuppressWarnings("deprecation")
+    @SuppressWarnings({"deprecation", "removal"})
     public static final Constant<SReferenceLink, DObserved<DNode, DNode>>                                    REFERENCE                        = Constant.of("REFERENCE", sr -> DObserved.of(sr, null, hasOpposite(sr) ? () -> DNode.OPPOSITE.get(sr) : null, dNode -> {
                                                                                                                                                   SNode orig = dNode.tryOriginal();
                                                                                                                                                   SReference ref = orig != null ? orig.getReference(sr) : null;
@@ -162,9 +170,9 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                                   SNode sNode = dNode.tryOriginal();
                                                                                                                                                   SNode soll = post != null ? post.tryOriginal() : null;
                                                                                                                                                   sNode.setReferenceTarget(sr, soll);
-                                                                                                                                              }, sr::getDeclarationNode, orphansAllowed));
-    @SuppressWarnings("deprecation")
-    public static final Constant<SReferenceLink, DObserved<DNode, Set<DNode>>>                               OPPOSITE                         = Constant.of("OPPOSITE", sr -> DObserved.of(Pair.of(sr, "OPPOSITE"), Set.of(), () -> DNode.REFERENCE.get(sr), null, null, sr::getDeclarationNode, synthetic));
+                                                                                                                                              }, () -> sr.getDeclarationNode().getReference(), orphansAllowed));
+    @SuppressWarnings({"deprecation", "removal"})
+    public static final Constant<SReferenceLink, DObserved<DNode, Set<DNode>>>                               OPPOSITE                         = Constant.of("OPPOSITE", sr -> DObserved.of(Pair.of(sr, "OPPOSITE"), Set.of(), () -> DNode.REFERENCE.get(sr), null, null, () -> sr.getDeclarationNode().getReference(), synthetic));
 
     private static final Observer<DNode>                                                                     MODEL_RULE                       = DObject.observer(MODEL, o -> {
                                                                                                                                                   DNode p = o.getAncestor(DNode.class);
@@ -229,14 +237,14 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                               });
 
     @SuppressWarnings("rawtypes")
-    protected static final Constant<SConcept, Set<DObserved>>                                                CONCEPT_DOBSERVEDS               = Constant.of("$CONCEPT_DOBSERVEDS", c -> Collection.concat(                                                                                                   //
-            Collection.of(c.getProperties()),                                                                                                                                                                                                                                                                //
-            Collection.of(c.getContainmentLinks()),                                                                                                                                                                                                                                                          //
+    protected static final Constant<SConcept, Set<DObserved>>                                                CONCEPT_DOBSERVEDS               = Constant.of("$CONCEPT_DOBSERVEDS", c -> Collection.concat(                                                                                                                         //
+            Collection.of(c.getProperties()),                                                                                                                                                                                                                                                                                      //
+            Collection.of(c.getContainmentLinks()),                                                                                                                                                                                                                                                                                //
             Collection.of(c.getReferenceLinks())).map(DNode::dObserved).toSet());
 
     @SuppressWarnings("rawtypes")
-    private static final Constant<SConcept, Set<DObserved>>                                                  CONCEPT_INIT_DOBSERVEDS          = Constant.of("$CONCEPT_INIT_DOBSERVEDS", c -> Collection.concat(                                                                                              //
-            Collection.of(c.getContainmentLinks()),                                                                                                                                                                                                                                                          //
+    private static final Constant<SConcept, Set<DObserved>>                                                  CONCEPT_INIT_DOBSERVEDS          = Constant.of("$CONCEPT_INIT_DOBSERVEDS", c -> Collection.concat(                                                                                                                    //
+            Collection.of(c.getContainmentLinks()),                                                                                                                                                                                                                                                                                //
             Collection.of(c.getReferenceLinks()).filter(DNode::hasOpposite)).map(DNode::dObserved).toSet());
 
     @SuppressWarnings("rawtypes")
@@ -244,11 +252,11 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
 
     protected static final Setable<DNode, Set<Pair<DObject, IssueKindReportItem>>>                           ALL_MPS_ISSUES                   = Setable.of("$ALL_MPS_ISSUES", Set.of(), (tx, o, pre, post) -> {
                                                                                                                                                   DRepository repos = DClareMPS.instance().getRepository();
-                                                                                                                                                  Setable.<Set<Pair<DObject, IssueKindReportItem>>, Pair<DObject, IssueKindReportItem>> diff(pre, post,                                                      //
+                                                                                                                                                  Setable.<Set<Pair<DObject, IssueKindReportItem>>, Pair<DObject, IssueKindReportItem>> diff(pre, post,                                                                            //
                                                                                                                                                           a -> {
                                                                                                                                                               DObject.MPS_ISSUES.set(a.a(), Set::add, a);
                                                                                                                                                               DRepository.ALL_MPS_ISSUES.set(repos, Set::add, a.b());
-                                                                                                                                                          },                                                                                                                                                 //
+                                                                                                                                                          },                                                                                                                                                                       //
                                                                                                                                                           r -> {
                                                                                                                                                               DObject.MPS_ISSUES.set(r.a(), Set::remove, r);
                                                                                                                                                               DRepository.ALL_MPS_ISSUES.set(repos, Set::remove, r.b());
@@ -268,11 +276,22 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
                                                                                                                                                   return o.equals(children) ? 0 : children instanceof List ? ((List) children).firstIndexOf(o) : -1;
                                                                                                                                               });
 
-    @SuppressWarnings("rawtypes")
-    protected static final Set<Observer>                                                                     OBSERVERS                        = DNewableObject.OBSERVERS.addAll(Set.of(ROOT_RULE, MODEL_RULE, INDEX_RULE, ACTIVATE_RULE));
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    protected static final Observed<DNode, Boolean>                                                          QUOTED                           = Observed.of("QUOTED", Boolean.FALSE, plumbing);
 
     @SuppressWarnings("rawtypes")
-    protected static final Set<Setable>                                                                      SETABLES                         = DNewableObject.SETABLES.addAll(Set.of(ROOT, MODEL, USER_OBJECTS, ALL_MPS_ISSUES, INDEX));
+    private static final Observer<DNode>                                                                     QUOTED_RULE                      = DObject.observer(QUOTED, o -> {
+                                                                                                                                                  DNode p = o.getParent();
+                                                                                                                                                  return p != null && (p.isQuotation() || (!p.isAntiQuotation() && QUOTED.get(p)));
+                                                                                                                                              });
+
+    private static final Setable<DNode, SNodeId>                                                             NODE_ID                          = Setable.of("NODE_ID", null);
+
+    @SuppressWarnings("rawtypes")
+    protected static final Set<Observer>                                                                     OBSERVERS                        = DNewableObject.OBSERVERS.addAll(Set.of(ROOT_RULE, MODEL_RULE, INDEX_RULE, ACTIVATE_RULE, QUOTED_RULE));
+
+    @SuppressWarnings("rawtypes")
+    protected static final Set<Setable>                                                                      SETABLES                         = DNewableObject.SETABLES.addAll(Set.of(ROOT, MODEL, USER_OBJECTS, ALL_MPS_ISSUES, INDEX, NODE_ID, QUOTED));
 
     private static void removeWhenAllreadyContained(SNode newParent, SContainmentLink link, SNode node) {
         SNode oldParent = node.getParent();
@@ -284,7 +303,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
     public static Observer<DNode> copyObserver(IAspect aspect, DObserved<DNode, ?> observed, TriConsumer<DNode, DNode, DCopy> action) {
         Direction direction = IAspect.DIRECTION.get(aspect);
         return DCopyObserver.of(aspect, observed, node -> {
-            DCopy reason = (DCopy) node.dConstructions().get(direction).reason();
+            DCopy reason = (DCopy) node.dAllDerivations().get(direction).reason();
             action.accept(node, reason.copied(), reason.root());
         }, direction);
     }
@@ -392,6 +411,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
         return originalConstruct(original, ref, () -> new DNode(new Object[]{uniqueLong(concept), concept, external}));
     }
 
+    @NotNull
     @Override
     public SConcept getConcept() {
         return (SConcept) identity[1];
@@ -419,7 +439,8 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
         SConcept concept = getConcept();
         DModel dModel = getModel();
         SModel sModel = dModel.tryOriginal();
-        return ref != null ? sModel.createNode(concept, ref.getNodeId()) : sModel.createNode(concept);
+        SNodeId nodeId = ref != null ? ref.getNodeId() : NODE_ID.get(this);
+        return nodeId != null ? sModel.createNode(concept, nodeId) : sModel.createNode(concept);
     }
 
     private void setMPSName(SNode sNode) {
@@ -449,15 +470,21 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
     @Override
     protected DNodeType getType() {
         DObject dParent = dObjectParent();
-        Set<SLanguage> ls = dParent != null ? TYPE.get(dParent).getLanguages() : Set.of();
-        SLanguage lang = DClareMPS.LANGUAGE.get(getConcept());
-        if (!DClareMPS.ACTIVE_RULE_SETS.get(lang).isEmpty()) {
-            ls = ls.add(lang);
+        Set<SLanguage> ls = (dParent != null && !dParent.isExternal() ? dParent : getContextObject()).dClass().getLanguages();
+        if (QUOTED.get(this)) {
+            return NODE_TYPE.get(Quadruple.of(ls, SNodeUtil.concept_BaseConcept, Set.of(), Set.of()));
+        } else {
+            ls = ls.addAll(getAnonymousLanguages());
+            return NODE_TYPE.get(Quadruple.of(ls, getConcept(), getAnonymousTypes(), getCopyAspects()));
         }
-        ls = ls.addAll(getAnonymousLanguages());
-        return NODE_TYPE.get(Quadruple.of(ls, getConcept(), getAnonymousTypes(), getCopyAspects()));
     }
 
+    @Override
+    protected DNodeType getBootstrapType() {
+        return NODE_TYPE.get(Quadruple.of(Set.of(), SNodeUtil.concept_BaseConcept, Set.of(), Set.of()));
+    }
+
+    @NotNull
     @Override
     public List<DNode> getChildren() {
         List<DNode> result = List.of();
@@ -542,8 +569,17 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
 
     @Override
     public SNodeId getNodeId() {
-        SNode sNode = tryOriginal();
-        return sNode != null ? sNode.getNodeId() : null;
+        SNodeReference ref = reference();
+        if (ref != null) {
+            return ref.getNodeId();
+        } else {
+            SNodeId nodeId = NODE_ID.current(this);
+            if (nodeId == null) {
+                nodeId = jetbrains.mps.smodel.SModel.generateUniqueId();
+                NODE_ID.set(this, nodeId);
+            }
+            return nodeId;
+        }
     }
 
     @Override
@@ -551,16 +587,18 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
         return getConcept();
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked", "deprecation"})
+    @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
     public Object dIdentity() {
         if (LeafTransaction.getCurrent() instanceof IdentityDerivationTransaction) {
             Optional<DCopy> copy = deriveReasons().filter(DCopy.class).findFirst();
             if (copy.isPresent()) {
-                return copy.get().copied().dIdentity();
+                DNode copied = copy.get().copied();
+                assert (!equals(copied));
+                return copied.dIdentity();
             }
         }
-        DObjectType<?> dObjectType = TYPE.get(this);
+        DObjectType<?> dObjectType = dClass();
         Set<DAttribute> id = dObjectType.getIdentifying();
         if (!id.isEmpty()) {
             Map<DAttribute, Object> map = Map.of();
@@ -611,7 +649,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
     }
 
     @Override
-    public boolean isInstanceOfConcept(SAbstractConcept c) {
+    public boolean isInstanceOfConcept(@NotNull SAbstractConcept c) {
         return getConcept().isSubConceptOf(c);
     }
 
@@ -626,7 +664,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
     }
 
     @Override
-    public void addChild(SContainmentLink role, SNode child) {
+    public void addChild(SContainmentLink role, @NotNull SNode child) {
         DNode dNode = of(child);
         if (role.isMultiple()) {
             MANY_CONTAINMENT.get(role).set(this, List::addUnique, dNode);
@@ -636,7 +674,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
     }
 
     @Override
-    public void insertChildBefore(SContainmentLink role, SNode child, SNode anchor) {
+    public void insertChildBefore(SContainmentLink role, @NotNull SNode child, SNode anchor) {
         DNode dNode = of(child);
         if (role.isMultiple()) {
             MANY_CONTAINMENT.get(role).set(this, (l, e) -> {
@@ -649,7 +687,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
     }
 
     @Override
-    public void insertChildAfter(SContainmentLink role, SNode child, SNode anchor) {
+    public void insertChildAfter(SContainmentLink role, @NotNull SNode child, SNode anchor) {
         DNode dNode = of(child);
         if (role.isMultiple()) {
             MANY_CONTAINMENT.get(role).set(this, (l, e) -> {
@@ -662,7 +700,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
     }
 
     @Override
-    public void removeChild(SNode child) {
+    public void removeChild(@NotNull SNode child) {
         DNode dNode = of(child);
         SContainmentLink link = dNode.getContainmentLink();
         if (link != null) {
@@ -705,6 +743,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
         return containing != null && containing.id() instanceof SContainmentLink ? (SContainmentLink) containing.id() : null;
     }
 
+    @NotNull
     @Override
     public DNode getContainingRoot() {
         return ROOT.get(this);
@@ -747,6 +786,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
         return null;
     }
 
+    @NotNull
     @Override
     public Iterable<? extends DNode> getChildren(SContainmentLink role) {
         return role.isMultiple() ? MANY_CONTAINMENT.get(role).get(this) : SINGLE_CONTAINMENT.get(role).<DNode> getCollection(this).toList();
@@ -765,12 +805,12 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
     }
 
     @Override
-    public void setReferenceTarget(SReferenceLink role, SNode target) {
+    public void setReferenceTarget(@NotNull SReferenceLink role, SNode target) {
         REFERENCE.get(role).set(this, DNode.of(target));
     }
 
     @Override
-    public DNode getReferenceTarget(SReferenceLink role) {
+    public DNode getReferenceTarget(@NotNull SReferenceLink role) {
         return REFERENCE.get(role).get(this);
     }
 
@@ -779,16 +819,17 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
     }
 
     @Override
-    public void setReference(SReferenceLink role, SNodeReference target) {
+    public void setReference(@NotNull SReferenceLink role, @NotNull SNodeReference target) {
         SNode targetNode = dClareMPS().read(() -> target.resolve(null));
         REFERENCE.get(role).set(this, DNode.of(targetNode.getConcept(), target, targetNode));
     }
 
     @Override
-    public SReference getReference(SReferenceLink role) {
+    public SReference getReference(@NotNull SReferenceLink role) {
         DNode target = REFERENCE.get(role).get(this);
         return target != null ? new SReference() {
 
+            @SuppressWarnings("deprecation")
             @Override
             @Deprecated
             public String getRole() {
@@ -829,12 +870,12 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
     }
 
     @Override
-    public void dropReference(SReferenceLink role) {
+    public void dropReference(@NotNull SReferenceLink role) {
         REFERENCE.get(role).setDefault(this);
     }
 
     @Override
-    public void setReference(SReferenceLink role, ResolveInfo resolveInfo) {
+    public void setReference(@NotNull SReferenceLink role, ResolveInfo resolveInfo) {
         String ri = resolveInfo instanceof ResolveInfo.S ? ((ResolveInfo.S) resolveInfo).getValue() : null;
         setReference(role, DynamicReference.createDynamicReference(role, this, null, ri));
     }
@@ -889,6 +930,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
         }
     }
 
+    @NotNull
     @Override
     public Iterable<? extends SReference> getReferences() {
         List<SReference> result = List.of();
@@ -901,29 +943,29 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
         return result;
     }
 
-    @SuppressWarnings("rawtypes")
     @Override
     public boolean dIsOrphan(State state) {
         return dCheckConsistency() && super.dIsOrphan(state);
     }
 
+    @NotNull
     @Override
     public Iterable<SProperty> getProperties() {
         return getConcept().getProperties();
     }
 
     @Override
-    public boolean hasProperty(SProperty property) {
+    public boolean hasProperty(@NotNull SProperty property) {
         return getProperty(property) != null;
     }
 
     @Override
-    public String getProperty(SProperty property) {
+    public String getProperty(@NotNull SProperty property) {
         return PROPERTY.get(property).get(this);
     }
 
     @Override
-    public void setProperty(SProperty property, String propertyValue) {
+    public void setProperty(@NotNull SProperty property, String propertyValue) {
         PROPERTY.get(property).set(this, propertyValue);
     }
 
@@ -942,6 +984,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
         return USER_OBJECTS.get(this).toKeys();
     }
 
+    @NotNull
     @Override
     public SNodeReference getReference() {
         return reference();
@@ -953,18 +996,21 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
         throw new UnsupportedOperationException();
     }
 
+    @SuppressWarnings("removal")
     @Override
     @Deprecated
     public boolean hasProperty(String propertyName) {
         throw new UnsupportedOperationException();
     }
 
+    @SuppressWarnings("removal")
     @Override
     @Deprecated
     public String getProperty(String propertyName) {
         throw new UnsupportedOperationException();
     }
 
+    @SuppressWarnings("removal")
     @Override
     @Deprecated
     public void setProperty(String propertyName, String propertyValue) {
@@ -977,55 +1023,62 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
         throw new UnsupportedOperationException();
     }
 
+    @SuppressWarnings("removal")
     @Override
     @Deprecated
     public void setReferenceTarget(String role, SNode target) {
         throw new UnsupportedOperationException();
     }
 
+    @SuppressWarnings("removal")
     @Override
     @Deprecated
     public SNode getReferenceTarget(String role) {
         throw new UnsupportedOperationException();
     }
 
+    @SuppressWarnings("removal")
     @Override
     @Deprecated
     public SReference getReference(String role) {
         throw new UnsupportedOperationException();
     }
 
+    @SuppressWarnings("removal")
     @Override
     @Deprecated
     public void setReference(String role, SReference reference) {
         throw new UnsupportedOperationException();
     }
 
+    @SuppressWarnings("removal")
     @Override
     @Deprecated
     public void insertChildBefore(String role, SNode child, SNode anchor) {
         throw new UnsupportedOperationException();
     }
 
+    @SuppressWarnings("removal")
     @Override
     @Deprecated
     public void addChild(String role, SNode child) {
         throw new UnsupportedOperationException();
     }
 
+    @SuppressWarnings("removal")
     @Override
     @Deprecated
     public Iterable<? extends SNode> getChildren(String role) {
         throw new UnsupportedOperationException();
     }
 
+    @SuppressWarnings("DeprecatedIsStillUsed")
     @Override
     @Deprecated
-    public void setReference(SReferenceLink role, SReference reference) {
+    public void setReference(@NotNull SReferenceLink role, SReference reference) {
         REFERENCE.get(role).set(this, DNode.of(reference.getTargetNode()));
     }
 
-    @SuppressWarnings("unchecked")
     protected static List<SNode> children(SNode node, SContainmentLink feature) {
         List<SNode> children = List.of();
         for (SNode child : node.getChildren(feature)) {
@@ -1113,7 +1166,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
     }
 
     @Override
-    @SuppressWarnings({"unchecked", "rawtypes"})
+    @SuppressWarnings("rawtypes")
     protected void readObservedDeep() {
         Set<Observed> read = DNewableObject.READ_OBSERVEDS.get(this);
         readObserved(read, INDEX);
@@ -1127,7 +1180,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
         if (!isExternal() && isAction() && isRead() && !isActive()) {
             SNode root = dClareMPS().read(() -> tryOriginal().getContainingRoot());
             if (root != null) {
-                SModel model = dClareMPS().read(() -> root.getModel());
+                SModel model = dClareMPS().read(root::getModel);
                 if (model != null) {
                     DModel.of(model).triggerAddRoot(DNode.of(root));
                 }
@@ -1150,27 +1203,38 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
     @Override
     protected Pair<DObject, DObserved<DObject, ?>> readParent() {
         SNode original = tryOriginal();
+        if (original == null) {
+            throw new NullPointerException("original of " + this + " returned null in readParent()");
+        }
         DClareMPS dClareMPS = dClareMPS();
-        SNode parentNode = dClareMPS.read(() -> original.getParent());
+        SNode parentNode = dClareMPS.read(original::getParent);
         if (parentNode != null) {
             SContainmentLink link = original.getContainmentLink();
             DNode parent = DNode.of(parentNode);
             DObserved observed = getDObserved(link);
             return Pair.of(parent, observed);
         } else {
-            SModel parentModel = dClareMPS.read(() -> original.getModel());
-            if (parentModel != null) {
-                DModel parent = DModel.of(parentModel);
-                return (Pair) Pair.of(parent, DModel.ROOTS);
-            } else {
+            SModel parentModel = dClareMPS.read(original::getModel);
+            if (parentModel == null) {
                 return null;
             }
+            DModel parent = DModel.of(parentModel);
+            return (Pair) Pair.of(parent, DModel.ROOTS);
         }
     }
 
     public boolean isShared() {
         DModel model = MODEL.get(this);
         return model != null && model.isShared();
+    }
+
+    private boolean isQuotation() {
+        return getConcept().equals(QUOTATION_CONCEPT);
+    }
+
+    private boolean isAntiQuotation() {
+        return getConcept().equals(ANTI_QUOTATION_CONCEPT) || getConcept().equals(LIST_ANTI_QUOTATION_CONCEPT) || //
+                getConcept().equals(PROPERTY_ANTI_QUOTATION_CONCEPT) || getConcept().equals(REFERENCE_ANTI_QUOTATION_CONCEPT);
     }
 
 }

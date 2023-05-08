@@ -1,5 +1,5 @@
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// (C) Copyright 2018-2022 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
+// (C) Copyright 2018-2023 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
 //                                                                                                                     ~
 // Licensed under the GNU Lesser General Public License v3.0 (the 'License'). You may not use this file except in      ~
 // compliance with the License. You may obtain a copy of the License at: https://choosealicense.com/licenses/lgpl-3.0  ~
@@ -27,6 +27,8 @@ import org.jetbrains.mps.openapi.language.SProperty;
 import org.jetbrains.mps.openapi.model.EditableSModel;
 import org.jetbrains.mps.openapi.model.SModel;
 import org.jetbrains.mps.openapi.model.SNode;
+import org.jetbrains.mps.openapi.model.SNodeReference;
+import org.modelingvalue.collections.List;
 import org.modelingvalue.dclare.AbstractDerivationTransaction;
 import org.modelingvalue.dclare.Constant;
 import org.modelingvalue.dclare.LeafTransaction;
@@ -39,7 +41,7 @@ import jetbrains.mps.smodel.adapter.structure.property.InvalidProperty;
 public interface DAttribute<O, T> extends DFeature {
 
     @SuppressWarnings("unchecked")
-    static <C, V> DAttribute<C, V> of(String id, String name, IRuleSet ruleSet, boolean syn, boolean optional, boolean composite, int identifyingNr, boolean isPublic, Object def, Class<?> cls, SLanguage oppositeLanguage, String opposite, Supplier<SNode> source, Function<C, V> deriver) {
+    static <C, V> DAttribute<C, V> of(String id, String name, IRuleSet ruleSet, boolean syn, boolean optional, boolean composite, int identifyingNr, boolean isPublic, Object def, Class<?> cls, SLanguage oppositeLanguage, String opposite, Supplier<SNodeReference> source, Function<C, V> deriver) {
         boolean idAttr = identifyingNr >= 0 && (ruleSet == null || ruleSet.getAnonymousType() != null);
         SetableModifier[] mods = {synthetic.iff(syn), mandatory.iff(idAttr || (!optional && identifyingNr < 0)), containment.iff(composite)};
         return idAttr ? new DIdentifyingAttribute(id, name, ruleSet, identifyingNr, cls, source, mods) : //
@@ -51,6 +53,11 @@ public interface DAttribute<O, T> extends DFeature {
     static <C, V> DAttribute<C, V> of(SLanguage language, String id) {
         return (DAttribute<C, V>) DClareMPS.ATTRIBUTE_MAP.get(language).get(id);
     }
+
+    @SuppressWarnings("rawtypes")
+    final static Constant<DAttribute, List<IChangeHandler>> D_HANDLERS = Constant.of("D_HANDLERS", a -> {
+        return DClareMPS.HANDLER_MAP.get(DClareMPS.instance()).get(a);
+    });
 
     void activate(O object);
 
@@ -81,6 +88,10 @@ public interface DAttribute<O, T> extends DFeature {
 
     boolean isMandatory();
 
+    default List<IChangeHandler> handlers() {
+        return D_HANDLERS.get(this);
+    }
+
     Class<?> cls();
 
     default SProperty getSProperty() {
@@ -94,11 +105,18 @@ public interface DAttribute<O, T> extends DFeature {
         private final SProperty sProperty;
         private final boolean   indetifying;
         private final IRuleSet  ruleSet;
+        private final boolean   isPublic;
 
-        public DObservedAttribute(Object id, String name, IRuleSet ruleSet, boolean indetifying, boolean isPublic, V def, Class<?> cls, Supplier<Setable<?, ?>> opposite, Supplier<SNode> source, SetableModifier... modifiers) {
+        @SuppressWarnings("unchecked")
+        public DObservedAttribute(Object id, String name, IRuleSet ruleSet, boolean indetifying, boolean isPublic, V def, Class<?> cls, Supplier<Setable<?, ?>> opposite, Supplier<SNodeReference> source, SetableModifier... modifiers) {
             super(id, def, opposite, null, source, modifiers);
+            this.sProperty = isPublic ? new InvalidProperty(id.toString(), name) : null;
+            this.name = name;
+            this.cls = cls;
+            this.indetifying = indetifying;
+            this.ruleSet = ruleSet;
+            this.isPublic = isPublic;
             if (isPublic) {
-                this.sProperty = new InvalidProperty(id.toString(), name);
                 setFromToMPS(null, (o, b, a) -> {
                     if (o instanceof DNode) {
                         SNode sNode = ((DNode) o).tryOriginal();
@@ -111,13 +129,12 @@ public interface DAttribute<O, T> extends DFeature {
                         }
                     }
                 });
-            } else {
-                this.sProperty = null;
             }
-            this.name = name;
-            this.cls = cls;
-            this.indetifying = indetifying;
-            this.ruleSet = ruleSet;
+        }
+
+        @Override
+        public boolean isNative() {
+            return !handlers().isEmpty();
         }
 
         @Override
@@ -152,6 +169,9 @@ public interface DAttribute<O, T> extends DFeature {
 
         @Override
         public V get(C object) {
+            if (object == null) {
+                throw new NullPointerException("attempt to read null." + this);
+            }
             if (sProperty != null && object instanceof SNode && DClareMPS.GET_FROM_MPS.get() && !AbstractDerivationTransaction.isDeriving()) {
                 ((SNode) object).getProperty(sProperty);
             }
@@ -183,17 +203,21 @@ public interface DAttribute<O, T> extends DFeature {
             return sProperty;
         }
 
+        public boolean isPublic() {
+            return isPublic;
+        }
+
     }
 
     final class DIdentifyingAttribute<C extends DIdentifiedObject, V> extends Setable<C, V> implements DAttribute<C, V> {
 
-        private final String          name;
-        private final int             index;
-        private final Supplier<SNode> source;
-        private final Class<?>        cls;
-        private final IRuleSet        ruleSet;
+        private final String                   name;
+        private final int                      index;
+        private final Supplier<SNodeReference> source;
+        private final Class<?>                 cls;
+        private final IRuleSet                 ruleSet;
 
-        public DIdentifyingAttribute(String id, String name, IRuleSet ruleSet, int index, Class<?> cls, Supplier<SNode> source, SetableModifier... modifiers) {
+        public DIdentifyingAttribute(String id, String name, IRuleSet ruleSet, int index, Class<?> cls, Supplier<SNodeReference> source, SetableModifier... modifiers) {
             super(id, null, null, null, null, modifiers);
             this.name = name;
             this.index = index;
@@ -204,6 +228,9 @@ public interface DAttribute<O, T> extends DFeature {
 
         @Override
         public V get(C object) {
+            if (object == null) {
+                throw new NullPointerException("attempt to read null." + this);
+            }
             return object.get(this);
         }
 
@@ -247,7 +274,7 @@ public interface DAttribute<O, T> extends DFeature {
         }
 
         @Override
-        public SNode getSource() {
+        public SNodeReference getSource() {
             return source != null ? source.get() : null;
         }
 
@@ -289,12 +316,12 @@ public interface DAttribute<O, T> extends DFeature {
 
     class DConstant<C extends DObject, V> extends Constant<C, V> implements DAttribute<C, V> {
 
-        private final String          name;
-        private final Supplier<SNode> source;
-        private final Class<?>        cls;
-        private final IRuleSet        ruleSet;
+        private final String                   name;
+        private final Supplier<SNodeReference> source;
+        private final Class<?>                 cls;
+        private final IRuleSet                 ruleSet;
 
-        public DConstant(Object id, String name, IRuleSet ruleSet, Class<?> cls, Supplier<SNode> source, Function<C, V> deriver, SetableModifier... modifiers) {
+        public DConstant(Object id, String name, IRuleSet ruleSet, Class<?> cls, Supplier<SNodeReference> source, Function<C, V> deriver, SetableModifier... modifiers) {
             super(id, null, null, null, deriver, null, modifiers);
             this.name = name;
             this.source = source;
@@ -304,12 +331,18 @@ public interface DAttribute<O, T> extends DFeature {
 
         @Override
         public V get(C object) {
-            return object != null ? super.get(object) : null;
+            if (object == null) {
+                throw new NullPointerException("attempt to read null." + this);
+            }
+            return super.get(object);
         }
 
         @Override
         public V pre(C object) {
-            return object != null ? super.pre(object) : null;
+            if (object == null) {
+                throw new NullPointerException("attempt to read null." + this);
+            }
+            return super.pre(object);
         }
 
         @Override
@@ -348,7 +381,7 @@ public interface DAttribute<O, T> extends DFeature {
         }
 
         @Override
-        public SNode getSource() {
+        public SNodeReference getSource() {
             return source != null ? source.get() : null;
         }
 
@@ -365,6 +398,11 @@ public interface DAttribute<O, T> extends DFeature {
         @Override
         public void activate(C object) {
             throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public boolean checkConsistency() {
+            return !isSynthetic() && super.checkConsistency();
         }
 
     }

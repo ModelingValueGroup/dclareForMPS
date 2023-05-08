@@ -1,5 +1,5 @@
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// (C) Copyright 2018-2022 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
+// (C) Copyright 2018-2023 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
 //                                                                                                                     ~
 // Licensed under the GNU Lesser General Public License v3.0 (the 'License'). You may not use this file except in      ~
 // compliance with the License. You may obtain a copy of the License at: https://choosealicense.com/licenses/lgpl-3.0  ~
@@ -18,19 +18,23 @@ plugins {
     `maven-publish`
 }
 dependencies {
-    implementation("org.modelingvalue:mvg-json:2.1.2-BRANCHED")
-    implementation("org.modelingvalue:immutable-collections:2.1.2-BRANCHED")
-    implementation("org.modelingvalue:dclare:2.1.2-BRANCHED")
+    implementation("org.modelingvalue:mvg-json:3.0.0-BRANCHED")
+    implementation("org.modelingvalue:immutable-collections:3.0.0-BRANCHED")
+    implementation("org.modelingvalue:dclare:3.0.0-BRANCHED")
 
+    compileOnly(mpsJar("debugger-api"))
+    compileOnly(mpsJar("forms_rt"))
+    compileOnly(mpsJar("jetbrains-annotations"))
+    compileOnly(mpsJar("mps-behavior-runtime"))
     compileOnly(mpsJar("mps-closures"))
     compileOnly(mpsJar("mps-core"))
+    compileOnly(mpsJar("mps-debugger-api"))
     compileOnly(mpsJar("mps-editor"))
     compileOnly(mpsJar("mps-openapi"))
     compileOnly(mpsJar("mps-platform"))
     compileOnly(mpsJar("mps-project-check"))
     compileOnly(mpsJar("platform-api"))
     compileOnly(mpsJar("util"))
-    compileOnly(mpsJar("mps-behavior-runtime"))
 }
 publishing {
     publications {
@@ -53,6 +57,9 @@ val gatherTask1 = tasks.register<Copy>("gatherRuntimeJars-part1") {
         configurations.runtimeClasspath,
         configurations.runtimeClasspath.get().allArtifacts.files
     )
+    // The following jars are excluded here because they should not be included by MPS from here.
+    // Otherwise MPS will have the classes imported through multiple class loaders and that causes havoc.
+    exclude("dclare*.jar", "immutable-collections*.jar", "mvg-json*.jar")
     rename {
         it
             .replaceFirst(Regex("[a-zA-Z_]*-[0-9a-z]*-SNAPSHOT[.]jar"), ".jar") // for backwards compat.... remove later
@@ -74,6 +81,9 @@ val gatherTask2 = tasks.register<Copy>("gatherRuntimeJars-part2") {
         configurations.runtimeClasspath,
         configurations.runtimeClasspath.get().allArtifacts.files
     )
+    // The following jars are excluded here because they should not be included by MPS from here.
+    // Otherwise MPS will have the classes imported through multiple class loaders and that causes havoc.
+    exclude("runtime*.jar")
     rename {
         it
             .replaceFirst(Regex("[a-zA-Z_]*-[0-9a-z]*-SNAPSHOT[.]jar"), ".jar") // for backwards compat.... remove later
