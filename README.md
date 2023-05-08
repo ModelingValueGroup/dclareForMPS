@@ -41,5 +41,6 @@ Multiple examples can be found on GitHub:
 - [EntityClassJava](https://github.com/ModelingValueGroup/EntityClassJava)
 - [NiamToOO](https://github.com/ModelingValueGroup/NiamToOO)
 - [FlattenAndCopy](https://github.com/ModelingValueGroup/FlattenAndCopy)
+- [StateMachines](https://github.com/ModelingValueGroup/statemachines)
 
 For more info, please read the _README.md_ files that are part of these examples.
