@@ -9044,5 +9044,36 @@
       <ref role="1YaFvo" to="7ggn:7QGAU2f1kyq" resolve="StructIsInstanceOfOperation" />
     </node>
   </node>
+  <node concept="1YbPZF" id="5v48sNENJdY">
+    <property role="TrG5h" value="typeof_ContainExpression" />
+    <property role="3GE5qa" value="expressions" />
+    <node concept="3clFbS" id="5v48sNENJdZ" role="18ibNy">
+      <node concept="1Z5TYs" id="5v48sNENJel" role="3cqZAp">
+        <node concept="mw_s8" id="5v48sNENJem" role="1ZfhK$">
+          <node concept="1Z2H0r" id="5v48sNENJen" role="mwGJk">
+            <node concept="1YBJjd" id="5v48sNENJeo" role="1Z2MuG">
+              <ref role="1YBMHb" node="5v48sNENJe1" resolve="containExpression" />
+            </node>
+          </node>
+        </node>
+        <node concept="mw_s8" id="5v48sNENJep" role="1ZfhKB">
+          <node concept="1Z2H0r" id="5v48sNENJeq" role="mwGJk">
+            <node concept="2OqwBi" id="5v48sNENJer" role="1Z2MuG">
+              <node concept="1YBJjd" id="5v48sNENJes" role="2Oq$k0">
+                <ref role="1YBMHb" node="5v48sNENJe1" resolve="containExpression" />
+              </node>
+              <node concept="3TrEf2" id="5v48sNENJet" role="2OqNvi">
+                <ref role="3Tt5mk" to="7ggn:5v48sNENHNw" resolve="expression" />
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+    <node concept="1YaCAy" id="5v48sNENJe1" role="1YuTPh">
+      <property role="TrG5h" value="containExpression" />
+      <ref role="1YaFvo" to="7ggn:5v48sNENHIV" resolve="ContainExpression" />
+    </node>
+  </node>
 </model>
 

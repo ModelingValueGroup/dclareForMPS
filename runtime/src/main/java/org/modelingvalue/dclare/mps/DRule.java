@@ -16,20 +16,41 @@
 package org.modelingvalue.dclare.mps;
 
 import org.modelingvalue.collections.Collection;
+import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Concurrent;
+import org.modelingvalue.collections.util.Context;
+import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.dclare.*;
+
+import java.util.ArrayList;
 
 @SuppressWarnings("rawtypes")
 public interface DRule<O> extends DFeature {
 
-    Constant<DRule, DObserver> OBSERVER = Constant.of("OBSERVER", DObserver::new);
+    Constant<DRule, DObserver>                         OBSERVER                   = Constant.of("OBSERVER", DObserver::new);
+    Constant<DRule, DAttribute<DObject, Set<DObject>>> LOCAL_CONTAINER_ATTRIBUTES = Constant.of("LOCAL_CONTAINER_ATTRIBUTES", dRule -> new DAttribute.DObservedAttribute<>(dRule, dRule.hashCode() + "", dRule.ruleSet(), false, false, null, Set.class, null, dRule::getSource, SetableModifier.containment, SetableModifier.plumbing));
+    Context<Set<DObject>>                              TO_LOCALLY_CONTAIN         = Context.of(null);
+
+    static void contain(DObject object) {
+        var tlc = TO_LOCALLY_CONTAIN.get();
+        TO_LOCALLY_CONTAIN.setOnThread((tlc == null ? Set.<DObject>of() : tlc).add(object));
+    }
 
     class DObserver<O extends Mutable> extends Observer<O> {
 
         @SuppressWarnings("unchecked")
         private DObserver(DRule rule) {
-            super(rule, rule::run, Collection.of(rule.targets()).toSet(), //
+            super(rule, (obj) -> {
+                        TO_LOCALLY_CONTAIN.setOnThread(null);
+                        try {
+                            rule.run(obj);
+                        } finally {
+                            LOCAL_CONTAINER_ATTRIBUTES.get(rule).set((DObject) obj, TO_LOCALLY_CONTAIN.get());
+                            TO_LOCALLY_CONTAIN.setOnThread(null);
+                        }
+                    }, //
+                    Collection.of(rule.targets()).toSet(), //
                     rule.initialLowPriority() ? Priority.outer : Priority.immediate, //
                     IAspect.DIRECTION.get(rule.ruleSet().getAspect()), //
                     LeafModifier.anonymous.iff(rule.ruleSet().getAnonymousType() != null), //
