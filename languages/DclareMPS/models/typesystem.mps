@@ -304,6 +304,7 @@
       <concept id="4693937538533521280" name="jetbrains.mps.lang.smodel.structure.OfConceptOperation" flags="ng" index="v3k3i">
         <child id="4693937538533538124" name="requestedConcept" index="v3oSu" />
       </concept>
+      <concept id="1540150895035667832" name="jetbrains.mps.lang.smodel.structure.OperationParm_SameMetaLevel" flags="ng" index="yhA9G" />
       <concept id="7453996997717780434" name="jetbrains.mps.lang.smodel.structure.Node_GetSConceptOperation" flags="nn" index="2yIwOk" />
       <concept id="2396822768958367367" name="jetbrains.mps.lang.smodel.structure.AbstractTypeCastExpression" flags="nn" index="$5XWr">
         <child id="6733348108486823193" name="leftExpression" index="1m5AlR" />
@@ -489,6 +490,7 @@
                     <ref role="cht4Q" to="7ggn:61p65V8x$6I" resolve="ThisContext" />
                   </node>
                 </node>
+                <node concept="yhA9G" id="13G9pej01BY" role="1xVPHs" />
               </node>
             </node>
             <node concept="2qgKlT" id="jVwYUSRmqo" role="2OqNvi">
@@ -1415,6 +1417,7 @@
                   </node>
                 </node>
                 <node concept="1xIGOp" id="4wbMdoKda0H" role="1xVPHs" />
+                <node concept="yhA9G" id="13G9pejvpaf" role="1xVPHs" />
               </node>
             </node>
             <node concept="2qgKlT" id="4$bpWrPpeUI" role="2OqNvi">
@@ -6382,6 +6385,7 @@
                   </node>
                 </node>
                 <node concept="1xIGOp" id="52x11UPju7_" role="1xVPHs" />
+                <node concept="yhA9G" id="13G9pejvqQ3" role="1xVPHs" />
               </node>
             </node>
             <node concept="2qgKlT" id="52x11UPju7A" role="2OqNvi">
@@ -7059,6 +7063,7 @@
                     <ref role="cht4Q" to="7ggn:61p65V8x$6I" resolve="ThisContext" />
                   </node>
                 </node>
+                <node concept="yhA9G" id="13G9pejvtqq" role="1xVPHs" />
               </node>
             </node>
             <node concept="2qgKlT" id="7LXUKct4swU" role="2OqNvi">
