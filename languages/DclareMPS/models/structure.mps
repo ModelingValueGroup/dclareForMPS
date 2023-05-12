@@ -1701,5 +1701,20 @@
       <ref role="20lvS9" node="4$bpWrNHO7E" resolve="StructClass" />
     </node>
   </node>
+  <node concept="1TIwiD" id="5v48sNENHIV">
+    <property role="EcuMT" value="6324216940731489211" />
+    <property role="3GE5qa" value="expressions" />
+    <property role="TrG5h" value="ContainExpression" />
+    <property role="34LRSv" value="contain(expr)" />
+    <property role="R4oN_" value="contains the object(s) in the rule" />
+    <ref role="1TJDcQ" to="tpee:fz3vP1J" resolve="Expression" />
+    <node concept="1TJgyj" id="5v48sNENHNw" role="1TKVEi">
+      <property role="IQ2ns" value="6324216940731489504" />
+      <property role="20lmBu" value="fLJjDmT/aggregation" />
+      <property role="20kJfa" value="expression" />
+      <property role="20lbJX" value="fLJekj4/_1" />
+      <ref role="20lvS9" to="tpee:fz3vP1J" resolve="Expression" />
+    </node>
+  </node>
 </model>
 
