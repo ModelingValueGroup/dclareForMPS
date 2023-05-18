@@ -15,17 +15,16 @@
 
 package org.modelingvalue.dclare.mps;
 
-import static org.modelingvalue.dclare.UniverseTransaction.Mood.*;
-
-import java.util.function.Supplier;
-
 import org.modelingvalue.dclare.ImperativeTransaction;
 import org.modelingvalue.dclare.UniverseStatistics;
 import org.modelingvalue.dclare.UniverseTransaction.Status;
 
-public class DclareForMpsStatus {
+import java.util.function.Supplier;
 
-    private final Status    status;
+import static org.modelingvalue.dclare.UniverseTransaction.Mood.*;
+
+public class DclareForMpsStatus {
+    private final Status status;
     private final DClareMPS dClareMPS;
 
     public DclareForMpsStatus(Status status, DClareMPS dClareMPS) {
@@ -55,6 +54,10 @@ public class DclareForMpsStatus {
 
     public <R> R get(Supplier<R> supplier) {
         return status.state.get(supplier);
+    }
+
+    public void run(Runnable r) {
+        status.state.run(r);
     }
 
     public UniverseStatistics stats() {
