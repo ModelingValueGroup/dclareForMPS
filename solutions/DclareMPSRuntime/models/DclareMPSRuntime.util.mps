@@ -1772,7 +1772,7 @@
       <node concept="3clFbS" id="5$bRKnREcAq" role="3clF47">
         <node concept="3cpWs6" id="7cS5T_tZ9e5" role="3cqZAp">
           <node concept="2YIFZM" id="7cS5T_tZ9kV" role="3cqZAk">
-            <ref role="37wK5l" node="3DB41z9GGdu" resolve="toMutable" />
+            <ref role="37wK5l" node="3DB41z9GGdu" resolve="toAttrType" />
             <ref role="1Pybhc" node="30fQumnG8Au" resolve="DclareUtil" />
             <node concept="37vLTw" id="7cS5T_tZ9kW" role="37wK5m">
               <ref role="3cqZAo" node="5$bRKnREcAk" resolve="attr" />
