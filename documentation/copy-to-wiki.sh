@@ -5,3 +5,4 @@
 set -euo pipefail
 
 echo "Copying documentation to wiki..."
+date > wiki/test.md
