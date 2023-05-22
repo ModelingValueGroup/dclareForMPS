@@ -13,6 +13,7 @@
 ## Contributors:                                                                                                       ~
 ##     Arjan Kok, Carel Bast                                                                                           ~
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 set -euo pipefail
 
 # This script copies the documentation from the current branch to the wiki
