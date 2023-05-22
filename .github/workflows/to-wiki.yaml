@@ -38,4 +38,4 @@ jobs:
 
       ################################################################################
       - name: "copy to wiki"
-        run: ls -la
+        run: . source/documentation/copy-to-wiki.sh
