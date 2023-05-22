@@ -13,16 +13,29 @@
 ## Contributors:                                                                                                       ~
 ##     Arjan Kok, Carel Bast                                                                                           ~
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+set -euo pipefail
 
 # This script copies the documentation from the current branch to the wiki
 
-set -euo pipefail
-
-git config --global user.email "auto-wiki-updater@modelingvalue.nl"
-git config --global user.name  "auto WIKI updater"
-
-echo "Copying documentation to wiki..."
-date > wiki/test.md
-
-
-cd wiki && git add -A && git commit -m "update wiki from branch '$GITHUB_REF'" && git push
+main() {
+    copyToWiki
+    pushToWiki
+}
+copyToWiki() {
+  echo "copying documentation to wiki..."
+  date > wiki/test.md
+}
+pushToWiki() {
+  ( cd wiki
+    if [[ $(git status --porcelain) ]]; then
+      echo "push changes to wiki repo..."
+      git config --global user.email "auto-wiki-updater@modelingvalue.nl"
+      git config --global user.name  "auto WIKI updater"
+      git add -A
+      git commit -m "update wiki from branch '${GITHUB_REF#refs/heads/}'"
+      git push
+    else
+      echo "no changes to push to wiki repo"
+    fi
+  )
+}
