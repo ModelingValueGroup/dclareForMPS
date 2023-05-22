@@ -25,4 +25,4 @@ echo "Copying documentation to wiki..."
 date > wiki/test.md
 
 
-cd wiki && git add -A && git commit -m "update wiki from branch '${{github.ref}}'" && git push
+cd wiki && git add -A && git commit -m "update wiki from branch '$GITHUB_REF'" && git push
