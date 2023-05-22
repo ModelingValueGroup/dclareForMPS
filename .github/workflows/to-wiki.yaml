@@ -13,7 +13,7 @@
 ##     Arjan Kok, Carel Bast                                                                                           ~
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-name: build
+name: copy-to-wiki
 
 on: [ push, workflow_dispatch ]
 
@@ -28,8 +28,14 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          fetch-depth: 0
+          path: 'source'
+
+      - uses: actions/checkout@v3
+        with:
+          repository: ${{github.repository}}.wiki
+          ref: master
+          path: 'wiki'
 
       ################################################################################
-      - name: "bootstrap"
+      - name: "copy to wiki"
         run: ls -la
