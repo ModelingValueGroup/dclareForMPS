@@ -18,5 +18,11 @@
 
 set -euo pipefail
 
+git config --global user.email "auto-wiki-updater@modelingvalue.nl"
+git config --global user.name  "auto WIKI updater"
+
 echo "Copying documentation to wiki..."
 date > wiki/test.md
+
+
+cd wiki && git add -A && git commit -m "update wiki from branch '${{github.ref}}'" && git push

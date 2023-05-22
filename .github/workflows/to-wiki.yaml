@@ -38,6 +38,3 @@ jobs:
 
       - name: "copy to wiki"
         run: . source/documentation/copy-to-wiki.sh
-
-      - name: "push to wiki repo"
-        run: cd wiki && git add -A && git commit -m "update wiki from branch '${{github.ref}}'" && git push
