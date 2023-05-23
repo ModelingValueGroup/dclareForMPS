@@ -1,5 +1,3 @@
-import org.jetbrains.annotations.NotNull;
-
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.file.Files;
@@ -77,7 +75,7 @@ class Line implements Comparable<Line> {
     }
 
     @Override
-    public int compareTo(@NotNull Line o) {
+    public int compareTo(Line o) {
         return version.compareTo(o.version);
     }
 }
@@ -148,7 +146,7 @@ class Version implements Comparable<Version> {
     }
 
     @Override
-    public int compareTo(@NotNull Version o) {
+    public int compareTo(Version o) {
         return o.version.compareTo(version);
     }
 }
