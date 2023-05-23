@@ -29,7 +29,7 @@ import java.util.stream.Stream;
 class GenerateHome {
     public static void main(String[] args) throws IOException {
         if (args.length != 6) {
-            System.err.println("Usage: GenerateHome <home.md> <owner> <repo> <version> <branch> <hash>");
+            System.err.println("Usage: GenerateHome <Home.md> <owner> <repo> <version> <branch> <hash>");
             System.exit(1);
         }
         new Doc(args[0])
@@ -163,12 +163,12 @@ class Version implements Comparable<Version> {
 
     public boolean isValid(Path rootDir) {
         Path d = rootDir.resolve(version);
-        return Files.isDirectory(d) && Files.isRegularFile(d.resolve("home.md"));
+        return Files.isDirectory(d) && Files.isRegularFile(d.resolve("main.md"));
     }
 
     @Override
     public String toString() {
-        String versionColumn = link(version, version + "/home.md");
+        String versionColumn = link(version, version + "/main");
         String branchColumn  = link(branch, "https://github.com/" + owner + "/" + repo + "/tree/" + branch);
         String linkColumn    = link(hash.substring(0, 7), "https://github.com/" + owner + "/" + repo + "/tree/" + hash);
         return String.format("| %s | %s | %s | %s |", versionColumn, date, branchColumn, linkColumn);
