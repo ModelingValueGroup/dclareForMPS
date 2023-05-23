@@ -15,6 +15,8 @@
 
 package org.modelingvalue.dclare.mps;
 
+import java.util.function.Predicate;
+
 import org.jetbrains.mps.openapi.language.SAbstractConcept;
 import org.jetbrains.mps.openapi.language.SConcept;
 import org.jetbrains.mps.openapi.language.SLanguage;
@@ -33,22 +35,20 @@ import org.modelingvalue.dclare.sync.SerialisationPool.BaseConverter;
 import org.modelingvalue.dclare.sync.SerializationHelperWithPool;
 import org.modelingvalue.dclare.sync.Util;
 
-import java.util.function.Predicate;
-
 import jetbrains.mps.project.DevKit;
 import jetbrains.mps.project.ProjectRepository;
 
 public class MPSSerializationHelper extends SerializationHelperWithPool<DObjectType<?>, DObject, DObserved<DObject, Object>> {
     public MPSSerializationHelper(ProjectRepository repos) {
-        super(Converters.ALL.appendList(List.of(    //
-                new DevKitConverter(repos),         //
-                new DModuleConverter(repos),        //
-                new DModelConverter(),              //
-                new DNodeConverter(),               //
-                new DServerMetaDataConverter(),     //
-                new SConceptConverter(),            //
-                new SLanguageConverter(),           //
-                new DObservedConverter()            //
+        super(Converters.ALL.appendList(List.of( //
+                new DevKitConverter(repos), //
+                new DModuleConverter(repos), //
+                new DModelConverter(), //
+                new DNodeConverter(), //
+                new DServerMetaDataConverter(), //
+                new SConceptConverter(), //
+                new SLanguageConverter(), //
+                new DObservedConverter() //
         )));
     }
 
@@ -59,8 +59,8 @@ public class MPSSerializationHelper extends SerializationHelperWithPool<DObjectT
     @Override
     public Predicate<Mutable> mutableFilter() {
         return m -> {
-            boolean ret   = false;
-            DModel  model = m.dAncestor(DModel.class);
+            boolean ret = false;
+            DModel model = m.dAncestor(DModel.class);
             if (model == null || model.isShared()) {
                 ret = (m instanceof DModel || m instanceof DNode || m instanceof DServerMetaData) && ((DObject) m).isActive() && !((DObject) m).isDclareOnly();
             }
@@ -78,7 +78,7 @@ public class MPSSerializationHelper extends SerializationHelperWithPool<DObjectT
     @Override
     public DObjectType<?> getMutableClass(DObject s) {
         DObjectType<DObject> type = (DObjectType<DObject>) DObject.TYPE.get(s);
-        return type != DObject.TYPE.getDefault() ? type : (DObjectType<DObject>) s.getType();
+        return type != DObject.TYPE.getDefault(s) ? type : (DObjectType<DObject>) s.getType();
     }
 
     private static class DevKitConverter extends BaseConverter<DevKit> {
@@ -96,8 +96,8 @@ public class MPSSerializationHelper extends SerializationHelperWithPool<DObjectT
 
         @Override
         public DevKit deserialize(String string, Object context) {
-            SModuleId id     = mpsPersist().createModuleId(string);
-            SModule   module = DObject.dClareMPS().read(() -> repos.getModule(id));
+            SModuleId id = mpsPersist().createModuleId(string);
+            SModule module = DObject.dClareMPS().read(() -> repos.getModule(id));
             if (!(module instanceof DevKit)) {
                 throw new IllegalArgumentException("Module " + id + " is not a DevKit, it is " + (module == null ? "<null>" : "a " + module.getClass().getSimpleName() + "!"));
             }
@@ -120,8 +120,8 @@ public class MPSSerializationHelper extends SerializationHelperWithPool<DObjectT
 
         @Override
         public DModule deserialize(String string, Object context) {
-            SModuleId id     = mpsPersist().createModuleId(string);
-            SModule   module = DObject.dClareMPS().read(() -> repos.getModule(id));
+            SModuleId id = mpsPersist().createModuleId(string);
+            SModule module = DObject.dClareMPS().read(() -> repos.getModule(id));
             return DModule.of(module);
         }
     }
@@ -164,9 +164,9 @@ public class MPSSerializationHelper extends SerializationHelperWithPool<DObjectT
 
         @Override
         public DNode deserialize(String string, Object context) {
-            String[]       concRef = Util.decodeFromLength(string, 2);
-            SConcept       con     = (SConcept) mpsPersist().createConcept(concRef[0]);
-            SNodeReference ref     = mpsPersist().createNodeReference(concRef[1]);
+            String[] concRef = Util.decodeFromLength(string, 2);
+            SConcept con = (SConcept) mpsPersist().createConcept(concRef[0]);
+            SNodeReference ref = mpsPersist().createNodeReference(concRef[1]);
             return DNode.of(con, ref);
         }
     }

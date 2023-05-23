@@ -139,7 +139,7 @@ public abstract class DObject implements Mutable {
     @Override
     public DObjectType<?> dClass() {
         DObjectType<?> type = TYPE.get(this);
-        return type == TYPE.getDefault() ? getBootstrapType() : type;
+        return type == TYPE.getDefault(this) ? getBootstrapType() : type;
     }
 
     protected abstract DObjectType<?> getBootstrapType();

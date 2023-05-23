@@ -8627,7 +8627,7 @@
             <ref role="1YBMHb" node="2gyk5RYUQdC" resolve="structRuleSet" />
           </node>
           <node concept="2qgKlT" id="2gyk5RYUZAC" role="2OqNvi">
-            <ref role="37wK5l" to="us1s:64dupBmWpM2" resolve="isConstant" />
+            <ref role="37wK5l" to="us1s:4ZoRzr2mHnY" resolve="mustContainConstantAccessOnly" />
           </node>
         </node>
       </node>
