@@ -1929,6 +1929,43 @@
             </node>
           </node>
         </node>
+        <node concept="3clFbH" id="1ih40ddoAPQ" role="3cqZAp" />
+        <node concept="3cpWs8" id="4RbflAQq2hW" role="3cqZAp">
+          <node concept="3cpWsn" id="4RbflAQq2hZ" role="3cpWs9">
+            <property role="TrG5h" value="text1" />
+            <node concept="10Q1$e" id="4RbflAQq3Y2" role="1tU5fm">
+              <node concept="17QB3L" id="4RbflAQq2hU" role="10Q1$1" />
+            </node>
+            <node concept="2ShNRf" id="4RbflAQq9Pw" role="33vP2m">
+              <node concept="3$_iS1" id="4RbflAQqfhV" role="2ShVmc">
+                <node concept="3$GHV9" id="4RbflAQqfhX" role="3$GQph">
+                  <node concept="3cmrfG" id="4RbflAQqgRT" role="3$I4v7">
+                    <property role="3cmrfH" value="3" />
+                  </node>
+                </node>
+                <node concept="17QB3L" id="4RbflAQqfeO" role="3$_nBY" />
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="3cpWs8" id="4RbflAQqEpK" role="3cqZAp">
+          <node concept="3cpWsn" id="4RbflAQqEpL" role="3cpWs9">
+            <property role="TrG5h" value="text2" />
+            <node concept="10Q1$e" id="4RbflAQqEpM" role="1tU5fm">
+              <node concept="17QB3L" id="4RbflAQqEpN" role="10Q1$1" />
+            </node>
+            <node concept="2ShNRf" id="4RbflAQqEpO" role="33vP2m">
+              <node concept="3$_iS1" id="4RbflAQqEpP" role="2ShVmc">
+                <node concept="3$GHV9" id="4RbflAQqEpQ" role="3$GQph">
+                  <node concept="3cmrfG" id="4RbflAQqEpR" role="3$I4v7">
+                    <property role="3cmrfH" value="3" />
+                  </node>
+                </node>
+                <node concept="17QB3L" id="4RbflAQqEpS" role="3$_nBY" />
+              </node>
+            </node>
+          </node>
+        </node>
         <node concept="3clFbH" id="1O8e97N9Bdc" role="3cqZAp" />
         <node concept="3clFbJ" id="1O8e97MO_D4" role="3cqZAp">
           <node concept="3clFbS" id="1O8e97MO_D6" role="3clFbx">
@@ -2558,6 +2595,230 @@
                             </node>
                           </node>
                         </node>
+                        <node concept="3clFbH" id="1ih40ddoR1D" role="3cqZAp" />
+                        <node concept="3clFbF" id="4RbflAQqxuk" role="3cqZAp">
+                          <node concept="37vLTI" id="4RbflAQqAUI" role="3clFbG">
+                            <node concept="AH0OO" id="4RbflAQqzie" role="37vLTJ">
+                              <node concept="3cmrfG" id="4RbflAQq$Zp" role="AHEQo">
+                                <property role="3cmrfH" value="0" />
+                              </node>
+                              <node concept="37vLTw" id="4RbflAQqxui" role="AHHXb">
+                                <ref role="3cqZAo" node="4RbflAQq2hZ" resolve="text1" />
+                              </node>
+                            </node>
+                            <node concept="1rXfSq" id="4RbflAQqCCD" role="37vLTx">
+                              <ref role="37wK5l" node="4RbflAQgiJQ" resolve="calcToStringOrBlank" />
+                              <node concept="37vLTw" id="4RbflAQqCCE" role="37wK5m">
+                                <ref role="3cqZAo" node="1O8e97MO9NM" resolve="devLine2Ref1" />
+                              </node>
+                              <node concept="1bVj0M" id="4RbflAQqCCF" role="37wK5m">
+                                <node concept="3clFbS" id="4RbflAQqCCG" role="1bW5cS">
+                                  <node concept="3clFbF" id="4RbflAQqCCH" role="3cqZAp">
+                                    <node concept="2OqwBi" id="4RbflAQqCCI" role="3clFbG">
+                                      <node concept="2OwXpG" id="4RbflAQqCCJ" role="2OqNvi">
+                                        <ref role="2Oxat5" to="kag7:~UniverseStatistics$ChampionChangesPerInstance.mutable" resolve="mutable" />
+                                      </node>
+                                      <node concept="2OqwBi" id="4RbflAQqCCK" role="2Oq$k0">
+                                        <node concept="37vLTw" id="4RbflAQqCCL" role="2Oq$k0">
+                                          <ref role="3cqZAo" node="1O8e97MW5Xg" resolve="stats" />
+                                        </node>
+                                        <node concept="liA8E" id="4RbflAQqCCM" role="2OqNvi">
+                                          <ref role="37wK5l" to="kag7:~UniverseStatistics.championChangesPerInstance()" resolve="championChangesPerInstance" />
+                                        </node>
+                                      </node>
+                                    </node>
+                                  </node>
+                                </node>
+                              </node>
+                            </node>
+                          </node>
+                        </node>
+                        <node concept="3clFbF" id="4RbflAQqIws" role="3cqZAp">
+                          <node concept="37vLTI" id="4RbflAQqIwt" role="3clFbG">
+                            <node concept="AH0OO" id="4RbflAQqIwu" role="37vLTJ">
+                              <node concept="3cmrfG" id="4RbflAQqIwv" role="AHEQo">
+                                <property role="3cmrfH" value="1" />
+                              </node>
+                              <node concept="37vLTw" id="4RbflAQqIww" role="AHHXb">
+                                <ref role="3cqZAo" node="4RbflAQq2hZ" resolve="text1" />
+                              </node>
+                            </node>
+                            <node concept="1rXfSq" id="4RbflAQqMdm" role="37vLTx">
+                              <ref role="37wK5l" node="4RbflAQgiJQ" resolve="calcToStringOrBlank" />
+                              <node concept="37vLTw" id="4RbflAQqMdn" role="37wK5m">
+                                <ref role="3cqZAo" node="1O8e97MOfFw" resolve="devLine3Ref1" />
+                              </node>
+                              <node concept="1bVj0M" id="4RbflAQqMdo" role="37wK5m">
+                                <node concept="3clFbS" id="4RbflAQqMdp" role="1bW5cS">
+                                  <node concept="3clFbF" id="4RbflAQqMdq" role="3cqZAp">
+                                    <node concept="2OqwBi" id="4RbflAQqMdr" role="3clFbG">
+                                      <node concept="2OwXpG" id="4RbflAQqMds" role="2OqNvi">
+                                        <ref role="2Oxat5" to="kag7:~UniverseStatistics$ChampionObserved.mutable" resolve="mutable" />
+                                      </node>
+                                      <node concept="2OqwBi" id="4RbflAQqMdt" role="2Oq$k0">
+                                        <node concept="37vLTw" id="4RbflAQqMdu" role="2Oq$k0">
+                                          <ref role="3cqZAo" node="1O8e97MW5Xg" resolve="stats" />
+                                        </node>
+                                        <node concept="liA8E" id="4RbflAQqMdv" role="2OqNvi">
+                                          <ref role="37wK5l" to="kag7:~UniverseStatistics.championObserved()" resolve="championObserved" />
+                                        </node>
+                                      </node>
+                                    </node>
+                                  </node>
+                                </node>
+                              </node>
+                            </node>
+                          </node>
+                        </node>
+                        <node concept="3clFbF" id="4RbflAQqKgk" role="3cqZAp">
+                          <node concept="37vLTI" id="4RbflAQqKgl" role="3clFbG">
+                            <node concept="AH0OO" id="4RbflAQqKgm" role="37vLTJ">
+                              <node concept="3cmrfG" id="4RbflAQqKgn" role="AHEQo">
+                                <property role="3cmrfH" value="2" />
+                              </node>
+                              <node concept="37vLTw" id="4RbflAQqKgo" role="AHHXb">
+                                <ref role="3cqZAo" node="4RbflAQq2hZ" resolve="text1" />
+                              </node>
+                            </node>
+                            <node concept="1rXfSq" id="4RbflAQqO2X" role="37vLTx">
+                              <ref role="37wK5l" node="4RbflAQgiJQ" resolve="calcToStringOrBlank" />
+                              <node concept="37vLTw" id="4RbflAQqO2Y" role="37wK5m">
+                                <ref role="3cqZAo" node="1O8e97MOgFv" resolve="devLine4Ref1" />
+                              </node>
+                              <node concept="1bVj0M" id="4RbflAQqO2Z" role="37wK5m">
+                                <node concept="3clFbS" id="4RbflAQqO30" role="1bW5cS">
+                                  <node concept="3clFbF" id="4RbflAQqO31" role="3cqZAp">
+                                    <node concept="2OqwBi" id="4RbflAQqO32" role="3clFbG">
+                                      <node concept="2OwXpG" id="4RbflAQqO33" role="2OqNvi">
+                                        <ref role="2Oxat5" to="kag7:~UniverseStatistics$ChampionObserver.mutable" resolve="mutable" />
+                                      </node>
+                                      <node concept="2OqwBi" id="4RbflAQqO34" role="2Oq$k0">
+                                        <node concept="37vLTw" id="4RbflAQqO35" role="2Oq$k0">
+                                          <ref role="3cqZAo" node="1O8e97MW5Xg" resolve="stats" />
+                                        </node>
+                                        <node concept="liA8E" id="4RbflAQqO36" role="2OqNvi">
+                                          <ref role="37wK5l" to="kag7:~UniverseStatistics.championObservers()" resolve="championObservers" />
+                                        </node>
+                                      </node>
+                                    </node>
+                                  </node>
+                                </node>
+                              </node>
+                            </node>
+                          </node>
+                        </node>
+                        <node concept="3clFbH" id="4RbflAQqu1D" role="3cqZAp" />
+                        <node concept="3clFbF" id="4RbflAQqWGq" role="3cqZAp">
+                          <node concept="37vLTI" id="4RbflAQqWGr" role="3clFbG">
+                            <node concept="AH0OO" id="4RbflAQqWGs" role="37vLTJ">
+                              <node concept="3cmrfG" id="4RbflAQqWGt" role="AHEQo">
+                                <property role="3cmrfH" value="0" />
+                              </node>
+                              <node concept="37vLTw" id="4RbflAQqWGu" role="AHHXb">
+                                <ref role="3cqZAo" node="4RbflAQqEpL" resolve="text2" />
+                              </node>
+                            </node>
+                            <node concept="1rXfSq" id="4RbflAQr6eR" role="37vLTx">
+                              <ref role="37wK5l" node="4RbflAQgiJQ" resolve="calcToStringOrBlank" />
+                              <node concept="37vLTw" id="4RbflAQr6eS" role="37wK5m">
+                                <ref role="3cqZAo" node="1O8e97MOf6f" resolve="devLine2Ref2" />
+                              </node>
+                              <node concept="1bVj0M" id="4RbflAQr6eT" role="37wK5m">
+                                <node concept="3clFbS" id="4RbflAQr6eU" role="1bW5cS">
+                                  <node concept="3clFbF" id="4RbflAQr6eV" role="3cqZAp">
+                                    <node concept="2OqwBi" id="4RbflAQr6eW" role="3clFbG">
+                                      <node concept="2OwXpG" id="4RbflAQr6eX" role="2OqNvi">
+                                        <ref role="2Oxat5" to="kag7:~UniverseStatistics$ChampionChangesPerInstance.observer" resolve="observer" />
+                                      </node>
+                                      <node concept="2OqwBi" id="4RbflAQr6eY" role="2Oq$k0">
+                                        <node concept="37vLTw" id="4RbflAQr6eZ" role="2Oq$k0">
+                                          <ref role="3cqZAo" node="1O8e97MW5Xg" resolve="stats" />
+                                        </node>
+                                        <node concept="liA8E" id="4RbflAQr6f0" role="2OqNvi">
+                                          <ref role="37wK5l" to="kag7:~UniverseStatistics.championChangesPerInstance()" resolve="championChangesPerInstance" />
+                                        </node>
+                                      </node>
+                                    </node>
+                                  </node>
+                                </node>
+                              </node>
+                            </node>
+                          </node>
+                        </node>
+                        <node concept="3clFbF" id="4RbflAQqWGb" role="3cqZAp">
+                          <node concept="37vLTI" id="4RbflAQqWGc" role="3clFbG">
+                            <node concept="AH0OO" id="4RbflAQqWGd" role="37vLTJ">
+                              <node concept="3cmrfG" id="4RbflAQqWGe" role="AHEQo">
+                                <property role="3cmrfH" value="1" />
+                              </node>
+                              <node concept="37vLTw" id="4RbflAQqWGf" role="AHHXb">
+                                <ref role="3cqZAo" node="4RbflAQqEpL" resolve="text2" />
+                              </node>
+                            </node>
+                            <node concept="1rXfSq" id="4RbflAQr8kj" role="37vLTx">
+                              <ref role="37wK5l" node="4RbflAQgiJQ" resolve="calcToStringOrBlank" />
+                              <node concept="37vLTw" id="4RbflAQr8kk" role="37wK5m">
+                                <ref role="3cqZAo" node="1O8e97MOg4O" resolve="devLine3Ref2" />
+                              </node>
+                              <node concept="1bVj0M" id="4RbflAQr8kl" role="37wK5m">
+                                <node concept="3clFbS" id="4RbflAQr8km" role="1bW5cS">
+                                  <node concept="3clFbF" id="4RbflAQr8kn" role="3cqZAp">
+                                    <node concept="2OqwBi" id="4RbflAQr8ko" role="3clFbG">
+                                      <node concept="2OwXpG" id="4RbflAQr8kp" role="2OqNvi">
+                                        <ref role="2Oxat5" to="kag7:~UniverseStatistics$ChampionObserved.observer" resolve="observer" />
+                                      </node>
+                                      <node concept="2OqwBi" id="4RbflAQr8kq" role="2Oq$k0">
+                                        <node concept="37vLTw" id="4RbflAQr8kr" role="2Oq$k0">
+                                          <ref role="3cqZAo" node="1O8e97MW5Xg" resolve="stats" />
+                                        </node>
+                                        <node concept="liA8E" id="4RbflAQr8ks" role="2OqNvi">
+                                          <ref role="37wK5l" to="kag7:~UniverseStatistics.championObserved()" resolve="championObserved" />
+                                        </node>
+                                      </node>
+                                    </node>
+                                  </node>
+                                </node>
+                              </node>
+                            </node>
+                          </node>
+                        </node>
+                        <node concept="3clFbF" id="4RbflAQqWFW" role="3cqZAp">
+                          <node concept="37vLTI" id="4RbflAQqWFX" role="3clFbG">
+                            <node concept="AH0OO" id="4RbflAQqWFY" role="37vLTJ">
+                              <node concept="3cmrfG" id="4RbflAQqWFZ" role="AHEQo">
+                                <property role="3cmrfH" value="2" />
+                              </node>
+                              <node concept="37vLTw" id="4RbflAQqWG0" role="AHHXb">
+                                <ref role="3cqZAo" node="4RbflAQqEpL" resolve="text2" />
+                              </node>
+                            </node>
+                            <node concept="1rXfSq" id="4RbflAQrahF" role="37vLTx">
+                              <ref role="37wK5l" node="4RbflAQgiJQ" resolve="calcToStringOrBlank" />
+                              <node concept="37vLTw" id="4RbflAQrahG" role="37wK5m">
+                                <ref role="3cqZAo" node="1O8e97MOnul" resolve="devLine4Ref2" />
+                              </node>
+                              <node concept="1bVj0M" id="4RbflAQrahH" role="37wK5m">
+                                <node concept="3clFbS" id="4RbflAQrahI" role="1bW5cS">
+                                  <node concept="3clFbF" id="4RbflAQrahJ" role="3cqZAp">
+                                    <node concept="2OqwBi" id="4RbflAQrahK" role="3clFbG">
+                                      <node concept="2OwXpG" id="4RbflAQrahL" role="2OqNvi">
+                                        <ref role="2Oxat5" to="kag7:~UniverseStatistics$ChampionObserver.observed" resolve="observed" />
+                                      </node>
+                                      <node concept="2OqwBi" id="4RbflAQrahM" role="2Oq$k0">
+                                        <node concept="37vLTw" id="4RbflAQrahN" role="2Oq$k0">
+                                          <ref role="3cqZAo" node="1O8e97MW5Xg" resolve="stats" />
+                                        </node>
+                                        <node concept="liA8E" id="4RbflAQrahO" role="2OqNvi">
+                                          <ref role="37wK5l" to="kag7:~UniverseStatistics.championObservers()" resolve="championObservers" />
+                                        </node>
+                                      </node>
+                                    </node>
+                                  </node>
+                                </node>
+                              </node>
+                            </node>
+                          </node>
+                        </node>
                       </node>
                     </node>
                   </node>
@@ -2781,279 +3042,6 @@
           </node>
         </node>
         <node concept="3clFbH" id="1O8e97NgPQc" role="3cqZAp" />
-        <node concept="3cpWs8" id="4RbflAQq2hW" role="3cqZAp">
-          <node concept="3cpWsn" id="4RbflAQq2hZ" role="3cpWs9">
-            <property role="TrG5h" value="text1" />
-            <node concept="10Q1$e" id="4RbflAQq3Y2" role="1tU5fm">
-              <node concept="17QB3L" id="4RbflAQq2hU" role="10Q1$1" />
-            </node>
-            <node concept="2ShNRf" id="4RbflAQq9Pw" role="33vP2m">
-              <node concept="3$_iS1" id="4RbflAQqfhV" role="2ShVmc">
-                <node concept="3$GHV9" id="4RbflAQqfhX" role="3$GQph">
-                  <node concept="3cmrfG" id="4RbflAQqgRT" role="3$I4v7">
-                    <property role="3cmrfH" value="3" />
-                  </node>
-                </node>
-                <node concept="17QB3L" id="4RbflAQqfeO" role="3$_nBY" />
-              </node>
-            </node>
-          </node>
-        </node>
-        <node concept="3cpWs8" id="4RbflAQqEpK" role="3cqZAp">
-          <node concept="3cpWsn" id="4RbflAQqEpL" role="3cpWs9">
-            <property role="TrG5h" value="text2" />
-            <node concept="10Q1$e" id="4RbflAQqEpM" role="1tU5fm">
-              <node concept="17QB3L" id="4RbflAQqEpN" role="10Q1$1" />
-            </node>
-            <node concept="2ShNRf" id="4RbflAQqEpO" role="33vP2m">
-              <node concept="3$_iS1" id="4RbflAQqEpP" role="2ShVmc">
-                <node concept="3$GHV9" id="4RbflAQqEpQ" role="3$GQph">
-                  <node concept="3cmrfG" id="4RbflAQqEpR" role="3$I4v7">
-                    <property role="3cmrfH" value="3" />
-                  </node>
-                </node>
-                <node concept="17QB3L" id="4RbflAQqEpS" role="3$_nBY" />
-              </node>
-            </node>
-          </node>
-        </node>
-        <node concept="3clFbF" id="4RbflAQqkWL" role="3cqZAp">
-          <node concept="2OqwBi" id="4RbflAQqnxc" role="3clFbG">
-            <node concept="37vLTw" id="4RbflAQqkWJ" role="2Oq$k0">
-              <ref role="3cqZAo" node="1O8e97MW5Xe" resolve="status" />
-            </node>
-            <node concept="liA8E" id="4RbflAQqpbI" role="2OqNvi">
-              <ref role="37wK5l" to="t4tl:~DclareForMpsStatus.run(java.lang.Runnable)" resolve="run" />
-              <node concept="1bVj0M" id="4RbflAQqqR4" role="37wK5m">
-                <node concept="3clFbS" id="4RbflAQqqR5" role="1bW5cS">
-                  <node concept="3clFbF" id="4RbflAQqxuk" role="3cqZAp">
-                    <node concept="37vLTI" id="4RbflAQqAUI" role="3clFbG">
-                      <node concept="AH0OO" id="4RbflAQqzie" role="37vLTJ">
-                        <node concept="3cmrfG" id="4RbflAQq$Zp" role="AHEQo">
-                          <property role="3cmrfH" value="0" />
-                        </node>
-                        <node concept="37vLTw" id="4RbflAQqxui" role="AHHXb">
-                          <ref role="3cqZAo" node="4RbflAQq2hZ" resolve="text1" />
-                        </node>
-                      </node>
-                      <node concept="1rXfSq" id="4RbflAQqCCD" role="37vLTx">
-                        <ref role="37wK5l" node="4RbflAQgiJQ" resolve="calcToStringOrBlank" />
-                        <node concept="37vLTw" id="4RbflAQqCCE" role="37wK5m">
-                          <ref role="3cqZAo" node="1O8e97MO9NM" resolve="devLine2Ref1" />
-                        </node>
-                        <node concept="1bVj0M" id="4RbflAQqCCF" role="37wK5m">
-                          <node concept="3clFbS" id="4RbflAQqCCG" role="1bW5cS">
-                            <node concept="3clFbF" id="4RbflAQqCCH" role="3cqZAp">
-                              <node concept="2OqwBi" id="4RbflAQqCCI" role="3clFbG">
-                                <node concept="2OwXpG" id="4RbflAQqCCJ" role="2OqNvi">
-                                  <ref role="2Oxat5" to="kag7:~UniverseStatistics$ChampionChangesPerInstance.mutable" resolve="mutable" />
-                                </node>
-                                <node concept="2OqwBi" id="4RbflAQqCCK" role="2Oq$k0">
-                                  <node concept="37vLTw" id="4RbflAQqCCL" role="2Oq$k0">
-                                    <ref role="3cqZAo" node="1O8e97MW5Xg" resolve="stats" />
-                                  </node>
-                                  <node concept="liA8E" id="4RbflAQqCCM" role="2OqNvi">
-                                    <ref role="37wK5l" to="kag7:~UniverseStatistics.championChangesPerInstance()" resolve="championChangesPerInstance" />
-                                  </node>
-                                </node>
-                              </node>
-                            </node>
-                          </node>
-                        </node>
-                      </node>
-                    </node>
-                  </node>
-                  <node concept="3clFbF" id="4RbflAQqIws" role="3cqZAp">
-                    <node concept="37vLTI" id="4RbflAQqIwt" role="3clFbG">
-                      <node concept="AH0OO" id="4RbflAQqIwu" role="37vLTJ">
-                        <node concept="3cmrfG" id="4RbflAQqIwv" role="AHEQo">
-                          <property role="3cmrfH" value="1" />
-                        </node>
-                        <node concept="37vLTw" id="4RbflAQqIww" role="AHHXb">
-                          <ref role="3cqZAo" node="4RbflAQq2hZ" resolve="text1" />
-                        </node>
-                      </node>
-                      <node concept="1rXfSq" id="4RbflAQqMdm" role="37vLTx">
-                        <ref role="37wK5l" node="4RbflAQgiJQ" resolve="calcToStringOrBlank" />
-                        <node concept="37vLTw" id="4RbflAQqMdn" role="37wK5m">
-                          <ref role="3cqZAo" node="1O8e97MOfFw" resolve="devLine3Ref1" />
-                        </node>
-                        <node concept="1bVj0M" id="4RbflAQqMdo" role="37wK5m">
-                          <node concept="3clFbS" id="4RbflAQqMdp" role="1bW5cS">
-                            <node concept="3clFbF" id="4RbflAQqMdq" role="3cqZAp">
-                              <node concept="2OqwBi" id="4RbflAQqMdr" role="3clFbG">
-                                <node concept="2OwXpG" id="4RbflAQqMds" role="2OqNvi">
-                                  <ref role="2Oxat5" to="kag7:~UniverseStatistics$ChampionObserved.mutable" resolve="mutable" />
-                                </node>
-                                <node concept="2OqwBi" id="4RbflAQqMdt" role="2Oq$k0">
-                                  <node concept="37vLTw" id="4RbflAQqMdu" role="2Oq$k0">
-                                    <ref role="3cqZAo" node="1O8e97MW5Xg" resolve="stats" />
-                                  </node>
-                                  <node concept="liA8E" id="4RbflAQqMdv" role="2OqNvi">
-                                    <ref role="37wK5l" to="kag7:~UniverseStatistics.championObserved()" resolve="championObserved" />
-                                  </node>
-                                </node>
-                              </node>
-                            </node>
-                          </node>
-                        </node>
-                      </node>
-                    </node>
-                  </node>
-                  <node concept="3clFbF" id="4RbflAQqKgk" role="3cqZAp">
-                    <node concept="37vLTI" id="4RbflAQqKgl" role="3clFbG">
-                      <node concept="AH0OO" id="4RbflAQqKgm" role="37vLTJ">
-                        <node concept="3cmrfG" id="4RbflAQqKgn" role="AHEQo">
-                          <property role="3cmrfH" value="2" />
-                        </node>
-                        <node concept="37vLTw" id="4RbflAQqKgo" role="AHHXb">
-                          <ref role="3cqZAo" node="4RbflAQq2hZ" resolve="text1" />
-                        </node>
-                      </node>
-                      <node concept="1rXfSq" id="4RbflAQqO2X" role="37vLTx">
-                        <ref role="37wK5l" node="4RbflAQgiJQ" resolve="calcToStringOrBlank" />
-                        <node concept="37vLTw" id="4RbflAQqO2Y" role="37wK5m">
-                          <ref role="3cqZAo" node="1O8e97MOgFv" resolve="devLine4Ref1" />
-                        </node>
-                        <node concept="1bVj0M" id="4RbflAQqO2Z" role="37wK5m">
-                          <node concept="3clFbS" id="4RbflAQqO30" role="1bW5cS">
-                            <node concept="3clFbF" id="4RbflAQqO31" role="3cqZAp">
-                              <node concept="2OqwBi" id="4RbflAQqO32" role="3clFbG">
-                                <node concept="2OwXpG" id="4RbflAQqO33" role="2OqNvi">
-                                  <ref role="2Oxat5" to="kag7:~UniverseStatistics$ChampionObserver.mutable" resolve="mutable" />
-                                </node>
-                                <node concept="2OqwBi" id="4RbflAQqO34" role="2Oq$k0">
-                                  <node concept="37vLTw" id="4RbflAQqO35" role="2Oq$k0">
-                                    <ref role="3cqZAo" node="1O8e97MW5Xg" resolve="stats" />
-                                  </node>
-                                  <node concept="liA8E" id="4RbflAQqO36" role="2OqNvi">
-                                    <ref role="37wK5l" to="kag7:~UniverseStatistics.championObservers()" resolve="championObservers" />
-                                  </node>
-                                </node>
-                              </node>
-                            </node>
-                          </node>
-                        </node>
-                      </node>
-                    </node>
-                  </node>
-                  <node concept="3clFbH" id="4RbflAQqu1D" role="3cqZAp" />
-                  <node concept="3clFbF" id="4RbflAQqWGq" role="3cqZAp">
-                    <node concept="37vLTI" id="4RbflAQqWGr" role="3clFbG">
-                      <node concept="AH0OO" id="4RbflAQqWGs" role="37vLTJ">
-                        <node concept="3cmrfG" id="4RbflAQqWGt" role="AHEQo">
-                          <property role="3cmrfH" value="0" />
-                        </node>
-                        <node concept="37vLTw" id="4RbflAQqWGu" role="AHHXb">
-                          <ref role="3cqZAo" node="4RbflAQqEpL" resolve="text2" />
-                        </node>
-                      </node>
-                      <node concept="1rXfSq" id="4RbflAQr6eR" role="37vLTx">
-                        <ref role="37wK5l" node="4RbflAQgiJQ" resolve="calcToStringOrBlank" />
-                        <node concept="37vLTw" id="4RbflAQr6eS" role="37wK5m">
-                          <ref role="3cqZAo" node="1O8e97MOf6f" resolve="devLine2Ref2" />
-                        </node>
-                        <node concept="1bVj0M" id="4RbflAQr6eT" role="37wK5m">
-                          <node concept="3clFbS" id="4RbflAQr6eU" role="1bW5cS">
-                            <node concept="3clFbF" id="4RbflAQr6eV" role="3cqZAp">
-                              <node concept="2OqwBi" id="4RbflAQr6eW" role="3clFbG">
-                                <node concept="2OwXpG" id="4RbflAQr6eX" role="2OqNvi">
-                                  <ref role="2Oxat5" to="kag7:~UniverseStatistics$ChampionChangesPerInstance.observer" resolve="observer" />
-                                </node>
-                                <node concept="2OqwBi" id="4RbflAQr6eY" role="2Oq$k0">
-                                  <node concept="37vLTw" id="4RbflAQr6eZ" role="2Oq$k0">
-                                    <ref role="3cqZAo" node="1O8e97MW5Xg" resolve="stats" />
-                                  </node>
-                                  <node concept="liA8E" id="4RbflAQr6f0" role="2OqNvi">
-                                    <ref role="37wK5l" to="kag7:~UniverseStatistics.championChangesPerInstance()" resolve="championChangesPerInstance" />
-                                  </node>
-                                </node>
-                              </node>
-                            </node>
-                          </node>
-                        </node>
-                      </node>
-                    </node>
-                  </node>
-                  <node concept="3clFbF" id="4RbflAQqWGb" role="3cqZAp">
-                    <node concept="37vLTI" id="4RbflAQqWGc" role="3clFbG">
-                      <node concept="AH0OO" id="4RbflAQqWGd" role="37vLTJ">
-                        <node concept="3cmrfG" id="4RbflAQqWGe" role="AHEQo">
-                          <property role="3cmrfH" value="1" />
-                        </node>
-                        <node concept="37vLTw" id="4RbflAQqWGf" role="AHHXb">
-                          <ref role="3cqZAo" node="4RbflAQqEpL" resolve="text2" />
-                        </node>
-                      </node>
-                      <node concept="1rXfSq" id="4RbflAQr8kj" role="37vLTx">
-                        <ref role="37wK5l" node="4RbflAQgiJQ" resolve="calcToStringOrBlank" />
-                        <node concept="37vLTw" id="4RbflAQr8kk" role="37wK5m">
-                          <ref role="3cqZAo" node="1O8e97MOg4O" resolve="devLine3Ref2" />
-                        </node>
-                        <node concept="1bVj0M" id="4RbflAQr8kl" role="37wK5m">
-                          <node concept="3clFbS" id="4RbflAQr8km" role="1bW5cS">
-                            <node concept="3clFbF" id="4RbflAQr8kn" role="3cqZAp">
-                              <node concept="2OqwBi" id="4RbflAQr8ko" role="3clFbG">
-                                <node concept="2OwXpG" id="4RbflAQr8kp" role="2OqNvi">
-                                  <ref role="2Oxat5" to="kag7:~UniverseStatistics$ChampionObserved.observer" resolve="observer" />
-                                </node>
-                                <node concept="2OqwBi" id="4RbflAQr8kq" role="2Oq$k0">
-                                  <node concept="37vLTw" id="4RbflAQr8kr" role="2Oq$k0">
-                                    <ref role="3cqZAo" node="1O8e97MW5Xg" resolve="stats" />
-                                  </node>
-                                  <node concept="liA8E" id="4RbflAQr8ks" role="2OqNvi">
-                                    <ref role="37wK5l" to="kag7:~UniverseStatistics.championObserved()" resolve="championObserved" />
-                                  </node>
-                                </node>
-                              </node>
-                            </node>
-                          </node>
-                        </node>
-                      </node>
-                    </node>
-                  </node>
-                  <node concept="3clFbF" id="4RbflAQqWFW" role="3cqZAp">
-                    <node concept="37vLTI" id="4RbflAQqWFX" role="3clFbG">
-                      <node concept="AH0OO" id="4RbflAQqWFY" role="37vLTJ">
-                        <node concept="3cmrfG" id="4RbflAQqWFZ" role="AHEQo">
-                          <property role="3cmrfH" value="2" />
-                        </node>
-                        <node concept="37vLTw" id="4RbflAQqWG0" role="AHHXb">
-                          <ref role="3cqZAo" node="4RbflAQqEpL" resolve="text2" />
-                        </node>
-                      </node>
-                      <node concept="1rXfSq" id="4RbflAQrahF" role="37vLTx">
-                        <ref role="37wK5l" node="4RbflAQgiJQ" resolve="calcToStringOrBlank" />
-                        <node concept="37vLTw" id="4RbflAQrahG" role="37wK5m">
-                          <ref role="3cqZAo" node="1O8e97MOnul" resolve="devLine4Ref2" />
-                        </node>
-                        <node concept="1bVj0M" id="4RbflAQrahH" role="37wK5m">
-                          <node concept="3clFbS" id="4RbflAQrahI" role="1bW5cS">
-                            <node concept="3clFbF" id="4RbflAQrahJ" role="3cqZAp">
-                              <node concept="2OqwBi" id="4RbflAQrahK" role="3clFbG">
-                                <node concept="2OwXpG" id="4RbflAQrahL" role="2OqNvi">
-                                  <ref role="2Oxat5" to="kag7:~UniverseStatistics$ChampionObserver.observed" resolve="observed" />
-                                </node>
-                                <node concept="2OqwBi" id="4RbflAQrahM" role="2Oq$k0">
-                                  <node concept="37vLTw" id="4RbflAQrahN" role="2Oq$k0">
-                                    <ref role="3cqZAo" node="1O8e97MW5Xg" resolve="stats" />
-                                  </node>
-                                  <node concept="liA8E" id="4RbflAQrahO" role="2OqNvi">
-                                    <ref role="37wK5l" to="kag7:~UniverseStatistics.championObservers()" resolve="championObservers" />
-                                  </node>
-                                </node>
-                              </node>
-                            </node>
-                          </node>
-                        </node>
-                      </node>
-                    </node>
-                  </node>
-                </node>
-              </node>
-            </node>
-          </node>
-        </node>
         <node concept="3cpWs8" id="1O8e97NpS_1" role="3cqZAp">
           <node concept="3cpWsn" id="1O8e97NpS_4" role="3cpWs9">
             <property role="TrG5h" value="fmt1" />
@@ -3953,12 +3941,23 @@
                     <node concept="1bVj0M" id="1O8e97NltS0" role="37wK5m">
                       <node concept="3clFbS" id="1O8e97NltS1" role="1bW5cS">
                         <node concept="3clFbF" id="1O8e97NltS2" role="3cqZAp">
-                          <node concept="2OqwBi" id="1O8e97NltS3" role="3clFbG">
-                            <node concept="37vLTw" id="1O8e97NltS4" role="2Oq$k0">
-                              <ref role="3cqZAo" node="1O8e97NltS6" resolve="s" />
+                          <node concept="3K4zz7" id="1ih40ddoW9P" role="3clFbG">
+                            <node concept="3clFbC" id="1ih40ddp0rI" role="3K4Cdx">
+                              <node concept="10Nm6u" id="1ih40ddp3o4" role="3uHU7w" />
+                              <node concept="37vLTw" id="1ih40ddoYNW" role="3uHU7B">
+                                <ref role="3cqZAo" node="1O8e97NltS6" resolve="s" />
+                              </node>
                             </node>
-                            <node concept="liA8E" id="1O8e97NltS5" role="2OqNvi">
-                              <ref role="37wK5l" to="wyt6:~String.length()" resolve="length" />
+                            <node concept="3cmrfG" id="1ih40ddp5Wc" role="3K4E3e">
+                              <property role="3cmrfH" value="0" />
+                            </node>
+                            <node concept="2OqwBi" id="1ih40ddpnzX" role="3K4GZi">
+                              <node concept="37vLTw" id="1ih40ddp8Nh" role="2Oq$k0">
+                                <ref role="3cqZAo" node="1O8e97NltS6" resolve="s" />
+                              </node>
+                              <node concept="liA8E" id="1ih40ddpqyV" role="2OqNvi">
+                                <ref role="37wK5l" to="wyt6:~String.length()" resolve="length" />
+                              </node>
                             </node>
                           </node>
                         </node>
