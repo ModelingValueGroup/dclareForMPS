@@ -33,6 +33,7 @@ prepare() {
 }
 copyToWiki() {
   echo "copying documentation from $SOURCE_DIR to $WIKI_DIR..."
+  rm -rf "$WIKI_DIR/$version"
   cp -r "$SOURCE_DIR/documentation" "$WIKI_DIR/$version"
 }
 generateHome() {
