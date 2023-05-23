@@ -59,10 +59,11 @@ class Doc {
     }
 
     public void write(PrintStream out) {
-        Stream<Line> pre      = lines.stream().takeWhile(Line::isNotVersion);
+        Stream<Line> pre      = lines.stream().takeWhile(Line::isNotTableHeader).filter(Line::isNotVersion);
+        Stream<Line> hdr      = lines.stream().filter(Line::isTableHeader).limit(1);
         Stream<Line> versions = lines.stream().filter(Line::isVersion).sorted();
-        Stream<Line> post     = lines.stream().dropWhile(Line::isNotVersion).filter(Line::isNotVersion);
-        Stream.concat(pre, Stream.concat(versions, post)).forEach(out::println);
+        Stream<Line> post     = lines.stream().dropWhile(Line::isNotTableHeader).skip(1).filter(Line::isNotVersion);
+        Stream.concat(pre, Stream.concat(hdr, Stream.concat(versions, post))).forEach(out::println);
     }
 }
 
@@ -83,6 +84,14 @@ class Line implements Comparable<Line> {
     @Override
     public String toString() {
         return isVersion() ? version.toString() : raw;
+    }
+
+    public boolean isTableHeader() {
+        return isNotVersion() && raw.startsWith("|:--");
+    }
+
+    public boolean isNotTableHeader() {
+        return !isTableHeader();
     }
 
     public boolean isVersion() {
