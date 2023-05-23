@@ -17,6 +17,7 @@
 set -euo pipefail
 
 main() {
+  set -x
   prepare
   copyToWiki
   generateHome
