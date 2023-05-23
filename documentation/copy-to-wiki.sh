@@ -50,11 +50,8 @@ pushToWiki() {
       git config --global user.email "auto-wiki-updater@modelingvalue.nl"
       git config --global user.name  "auto WIKI updater"
       git add -A
-      #git commit -m "update wiki from version '$version' in branch '$branch'"
-      #git push
-      git status
-      cat Home.md
-      find . -ls
+      git commit -m "update wiki from version '$version' in branch '$branch'"
+      git push
     )
   fi
 }
