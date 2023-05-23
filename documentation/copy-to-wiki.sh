@@ -36,7 +36,8 @@ copyToWiki() {
   cp -r "$SOURCE_DIR/documentation" "$WIKI_DIR/$version"
 }
 generateHome() {
-  java "$SOURCE_DIR/documentation/generateHome.java" "$WIKI_DIR/Home.md" "$owner" "$repo" "$version" "$branch" "$hash" | cat > "$WIKI_DIR/Home.md"
+  java "$SOURCE_DIR/documentation/GenerateHome.java" "$WIKI_DIR/Home.md" "$owner" "$repo" "$version" "$branch" "$hash" > "/tmp/Home.md"
+  mv "/tmp/Home.md" "$WIKI_DIR/Home.md"
 }
 pushToWiki() {
   if ! hasWikiChanges; then
@@ -47,8 +48,10 @@ pushToWiki() {
       git config --global user.email "auto-wiki-updater@modelingvalue.nl"
       git config --global user.name  "auto WIKI updater"
       git add -A
-      git commit -m "update wiki from version '$version' in branch '$branch'"
-      git push
+      #git commit -m "update wiki from version '$version' in branch '$branch'"
+      #git push
+      git status
+      cat Home.md
     )
   fi
 }
