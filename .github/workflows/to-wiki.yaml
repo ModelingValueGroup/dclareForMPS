@@ -37,4 +37,8 @@ jobs:
           path: 'wiki'
 
       - name: "copy to wiki"
+        env:
+          OWNER: ${{github.repository_owner}}
+          REPO: ${{github.event.repository.name}}
+          HASH: ${{github.sha}}
         run: . source/documentation/copy-to-wiki.sh

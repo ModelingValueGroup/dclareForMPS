@@ -15,27 +15,53 @@
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 set -euo pipefail
 
-# This script copies the documentation from the current branch to the wiki
-
 main() {
-    copyToWiki
-    pushToWiki
+  prepare
+  copyToWiki
+  generateHome
+  pushToWiki
+}
+prepare() {
+  SOURCE_DIR="source"
+    WIKI_DIR="wiki"
+     version="$(getVersion)"
+      branch="${GITHUB_REF#refs/heads/}"
+       owner="$OWNER"
+        repo="$REPO"
+        hash="$HASH"
 }
 copyToWiki() {
-  echo "copying documentation to wiki..."
-  date > wiki/test.md
+  echo "copying documentation from $SOURCE_DIR to $WIKI_DIR..."
+  cp -r "$SOURCE_DIR/documentation" "$WIKI_DIR/$version"
+}
+generateHome() {
+  java "$SOURCE_DIR/documentation/generateHome.java" "$WIKI_DIR/home.md" "$owner" "$repo" "$version" "$branch" "$hash" > "/tmp/home-$$"
+  cp "/tmp/home-$$" "$WIKI_DIR/home.md"
+  cat "/tmp/home-$$"
 }
 pushToWiki() {
-  ( cd wiki
-    if [[ $(git status --porcelain) ]]; then
+  if ! hasWikiChanges; then
+    echo "no changes to push to wiki repo"
+  else
+    ( cd $WIKI_DIR
       echo "push changes to wiki repo..."
       git config --global user.email "auto-wiki-updater@modelingvalue.nl"
       git config --global user.name  "auto WIKI updater"
       git add -A
-      git commit -m "update wiki from branch '${GITHUB_REF#refs/heads/}'"
-      git push
-    else
-      echo "no changes to push to wiki repo"
-    fi
+      #git commit -m "update wiki from version '$version' in branch '$branch'"
+      #git push
+      git status
+    )
+  fi
+}
+getVersion() {
+  cat "$SOURCE_DIR/gradle.properties" | sed 's/ //g' | egrep '^version=' | sed 's/version=//'
+}
+hasWikiChanges() {
+  ( cd "$WIKI_DIR"
+    [[ $(git status --porcelain) ]]
   )
 }
+
+
+main "$@"
