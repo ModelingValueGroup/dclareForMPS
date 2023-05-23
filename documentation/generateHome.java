@@ -16,6 +16,7 @@
 import java.io.IOException;
 import java.io.PrintStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -41,9 +42,12 @@ class Doc {
     final List<Line> lines;
 
     public Doc(String filePath) throws IOException {
-        lines = Files.readAllLines(Paths.get(filePath))
+        Path homeMd  = Paths.get(filePath);
+        Path rootDir = homeMd.getParent();
+        lines = Files.readAllLines(homeMd)
                 .stream()
                 .map(Line::new)
+                .filter(line -> line.isValid(rootDir))
                 .collect(Collectors.toList());
     }
 
@@ -87,6 +91,10 @@ class Line implements Comparable<Line> {
 
     public boolean isNotVersion() {
         return version == null;
+    }
+
+    public boolean isValid(Path rootDir) {
+        return isNotVersion() || version.isValid(rootDir);
     }
 
     @Override
@@ -142,6 +150,11 @@ class Version implements Comparable<Version> {
             throw new Error("Invalid version line: " + matcher.group(8) + " != " + repo);
         }
         hash = matcher.group(9);
+    }
+
+    public boolean isValid(Path rootDir) {
+        Path d = rootDir.resolve(version);
+        return Files.isDirectory(d) && Files.isRegularFile(d.resolve("home.md"));
     }
 
     @Override
