@@ -54,6 +54,7 @@ pushToWiki() {
       #git push
       git status
       cat Home.md
+      find . -ls
     )
   fi
 }
