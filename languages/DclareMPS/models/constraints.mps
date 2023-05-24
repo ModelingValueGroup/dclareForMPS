@@ -3659,7 +3659,7 @@
                   <node concept="2OqwBi" id="64dupBnG0VA" role="3uHU7B">
                     <node concept="EsrRn" id="64dupBnG0wQ" role="2Oq$k0" />
                     <node concept="2qgKlT" id="64dupBnG1ma" role="2OqNvi">
-                      <ref role="37wK5l" to="us1s:64dupBmWpM2" resolve="isConstant" />
+                      <ref role="37wK5l" to="us1s:4ZoRzr2mHnY" resolve="mustContainConstantAccessOnly" />
                     </node>
                   </node>
                   <node concept="3clFbC" id="64dupBnGbUa" role="3uHU7w">

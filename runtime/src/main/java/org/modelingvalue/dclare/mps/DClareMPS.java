@@ -1248,13 +1248,16 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
                     mpsChecker.check(itemsToCheck, repos, reportItems::add, new EmptyProgressMonitor());
                     imperativeTransaction.schedule(() -> {
                         for (SModule sModule : modules) {
-                            DObject.MPS_ISSUES.set(DModule.of(sModule), DObject.MPS_ISSUES.getDefault());
+                            DModule dModule = DModule.of(sModule);
+                            DObject.MPS_ISSUES.set(dModule, DObject.MPS_ISSUES.getDefault(dModule));
                         }
                         for (SModel sModel : models) {
-                            DObject.MPS_ISSUES.set(DModel.of(sModel), DObject.MPS_ISSUES.getDefault());
+                            DModel dModel = DModel.of(sModel);
+                            DObject.MPS_ISSUES.set(dModel, DObject.MPS_ISSUES.getDefault(dModel));
                         }
                         for (SNode root : roots) {
-                            DNode.ALL_MPS_ISSUES.set(DNode.of(root), DNode.ALL_MPS_ISSUES.getDefault());
+                            DNode dNode = DNode.of(root);
+                            DNode.ALL_MPS_ISSUES.set(dNode, DNode.ALL_MPS_ISSUES.getDefault(dNode));
                         }
                         for (IssueKindReportItem item : reportItems) {
                             DObject d = read(() -> context(item));

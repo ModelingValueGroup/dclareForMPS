@@ -274,6 +274,11 @@
       <property role="TrG5h" value="public" />
       <ref role="AX2Wp" to="tpck:fKAQMTB" resolve="boolean" />
     </node>
+    <node concept="1TJgyi" id="4ZoRzr2kIcs" role="1TKVEl">
+      <property role="IQ2nx" value="5753592850735620892" />
+      <property role="TrG5h" value="defaultInitializer" />
+      <ref role="AX2Wp" to="tpck:fKAQMTB" resolve="boolean" />
+    </node>
   </node>
   <node concept="1TIwiD" id="4$MeK2bvRdy">
     <property role="EcuMT" value="5274342987130696546" />
