@@ -1,6 +1,8 @@
 # How To Start
 ### Plugin Installation
+![plugin.png](images%2Fplugin.png)
 ### Switch on Engine
+![DclareEngineOnAtProjectOpen.png](images%2FDclareEngineOnAtProjectOpen.png)
 ### Helloworld
 
 # Syntax
@@ -56,6 +58,5 @@
 ### Constant Functionality
 
 # Gui Library
-### Diagrams
-### Declarative Swing
-### Shapes
+The GUI library is an MPS language that allows you to create Swing GUIs in a declarative way.
+The library is documented [here](GUI).

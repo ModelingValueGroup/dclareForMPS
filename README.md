@@ -30,7 +30,7 @@ The dclare project can be found here: [dclare](https://github.com/ModelingValueG
 4. open one of the example projects (see below)
 5. verify that the 'On' setting is enabled (Settings > Other Settings > Dclare):
 
-   ![check the engine checkbox](documentation/DclareEngineOnAtProjectOpen.png "Dclare Engine On At Project Open")
+   ![check the engine checkbox](documentation/images/DclareEngineOnAtProjectOpen.png "Dclare Engine On At Project Open")
 
 4. rebuild the example project
 5. play with the sandbox-models in the example-project

@@ -38,8 +38,7 @@ copyToWiki() {
   cp -r "$SOURCE_DIR/documentation" "$WIKI_DIR/$version"
 }
 generateHome() {
-  java "$SOURCE_DIR/documentation/GenerateHome.java" "$WIKI_DIR/Home.md" "$owner" "$repo" "$version" "$branch" "$hash" > "/tmp/Home.md"
-  mv "/tmp/Home.md" "$WIKI_DIR/Home.md"
+  java "$SOURCE_DIR/documentation/GenerateHome.java" "$WIKI_DIR/Home.md" "$owner" "$repo" "$version" "$branch" "$hash"
 }
 pushToWiki() {
   if ! hasWikiChanges; then
