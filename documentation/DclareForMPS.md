@@ -3,6 +3,7 @@
 ### Plugin Installation
 
 You can install the plugin from the Jetbrains plugin Marketplace:
+
 ![plugin.png](images/plugin.png)
 
 ### Where to find the various parts of the plugin
