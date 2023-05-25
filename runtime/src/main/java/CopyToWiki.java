@@ -13,8 +13,6 @@
 //     Arjan Kok, Carel Bast                                                                                           ~
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-import org.jetbrains.annotations.NotNull;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -320,12 +318,10 @@ class Version implements Comparable<Version> {
         return String.format("| %s | %s | %s | %s |", versionColumn, date, branchColumn, linkColumn);
     }
 
-    @NotNull
     private String myBareMainMd() {
         return version + Wiki.SEPARATOR_MD + "main.md";
     }
 
-    @NotNull
     private String myBareMainLink() {
         return version + Wiki.SEPARATOR_MD + "main";
     }
