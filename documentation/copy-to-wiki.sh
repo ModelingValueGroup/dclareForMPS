@@ -32,6 +32,8 @@ prepare() {
         hash="$HASH"
 }
 copyToWiki() {
+  set -x
+  ls -l "$SOURCE_DIR/runtime/src/main/java/GenerateHome.java"
   java "$SOURCE_DIR/runtime/src/main/java/GenerateHome.java" \
     "$DOCU_DIR"
     "$WIKI_DIR" \
