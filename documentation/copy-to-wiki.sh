@@ -33,7 +33,7 @@ prepare() {
 }
 copyToWiki() {
   java "$SOURCE_DIR/runtime/src/main/java/CopyToWiki.java" \
-    "$DOCU_DIR"
+    "$DOCU_DIR" \
     "$WIKI_DIR" \
     "$owner" \
     "$repo" \
