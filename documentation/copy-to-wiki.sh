@@ -19,7 +19,6 @@ set -euo pipefail
 main() {
   prepare
   copyToWiki
-  generateHome
   pushToWiki
 }
 prepare() {
@@ -33,11 +32,6 @@ prepare() {
         hash="$HASH"
 }
 copyToWiki() {
-  echo "copying documentation from $SOURCE_DIR to $WIKI_DIR..."
-  rm -rf "$WIKI_DIR/$version"
-  cp -r "$DOCU_DIR" "$WIKI_DIR/$version"
-}
-generateHome() {
   java "$SOURCE_DIR/runtime/src/main/java/GenerateHome.java" \
     "$DOCU_DIR"
     "$WIKI_DIR" \
