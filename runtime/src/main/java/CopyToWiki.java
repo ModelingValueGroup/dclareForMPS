@@ -45,8 +45,9 @@ class CopyToWiki {
 
 @SuppressWarnings("resource")
 class Wiki {
-    static final String SEPARATOR_MD  = "–";
-    static final String SEPARATOR_IMG = "$";
+    static final String MAIN_PAGE_NAME = "DclareForMPS";
+    static final String SEPARATOR_MD   = "–";
+    static final String SEPARATOR_IMG  = "$";
 
     private final Path       wikiDir;
     private final Path       homeMd;
@@ -90,7 +91,8 @@ class Wiki {
     public void removeInvalidLines() {
         if (lines.removeIf(line -> !line.isValid(wikiDir))) {
             System.err.println();
-            System.err.println("##DEL## invalid versions");
+            System.err.println("##DEL## removed invalid versions, remaining:");
+            lines.stream().filter(Line::isVersion).forEach(line -> System.err.println("##VER## " + line.version));
         }
     }
 
@@ -288,9 +290,9 @@ class Version implements Comparable<Version> {
             throw new Error("Invalid version line: " + matcher.group(0) + ": groupcount=" + matcher.groupCount() + " but should be 11");
         }
         version = matcher.group(1);
-        if (!matcher.group(2).equals(myBareMainLink())) {
-            throw new Error("Invalid version line: " + matcher.group(2) + " != " + myBareMainLink());
-        }
+//        if (!matcher.group(2).equals(myBareMainLink())) {
+//            throw new Error("Invalid version line: " + matcher.group(2) + " != " + myBareMainLink());
+//        }
         date   = matcher.group(3);
         branch = matcher.group(4);
         owner  = matcher.group(5);
@@ -311,7 +313,7 @@ class Version implements Comparable<Version> {
     }
 
     public boolean isValid(Path rootDir) {
-        System.err.println("@@@@@@@ " + rootDir.resolve(myBareMainMd())+" @@@ "+Files.isRegularFile(rootDir.resolve(myBareMainMd())));
+        System.err.println("@@@@@@@ " + rootDir.resolve(myBareMainMd()) + " @@@ " + Files.isRegularFile(rootDir.resolve(myBareMainMd())));
         return Files.isRegularFile(rootDir.resolve(myBareMainMd()));
     }
 
@@ -329,11 +331,11 @@ class Version implements Comparable<Version> {
     }
 
     private String myBareMainMd() {
-        return version + Wiki.SEPARATOR_MD + "main.md";
+        return myBareMainLink() + ".md";
     }
 
     private String myBareMainLink() {
-        return version + Wiki.SEPARATOR_MD + "main";
+        return version + Wiki.SEPARATOR_MD + Wiki.MAIN_PAGE_NAME;
     }
 
     private static String link(String text, String link) {
