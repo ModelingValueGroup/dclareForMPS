@@ -98,23 +98,30 @@ class Wiki {
 
     @SuppressWarnings("resource")
     static class CopyFileInfo {
-        final String separator;
-        final Path   src;
-        final Path   dst;
-        final String oldPath;
-        final String newPath;
+        final String  separator;
+        final Path    src;
+        final Path    dst;
+        final String  oldPath;
+        final String  newPath;
+        final boolean isMd;
+        final Pattern replacementPattern;
+        final String  replacement;
 
         public CopyFileInfo(Path docuDir, Path wikiDir, Path versionDir, Path src) {
             Path fromDoc = docuDir.relativize(src);
-            this.separator = getSeparator(fromDoc.getFileName().toString());
-            this.src       = src;
-            this.dst       = wikiDir.resolve(getWikiFileName(versionDir, fromDoc, separator));
-            this.oldPath   = fromDoc.toString();
-            this.newPath   = getWikiFileName(versionDir, fromDoc, getSeparator(fromDoc.getFileName().toString()));
+            this.separator          = getSeparator(fromDoc.getFileName().toString());
+            this.src                = src;
+            this.dst                = wikiDir.resolve(getWikiFileName(versionDir, fromDoc, separator));
+            this.oldPath            = fromDoc.toString();
+            this.newPath            = getWikiFileName(versionDir, fromDoc, getSeparator(fromDoc.getFileName().toString()));
+            this.isMd               = separator.equals(SEPARATOR_MD);
+            String regex = "]\\(" + Pattern.quote(isMd ? oldPath.replaceAll("[.][^.]*$", "") : oldPath).replaceAll("/", "\\\\E(/|%2f|%2F)\\\\Q") + "\\)";
+            this.replacementPattern = Pattern.compile(regex);
+            this.replacement        = "](" + (isMd ? newPath.replaceAll("[.][^.]*$", "") : newPath).replaceAll("\\$", "\\\\\\$") + ")";
         }
 
         public void copyFile(Map<String, CopyFileInfo> map) {
-            if (separator.equals(SEPARATOR_MD)) {
+            if (isMd) {
                 translateMdFile(map);
             } else {
                 copyBinaryFile();
@@ -133,18 +140,18 @@ class Wiki {
             }
         }
 
-        private String translateLine(String line) {
-            Matcher matcher = Pattern.compile("\\(" + Pattern.quote(oldPath).replaceAll("/", "\\\\E(/|%2f|%2F)\\\\Q") + "\\)").matcher(line);
-            if (matcher.find()) {
-                return matcher.replaceAll("(" + newPath.replaceAll("\\$", "\\\\\\$") + ")");
-            } else {
-                return line;
+        private void copyBinaryFile() {
+            System.err.printf("##CPY## %-70s => %s\n", src, dst);
+            try {
+                Files.copy(src, dst);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
         }
 
         private String translateLine(String line, Map<String, CopyFileInfo> map) {
             String[] v = new String[]{line};
-            map.values().forEach(cfi -> v[0] = cfi.translateLine(v[0]));
+            map.values().forEach(cfi -> cfi.translateLine(v));
             if (!v[0].equals(line)) {
                 System.err.println("##TRA##       >   " + line);
                 System.err.println("##TRA##       <   " + v[0]);
@@ -152,12 +159,10 @@ class Wiki {
             return v[0];
         }
 
-        private void copyBinaryFile() {
-            System.err.printf("##CPY## %-70s => %s\n", src, dst);
-            try {
-                Files.copy(src, dst);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+        private void translateLine(String[] line) {
+            Matcher matcher = replacementPattern.matcher(line[0]);
+            if (matcher.find()) {
+                line[0] = matcher.replaceAll(replacement);
             }
         }
     }
