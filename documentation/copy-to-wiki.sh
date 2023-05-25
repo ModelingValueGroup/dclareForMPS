@@ -17,7 +17,6 @@
 set -euo pipefail
 
 main() {
-  set -x
   prepare
   copyToWiki
   generateHome
@@ -25,6 +24,7 @@ main() {
 }
 prepare() {
   SOURCE_DIR="source"
+    DOCU_DIR="$SOURCE_DIR/documentation"
     WIKI_DIR="wiki"
      version="$(getVersion)"
       branch="${GITHUB_REF#refs/heads/}"
@@ -35,10 +35,17 @@ prepare() {
 copyToWiki() {
   echo "copying documentation from $SOURCE_DIR to $WIKI_DIR..."
   rm -rf "$WIKI_DIR/$version"
-  cp -r "$SOURCE_DIR/documentation" "$WIKI_DIR/$version"
+  cp -r "$DOCU_DIR" "$WIKI_DIR/$version"
 }
 generateHome() {
-  java "$SOURCE_DIR/documentation/GenerateHome.java" "$WIKI_DIR/Home.md" "$owner" "$repo" "$version" "$branch" "$hash"
+  java "$SOURCE_DIR/runtime/src/main/java/GenerateHome.java" \
+    "$DOCU_DIR"
+    "$WIKI_DIR" \
+    "$owner" \
+    "$repo" \
+    "$version" \
+    "$branch" \
+    "$hash"
 }
 pushToWiki() {
   if ! hasWikiChanges; then
