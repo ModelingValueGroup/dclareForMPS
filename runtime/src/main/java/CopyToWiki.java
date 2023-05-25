@@ -37,7 +37,9 @@ class CopyToWiki {
         Path    wikiDir    = Paths.get(args[1]);
         Version newVersion = new Version(args[2], args[3], args[4], args[5], args[6]);
 
-        new Wiki(wikiDir).replaceVersion(newVersion, docuDir);
+        Wiki wiki = new Wiki(wikiDir);
+        wiki.removeInvalidLines();
+        wiki.replaceVersion(newVersion, docuDir);
     }
 }
 
@@ -56,8 +58,8 @@ class Wiki {
         lines        = Files.readAllLines(homeMd)
                 .stream()
                 .map(Line::new)
-                .filter(line -> line.isValid(wikiDir))
                 .collect(Collectors.toList());
+        lines.stream().filter(Line::isVersion).forEach(line -> System.err.println("##VER## " + line.version));
     }
 
     public void replaceVersion(Version newVersion, Path docuDir) throws IOException {
@@ -83,6 +85,13 @@ class Wiki {
                 deleteFile(p);
             }
         });
+    }
+
+    public void removeInvalidLines() {
+        if (lines.removeIf(line -> !line.isValid(wikiDir))) {
+            System.err.println();
+            System.err.println("##DEL## invalid versions");
+        }
     }
 
     @SuppressWarnings("resource")
@@ -302,6 +311,7 @@ class Version implements Comparable<Version> {
     }
 
     public boolean isValid(Path rootDir) {
+        System.err.println("@@@@@@@ " + rootDir.resolve(myBareMainMd())+" @@@ "+Files.isRegularFile(rootDir.resolve(myBareMainMd())));
         return Files.isRegularFile(rootDir.resolve(myBareMainMd()));
     }
 
