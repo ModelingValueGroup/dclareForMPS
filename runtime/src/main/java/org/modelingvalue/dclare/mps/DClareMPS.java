@@ -893,22 +893,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
 
     public static <T> T get(Object sObject, Supplier<T> supplier) {
         DClareMPS dClareMPS = dClareForObject(sObject);
-        State state = dClareMPS != null ? dClareMPS.imperativeState() : null;
-        return state != null ? state.get(() -> GET_FROM_MPS.get(true, () -> {
-            DObject dObject = dClareMPS.toDObject(sObject);
-            if (dObject.isExternal()) {
-                return state.derive(supplier, dClareMPS.universeTransaction().constantState());
-            } else if (dObject.isActive()) {
-                try {
-                    return supplier.get();
-                } catch (Throwable t) {
-                    dClareMPS.addThrowable(t);
-                    return null;
-                }
-            } else {
-                return state.derive(supplier, dClareMPS.derivationState());
-            }
-        })) : null;
+        return dClareMPS.doGet(sObject, supplier);
     }
 
     private static DClareMPS dClareForObject(Object sObject) {
@@ -930,10 +915,31 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
                     return dClareMPS;
                 }
             }
-        } else {
-            throw new UnsupportedOperationException("Non supported sObject " + sObject);
         }
-        return null;
+        throw new UnsupportedOperationException("Non Dclare Engine found for " + sObject);
+    }
+
+    public <T> T doGet(Object sObject, Supplier<T> supplier) {
+        State state = imperativeState();
+        return state.get(() -> GET_FROM_MPS.get(true, () -> {
+            DObject dObject = toDObject(sObject);
+            if (dObject.isExternal()) {
+                return state.derive(supplier, universeTransaction().constantState());
+            } else if (dObject.isActive() && isRunning()) {
+                try {
+                    if (Thread.currentThread() == commandThread) {
+                        return LeafTransaction.getContext().get(imperativeTransaction, supplier);
+                    } else {
+                        return supplier.get();
+                    }
+                } catch (Throwable t) {
+                    addThrowable(t);
+                    return null;
+                }
+            } else {
+                return state.derive(supplier, derivationState());
+            }
+        }));
     }
 
     @SuppressWarnings("unchecked")
