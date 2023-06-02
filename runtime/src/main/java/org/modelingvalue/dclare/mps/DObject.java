@@ -22,6 +22,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
+import org.jetbrains.mps.openapi.model.SNode;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
@@ -108,6 +109,13 @@ public abstract class DObject implements Mutable {
                                                                                                                  }, plumbing, containment);
 
     protected static final DObserved<DObject, Boolean>                                 CONTAINED                 = DObserved.of("$CONTAINED", Boolean.FALSE, null, (dObject, pre, post) -> {
+                                                                                                                     if (dObject instanceof DNode) {
+                                                                                                                         SNode sNode = ((DNode) dObject).tryOriginal();
+                                                                                                                         if (sNode != null) {
+                                                                                                                             sNode.setProperty(DNode.PARENT_PROPERTY, "");
+                                                                                                                             sNode.setProperty(DNode.PARENT_PROPERTY, null);
+                                                                                                                         }
+                                                                                                                     }
                                                                                                                  }, plumbing);
 
     protected static final Setable<DObject, Set<Observed>>                             READ_OBSERVEDS            = Setable.of("$READ_OBSERVEDS", Set.of(), plumbing, preserved);

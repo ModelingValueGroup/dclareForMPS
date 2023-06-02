@@ -183,6 +183,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
     protected static final Setable<DClareMPS, DRepository>                                          REPOSITORY_CONTAINER     = Setable.of("REPOSITORY_CONTAINER", null, containment);
     private static final Setable<DClareMPS, DServerMetaData>                                        DSERVER_METADATA         = Setable.of("SERVER_METADATA", null, containment);
     protected static final Set<? extends Setable<? extends Mutable, ?>>                             SETABLES                 = Set.of(REPOSITORY_CONTAINER, DSERVER_METADATA);
+
     //
     private final int                                                                               nr;
     private final ContextPool                                                                       thePool                  = ContextThread.createPool(this);
@@ -358,8 +359,18 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
                 imperativeTransaction = null;
             }
             state.run(() -> getRepository().stop(this));
+            refreshAllObservingEditors();
         }
         universeTransaction.kill();
+    }
+
+    private void refreshAllObservingEditors() {
+        commandInEDT(() -> {
+            engine.observedNodes.get().forEachOrdered(n -> {
+                n.setProperty(DNode.PARENT_PROPERTY, "");
+                n.setProperty(DNode.PARENT_PROPERTY, null);
+            });
+        });
     }
 
     @SuppressWarnings("unused") // called from MPS
@@ -919,10 +930,14 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
         throw new UnsupportedOperationException("Non Dclare Engine found for " + sObject);
     }
 
-    public <T> T doGet(Object sObject, Supplier<T> supplier) {
+    private <T> T doGet(Object sObject, Supplier<T> supplier) {
         State state = imperativeState();
         return state.get(() -> GET_FROM_MPS.get(true, () -> {
             DObject dObject = toDObject(sObject);
+            if (sObject instanceof SNode) {
+                ((SNode) sObject).getProperty(DNode.PARENT_PROPERTY);
+                addObservedNode((SNode) sObject);
+            }
             if (dObject.isExternal()) {
                 return state.derive(supplier, universeTransaction().constantState());
             } else if (dObject.isActive() && isRunning()) {
@@ -1308,5 +1323,9 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
         } else {
             return null;
         }
+    }
+
+    protected void addObservedNode(SNode sNode) {
+        engine.observedNodes.update(Set::add, sNode);
     }
 }

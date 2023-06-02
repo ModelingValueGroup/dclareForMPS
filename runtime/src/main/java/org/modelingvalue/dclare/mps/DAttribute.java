@@ -172,10 +172,13 @@ public interface DAttribute<O, T> extends DFeature {
             if (object == null) {
                 throw new NullPointerException("attempt to read null." + this);
             }
-            if (sProperty != null && object instanceof SNode && DClareMPS.GET_FROM_MPS.get() && !AbstractDerivationTransaction.isDeriving()) {
-                ((SNode) object).getProperty(sProperty);
-            }
             LeafTransaction tx = LeafTransaction.getCurrent();
+            if (sProperty != null && object instanceof DNode && DClareMPS.GET_FROM_MPS.get() && !AbstractDerivationTransaction.isDeriving()) {
+                SNode sNode = ((DNode) object).tryOriginal();
+                if (sNode != null) {
+                    sNode.getProperty(sProperty);
+                }
+            }
             if (!(tx instanceof AbstractDerivationTransaction) && object.isExternal()) {
                 DClareMPS dClareMPS = DClareMPS.instance(tx);
                 return dClareMPS.imperativeState().derive(() -> super.get(object), dClareMPS.universeTransaction().constantState());
