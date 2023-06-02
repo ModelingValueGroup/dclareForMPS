@@ -10021,7 +10021,7 @@
     </node>
     <node concept="13i0hz" id="4ZoRzr2mIOV" role="13h7CS">
       <property role="TrG5h" value="mustContainConstantAccessOnly" />
-      <ref role="13i0hy" node="4ZoRzr2mHnY" resolve="mustContainConstantOnly" />
+      <ref role="13i0hy" node="4ZoRzr2mHnY" resolve="mustContainConstantAccessOnly" />
       <node concept="3clFbS" id="4ZoRzr2mIOY" role="3clF47">
         <node concept="3clFbF" id="4ZoRzr2mLeM" role="3cqZAp">
           <node concept="22lmx$" id="4ZoRzr2mLiT" role="3clFbG">

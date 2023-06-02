@@ -6744,7 +6744,7 @@
                                       <ref role="37wK5l" to="r791:~JTextComponent.selectAll()" resolve="selectAll" />
                                     </node>
                                     <node concept="37vLTw" id="2oUheSol1d2" role="2Oq$k0">
-                                      <ref role="3cqZAo" node="2oUheSol1cW" resolve="field" />
+                                      <ref role="3cqZAo" node="2oUheSol1cW" resolve="f" />
                                     </node>
                                   </node>
                                 </node>
@@ -6822,7 +6822,7 @@
                                       </node>
                                     </node>
                                     <node concept="37vLTw" id="2oUheSokJa8" role="2Oq$k0">
-                                      <ref role="3cqZAo" node="2oUheSokJa2" resolve="field" />
+                                      <ref role="3cqZAo" node="2oUheSokJa2" resolve="f" />
                                     </node>
                                   </node>
                                 </node>

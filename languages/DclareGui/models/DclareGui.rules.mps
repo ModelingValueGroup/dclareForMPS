@@ -10617,7 +10617,7 @@
             <node concept="2OqwBi" id="55oixcmGwDd" role="2Oq$k0">
               <node concept="2Wb9Zs" id="55oixcmGwiZ" role="2Oq$k0" />
               <node concept="32jkxy" id="55oixcmGxg9" role="2OqNvi">
-                <ref role="3cqZAo" node="3OZjsowr3$L" resolve="layout" />
+                <ref role="3cqZAo" node="3OZjsowr3$L" resolve="iDiagram" />
               </node>
             </node>
             <node concept="3Tsc0h" id="55oixcmGyxT" role="2OqNvi">
