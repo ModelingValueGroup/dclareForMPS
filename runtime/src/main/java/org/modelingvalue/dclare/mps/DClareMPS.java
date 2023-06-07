@@ -881,11 +881,11 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
     }
 
     public static <T> T pre(Supplier<T> supplier) {
-        return LeafTransaction.getCurrent().universeTransaction().preOuterStartState().get(supplier);
+        return LeafTransaction.getCurrent().universeTransaction().preStartState(Priority.OUTER).get(supplier);
     }
 
     public static <T> T post(Supplier<T> supplier) {
-        return LeafTransaction.getCurrent().universeTransaction().outerStartState().get(supplier);
+        return LeafTransaction.getCurrent().universeTransaction().startState(Priority.OUTER).get(supplier);
     }
 
     public UniverseTransaction universeTransaction() {
@@ -1102,7 +1102,7 @@ public class DClareMPS implements StateDeltaHandler, Universe, UncaughtException
 
         private boolean isPreState() {
             UniverseTransaction utx = universeTransaction();
-            return this == utx.preState() || this == utx.preOuterStartState();
+            return this == utx.preState() || this == utx.preStartState(Priority.OUTER).state();
         }
     }
 

@@ -182,7 +182,7 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
             if (object.isRead()) {
                 if (!DObject.READ_OBSERVEDS.get(object).contains(this)) {
                     triggerInitRead(object);
-                    ((ObserverTransaction) tx).retrigger(Priority.inner);
+                    ((ObserverTransaction) tx).retrigger(Priority.INNER);
                     return super.get(object);
                 }
             } else if (!DObject.READ_OBSERVEDS.add(object, this).contains(this) && DClareMPS.instance().getConfig().isTraceActivation()) {
