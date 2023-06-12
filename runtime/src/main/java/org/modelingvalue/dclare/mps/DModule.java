@@ -249,7 +249,7 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
         Set<SModel> ist = Set.of();
         if (isLanguage() || isSolution()) {
             for (SModel child : original().getModels()) {
-                if (child instanceof EditableSModel && !(isLanguage() && child.getName().getSimpleName().equals("rules"))) {
+                if (child instanceof EditableSModel) {
                     ist = ist.add(child);
                 }
             }
