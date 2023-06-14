@@ -59,6 +59,7 @@
         <depends>jetbrains.mps.ide.devkit</depends>
         <depends>com.intellij.modules.mps</depends>
         <depends>jetbrains.mps.ide.modelchecker</depends>
+        <depends>jetbrains.mps.debugger.api</depends>
         <idea-version since-build="213.5000.0000" until-build="213.9000.0000" />
         
         <extensions defaultExtensionNs="com.intellij">
@@ -81,6 +82,7 @@
         <depends>jetbrains.mps.ide.devkit</depends>
         <depends>com.intellij.modules.mps</depends>
         <depends>jetbrains.mps.ide.modelchecker</depends>
+        <depends>jetbrains.mps.debugger.api</depends>
         <idea-version since-build="213.5000.0000" until-build="213.9000.0000" />
         
         <extensions defaultExtensionNs="com.intellij">
