@@ -478,6 +478,10 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
             return NODE_TYPE.get(Quadruple.of(ls, SNodeUtil.concept_BaseConcept, Set.of(), Set.of()));
         } else {
             ls = ls.addAll(getAnonymousLanguages());
+            SLanguage l = DClareMPS.LANGUAGE.get(getConcept());
+            if (!DClareMPS.ACTIVE_RULE_SETS.get(l).isEmpty()) {
+                ls = ls.add(l);
+            }
             return NODE_TYPE.get(Quadruple.of(ls, getConcept(), getAnonymousTypes(), getCopyAspects()));
         }
     }
