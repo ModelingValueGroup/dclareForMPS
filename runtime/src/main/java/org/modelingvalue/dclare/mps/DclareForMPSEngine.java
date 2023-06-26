@@ -32,6 +32,8 @@ import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.MutationWrapper;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.collections.util.StatusProvider.StatusIterator;
+import org.modelingvalue.dclare.DclareTrace;
+import org.modelingvalue.dclare.LeafTransaction;
 import org.modelingvalue.dclare.UniverseTransaction.Status;
 
 import jetbrains.mps.classloading.ClassLoaderManager;
@@ -199,11 +201,11 @@ public class DclareForMPSEngine implements DeployListener, IBreakpointManagerLis
     }
 
     public static void breakpoint() {
-        System.err.println("breakpoint");
+        System.err.println(DclareTrace.getLineStart("BRKPNT", LeafTransaction.getCurrent()));
     }
 
     public static <T> T print(Object ctx, T val) {
-        System.err.println("!!!!!!!!!! " + ctx + " : " + val);
+        System.err.println(DclareTrace.getLineStart("PRINT", LeafTransaction.getCurrent()) + ctx + " : " + val);
         return val;
     }
 
