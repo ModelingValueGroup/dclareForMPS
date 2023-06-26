@@ -140,6 +140,8 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
         if (!isExternal()) {
             CONTAINED.set(this, Boolean.TRUE);
             MODELS.triggerInitRead(this);
+            LANGUAGES.triggerInitRead(this);
+            DEPENDENCIES.triggerInitRead(this);
         }
     }
 
