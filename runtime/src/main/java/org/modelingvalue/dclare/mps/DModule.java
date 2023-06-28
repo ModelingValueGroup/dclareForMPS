@@ -37,6 +37,7 @@ import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.dclare.Constant;
 import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.Setable;
+import org.modelingvalue.dclare.State;
 
 import jetbrains.mps.errors.item.ModuleReportItem;
 import jetbrains.mps.extapi.model.SModelBase;
@@ -281,6 +282,12 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
     @Override
     protected Pair<DObject, DObserved<DObject, ?>> readParent() {
         return (Pair) Pair.of(dClareMPS().getRepository(), DRepository.MODULES);
+    }
+
+    @SuppressWarnings("rawtypes")
+    @Override
+    public boolean dIsOrphan(State state) {
+        return !isExternal() && super.dIsOrphan(state);
     }
 
 }
