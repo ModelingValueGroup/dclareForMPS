@@ -33,7 +33,7 @@ public interface IRuleSet {
 
     List<DAttribute<DRepository, ?>> getRepositoryAttributes();
 
-    List<DAttribute<SStructObject, ?>> getStructAttributes(SStructClass cls);
+    List<DAttribute<SStructObject, ?>> getStructAttributes(SStructClass cls, Set<String> anonymousTypes);
 
     List<DRule<SNode>> getNodeRules(SAbstractConcept concept, Set<String> anonymousTypes);
 
@@ -43,7 +43,7 @@ public interface IRuleSet {
 
     List<DRule<DRepository>> getRepositoryRules();
 
-    List<DRule<SStructObject>> getStructRules(SStructClass cls);
+    List<DRule<SStructObject>> getStructRules(SStructClass cls, Set<String> anonymousTypes);
 
     List<INative<SNode>> getNodeNatives(SAbstractConcept concept, Set<String> anonymousTypes);
 
@@ -53,7 +53,7 @@ public interface IRuleSet {
 
     List<INative<DRepository>> getRepositoryNatives();
 
-    List<INative<SStructObject>> getStructNatives(SStructClass cls);
+    List<INative<SStructObject>> getStructNatives(SStructClass cls, Set<String> anonymousTypes);
 
     List<DMethod<?>> getAllMethods();
 

@@ -700,7 +700,7 @@
     </node>
   </node>
   <node concept="24kQdi" id="29R9$zYWiG0">
-    <property role="3GE5qa" value="models" />
+    <property role="3GE5qa" value="nodes" />
     <ref role="1XX52x" to="7ggn:29R9$zYWiFR" resolve="OppositeLinkAccess" />
     <node concept="1iCGBv" id="g$eExpw" role="2wV5jI">
       <property role="1$x2rV" value="&lt;no link&gt;" />
@@ -1049,7 +1049,7 @@
     </node>
   </node>
   <node concept="24kQdi" id="30GBB6Y$wtU">
-    <property role="3GE5qa" value="attributes.builder" />
+    <property role="3GE5qa" value="nodes.builder" />
     <ref role="1XX52x" to="7ggn:30GBB6Y$vTM" resolve="NodeBuilderInitAttribute" />
     <node concept="3EZMnI" id="30GBB6Y$wtW" role="2wV5jI">
       <node concept="1iCGBv" id="30GBB6Y$wtX" role="3EZMnx">
@@ -1292,7 +1292,7 @@
     </node>
   </node>
   <node concept="24kQdi" id="6HWpSUEvTB6">
-    <property role="3GE5qa" value="models" />
+    <property role="3GE5qa" value="nodes" />
     <ref role="1XX52x" to="7ggn:6HWpSUEuark" resolve="NodeRuleSet" />
     <node concept="3EZMnI" id="6HWpSUEw$TT" role="2wV5jI">
       <node concept="l2Vlx" id="6_R8J$2Fzhm" role="2iSdaV" />
@@ -1423,7 +1423,7 @@
     </node>
   </node>
   <node concept="24kQdi" id="6HWpSUEvTBv">
-    <property role="3GE5qa" value="models" />
+    <property role="3GE5qa" value="modules" />
     <ref role="1XX52x" to="7ggn:6HWpSUEu3U0" resolve="ModuleRuleSet" />
     <node concept="3EZMnI" id="6_R8J$2HZdM" role="2wV5jI">
       <node concept="l2Vlx" id="6_R8J$2HZdN" role="2iSdaV" />
@@ -1671,7 +1671,7 @@
     </node>
   </node>
   <node concept="24kQdi" id="6HWpSUEvTDx">
-    <property role="3GE5qa" value="models" />
+    <property role="3GE5qa" value="repositories" />
     <ref role="1XX52x" to="7ggn:6HWpSUEu3U3" resolve="RepositoryRuleSet" />
     <node concept="3EZMnI" id="6_R8J$2HZrv" role="2wV5jI">
       <node concept="l2Vlx" id="6_R8J$2HZrw" role="2iSdaV" />
@@ -2642,7 +2642,7 @@
     </node>
   </node>
   <node concept="24kQdi" id="55IEyjJExxh">
-    <property role="3GE5qa" value="models" />
+    <property role="3GE5qa" value="modules" />
     <ref role="1XX52x" to="7ggn:55IEyjJExwL" resolve="Models" />
     <node concept="PMmxH" id="55IEyjJExxj" role="2wV5jI">
       <ref role="PMmxG" to="tpco:2wZex4PafBj" resolve="alias" />
@@ -2652,7 +2652,7 @@
     </node>
   </node>
   <node concept="24kQdi" id="18IIFqBx4nI">
-    <property role="3GE5qa" value="models" />
+    <property role="3GE5qa" value="nodes" />
     <ref role="1XX52x" to="7ggn:18IIFqBx3QL" resolve="OppositeLinkAccessImplicitSelect" />
     <node concept="1iCGBv" id="18IIFqBx4nN" role="2wV5jI">
       <property role="1$x2rV" value="&lt;no link&gt;" />
@@ -2892,7 +2892,7 @@
     </node>
   </node>
   <node concept="24kQdi" id="7S$pNDLbd0D">
-    <property role="3GE5qa" value="models" />
+    <property role="3GE5qa" value="modules" />
     <ref role="1XX52x" to="7ggn:7S$pNDLbd0e" resolve="RepositoryOperation" />
     <node concept="PMmxH" id="7S$pNDLbd0F" role="2wV5jI">
       <ref role="PMmxG" to="tpco:2wZex4PafBj" resolve="alias" />
@@ -2902,7 +2902,7 @@
     </node>
   </node>
   <node concept="24kQdi" id="7S$pNDLbgaC">
-    <property role="3GE5qa" value="models" />
+    <property role="3GE5qa" value="repositories" />
     <ref role="1XX52x" to="7ggn:7S$pNDLbgad" resolve="Modules" />
     <node concept="PMmxH" id="7S$pNDLbgaE" role="2wV5jI">
       <ref role="PMmxG" to="tpco:2wZex4PafBj" resolve="alias" />
@@ -2936,7 +2936,7 @@
     </node>
   </node>
   <node concept="24kQdi" id="rTfv3GZ3Vf">
-    <property role="3GE5qa" value="models" />
+    <property role="3GE5qa" value="nodes" />
     <ref role="1XX52x" to="7ggn:rTfv3GWr7J" resolve="CopyImplicitSelect" />
     <node concept="PMmxH" id="rTfv3GZ3Vh" role="2wV5jI">
       <ref role="PMmxG" to="tpco:2wZex4PafBj" resolve="alias" />
@@ -4589,7 +4589,7 @@
     <node concept="3VyMlK" id="6_R8J$2Iqne" role="3ft7WO" />
   </node>
   <node concept="24kQdi" id="4IP40Bi38Sx">
-    <property role="3GE5qa" value="quotations" />
+    <property role="3GE5qa" value="nodes.builder" />
     <ref role="1XX52x" to="tp3r:4IP40Bi38Sq" resolve="NodeBuilderInitLink" />
     <node concept="3EZMnI" id="4IP40Bi38Sz" role="2wV5jI">
       <node concept="1iCGBv" id="4IP40Bi38S$" role="3EZMnx">
@@ -4655,7 +4655,7 @@
     </node>
   </node>
   <node concept="24kQdi" id="4IP40Bi2KcE">
-    <property role="3GE5qa" value="quotations" />
+    <property role="3GE5qa" value="nodes.builder" />
     <ref role="1XX52x" to="tp3r:4IP40Bi2Kc_" resolve="NodeBuilderInitProperty" />
     <node concept="3EZMnI" id="4IP40Bi2KcG" role="2wV5jI">
       <node concept="1iCGBv" id="4IP40Bi2KcJ" role="3EZMnx">
@@ -5879,6 +5879,7 @@
   </node>
   <node concept="PKFIW" id="55f2HNAp6uS">
     <property role="TrG5h" value="AspectEditor" />
+    <property role="3GE5qa" value="aspects" />
     <ref role="1XX52x" to="7ggn:29R9$zZUovD" resolve="RuleSet" />
     <node concept="3EZMnI" id="55f2HNAp6h6" role="2wV5jI">
       <node concept="2iRfu4" id="55f2HNAp6h7" role="2iSdaV" />
@@ -6256,7 +6257,7 @@
     </node>
   </node>
   <node concept="24kQdi" id="3m__5a3eLbp">
-    <property role="3GE5qa" value="quotations" />
+    <property role="3GE5qa" value="nodes.builder" />
     <ref role="1XX52x" to="tp3r:4IP40Bi2$Et" resolve="NodeBuilder" />
     <node concept="2aJ2om" id="3m__5a3eLbr" role="CpUAK">
       <ref role="2$4xQ3" node="4apidoKAdWg" resolve="RuleSpec" />
@@ -6485,7 +6486,7 @@
     </node>
   </node>
   <node concept="3p309x" id="7J8ZPccOSOk">
-    <property role="3GE5qa" value="quotations" />
+    <property role="3GE5qa" value="nodes.builder" />
     <property role="TrG5h" value="NodeBuilder_Contribution" />
     <node concept="2kknPJ" id="7J8ZPccOSOm" role="1IG6uw">
       <ref role="2ZyFGn" to="tp3r:4IP40Bi2$Et" resolve="NodeBuilder" />
@@ -6542,7 +6543,7 @@
     </node>
   </node>
   <node concept="PKFIW" id="2JtLodk5Uvn">
-    <property role="3GE5qa" value="quotations" />
+    <property role="3GE5qa" value="nodes.builder" />
     <property role="TrG5h" value="NodeBuilderNode_RuleSpec_Component" />
     <ref role="1XX52x" to="tp3r:4IP40Bi2$Ew" resolve="NodeBuilderNode" />
     <node concept="1PE4EZ" id="2JtLodk5Uvp" role="1PM95z">
@@ -9463,6 +9464,37 @@
           </node>
         </node>
       </node>
+    </node>
+  </node>
+  <node concept="24kQdi" id="4cpRreI_Ukd">
+    <property role="3GE5qa" value="models.builder" />
+    <ref role="1XX52x" to="7ggn:4cpRreI_UiU" resolve="ModelBuilderInitAttribute" />
+    <node concept="3EZMnI" id="4cpRreIAmyo" role="2wV5jI">
+      <node concept="1iCGBv" id="4cpRreIAmyp" role="3EZMnx">
+        <ref role="1NtTu8" to="7ggn:4cpRreI_UiW" resolve="attribute" />
+        <ref role="1k5W1q" to="tpen:hFD0yD_" resolve="VariableName" />
+        <node concept="1sVBvm" id="4cpRreIAmyq" role="1sWHZn">
+          <node concept="3F0A7n" id="4cpRreIAmyr" role="2wV5jI">
+            <property role="1Intyy" value="true" />
+            <ref role="1k5W1q" to="tp3y:2r4rhgaDxBT" resolve="Variable" />
+            <ref role="1NtTu8" to="tpck:h0TrG11" resolve="name" />
+            <node concept="VechU" id="4cpRreIAmys" role="3F10Kt">
+              <property role="Vb096" value="g1_qRwE/darkGreen" />
+              <node concept="1iSF2X" id="4cpRreIAmyt" role="VblUZ">
+                <property role="1iTho6" value="aa1111" />
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+      <node concept="3F0ifn" id="4cpRreIAmyu" role="3EZMnx">
+        <property role="3F0ifm" value=":=" />
+        <ref role="1k5W1q" to="tpen:hF$iUjy" resolve="Operator" />
+      </node>
+      <node concept="3F1sOY" id="4cpRreIAmyv" role="3EZMnx">
+        <ref role="1NtTu8" to="7ggn:4cpRreI_UiV" resolve="initValue" />
+      </node>
+      <node concept="l2Vlx" id="4cpRreIAmyw" role="2iSdaV" />
     </node>
   </node>
 </model>

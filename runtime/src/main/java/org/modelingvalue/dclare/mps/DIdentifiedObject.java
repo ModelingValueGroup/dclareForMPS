@@ -16,9 +16,15 @@
 package org.modelingvalue.dclare.mps;
 
 import java.util.Arrays;
+import java.util.function.Supplier;
 
+import org.jetbrains.mps.openapi.language.SLanguage;
+import org.modelingvalue.collections.Collection;
+import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Age;
 import org.modelingvalue.dclare.ActionTransaction;
+import org.modelingvalue.dclare.Construction;
+import org.modelingvalue.dclare.Construction.Reason;
 import org.modelingvalue.dclare.IdentityDerivationTransaction;
 import org.modelingvalue.dclare.LeafTransaction;
 import org.modelingvalue.dclare.mps.DAttribute.DIdentifyingAttribute;
@@ -61,9 +67,49 @@ public abstract class DIdentifiedObject extends DObject {
         }
     }
 
+    protected Collection<Reason> deriveReasons() {
+        return dAllDerivations().map(Construction::reason);
+    }
+
+    public Set<String> getAnonymousTypes() {
+        return deriveReasons().filter(DQuotation.class).map(DDerive::anonymousType).notNull().toSet();
+    }
+
+    public Set<SLanguage> getAnonymousLanguages() {
+        return deriveReasons().filter(DQuotation.class).map(DDerive::aspect).flatMap(d -> IAspect.ALL_DEPENDENCIES.get(d)).map(IAspect::getLanguage).toSet();
+    }
+
+    protected static <D extends DIdentifiedObject> D quotationConstruct(IRuleSet ruleSet, String anonymousType, Object[] ctx, Supplier<D> supplier) {
+        LeafTransaction tx = LeafTransaction.getCurrent();
+        return tx.construct(new DQuotation(tx.mutable(), ruleSet, anonymousType, ctx), supplier);
+    }
+
     @SuppressWarnings("unchecked")
     protected <V> V get(DIdentifyingAttribute<?, V> attr) {
-        return (V) identity[attr.index()];
+        if (attr.synthetic()) {
+            Construction c = getQuotationConstruction(attr.anonymousType());
+            if (c != null) {
+                return (V) c.get(attr.index());
+            } else {
+                throw new NullPointerException("No Aanonymous Type " + attr.anonymousType() + " found when trying to read " + this + "." + attr);
+            }
+        } else {
+            return (V) identity[attr.index()];
+        }
+    }
+
+    private Construction getQuotationConstruction(String anonymousType) {
+        for (Construction c : dAllDerivations()) {
+            if (c.reason() instanceof DQuotation && ((DQuotation) c.reason()).anonymousType() == anonymousType) {
+                return c;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    protected boolean isObsolete(String anonymousType) {
+        return anonymousType != null && getQuotationConstruction(anonymousType) == null;
     }
 
     @Override

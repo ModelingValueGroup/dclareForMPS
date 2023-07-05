@@ -18,35 +18,43 @@ package org.modelingvalue.dclare.mps;
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
-import org.modelingvalue.collections.util.Pair;
+import org.modelingvalue.collections.util.Triple;
 
-public class DStructClass extends DObjectType<Pair<Set<SLanguage>, SStructClass>> {
+public class DStructClass extends DObjectType<Triple<Set<SLanguage>, Set<String>, SStructClass>> {
 
-    public DStructClass(Pair<Set<SLanguage>, SStructClass> identity) {
+    public DStructClass(Triple<Set<SLanguage>, Set<String>, SStructClass> identity) {
         super(identity);
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
     public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
-        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getStructRules(id().b()))).toSet();
+        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getStructRules(getSStructClass(), getAnonymousTypes()))).toSet();
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
     public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
-        return (Set) Collection.concat(id().b().getIdentity(), ruleSets.flatMap(rs -> Collection.of(rs.getStructAttributes(id().b())))).toSet();
+        return (Set) Collection.concat(getSStructClass().getIdentity(), ruleSets.flatMap(rs -> Collection.of(rs.getStructAttributes(getSStructClass(), getAnonymousTypes())))).toSet();
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
     public Set<INative> getNatives(Set<IRuleSet> ruleSets) {
-        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getStructNatives(id().b()))).toSet();
+        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getStructNatives(getSStructClass(), getAnonymousTypes()))).toSet();
     }
 
     @Override
     public Set<SLanguage> getLanguages() {
         return id().a();
+    }
+
+    public Set<String> getAnonymousTypes() {
+        return id().b();
+    }
+
+    public SStructClass getSStructClass() {
+        return id().c();
     }
 
 }

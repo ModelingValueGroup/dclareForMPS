@@ -420,11 +420,6 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
         return (SConcept) identity[1];
     }
 
-    @Override
-    public Long dSortKey() {
-        return (Long) identity[0];
-    }
-
     private final boolean isINamedConcept;
 
     protected DNode(Object[] identity) {

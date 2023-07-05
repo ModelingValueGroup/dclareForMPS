@@ -21,13 +21,14 @@ import java.util.Objects;
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
+import org.modelingvalue.collections.util.Triple;
 import org.modelingvalue.dclare.Constant;
 import org.modelingvalue.dclare.State;
 
 @SuppressWarnings("unused")
 public class DStructObject extends DIdentifiedObject implements SStructObject {
 
-    private static final Constant<Pair<Set<SLanguage>, SStructClass>, DStructClass> CLASS_OBJECT_TYPE = Constant.of("CLASS_OBJECT_TYPE", DStructClass::new);
+    private static final Constant<Triple<Set<SLanguage>, Set<String>, SStructClass>, DStructClass> CLASS_OBJECT_TYPE = Constant.of("CLASS_OBJECT_TYPE", DStructClass::new);
 
     public static DStructObject of(SStructClass cls, Object[] identity) {
         for (int i = 0; i < identity.length; i++) {
@@ -36,6 +37,10 @@ public class DStructObject extends DIdentifiedObject implements SStructObject {
         identity = Arrays.copyOf(identity, identity.length + 1);
         identity[identity.length - 1] = cls;
         return new DStructObject(identity);
+    }
+
+    public static DStructObject of(IRuleSet ruleSet, String anonymousType, Object[] ctx, SStructClass cls, Object[] identity) {
+        return quotationConstruct(ruleSet, anonymousType, ctx, () -> of(cls, identity));
     }
 
     protected DStructObject(Object[] identity) {
@@ -66,12 +71,13 @@ public class DStructObject extends DIdentifiedObject implements SStructObject {
         if (!DClareMPS.ACTIVE_RULE_SETS.get(lang).isEmpty()) {
             ls = ls.add(lang);
         }
-        return CLASS_OBJECT_TYPE.get(Pair.of(ls, getSClass()));
+        ls = ls.addAll(getAnonymousLanguages());
+        return CLASS_OBJECT_TYPE.get(Triple.of(ls, getAnonymousTypes(), getSClass()));
     }
 
     @Override
     protected DStructClass getBootstrapType() {
-        return CLASS_OBJECT_TYPE.get(Pair.of(Set.of(), getSClass()));
+        return CLASS_OBJECT_TYPE.get(Triple.of(Set.of(), Set.of(), getSClass()));
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
