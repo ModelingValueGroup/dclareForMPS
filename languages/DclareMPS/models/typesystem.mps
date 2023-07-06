@@ -9084,5 +9084,66 @@
       <ref role="1YaFvo" to="7ggn:4cpRreI_UiU" resolve="ModelBuilderInitAttribute" />
     </node>
   </node>
+  <node concept="1YbPZF" id="6_fOQ$ATVRi">
+    <property role="TrG5h" value="typeof_NativeRunnable" />
+    <property role="3GE5qa" value="native" />
+    <node concept="3clFbS" id="6_fOQ$ATVRj" role="18ibNy">
+      <node concept="1Z5TYs" id="6_fOQ$ATVRx" role="3cqZAp">
+        <node concept="mw_s8" id="6_fOQ$ATVRC" role="1ZfhK$">
+          <node concept="1Z2H0r" id="6_fOQ$ATVRD" role="mwGJk">
+            <node concept="1YBJjd" id="6_fOQ$ATVRE" role="1Z2MuG">
+              <ref role="1YBMHb" node="6_fOQ$ATVRl" resolve="nativeRunnable" />
+            </node>
+          </node>
+        </node>
+        <node concept="mw_s8" id="6_fOQ$ATW26" role="1ZfhKB">
+          <node concept="2c44tf" id="6_fOQ$ATX7u" role="mwGJk">
+            <node concept="3uibUv" id="6_fOQ$ATX7P" role="2c44tc">
+              <ref role="3uigEE" to="wyt6:~Runnable" resolve="Runnable" />
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+    <node concept="1YaCAy" id="6_fOQ$ATVRl" role="1YuTPh">
+      <property role="TrG5h" value="nativeRunnable" />
+      <ref role="1YaFvo" to="7ggn:6_fOQ$ATVaC" resolve="NativeRunnable" />
+    </node>
+  </node>
+  <node concept="1YbPZF" id="4CuBnhB3sFD">
+    <property role="TrG5h" value="typeof_NativeDeclaration" />
+    <property role="3GE5qa" value="native" />
+    <node concept="3clFbS" id="4CuBnhB3sFE" role="18ibNy" />
+    <node concept="1YaCAy" id="4CuBnhB3sFG" role="1YuTPh">
+      <property role="TrG5h" value="nativeDeclaration" />
+      <ref role="1YaFvo" to="7ggn:5Hwm38JY5Mc" resolve="NativeDeclaration" />
+    </node>
+  </node>
+  <node concept="1YbPZF" id="4CuBnhB3uFf">
+    <property role="TrG5h" value="typeof_NativeDclare" />
+    <property role="3GE5qa" value="native" />
+    <node concept="3clFbS" id="4CuBnhB3uFg" role="18ibNy">
+      <node concept="1Z5TYs" id="4CuBnhB3uFm" role="3cqZAp">
+        <node concept="mw_s8" id="4CuBnhB3uFn" role="1ZfhK$">
+          <node concept="1Z2H0r" id="4CuBnhB3uFo" role="mwGJk">
+            <node concept="1YBJjd" id="4CuBnhB3uFp" role="1Z2MuG">
+              <ref role="1YBMHb" node="4CuBnhB3uFi" resolve="nativeDclare" />
+            </node>
+          </node>
+        </node>
+        <node concept="mw_s8" id="4CuBnhB3uFq" role="1ZfhKB">
+          <node concept="2c44tf" id="4CuBnhB3uFr" role="mwGJk">
+            <node concept="3uibUv" id="4CuBnhB3uFs" role="2c44tc">
+              <ref role="3uigEE" to="t4tl:~DClareMPS" resolve="DClareMPS" />
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+    <node concept="1YaCAy" id="4CuBnhB3uFi" role="1YuTPh">
+      <property role="TrG5h" value="nativeDclare" />
+      <ref role="1YaFvo" to="7ggn:4CuBnhB351W" resolve="NativeDclare" />
+    </node>
+  </node>
 </model>
 

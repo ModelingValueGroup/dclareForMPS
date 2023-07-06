@@ -26,6 +26,8 @@ public interface IRuleAspect extends ILanguageAspect {
 
     List<IAspect> getAspects();
 
+    List<INativeGroup> getNativeGroups();
+
     List<SStructClass> getStructClasses();
 
     List<SReferenceLink> getReferencesWithOpposite();

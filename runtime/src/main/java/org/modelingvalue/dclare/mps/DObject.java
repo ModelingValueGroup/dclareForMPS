@@ -74,7 +74,7 @@ public abstract class DObject implements Mutable {
                                                                                                                  };
 
     protected static final Observed<DObject, DObjectType<?>>                           TYPE                      = Observed.of("$TYPE", DUMMY_TYPE, (t, o, b, a) -> {
-                                                                                                                     if (!a.getNatives().isEmpty()) {
+                                                                                                                     if (a.hasNatives()) {
                                                                                                                          DObject.CONTAINED.set(o, true);
                                                                                                                      }
                                                                                                                  }, plumbing);
@@ -280,8 +280,8 @@ public abstract class DObject implements Mutable {
         return !isExternal() && LeafTransaction.getCurrent().current().get(this, Mutable.D_PARENT_CONTAINING) != null;
     }
 
-    protected boolean isNative() {
-        return !isExternal() && !dClass().getNatives().isEmpty();
+    protected boolean isNative(INativeGroup ng) {
+        return !isExternal() && !dClass().getNatives(ng).isEmpty();
     }
 
 }

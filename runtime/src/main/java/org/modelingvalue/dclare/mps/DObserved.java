@@ -268,7 +268,7 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
         return toMPS == null;
     }
 
-    public boolean isNative() {
+    public boolean isNative(INativeGroup ng) {
         return false;
     }
 

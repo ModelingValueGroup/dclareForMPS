@@ -1541,6 +1541,40 @@
         <ref role="3uigEE" to="t4tl:~IAspect" resolve="IAspect" />
       </node>
     </node>
+    <node concept="2tJIrI" id="4ONkEkNo3RL" role="jymVt" />
+    <node concept="2YIFZL" id="4ONkEkNofto" role="jymVt">
+      <property role="TrG5h" value="getNativeGroup" />
+      <node concept="37vLTG" id="4ONkEkNoftp" role="3clF46">
+        <property role="TrG5h" value="language" />
+        <property role="3TUv4t" value="true" />
+        <node concept="3uibUv" id="4ONkEkNoftq" role="1tU5fm">
+          <ref role="3uigEE" to="c17a:~SLanguage" resolve="SLanguage" />
+        </node>
+      </node>
+      <node concept="37vLTG" id="4ONkEkNoftr" role="3clF46">
+        <property role="TrG5h" value="id" />
+        <property role="3TUv4t" value="true" />
+        <node concept="17QB3L" id="4ONkEkNofts" role="1tU5fm" />
+      </node>
+      <node concept="3clFbS" id="4ONkEkNoftt" role="3clF47">
+        <node concept="3cpWs6" id="4ONkEkNoftu" role="3cqZAp">
+          <node concept="2YIFZM" id="4ONkEkNoftv" role="3cqZAk">
+            <ref role="1Pybhc" to="t4tl:~INativeGroup" resolve="INativeGroup" />
+            <ref role="37wK5l" to="t4tl:~INativeGroup.of(org.jetbrains.mps.openapi.language.SLanguage,java.lang.String)" resolve="of" />
+            <node concept="37vLTw" id="4ONkEkNoftw" role="37wK5m">
+              <ref role="3cqZAo" node="4ONkEkNoftp" resolve="language" />
+            </node>
+            <node concept="37vLTw" id="4ONkEkNoftx" role="37wK5m">
+              <ref role="3cqZAo" node="4ONkEkNoftr" resolve="id" />
+            </node>
+          </node>
+        </node>
+      </node>
+      <node concept="3Tm1VV" id="4ONkEkNofty" role="1B3o_S" />
+      <node concept="3uibUv" id="4ONkEkNoftz" role="3clF45">
+        <ref role="3uigEE" to="t4tl:~INativeGroup" resolve="INativeGroup" />
+      </node>
+    </node>
     <node concept="2tJIrI" id="1prswk9iryn" role="jymVt" />
     <node concept="2YIFZL" id="4xaBPI8df35" role="jymVt">
       <property role="TrG5h" value="getAttribute" />

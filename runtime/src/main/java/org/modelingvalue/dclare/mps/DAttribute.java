@@ -28,6 +28,7 @@ import org.jetbrains.mps.openapi.model.EditableSModel;
 import org.jetbrains.mps.openapi.model.SModel;
 import org.jetbrains.mps.openapi.model.SNode;
 import org.jetbrains.mps.openapi.model.SNodeReference;
+import org.modelingvalue.collections.DefaultMap;
 import org.modelingvalue.collections.List;
 import org.modelingvalue.dclare.AbstractDerivationTransaction;
 import org.modelingvalue.dclare.Constant;
@@ -55,7 +56,7 @@ public interface DAttribute<O, T> extends DFeature {
     }
 
     @SuppressWarnings("rawtypes")
-    final static Constant<DAttribute, List<IChangeHandler>> D_HANDLERS = Constant.of("D_HANDLERS", a -> {
+    final static Constant<DAttribute, DefaultMap<INativeGroup, List<IChangeHandler>>> D_HANDLERS = Constant.of("D_HANDLERS", a -> {
         return DClareMPS.HANDLER_MAP.get(DClareMPS.instance()).get(a);
     });
 
@@ -88,8 +89,8 @@ public interface DAttribute<O, T> extends DFeature {
 
     boolean isMandatory();
 
-    default List<IChangeHandler> handlers() {
-        return D_HANDLERS.get(this);
+    default List<IChangeHandler> handlers(INativeGroup ng) {
+        return D_HANDLERS.get(this).get(ng);
     }
 
     Class<?> cls();
@@ -133,8 +134,8 @@ public interface DAttribute<O, T> extends DFeature {
         }
 
         @Override
-        public boolean isNative() {
-            return !handlers().isEmpty();
+        public boolean isNative(INativeGroup ng) {
+            return !handlers(ng).isEmpty();
         }
 
         @Override

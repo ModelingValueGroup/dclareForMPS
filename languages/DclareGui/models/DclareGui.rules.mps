@@ -48,6 +48,7 @@
         <child id="2328169690265034470" name="else" index="2_mOWp" />
       </concept>
       <concept id="3943890974580131286" name="DclareMPS.structure.Equation" flags="ng" index="E34o$" />
+      <concept id="5340879331378614396" name="DclareMPS.structure.NativeDclare" flags="ng" index="H4GO8" />
       <concept id="8102307003770101093" name="DclareMPS.structure.NativeRunner" flags="ng" index="2O$n0J" />
       <concept id="4893482730976715512" name="DclareMPS.structure.StructBuilderInitAttribute" flags="ng" index="2Pygp_">
         <reference id="4893482730976715517" name="attribute" index="2Pygpw" />
@@ -84,6 +85,7 @@
         <child id="4961035436665424243" name="elements" index="2Gi6C2" />
       </concept>
       <concept id="7052226383913853631" name="DclareMPS.structure.StructParent" flags="ng" index="1932wR" />
+      <concept id="7588516345720320680" name="DclareMPS.structure.NativeRunnable" flags="ng" index="1fE671" />
       <concept id="2643921241704844352" name="DclareMPS.structure.ModelIssue" flags="ng" index="1tn5gs" />
       <concept id="2483495814491113448" name="DclareMPS.structure.Rule" flags="ng" index="3tBE6w">
         <child id="7745179321625723507" name="statement" index="30jUnX" />
@@ -122,6 +124,7 @@
         <child id="9055784064631873602" name="leftExpression" index="3MEzJy" />
       </concept>
       <concept id="6584359627792080012" name="DclareMPS.structure.NativeDeclaration" flags="ng" index="1OA0iY">
+        <reference id="5562880834217355092" name="group" index="1YqvnL" />
         <child id="6584359627792080018" name="exit" index="1OA0iw" />
         <child id="6584359627792080016" name="init" index="1OA0iy" />
         <child id="6584359627792080929" name="fields" index="1OA3wj" />
@@ -140,6 +143,9 @@
         <child id="2643921241704685917" name="message" index="1tmZ$1" />
         <child id="8297955622421103127" name="severity" index="3Bts2V" />
         <child id="4641067027424890124" name="object" index="1W62Nj" />
+      </concept>
+      <concept id="5562880834215759818" name="DclareMPS.structure.NativeGroup" flags="ng" index="1YshPJ">
+        <child id="7588516345720305869" name="scheduler" index="1fEaI$" />
       </concept>
     </language>
     <language id="f3061a53-9226-4cc5-a443-f952ceaf5816" name="jetbrains.mps.baseLanguage">
@@ -601,6 +607,7 @@
     </node>
     <node concept="1FPxxo" id="5QJfFCjNkwO" role="1FPzNG" />
     <node concept="1OA0iY" id="3ySjgkDG3vh" role="1FPzNG">
+      <ref role="1YqvnL" node="6_fOQ$Bh29y" resolve="GUI" />
       <node concept="1OA3wd" id="5QJfFCjNnde" role="1OA3wj">
         <property role="TrG5h" value="splitPane" />
         <node concept="3uibUv" id="5QJfFCjNnhe" role="1tU5fm">
@@ -1194,6 +1201,7 @@
     </node>
     <node concept="1FPxxo" id="2xAA8jfBD2R" role="1FPzNG" />
     <node concept="1OA0iY" id="3ySjgkDG3vn" role="1FPzNG">
+      <ref role="1YqvnL" node="6_fOQ$Bh29y" resolve="GUI" />
       <node concept="3clFbS" id="3ySjgkDG3vo" role="1OA0iy" />
       <node concept="3clFbS" id="3ySjgkDG3vp" role="1OA0iw" />
       <node concept="1OA0iZ" id="2xAA8jgzUsz" role="1OA3xZ">
@@ -1815,6 +1823,7 @@
     </node>
     <node concept="1FPxxo" id="3HJBHAQJ8D5" role="1FPzNG" />
     <node concept="1OA0iY" id="3ySjgkDG3vt" role="1FPzNG">
+      <ref role="1YqvnL" node="6_fOQ$Bh29y" resolve="GUI" />
       <node concept="3clFbS" id="3ySjgkDG3vu" role="1OA0iy" />
       <node concept="3clFbS" id="3ySjgkDG3vv" role="1OA0iw" />
       <node concept="1OA0iZ" id="3HJBHAQJJie" role="1OA3xZ">
@@ -1982,6 +1991,7 @@
     </node>
     <node concept="1FPxxo" id="3XDIiT4clmy" role="1FPzNG" />
     <node concept="1OA0iY" id="3ySjgkDG3vz" role="1FPzNG">
+      <ref role="1YqvnL" node="6_fOQ$Bh29y" resolve="GUI" />
       <node concept="1OA3wd" id="3XDIiT4czNO" role="1OA3wj">
         <property role="TrG5h" value="panel" />
         <node concept="3uibUv" id="3XDIiT4cAHJ" role="1tU5fm">
@@ -2880,6 +2890,7 @@
     </node>
     <node concept="1FPxxo" id="2ihDbyJUkPx" role="1FPzNG" />
     <node concept="1OA0iY" id="3ySjgkDG3vD" role="1FPzNG">
+      <ref role="1YqvnL" node="6_fOQ$Bh29y" resolve="GUI" />
       <node concept="1OA0iZ" id="10mRasGq72j" role="1OA3xZ">
         <ref role="1OA0iW" node="10mRasGpZJ8" resolve="beginPoint" />
         <node concept="3clFbS" id="10mRasGq72k" role="1OA0iB">
@@ -3173,6 +3184,7 @@
     </node>
     <node concept="1FPxxo" id="2xAA8jfALAd" role="1FPzNG" />
     <node concept="1OA0iY" id="3ySjgkDG3vJ" role="1FPzNG">
+      <ref role="1YqvnL" node="6_fOQ$Bh29y" resolve="GUI" />
       <node concept="1OA0iZ" id="2xAA8jfoOPB" role="1OA3xZ">
         <ref role="1OA0iW" node="4NMtPTvGUBA" resolve="location" />
         <node concept="3clFbS" id="2xAA8jfoOPC" role="1OA0iB">
@@ -3942,6 +3954,7 @@
     </node>
     <node concept="1FPxxo" id="3OZjsowvLEh" role="1FPzNG" />
     <node concept="1OA0iY" id="3ySjgkDG3vP" role="1FPzNG">
+      <ref role="1YqvnL" node="6_fOQ$Bh29y" resolve="GUI" />
       <node concept="1OA0iZ" id="2xAA8jgzUnj" role="1OA3xZ">
         <ref role="1OA0iW" node="2xAA8jfCCHw" resolve="position" />
         <node concept="3clFbS" id="2xAA8jgzUnk" role="1OA0iB">
@@ -4100,6 +4113,7 @@
     </node>
     <node concept="1FPxxo" id="2gyk5S1Drsr" role="1FPzNG" />
     <node concept="1OA0iY" id="3ySjgkDG3vV" role="1FPzNG">
+      <ref role="1YqvnL" node="6_fOQ$Bh29y" resolve="GUI" />
       <node concept="1OA0iZ" id="46vl3mDUR5K" role="1OA3xZ">
         <ref role="1OA0iW" node="4NMtPTvGUBA" resolve="location" />
         <node concept="3clFbS" id="46vl3mDUR5L" role="1OA0iB">
@@ -4348,6 +4362,7 @@
     </node>
     <node concept="1FPxxo" id="2cgTHFO6hpD" role="1FPzNG" />
     <node concept="1OA0iY" id="3ySjgkDG3w1" role="1FPzNG">
+      <ref role="1YqvnL" node="6_fOQ$Bh29y" resolve="GUI" />
       <node concept="1OA3wd" id="76QCTJD2Tzy" role="1OA3wj">
         <property role="TrG5h" value="component" />
         <node concept="3uibUv" id="76QCTJD30Tq" role="1tU5fm">
@@ -5605,6 +5620,7 @@
     </node>
     <node concept="1FPxxo" id="10mRasGtHL0" role="1FPzNG" />
     <node concept="1OA0iY" id="3ySjgkDG3w7" role="1FPzNG">
+      <ref role="1YqvnL" node="6_fOQ$Bh29y" resolve="GUI" />
       <node concept="1OA0iZ" id="3nsHMGrYF5Z" role="1OA3xZ">
         <ref role="1OA0iW" node="3nsHMGrXC3n" resolve="radius" />
         <node concept="3clFbS" id="3nsHMGrYF60" role="1OA0iB">
@@ -6022,6 +6038,7 @@
     </node>
     <node concept="1FPxxo" id="7ypR234heXV" role="1FPzNG" />
     <node concept="1OA0iY" id="3ySjgkDG3wd" role="1FPzNG">
+      <ref role="1YqvnL" node="6_fOQ$Bh29y" resolve="GUI" />
       <node concept="1OA3wd" id="3nsHMGrWoxt" role="1OA3wj">
         <property role="TrG5h" value="panel" />
         <node concept="3uibUv" id="3nsHMGrWrLE" role="1tU5fm">
@@ -6071,7 +6088,7 @@
                         <node concept="2OqwBi" id="3nsHMGrWVYj" role="3clFbG">
                           <node concept="2O$n0J" id="3nsHMGrWV1M" role="2Oq$k0" />
                           <node concept="liA8E" id="3nsHMGrWWDY" role="2OqNvi">
-                            <ref role="37wK5l" to="t4tl:~INativeRunner.run(java.lang.Runnable)" resolve="run" />
+                            <ref role="37wK5l" to="t4tl:~INativeRunner.runNow(java.lang.Runnable)" resolve="runNow" />
                             <node concept="1bVj0M" id="3nsHMGrWXm4" role="37wK5m">
                               <node concept="3clFbS" id="3nsHMGrWXm5" role="1bW5cS">
                                 <node concept="3clFbF" id="3nsHMGrWJFx" role="3cqZAp">
@@ -7352,6 +7369,7 @@
     </node>
     <node concept="1FPxxo" id="2xAA8jfpUGA" role="1FPzNG" />
     <node concept="1OA0iY" id="2xAA8jfoOOX" role="1FPzNG">
+      <ref role="1YqvnL" node="6_fOQ$Bh29y" resolve="GUI" />
       <node concept="1OA3wd" id="2xAA8jfpi_q" role="1OA3wj">
         <property role="TrG5h" value="menuBar" />
         <node concept="3uibUv" id="2xAA8jfpi_w" role="1tU5fm">
@@ -7484,6 +7502,7 @@
     </node>
     <node concept="1FPxxo" id="2xAA8jfpV3Z" role="1FPzNG" />
     <node concept="1OA0iY" id="2xAA8jfpPu5" role="1FPzNG">
+      <ref role="1YqvnL" node="6_fOQ$Bh29y" resolve="GUI" />
       <node concept="1OA3wd" id="2xAA8jfpPuh" role="1OA3wj">
         <property role="TrG5h" value="menu" />
         <node concept="3uibUv" id="2xAA8jfpPun" role="1tU5fm">
@@ -7576,6 +7595,7 @@
     <ref role="2RaPBF" node="WHdioYVYbd" resolve="GUI" />
     <node concept="1FPxxo" id="2xAA8jfqveD" role="1FPzNG" />
     <node concept="1OA0iY" id="2xAA8jfqbxx" role="1FPzNG">
+      <ref role="1YqvnL" node="6_fOQ$Bh29y" resolve="GUI" />
       <node concept="1OA3wd" id="2xAA8jfqjHL" role="1OA3wj">
         <property role="TrG5h" value="menuItem" />
         <node concept="3uibUv" id="2xAA8jfqjHR" role="1tU5fm">
@@ -8938,6 +8958,7 @@
     </node>
     <node concept="1FPxxo" id="681X9Tz1wKw" role="1FPzNG" />
     <node concept="1OA0iY" id="681X9Tz1wMJ" role="1FPzNG">
+      <ref role="1YqvnL" node="6_fOQ$Bh29y" resolve="GUI" />
       <node concept="1OA3wd" id="681X9Tz1zcG" role="1OA3wj">
         <property role="TrG5h" value="nodeEditor" />
         <node concept="3uibUv" id="681X9Tz1zh4" role="1tU5fm">
@@ -9044,7 +9065,7 @@
                             <node concept="2OqwBi" id="7eX99otCEH3" role="3clFbG">
                               <node concept="2O$n0J" id="7eX99otCC15" role="2Oq$k0" />
                               <node concept="liA8E" id="7eX99otCGju" role="2OqNvi">
-                                <ref role="37wK5l" to="t4tl:~INativeRunner.run(java.lang.Runnable)" resolve="run" />
+                                <ref role="37wK5l" to="t4tl:~INativeRunner.runNow(java.lang.Runnable)" resolve="runNow" />
                                 <node concept="1bVj0M" id="7eX99otCJDg" role="37wK5m">
                                   <node concept="3clFbS" id="7eX99otCJDh" role="1bW5cS">
                                     <node concept="3cpWs8" id="5uiQOXmE7JN" role="3cqZAp">
@@ -9200,7 +9221,7 @@
                             <node concept="2OqwBi" id="7eX99otCVD8" role="3clFbG">
                               <node concept="2O$n0J" id="7eX99otCSVW" role="2Oq$k0" />
                               <node concept="liA8E" id="7eX99otCXsO" role="2OqNvi">
-                                <ref role="37wK5l" to="t4tl:~INativeRunner.run(java.lang.Runnable)" resolve="run" />
+                                <ref role="37wK5l" to="t4tl:~INativeRunner.runNow(java.lang.Runnable)" resolve="runNow" />
                                 <node concept="1bVj0M" id="7eX99otD1PL" role="37wK5m">
                                   <node concept="3clFbS" id="7eX99otD1PM" role="1bW5cS">
                                     <node concept="3cpWs8" id="5uiQOXmFsOh" role="3cqZAp">
@@ -10817,6 +10838,21 @@
                 </node>
               </node>
             </node>
+          </node>
+        </node>
+      </node>
+    </node>
+  </node>
+  <node concept="1YshPJ" id="6_fOQ$Bh29y">
+    <property role="3GE5qa" value="gui" />
+    <property role="TrG5h" value="GUI" />
+    <node concept="3clFbS" id="6_fOQ$Bh29z" role="1fEaI$">
+      <node concept="3clFbF" id="6_fOQ$Bh29_" role="3cqZAp">
+        <node concept="2OqwBi" id="6_fOQ$Bh2zk" role="3clFbG">
+          <node concept="H4GO8" id="4CuBnhBfRGW" role="2Oq$k0" />
+          <node concept="liA8E" id="6_fOQ$Bh43N" role="2OqNvi">
+            <ref role="37wK5l" to="t4tl:~DClareMPS.invokeLater(java.lang.Runnable)" resolve="invokeLater" />
+            <node concept="1fE671" id="6_fOQ$Bh45s" role="37wK5m" />
           </node>
         </node>
       </node>

@@ -17,6 +17,8 @@ package org.modelingvalue.dclare.mps;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.Collection;
+import org.modelingvalue.collections.DefaultMap;
+import org.modelingvalue.collections.Entry;
 import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.dclare.Constant;
@@ -31,7 +33,11 @@ public abstract class DObjectType<I> implements MutableClass {
 
     private static final Constant<DObjectType<?>, Set<IRuleSet>>                                TYPE_RULE_SETS = Constant.of("TYPE_RULE_SETS", Set.of(), t -> t.getLanguages().flatMap(DClareMPS.ACTIVE_RULE_SETS::get).toSet());
     private static final Constant<DObjectType<?>, Set<DObserver>>                               OBSERVERS      = Constant.of("OBSERVERS", Set.of(), t -> t.getRules(TYPE_RULE_SETS.get(t)).map(DRule.OBSERVER::get).toSet());
-    private static final Constant<DObjectType<?>, List<INative>>                                NATIVES        = Constant.of("NATIVES", List.of(), t -> t.getNatives(TYPE_RULE_SETS.get(t)).sorted(INative::compare).toList());
+    private static final Constant<DObjectType<?>, DefaultMap<INativeGroup, List<INative>>>      NATIVES        = Constant.of("NATIVES", DefaultMap.of(ng -> List.of()), t -> {
+                                                                                                                   Set<INative> natives = t.getNatives(TYPE_RULE_SETS.get(t));
+                                                                                                                   return t.getLanguages().flatMap(DClareMPS.NATIVE_GROUPS::get).toDefaultMap(ng -> List.of(),                                                                                    //
+                                                                                                                           ng -> Entry.of(ng, natives.filter(n -> n.group().equals(ng)).sorted(INative::compare).toList()));
+                                                                                                               });
     private static final Constant<DObjectType<?>, Set<DAttribute>>                              ATTRIBUTES     = Constant.of("ATTRIBUTES", Set.of(), t -> t.getAttributes(TYPE_RULE_SETS.get(t)).toSet());
     private static final Constant<DObjectType<?>, Set<DAttribute>>                              CONTAINERS     = Constant.of("CONTAINERS", Set.of(), t -> ATTRIBUTES.get(t).filter(DAttribute::isComposite).toSet());
     private static final Constant<DObjectType<?>, Set<DAttribute>>                              NON_SYNTHETICS = Constant.of("NON_SYNTHETICS", Set.of(), t -> ATTRIBUTES.get(t).filter(a -> !a.isSynthetic()).toSet());
@@ -60,8 +66,12 @@ public abstract class DObjectType<I> implements MutableClass {
         return ATTRIBUTES.get(this);
     }
 
-    public List<INative> getNatives() {
-        return NATIVES.get(this);
+    public List<INative> getNatives(INativeGroup ng) {
+        return NATIVES.get(this).get(ng);
+    }
+
+    public boolean hasNatives() {
+        return NATIVES.get(this).anyMatch(e -> !e.getValue().isEmpty());
     }
 
     public Set<DAttribute> getIdentifying() {
