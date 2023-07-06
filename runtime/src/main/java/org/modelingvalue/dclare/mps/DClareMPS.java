@@ -279,6 +279,13 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
     public void init() {
         Universe.super.init();
         mpsTransaction = universeTransaction.addImperative("MPS", this::handleMPSDelta, this::invokeLater, false);
+        queuedChangeHandlers = Map.of();
+        deferredChangeHandlers = Map.of();
+        for (INativeGroup ng : DRepository.ALL_NATIVE_GROUPS.get(getRepository())) {
+            queuedChangeHandlers = queuedChangeHandlers.put(ng.getId(), Concurrent.of(Map.of()));
+            deferredChangeHandlers = deferredChangeHandlers.put(ng.getId(), Concurrent.of(Map.of()));
+            universeTransaction.addImperative(ng.getId(), this::handleNativeDelta, ng.getScheduler(this)::accept, false);
+        }
         mpsTransaction.schedule(() -> REPOSITORY_CONTAINER.set(this, getRepository()));
         mpsTransaction.schedule(() -> DSERVER_METADATA.set(this, dServerMetaData));
         if (isCollaberationEnabled()) {
@@ -293,13 +300,6 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
                 System.err.println("INFO: remote model synchronization connecting to " + host + " at port " + port);
                 syncConnectionHandler.connect(host, port);
             }
-        }
-        queuedChangeHandlers = Map.of();
-        deferredChangeHandlers = Map.of();
-        for (INativeGroup ng : DRepository.ALL_NATIVE_GROUPS.get(getRepository())) {
-            queuedChangeHandlers = queuedChangeHandlers.put(ng.getId(), Concurrent.of(Map.of()));
-            deferredChangeHandlers = deferredChangeHandlers.put(ng.getId(), Concurrent.of(Map.of()));
-            universeTransaction.addImperative(ng.getId(), this::handleNativeDelta, ng.getScheduler(this)::accept, false);
         }
     }
 
