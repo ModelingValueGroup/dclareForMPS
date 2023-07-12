@@ -687,7 +687,7 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
             }
             Map<DObject, Map<DObserved, Pair<Object, Object>>>[] diff = new Map[]{imper.diff(dclare, //
                     o -> o instanceof DObject && (((DObject) o).isNative(nativeGroup) || !imper.get((DObject) o, DObject.TYPE).getNatives(nativeGroup).isEmpty()), //
-                    s -> s instanceof DObserved && ((DObserved) s).isNative(nativeGroup)).toMap(e -> (Entry) e)};
+                    s -> s instanceof DObserved && (DObject.CONTAINED == s || ((DObserved) s).isNative(nativeGroup))).toMap(e -> (Entry) e)};
             if (!diff[0].isEmpty()) {
                 do {
                     toNative(nativeGroup, nativeRunner, imper, dclare, diff, diff[0].get(0).getKey());
