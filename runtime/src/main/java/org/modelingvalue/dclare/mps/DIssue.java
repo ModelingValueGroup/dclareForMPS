@@ -15,6 +15,9 @@
 
 package org.modelingvalue.dclare.mps;
 
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
 import org.jetbrains.mps.openapi.model.SModel;
 import org.jetbrains.mps.openapi.model.SNode;
 import org.jetbrains.mps.openapi.module.SModule;
@@ -26,9 +29,6 @@ import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.Setable;
 import org.modelingvalue.dclare.mps.DRule.DObserver;
 import org.modelingvalue.dclare.mps.DRule.DObserverTransaction;
-
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 import jetbrains.mps.errors.MessageStatus;
 import jetbrains.mps.errors.item.IssueKindReportItem;
@@ -50,7 +50,7 @@ public class DIssue extends DIdentifiedObject {
 
     private static final Observer<DIssue>                    MESSAGE_RULE     = DObject.observer(MESSAGE, o -> o.message.get());
 
-    public static final Setable<DIssue, DObject>             DOBJECT          = Setable.of("$DOBJECT", null);
+    public static final Setable<DIssue, DObject>             DOBJECT          = Setable.of("$DOBJECT", null, () -> DObject.DCLARE_ISSUES);
 
     private static final Observer<DIssue>                    DOBJECT_RULE     = DObject.observer(DOBJECT, o -> o.dObject.get());
 
@@ -74,8 +74,8 @@ public class DIssue extends DIdentifiedObject {
             // we can not store this issue, so we just return null
             return null;
         }
-        DObserverTransaction obTx    = (DObserverTransaction) tx;
-        DIssue               issue = new DIssue(((DObserver<?>) obTx.cls()).rule(), object, severity, feature, message, identity);
+        DObserverTransaction obTx = (DObserverTransaction) tx;
+        DIssue issue = new DIssue(((DObserver<?>) obTx.cls()).rule(), object, severity, feature, message, identity);
         obTx.issues.change(s -> s.add(issue));
         return issue;
     }

@@ -74,7 +74,7 @@ public interface DRule<O> extends DFeature {
                     super.doRun(pre, universeTransaction);
                 }
             } finally {
-                DObject.DCLARE_ISSUES.set(dObject, (b, a) -> a.addAll(b.exclude(i -> i.getRule().equals(rule()))), issues.result());
+                DObject.CONTAINED_DCLARE_ISSUES.set(dObject, (b, a) -> a.addAll(b.exclude(i -> i.getRule().equals(rule()))), issues.result());
             }
         }
 

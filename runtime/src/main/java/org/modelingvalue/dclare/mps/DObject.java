@@ -105,8 +105,10 @@ public abstract class DObject implements Mutable {
                                                                                                                      }
                                                                                                                  });
 
-    protected static final DObserved<DObject, Set<DIssue>>                             DCLARE_ISSUES             = DObserved.of("$DCLARE_ISSUES", Set.of(), null, (dObject, pre, post) -> {
-                                                                                                                 }, plumbing, containment);
+    protected static final Setable<DObject, Set<DIssue>>                               CONTAINED_DCLARE_ISSUES   = Setable.of("$CONTAINED_DCLARE_ISSUES", Set.of(), plumbing, containment);
+
+    protected static final DObserved<DObject, Set<DIssue>>                             DCLARE_ISSUES             = DObserved.of("$DCLARE_ISSUES", Set.of(), () -> DIssue.DOBJECT, null, (dObject, pre, post) -> {
+                                                                                                                 }, plumbing);
 
     protected static final DObserved<DObject, Boolean>                                 CONTAINED                 = DObserved.of("$CONTAINED", Boolean.FALSE, null, (dObject, pre, post) -> {
                                                                                                                      if (dObject instanceof DNode) {
@@ -122,7 +124,7 @@ public abstract class DObject implements Mutable {
 
     protected static final Set<Observer>                                               OBSERVERS                 = Set.of(TYPE_RULE, CONTAINING_ATTRIBUTE_RULE);
 
-    protected static final Set<Setable>                                                SETABLES                  = Set.of(TYPE, MPS_ISSUES, DCLARE_ISSUES, CONTAINING_ATTRIBUTE, CONTAINED, READ_OBSERVEDS);
+    protected static final Set<Setable>                                                SETABLES                  = Set.of(TYPE, MPS_ISSUES, CONTAINED_DCLARE_ISSUES, DCLARE_ISSUES, CONTAINING_ATTRIBUTE, CONTAINED, READ_OBSERVEDS);
 
     public static DClareMPS dClareMPS() {
         return DClareMPS.instance();
