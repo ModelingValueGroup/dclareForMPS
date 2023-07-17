@@ -956,7 +956,7 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
 
     public static <T> T get(Object sObject, Supplier<T> supplier) {
         DClareMPS dClareMPS = dClareForObject(sObject);
-        return dClareMPS.doGet(sObject, supplier);
+        return dClareMPS != null ? dClareMPS.doGet(sObject, supplier) : null;
     }
 
     private static DClareMPS dClareForObject(Object sObject) {
@@ -979,7 +979,7 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
                 }
             }
         }
-        throw new UnsupportedOperationException("Non Dclare Engine found for " + sObject);
+        return null;
     }
 
     private <T> T doGet(Object sObject, Supplier<T> supplier) {
