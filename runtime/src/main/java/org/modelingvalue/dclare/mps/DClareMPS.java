@@ -996,7 +996,7 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
 
     public static <T> T get(Object sObject, Supplier<T> supplier) {
         DClareMPS dClareMPS = dClareForObject(sObject);
-        return dClareMPS.doGet(sObject, supplier);
+        return dClareMPS != null ? dClareMPS.doGet(sObject, supplier) : null;
     }
 
     public static DClareMPS dClareForObject(Object sObject) {
@@ -1022,7 +1022,8 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
         }
         java.util.List<String> byProject = DclareForMPSEngine.ALL_DCLARE_MPS.stream().map(dClareMPS -> String.valueOf(dClareMPS.project)).collect(Collectors.toList());
         java.util.List<String> byRepo    = DclareForMPSEngine.ALL_DCLARE_MPS.stream().map(dClareMPS -> String.valueOf(dClareMPS.dRepository.original())).collect(Collectors.toList());
-        throw new UnsupportedOperationException("no Dclare engine found for " + sObject + "[" + sObject.getClass() + "], matching " + s + (s == null ? "" : "[" + s.getClass() + "]") + ", available by project:" + byProject + " available by repo: " + byRepo);
+        System.err.println("no Dclare engine found for " + sObject + (s == null ? "" :"[" + sObject.getClass() + "]), matching " + s + (s == null ? "" : "[" + s.getClass() + "]") + ", available by project:" + byProject + " available by repo: " + byRepo);
+        return null;
     }
 
     private <T> T doGet(Object sObject, Supplier<T> supplier) {

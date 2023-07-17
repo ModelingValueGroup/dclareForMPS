@@ -177,8 +177,8 @@ public abstract class DObject implements Mutable {
     }
 
     @Override
-    public void dDeactivate() {
-        Mutable.super.dDeactivate();
+    public void dDeactivate(LeafTransaction tx) {
+        Mutable.super.dDeactivate(tx);
         stop(dClareMPS());
     }
 

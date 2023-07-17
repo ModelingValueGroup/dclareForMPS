@@ -1067,7 +1067,7 @@
                         <property role="3clFbU" value="true" />
                       </node>
                       <node concept="1SfVH9" id="2cgTHFOzGJy" role="37vLTJ">
-                        <ref role="3cqZAo" node="3nsHMGrYX5W" resolve="hitLeft" />
+                        <ref role="3cqZAo" node="2cgTHFOzwuc" resolve="hitRight" />
                       </node>
                     </node>
                   </node>

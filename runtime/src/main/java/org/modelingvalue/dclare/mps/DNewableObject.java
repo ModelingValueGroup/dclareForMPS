@@ -143,8 +143,8 @@ public abstract class DNewableObject<T extends DNewableObject, R, S> extends DId
     }
 
     @Override
-    public final void dDeactivate() {
-        Newable.super.dDeactivate();
+    public final void dDeactivate(LeafTransaction tx) {
+        Newable.super.dDeactivate(tx);
         stop(dClareMPS());
     }
 
