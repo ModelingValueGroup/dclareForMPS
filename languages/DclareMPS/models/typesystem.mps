@@ -9145,5 +9145,52 @@
       <ref role="1YaFvo" to="7ggn:4CuBnhB351W" resolve="NativeDclare" />
     </node>
   </node>
+  <node concept="18kY7G" id="7osbeMH8JfC">
+    <property role="3GE5qa" value="attributes" />
+    <property role="TrG5h" value="publicPrimitiveAttributeChecker" />
+    <node concept="3clFbS" id="7osbeMH8JfD" role="18ibNy">
+      <node concept="3clFbJ" id="7osbeMH8JI5" role="3cqZAp">
+        <node concept="1Wc70l" id="7osbeMH8LkC" role="3clFbw">
+          <node concept="2OqwBi" id="7osbeMH8SKL" role="3uHU7w">
+            <node concept="2OqwBi" id="7osbeMH8LKW" role="2Oq$k0">
+              <node concept="1YBJjd" id="7osbeMH8Lss" role="2Oq$k0">
+                <ref role="1YBMHb" node="7osbeMH8JfF" resolve="attribute" />
+              </node>
+              <node concept="3TrEf2" id="7osbeMH8NtI" role="2OqNvi">
+                <ref role="3Tt5mk" to="tpee:4VkOLwjf83e" resolve="type" />
+              </node>
+            </node>
+            <node concept="1mIQ4w" id="7osbeMH8SOo" role="2OqNvi">
+              <node concept="chp4Y" id="7osbeMH8SUK" role="cj9EA">
+                <ref role="cht4Q" to="tpee:gWaQbR$" resolve="PrimitiveType" />
+              </node>
+            </node>
+          </node>
+          <node concept="2OqwBi" id="7osbeMH8K2u" role="3uHU7B">
+            <node concept="1YBJjd" id="7osbeMH8JIh" role="2Oq$k0">
+              <ref role="1YBMHb" node="7osbeMH8JfF" resolve="attribute" />
+            </node>
+            <node concept="3TrcHB" id="7osbeMH8KXT" role="2OqNvi">
+              <ref role="3TsBF5" to="7ggn:6aMI9gKVBbh" resolve="public" />
+            </node>
+          </node>
+        </node>
+        <node concept="3clFbS" id="7osbeMH8JI7" role="3clFbx">
+          <node concept="2MkqsV" id="7osbeMH9C6j" role="3cqZAp">
+            <node concept="Xl_RD" id="7osbeMH9C6l" role="2MkJ7o">
+              <property role="Xl_RC" value="public attributes with primitive types are not yet supported (use boxed type for now)" />
+            </node>
+            <node concept="1YBJjd" id="7osbeMH9C6m" role="1urrMF">
+              <ref role="1YBMHb" node="7osbeMH8JfF" resolve="attribute" />
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+    <node concept="1YaCAy" id="7osbeMH8JfF" role="1YuTPh">
+      <property role="TrG5h" value="attribute" />
+      <ref role="1YaFvo" to="7ggn:4$MeK2bmw9s" resolve="Attribute" />
+    </node>
+  </node>
 </model>
 
