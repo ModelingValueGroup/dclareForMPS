@@ -1020,9 +1020,15 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
                 }
             }
         }
+        String sObjectRender = sObject + (sObject == null ? "" : "[" + sObject.getClass() + "]");
+        String sRender       = s + (s == null ? "" : "[" + s.getClass() + "]");
+        System.err.println("INFO: no Dclare engine found for " + sObjectRender + " (trying to match " + sRender + ")");
+        System.err.println("      by project   : ");
         java.util.List<String> byProject = DclareForMPSEngine.ALL_DCLARE_MPS.stream().map(dClareMPS -> String.valueOf(dClareMPS.project)).collect(Collectors.toList());
-        java.util.List<String> byRepo    = DclareForMPSEngine.ALL_DCLARE_MPS.stream().map(dClareMPS -> String.valueOf(dClareMPS.dRepository.original())).collect(Collectors.toList());
-        System.err.println("no Dclare engine found for " + sObject + (s == null ? "" :"[" + sObject.getClass() + "]), matching " + s + (s == null ? "" : "[" + s.getClass() + "]") + ", available by project:" + byProject + " available by repo: " + byRepo);
+        byProject.forEach(p -> System.err.println("          " + p));
+        System.err.println("      by repository: ");
+        java.util.List<String> byRepo = DclareForMPSEngine.ALL_DCLARE_MPS.stream().map(dClareMPS -> String.valueOf(dClareMPS.dRepository.original())).collect(Collectors.toList());
+        byRepo.forEach(p -> System.err.println("          " + p));
         return null;
     }
 

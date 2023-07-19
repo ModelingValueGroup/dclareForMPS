@@ -1738,7 +1738,7 @@
     <property role="3GE5qa" value="native" />
     <property role="TrG5h" value="NativeGroup" />
     <property role="19KtqR" value="true" />
-    <ref role="1TJDcQ" to="tpck:gw2VY9q" />
+    <ref role="1TJDcQ" to="tpck:gw2VY9q" resolve="BaseConcept" />
     <node concept="1TJgyj" id="6_fOQ$ATRzd" role="1TKVEi">
       <property role="IQ2ns" value="7588516345720305869" />
       <property role="20lmBu" value="fLJjDmT/aggregation" />
