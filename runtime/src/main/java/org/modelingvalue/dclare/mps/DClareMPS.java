@@ -999,37 +999,42 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
         return dClareMPS != null ? dClareMPS.doGet(sObject, supplier) : null;
     }
 
-    public static DClareMPS dClareForObject(Object sObject) {
-        Object s = sObject;
-        if (s instanceof SNode) {
-            s = ((SNode) s).getModel();
+    public static DClareMPS dClareForObject(Object sArg) {
+        Object sObj = sArg;
+        if (sObj instanceof SNode) {
+            sObj = ((SNode) sObj).getModel();
         }
-        if (s instanceof SModel) {
-            s = ((SModel) s).getModule();
+        if (sObj instanceof SModel) {
+            sObj = ((SModel) sObj).getModule();
         }
-        if (s instanceof SModule) {
+        if (sObj instanceof SModule) {
             for (DClareMPS dClareMPS : DclareForMPSEngine.ALL_DCLARE_MPS) {
-                if (dClareMPS.project.getPath((SModule) s) != null) {
+                if (dClareMPS.project.getPath((SModule) sObj) != null) {
                     return dClareMPS;
                 }
             }
-        } else if (s instanceof SRepository) {
+            System.err.println("INFO: no Dclare engine found for " + render(sArg));
+            System.err.println("      matching " + render(sObj) + " by project with:");
+            DclareForMPSEngine.ALL_DCLARE_MPS.forEach(dClareMPS -> System.err.println("          " + dClareMPS.project));
+        } else if (sObj instanceof SRepository) {
             for (DClareMPS dClareMPS : DclareForMPSEngine.ALL_DCLARE_MPS) {
-                if (dClareMPS.dRepository.original().equals(s)) {
+                if (dClareMPS.dRepository.original().equals(sObj)) {
                     return dClareMPS;
                 }
             }
+            System.err.println("INFO: no Dclare engine found for " + render(sArg));
+            System.err.println("      matching " + render(sObj) + " by repository with:");
+            DclareForMPSEngine.ALL_DCLARE_MPS.forEach(dClareMPS -> System.err.println("          repo of project " + dClareMPS.dRepository.original().getProject()));
+        } else if (sArg != null) {
+            System.err.println("INFO: no Dclare engine found for " + render(sArg) + ", because " + render(sObj) + " is not an SModule nor an SRepository");
+        } else {
+            System.err.println("INFO: no Dclare engine found for null");
         }
-        String sObjectRender = sObject + (sObject == null ? "" : "[" + sObject.getClass() + "]");
-        String sRender       = s + (s == null ? "" : "[" + s.getClass() + "]");
-        System.err.println("INFO: no Dclare engine found for " + sObjectRender + " (trying to match " + sRender + ")");
-        System.err.println("      by project   : ");
-        java.util.List<String> byProject = DclareForMPSEngine.ALL_DCLARE_MPS.stream().map(dClareMPS -> String.valueOf(dClareMPS.project)).collect(Collectors.toList());
-        byProject.forEach(p -> System.err.println("          " + p));
-        System.err.println("      by repository: ");
-        java.util.List<String> byRepo = DclareForMPSEngine.ALL_DCLARE_MPS.stream().map(dClareMPS -> String.valueOf(dClareMPS.dRepository.original())).collect(Collectors.toList());
-        byRepo.forEach(p -> System.err.println("          " + p));
         return null;
+    }
+
+    private static String render(Object o) {
+        return o == null ? "<null>" : "'" + o + "' [" + o.getClass() + "]";
     }
 
     private <T> T doGet(Object sObject, Supplier<T> supplier) {
