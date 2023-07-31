@@ -926,15 +926,15 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
     private static <T> T toMutable(DAttribute<?, T> attr, Object value) {
         Class<?> cls = attr.cls();
         if (cls == java.util.List.class && value instanceof List) {
-            value = (T) ((List<Object>) value).toMutable();
+            value = ((List<Object>) value).toMutable();
         } else if (cls == java.util.List.class && value instanceof Collection) {
-            value = (T) ((Collection<Object>) value).collect(Collectors.toList());
+            value = ((Collection<Object>) value).collect(Collectors.toList());
         } else if (cls == java.util.Set.class && value instanceof Set) {
-            value = (T) ((Set<Object>) value).toMutable();
+            value = ((Set<Object>) value).toMutable();
         } else if (cls == java.util.Set.class && value instanceof Collection) {
-            value = (T) ((Collection<Object>) value).collect(Collectors.toSet());
+            value = ((Collection<Object>) value).collect(Collectors.toSet());
         } else if (cls == java.util.Map.class && value instanceof Map) {
-            value = (T) ((Map<Object, Object>) value).toMutable();
+            value = ((Map<Object, Object>) value).toMutable();
         }
         return (T) value;
     }
@@ -1006,6 +1006,9 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
         }
         if (sObj instanceof SModel) {
             sObj = ((SModel) sObj).getModule();
+        }
+        if (sObj instanceof DModel) {
+            SModel sModel = ((DModel) sObj).tryOriginal();
         }
         if (sObj instanceof SModule) {
             for (DClareMPS dClareMPS : DclareForMPSEngine.ALL_DCLARE_MPS) {
