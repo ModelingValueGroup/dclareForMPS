@@ -62,7 +62,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
     @SuppressWarnings("rawtypes")
     protected static Constant<SAbstractConcept, Set<DRule<SNode>>>                                           RULES                            = Constant.of("RULES", c -> {
                                                                                                                                                   Set<SLanguage> langs = DRepository.ALL_LANGUAGES_WITH_RULES.get(DClareMPS.instance().getRepository());
-                                                                                                                                                  return langs.flatMap(l -> DClareMPS.ACTIVE_RULE_SETS.get(l)).flatMap(rs -> Collection.of(rs.getNodeRules(c, Set.of()))).toSet();
+                                                                                                                                                  return langs.flatMap(l -> DClareMPS.ACTIVE_RULE_SETS.get(l)).flatMap(rs -> Collection.of(rs.getNodeRules(c, Set.of()))).asSet();
                                                                                                                                               });
 
     private static final Constant<Quadruple<Set<SLanguage>, SConcept, Set<String>, Set<IAspect>>, DNodeType> NODE_TYPE                        = Constant.of("NODE_TYPE", DNodeType::new);
@@ -72,11 +72,11 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
     protected static final Constant<SAbstractConcept, Set<SAbstractConcept>>                                 SUPER_CONCEPTS                   = Constant.of("SUPER_CONCEPTS", ac -> {
                                                                                                                                                   if (ac instanceof SInterfaceConcept) {
                                                                                                                                                       SInterfaceConcept i = (SInterfaceConcept) ac;
-                                                                                                                                                      Set<SAbstractConcept> supers = Collection.of(i.getSuperInterfaces()).flatMap(DNode.SUPER_CONCEPTS::get).toSet();
+                                                                                                                                                      Set<SAbstractConcept> supers = Collection.of(i.getSuperInterfaces()).flatMap(DNode.SUPER_CONCEPTS::get).asSet();
                                                                                                                                                       return supers.add(ac);
                                                                                                                                                   } else {
                                                                                                                                                       SConcept c = (SConcept) ac;
-                                                                                                                                                      Set<SAbstractConcept> supers = Collection.of(c.getSuperInterfaces()).flatMap(DNode.SUPER_CONCEPTS::get).toSet();
+                                                                                                                                                      Set<SAbstractConcept> supers = Collection.of(c.getSuperInterfaces()).flatMap(DNode.SUPER_CONCEPTS::get).asSet();
                                                                                                                                                       SConcept sc = c.getSuperConcept();
                                                                                                                                                       if (sc != null) {
                                                                                                                                                           supers = supers.addAll(DNode.SUPER_CONCEPTS.get(sc));
@@ -87,13 +87,13 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
 
     protected static final Constant<SConcept, Set<SReferenceLink>>                                           SINGLE_REFERENCES                = Constant.of("SINGLE_REFERENCES", c -> {
                                                                                                                                                   return Collection.of(c.getReferenceLinks()).exclude(SReferenceLink::isOptional).                                                                                                 //
-                                                                                                                                                          exclude(SNodeUtil.concept_BaseConcept.getReferenceLinks()::contains).toSet();
+                                                                                                                                                          exclude(SNodeUtil.concept_BaseConcept.getReferenceLinks()::contains).asSet();
                                                                                                                                               });
 
     @SuppressWarnings("unlikely-arg-type")
     protected static final Constant<SConcept, Set<SContainmentLink>>                                         SINGLE_CONTAINMENTS              = Constant.of("SINGLE_CONTAINMENTS", c -> {
                                                                                                                                                   return Collection.of(c.getContainmentLinks()).exclude(SContainmentLink::isMultiple).exclude(SContainmentLink::isOptional).                                                       //
-                                                                                                                                                          exclude(SNodeUtil.concept_BaseConcept.getContainmentLinks()::contains).toSet();
+                                                                                                                                                          exclude(SNodeUtil.concept_BaseConcept.getContainmentLinks()::contains).asSet();
                                                                                                                                               });
 
     protected static final DObserved<DNode, DModel>                                                          MODEL                            = DObserved.of("$MODEL", null, dNode -> {
@@ -130,7 +130,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
     @SuppressWarnings({"deprecation", "removal"})
     public static final Constant<SContainmentLink, DObserved<DNode, List<DNode>>>                            MANY_CONTAINMENT                 = Constant.of("MANY_CONTAINMENT", mc -> DObserved.of(mc, List.of(), dNode -> {
                                                                                                                                                   SNode sNode = dNode.tryOriginal();
-                                                                                                                                                  return sNode != null ? children(sNode, mc).map(DNode::of).toList() : List.of();
+                                                                                                                                                  return sNode != null ? children(sNode, mc).map(DNode::of).asList() : List.of();
                                                                                                                                               }, (dNode, pre, post) -> {
                                                                                                                                                   SNode sNode = dNode.tryOriginal();
                                                                                                                                                   DObserved.<DNode> map(pre, post, (n, a) -> {
@@ -243,12 +243,12 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
     protected static final Constant<SConcept, Set<DObserved>>                                                CONCEPT_DOBSERVEDS               = Constant.of("$CONCEPT_DOBSERVEDS", c -> Collection.concat(                                                                                                                         //
             Collection.of(c.getProperties()),                                                                                                                                                                                                                                                                                      //
             Collection.of(c.getContainmentLinks()),                                                                                                                                                                                                                                                                                //
-            Collection.of(c.getReferenceLinks())).map(DNode::dObserved).toSet());
+            Collection.of(c.getReferenceLinks())).map(DNode::dObserved).asSet());
 
     @SuppressWarnings("rawtypes")
     private static final Constant<SConcept, Set<DObserved>>                                                  CONCEPT_INIT_DOBSERVEDS          = Constant.of("$CONCEPT_INIT_DOBSERVEDS", c -> Collection.concat(                                                                                                                    //
             Collection.of(c.getContainmentLinks()),                                                                                                                                                                                                                                                                                //
-            Collection.of(c.getReferenceLinks()).filter(DNode::hasOpposite)).map(DNode::dObserved).toSet());
+            Collection.of(c.getReferenceLinks()).filter(DNode::hasOpposite)).map(DNode::dObserved).asSet());
 
     @SuppressWarnings("rawtypes")
     protected static final Constant<SConcept, Set<Observer>>                                                 CONCEPT_OBSERVERS                = Constant.of("$CONCEPT_OBSERVERS", c -> Set.of());
@@ -530,7 +530,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
     }
 
     private static List<DNode> copy(List<DNode> children, DCopy root) {
-        return children.sequential().map(c -> copy(c, root)).toList();
+        return children.sequential().map(c -> copy(c, root)).asList();
     }
 
     private static DNode copy(DNode child, DCopy root) {
@@ -791,7 +791,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
     @NotNull
     @Override
     public Iterable<? extends DNode> getChildren(SContainmentLink role) {
-        return role.isMultiple() ? MANY_CONTAINMENT.get(role).get(this) : SINGLE_CONTAINMENT.get(role).<DNode> getCollection(this).toList();
+        return role.isMultiple() ? MANY_CONTAINMENT.get(role).get(this) : SINGLE_CONTAINMENT.get(role).<DNode> getCollection(this).asList();
     }
 
     @SuppressWarnings("rawtypes")
@@ -889,7 +889,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
         } else if (feature instanceof SContainmentLink) {
             SContainmentLink cl = (SContainmentLink) feature;
             if (cl.isMultiple()) {
-                List<DNode> post = value != null ? Collection.of((Iterable<DNode>) value).notNull().distinct().toList() : null;
+                List<DNode> post = value != null ? Collection.of((Iterable<DNode>) value).notNull().distinct().asList() : null;
                 if (post != null) {
                     MANY_CONTAINMENT.get(cl).set(this, post);
                 }

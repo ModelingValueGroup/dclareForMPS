@@ -753,7 +753,15 @@
             </node>
             <node concept="2ShNRf" id="5LbVSrDCoTV" role="37vLTx">
               <node concept="1pGfFk" id="5LbVSrDCoTW" role="2ShVmc">
-                <ref role="37wK5l" to="t4tl:~DclareForMPSEngine.&lt;init&gt;(jetbrains.mps.project.ProjectBase,org.modelingvalue.dclare.mps.EngineStatusHandler)" resolve="DclareForMPSEngine" />
+                <ref role="37wK5l" to="t4tl:~DclareForMPSEngine.&lt;init&gt;(com.intellij.openapi.project.Project,jetbrains.mps.project.ProjectBase,org.modelingvalue.dclare.mps.EngineStatusHandler)" resolve="DclareForMPSEngine" />
+                <node concept="2OqwBi" id="Xq5cK80W9S" role="37wK5m">
+                  <node concept="37vLTw" id="Xq5cK80W9T" role="2Oq$k0">
+                    <ref role="3cqZAo" node="3zaVTDejJfa" resolve="mpsProject" />
+                  </node>
+                  <node concept="liA8E" id="Xq5cK80W9U" role="2OqNvi">
+                    <ref role="37wK5l" to="z1c3:~MPSProject.getProject()" resolve="getProject" />
+                  </node>
+                </node>
                 <node concept="37vLTw" id="3zaVTDejJfd" role="37wK5m">
                   <ref role="3cqZAo" node="3zaVTDejJfa" resolve="mpsProject" />
                 </node>
@@ -15841,7 +15849,7 @@
                 </node>
               </node>
               <node concept="liA8E" id="22ExA6giZxh" role="2OqNvi">
-                <ref role="37wK5l" to="zrbp:~Collection.toList()" resolve="toList" />
+                <ref role="37wK5l" to="zrbp:~Collection.asList()" resolve="asList" />
               </node>
             </node>
           </node>

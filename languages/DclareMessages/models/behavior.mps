@@ -575,7 +575,7 @@
                                   </node>
                                 </node>
                                 <node concept="liA8E" id="1KqhpdFS8PL" role="2OqNvi">
-                                  <ref role="37wK5l" to="zrbp:~Collection.toList()" resolve="toList" />
+                                  <ref role="37wK5l" to="zrbp:~Collection.asList()" resolve="asList" />
                                 </node>
                               </node>
                             </node>

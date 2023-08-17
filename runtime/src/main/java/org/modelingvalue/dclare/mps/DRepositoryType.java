@@ -30,19 +30,19 @@ public class DRepositoryType extends DObjectType<Set<SLanguage>> {
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
     public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
-        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getRepositoryRules())).toSet();
+        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getRepositoryRules())).asSet();
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
     public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
-        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getRepositoryAttributes())).toSet();
+        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getRepositoryAttributes())).asSet();
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
     public Set<INative> getNatives(Set<IRuleSet> ruleSets) {
-        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getRepositoryNatives())).toSet();
+        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getRepositoryNatives())).asSet();
     }
 
     @Override

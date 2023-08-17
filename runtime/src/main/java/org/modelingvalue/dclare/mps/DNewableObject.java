@@ -72,7 +72,7 @@ public abstract class DNewableObject<T extends DNewableObject, R, S> extends DId
     }
 
     public Set<IAspect> getCopyAspects() {
-        return deriveReasons().filter(DCopy.class).map(DDerive::aspect).toSet();
+        return deriveReasons().filter(DCopy.class).map(DDerive::aspect).asSet();
     }
 
     @Override
@@ -160,7 +160,7 @@ public abstract class DNewableObject<T extends DNewableObject, R, S> extends DId
                 }
             }
         } else if (dObserved.containment()) {
-            Set<Object> set = dObserved.collection(dObserved.fromMPS(this)).toSet();
+            Set<Object> set = dObserved.collection(dObserved.fromMPS(this)).asSet();
             for (Object child : dObserved.getCollection(this)) {
                 if (child instanceof DNewableObject && set.contains(child)) {
                     READ_OBSERVED_DEEP.trigger((DNewableObject) child);

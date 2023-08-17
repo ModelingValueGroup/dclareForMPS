@@ -162,7 +162,7 @@ public abstract class DObject implements Mutable {
     @SuppressWarnings("unchecked")
     public static Set<DObject> getDObjectSet(Object v) {
         if (v instanceof Collection) {
-            return ((Collection) v).toSet();
+            return ((Collection) v).asSet();
         } else if (v instanceof java.util.Collection) {
             return Set.of((java.util.Collection) v);
         } else {
