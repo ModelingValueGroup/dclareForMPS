@@ -59,7 +59,7 @@
         <depends>com.intellij.modules.mps</depends>
         <depends>jetbrains.mps.ide.modelchecker</depends>
         <depends>jetbrains.mps.debugger.api</depends>
-        <idea-version since-build="213.5000.0000" until-build="213.9000.0000" />
+        <idea-version since-build="223.5000.0000" until-build="223.9000.0000" />
         
         <extensions defaultExtensionNs="com.intellij">
           <mps.LanguageLibrary dir="/languages" />
@@ -82,7 +82,7 @@
         <depends>com.intellij.modules.mps</depends>
         <depends>jetbrains.mps.ide.modelchecker</depends>
         <depends>jetbrains.mps.debugger.api</depends>
-        <idea-version since-build="213.5000.0000" until-build="213.9000.0000" />
+        <idea-version since-build="223.5000.0000" until-build="223.9000.0000" />
         
         <extensions defaultExtensionNs="com.intellij">
           <mps.LanguageLibrary dir="/languages" />
@@ -734,7 +734,7 @@
   
   <target name="generate" depends="declare-mps-tasks, fetchDependencies">
     <echo message="generating" />
-    <generate fork="true" targetJavaVersion="11" logLevel="${mps.ant.log}">      
+    <generate fork="true" targetJavaVersion="17" logLevel="${mps.ant.log}">      
       <settings refid="m2m-defaults" />
       <plugin path="${artifacts.mps}/lib/mps-workbench.jar" />
       <plugin path="${artifacts.mps}/plugins/mps-build" />
@@ -903,7 +903,7 @@
   <target name="java.compile.DclareMPS" depends="java.compile.DclareMPSRuntime, java.compile.DclareRuntime, fetchDependencies">
     <mkdir dir="${dclare_home}/languages/DclareMPS/source_gen" />
     <mkdir dir="${build.tmp}/java/out/DclareMPS" />
-    <javac destdir="${build.tmp}/java/out/DclareMPS" fork="false" encoding="utf8" includeantruntime="false" source="11" target="11">
+    <javac destdir="${build.tmp}/java/out/DclareMPS" fork="false" encoding="utf8" includeantruntime="false" source="17" target="17">
       <compilerarg value="-Xlint:none" />
       <src>
         <path location="${dclare_home}/languages/DclareMPS/source_gen" />
@@ -986,7 +986,7 @@
   <target name="java.compile.DclareMPS#01" depends="java.compile.DclareMPS, java.compile.DclareMPSRuntime, java.compile.DclareRuntime, fetchDependencies">
     <mkdir dir="${dclare_home}/languages/DclareMPS/generator/source_gen" />
     <mkdir dir="${build.tmp}/java/out/DclareMPS#01" />
-    <javac destdir="${build.tmp}/java/out/DclareMPS#01" fork="false" encoding="utf8" includeantruntime="false" source="11" target="11">
+    <javac destdir="${build.tmp}/java/out/DclareMPS#01" fork="false" encoding="utf8" includeantruntime="false" source="17" target="17">
       <compilerarg value="-Xlint:none" />
       <src>
         <path location="${dclare_home}/languages/DclareMPS/generator/source_gen" />
@@ -1063,7 +1063,7 @@
   <target name="java.compile.DclareMessages" depends="java.compile.DclareMPS, java.compile.DclareMPSRuntime, java.compile.DclareRuntime, fetchDependencies">
     <mkdir dir="${dclare_home}/languages/DclareMessages/source_gen" />
     <mkdir dir="${build.tmp}/java/out/DclareMessages" />
-    <javac destdir="${build.tmp}/java/out/DclareMessages" fork="false" encoding="utf8" includeantruntime="false" source="11" target="11">
+    <javac destdir="${build.tmp}/java/out/DclareMessages" fork="false" encoding="utf8" includeantruntime="false" source="17" target="17">
       <compilerarg value="-Xlint:none" />
       <src>
         <path location="${dclare_home}/languages/DclareMessages/source_gen" />
@@ -1138,7 +1138,7 @@
   <target name="java.compile.DclareGui" depends="java.compile.DclareMPSRuntime, java.compile.DclareRuntime, fetchDependencies">
     <mkdir dir="${dclare_home}/languages/DclareGui/source_gen" />
     <mkdir dir="${build.tmp}/java/out/DclareGui" />
-    <javac destdir="${build.tmp}/java/out/DclareGui" fork="false" encoding="utf8" includeantruntime="false" source="11" target="11">
+    <javac destdir="${build.tmp}/java/out/DclareGui" fork="false" encoding="utf8" includeantruntime="false" source="17" target="17">
       <compilerarg value="-Xlint:none" />
       <src>
         <path location="${dclare_home}/languages/DclareGui/source_gen" />
@@ -1195,7 +1195,7 @@
   <target name="java.compile.DclareRuntime">
     <mkdir dir="${dclare_home}/solutions/DclareRuntime/source_gen" />
     <mkdir dir="${build.tmp}/java/out/DclareRuntime" />
-    <javac destdir="${build.tmp}/java/out/DclareRuntime" fork="false" encoding="utf8" includeantruntime="false" source="11" target="11">
+    <javac destdir="${build.tmp}/java/out/DclareRuntime" fork="false" encoding="utf8" includeantruntime="false" source="17" target="17">
       <compilerarg value="-Xlint:none" />
       <src>
         <path location="${dclare_home}/solutions/DclareRuntime/source_gen" />
@@ -1211,7 +1211,7 @@
   <target name="java.compile.DclareMPSRuntime" depends="java.compile.DclareRuntime, fetchDependencies">
     <mkdir dir="${dclare_home}/solutions/DclareMPSRuntime/source_gen" />
     <mkdir dir="${build.tmp}/java/out/DclareMPSRuntime" />
-    <javac destdir="${build.tmp}/java/out/DclareMPSRuntime" fork="false" encoding="utf8" includeantruntime="false" source="11" target="11">
+    <javac destdir="${build.tmp}/java/out/DclareMPSRuntime" fork="false" encoding="utf8" includeantruntime="false" source="17" target="17">
       <compilerarg value="-Xlint:none" />
       <src>
         <path location="${dclare_home}/solutions/DclareMPSRuntime/source_gen" />
@@ -1268,7 +1268,7 @@
   <target name="java.compile.DclareMPSPlugin" depends="java.compile.DclareGui, java.compile.DclareMPS, java.compile.DclareMPSRuntime, java.compile.DclareMessages, java.compile.DclareRuntime, fetchDependencies">
     <mkdir dir="${dclare_home}/solutions/DclareMPSPlugin/source_gen" />
     <mkdir dir="${build.tmp}/java/out/DclareMPSPlugin" />
-    <javac destdir="${build.tmp}/java/out/DclareMPSPlugin" fork="false" encoding="utf8" includeantruntime="false" source="11" target="11">
+    <javac destdir="${build.tmp}/java/out/DclareMPSPlugin" fork="false" encoding="utf8" includeantruntime="false" source="17" target="17">
       <compilerarg value="-Xlint:none" />
       <src>
         <path location="${dclare_home}/solutions/DclareMPSPlugin/source_gen" />
@@ -1348,7 +1348,7 @@
   <target name="java.compile.DclareForMPS.build">
     <mkdir dir="${dclare_home}/solutions/DclareForMPS.build/source_gen" />
     <mkdir dir="${build.tmp}/java/out/DclareForMPS.build" />
-    <javac destdir="${build.tmp}/java/out/DclareForMPS.build" fork="false" encoding="utf8" includeantruntime="false" source="11" target="11">
+    <javac destdir="${build.tmp}/java/out/DclareForMPS.build" fork="false" encoding="utf8" includeantruntime="false" source="17" target="17">
       <compilerarg value="-Xlint:none" />
       <src>
         <path location="${dclare_home}/solutions/DclareForMPS.build/source_gen" />
