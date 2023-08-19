@@ -34,19 +34,19 @@ public class DNodeType extends DObjectType<Quadruple<Set<SLanguage>, SConcept, S
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
-        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getNodeRules(getConcept(), getAnonymousTypes()))).toSet();
+        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getNodeRules(getConcept(), getAnonymousTypes()))).asSet();
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
-        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getNodeAttributes(getConcept(), getAnonymousTypes()))).toSet();
+        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getNodeAttributes(getConcept(), getAnonymousTypes()))).asSet();
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
     public Set<INative> getNatives(Set<IRuleSet> ruleSets) {
-        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getNodeNatives(getConcept(), getAnonymousTypes()))).toSet();
+        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getNodeNatives(getConcept(), getAnonymousTypes()))).asSet();
     }
 
     @Override

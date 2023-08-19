@@ -33,7 +33,8 @@ dependencies {
     compileOnly(mpsJar("mps-openapi"))
     compileOnly(mpsJar("mps-platform"))
     compileOnly(mpsJar("mps-project-check"))
-    compileOnly(mpsJar("platform-api"))
+    compileOnly(mpsJar("mps-platform"))
+    compileOnly(mpsJar("app"))
     compileOnly(mpsJar("util"))
 }
 publishing {

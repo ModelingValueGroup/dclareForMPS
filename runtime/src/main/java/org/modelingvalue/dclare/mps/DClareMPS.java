@@ -142,43 +142,43 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
     protected static final Constant<SLanguage, Map<String, DAttribute<?, ?>>>                                          ATTRIBUTE_MAP            = Constant.of("ATTRIBUTE_MAP", l -> {
         Collection<DAttribute<?, ?>> attrs1 = DClareMPS.STRUCT_CLASS_MAP.get(l).flatMap(e -> e.getValue().getIdentity());
         Collection<DAttribute<?, ?>> attrs2 = DClareMPS.RULE_SETS.get(l).flatMap(rs -> Collection.of(rs.getAllAttributes()));
-        return Collection.concat(attrs1, attrs2).toMap(a -> Entry.of(a.id(), a));
+        return Collection.concat(attrs1, attrs2).asMap(a -> Entry.of(a.id(), a));
     });
     protected static final Constant<SLanguage, Map<String, SStructClass>>                                              STRUCT_CLASS_MAP         = Constant.of("STRUCT_CLASS_MAP", l -> {
         IRuleAspect       aspect        = RULE_ASPECT.get(l);
-        Set<SStructClass> structClasses = aspect != null ? Collection.of(aspect.getStructClasses()).toSet() : Set.of();
-        return structClasses.toMap(s -> Entry.of(s.id(), s));
+        Set<SStructClass> structClasses = aspect != null ? Collection.of(aspect.getStructClasses()).asSet() : Set.of();
+        return structClasses.asMap(s -> Entry.of(s.id(), s));
     });
     protected static final Constant<SLanguage, Map<String, IAspect>>                                                   ASPECT_MAP               = Constant.of("ASPECT_MAP", l -> {
-        return DClareMPS.ASPECTS.get(l).toMap(a -> Entry.of(a.getId(), a));
+        return DClareMPS.ASPECTS.get(l).asMap(a -> Entry.of(a.getId(), a));
     });
     protected static final Constant<SLanguage, Map<String, DMethod<?>>>                                                ALL_METHODS_MAP          = Constant.of("ALL_METHODS_MAP", l -> {
         Collection<DMethod<?>> methods = DClareMPS.RULE_SETS.get(l).flatMap(rs -> Collection.of(rs.getAllMethods()));
-        return methods.toMap(m -> Entry.of(m.id(), m));
+        return methods.asMap(m -> Entry.of(m.id(), m));
     });
     protected static final Constant<SLanguage, Map<SNodeReference, DRule<?>>>                                          ALL_RULES_MAP            = Constant.of("ALL_RULES_MAP", l -> {
         Collection<DRule<?>> rules = DClareMPS.RULE_SETS.get(l).flatMap(rs -> Collection.of(rs.getAllRules()));
-        return rules.toMap(m -> Entry.of(m.getSource(), m));
+        return rules.asMap(m -> Entry.of(m.getSource(), m));
     });
     protected static final Constant<SLanguage, Set<SReferenceLink>>                                                    REFERENCES_WITH_OPPOSITE = Constant.of("REFERENCES_WITH_OPPOSITE", l -> {
         IRuleAspect aspect = RULE_ASPECT.get(l);
-        return aspect != null ? Collection.of(aspect.getReferencesWithOpposite()).toSet() : Set.of();
+        return aspect != null ? Collection.of(aspect.getReferencesWithOpposite()).asSet() : Set.of();
     });
     @SuppressWarnings("rawtypes")
     protected static final Constant<Set<SLanguage>, DefaultMap<Pair<String, Integer>, List<DMethod>>>                  METHOD_MAP               = Constant.of("METHOD_MAP", ls -> {
-        Set<IRuleSet>                                    ruleSets = ls.flatMap(DClareMPS.ACTIVE_RULE_SETS::get).toSet();
+        Set<IRuleSet>                                    ruleSets = ls.flatMap(DClareMPS.ACTIVE_RULE_SETS::get).asSet();
         DefaultMap<Pair<String, Integer>, List<DMethod>> map      = EMPTY_METHOD_MAP;
         for (DMethod m : ruleSets.flatMap(rs -> Collection.of(rs.getAllMethods()))) {
             Pair<String, Integer> k = Pair.of(m.name(), m.signature().size());
             map = map.put(k, map.get(k).add(m));
         }
-        return map.toDefaultMap(EMPTY_METHOD_MAP.defaultFunction(),                                                          //
-                                e -> Entry.of(e.getKey(), e.getValue().sorted(Comparator.comparing(DMethod::signature)).toList()));
+        return map.asDefaultMap(EMPTY_METHOD_MAP.defaultFunction(),                                                          //
+                                e -> Entry.of(e.getKey(), e.getValue().sorted(Comparator.comparing(DMethod::signature)).asList()));
     });
     @SuppressWarnings("rawtypes")
     protected static final Constant<DClareMPS, DefaultMap<DAttribute, DefaultMap<INativeGroup, List<IChangeHandler>>>> HANDLER_MAP              = Constant.of("HANDLER_MAP", d -> {
         Set<SLanguage>                                                         ls       = DRepository.ALL_LANGUAGES_WITH_RULES.get(d.getRepository());
-        Set<IRuleSet>                                                          ruleSets = ls.flatMap(DClareMPS.ACTIVE_RULE_SETS::get).toSet();
+        Set<IRuleSet>                                                          ruleSets = ls.flatMap(DClareMPS.ACTIVE_RULE_SETS::get).asSet();
         DefaultMap<DAttribute, DefaultMap<INativeGroup, List<IChangeHandler>>> map      = EMPTY_HANDLER_MAP;
         for (INative<?> n : ruleSets.flatMap(rs -> Collection.of(rs.getAllNatives()))) {
             INativeGroup ng = n.group();
@@ -191,7 +191,7 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
         return map;
     });
     protected static final Constant<DClareMPS, Map<SNodeReference, DRule<?>>>                                          RULE_MAP                 = Constant.of("RULE_MAP", dClareMPS -> {
-        return DRepository.ALL_LANGUAGES_WITH_RULES.get(dClareMPS.getRepository()).flatMap(ALL_RULES_MAP::get).toMap(e -> e);
+        return DRepository.ALL_LANGUAGES_WITH_RULES.get(dClareMPS.getRepository()).flatMap(ALL_RULES_MAP::get).asMap(e -> e);
     });
     protected static final DefaultMap<DMessageType, List<DMessage>>                                                    EMPTY_MESSAGE_LIST_MAP   = DefaultMap.of(t -> List.of());
     private static final   MutableClass                                                                                UNIVERSE_CLASS           = new MutableClass() {
@@ -207,26 +207,26 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
     };
     private static final   Constant<SLanguage, Set<IRuleSet>>                                                          RULE_SETS                = Constant.of("RULE_SETS", Set.of(), l -> {
         IRuleAspect aspect = RULE_ASPECT.get(l);
-        return aspect != null ? Collection.of(aspect.getRuleSets()).toSet() : Set.of();
+        return aspect != null ? Collection.of(aspect.getRuleSets()).asSet() : Set.of();
     });
     public static final    Constant<SLanguage, Set<IRuleSet>>                                                          ACTIVE_RULE_SETS         = Constant.of("ACTIVE_RULE_SETS", Set.of(), l -> {
         DClareMPS dclareMPS = DClareMPS.instance();
-        return RULE_SETS.get(l).filter(rs -> dclareMPS.isActiveAspect(rs.getAspect())).toSet();
+        return RULE_SETS.get(l).filter(rs -> dclareMPS.isActiveAspect(rs.getAspect())).asSet();
     });
     public static final    Constant<SLanguage, Set<IAspect>>                                                           ASPECTS                  = Constant.of("ASPECTS", Set.of(), l -> {
         IRuleAspect aspect = RULE_ASPECT.get(l);
-        return aspect != null ? Collection.of(aspect.getAspects()).toSet() : Set.of();
+        return aspect != null ? Collection.of(aspect.getAspects()).asSet() : Set.of();
     });
     protected static final Constant<SLanguage, Map<String, INativeGroup>>                                              NATIVE_GROUP_MAP         = Constant.of("NATIVE_GROUP_MAP", l -> {
-        return DClareMPS.NATIVE_GROUPS.get(l).toMap(a -> Entry.of(a.getId(), a));
+        return DClareMPS.NATIVE_GROUPS.get(l).asMap(a -> Entry.of(a.getId(), a));
     });
     public static final    Constant<SLanguage, Set<INativeGroup>>                                                      NATIVE_GROUPS            = Constant.of("NATIVE_GROUPS", l -> {
         IRuleAspect aspect = RULE_ASPECT.get(l);
-        return aspect != null ? Collection.of(aspect.getNativeGroups()).toSet() : Set.of();
+        return aspect != null ? Collection.of(aspect.getNativeGroups()).asSet() : Set.of();
     });
     public static final    Constant<SAbstractConcept, SLanguage>                                                       LANGUAGE                 = Constant.of("LANGUAGE", null, SAbstractConcept::getLanguage);
 
-    public static final Constant<DevKit, Set<SLanguage>> DEVKIT_LANGUAGES = Constant.of("DEVKIT_LANGUAGES", Set.of(), devkit -> Collection.of(devkit.getAllExportedLanguageIds()).toSet());
+    public static final Constant<DevKit, Set<SLanguage>> DEVKIT_LANGUAGES = Constant.of("DEVKIT_LANGUAGES", Set.of(), devkit -> Collection.of(devkit.getAllExportedLanguageIds()).asSet());
 
     protected static final Setable<DClareMPS, DRepository>              REPOSITORY_CONTAINER = Setable.of("REPOSITORY_CONTAINER", null, containment);
     private static final   Setable<DClareMPS, DServerMetaData>          DSERVER_METADATA     = Setable.of("SERVER_METADATA", null, containment);
@@ -725,7 +725,7 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
             }
             Map<DObject, Map<DObserved, Pair<Object, Object>>>[] diff = new Map[]{imper.diff(dclare, //
                                                                                              o -> o instanceof DObject && (((DObject) o).isNative(nativeGroup) || !imper.get((DObject) o, DObject.TYPE).getNatives(nativeGroup).isEmpty()), //
-                                                                                             s -> s instanceof DObserved && (DObject.CONTAINED == s || ((DObserved) s).isNative(nativeGroup))).toMap(e -> (Entry) e)};
+                                                                                             s -> s instanceof DObserved && (DObject.CONTAINED == s || ((DObserved) s).isNative(nativeGroup))).asMap(e -> (Entry) e)};
             if (!diff[0].isEmpty()) {
                 do
                 {
@@ -839,7 +839,7 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
             boolean changed = false;
             Map<DObject, Map<DObserved, Pair<Object, Object>>>[] diff = new Map[]{imper.diff(dclare, //
                                                                                              o -> o instanceof DObject && ((DObject) o).isActive() && !((DObject) o).isDclareOnly(), //
-                                                                                             s -> s instanceof DObserved && !((DObserved) s).isDclareOnly()).toMap(e -> (Entry) e)};
+                                                                                             s -> s instanceof DObserved && !((DObserved) s).isDclareOnly()).asMap(e -> (Entry) e)};
             if (!diff[0].isEmpty()) {
                 changed = true;
                 command(() -> {

@@ -3069,7 +3069,7 @@
                             </node>
                           </node>
                           <node concept="liA8E" id="4cmsXOuI5po" role="2OqNvi">
-                            <ref role="37wK5l" to="zrbp:~Collection.toList()" resolve="toList" />
+                            <ref role="37wK5l" to="zrbp:~Collection.asList()" resolve="asList" />
                           </node>
                         </node>
                       </node>
@@ -3191,7 +3191,7 @@
                             </node>
                           </node>
                           <node concept="liA8E" id="4cmsXOuIGuk" role="2OqNvi">
-                            <ref role="37wK5l" to="zrbp:~Collection.toSet()" resolve="toSet" />
+                            <ref role="37wK5l" to="zrbp:~Collection.asSet()" resolve="asSet" />
                           </node>
                         </node>
                       </node>
@@ -3416,7 +3416,7 @@
                         </node>
                       </node>
                       <node concept="liA8E" id="2$eQdABndls" role="2OqNvi">
-                        <ref role="37wK5l" to="zrbp:~Collection.toList()" resolve="toList" />
+                        <ref role="37wK5l" to="zrbp:~Collection.asList()" resolve="asList" />
                       </node>
                     </node>
                   </node>
@@ -3483,7 +3483,7 @@
                         </node>
                       </node>
                       <node concept="liA8E" id="6Ct1cXsyFOF" role="2OqNvi">
-                        <ref role="37wK5l" to="zrbp:~Collection.toList()" resolve="toList" />
+                        <ref role="37wK5l" to="zrbp:~Collection.asList()" resolve="asList" />
                       </node>
                     </node>
                   </node>
@@ -3555,7 +3555,7 @@
                         </node>
                       </node>
                       <node concept="liA8E" id="2$eQdABlS8l" role="2OqNvi">
-                        <ref role="37wK5l" to="zrbp:~Collection.toSet()" resolve="toSet" />
+                        <ref role="37wK5l" to="zrbp:~Collection.asSet()" resolve="asSet" />
                       </node>
                     </node>
                   </node>
@@ -3624,7 +3624,7 @@
                         </node>
                       </node>
                       <node concept="liA8E" id="3DB41z9GPi9" role="2OqNvi">
-                        <ref role="37wK5l" to="zrbp:~Collection.toMap(java.util.function.Function)" resolve="toMap" />
+                        <ref role="37wK5l" to="zrbp:~Collection.asMap(java.util.function.Function)" resolve="asMap" />
                         <node concept="1bVj0M" id="3DB41z9GPia" role="37wK5m">
                           <node concept="3clFbS" id="3DB41z9GPib" role="1bW5cS">
                             <node concept="3clFbF" id="3DB41z9GPic" role="3cqZAp">
@@ -3804,7 +3804,7 @@
                       </node>
                     </node>
                     <node concept="liA8E" id="7qx2SEVmYv8" role="2OqNvi">
-                      <ref role="37wK5l" to="zrbp:~Collection.toSet()" resolve="toSet" />
+                      <ref role="37wK5l" to="zrbp:~Collection.asSet()" resolve="asSet" />
                     </node>
                   </node>
                 </node>
@@ -3853,7 +3853,7 @@
                       </node>
                     </node>
                     <node concept="liA8E" id="7qx2SEVljfP" role="2OqNvi">
-                      <ref role="37wK5l" to="zrbp:~Collection.toMap(java.util.function.Function)" resolve="toMap" />
+                      <ref role="37wK5l" to="zrbp:~Collection.asMap(java.util.function.Function)" resolve="asMap" />
                       <node concept="1bVj0M" id="7qx2SEVljfQ" role="37wK5m">
                         <node concept="3clFbS" id="7qx2SEVljfR" role="1bW5cS">
                           <node concept="3clFbF" id="7qx2SEVljfS" role="3cqZAp">
@@ -3965,7 +3965,7 @@
                       </node>
                     </node>
                     <node concept="liA8E" id="7qx2SEVljeP" role="2OqNvi">
-                      <ref role="37wK5l" to="zrbp:~Collection.toList()" resolve="toList" />
+                      <ref role="37wK5l" to="zrbp:~Collection.asList()" resolve="asList" />
                     </node>
                   </node>
                   <node concept="37vLTw" id="7qx2SEVljeQ" role="37vLTJ">

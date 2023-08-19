@@ -71,7 +71,7 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
 
     public static final DObserved<DModel, Set<DNode>>                            ROOTS                      = DObserved.of("ROOTS", Set.of(), dModel -> {
                                                                                                                 SModel sModel = dModel.tryOriginal();
-                                                                                                                return sModel != null ? DModel.roots(sModel).map(DNode::of).toSet() : Set.of();
+                                                                                                                return sModel != null ? DModel.roots(sModel).map(DNode::of).asSet() : Set.of();
                                                                                                             }, (dModel, pre, post) -> {
                                                                                                                 SModel sModel = dModel.tryOriginal();
                                                                                                                 Setable.<Set<DNode>, DNode> diff(pre, post, a -> {
@@ -94,7 +94,7 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
 
     public static final DObserved<DModel, Set<SLanguage>>                        USED_LANGUAGES             = DObserved.of("USED_LANGUAGES", Set.of(), dModel -> {
                                                                                                                 SModelInternal sModel = (SModelInternal) dModel.tryOriginal();
-                                                                                                                return sModel != null ? Collection.of(sModel.importedLanguageIds()).toSet() : Set.of();
+                                                                                                                return sModel != null ? Collection.of(sModel.importedLanguageIds()).asSet() : Set.of();
                                                                                                             }, (dModel, pre, post) -> {
                                                                                                                 SModelInternal sModel = (SModelInternal) dModel.tryOriginal();
                                                                                                                 DObserved.map(pre, post, sModel::addLanguage, sModel::deleteLanguageId);
@@ -104,22 +104,22 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
     public static final DObserved<DModel, Set<DevKit>>                           USED_DEVKITS               = DObserved.of("USED_DEVKITS", Set.of(), dModel -> {
                                                                                                                 SModelInternal sModel = (SModelInternal) dModel.tryOriginal();
                                                                                                                 return sModel != null ? Collection.of(sModel.importedDevkits()).                                                                                //
-                                                                                                                        map(r -> r.resolve(MPSModuleRepository.getInstance())).filter(DevKit.class).toSet() : Set.of();
+                                                                                                                        map(r -> r.resolve(MPSModuleRepository.getInstance())).filter(DevKit.class).asSet() : Set.of();
                                                                                                             }, (dModel, pre, post) -> {
                                                                                                                 SModelInternal sModel = (SModelInternal) dModel.tryOriginal();
-                                                                                                                Set<SModuleReference> soll = post.map(AbstractModule::getModuleReference).toSet();
-                                                                                                                Set<SModuleReference> ist = pre.map(AbstractModule::getModuleReference).toSet();
+                                                                                                                Set<SModuleReference> soll = post.map(AbstractModule::getModuleReference).asSet();
+                                                                                                                Set<SModuleReference> ist = pre.map(AbstractModule::getModuleReference).asSet();
                                                                                                                 DObserved.map(ist, soll, sModel::addDevKit, sModel::deleteDevKit);
                                                                                                             });
 
     public static final DObserved<DModel, Set<DModel>>                           USED_MODELS                = DObserved.of("USED_MODELS", Set.of(), dModel -> {
                                                                                                                 SModelInternal sModel = (SModelInternal) dModel.tryOriginal();
                                                                                                                 return sModel != null ? Collection.of(((SModelInternal) sModel).getModelImports()).                                                             //
-                                                                                                                        map(r -> r.resolve(null)).notNull().map(DModel::of).toSet() : Set.of();
+                                                                                                                        map(r -> r.resolve(null)).notNull().map(DModel::of).asSet() : Set.of();
                                                                                                             }, (o, pre, post) -> {
                                                                                                                 SModelInternal sModel = (SModelInternal) o.tryOriginal();
-                                                                                                                Set<SModelReference> soll = post.map(DModel::reference).notNull().toSet();
-                                                                                                                Set<SModelReference> ist = pre.map(DModel::reference).toSet();
+                                                                                                                Set<SModelReference> soll = post.map(DModel::reference).notNull().asSet();
+                                                                                                                Set<SModelReference> ist = pre.map(DModel::reference).asSet();
                                                                                                                 DObserved.map(ist, soll, sModel::addModelImport, sModel::deleteModelImport);
                                                                                                             });
 
@@ -302,7 +302,7 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
                 accessoryLanguages = DRepository.CONTAINED_LANGUAGES_WITH_RULES.get(getRepository());
             }
         }
-        return Collection.concat(accessoryLanguages, USED_LANGUAGES.get(this), USED_DEVKITS.get(this).flatMap(dk -> DClareMPS.DEVKIT_LANGUAGES.get(dk))).filter(l -> !DClareMPS.ACTIVE_RULE_SETS.get(l).isEmpty()).toSet();
+        return Collection.concat(accessoryLanguages, USED_LANGUAGES.get(this), USED_DEVKITS.get(this).flatMap(dk -> DClareMPS.DEVKIT_LANGUAGES.get(dk))).filter(l -> !DClareMPS.ACTIVE_RULE_SETS.get(l).isEmpty()).asSet();
     }
 
     public java.util.Set<SLanguage> getUsedLanguages() {
@@ -310,7 +310,7 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
     }
 
     public void setUsedLanguages(Iterable<SLanguage> languages) {
-        USED_LANGUAGES.set(this, Collection.of(languages).toSet());
+        USED_LANGUAGES.set(this, Collection.of(languages).asSet());
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
@@ -319,7 +319,7 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
     }
 
     public void setUsedModels(Iterable<DModel> models) {
-        USED_MODELS.set(this, Collection.of(models).toSet());
+        USED_MODELS.set(this, Collection.of(models).asSet());
     }
 
     @Override
@@ -439,7 +439,7 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
     }
 
     public void setRootNodes(SAbstractConcept concept, Iterable<SNode> roots) {
-        Set<DNode> set = Collection.of(roots).notNull().map(DNode::of).toSet();
+        Set<DNode> set = Collection.of(roots).notNull().map(DNode::of).asSet();
         ROOTS.set(this, (b, a) -> a.addAll(b.filter(r -> !r.isInstanceOfConcept(concept))), set);
     }
 

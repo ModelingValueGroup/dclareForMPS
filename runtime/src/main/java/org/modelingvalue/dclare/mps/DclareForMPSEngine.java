@@ -36,6 +36,8 @@ import org.modelingvalue.dclare.DclareTrace;
 import org.modelingvalue.dclare.LeafTransaction;
 import org.modelingvalue.dclare.UniverseTransaction.Status;
 
+import com.intellij.openapi.project.Project;
+
 import jetbrains.mps.classloading.ClassLoaderManager;
 import jetbrains.mps.classloading.DeployListener;
 import jetbrains.mps.debug.api.BreakpointManagerComponent;
@@ -66,7 +68,7 @@ public class DclareForMPSEngine implements DeployListener, IBreakpointManagerLis
     //
     private DClareMPS                                      dClareMPS;
 
-    public DclareForMPSEngine(ProjectBase project, EngineStatusHandler engineStatusHandler) {
+    public DclareForMPSEngine(Project openApiProject, ProjectBase project, EngineStatusHandler engineStatusHandler) {
         this.nr = COUNTER.getAndIncrement();
         this.project = project;
         this.engineStatusHandler = engineStatusHandler;
@@ -76,7 +78,7 @@ public class DclareForMPSEngine implements DeployListener, IBreakpointManagerLis
         }
         classLoaderManager = Objects.requireNonNull(MPSCoreComponents.getInstance().getPlatform().findComponent(ClassLoaderManager.class));
         classLoaderManager.addListener(this);
-        breakpointManagerComponent = project.getComponent(BreakpointManagerComponent.class);
+        breakpointManagerComponent = openApiProject.getService(BreakpointManagerComponent.class);
         moodUpdaterThread = new MoodUpdaterThread();
         newDClareMPS(project, new DclareForMpsConfig().withMaxNrOfHistory(MAX_NR_OF_HISTORY_FOR_MPS).withStatusHandler(engineStatusHandler));
         moodUpdaterThread.start();

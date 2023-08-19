@@ -29,19 +29,19 @@ public class DStructClass extends DObjectType<Triple<Set<SLanguage>, Set<String>
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
     public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
-        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getStructRules(getSStructClass(), getAnonymousTypes()))).toSet();
+        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getStructRules(getSStructClass(), getAnonymousTypes()))).asSet();
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
     public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
-        return (Set) Collection.concat(getSStructClass().getIdentity(), ruleSets.flatMap(rs -> Collection.of(rs.getStructAttributes(getSStructClass(), getAnonymousTypes())))).toSet();
+        return (Set) Collection.concat(getSStructClass().getIdentity(), ruleSets.flatMap(rs -> Collection.of(rs.getStructAttributes(getSStructClass(), getAnonymousTypes())))).asSet();
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
     public Set<INative> getNatives(Set<IRuleSet> ruleSets) {
-        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getStructNatives(getSStructClass(), getAnonymousTypes()))).toSet();
+        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getStructNatives(getSStructClass(), getAnonymousTypes()))).asSet();
     }
 
     @Override
