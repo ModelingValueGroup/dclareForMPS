@@ -15,46 +15,37 @@
 
 package org.modelingvalue.dclare.mps;
 
-import org.jetbrains.mps.openapi.language.SLanguage;
-import org.modelingvalue.collections.Collection;
-import org.modelingvalue.collections.Set;
-import org.modelingvalue.collections.util.Triple;
+import org.jetbrains.mps.openapi.module.SDependency;
+import org.jetbrains.mps.openapi.module.SDependencyScope;
+import org.jetbrains.mps.openapi.module.SModule;
+import org.jetbrains.mps.openapi.module.SModuleReference;
+import org.modelingvalue.collections.util.IdentifiedBy;
 
-public class DStructClass extends DObjectType<Triple<Set<SLanguage>, Set<String>, SStructClass>> {
+public class DDependency extends IdentifiedBy<SDependency> implements SDependency {
 
-    public DStructClass(Triple<Set<SLanguage>, Set<String>, SStructClass> identity) {
-        super(identity);
-    }
-
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    @Override
-    public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
-        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getStructRules(getSStructClass(), getAnonymousTypes()))).toSet();
-    }
-
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    @Override
-    public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
-        return (Set) Collection.concat(getSStructClass().getIdentity(), ruleSets.flatMap(rs -> Collection.of(rs.getStructAttributes(getSStructClass(), getAnonymousTypes())))).toSet();
-    }
-
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    @Override
-    public Set<INative> getNatives(Set<IRuleSet> ruleSets) {
-        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getStructNatives(getSStructClass(), getAnonymousTypes()))).toSet();
+    public DDependency(SDependency original) {
+        super(original);
     }
 
     @Override
-    public Set<SLanguage> getLanguages() {
-        return id().a();
+    public SDependencyScope getScope() {
+        return id().getScope();
     }
 
-    public Set<String> getAnonymousTypes() {
-        return id().b();
+    @Override
+    public boolean isReexport() {
+        return id().isReexport();
     }
 
-    public SStructClass getSStructClass() {
-        return id().c();
+    @Override
+    public SModuleReference getTargetModule() {
+        return new DModuleReference(id().getTargetModule());
+    }
+
+    @Override
+    public DModule getTarget() {
+        SModule target = DClareMPS.instance().read(() -> id().getTarget());
+        return target != null ? DModule.of(target) : null;
     }
 
 }

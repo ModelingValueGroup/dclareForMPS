@@ -36,6 +36,10 @@ public class DTempModel extends EditableModelDescriptor implements EditableSMode
         this(createModelRef(name, module.getModuleReference()));
     }
 
+    protected DTempModel(String name) {
+        this(createModelRef(name, null));
+    }
+
     public DTempModel(SModelReference ref) {
         super(ref, new NullDataSource());
     }
@@ -56,6 +60,11 @@ public class DTempModel extends EditableModelDescriptor implements EditableSMode
             @Override
             protected void performUndoableAction(SNodeUndoableAction action) {
                 super.performUndoableAction(action);
+            }
+
+            @Override
+            public boolean canFireEvent() {
+                return true;
             }
         };
         return new ModelLoadResult<>(smodel, ModelLoadingState.FULLY_LOADED);

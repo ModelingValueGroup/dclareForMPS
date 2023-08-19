@@ -10,15 +10,17 @@ Rules definitions typically use quotations (light or not) to define the derivati
 The rules are executed incrementally, meaning they perform a minimal amount of changes to derive the defined patterns (
 expressed in quotations).
 
-## Standard MPS plugin
+## MPS plugin
 
-DclareForMPS is in constant progress. It is available as a standard plugin in MPS, without the need to download it here.
+DclareForMPS is in constant progress.
+It is available as a plugin in MPS through the plugin marketplace.
+
 All feedback, functional or technical, is appreciated.
 
-## dclareForJava
+## dclare
 
 DclareForMPS uses the dclare engine of the Modeling Value Group.  
-The dclare project can be found here: [dclare on GitHub](https://github.com/ModelingValueGroup/dclare)
+The dclare project can be found here: [dclare](https://github.com/ModelingValueGroup/dclare)
 
 ## Installation
 
@@ -28,7 +30,7 @@ The dclare project can be found here: [dclare on GitHub](https://github.com/Mode
 4. open one of the example projects (see below)
 5. verify that the 'On' setting is enabled (Settings > Other Settings > Dclare):
 
-![check the engine checkbox](docs/engineOn.jpg "Engine on")
+   ![check the engine checkbox](documentation/images/DclareEngineOnAtProjectOpen.png "Dclare Engine On At Project Open")
 
 4. rebuild the example project
 5. play with the sandbox-models in the example-project
@@ -37,10 +39,10 @@ The dclare project can be found here: [dclare on GitHub](https://github.com/Mode
 
 Multiple examples can be found on GitHub:
 
-- [Sudoku](https://github.com/ModelingValueGroup/Sudoku)
-- [EntityClassJava](https://github.com/ModelingValueGroup/EntityClassJava)
-- [NiamToOO](https://github.com/ModelingValueGroup/NiamToOO)
-- [FlattenAndCopy](https://github.com/ModelingValueGroup/FlattenAndCopy)
+- [Sudoku](https://github.com/ModelingValueGroup/ex-Sudoku)
+- [EntityClassJava](https://github.com/ModelingValueGroup/ex-EntityClassJava)
+- [NiamToOO](https://github.com/ModelingValueGroup/ex-NiamToOO)
+- [FlattenAndCopy](https://github.com/ModelingValueGroup/ex-FlattenAndCopy)
 - [StateMachines](https://github.com/ModelingValueGroup/statemachines)
 
 For more info, please read the _README.md_ files that are part of these examples.

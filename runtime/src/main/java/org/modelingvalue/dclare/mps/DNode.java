@@ -46,6 +46,7 @@ import jetbrains.mps.lang.smodel.generator.smodelAdapter.SNodeOperations;
 import jetbrains.mps.smodel.DynamicReference;
 import jetbrains.mps.smodel.SNodeUtil;
 import jetbrains.mps.smodel.adapter.structure.MetaAdapterFactory;
+import jetbrains.mps.smodel.adapter.structure.property.InvalidProperty;
 
 @SuppressWarnings("unused")
 public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implements SNode {
@@ -55,6 +56,8 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
     private static final SConcept                                                                            LIST_ANTI_QUOTATION_CONCEPT      = MetaAdapterFactory.getConcept(0x3a13115c633c4c5cL, 0xbbcc75c4219e9555L, 0x1168c10465eL, "jetbrains.mps.lang.quotation.structure.ListAntiquotation");
     private static final SConcept                                                                            PROPERTY_ANTI_QUOTATION_CONCEPT  = MetaAdapterFactory.getConcept(0x3a13115c633c4c5cL, 0xbbcc75c4219e9555L, 0x116aac96587L, "jetbrains.mps.lang.quotation.structure.PropertyAntiquotation");
     private static final SConcept                                                                            REFERENCE_ANTI_QUOTATION_CONCEPT = MetaAdapterFactory.getConcept(0x3a13115c633c4c5cL, 0xbbcc75c4219e9555L, 0x1168c10465dL, "jetbrains.mps.lang.quotation.structure.ReferenceAntiquotation");
+
+    protected static final SProperty                                                                         PARENT_PROPERTY                  = new InvalidProperty("$PARENT_PROPERTY", "PARENT_PROPERTY");
 
     @SuppressWarnings("rawtypes")
     protected static Constant<SAbstractConcept, Set<DRule<SNode>>>                                           RULES                            = Constant.of("RULES", c -> {
@@ -417,11 +420,6 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
         return (SConcept) identity[1];
     }
 
-    @Override
-    public Long dSortKey() {
-        return (Long) identity[0];
-    }
-
     private final boolean isINamedConcept;
 
     protected DNode(Object[] identity) {
@@ -475,6 +473,10 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
             return NODE_TYPE.get(Quadruple.of(ls, SNodeUtil.concept_BaseConcept, Set.of(), Set.of()));
         } else {
             ls = ls.addAll(getAnonymousLanguages());
+            SLanguage l = DClareMPS.LANGUAGE.get(getConcept());
+            if (!DClareMPS.ACTIVE_RULE_SETS.get(l).isEmpty()) {
+                ls = ls.add(l);
+            }
             return NODE_TYPE.get(Quadruple.of(ls, getConcept(), getAnonymousTypes(), getCopyAspects()));
         }
     }

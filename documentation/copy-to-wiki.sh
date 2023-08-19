@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ## (C) Copyright 2018-2023 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
 ##                                                                                                                     ~
@@ -13,9 +14,55 @@
 ##     Arjan Kok, Carel Bast                                                                                           ~
 ##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-# suppress inspection "UnusedProperty" for whole file
-group        = org.modelingvalue
-artifact     = DclareForMPS
-version      = 3.1.0
-version_java = 11
-version_mps  = 2021.3.1
+set -euo pipefail
+
+main() {
+  prepare
+  copyToWiki
+  pushToWiki
+}
+prepare() {
+  SOURCE_DIR="source"
+    DOCU_DIR="$SOURCE_DIR/documentation"
+    WIKI_DIR="wiki"
+     version="$(getVersion)"
+      branch="${GITHUB_REF#refs/heads/}"
+       owner="$OWNER"
+        repo="$REPO"
+        hash="$HASH"
+}
+copyToWiki() {
+  java "$SOURCE_DIR/runtime/src/main/java/CopyToWiki.java" \
+    "$DOCU_DIR" \
+    "$WIKI_DIR" \
+    "$owner" \
+    "$repo" \
+    "$version" \
+    "$branch" \
+    "$hash"
+}
+pushToWiki() {
+  if ! hasWikiChanges; then
+    echo "no changes to push to wiki repo"
+  else
+    ( cd $WIKI_DIR
+      echo "push changes to wiki repo..."
+      git config --global user.email "auto-wiki-updater@modelingvalue.nl"
+      git config --global user.name  "auto WIKI updater"
+      git add -A
+      git commit -m "update wiki from version '$version' in branch '$branch'"
+      git push
+    )
+  fi
+}
+getVersion() {
+  cat "$SOURCE_DIR/gradle.properties" | sed 's/ //g' | egrep '^version=' | sed 's/version=//'
+}
+hasWikiChanges() {
+  ( cd "$WIKI_DIR"
+    [[ $(git status --porcelain) ]]
+  )
+}
+
+
+main "$@"

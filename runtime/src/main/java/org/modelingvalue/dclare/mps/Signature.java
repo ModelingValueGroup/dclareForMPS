@@ -70,6 +70,10 @@ public class Signature extends IdentifiedByArray implements Comparable<Signature
                     if (!((Class) sup.get(i)).isAssignableFrom((Class) get(i))) {
                         return false;
                     }
+                } else if ((get(i) instanceof SAbstractConcept || get(i) instanceof SStructClass) && sup.get(i) instanceof Class) {
+                    if (sup.get(i) != Object.class) {
+                        return false;
+                    }
                 } else {
                     return false;
                 }

@@ -28,6 +28,7 @@ import org.jetbrains.mps.openapi.model.EditableSModel;
 import org.jetbrains.mps.openapi.model.SModel;
 import org.jetbrains.mps.openapi.model.SNode;
 import org.jetbrains.mps.openapi.model.SNodeReference;
+import org.modelingvalue.collections.DefaultMap;
 import org.modelingvalue.collections.List;
 import org.modelingvalue.dclare.AbstractDerivationTransaction;
 import org.modelingvalue.dclare.Constant;
@@ -41,7 +42,7 @@ import jetbrains.mps.smodel.adapter.structure.property.InvalidProperty;
 public interface DAttribute<O, T> extends DFeature {
 
     @SuppressWarnings("unchecked")
-    static <C, V> DAttribute<C, V> of(String id, String name, IRuleSet ruleSet, boolean syn, boolean optional, boolean composite, int identifyingNr, boolean isPublic, Object def, Class<?> cls, SLanguage oppositeLanguage, String opposite, Supplier<SNodeReference> source, Function<C, V> deriver) {
+    static <C, V> DAttribute<C, V> of(String id, String name, IRuleSet ruleSet, boolean syn, boolean optional, boolean composite, int identifyingNr, boolean isPublic, Function<C, Object> def, Class<?> cls, SLanguage oppositeLanguage, String opposite, Supplier<SNodeReference> source, Function<C, V> deriver) {
         boolean idAttr = identifyingNr >= 0 && (ruleSet == null || ruleSet.getAnonymousType() != null);
         SetableModifier[] mods = {synthetic.iff(syn), mandatory.iff(idAttr || (!optional && identifyingNr < 0)), containment.iff(composite)};
         return idAttr ? new DIdentifyingAttribute(id, name, ruleSet, identifyingNr, cls, source, mods) : //
@@ -55,7 +56,7 @@ public interface DAttribute<O, T> extends DFeature {
     }
 
     @SuppressWarnings("rawtypes")
-    final static Constant<DAttribute, List<IChangeHandler>> D_HANDLERS = Constant.of("D_HANDLERS", a -> {
+    final static Constant<DAttribute, DefaultMap<INativeGroup, List<IChangeHandler>>> D_HANDLERS = Constant.of("D_HANDLERS", a -> {
         return DClareMPS.HANDLER_MAP.get(DClareMPS.instance()).get(a);
     });
 
@@ -88,8 +89,8 @@ public interface DAttribute<O, T> extends DFeature {
 
     boolean isMandatory();
 
-    default List<IChangeHandler> handlers() {
-        return D_HANDLERS.get(this);
+    default List<IChangeHandler> handlers(INativeGroup ng) {
+        return D_HANDLERS.get(this).get(ng);
     }
 
     Class<?> cls();
@@ -108,7 +109,7 @@ public interface DAttribute<O, T> extends DFeature {
         private final boolean   isPublic;
 
         @SuppressWarnings("unchecked")
-        public DObservedAttribute(Object id, String name, IRuleSet ruleSet, boolean indetifying, boolean isPublic, V def, Class<?> cls, Supplier<Setable<?, ?>> opposite, Supplier<SNodeReference> source, SetableModifier... modifiers) {
+        public DObservedAttribute(Object id, String name, IRuleSet ruleSet, boolean indetifying, boolean isPublic, Function<C, V> def, Class<?> cls, Supplier<Setable<?, ?>> opposite, Supplier<SNodeReference> source, SetableModifier... modifiers) {
             super(id, def, opposite, null, source, modifiers);
             this.sProperty = isPublic ? new InvalidProperty(id.toString(), name) : null;
             this.name = name;
@@ -133,8 +134,8 @@ public interface DAttribute<O, T> extends DFeature {
         }
 
         @Override
-        public boolean isNative() {
-            return !handlers().isEmpty();
+        public boolean isNative(INativeGroup ng) {
+            return !handlers(ng).isEmpty();
         }
 
         @Override
@@ -172,10 +173,13 @@ public interface DAttribute<O, T> extends DFeature {
             if (object == null) {
                 throw new NullPointerException("attempt to read null." + this);
             }
-            if (sProperty != null && object instanceof SNode && DClareMPS.GET_FROM_MPS.get() && !AbstractDerivationTransaction.isDeriving()) {
-                ((SNode) object).getProperty(sProperty);
-            }
             LeafTransaction tx = LeafTransaction.getCurrent();
+            if (sProperty != null && object instanceof DNode && DClareMPS.GET_FROM_MPS.get() && !AbstractDerivationTransaction.isDeriving()) {
+                SNode sNode = ((DNode) object).tryOriginal();
+                if (sNode != null) {
+                    sNode.getProperty(sProperty);
+                }
+            }
             if (!(tx instanceof AbstractDerivationTransaction) && object.isExternal()) {
                 DClareMPS dClareMPS = DClareMPS.instance(tx);
                 return dClareMPS.imperativeState().derive(() -> super.get(object), dClareMPS.universeTransaction().constantState());

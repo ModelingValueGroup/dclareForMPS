@@ -35,6 +35,8 @@ public interface INative<O> extends DFeature {
 
     Object type();
 
+    INativeGroup group();
+
     @SuppressWarnings({"rawtypes", "unchecked"})
     static int compare(INative a, INative b) {
         if (a.equals(b)) {

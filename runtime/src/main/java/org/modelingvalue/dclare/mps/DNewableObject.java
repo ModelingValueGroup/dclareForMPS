@@ -17,30 +17,20 @@ package org.modelingvalue.dclare.mps;
 
 import java.util.function.Supplier;
 
-import org.jetbrains.mps.openapi.language.SLanguage;
-import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.dclare.*;
-import org.modelingvalue.dclare.Construction.Reason;
-import org.modelingvalue.dclare.mps.DAttribute.DIdentifyingAttribute;
 
 @SuppressWarnings("rawtypes")
 public abstract class DNewableObject<T extends DNewableObject, R, S> extends DIdentifiedObject implements Newable {
 
-    private static final Constant<DNewableObject, Object>  ORIGINAL           = Constant.of("$ORIGINAL", null);
-    private static final Constant<DNewableObject, Boolean> ORPHAN             = Constant.of("$ORPHAN", Boolean.FALSE);
+    private static final Constant<DNewableObject, Object> ORIGINAL           = Constant.of("$ORIGINAL", null);
 
-    protected static final Action<DNewableObject>          READ_OBSERVED_DEEP = Action.of("$READ_OBSERVED_DEEP", DNewableObject::readObservedDeep);
+    protected static final Action<DNewableObject>         READ_OBSERVED_DEEP = Action.of("$READ_OBSERVED_DEEP", DNewableObject::readObservedDeep);
 
     @SuppressWarnings("unchecked")
-    protected static final Set<Observer>                   OBSERVERS          = DObject.OBSERVERS;
+    protected static final Set<Observer>                  OBSERVERS          = DObject.OBSERVERS;
 
-    protected static final Set<Setable>                    SETABLES           = DObject.SETABLES;
-
-    protected static <D extends DNewableObject> D quotationConstruct(IRuleSet ruleSet, String anonymousType, Object[] ctx, Supplier<D> supplier) {
-        LeafTransaction tx = LeafTransaction.getCurrent();
-        return tx.construct(new DQuotation(tx.mutable(), ruleSet, anonymousType, ctx), supplier);
-    }
+    protected static final Set<Setable>                   SETABLES           = DObject.SETABLES;
 
     protected static <D extends DNewableObject> D copyRootConstruct(IRuleSet ruleSet, String anonymousType, Object[] ctx, DNode copiedRoot, Supplier<D> supplier) {
         LeafTransaction tx = LeafTransaction.getCurrent();
@@ -70,31 +60,6 @@ public abstract class DNewableObject<T extends DNewableObject, R, S> extends DId
     }
 
     @SuppressWarnings("unchecked")
-    @Override
-    protected <V> V get(DIdentifyingAttribute<?, V> attr) {
-        Construction c = getQuotationConstruction(attr.anonymousType());
-        if (c != null) {
-            return (V) c.get(attr.index());
-        } else {
-            throw new NullPointerException("No Aanonymous Type " + attr.anonymousType() + " found when trying to read " + this + "." + attr);
-        }
-    }
-
-    @Override
-    protected boolean isObsolete(String anonymousType) {
-        return anonymousType != null && getQuotationConstruction(anonymousType) == null;
-    }
-
-    private Construction getQuotationConstruction(String anonymousType) {
-        for (Construction c : dAllDerivations()) {
-            if (c.reason() instanceof DQuotation && ((DQuotation) c.reason()).anonymousType() == anonymousType) {
-                return c;
-            }
-        }
-        return null;
-    }
-
-    @SuppressWarnings("unchecked")
     protected final R reference() {
         DRead<R> rc = referenceReason();
         return rc != null ? rc.reference() : null;
@@ -106,25 +71,13 @@ public abstract class DNewableObject<T extends DNewableObject, R, S> extends DId
         return cons.reason() instanceof DRead ? (DRead) cons.reason() : null;
     }
 
-    protected Collection<Reason> deriveReasons() {
-        return dAllDerivations().map(Construction::reason);
-    }
-
-    public Set<String> getAnonymousTypes() {
-        return deriveReasons().filter(DQuotation.class).map(DDerive::anonymousType).notNull().toSet();
-    }
-
     public Set<IAspect> getCopyAspects() {
         return deriveReasons().filter(DCopy.class).map(DDerive::aspect).toSet();
     }
 
-    public Set<SLanguage> getAnonymousLanguages() {
-        return deriveReasons().filter(DQuotation.class).map(DDerive::aspect).flatMap(d -> IAspect.ALL_DEPENDENCIES.get(d)).map(IAspect::getLanguage).toSet();
-    }
-
     @Override
     protected boolean isRead() {
-        return tryOriginal() != null && !ORPHAN.get(this);
+        return tryOriginal() != null && !dBecameOrphan();
     }
 
     @SuppressWarnings("unchecked")
@@ -172,7 +125,6 @@ public abstract class DNewableObject<T extends DNewableObject, R, S> extends DId
         super.exit(dClareMPS);
         S original = tryOriginal();
         if (original != null) {
-            ORPHAN.force(this, Boolean.TRUE);
             exit(dClareMPS, original);
         }
     }
@@ -191,8 +143,8 @@ public abstract class DNewableObject<T extends DNewableObject, R, S> extends DId
     }
 
     @Override
-    public final void dDeactivate() {
-        Newable.super.dDeactivate();
+    public final void dDeactivate(LeafTransaction tx) {
+        Newable.super.dDeactivate(tx);
         stop(dClareMPS());
     }
 

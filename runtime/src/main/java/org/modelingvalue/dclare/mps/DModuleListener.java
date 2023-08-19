@@ -55,10 +55,16 @@ public class DModuleListener extends Pair<DModule, DClareMPS> implements SModule
 
     @Override
     public void dependencyAdded(SModule module, SDependency dep) {
+        b().handleMPSChange(() -> {
+            DModule.DEPENDENCIES.set(a(), Set::add, new DDependency(dep));
+        });
     }
 
     @Override
     public void dependencyRemoved(SModule module, SDependency dep) {
+        b().handleMPSChange(() -> {
+            DModule.DEPENDENCIES.set(a(), Set::remove, new DDependency(dep));
+        });
     }
 
     @Override

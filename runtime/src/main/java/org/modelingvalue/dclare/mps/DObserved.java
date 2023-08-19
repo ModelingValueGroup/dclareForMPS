@@ -36,27 +36,35 @@ import org.modelingvalue.dclare.ex.ThrowableError;
 public class DObserved<O extends DObject, T> extends Observed<O, T> implements DFeature {
 
     public static <C extends DObject, V> DObserved<C, V> of(Object id, V def, Function<C, V> fromMPS, TriConsumer<C, V, V> toMPS, SetableModifier... modifiers) {
-        return new DObserved<>(id, def, null, fromMPS, toMPS, null, null, modifiers);
+        return new DObserved<>(id, c -> def, null, fromMPS, toMPS, null, null, modifiers);
     }
 
     public static <C extends DObject, V> DObserved<C, V> of(Object id, V def, Function<C, V> fromMPS, TriConsumer<C, V, V> toMPS, Supplier<SNodeReference> source, SetableModifier... modifiers) {
-        return new DObserved<>(id, def, null, fromMPS, toMPS, null, source, modifiers);
+        return new DObserved<>(id, c -> def, null, fromMPS, toMPS, null, source, modifiers);
     }
 
     public static <C extends DObject, V> DObserved<C, V> of(Object id, V def, Function<C, V> fromMPS, TriConsumer<C, V, V> toMPS, QuadConsumer<LeafTransaction, C, V, V> changed, SetableModifier... modifiers) {
-        return new DObserved<>(id, def, null, fromMPS, toMPS, changed, null, modifiers);
+        return new DObserved<>(id, c -> def, null, fromMPS, toMPS, changed, null, modifiers);
     }
 
     public static <C extends DObject, V> DObserved<C, V> of(Object id, V def, Function<C, V> fromPMS, TriConsumer<C, V, V> toMPS, QuadConsumer<LeafTransaction, C, V, V> changed, Supplier<SNodeReference> source, SetableModifier... modifiers) {
-        return new DObserved<>(id, def, null, null, toMPS, changed, source, modifiers);
+        return new DObserved<>(id, c -> def, null, null, toMPS, changed, source, modifiers);
+    }
+
+    public static <C extends DObject, V> DObserved<C, V> of(Object id, V def, Supplier<Setable<?, ?>> opposite, Function<C, V> fromPMS, TriConsumer<C, V, V> toMPS, SetableModifier... modifiers) {
+        return new DObserved<>(id, c -> def, opposite, fromPMS, toMPS, null, null, modifiers);
+    }
+
+    public static <C extends DObject, V> DObserved<C, V> of(Object id, V def, Supplier<Setable<?, ?>> opposite, Function<C, V> fromPMS, TriConsumer<C, V, V> toMPS, QuadConsumer<LeafTransaction, C, V, V> changed, SetableModifier... modifiers) {
+        return new DObserved<>(id, c -> def, opposite, fromPMS, toMPS, changed, null, modifiers);
     }
 
     public static <C extends DObject, V> DObserved<C, V> of(Object id, V def, Supplier<Setable<?, ?>> opposite, Function<C, V> fromPMS, TriConsumer<C, V, V> toMPS, Supplier<SNodeReference> source, SetableModifier... modifiers) {
-        return new DObserved<>(id, def, opposite, fromPMS, toMPS, null, source, modifiers);
+        return new DObserved<>(id, c -> def, opposite, fromPMS, toMPS, null, source, modifiers);
     }
 
     public static <C extends DObject, V> DObserved<C, V> of(Object id, V def, Supplier<Setable<?, ?>> opposite, Function<C, V> fromPMS, TriConsumer<C, V, V> toMPS, QuadConsumer<LeafTransaction, C, V, V> changed, Supplier<SNodeReference> source, SetableModifier... modifiers) {
-        return new DObserved<>(id, def, opposite, fromPMS, toMPS, changed, source, modifiers);
+        return new DObserved<>(id, c -> def, opposite, fromPMS, toMPS, changed, source, modifiers);
     }
 
     private Function<O, T>                 fromMPS;
@@ -65,13 +73,13 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
     private Action<O>                      reReadAction;
     private final Supplier<SNodeReference> source;
 
-    private DObserved(Object id, T def, Supplier<Setable<?, ?>> opposite, Function<O, T> fromMPS, TriConsumer<O, T, T> toMPS, QuadConsumer<LeafTransaction, O, T, T> changed, Supplier<SNodeReference> source, SetableModifier... modifiers) {
+    private DObserved(Object id, Function<O, T> def, Supplier<Setable<?, ?>> opposite, Function<O, T> fromMPS, TriConsumer<O, T, T> toMPS, QuadConsumer<LeafTransaction, O, T, T> changed, Supplier<SNodeReference> source, SetableModifier... modifiers) {
         super(id, def, opposite, null, changed, modifiers);
         this.source = source;
         setFromToMPS(fromMPS, toMPS);
     }
 
-    protected DObserved(Object id, T def, Supplier<Setable<?, ?>> opposite, QuadConsumer<LeafTransaction, O, T, T> changed, Supplier<SNodeReference> source, SetableModifier... modifiers) {
+    protected DObserved(Object id, Function<O, T> def, Supplier<Setable<?, ?>> opposite, QuadConsumer<LeafTransaction, O, T, T> changed, Supplier<SNodeReference> source, SetableModifier... modifiers) {
         super(id, def, opposite, null, changed, modifiers);
         this.source = source;
     }
@@ -134,7 +142,7 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
     }
 
     protected T fromMPS(O object) {
-        return DClareMPS.instance().read(() -> fromMPS(object, getDefault()));
+        return DClareMPS.instance().read(() -> fromMPS(object, getDefault(object)));
     }
 
     protected final T fromMPS(O object, T def) {
@@ -182,7 +190,7 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
             if (object.isRead()) {
                 if (!DObject.READ_OBSERVEDS.get(object).contains(this)) {
                     triggerInitRead(object);
-                    ((ObserverTransaction) tx).retrigger(Priority.inner);
+                    ((ObserverTransaction) tx).retrigger(Priority.INNER);
                     return super.get(object);
                 }
             } else if (!DObject.READ_OBSERVEDS.add(object, this).contains(this) && DClareMPS.instance().getConfig().isTraceActivation()) {
@@ -268,7 +276,7 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
         return toMPS == null;
     }
 
-    public boolean isNative() {
+    public boolean isNative(INativeGroup ng) {
         return false;
     }
 

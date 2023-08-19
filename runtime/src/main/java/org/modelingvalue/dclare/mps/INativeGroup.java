@@ -15,46 +15,21 @@
 
 package org.modelingvalue.dclare.mps;
 
+import java.util.function.Consumer;
+
 import org.jetbrains.mps.openapi.language.SLanguage;
-import org.modelingvalue.collections.Collection;
-import org.modelingvalue.collections.Set;
-import org.modelingvalue.collections.util.Triple;
 
-public class DStructClass extends DObjectType<Triple<Set<SLanguage>, Set<String>, SStructClass>> {
+public interface INativeGroup {
 
-    public DStructClass(Triple<Set<SLanguage>, Set<String>, SStructClass> identity) {
-        super(identity);
+    @SuppressWarnings("unchecked")
+    static <C, V> INativeGroup of(SLanguage language, String id) {
+        return DClareMPS.NATIVE_GROUP_MAP.get(language).get(id);
     }
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    @Override
-    public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
-        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getStructRules(getSStructClass(), getAnonymousTypes()))).toSet();
-    }
+    String getId();
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    @Override
-    public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
-        return (Set) Collection.concat(getSStructClass().getIdentity(), ruleSets.flatMap(rs -> Collection.of(rs.getStructAttributes(getSStructClass(), getAnonymousTypes())))).toSet();
-    }
+    String getName();
 
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    @Override
-    public Set<INative> getNatives(Set<IRuleSet> ruleSets) {
-        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getStructNatives(getSStructClass(), getAnonymousTypes()))).toSet();
-    }
-
-    @Override
-    public Set<SLanguage> getLanguages() {
-        return id().a();
-    }
-
-    public Set<String> getAnonymousTypes() {
-        return id().b();
-    }
-
-    public SStructClass getSStructClass() {
-        return id().c();
-    }
+    Consumer<Runnable> getScheduler(DClareMPS dclare);
 
 }

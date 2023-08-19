@@ -1598,5 +1598,39 @@
       </node>
     </node>
   </node>
+  <node concept="2S6QgY" id="1nDBaIBPjh0">
+    <property role="TrG5h" value="RemoveQuotedLabel" />
+    <ref role="2ZfgGC" to="7ggn:OIpsC9Sbv6" resolve="QuotedLabel" />
+    <node concept="2S6ZIM" id="1nDBaIBPjh1" role="2ZfVej">
+      <node concept="3clFbS" id="1nDBaIBPjh2" role="2VODD2">
+        <node concept="3clFbF" id="1nDBaIBPjmc" role="3cqZAp">
+          <node concept="Xl_RD" id="1nDBaIBPjmb" role="3clFbG">
+            <property role="Xl_RC" value="Remove Label" />
+          </node>
+        </node>
+      </node>
+    </node>
+    <node concept="2Sbjvc" id="1nDBaIBPjh3" role="2ZfgGD">
+      <node concept="3clFbS" id="1nDBaIBPjh4" role="2VODD2">
+        <node concept="3clFbF" id="1nDBaIBPjPp" role="3cqZAp">
+          <node concept="2OqwBi" id="1nDBaIBPjPq" role="3clFbG">
+            <node concept="2OqwBi" id="1nDBaIBPjPr" role="2Oq$k0">
+              <node concept="2OqwBi" id="1nDBaIBPkiN" role="2Oq$k0">
+                <node concept="2Sf5sV" id="1nDBaIBPjPs" role="2Oq$k0" />
+                <node concept="1mfA1w" id="1nDBaIBPkzp" role="2OqNvi" />
+              </node>
+              <node concept="3Tsc0h" id="1nDBaIBPjPt" role="2OqNvi">
+                <ref role="3TtcxE" to="tpck:4uZwTti3__2" resolve="smodelAttribute" />
+              </node>
+            </node>
+            <node concept="liA8E" id="1nDBaIBPjPu" role="2OqNvi">
+              <ref role="37wK5l" to="33ny:~List.remove(java.lang.Object)" resolve="remove" />
+              <node concept="2Sf5sV" id="1nDBaIBPkId" role="37wK5m" />
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+  </node>
 </model>
 

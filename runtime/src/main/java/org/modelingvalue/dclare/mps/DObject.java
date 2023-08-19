@@ -22,6 +22,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
+import org.jetbrains.mps.openapi.model.SNode;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
@@ -73,7 +74,7 @@ public abstract class DObject implements Mutable {
                                                                                                                  };
 
     protected static final Observed<DObject, DObjectType<?>>                           TYPE                      = Observed.of("$TYPE", DUMMY_TYPE, (t, o, b, a) -> {
-                                                                                                                     if (!a.getNatives().isEmpty()) {
+                                                                                                                     if (a.hasNatives()) {
                                                                                                                          DObject.CONTAINED.set(o, true);
                                                                                                                      }
                                                                                                                  }, plumbing);
@@ -104,17 +105,26 @@ public abstract class DObject implements Mutable {
                                                                                                                      }
                                                                                                                  });
 
-    protected static final DObserved<DObject, Set<DIssue>>                             DCLARE_ISSUES             = DObserved.of("$DCLARE_ISSUES", Set.of(), null, (dObject, pre, post) -> {
-                                                                                                                 }, plumbing, containment);
+    protected static final Setable<DObject, Set<DIssue>>                               CONTAINED_DCLARE_ISSUES   = Setable.of("$CONTAINED_DCLARE_ISSUES", Set.of(), plumbing, containment);
+
+    protected static final DObserved<DObject, Set<DIssue>>                             DCLARE_ISSUES             = DObserved.of("$DCLARE_ISSUES", Set.of(), () -> DIssue.DOBJECT, null, (dObject, pre, post) -> {
+                                                                                                                 }, plumbing);
 
     protected static final DObserved<DObject, Boolean>                                 CONTAINED                 = DObserved.of("$CONTAINED", Boolean.FALSE, null, (dObject, pre, post) -> {
+                                                                                                                     if (dObject instanceof DNode) {
+                                                                                                                         SNode sNode = ((DNode) dObject).tryOriginal();
+                                                                                                                         if (sNode != null) {
+                                                                                                                             sNode.setProperty(DNode.PARENT_PROPERTY, "");
+                                                                                                                             sNode.setProperty(DNode.PARENT_PROPERTY, null);
+                                                                                                                         }
+                                                                                                                     }
                                                                                                                  }, plumbing);
 
     protected static final Setable<DObject, Set<Observed>>                             READ_OBSERVEDS            = Setable.of("$READ_OBSERVEDS", Set.of(), plumbing, preserved);
 
     protected static final Set<Observer>                                               OBSERVERS                 = Set.of(TYPE_RULE, CONTAINING_ATTRIBUTE_RULE);
 
-    protected static final Set<Setable>                                                SETABLES                  = Set.of(TYPE, MPS_ISSUES, DCLARE_ISSUES, CONTAINING_ATTRIBUTE, CONTAINED, READ_OBSERVEDS);
+    protected static final Set<Setable>                                                SETABLES                  = Set.of(TYPE, MPS_ISSUES, CONTAINED_DCLARE_ISSUES, DCLARE_ISSUES, CONTAINING_ATTRIBUTE, CONTAINED, READ_OBSERVEDS);
 
     public static DClareMPS dClareMPS() {
         return DClareMPS.instance();
@@ -139,7 +149,7 @@ public abstract class DObject implements Mutable {
     @Override
     public DObjectType<?> dClass() {
         DObjectType<?> type = TYPE.get(this);
-        return type == TYPE.getDefault() ? getBootstrapType() : type;
+        return type == TYPE.getDefault(this) ? getBootstrapType() : type;
     }
 
     protected abstract DObjectType<?> getBootstrapType();
@@ -167,8 +177,8 @@ public abstract class DObject implements Mutable {
     }
 
     @Override
-    public void dDeactivate() {
-        Mutable.super.dDeactivate();
+    public void dDeactivate(LeafTransaction tx) {
+        Mutable.super.dDeactivate(tx);
         stop(dClareMPS());
     }
 
@@ -272,8 +282,8 @@ public abstract class DObject implements Mutable {
         return !isExternal() && LeafTransaction.getCurrent().current().get(this, Mutable.D_PARENT_CONTAINING) != null;
     }
 
-    protected boolean isNative() {
-        return !isExternal() && !dClass().getNatives().isEmpty();
+    protected boolean isNative(INativeGroup ng) {
+        return !isExternal() && !dClass().getNatives(ng).isEmpty();
     }
 
 }

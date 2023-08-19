@@ -15,46 +15,31 @@
 
 package org.modelingvalue.dclare.mps;
 
-import org.jetbrains.mps.openapi.language.SLanguage;
-import org.modelingvalue.collections.Collection;
-import org.modelingvalue.collections.Set;
-import org.modelingvalue.collections.util.Triple;
+import org.jetbrains.mps.openapi.module.SModule;
+import org.jetbrains.mps.openapi.module.SModuleId;
+import org.jetbrains.mps.openapi.module.SModuleReference;
+import org.jetbrains.mps.openapi.module.SRepository;
+import org.modelingvalue.collections.util.IdentifiedBy;
 
-public class DStructClass extends DObjectType<Triple<Set<SLanguage>, Set<String>, SStructClass>> {
+public class DModuleReference extends IdentifiedBy<SModuleReference> implements SModuleReference {
 
-    public DStructClass(Triple<Set<SLanguage>, Set<String>, SStructClass> identity) {
-        super(identity);
-    }
-
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    @Override
-    public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
-        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getStructRules(getSStructClass(), getAnonymousTypes()))).toSet();
-    }
-
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    @Override
-    public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
-        return (Set) Collection.concat(getSStructClass().getIdentity(), ruleSets.flatMap(rs -> Collection.of(rs.getStructAttributes(getSStructClass(), getAnonymousTypes())))).toSet();
-    }
-
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    @Override
-    public Set<INative> getNatives(Set<IRuleSet> ruleSets) {
-        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getStructNatives(getSStructClass(), getAnonymousTypes()))).toSet();
+    public DModuleReference(SModuleReference id) {
+        super(id);
     }
 
     @Override
-    public Set<SLanguage> getLanguages() {
-        return id().a();
+    public SModuleId getModuleId() {
+        return id().getModuleId();
     }
 
-    public Set<String> getAnonymousTypes() {
-        return id().b();
+    @Override
+    public String getModuleName() {
+        return id().getModuleName();
     }
 
-    public SStructClass getSStructClass() {
-        return id().c();
+    @Override
+    public SModule resolve(SRepository repo) {
+        SModule resolved = DClareMPS.instance().read(() -> id().resolve(repo));
+        return resolved != null ? DModule.of(resolved) : null;
     }
-
 }

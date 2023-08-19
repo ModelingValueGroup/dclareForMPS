@@ -53,7 +53,6 @@
     <import index="r791" ref="6354ebe7-c22a-4a0f-ac54-50b52ab9b065/java:javax.swing.text(JDK/)" />
     <import index="akim" ref="r:36c1ea3b-fbca-41f9-87cc-9bacb8f18c30(DclareMessages.behavior)" />
     <import index="dvox" ref="r:9dfd3567-3b1f-4edb-85a0-3981ca2bfd8c(jetbrains.mps.lang.modelapi.structure)" />
-    <import index="7e0v" ref="r:afc499bf-658e-47de-983c-b73f835c87e1(jetbrains.mps.ide.devkit.editor)" />
     <import index="phxh" ref="r:5754bb7d-f802-4a0f-bd3d-0764f0d71413(jetbrains.mps.ide.modelchecker.platform.actions)" />
     <import index="g4jo" ref="r:d98d04fb-4a60-4106-81cf-6cb40b67de4d(jetbrains.mps.ide.findusages.model)" />
     <import index="d6hs" ref="6ed54515-acc8-4d1e-a16c-9fd6cfe951ea/java:jetbrains.mps.errors.item(MPS.Core/)" />
@@ -75,6 +74,7 @@
     <import index="u42p" ref="r:986938bb-bdb1-4307-b062-e4647a4db0f9(jetbrains.mps.ide.platform.refactoring)" />
     <import index="pexp" ref="r:97d6b60a-b381-42e8-9ea4-402ec93eaf11(jetbrains.mps.ide.refactoring.plugin)" />
     <import index="z1c5" ref="86441d7a-e194-42da-81a5-2161ec62a379/java:jetbrains.mps.project(MPS.Workbench/)" />
+    <import index="7e0v" ref="r:afc499bf-658e-47de-983c-b73f835c87e1(jetbrains.mps.ide.devkit.editor)" />
     <import index="tpck" ref="r:00000000-0000-4000-0000-011c89590288(jetbrains.mps.lang.core.structure)" implicit="true" />
     <import index="1m72" ref="498d89d2-c2e9-11e2-ad49-6cf049e62fe5/java:com.intellij.openapi.components(MPS.IDEA/)" implicit="true" />
     <import index="tprs" ref="r:00000000-0000-4000-0000-011c895904a4(jetbrains.mps.ide.actions)" implicit="true" />
@@ -3361,6 +3361,23 @@
               </node>
             </node>
           </node>
+          <node concept="3cpWs8" id="4RbflAQx3C9" role="3cqZAp">
+            <node concept="3cpWsn" id="4RbflAQx3Ca" role="3cpWs9">
+              <property role="3TUv4t" value="true" />
+              <property role="TrG5h" value="inf" />
+              <node concept="3uibUv" id="4RbflAQx3Cb" role="1tU5fm">
+                <ref role="3uigEE" to="dxuu:~JButton" resolve="JButton" />
+              </node>
+              <node concept="2ShNRf" id="4RbflAQx3Cc" role="33vP2m">
+                <node concept="1pGfFk" id="4RbflAQx3Cd" role="2ShVmc">
+                  <ref role="37wK5l" to="dxuu:~JButton.&lt;init&gt;(java.lang.String)" resolve="JButton" />
+                  <node concept="Xl_RD" id="4RbflAQx3Ce" role="37wK5m">
+                    <property role="Xl_RC" value="∞" />
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
           <node concept="3clFbH" id="4FbMPtULl$C" role="3cqZAp" />
           <node concept="3clFbF" id="4FbMPtULqgE" role="3cqZAp">
             <node concept="2OqwBi" id="4FbMPtULsA$" role="3clFbG">
@@ -3606,7 +3623,7 @@
                       <property role="3cmrfH" value="1" />
                     </node>
                     <node concept="3cmrfG" id="2HLAWGSjb8A" role="37wK5m">
-                      <property role="3cmrfH" value="7" />
+                      <property role="3cmrfH" value="8" />
                     </node>
                     <node concept="2ShNRf" id="2HLAWGSjb8B" role="37wK5m">
                       <node concept="1pGfFk" id="2HLAWGSjb8C" role="2ShVmc">
@@ -5701,6 +5718,59 @@
               </node>
             </node>
           </node>
+          <node concept="3clFbF" id="4RbflAQxh2D" role="3cqZAp">
+            <node concept="2OqwBi" id="4RbflAQxh2E" role="3clFbG">
+              <node concept="37vLTw" id="4RbflAQxh2F" role="2Oq$k0">
+                <ref role="3cqZAo" node="2HLAWGSjaX_" resolve="presetsPanel" />
+              </node>
+              <node concept="liA8E" id="4RbflAQxh2G" role="2OqNvi">
+                <ref role="37wK5l" to="z60i:~Container.add(java.awt.Component,java.lang.Object)" resolve="add" />
+                <node concept="37vLTw" id="4RbflAQxh2H" role="37wK5m">
+                  <ref role="3cqZAo" node="4RbflAQx3Ca" resolve="inf" />
+                </node>
+                <node concept="2ShNRf" id="4RbflAQxh2I" role="37wK5m">
+                  <node concept="1pGfFk" id="4RbflAQxh2J" role="2ShVmc">
+                    <ref role="37wK5l" to="dwmc:~GridConstraints.&lt;init&gt;(int,int,int,int,int,int,int,int,java.awt.Dimension,java.awt.Dimension,java.awt.Dimension,int,boolean)" resolve="GridConstraints" />
+                    <node concept="3cmrfG" id="4RbflAQxh2K" role="37wK5m">
+                      <property role="3cmrfH" value="0" />
+                    </node>
+                    <node concept="3cmrfG" id="4RbflAQxh2L" role="37wK5m">
+                      <property role="3cmrfH" value="6" />
+                    </node>
+                    <node concept="3cmrfG" id="4RbflAQxh2M" role="37wK5m">
+                      <property role="3cmrfH" value="1" />
+                    </node>
+                    <node concept="3cmrfG" id="4RbflAQxh2N" role="37wK5m">
+                      <property role="3cmrfH" value="1" />
+                    </node>
+                    <node concept="10M0yZ" id="4RbflAQxh2O" role="37wK5m">
+                      <ref role="3cqZAo" to="dwmc:~GridConstraints.ANCHOR_WEST" resolve="ANCHOR_WEST" />
+                      <ref role="1PxDUh" to="dwmc:~GridConstraints" resolve="GridConstraints" />
+                    </node>
+                    <node concept="10M0yZ" id="4RbflAQxh2P" role="37wK5m">
+                      <ref role="3cqZAo" to="dwmc:~GridConstraints.FILL_BOTH" resolve="FILL_BOTH" />
+                      <ref role="1PxDUh" to="dwmc:~GridConstraints" resolve="GridConstraints" />
+                    </node>
+                    <node concept="10M0yZ" id="4RbflAQxh2Q" role="37wK5m">
+                      <ref role="3cqZAo" to="dwmc:~GridConstraints.SIZEPOLICY_FIXED" resolve="SIZEPOLICY_FIXED" />
+                      <ref role="1PxDUh" to="dwmc:~GridConstraints" resolve="GridConstraints" />
+                    </node>
+                    <node concept="10M0yZ" id="4RbflAQxh2R" role="37wK5m">
+                      <ref role="3cqZAo" to="dwmc:~GridConstraints.SIZEPOLICY_FIXED" resolve="SIZEPOLICY_FIXED" />
+                      <ref role="1PxDUh" to="dwmc:~GridConstraints" resolve="GridConstraints" />
+                    </node>
+                    <node concept="10Nm6u" id="4RbflAQxh2S" role="37wK5m" />
+                    <node concept="10Nm6u" id="4RbflAQxh2T" role="37wK5m" />
+                    <node concept="10Nm6u" id="4RbflAQxh2U" role="37wK5m" />
+                    <node concept="3cmrfG" id="4RbflAQxh2V" role="37wK5m">
+                      <property role="3cmrfH" value="0" />
+                    </node>
+                    <node concept="3clFbT" id="4RbflAQxh2W" role="37wK5m" />
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
           <node concept="3clFbF" id="2HLAWGSks4a" role="3cqZAp">
             <node concept="2OqwBi" id="2HLAWGSks4c" role="3clFbG">
               <node concept="37vLTw" id="2HLAWGSkuW9" role="2Oq$k0">
@@ -5718,7 +5788,7 @@
                       <property role="3cmrfH" value="0" />
                     </node>
                     <node concept="3cmrfG" id="2HLAWGSks4j" role="37wK5m">
-                      <property role="3cmrfH" value="6" />
+                      <property role="3cmrfH" value="7" />
                     </node>
                     <node concept="3cmrfG" id="2HLAWGSks4k" role="37wK5m">
                       <property role="3cmrfH" value="1" />
@@ -6524,6 +6594,98 @@
               </node>
             </node>
           </node>
+          <node concept="3clFbF" id="4RbflAQxy$Y" role="3cqZAp">
+            <node concept="2OqwBi" id="4RbflAQxy$Z" role="3clFbG">
+              <node concept="37vLTw" id="4RbflAQxy_0" role="2Oq$k0">
+                <ref role="3cqZAo" node="4RbflAQx3Ca" resolve="inf" />
+              </node>
+              <node concept="liA8E" id="4RbflAQxy_1" role="2OqNvi">
+                <ref role="37wK5l" to="dxuu:~AbstractButton.addActionListener(java.awt.event.ActionListener)" resolve="addActionListener" />
+                <node concept="2ShNRf" id="4RbflAQxy_2" role="37wK5m">
+                  <node concept="YeOm9" id="4RbflAQxy_3" role="2ShVmc">
+                    <node concept="1Y3b0j" id="4RbflAQxy_4" role="YeSDq">
+                      <property role="2bfB8j" value="true" />
+                      <ref role="1Y3XeK" to="hyam:~ActionListener" resolve="ActionListener" />
+                      <ref role="37wK5l" to="wyt6:~Object.&lt;init&gt;()" resolve="Object" />
+                      <node concept="3Tm1VV" id="4RbflAQxy_5" role="1B3o_S" />
+                      <node concept="3clFb_" id="4RbflAQxy_6" role="jymVt">
+                        <property role="TrG5h" value="actionPerformed" />
+                        <node concept="3Tm1VV" id="4RbflAQxy_7" role="1B3o_S" />
+                        <node concept="3cqZAl" id="4RbflAQxy_8" role="3clF45" />
+                        <node concept="37vLTG" id="4RbflAQxy_9" role="3clF46">
+                          <property role="TrG5h" value="p1" />
+                          <node concept="3uibUv" id="4RbflAQxy_a" role="1tU5fm">
+                            <ref role="3uigEE" to="hyam:~ActionEvent" resolve="ActionEvent" />
+                          </node>
+                        </node>
+                        <node concept="3clFbS" id="4RbflAQxy_b" role="3clF47">
+                          <node concept="3clFbF" id="4RbflAQxy_c" role="3cqZAp">
+                            <node concept="2OqwBi" id="4RbflAQxy_d" role="3clFbG">
+                              <node concept="37vLTw" id="4RbflAQxy_e" role="2Oq$k0">
+                                <ref role="3cqZAo" node="4FbMPtUModK" resolve="maxTotalNrOfChanges" />
+                              </node>
+                              <node concept="liA8E" id="4RbflAQxy_f" role="2OqNvi">
+                                <ref role="37wK5l" to="dxuu:~JFormattedTextField.setValue(java.lang.Object)" resolve="setValue" />
+                                <node concept="10M0yZ" id="4RbflAQxM7H" role="37wK5m">
+                                  <ref role="3cqZAo" to="wyt6:~Integer.MAX_VALUE" resolve="MAX_VALUE" />
+                                  <ref role="1PxDUh" to="wyt6:~Integer" resolve="Integer" />
+                                </node>
+                              </node>
+                            </node>
+                          </node>
+                          <node concept="3clFbF" id="4RbflAQxy_l" role="3cqZAp">
+                            <node concept="2OqwBi" id="4RbflAQxy_m" role="3clFbG">
+                              <node concept="37vLTw" id="4RbflAQxy_n" role="2Oq$k0">
+                                <ref role="3cqZAo" node="4FbMPtUL6HO" resolve="maxNrOfChanges" />
+                              </node>
+                              <node concept="liA8E" id="4RbflAQxy_o" role="2OqNvi">
+                                <ref role="37wK5l" to="dxuu:~JFormattedTextField.setValue(java.lang.Object)" resolve="setValue" />
+                                <node concept="10M0yZ" id="4RbflAQxMrK" role="37wK5m">
+                                  <ref role="3cqZAo" to="wyt6:~Integer.MAX_VALUE" resolve="MAX_VALUE" />
+                                  <ref role="1PxDUh" to="wyt6:~Integer" resolve="Integer" />
+                                </node>
+                              </node>
+                            </node>
+                          </node>
+                          <node concept="3clFbF" id="4RbflAQxy_u" role="3cqZAp">
+                            <node concept="2OqwBi" id="4RbflAQxy_v" role="3clFbG">
+                              <node concept="37vLTw" id="4RbflAQxy_w" role="2Oq$k0">
+                                <ref role="3cqZAo" node="4FbMPtUPopQ" resolve="maxNrOfObserved" />
+                              </node>
+                              <node concept="liA8E" id="4RbflAQxy_x" role="2OqNvi">
+                                <ref role="37wK5l" to="dxuu:~JFormattedTextField.setValue(java.lang.Object)" resolve="setValue" />
+                                <node concept="10M0yZ" id="4RbflAQxMKu" role="37wK5m">
+                                  <ref role="3cqZAo" to="wyt6:~Integer.MAX_VALUE" resolve="MAX_VALUE" />
+                                  <ref role="1PxDUh" to="wyt6:~Integer" resolve="Integer" />
+                                </node>
+                              </node>
+                            </node>
+                          </node>
+                          <node concept="3clFbF" id="4RbflAQxy_B" role="3cqZAp">
+                            <node concept="2OqwBi" id="4RbflAQxy_C" role="3clFbG">
+                              <node concept="37vLTw" id="4RbflAQxy_D" role="2Oq$k0">
+                                <ref role="3cqZAo" node="4FbMPtUPo$q" resolve="maxNrOfObservers" />
+                              </node>
+                              <node concept="liA8E" id="4RbflAQxy_E" role="2OqNvi">
+                                <ref role="37wK5l" to="dxuu:~JFormattedTextField.setValue(java.lang.Object)" resolve="setValue" />
+                                <node concept="10M0yZ" id="4RbflAQxN4N" role="37wK5m">
+                                  <ref role="1PxDUh" to="wyt6:~Integer" resolve="Integer" />
+                                  <ref role="3cqZAo" to="wyt6:~Integer.MAX_VALUE" resolve="MAX_VALUE" />
+                                </node>
+                              </node>
+                            </node>
+                          </node>
+                        </node>
+                        <node concept="2AHcQZ" id="4RbflAQxy_K" role="2AJF6D">
+                          <ref role="2AI5Lk" to="wyt6:~Override" resolve="Override" />
+                        </node>
+                      </node>
+                    </node>
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
           <node concept="3clFbH" id="2HLAWGStuNo" role="3cqZAp" />
           <node concept="3cpWs8" id="2HLAWGSxeBi" role="3cqZAp">
             <node concept="3cpWsn" id="2HLAWGSxeBj" role="3cpWs9">
@@ -6555,25 +6717,34 @@
                             <ref role="1Pybhc" to="dxuu:~SwingUtilities" resolve="SwingUtilities" />
                             <node concept="1bVj0M" id="2HLAWGSxeBw" role="37wK5m">
                               <node concept="3clFbS" id="2HLAWGSxeBx" role="1bW5cS">
+                                <node concept="3cpWs8" id="2oUheSol1cV" role="3cqZAp">
+                                  <node concept="3cpWsn" id="2oUheSol1cW" role="3cpWs9">
+                                    <property role="TrG5h" value="f" />
+                                    <node concept="3uibUv" id="2oUheSol0Bk" role="1tU5fm">
+                                      <ref role="3uigEE" to="dxuu:~JFormattedTextField" resolve="JFormattedTextField" />
+                                    </node>
+                                    <node concept="10QFUN" id="2oUheSol1cX" role="33vP2m">
+                                      <node concept="3uibUv" id="2oUheSol1cY" role="10QFUM">
+                                        <ref role="3uigEE" to="dxuu:~JFormattedTextField" resolve="JFormattedTextField" />
+                                      </node>
+                                      <node concept="2OqwBi" id="2oUheSol1cZ" role="10QFUP">
+                                        <node concept="37vLTw" id="2oUheSol1d0" role="2Oq$k0">
+                                          <ref role="3cqZAo" node="2HLAWGSxeBr" resolve="p1" />
+                                        </node>
+                                        <node concept="liA8E" id="2oUheSol1d1" role="2OqNvi">
+                                          <ref role="37wK5l" to="hyam:~ComponentEvent.getComponent()" resolve="getComponent" />
+                                        </node>
+                                      </node>
+                                    </node>
+                                  </node>
+                                </node>
                                 <node concept="3clFbF" id="2HLAWGSxeBy" role="3cqZAp">
                                   <node concept="2OqwBi" id="2HLAWGSxeBz" role="3clFbG">
                                     <node concept="liA8E" id="2HLAWGSxeB$" role="2OqNvi">
                                       <ref role="37wK5l" to="r791:~JTextComponent.selectAll()" resolve="selectAll" />
                                     </node>
-                                    <node concept="1eOMI4" id="2HLAWGSxeB_" role="2Oq$k0">
-                                      <node concept="10QFUN" id="2HLAWGSxeBA" role="1eOMHV">
-                                        <node concept="3uibUv" id="2HLAWGSxeBB" role="10QFUM">
-                                          <ref role="3uigEE" to="r791:~JTextComponent" resolve="JTextComponent" />
-                                        </node>
-                                        <node concept="2OqwBi" id="2HLAWGSxeBC" role="10QFUP">
-                                          <node concept="37vLTw" id="2HLAWGSxeBD" role="2Oq$k0">
-                                            <ref role="3cqZAo" node="2HLAWGSxeBr" resolve="p1" />
-                                          </node>
-                                          <node concept="liA8E" id="2HLAWGSxeBE" role="2OqNvi">
-                                            <ref role="37wK5l" to="hyam:~ComponentEvent.getComponent()" resolve="getComponent" />
-                                          </node>
-                                        </node>
-                                      </node>
+                                    <node concept="37vLTw" id="2oUheSol1d2" role="2Oq$k0">
+                                      <ref role="3cqZAo" node="2oUheSol1cW" resolve="f" />
                                     </node>
                                   </node>
                                 </node>
@@ -6597,7 +6768,69 @@
                           <ref role="3uigEE" to="hyam:~FocusEvent" resolve="FocusEvent" />
                         </node>
                       </node>
-                      <node concept="3clFbS" id="2HLAWGSxeBM" role="3clF47" />
+                      <node concept="3clFbS" id="2HLAWGSxeBM" role="3clF47">
+                        <node concept="3clFbF" id="2oUheSokBVK" role="3cqZAp">
+                          <node concept="2YIFZM" id="2oUheSokBVL" role="3clFbG">
+                            <ref role="1Pybhc" to="dxuu:~SwingUtilities" resolve="SwingUtilities" />
+                            <ref role="37wK5l" to="dxuu:~SwingUtilities.invokeLater(java.lang.Runnable)" resolve="invokeLater" />
+                            <node concept="1bVj0M" id="2oUheSokBVM" role="37wK5m">
+                              <node concept="3clFbS" id="2oUheSokBVN" role="1bW5cS">
+                                <node concept="3cpWs8" id="2oUheSokJa1" role="3cqZAp">
+                                  <node concept="3cpWsn" id="2oUheSokJa2" role="3cpWs9">
+                                    <property role="TrG5h" value="f" />
+                                    <node concept="3uibUv" id="2oUheSokI3H" role="1tU5fm">
+                                      <ref role="3uigEE" to="dxuu:~JFormattedTextField" resolve="JFormattedTextField" />
+                                    </node>
+                                    <node concept="10QFUN" id="2oUheSokJa3" role="33vP2m">
+                                      <node concept="3uibUv" id="2oUheSokJa4" role="10QFUM">
+                                        <ref role="3uigEE" to="dxuu:~JFormattedTextField" resolve="JFormattedTextField" />
+                                      </node>
+                                      <node concept="2OqwBi" id="2oUheSokJa5" role="10QFUP">
+                                        <node concept="37vLTw" id="2oUheSokJa6" role="2Oq$k0">
+                                          <ref role="3cqZAo" node="2HLAWGSxeBK" resolve="p1" />
+                                        </node>
+                                        <node concept="liA8E" id="2oUheSokJa7" role="2OqNvi">
+                                          <ref role="37wK5l" to="hyam:~ComponentEvent.getComponent()" resolve="getComponent" />
+                                        </node>
+                                      </node>
+                                    </node>
+                                  </node>
+                                </node>
+                                <node concept="3clFbF" id="2oUheSokBVO" role="3cqZAp">
+                                  <node concept="2OqwBi" id="2oUheSokBVP" role="3clFbG">
+                                    <node concept="liA8E" id="2oUheSokBVQ" role="2OqNvi">
+                                      <ref role="37wK5l" to="dxuu:~JFormattedTextField.setValue(java.lang.Object)" resolve="setValue" />
+                                      <node concept="2YIFZM" id="2oUheSokMpo" role="37wK5m">
+                                        <ref role="37wK5l" to="wyt6:~Math.max(int,int)" resolve="max" />
+                                        <ref role="1Pybhc" to="wyt6:~Math" resolve="Math" />
+                                        <node concept="10QFUN" id="2oUheSokP8I" role="37wK5m">
+                                          <node concept="3uibUv" id="2oUheSokQab" role="10QFUM">
+                                            <ref role="3uigEE" to="wyt6:~Integer" resolve="Integer" />
+                                          </node>
+                                          <node concept="2OqwBi" id="2oUheSokS6M" role="10QFUP">
+                                            <node concept="37vLTw" id="2oUheSokRhw" role="2Oq$k0">
+                                              <ref role="3cqZAo" node="2oUheSokJa2" resolve="f" />
+                                            </node>
+                                            <node concept="liA8E" id="2oUheSokTkf" role="2OqNvi">
+                                              <ref role="37wK5l" to="dxuu:~JFormattedTextField.getValue()" resolve="getValue" />
+                                            </node>
+                                          </node>
+                                        </node>
+                                        <node concept="3cmrfG" id="2oUheSokX07" role="37wK5m">
+                                          <property role="3cmrfH" value="1" />
+                                        </node>
+                                      </node>
+                                    </node>
+                                    <node concept="37vLTw" id="2oUheSokJa8" role="2Oq$k0">
+                                      <ref role="3cqZAo" node="2oUheSokJa2" resolve="f" />
+                                    </node>
+                                  </node>
+                                </node>
+                              </node>
+                            </node>
+                          </node>
+                        </node>
+                      </node>
                       <node concept="2AHcQZ" id="2HLAWGSxeBN" role="2AJF6D">
                         <ref role="2AI5Lk" to="wyt6:~Override" resolve="Override" />
                       </node>
@@ -7684,17 +7917,24 @@
                   <ref role="2WH_rO" node="GLgNzrkGxI" resolve="maxTotalNrOfChanges" />
                 </node>
               </node>
-              <node concept="0kSF2" id="1iXkhsJ_4m7" role="37vLTx">
-                <node concept="3uibUv" id="1iXkhsJ_4m8" role="0kSFW">
-                  <ref role="3uigEE" to="wyt6:~Integer" resolve="Integer" />
+              <node concept="2YIFZM" id="4RbflAQ_8xq" role="37vLTx">
+                <ref role="37wK5l" to="wyt6:~Math.max(int,int)" resolve="max" />
+                <ref role="1Pybhc" to="wyt6:~Math" resolve="Math" />
+                <node concept="0kSF2" id="1iXkhsJ_4m7" role="37wK5m">
+                  <node concept="3uibUv" id="1iXkhsJ_4m8" role="0kSFW">
+                    <ref role="3uigEE" to="wyt6:~Integer" resolve="Integer" />
+                  </node>
+                  <node concept="2OqwBi" id="1iXkhsJ_4m9" role="0kSFX">
+                    <node concept="37vLTw" id="1iXkhsJ_8JI" role="2Oq$k0">
+                      <ref role="3cqZAo" node="4FbMPtUXTM0" resolve="maxTotalNrOfChanges" />
+                    </node>
+                    <node concept="liA8E" id="1iXkhsJ_4mb" role="2OqNvi">
+                      <ref role="37wK5l" to="dxuu:~JFormattedTextField.getValue()" resolve="getValue" />
+                    </node>
+                  </node>
                 </node>
-                <node concept="2OqwBi" id="1iXkhsJ_4m9" role="0kSFX">
-                  <node concept="37vLTw" id="1iXkhsJ_8JI" role="2Oq$k0">
-                    <ref role="3cqZAo" node="4FbMPtUXTM0" resolve="maxTotalNrOfChanges" />
-                  </node>
-                  <node concept="liA8E" id="1iXkhsJ_4mb" role="2OqNvi">
-                    <ref role="37wK5l" to="dxuu:~JFormattedTextField.getValue()" resolve="getValue" />
-                  </node>
+                <node concept="3cmrfG" id="4RbflAQ_k3u" role="37wK5m">
+                  <property role="3cmrfH" value="1" />
                 </node>
               </node>
             </node>
@@ -7707,17 +7947,24 @@
                   <ref role="2WH_rO" node="GLgNzrkAU0" resolve="maxNrOfChanges" />
                 </node>
               </node>
-              <node concept="0kSF2" id="1iXkhsJ$Zv2" role="37vLTx">
-                <node concept="3uibUv" id="1iXkhsJ$Zv3" role="0kSFW">
-                  <ref role="3uigEE" to="wyt6:~Integer" resolve="Integer" />
+              <node concept="2YIFZM" id="4RbflAQy0UF" role="37vLTx">
+                <ref role="37wK5l" to="wyt6:~Math.max(int,int)" resolve="max" />
+                <ref role="1Pybhc" to="wyt6:~Math" resolve="Math" />
+                <node concept="0kSF2" id="1iXkhsJ$Zv2" role="37wK5m">
+                  <node concept="3uibUv" id="1iXkhsJ$Zv3" role="0kSFW">
+                    <ref role="3uigEE" to="wyt6:~Integer" resolve="Integer" />
+                  </node>
+                  <node concept="2OqwBi" id="1iXkhsJ$Zv4" role="0kSFX">
+                    <node concept="37vLTw" id="1iXkhsJ_93A" role="2Oq$k0">
+                      <ref role="3cqZAo" node="GLgNzrnI84" resolve="maxNrOfChanges" />
+                    </node>
+                    <node concept="liA8E" id="1iXkhsJ$Zv6" role="2OqNvi">
+                      <ref role="37wK5l" to="dxuu:~JFormattedTextField.getValue()" resolve="getValue" />
+                    </node>
+                  </node>
                 </node>
-                <node concept="2OqwBi" id="1iXkhsJ$Zv4" role="0kSFX">
-                  <node concept="37vLTw" id="1iXkhsJ_93A" role="2Oq$k0">
-                    <ref role="3cqZAo" node="GLgNzrnI84" resolve="maxNrOfChanges" />
-                  </node>
-                  <node concept="liA8E" id="1iXkhsJ$Zv6" role="2OqNvi">
-                    <ref role="37wK5l" to="dxuu:~JFormattedTextField.getValue()" resolve="getValue" />
-                  </node>
+                <node concept="3cmrfG" id="4RbflAQyur7" role="37wK5m">
+                  <property role="3cmrfH" value="1" />
                 </node>
               </node>
             </node>
@@ -7730,17 +7977,24 @@
                   <ref role="2WH_rO" node="1RIwjuNzktC" resolve="maxNrOfObserved" />
                 </node>
               </node>
-              <node concept="0kSF2" id="1iXkhsJ_9xx" role="37vLTx">
-                <node concept="3uibUv" id="1iXkhsJ_9xy" role="0kSFW">
-                  <ref role="3uigEE" to="wyt6:~Integer" resolve="Integer" />
+              <node concept="2YIFZM" id="4RbflAQyORL" role="37vLTx">
+                <ref role="37wK5l" to="wyt6:~Math.max(int,int)" resolve="max" />
+                <ref role="1Pybhc" to="wyt6:~Math" resolve="Math" />
+                <node concept="0kSF2" id="1iXkhsJ_9xx" role="37wK5m">
+                  <node concept="3uibUv" id="1iXkhsJ_9xy" role="0kSFW">
+                    <ref role="3uigEE" to="wyt6:~Integer" resolve="Integer" />
+                  </node>
+                  <node concept="2OqwBi" id="1iXkhsJ_9xz" role="0kSFX">
+                    <node concept="37vLTw" id="1iXkhsJ_9x$" role="2Oq$k0">
+                      <ref role="3cqZAo" node="4FbMPtUXTOq" resolve="maxNrOfObserved" />
+                    </node>
+                    <node concept="liA8E" id="1iXkhsJ_9x_" role="2OqNvi">
+                      <ref role="37wK5l" to="dxuu:~JFormattedTextField.getValue()" resolve="getValue" />
+                    </node>
+                  </node>
                 </node>
-                <node concept="2OqwBi" id="1iXkhsJ_9xz" role="0kSFX">
-                  <node concept="37vLTw" id="1iXkhsJ_9x$" role="2Oq$k0">
-                    <ref role="3cqZAo" node="4FbMPtUXTOq" resolve="maxNrOfObserved" />
-                  </node>
-                  <node concept="liA8E" id="1iXkhsJ_9x_" role="2OqNvi">
-                    <ref role="37wK5l" to="dxuu:~JFormattedTextField.getValue()" resolve="getValue" />
-                  </node>
+                <node concept="3cmrfG" id="4RbflAQz0jR" role="37wK5m">
+                  <property role="3cmrfH" value="1" />
                 </node>
               </node>
             </node>
@@ -7753,17 +8007,24 @@
                   <ref role="2WH_rO" node="1RIwjuNzsTl" resolve="maxNrOfObservers" />
                 </node>
               </node>
-              <node concept="0kSF2" id="1iXkhsJ_dXn" role="37vLTx">
-                <node concept="3uibUv" id="1iXkhsJ_dXo" role="0kSFW">
-                  <ref role="3uigEE" to="wyt6:~Integer" resolve="Integer" />
+              <node concept="2YIFZM" id="4RbflAQzn3i" role="37vLTx">
+                <ref role="37wK5l" to="wyt6:~Math.max(int,int)" resolve="max" />
+                <ref role="1Pybhc" to="wyt6:~Math" resolve="Math" />
+                <node concept="0kSF2" id="1iXkhsJ_dXn" role="37wK5m">
+                  <node concept="3uibUv" id="1iXkhsJ_dXo" role="0kSFW">
+                    <ref role="3uigEE" to="wyt6:~Integer" resolve="Integer" />
+                  </node>
+                  <node concept="2OqwBi" id="1iXkhsJ_dXp" role="0kSFX">
+                    <node concept="liA8E" id="1iXkhsJ_dXq" role="2OqNvi">
+                      <ref role="37wK5l" to="dxuu:~JFormattedTextField.getValue()" resolve="getValue" />
+                    </node>
+                    <node concept="37vLTw" id="1iXkhsJ_dXr" role="2Oq$k0">
+                      <ref role="3cqZAo" node="4FbMPtUXTQW" resolve="maxNrOfObservers" />
+                    </node>
+                  </node>
                 </node>
-                <node concept="2OqwBi" id="1iXkhsJ_dXp" role="0kSFX">
-                  <node concept="liA8E" id="1iXkhsJ_dXq" role="2OqNvi">
-                    <ref role="37wK5l" to="dxuu:~JFormattedTextField.getValue()" resolve="getValue" />
-                  </node>
-                  <node concept="37vLTw" id="1iXkhsJ_dXr" role="2Oq$k0">
-                    <ref role="3cqZAo" node="4FbMPtUXTQW" resolve="maxNrOfObservers" />
-                  </node>
+                <node concept="3cmrfG" id="4RbflAQzDFE" role="37wK5m">
+                  <property role="3cmrfH" value="1" />
                 </node>
               </node>
             </node>
@@ -12724,21 +12985,15 @@
       <node concept="3Tm1VV" id="1sOlkZtHpWW" role="1B3o_S" />
       <node concept="3cqZAl" id="1sOlkZtHpWY" role="3clF45" />
       <node concept="3clFbS" id="1sOlkZtHpX3" role="3clF47">
-        <node concept="3clFbF" id="WqIZmh24Lu" role="3cqZAp">
-          <node concept="2OqwBi" id="WqIZmh34Pm" role="3clFbG">
-            <node concept="2JrnkZ" id="WqIZmh2P7_" role="2Oq$k0">
-              <node concept="37vLTw" id="WqIZmh24Ls" role="2JrQYb">
-                <ref role="3cqZAo" node="1ajo$O32MNd" resolve="root" />
-              </node>
+        <node concept="3clFbF" id="1O8e97MYAbY" role="3cqZAp">
+          <node concept="2YIFZM" id="1O8e97N00$2" role="3clFbG">
+            <ref role="37wK5l" to="akim:1O8e97MZXyw" resolve="setDclareForMpsStatus" />
+            <ref role="1Pybhc" to="akim:3zaVTDewaf5" resolve="Const" />
+            <node concept="37vLTw" id="1O8e97N00$3" role="37wK5m">
+              <ref role="3cqZAo" node="1ajo$O32MNd" resolve="root" />
             </node>
-            <node concept="liA8E" id="WqIZmh3i6P" role="2OqNvi">
-              <ref role="37wK5l" to="mhbf:~SNode.putUserObject(java.lang.Object,java.lang.Object)" resolve="putUserObject" />
-              <node concept="Xl_RD" id="WqIZmh3L_x" role="37wK5m">
-                <property role="Xl_RC" value="D_STATUS" />
-              </node>
-              <node concept="37vLTw" id="WqIZmh4H1C" role="37wK5m">
-                <ref role="3cqZAo" node="433JJClcyKm" resolve="status" />
-              </node>
+            <node concept="37vLTw" id="1O8e97N00$4" role="37wK5m">
+              <ref role="3cqZAo" node="433JJClcyKm" resolve="status" />
             </node>
           </node>
         </node>

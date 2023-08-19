@@ -17,6 +17,7 @@ package org.modelingvalue.dclare.mps;
 
 import static org.modelingvalue.dclare.SetableModifier.containment;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
@@ -29,7 +30,6 @@ import org.jetbrains.mps.openapi.module.SModuleFacet;
 import org.jetbrains.mps.openapi.module.SModuleId;
 import org.jetbrains.mps.openapi.module.SModuleListener;
 import org.jetbrains.mps.openapi.module.SModuleReference;
-import org.jetbrains.mps.openapi.module.SRepository;
 import org.jetbrains.mps.openapi.persistence.ModelRoot;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
@@ -37,6 +37,7 @@ import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.dclare.Constant;
 import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.Setable;
+import org.modelingvalue.dclare.State;
 
 import jetbrains.mps.errors.item.ModuleReportItem;
 import jetbrains.mps.extapi.model.SModelBase;
@@ -59,20 +60,24 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
                                                                                     }, (m, pre, post) -> {
                                                                                         if (m.isSolution()) {
                                                                                             SModule sModule = m.original();
-                                                                                            Setable.<Set<DModel>, DModel> diff(pre, post,                                         //
+                                                                                            Setable.<Set<DModel>, DModel> diff(pre, post,                                          //
                                                                                                     a -> {
                                                                                                         SModel sModel = a.original();
                                                                                                         if (sModel.getModule() != sModule) {
                                                                                                             ((SModuleBase) sModule).registerModel((SModelBase) sModel);
                                                                                                         }
                                                                                                         a.init(sModel);
-                                                                                                    },                                                                            //
+                                                                                                    },                                                                             //
                                                                                                     r -> new ModelDeleteHelper(r.tryOriginal()).delete());
                                                                                         }
                                                                                     }, containment);
 
     public static final DObserved<DModule, Set<SLanguage>>     LANGUAGES            = DObserved.of("LANGUAGES", Set.of(), m -> {
                                                                                         return Collection.of(m.original().getUsedLanguages()).toSet();
+                                                                                    }, null);
+
+    public static final DObserved<DModule, Set<DDependency>>   DEPENDENCIES         = DObserved.of("DEPENDENCIES", Set.of(), m -> {
+                                                                                        return Collection.of(m.original().getDeclaredDependencies()).map(DDependency::new).toSet();
                                                                                     }, null);
 
     public static final Constant<DModule, Set<SLanguage>>      LANGUAGES_WITH_RULES = Constant.of("LANGUAGES_WITH_RULE_ASPECT", Set.of(), m -> {
@@ -82,7 +87,7 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
     protected static final Set<Observer>                       OBSERVERS            = DObject.OBSERVERS;
 
     @SuppressWarnings("rawtypes")
-    protected static final Set<Setable>                        SETABLES             = DObject.SETABLES.addAll(Set.of(MODELS, LANGUAGES, LANGUAGES_WITH_RULES));
+    protected static final Set<Setable>                        SETABLES             = DObject.SETABLES.addAll(Set.of(MODELS, LANGUAGES, DEPENDENCIES, LANGUAGES_WITH_RULES));
 
     public static DModule of(SModule original) {
         return original instanceof DModule ? (DModule) original : DMODULE.get(original);
@@ -136,6 +141,8 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
         if (!isExternal()) {
             CONTAINED.set(this, Boolean.TRUE);
             MODELS.triggerInitRead(this);
+            LANGUAGES.triggerInitRead(this);
+            DEPENDENCIES.triggerInitRead(this);
         }
     }
 
@@ -151,24 +158,7 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
 
     @Override
     public SModuleReference getModuleReference() {
-        return new SModuleReference() {
-            final SModuleReference ref = original().getModuleReference();
-
-            @Override
-            public SModuleId getModuleId() {
-                return ref.getModuleId();
-            }
-
-            @Override
-            public String getModuleName() {
-                return ref.getModuleName();
-            }
-
-            @Override
-            public SModule resolve(SRepository repo) {
-                return DModule.of(ref.resolve(repo));
-            }
-        };
+        return new DModuleReference(original().getModuleReference());
     }
 
     @Override
@@ -187,8 +177,12 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
     }
 
     @Override
-    public Iterable<SDependency> getDeclaredDependencies() {
-        return original().getDeclaredDependencies();
+    public java.util.List<SDependency> getDeclaredDependencies() {
+        java.util.List<SDependency> deps = new ArrayList<>();
+        for (DDependency dep : DEPENDENCIES.get(this)) {
+            deps.add(dep);
+        }
+        return deps;
     }
 
     @Override
@@ -249,7 +243,7 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
         Set<SModel> ist = Set.of();
         if (isLanguage() || isSolution()) {
             for (SModel child : original().getModels()) {
-                if (child instanceof EditableSModel && !(isLanguage() && child.getName().getSimpleName().equals("rules"))) {
+                if (child instanceof EditableSModel) {
                     ist = ist.add(child);
                 }
             }
@@ -288,6 +282,12 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
     @Override
     protected Pair<DObject, DObserved<DObject, ?>> readParent() {
         return (Pair) Pair.of(dClareMPS().getRepository(), DRepository.MODULES);
+    }
+
+    @SuppressWarnings("rawtypes")
+    @Override
+    public boolean dIsOrphan(State state) {
+        return !isExternal() && super.dIsOrphan(state);
     }
 
 }
