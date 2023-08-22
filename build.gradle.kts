@@ -71,12 +71,18 @@ try {
         doLast {
             listOf("languages", "solutions").forEach {
                 val d = project.projectDir.resolve(it)
-                System.err.println("INFO: cleaning _gen dirs from: " + d)
+                println("INFO: cleaning all _gen dirs from: $d")
                 d.walkTopDown().filter {
                     it.name.contains("_gen")
                 }.forEach {
                     it.deleteRecursively()
                 }
+            }
+            val buildDir = project.projectDir.resolve("build")
+            listOf("tmp", "artifacts").forEach {
+                val d = buildDir.resolve(it)
+                println("INFO: cleaning from build dir: $d")
+                d.deleteRecursively()
             }
         }
     }
