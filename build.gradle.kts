@@ -70,7 +70,9 @@ try {
         group = "build"
         doLast {
             listOf("languages", "solutions").forEach {
-                File(it).walkTopDown().filter {
+                val d = project.projectDir.resolve(it)
+                System.err.println("INFO: cleaning _gen dirs from: " + d)
+                d.walkTopDown().filter {
                     it.name.contains("_gen")
                 }.forEach {
                     it.deleteRecursively()
