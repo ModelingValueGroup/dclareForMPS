@@ -38,6 +38,7 @@
     <import index="l36t" ref="r:87dca7c3-9c03-4bb2-90a6-6d5e60f0974a(jetbrains.mps.baseLanguage.checkedDots.editor)" />
     <import index="pxpg" ref="r:5a550369-d6d9-4c89-a89b-1bb748dc20b3(jetbrains.mps.baseLanguage.checkedDots.structure)" />
     <import index="20zj" ref="r:c7d5aae8-f5bf-4f88-8851-a39de153e482(DclareMPS.intentions)" />
+    <import index="f4zo" ref="1ed103c3-3aa6-49b7-9c21-6765ee11f224/java:jetbrains.mps.openapi.editor.cells(MPS.Editor/)" />
     <import index="tp25" ref="r:00000000-0000-4000-0000-011c89590301(jetbrains.mps.lang.smodel.structure)" implicit="true" />
     <import index="tpcn" ref="r:00000000-0000-4000-0000-011c8959028b(jetbrains.mps.lang.structure.behavior)" implicit="true" />
     <import index="tpck" ref="r:00000000-0000-4000-0000-011c89590288(jetbrains.mps.lang.core.structure)" implicit="true" />
@@ -90,6 +91,7 @@
       </concept>
       <concept id="1106270549637" name="jetbrains.mps.lang.editor.structure.CellLayout_Horizontal" flags="nn" index="2iRfu4" />
       <concept id="1106270571710" name="jetbrains.mps.lang.editor.structure.CellLayout_Vertical" flags="nn" index="2iRkQZ" />
+      <concept id="3459162043708467089" name="jetbrains.mps.lang.editor.structure.CellActionMap_CanExecuteFunction" flags="in" index="jK8Ss" />
       <concept id="6089045305654894366" name="jetbrains.mps.lang.editor.structure.SubstituteMenuReference_Default" flags="ng" index="2kknPJ" />
       <concept id="1237303669825" name="jetbrains.mps.lang.editor.structure.CellLayout_Indent" flags="nn" index="l2Vlx" />
       <concept id="1237307900041" name="jetbrains.mps.lang.editor.structure.IndentLayoutIndentStyleClassItem" flags="ln" index="lj46D" />
@@ -257,6 +259,7 @@
       <concept id="1139535280617" name="jetbrains.mps.lang.editor.structure.CellActionMapItem" flags="lg" index="1hA7zw">
         <property id="1139535298778" name="actionId" index="1hAc7j" />
         <property id="1139537298254" name="description" index="1hHO97" />
+        <child id="3459162043708468028" name="canExecuteFunction" index="jK8aL" />
         <child id="1139535280620" name="executeFunction" index="1hA7z_" />
       </concept>
       <concept id="1139535439104" name="jetbrains.mps.lang.editor.structure.CellActionMap_ExecuteFunction" flags="in" index="1hAIg9" />
@@ -413,6 +416,10 @@
       <concept id="1197027756228" name="jetbrains.mps.baseLanguage.structure.DotExpression" flags="nn" index="2OqwBi">
         <child id="1197027771414" name="operand" index="2Oq$k0" />
         <child id="1197027833540" name="operation" index="2OqNvi" />
+      </concept>
+      <concept id="1083260308424" name="jetbrains.mps.baseLanguage.structure.EnumConstantReference" flags="nn" index="Rm8GO">
+        <reference id="1083260308426" name="enumConstantDeclaration" index="Rm8GQ" />
+        <reference id="1144432896254" name="enumClass" index="1Px2BO" />
       </concept>
       <concept id="1145552977093" name="jetbrains.mps.baseLanguage.structure.GenericNewExpression" flags="nn" index="2ShNRf">
         <child id="1145553007750" name="creator" index="2ShVmc" />
@@ -1238,10 +1245,11 @@
   </node>
   <node concept="PKFIW" id="6HWpSUEvTAW">
     <property role="TrG5h" value="RuleSetMembersComponent" />
+    <property role="3GE5qa" value="members" />
     <ref role="1XX52x" to="7ggn:29R9$zZUovD" resolve="RuleSet" />
     <node concept="3F2HdR" id="3Z61ZaMckgw" role="2wV5jI">
-      <property role="2czwfO" value=" " />
       <ref role="1NtTu8" to="7ggn:6_R8J$2ChSl" resolve="members" />
+      <ref role="1ERwB7" node="1IN3FLTEGuo" resolve="RuleSetMember_Actions" />
       <node concept="3F0ifn" id="53WsQmnjCxk" role="2czzBI">
         <property role="3F0ifm" value="" />
         <node concept="VPxyj" id="53WsQmnjCy9" role="3F10Kt">
@@ -9644,6 +9652,169 @@
       <ref role="PMmxG" to="tpco:2wZex4PafBj" resolve="alias" />
       <node concept="VechU" id="4CuBnhB3ssV" role="3F10Kt">
         <property role="Vb096" value="fLJRk5A/lightGray" />
+      </node>
+    </node>
+  </node>
+  <node concept="1h_SRR" id="1IN3FLTEGuo">
+    <property role="TrG5h" value="RuleSetMember_Actions" />
+    <property role="3GE5qa" value="members" />
+    <ref role="1h_SK9" to="tpee:g7pOWCK" resolve="Classifier" />
+    <node concept="1hA7zw" id="1IN3FLTEGup" role="1h_SK8">
+      <property role="1hAc7j" value="insert_placeholder_action_id" />
+      <node concept="1hAIg9" id="1IN3FLTEGuq" role="1hA7z_">
+        <node concept="3clFbS" id="1IN3FLTEGur" role="2VODD2">
+          <node concept="3cpWs8" id="1IN3FLTEGus" role="3cqZAp">
+            <node concept="3cpWsn" id="1IN3FLTEGut" role="3cpWs9">
+              <property role="TrG5h" value="action" />
+              <node concept="3uibUv" id="1IN3FLTEGuu" role="1tU5fm">
+                <ref role="3uigEE" to="f4zo:~CellAction" resolve="CellAction" />
+              </node>
+              <node concept="2OqwBi" id="1IN3FLTEGuv" role="33vP2m">
+                <node concept="2OqwBi" id="1IN3FLTEGuw" role="2Oq$k0">
+                  <node concept="1Q80Hx" id="1IN3FLTEGux" role="2Oq$k0" />
+                  <node concept="liA8E" id="1IN3FLTEGuy" role="2OqNvi">
+                    <ref role="37wK5l" to="cj4x:~EditorContext.getContextCell()" resolve="getContextCell" />
+                  </node>
+                </node>
+                <node concept="liA8E" id="1IN3FLTEGuz" role="2OqNvi">
+                  <ref role="37wK5l" to="f4zo:~EditorCell.getAction(jetbrains.mps.openapi.editor.cells.CellActionType)" resolve="getAction" />
+                  <node concept="Rm8GO" id="1IN3FLTEGu$" role="37wK5m">
+                    <ref role="Rm8GQ" to="f4zo:~CellActionType.INSERT" resolve="INSERT" />
+                    <ref role="1Px2BO" to="f4zo:~CellActionType" resolve="CellActionType" />
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+          <node concept="3clFbF" id="1IN3FLTEGu_" role="3cqZAp">
+            <node concept="2OqwBi" id="1IN3FLTEGuA" role="3clFbG">
+              <node concept="37vLTw" id="1IN3FLTEGuB" role="2Oq$k0">
+                <ref role="3cqZAo" node="1IN3FLTEGut" resolve="action" />
+              </node>
+              <node concept="liA8E" id="1IN3FLTEGuC" role="2OqNvi">
+                <ref role="37wK5l" to="f4zo:~CellAction.execute(jetbrains.mps.openapi.editor.EditorContext)" resolve="execute" />
+                <node concept="1Q80Hx" id="1IN3FLTEGuD" role="37wK5m" />
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+      <node concept="jK8Ss" id="1IN3FLTEGuE" role="jK8aL">
+        <node concept="3clFbS" id="1IN3FLTEGuF" role="2VODD2">
+          <node concept="3cpWs8" id="1IN3FLTEGuG" role="3cqZAp">
+            <node concept="3cpWsn" id="1IN3FLTEGuH" role="3cpWs9">
+              <property role="TrG5h" value="action" />
+              <node concept="3uibUv" id="1IN3FLTEGuI" role="1tU5fm">
+                <ref role="3uigEE" to="f4zo:~CellAction" resolve="CellAction" />
+              </node>
+              <node concept="2OqwBi" id="1IN3FLTEGuJ" role="33vP2m">
+                <node concept="2OqwBi" id="1IN3FLTEGuK" role="2Oq$k0">
+                  <node concept="1Q80Hx" id="1IN3FLTEGuL" role="2Oq$k0" />
+                  <node concept="liA8E" id="1IN3FLTEGuM" role="2OqNvi">
+                    <ref role="37wK5l" to="cj4x:~EditorContext.getContextCell()" resolve="getContextCell" />
+                  </node>
+                </node>
+                <node concept="liA8E" id="1IN3FLTEGuN" role="2OqNvi">
+                  <ref role="37wK5l" to="f4zo:~EditorCell.getAction(jetbrains.mps.openapi.editor.cells.CellActionType)" resolve="getAction" />
+                  <node concept="Rm8GO" id="1IN3FLTEGuO" role="37wK5m">
+                    <ref role="Rm8GQ" to="f4zo:~CellActionType.INSERT" resolve="INSERT" />
+                    <ref role="1Px2BO" to="f4zo:~CellActionType" resolve="CellActionType" />
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+          <node concept="3clFbF" id="1IN3FLTEGuP" role="3cqZAp">
+            <node concept="2OqwBi" id="1IN3FLTEGuQ" role="3clFbG">
+              <node concept="37vLTw" id="1IN3FLTEGuR" role="2Oq$k0">
+                <ref role="3cqZAo" node="1IN3FLTEGuH" resolve="action" />
+              </node>
+              <node concept="liA8E" id="1IN3FLTEGuS" role="2OqNvi">
+                <ref role="37wK5l" to="f4zo:~CellAction.canExecute(jetbrains.mps.openapi.editor.EditorContext)" resolve="canExecute" />
+                <node concept="1Q80Hx" id="1IN3FLTEGuT" role="37wK5m" />
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+    <node concept="1hA7zw" id="1IN3FLTEGuU" role="1h_SK8">
+      <property role="1hAc7j" value="insert_placeholder_before_action_id" />
+      <node concept="1hAIg9" id="1IN3FLTEGuV" role="1hA7z_">
+        <node concept="3clFbS" id="1IN3FLTEGuW" role="2VODD2">
+          <node concept="3cpWs8" id="1IN3FLTEGuX" role="3cqZAp">
+            <node concept="3cpWsn" id="1IN3FLTEGuY" role="3cpWs9">
+              <property role="TrG5h" value="action" />
+              <node concept="3uibUv" id="1IN3FLTEGuZ" role="1tU5fm">
+                <ref role="3uigEE" to="f4zo:~CellAction" resolve="CellAction" />
+              </node>
+              <node concept="2OqwBi" id="1IN3FLTEGv0" role="33vP2m">
+                <node concept="2OqwBi" id="1IN3FLTEGv1" role="2Oq$k0">
+                  <node concept="1Q80Hx" id="1IN3FLTEGv2" role="2Oq$k0" />
+                  <node concept="liA8E" id="1IN3FLTEGv3" role="2OqNvi">
+                    <ref role="37wK5l" to="cj4x:~EditorContext.getContextCell()" resolve="getContextCell" />
+                  </node>
+                </node>
+                <node concept="liA8E" id="1IN3FLTEGv4" role="2OqNvi">
+                  <ref role="37wK5l" to="f4zo:~EditorCell.getAction(jetbrains.mps.openapi.editor.cells.CellActionType)" resolve="getAction" />
+                  <node concept="Rm8GO" id="1IN3FLTEGv5" role="37wK5m">
+                    <ref role="1Px2BO" to="f4zo:~CellActionType" resolve="CellActionType" />
+                    <ref role="Rm8GQ" to="f4zo:~CellActionType.INSERT_BEFORE" resolve="INSERT_BEFORE" />
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+          <node concept="3clFbF" id="1IN3FLTEGv6" role="3cqZAp">
+            <node concept="2OqwBi" id="1IN3FLTEGv7" role="3clFbG">
+              <node concept="37vLTw" id="1IN3FLTEGv8" role="2Oq$k0">
+                <ref role="3cqZAo" node="1IN3FLTEGuY" resolve="action" />
+              </node>
+              <node concept="liA8E" id="1IN3FLTEGv9" role="2OqNvi">
+                <ref role="37wK5l" to="f4zo:~CellAction.execute(jetbrains.mps.openapi.editor.EditorContext)" resolve="execute" />
+                <node concept="1Q80Hx" id="1IN3FLTEGva" role="37wK5m" />
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+      <node concept="jK8Ss" id="1IN3FLTEGvb" role="jK8aL">
+        <node concept="3clFbS" id="1IN3FLTEGvc" role="2VODD2">
+          <node concept="3cpWs8" id="1IN3FLTEGvd" role="3cqZAp">
+            <node concept="3cpWsn" id="1IN3FLTEGve" role="3cpWs9">
+              <property role="TrG5h" value="action" />
+              <node concept="3uibUv" id="1IN3FLTEGvf" role="1tU5fm">
+                <ref role="3uigEE" to="f4zo:~CellAction" resolve="CellAction" />
+              </node>
+              <node concept="2OqwBi" id="1IN3FLTEGvg" role="33vP2m">
+                <node concept="2OqwBi" id="1IN3FLTEGvh" role="2Oq$k0">
+                  <node concept="1Q80Hx" id="1IN3FLTEGvi" role="2Oq$k0" />
+                  <node concept="liA8E" id="1IN3FLTEGvj" role="2OqNvi">
+                    <ref role="37wK5l" to="cj4x:~EditorContext.getContextCell()" resolve="getContextCell" />
+                  </node>
+                </node>
+                <node concept="liA8E" id="1IN3FLTEGvk" role="2OqNvi">
+                  <ref role="37wK5l" to="f4zo:~EditorCell.getAction(jetbrains.mps.openapi.editor.cells.CellActionType)" resolve="getAction" />
+                  <node concept="Rm8GO" id="1IN3FLTEGvl" role="37wK5m">
+                    <ref role="Rm8GQ" to="f4zo:~CellActionType.INSERT_BEFORE" resolve="INSERT_BEFORE" />
+                    <ref role="1Px2BO" to="f4zo:~CellActionType" resolve="CellActionType" />
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+          <node concept="3clFbF" id="1IN3FLTEGvm" role="3cqZAp">
+            <node concept="2OqwBi" id="1IN3FLTEGvn" role="3clFbG">
+              <node concept="37vLTw" id="1IN3FLTEGvo" role="2Oq$k0">
+                <ref role="3cqZAo" node="1IN3FLTEGve" resolve="action" />
+              </node>
+              <node concept="liA8E" id="1IN3FLTEGvp" role="2OqNvi">
+                <ref role="37wK5l" to="f4zo:~CellAction.canExecute(jetbrains.mps.openapi.editor.EditorContext)" resolve="canExecute" />
+                <node concept="1Q80Hx" id="1IN3FLTEGvq" role="37wK5m" />
+              </node>
+            </node>
+          </node>
+        </node>
       </node>
     </node>
   </node>
