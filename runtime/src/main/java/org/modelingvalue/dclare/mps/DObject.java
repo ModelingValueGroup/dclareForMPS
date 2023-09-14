@@ -229,6 +229,12 @@ public abstract class DObject implements Mutable {
         return constantState.isSet(tx, this, Mutable.D_PARENT_CONTAINING.constant()) || isExternal() ? constantState : Mutable.super.dMemoization(tx);
     }
 
+    @Override
+    public boolean dIsOrphan(State state) {
+        LeafTransaction tx = LeafTransaction.getCurrent();
+        return Mutable.super.dIsOrphan(state) && !tx.universeTransaction().constantState().isSet(tx, this, Mutable.D_PARENT_CONTAINING.constant());
+    }
+
     public abstract boolean isExternal();
 
     protected boolean isObsolete(String anonymousType) {
