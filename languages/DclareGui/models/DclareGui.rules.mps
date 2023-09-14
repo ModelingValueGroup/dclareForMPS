@@ -55,6 +55,7 @@
         <child id="4893482730976715515" name="initValue" index="2PygpA" />
       </concept>
       <concept id="5858913584106642961" name="DclareMPS.structure.Aspect" flags="ng" index="2Rb1jd">
+        <property id="6646394970002079166" name="allwaysOn" index="2bPw2W" />
         <property id="8690218989273699402" name="primitiveTypeDefaults" index="2WACxE" />
       </concept>
       <concept id="5263414693702615530" name="DclareMPS.structure.StructClass" flags="ng" index="2UJ2oG">
@@ -495,6 +496,7 @@
     <property role="TrG5h" value="GUI" />
     <property role="3GE5qa" value="gui." />
     <property role="2WACxE" value="true" />
+    <property role="2bPw2W" value="true" />
   </node>
   <node concept="2UJ2oG" id="skgx$J4Z2r">
     <property role="3GE5qa" value="structs" />

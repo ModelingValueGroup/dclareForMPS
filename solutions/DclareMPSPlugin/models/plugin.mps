@@ -230,11 +230,17 @@
       </concept>
     </language>
     <language id="ef7bf5ac-d06c-4342-b11d-e42104eb9343" name="jetbrains.mps.lang.plugin.standalone">
+      <concept id="481983775135178851" name="jetbrains.mps.lang.plugin.standalone.structure.ApplicationPluginInitBlock" flags="in" index="2uRRBj" />
       <concept id="481983775135178834" name="jetbrains.mps.lang.plugin.standalone.structure.ProjectPluginDeclaration" flags="ng" index="2uRRBy">
         <child id="481983775135178836" name="initBlock" index="2uRRB$" />
         <child id="481983775135178837" name="disposeBlock" index="2uRRB_" />
         <child id="481983775135178838" name="fieldDeclaration" index="2uRRBA" />
       </concept>
+      <concept id="481983775135178840" name="jetbrains.mps.lang.plugin.standalone.structure.ApplicationPluginDeclaration" flags="ng" index="2uRRBC">
+        <child id="481983775135178842" name="initBlock" index="2uRRBE" />
+        <child id="481983775135178843" name="disposeBlock" index="2uRRBF" />
+      </concept>
+      <concept id="481983775135178846" name="jetbrains.mps.lang.plugin.standalone.structure.ApplicationPluginDisposeBlock" flags="in" index="2uRRBI" />
       <concept id="481983775135178819" name="jetbrains.mps.lang.plugin.standalone.structure.ProjectPluginDisposeBlock" flags="in" index="2uRRBN" />
       <concept id="481983775135178825" name="jetbrains.mps.lang.plugin.standalone.structure.ProjectPluginInitBlock" flags="in" index="2uRRBT" />
       <concept id="7520713872864775836" name="jetbrains.mps.lang.plugin.standalone.structure.StandalonePluginDescriptor" flags="ng" index="2DaZZR" />
@@ -751,53 +757,11 @@
                 <ref role="2WH_rO" node="5LbVSrDCROd" resolve="engine" />
               </node>
             </node>
-            <node concept="2ShNRf" id="5LbVSrDCoTV" role="37vLTx">
-              <node concept="1pGfFk" id="5LbVSrDCoTW" role="2ShVmc">
-                <ref role="37wK5l" to="t4tl:~DclareForMPSEngine.&lt;init&gt;(com.intellij.openapi.project.Project,jetbrains.mps.project.ProjectBase,org.modelingvalue.dclare.mps.EngineStatusHandler)" resolve="DclareForMPSEngine" />
-                <node concept="2OqwBi" id="Xq5cK80W9S" role="37wK5m">
-                  <node concept="37vLTw" id="Xq5cK80W9T" role="2Oq$k0">
-                    <ref role="3cqZAo" node="3zaVTDejJfa" resolve="mpsProject" />
-                  </node>
-                  <node concept="liA8E" id="Xq5cK80W9U" role="2OqNvi">
-                    <ref role="37wK5l" to="z1c3:~MPSProject.getProject()" resolve="getProject" />
-                  </node>
-                </node>
-                <node concept="37vLTw" id="3zaVTDejJfd" role="37wK5m">
-                  <ref role="3cqZAo" node="3zaVTDejJfa" resolve="mpsProject" />
-                </node>
-                <node concept="2ShNRf" id="QlQbLbRF9I" role="37wK5m">
-                  <node concept="1pGfFk" id="1sOlkZtHHye" role="2ShVmc">
-                    <ref role="37wK5l" node="1sOlkZtGUn4" resolve="MyEngineStatusHandler" />
-                    <node concept="37vLTw" id="3zaVTDejL3U" role="37wK5m">
-                      <ref role="3cqZAo" node="3zaVTDejJfa" resolve="mpsProject" />
-                    </node>
-                  </node>
-                </node>
-              </node>
-            </node>
-          </node>
-        </node>
-        <node concept="3clFbF" id="4o9njCw5o55" role="3cqZAp">
-          <node concept="2OqwBi" id="4o9njCw5on8" role="3clFbG">
-            <node concept="10M0yZ" id="3jy5t$Kuxrd" role="2Oq$k0">
-              <ref role="3cqZAo" to="u4ym:4o9njCw5asw" resolve="ENGINES" />
-              <ref role="1PxDUh" to="u4ym:30fQumnG8Au" resolve="DclareUtil" />
-            </node>
-            <node concept="liA8E" id="4o9njCw5o$Y" role="2OqNvi">
-              <ref role="37wK5l" to="33ny:~Map.put(java.lang.Object,java.lang.Object)" resolve="put" />
-              <node concept="2OqwBi" id="3zaVTDejQ4E" role="37wK5m">
-                <node concept="37vLTw" id="3zaVTDejQ4F" role="2Oq$k0">
-                  <ref role="3cqZAo" node="3zaVTDejJfa" resolve="mpsProject" />
-                </node>
-                <node concept="liA8E" id="3zaVTDejQ4G" role="2OqNvi">
-                  <ref role="37wK5l" to="z1c3:~MPSProject.getProject()" resolve="getProject" />
-                </node>
-              </node>
-              <node concept="2OqwBi" id="5LbVSrDCT1V" role="37wK5m">
-                <node concept="2WthIp" id="5LbVSrDCT1Y" role="2Oq$k0" />
-                <node concept="2BZ7hE" id="5LbVSrDCT20" role="2OqNvi">
-                  <ref role="2WH_rO" node="5LbVSrDCROd" resolve="engine" />
-                </node>
+            <node concept="2YIFZM" id="5EIT0VtSL5b" role="37vLTx">
+              <ref role="37wK5l" to="t4tl:~DclareForMPSEngine.getEngine(jetbrains.mps.project.MPSProject)" resolve="getEngine" />
+              <ref role="1Pybhc" to="t4tl:~DclareForMPSEngine" resolve="DclareForMPSEngine" />
+              <node concept="37vLTw" id="5EIT0VtSL5W" role="37wK5m">
+                <ref role="3cqZAo" node="3zaVTDejJfa" resolve="mpsProject" />
               </node>
             </node>
           </node>
@@ -19206,6 +19170,130 @@
       <node concept="3Tqbb2" id="6DCjLl3eyJz" role="1tU5fm">
         <ref role="ehGHo" to="7ggn:29R9$zZUovD" resolve="RuleSet" />
       </node>
+    </node>
+  </node>
+  <node concept="2uRRBC" id="3OW3wudQVFd">
+    <property role="TrG5h" value="DclareApplicationPlugin" />
+    <node concept="2uRRBj" id="3OW3wudQVFe" role="2uRRBE">
+      <node concept="3clFbS" id="3OW3wudQVFf" role="2VODD2">
+        <node concept="3clFbF" id="5EIT0VtSLgG" role="3cqZAp">
+          <node concept="2YIFZM" id="5EIT0VtSLhm" role="3clFbG">
+            <ref role="37wK5l" to="t4tl:~DclareForMPSEngine.setStatusHandlerFunction(java.util.function.Function)" resolve="setStatusHandlerFunction" />
+            <ref role="1Pybhc" to="t4tl:~DclareForMPSEngine" resolve="DclareForMPSEngine" />
+            <node concept="2ShNRf" id="5EIT0VtSLjZ" role="37wK5m">
+              <node concept="YeOm9" id="5EIT0VtTuJo" role="2ShVmc">
+                <node concept="1Y3b0j" id="5EIT0VtTuJr" role="YeSDq">
+                  <property role="2bfB8j" value="true" />
+                  <property role="373rjd" value="true" />
+                  <ref role="1Y3XeK" to="82uw:~Function" resolve="Function" />
+                  <ref role="37wK5l" to="wyt6:~Object.&lt;init&gt;()" />
+                  <node concept="3Tm1VV" id="5EIT0VtTuJs" role="1B3o_S" />
+                  <node concept="3clFb_" id="5EIT0VtTuJI" role="jymVt">
+                    <property role="TrG5h" value="apply" />
+                    <node concept="3Tm1VV" id="5EIT0VtTuJJ" role="1B3o_S" />
+                    <node concept="3uibUv" id="5EIT0VtTuJX" role="3clF45">
+                      <ref role="3uigEE" to="t4tl:~EngineStatusHandler" resolve="EngineStatusHandler" />
+                    </node>
+                    <node concept="37vLTG" id="5EIT0VtTuJM" role="3clF46">
+                      <property role="TrG5h" value="project" />
+                      <node concept="3uibUv" id="5EIT0VtTuJV" role="1tU5fm">
+                        <ref role="3uigEE" to="z1c3:~MPSProject" resolve="MPSProject" />
+                      </node>
+                    </node>
+                    <node concept="3clFbS" id="5EIT0VtTuJO" role="3clF47">
+                      <node concept="3clFbF" id="5EIT0VtTvAG" role="3cqZAp">
+                        <node concept="2ShNRf" id="QlQbLbRF9I" role="3clFbG">
+                          <node concept="1pGfFk" id="1sOlkZtHHye" role="2ShVmc">
+                            <ref role="37wK5l" node="1sOlkZtGUn4" resolve="MyEngineStatusHandler" />
+                            <node concept="37vLTw" id="3zaVTDejL3U" role="37wK5m">
+                              <ref role="3cqZAo" node="5EIT0VtTuJM" resolve="project" />
+                            </node>
+                          </node>
+                        </node>
+                      </node>
+                    </node>
+                    <node concept="2AHcQZ" id="5EIT0VtTuJQ" role="2AJF6D">
+                      <ref role="2AI5Lk" to="wyt6:~Override" />
+                    </node>
+                  </node>
+                  <node concept="3uibUv" id="5EIT0VtTuJU" role="2Ghqu4">
+                    <ref role="3uigEE" to="z1c3:~MPSProject" resolve="MPSProject" />
+                  </node>
+                  <node concept="3uibUv" id="5EIT0VtTuJW" role="2Ghqu4">
+                    <ref role="3uigEE" to="t4tl:~EngineStatusHandler" resolve="EngineStatusHandler" />
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="3clFbF" id="2q878H6UoXf" role="3cqZAp">
+          <node concept="2YIFZM" id="2q878H6Up4u" role="3clFbG">
+            <ref role="37wK5l" to="t4tl:~DclareForMPSEngine.setEngineConsumer(java.util.function.Consumer)" resolve="setEngineConsumer" />
+            <ref role="1Pybhc" to="t4tl:~DclareForMPSEngine" resolve="DclareForMPSEngine" />
+            <node concept="2ShNRf" id="2q878H6Upam" role="37wK5m">
+              <node concept="YeOm9" id="2q878H6VabF" role="2ShVmc">
+                <node concept="1Y3b0j" id="2q878H6VabI" role="YeSDq">
+                  <property role="2bfB8j" value="true" />
+                  <property role="373rjd" value="true" />
+                  <ref role="1Y3XeK" to="82uw:~Consumer" resolve="Consumer" />
+                  <ref role="37wK5l" to="wyt6:~Object.&lt;init&gt;()" />
+                  <node concept="3Tm1VV" id="2q878H6VabJ" role="1B3o_S" />
+                  <node concept="3clFb_" id="2q878H6VabX" role="jymVt">
+                    <property role="TrG5h" value="accept" />
+                    <node concept="3Tm1VV" id="2q878H6VabY" role="1B3o_S" />
+                    <node concept="3cqZAl" id="2q878H6Vac0" role="3clF45" />
+                    <node concept="37vLTG" id="2q878H6Vac1" role="3clF46">
+                      <property role="TrG5h" value="engine" />
+                      <node concept="3uibUv" id="2q878H6Vac9" role="1tU5fm">
+                        <ref role="3uigEE" to="t4tl:~DclareForMPSEngine" resolve="DclareForMPSEngine" />
+                      </node>
+                    </node>
+                    <node concept="3clFbS" id="2q878H6Vac3" role="3clF47">
+                      <node concept="3clFbF" id="4o9njCw5o55" role="3cqZAp">
+                        <node concept="2OqwBi" id="4o9njCw5on8" role="3clFbG">
+                          <node concept="10M0yZ" id="3jy5t$Kuxrd" role="2Oq$k0">
+                            <ref role="3cqZAo" to="u4ym:4o9njCw5asw" resolve="ENGINES" />
+                            <ref role="1PxDUh" to="u4ym:30fQumnG8Au" resolve="DclareUtil" />
+                          </node>
+                          <node concept="liA8E" id="4o9njCw5o$Y" role="2OqNvi">
+                            <ref role="37wK5l" to="33ny:~Map.put(java.lang.Object,java.lang.Object)" resolve="put" />
+                            <node concept="2OqwBi" id="2q878H6Vd$n" role="37wK5m">
+                              <node concept="2OqwBi" id="3zaVTDejQ4E" role="2Oq$k0">
+                                <node concept="37vLTw" id="3zaVTDejQ4F" role="2Oq$k0">
+                                  <ref role="3cqZAo" node="2q878H6Vac1" resolve="engine" />
+                                </node>
+                                <node concept="liA8E" id="3zaVTDejQ4G" role="2OqNvi">
+                                  <ref role="37wK5l" to="t4tl:~DclareForMPSEngine.project()" resolve="project" />
+                                </node>
+                              </node>
+                              <node concept="liA8E" id="2q878H6Vfv5" role="2OqNvi">
+                                <ref role="37wK5l" to="z1c3:~MPSProject.getProject()" resolve="getProject" />
+                              </node>
+                            </node>
+                            <node concept="37vLTw" id="2q878H6Vgi3" role="37wK5m">
+                              <ref role="3cqZAo" node="2q878H6Vac1" resolve="engine" />
+                            </node>
+                          </node>
+                        </node>
+                      </node>
+                    </node>
+                    <node concept="2AHcQZ" id="2q878H6Vac5" role="2AJF6D">
+                      <ref role="2AI5Lk" to="wyt6:~Override" />
+                    </node>
+                  </node>
+                  <node concept="3uibUv" id="2q878H6Vac8" role="2Ghqu4">
+                    <ref role="3uigEE" to="t4tl:~DclareForMPSEngine" resolve="DclareForMPSEngine" />
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+    <node concept="2uRRBI" id="3OW3wudQVFF" role="2uRRBF">
+      <node concept="3clFbS" id="3OW3wudQVFG" role="2VODD2" />
     </node>
   </node>
 </model>

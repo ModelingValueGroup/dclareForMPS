@@ -64,6 +64,10 @@ public class DRepository extends DFromOriginalObject<ProjectRepository> implemen
                                                                                                                           return ALL_LANGUAGES_WITH_RULES.get(r).flatMap(l -> DClareMPS.ASPECTS.get(l)).sortedBy(IAspect::getName).asList();
                                                                                                                       });
 
+    public static final Constant<DRepository, List<IAspect>>                      ALL_DYNAMIC_ASPECTS                 = Constant.of("ALL_DYNAMIC_ASPECTS", List.of(), r -> {
+                                                                                                                          return ALL_ASPECTS.get(r).exclude(a -> a.isAllwaysOn() || a.isOnDemand()).asList();
+                                                                                                                      });
+
     public static final Constant<DRepository, QualifiedSet<String, INativeGroup>> ALL_NATIVE_GROUPS                   = Constant.of("ALL_NATIVE_GROUPS", QualifiedSet.of(INativeGroup::getId), r -> {
                                                                                                                           return ALL_LANGUAGES_WITH_RULES.get(r).flatMap(l -> DClareMPS.NATIVE_GROUPS.get(l)).asQualifiedSet(INativeGroup::getId);
                                                                                                                       });

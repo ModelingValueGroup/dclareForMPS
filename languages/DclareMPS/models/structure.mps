@@ -1256,6 +1256,16 @@
       <property role="TrG5h" value="primitiveTypeDefaults" />
       <ref role="AX2Wp" to="tpck:fKAQMTB" resolve="boolean" />
     </node>
+    <node concept="1TJgyi" id="5KWJgbnUFQY" role="1TKVEl">
+      <property role="IQ2nx" value="6646394970002079166" />
+      <property role="TrG5h" value="allwaysOn" />
+      <ref role="AX2Wp" to="tpck:fKAQMTB" resolve="boolean" />
+    </node>
+    <node concept="1TJgyi" id="475V1oonwez" role="1TKVEl">
+      <property role="IQ2nx" value="4739453762519565219" />
+      <property role="TrG5h" value="onDemand" />
+      <ref role="AX2Wp" to="tpck:fKAQMTB" resolve="boolean" />
+    </node>
     <node concept="PrWs8" id="55f2HNAp5a8" role="PzmwI">
       <ref role="PrY4T" to="tpck:h0TrEE$" resolve="INamedConcept" />
     </node>

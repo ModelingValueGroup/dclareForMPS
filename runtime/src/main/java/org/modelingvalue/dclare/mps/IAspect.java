@@ -48,4 +48,8 @@ public interface IAspect {
 
     SLanguage getLanguage();
 
+    boolean isAllwaysOn();
+
+    boolean isOnDemand();
+
 }

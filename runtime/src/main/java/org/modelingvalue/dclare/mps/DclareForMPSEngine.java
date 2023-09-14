@@ -18,10 +18,12 @@ package org.modelingvalue.dclare.mps;
 import static org.modelingvalue.dclare.UniverseTransaction.Mood.*;
 
 import java.util.Objects;
+import java.util.WeakHashMap;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 import org.jetbrains.mps.openapi.model.SNode;
 import org.jetbrains.mps.openapi.model.SNodeReference;
@@ -36,8 +38,6 @@ import org.modelingvalue.dclare.DclareTrace;
 import org.modelingvalue.dclare.LeafTransaction;
 import org.modelingvalue.dclare.UniverseTransaction.Status;
 
-import com.intellij.openapi.project.Project;
-
 import jetbrains.mps.classloading.ClassLoaderManager;
 import jetbrains.mps.classloading.DeployListener;
 import jetbrains.mps.debug.api.BreakpointManagerComponent;
@@ -48,52 +48,78 @@ import jetbrains.mps.debug.api.breakpoints.ILocationBreakpoint;
 import jetbrains.mps.errors.item.IssueKindReportItem;
 import jetbrains.mps.ide.MPSCoreComponents;
 import jetbrains.mps.module.ReloadableModule;
+import jetbrains.mps.project.MPSProject;
 import jetbrains.mps.project.ProjectBase;
 
 @SuppressWarnings("unused")
 public class DclareForMPSEngine implements DeployListener, IBreakpointManagerListener {
 
-    private static final boolean                           TRACE_ENGINE              = Boolean.getBoolean("TRACE_ENGINE");
-    public static final int                                MAX_NR_OF_HISTORY_FOR_MPS = Integer.getInteger("MAX_NR_OF_HISTORY_FOR_MPS", 4) + 3;
-    protected static final CopyOnWriteArrayList<DClareMPS> ALL_DCLARE_MPS            = new CopyOnWriteArrayList<>();
-    private static final AtomicInteger                     COUNTER                   = new AtomicInteger(0);
-    //
-    private final ProjectBase                              project;
-    private final ClassLoaderManager                       classLoaderManager;
-    private final EngineStatusHandler                      engineStatusHandler;
-    private final int                                      nr;
-    private final MoodUpdaterThread                        moodUpdaterThread;
-    private final BreakpointManagerComponent               breakpointManagerComponent;
-    protected final MutationWrapper<Set<SNode>>            observedNodes;
-    //
-    private DClareMPS                                      dClareMPS;
+    private static Function<MPSProject, EngineStatusHandler>         STATUS_HANDLER_FUNCTION;
+    private static Consumer<DclareForMPSEngine>                      NEW_ENGINE_CONSUMER;
+    private static final WeakHashMap<MPSProject, DclareForMPSEngine> ENGINE_MAP                = new WeakHashMap<>();
 
-    public DclareForMPSEngine(Project openApiProject, ProjectBase project, EngineStatusHandler engineStatusHandler) {
+    private static final boolean                                     TRACE_ENGINE              = Boolean.getBoolean("TRACE_ENGINE");
+    public static final int                                          MAX_NR_OF_HISTORY_FOR_MPS = Integer.getInteger("MAX_NR_OF_HISTORY_FOR_MPS", 4) + 3;
+    private static final AtomicInteger                               COUNTER                   = new AtomicInteger(0);
+
+    public static void setStatusHandlerFunction(Function<MPSProject, EngineStatusHandler> function) {
+        STATUS_HANDLER_FUNCTION = function;
+    }
+
+    public static void setEngineConsumer(Consumer<DclareForMPSEngine> consumer) {
+        NEW_ENGINE_CONSUMER = consumer;
+    }
+
+    public static DclareForMPSEngine getEngine(MPSProject project) {
+        synchronized (ENGINE_MAP) {
+            DclareForMPSEngine engine = ENGINE_MAP.get(project);
+            if (engine == null) {
+                engine = new DclareForMPSEngine(project);
+                ENGINE_MAP.put(project, engine);
+            }
+            return engine;
+        }
+    }
+
+    //
+    private final MPSProject                    project;
+    private final ClassLoaderManager            classLoaderManager;
+    private final EngineStatusHandler           engineStatusHandler;
+    private final int                           nr;
+    private final MoodUpdaterThread             moodUpdaterThread;
+    private final BreakpointManagerComponent    breakpointManagerComponent;
+    protected final MutationWrapper<Set<SNode>> observedNodes;
+    //
+    private DClareMPS                           dClareMPS;
+
+    private DclareForMPSEngine(MPSProject project) {
         this.nr = COUNTER.getAndIncrement();
         this.project = project;
-        this.engineStatusHandler = engineStatusHandler;
+        this.engineStatusHandler = STATUS_HANDLER_FUNCTION.apply(project);
         this.observedNodes = new MutationWrapper<>(Set.of());
         if (TRACE_ENGINE) {
             System.err.println("--- DCLARE FOR MPS --- PROJECT START " + project + ":" + nr);
         }
         classLoaderManager = Objects.requireNonNull(MPSCoreComponents.getInstance().getPlatform().findComponent(ClassLoaderManager.class));
         classLoaderManager.addListener(this);
-        breakpointManagerComponent = openApiProject.getService(BreakpointManagerComponent.class);
+        breakpointManagerComponent = project.getProject().getService(BreakpointManagerComponent.class);
         moodUpdaterThread = new MoodUpdaterThread();
         newDClareMPS(project, new DclareForMpsConfig().withMaxNrOfHistory(MAX_NR_OF_HISTORY_FOR_MPS).withStatusHandler(engineStatusHandler));
         moodUpdaterThread.start();
+        NEW_ENGINE_CONSUMER.accept(this);
+    }
+
+    public MPSProject project() {
+        return project;
     }
 
     private void newDClareMPS(ProjectBase project, DclareForMpsConfig config) {
         if (TRACE_ENGINE) {
             System.err.println("--- DCLARE FOR MPS --- START " + project + ":" + nr);
         }
-        synchronized (ALL_DCLARE_MPS) {
-            Status[] startStatus = new Status[1];
-            dClareMPS = new DClareMPS(this, project, config, COUNTER.getAndIncrement(), s -> startStatus[0] = s);
-            ALL_DCLARE_MPS.add(dClareMPS);
-            moodUpdaterThread.putDClareMPS(dClareMPS, startStatus[0]);
-        }
+        Status[] startStatus = new Status[1];
+        dClareMPS = new DClareMPS(this, project, config, COUNTER.getAndIncrement(), s -> startStatus[0] = s);
+        moodUpdaterThread.putDClareMPS(dClareMPS, startStatus[0]);
         if (config.isOnMode()) {
             startBreakPoints();
             dClareMPS.start();
@@ -126,13 +152,11 @@ public class DclareForMPSEngine implements DeployListener, IBreakpointManagerLis
 
     public void setConfig(DclareForMpsConfig config) {
         config = config.withMaxNrOfHistory(getConfig().getMaxNrOfHistory()).withStatusHandler(getConfig().getStatusHandler());
-        synchronized (ALL_DCLARE_MPS) {
-            if (!getConfig().equals(config) || config.isOnMode() != dClareMPS.isRunning()) {
-                if (TRACE_ENGINE) {
-                    System.err.println("--- DCLARE FOR MPS --- SET CONFIG " + project + ":" + nr);
-                }
-                startDCLareMPS(config);
+        if (!getConfig().equals(config) || config.isOnMode() != dClareMPS.isRunning()) {
+            if (TRACE_ENGINE) {
+                System.err.println("--- DCLARE FOR MPS --- SET CONFIG " + project + ":" + nr);
             }
+            startDCLareMPS(config);
         }
     }
 
@@ -153,11 +177,8 @@ public class DclareForMPSEngine implements DeployListener, IBreakpointManagerLis
     }
 
     private void startDCLareMPS(DclareForMpsConfig config) {
-        synchronized (ALL_DCLARE_MPS) {
-            stopDClareMPS();
-            ALL_DCLARE_MPS.remove(dClareMPS);
-            newDClareMPS(project, config);
-        }
+        stopDClareMPS();
+        newDClareMPS(project, config);
     }
 
     protected void stopDClareMPS() {
@@ -167,9 +188,7 @@ public class DclareForMPSEngine implements DeployListener, IBreakpointManagerLis
         if (dClareMPS.getConfig().isOnMode()) {
             stopBreakPoints();
         }
-        synchronized (ALL_DCLARE_MPS) {
-            dClareMPS.stop();
-        }
+        dClareMPS.stop();
     }
 
     public void stop() {
@@ -177,23 +196,25 @@ public class DclareForMPSEngine implements DeployListener, IBreakpointManagerLis
             System.err.println("--- DCLARE FOR MPS --- PROJECT STOP " + project + ":" + nr);
         }
         classLoaderManager.removeListener(this);
-        synchronized (ALL_DCLARE_MPS) {
-            stopDClareMPS();
-            ALL_DCLARE_MPS.remove(dClareMPS);
-            moodUpdaterThread.stop = true;
-        }
+        stopDClareMPS();
+        moodUpdaterThread.stop = true;
         moodUpdaterThread.interrupt();
+        synchronized (ENGINE_MAP) {
+            ENGINE_MAP.remove(project);
+        }
     }
 
     @Override
     public void onLoaded(java.util.Set<ReloadableModule> loadedModules, ProgressMonitor monitor) {
-        for (DClareMPS dClareMPS : ALL_DCLARE_MPS) {
-            if (loadedModules.stream().anyMatch(m -> dClareMPS.project.isProjectModule(m))) {
-                if (TRACE_ENGINE) {
-                    System.err.println("--- DCLARE FOR MPS --- LOADED " + project + ":" + nr);
+        synchronized (ENGINE_MAP) {
+            for (DclareForMPSEngine engine : ENGINE_MAP.values()) {
+                if (loadedModules.stream().anyMatch(m -> engine.project.isProjectModule(m))) {
+                    if (TRACE_ENGINE) {
+                        System.err.println("--- DCLARE FOR MPS --- LOADED " + project + ":" + nr);
+                    }
+                    restart();
+                    break;
                 }
-                restart();
-                break;
             }
         }
     }
@@ -270,7 +291,7 @@ public class DclareForMPSEngine implements DeployListener, IBreakpointManagerLis
 
         private void updateStatus(Status status, DClareMPS current) {
             DclareForMpsStatus dclareForMpsStatus = new DclareForMpsStatus(status, current);
-            List<IAspect> aspects = status.mood == starting ? current.getAllAspects() : prevAspects;
+            List<IAspect> aspects = status.mood == starting ? current.getAllDynamicAspects() : prevAspects;
             DefaultMap<DMessageType, List<DMessage>> messages = status.mood == starting || status.mood == idle || status.mood == stopped ? current.getMessages() : prevMessages;
             current.readInEDT(() -> engineStatusHandler.status(dclareForMpsStatus));
             if (status.mood == starting) {
