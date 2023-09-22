@@ -57,11 +57,15 @@ public class DRepository extends DFromOriginalObject<ProjectRepository> implemen
     public static final Constant<DRepository, Set<SLanguage>>                     ALL_LANGUAGES_WITH_RULES            = Constant.of("ALL_LANGUAGES_WITH_RULES", Set.of(), r -> {
                                                                                                                           return MODULES.get(r).flatMap(m -> DModule.LANGUAGES_WITH_RULES.get(m)).asSet();
                                                                                                                       });
+
+    public static final Constant<DRepository, Set<SLanguage>>                     ALL_LANGUAGES                       = Constant.of("ALL_LANGUAGES", Set.of(), r -> {
+                                                                                                                          return MODULES.get(r).flatMap(m -> DModule.LANGUAGES.get(m)).asSet();
+                                                                                                                      });
     @SuppressWarnings({"unchecked", "rawtypes"})
     protected static final Observed<DRepository, Set<SLanguage>>                  CONTAINED_LANGUAGES_WITH_RULES      = Observed.of("CONTAINED_LANGUAGES_WITH_RULES", Set.of());
 
     public static final Constant<DRepository, List<IAspect>>                      ALL_ASPECTS                         = Constant.of("ALL_ASPECTS", List.of(), r -> {
-                                                                                                                          return ALL_LANGUAGES_WITH_RULES.get(r).flatMap(l -> DClareMPS.ASPECTS.get(l)).sortedBy(IAspect::getName).asList();
+                                                                                                                          return ALL_LANGUAGES.get(r).flatMap(l -> DClareMPS.ASPECTS.get(l)).sortedBy(IAspect::getName).asList();
                                                                                                                       });
 
     public static final Constant<DRepository, List<IAspect>>                      ALL_DYNAMIC_ASPECTS                 = Constant.of("ALL_DYNAMIC_ASPECTS", List.of(), r -> {

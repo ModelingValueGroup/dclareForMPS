@@ -362,7 +362,11 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
             checkerRegistry.unregisterChecker(modelChecker);
             checkerRegistry.unregisterChecker(nodeChecker);
             Highlighter highlighter = project.getComponent(Highlighter.class);
-            readInEDT(() -> highlighter.removeChecker(languageEditorChecker));
+            readInEDT(() -> {
+                if (!highlighter.isStopping()) {
+                    highlighter.removeChecker(languageEditorChecker);
+                }
+            });
             mpsTransaction = null;
             syncConnectionHandler = null;
             for (ImperativeTransaction it : universeTransaction.getImperativeTransactions()) {

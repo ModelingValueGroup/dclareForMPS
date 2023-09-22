@@ -4843,10 +4843,24 @@
           </node>
         </node>
         <node concept="3clFbJ" id="6di_o0BpuTX" role="3cqZAp">
-          <node concept="3y3z36" id="6di_o0Bpv9W" role="3clFbw">
-            <node concept="10Nm6u" id="6di_o0BpvhZ" role="3uHU7w" />
-            <node concept="37vLTw" id="3czWNc2p5aY" role="3uHU7B">
-              <ref role="3cqZAo" node="3czWNc2p5aW" resolve="current" />
+          <node concept="1Wc70l" id="3AyIHA_Y0zM" role="3clFbw">
+            <node concept="3y3z36" id="6di_o0Bpv9W" role="3uHU7B">
+              <node concept="37vLTw" id="3czWNc2p5aY" role="3uHU7B">
+                <ref role="3cqZAo" node="3czWNc2p5aW" resolve="current" />
+              </node>
+              <node concept="10Nm6u" id="6di_o0BpvhZ" role="3uHU7w" />
+            </node>
+            <node concept="3fqX7Q" id="3AyIHA_Y25A" role="3uHU7w">
+              <node concept="1eOMI4" id="3AyIHA_Y25B" role="3fr31v">
+                <node concept="2ZW3vV" id="3AyIHA_Y25C" role="1eOMHV">
+                  <node concept="3uibUv" id="3AyIHA_Y25D" role="2ZW6by">
+                    <ref role="3uigEE" to="kag7:~ImperativeTransaction" resolve="ImperativeTransaction" />
+                  </node>
+                  <node concept="37vLTw" id="3AyIHA_Y25E" role="2ZW6bz">
+                    <ref role="3cqZAo" node="3czWNc2p5aW" resolve="current" />
+                  </node>
+                </node>
+              </node>
             </node>
           </node>
           <node concept="3clFbS" id="6di_o0BpuTZ" role="3clFbx">
@@ -4934,12 +4948,37 @@
         </node>
       </node>
       <node concept="3clFbS" id="3CVeTM7RR7P" role="3clF47">
-        <node concept="3clFbJ" id="3CVeTM7RR7Q" role="3cqZAp">
-          <node concept="3y3z36" id="3CVeTM7RR7R" role="3clFbw">
-            <node concept="10Nm6u" id="3CVeTM7RR7S" role="3uHU7w" />
-            <node concept="2YIFZM" id="3CVeTM7RR7T" role="3uHU7B">
+        <node concept="3cpWs8" id="3AyIHA_X_30" role="3cqZAp">
+          <node concept="3cpWsn" id="3AyIHA_X_31" role="3cpWs9">
+            <property role="TrG5h" value="current" />
+            <node concept="3uibUv" id="3AyIHA_Xhxd" role="1tU5fm">
+              <ref role="3uigEE" to="kag7:~LeafTransaction" resolve="LeafTransaction" />
+            </node>
+            <node concept="2YIFZM" id="3AyIHA_X_32" role="33vP2m">
               <ref role="1Pybhc" to="kag7:~LeafTransaction" resolve="LeafTransaction" />
               <ref role="37wK5l" to="kag7:~LeafTransaction.getCurrent()" resolve="getCurrent" />
+            </node>
+          </node>
+        </node>
+        <node concept="3clFbJ" id="3CVeTM7RR7Q" role="3cqZAp">
+          <node concept="1Wc70l" id="3AyIHA_XR_i" role="3clFbw">
+            <node concept="3fqX7Q" id="3AyIHA_XXYg" role="3uHU7w">
+              <node concept="1eOMI4" id="3AyIHA_XZnN" role="3fr31v">
+                <node concept="2ZW3vV" id="3AyIHA_XXYi" role="1eOMHV">
+                  <node concept="3uibUv" id="3AyIHA_XXYj" role="2ZW6by">
+                    <ref role="3uigEE" to="kag7:~ImperativeTransaction" resolve="ImperativeTransaction" />
+                  </node>
+                  <node concept="37vLTw" id="3AyIHA_XXYk" role="2ZW6bz">
+                    <ref role="3cqZAo" node="3AyIHA_X_31" resolve="current" />
+                  </node>
+                </node>
+              </node>
+            </node>
+            <node concept="3y3z36" id="3CVeTM7RR7R" role="3uHU7B">
+              <node concept="37vLTw" id="3AyIHA_X_33" role="3uHU7B">
+                <ref role="3cqZAo" node="3AyIHA_X_31" resolve="current" />
+              </node>
+              <node concept="10Nm6u" id="3CVeTM7RR7S" role="3uHU7w" />
             </node>
           </node>
           <node concept="3clFbS" id="3CVeTM7RR7U" role="3clFbx">
@@ -4949,8 +4988,11 @@
                 <ref role="1Pybhc" to="t4tl:~DModel" resolve="DModel" />
                 <node concept="2OqwBi" id="3CVeTM7SNZg" role="37wK5m">
                   <node concept="2YIFZM" id="3CVeTM7SNZh" role="2Oq$k0">
-                    <ref role="37wK5l" to="t4tl:~DClareMPS.instance()" resolve="instance" />
+                    <ref role="37wK5l" to="t4tl:~DClareMPS.instance(org.modelingvalue.dclare.Transaction)" resolve="instance" />
                     <ref role="1Pybhc" to="t4tl:~DClareMPS" resolve="DClareMPS" />
+                    <node concept="37vLTw" id="3AyIHA_XE9D" role="37wK5m">
+                      <ref role="3cqZAo" node="3AyIHA_X_31" resolve="current" />
+                    </node>
                   </node>
                   <node concept="liA8E" id="3CVeTM7SNZi" role="2OqNvi">
                     <ref role="37wK5l" to="t4tl:~DClareMPS.read(java.util.function.Supplier)" resolve="read" />
