@@ -970,7 +970,7 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
 
     protected State imperativeState() {
         ImperativeTransaction itx = mpsTransaction;
-        return itx != null ? itx.state() : universeTransaction.preState();
+        return itx != null ? itx.preState() : universeTransaction.preState();
     }
 
     public static <T> T get(Object sObject, Supplier<T> supplier) {
