@@ -231,8 +231,12 @@ public abstract class DObject implements Mutable {
 
     @Override
     public boolean dIsOrphan(State state) {
+        return Mutable.super.dIsOrphan(state) && !isExternal() && !isConstantContained();
+    }
+
+    private boolean isConstantContained() {
         LeafTransaction tx = LeafTransaction.getCurrent();
-        return Mutable.super.dIsOrphan(state) && !tx.universeTransaction().constantState().isSet(tx, this, Mutable.D_PARENT_CONTAINING.constant());
+        return tx.universeTransaction().constantState().isSet(tx, this, Mutable.D_PARENT_CONTAINING.constant());
     }
 
     public abstract boolean isExternal();
