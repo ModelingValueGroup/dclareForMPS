@@ -15,8 +15,8 @@
 
 package org.modelingvalue.dclare.mps;
 
-import static org.modelingvalue.dclare.SetableModifier.containment;
-import static org.modelingvalue.dclare.SetableModifier.plumbing;
+import static org.modelingvalue.dclare.CoreSetableModifier.containment;
+import static org.modelingvalue.dclare.CoreSetableModifier.plumbing;
 import static org.modelingvalue.dclare.mps.DServerMetaData.SHARED_MODELS;
 
 import java.util.Collections;

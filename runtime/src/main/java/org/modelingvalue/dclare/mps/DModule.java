@@ -15,7 +15,7 @@
 
 package org.modelingvalue.dclare.mps;
 
-import static org.modelingvalue.dclare.SetableModifier.containment;
+import static org.modelingvalue.dclare.CoreSetableModifier.containment;
 
 import java.util.ArrayList;
 import java.util.HashSet;

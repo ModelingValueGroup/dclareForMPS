@@ -15,7 +15,7 @@
 
 package org.modelingvalue.dclare.mps;
 
-import static org.modelingvalue.dclare.SetableModifier.*;
+import static org.modelingvalue.dclare.CoreSetableModifier.*;
 
 import java.util.function.Consumer;
 import java.util.function.Function;

@@ -15,7 +15,7 @@
 
 package org.modelingvalue.dclare.mps;
 
-import static org.modelingvalue.dclare.SetableModifier.plumbing;
+import static org.modelingvalue.dclare.CoreSetableModifier.plumbing;
 
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;

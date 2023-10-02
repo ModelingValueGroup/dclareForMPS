@@ -14325,9 +14325,9 @@
               </node>
             </node>
           </node>
-          <node concept="Rm8GO" id="2gyk5RZ04$k" role="37wK5m">
-            <ref role="Rm8GQ" to="kag7:~SetableModifier.doNotClear" resolve="doNotClear" />
-            <ref role="1Px2BO" to="kag7:~SetableModifier" resolve="SetableModifier" />
+          <node concept="Rm8GO" id="5w$0C1Sk8P6" role="37wK5m">
+            <ref role="Rm8GQ" to="kag7:~CoreSetableModifier.doNotClear" resolve="doNotClear" />
+            <ref role="1Px2BO" to="kag7:~CoreSetableModifier" resolve="CoreSetableModifier" />
           </node>
         </node>
         <node concept="1WS0z7" id="5LBfqS_nLkK" role="lGtFl">
