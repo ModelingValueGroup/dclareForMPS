@@ -39,6 +39,7 @@ import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.collections.util.Quadruple;
 import org.modelingvalue.collections.util.TriConsumer;
 import org.modelingvalue.dclare.*;
+import org.modelingvalue.dclare.Construction.Reason;
 
 import jetbrains.mps.errors.item.IssueKindReportItem;
 import jetbrains.mps.errors.item.NodeReportItem;
@@ -306,8 +307,11 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
     public static Observer<DNode> copyObserver(IAspect aspect, DObserved<DNode, ?> observed, TriConsumer<DNode, DNode, DCopy> action) {
         Direction direction = IAspect.DIRECTION.get(aspect);
         return DCopyObserver.of(aspect, observed, node -> {
-            DCopy reason = (DCopy) node.dAllDerivations().get(direction).reason();
-            action.accept(node, reason.copied(), reason.root());
+            Reason reason = node.dAllDerivations().get(direction).reason();
+            if (reason instanceof DCopy) {
+                DCopy dCopy = (DCopy) reason;
+                action.accept(node, dCopy.copied(), dCopy.root());
+            }
         }, direction);
     }
 
