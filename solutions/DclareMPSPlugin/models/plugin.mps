@@ -12412,6 +12412,29 @@
             </node>
           </node>
         </node>
+        <node concept="3cpWs8" id="3woxxXsp4tF" role="3cqZAp">
+          <node concept="3cpWsn" id="3woxxXsp4tG" role="3cpWs9">
+            <property role="TrG5h" value="errors" />
+            <node concept="3uibUv" id="3woxxXsp3zL" role="1tU5fm">
+              <ref role="3uigEE" to="zrbp:~List" resolve="List" />
+              <node concept="3uibUv" id="3woxxXsp3zO" role="11_B2D">
+                <ref role="3uigEE" to="t4tl:~DMessage" resolve="DMessage" />
+              </node>
+            </node>
+            <node concept="2OqwBi" id="3woxxXsp4tH" role="33vP2m">
+              <node concept="37vLTw" id="3woxxXsp4tI" role="2Oq$k0">
+                <ref role="3cqZAo" node="433JJClei3a" resolve="messages" />
+              </node>
+              <node concept="liA8E" id="3woxxXsp4tJ" role="2OqNvi">
+                <ref role="37wK5l" to="zrbp:~DefaultMap.get(java.lang.Object)" resolve="get" />
+                <node concept="Rm8GO" id="3woxxXsp4tK" role="37wK5m">
+                  <ref role="Rm8GQ" to="t4tl:~DMessageType.error" resolve="error" />
+                  <ref role="1Px2BO" to="t4tl:~DMessageType" resolve="DMessageType" />
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
         <node concept="3clFbJ" id="7zjHQApUBnq" role="3cqZAp">
           <node concept="3clFbS" id="7zjHQApUBns" role="3clFbx">
             <node concept="3clFbF" id="3zaVTDehRAS" role="3cqZAp">
@@ -12425,20 +12448,43 @@
                 </node>
               </node>
             </node>
+            <node concept="3clFbF" id="4koLORdSGIi" role="3cqZAp">
+              <node concept="2YIFZM" id="4koLORdSTO$" role="3clFbG">
+                <ref role="37wK5l" to="dxuu:~JOptionPane.showMessageDialog(java.awt.Component,java.lang.Object,java.lang.String,int)" resolve="showMessageDialog" />
+                <ref role="1Pybhc" to="dxuu:~JOptionPane" resolve="JOptionPane" />
+                <node concept="10Nm6u" id="4koLORdTYr7" role="37wK5m" />
+                <node concept="3cpWs3" id="3woxxXsmL7g" role="37wK5m">
+                  <node concept="Xl_RD" id="3woxxXsmLAU" role="3uHU7w">
+                    <property role="Xl_RC" value=" errors" />
+                  </node>
+                  <node concept="3cpWs3" id="3woxxXslsmb" role="3uHU7B">
+                    <node concept="Xl_RD" id="4koLORdUojp" role="3uHU7B">
+                      <property role="Xl_RC" value="dclare engine stopped with " />
+                    </node>
+                    <node concept="2OqwBi" id="3woxxXsmkeU" role="3uHU7w">
+                      <node concept="liA8E" id="3woxxXspfru" role="2OqNvi">
+                        <ref role="37wK5l" to="zrbp:~Collection.size()" resolve="size" />
+                      </node>
+                      <node concept="37vLTw" id="3woxxXspcmW" role="2Oq$k0">
+                        <ref role="3cqZAo" node="3woxxXsp4tG" resolve="errors" />
+                      </node>
+                    </node>
+                  </node>
+                </node>
+                <node concept="Xl_RD" id="4koLORdUN0r" role="37wK5m">
+                  <property role="Xl_RC" value="dclare" />
+                </node>
+                <node concept="10M0yZ" id="3woxxXspi16" role="37wK5m">
+                  <ref role="3cqZAo" to="dxuu:~JOptionPane.ERROR_MESSAGE" resolve="ERROR_MESSAGE" />
+                  <ref role="1PxDUh" to="dxuu:~JOptionPane" resolve="JOptionPane" />
+                </node>
+              </node>
+            </node>
           </node>
           <node concept="3fqX7Q" id="433JJClenf$" role="3clFbw">
             <node concept="2OqwBi" id="433JJClenfA" role="3fr31v">
-              <node concept="2OqwBi" id="1R4NEEqhC5A" role="2Oq$k0">
-                <node concept="37vLTw" id="433JJClenfB" role="2Oq$k0">
-                  <ref role="3cqZAo" node="433JJClei3a" resolve="messages" />
-                </node>
-                <node concept="liA8E" id="1R4NEEqhFzA" role="2OqNvi">
-                  <ref role="37wK5l" to="zrbp:~DefaultMap.get(java.lang.Object)" resolve="get" />
-                  <node concept="Rm8GO" id="1R4NEEqhIak" role="37wK5m">
-                    <ref role="Rm8GQ" to="t4tl:~DMessageType.error" resolve="error" />
-                    <ref role="1Px2BO" to="t4tl:~DMessageType" resolve="DMessageType" />
-                  </node>
-                </node>
+              <node concept="37vLTw" id="3woxxXsp4tL" role="2Oq$k0">
+                <ref role="3cqZAo" node="3woxxXsp4tG" resolve="" />
               </node>
               <node concept="liA8E" id="433JJClenfC" role="2OqNvi">
                 <ref role="37wK5l" to="zrbp:~Collection.isEmpty()" resolve="isEmpty" />
