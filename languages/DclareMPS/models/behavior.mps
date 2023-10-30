@@ -355,6 +355,7 @@
       <concept id="4693937538533521280" name="jetbrains.mps.lang.smodel.structure.OfConceptOperation" flags="ng" index="v3k3i">
         <child id="4693937538533538124" name="requestedConcept" index="v3oSu" />
       </concept>
+      <concept id="1540150895035667832" name="jetbrains.mps.lang.smodel.structure.OperationParm_SameMetaLevel" flags="ng" index="yhA9G" />
       <concept id="7453996997717780434" name="jetbrains.mps.lang.smodel.structure.Node_GetSConceptOperation" flags="nn" index="2yIwOk" />
       <concept id="1173122760281" name="jetbrains.mps.lang.smodel.structure.Node_GetAncestorsOperation" flags="nn" index="z$bX8" />
       <concept id="2396822768958367367" name="jetbrains.mps.lang.smodel.structure.AbstractTypeCastExpression" flags="nn" index="$5XWr">
@@ -14765,6 +14766,7 @@
                   </node>
                 </node>
                 <node concept="1xIGOp" id="64dupBntyXA" role="1xVPHs" />
+                <node concept="yhA9G" id="13G9pej_N77" role="1xVPHs" />
               </node>
             </node>
           </node>
