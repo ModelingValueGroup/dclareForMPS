@@ -1856,33 +1856,6 @@
     <node concept="3clFbS" id="67uyCwCTrmo" role="18ibNy">
       <node concept="3clFbJ" id="67uyCwCTrnE" role="3cqZAp">
         <node concept="3clFbS" id="67uyCwCTrnG" role="3clFbx">
-          <node concept="3clFbJ" id="67uyCwCTs2B" role="3cqZAp">
-            <node concept="3clFbS" id="67uyCwCTs2D" role="3clFbx">
-              <node concept="2MkqsV" id="67uyCwCTtAv" role="3cqZAp">
-                <node concept="Xl_RD" id="67uyCwCTtAL" role="2MkJ7o">
-                  <property role="Xl_RC" value="Identifying attributes may only be defined in a Node RuleSet" />
-                </node>
-                <node concept="1YBJjd" id="67uyCwCTtE8" role="1urrMF">
-                  <ref role="1YBMHb" node="67uyCwCTrnv" resolve="attribute" />
-                </node>
-              </node>
-            </node>
-            <node concept="3fqX7Q" id="2McdWNXlVGU" role="3clFbw">
-              <node concept="2OqwBi" id="2McdWNXlVGV" role="3fr31v">
-                <node concept="2OqwBi" id="2McdWNXlVGW" role="2Oq$k0">
-                  <node concept="1YBJjd" id="2McdWNXlVGX" role="2Oq$k0">
-                    <ref role="1YBMHb" node="67uyCwCTrnv" resolve="attribute" />
-                  </node>
-                  <node concept="1mfA1w" id="2McdWNXlVGY" role="2OqNvi" />
-                </node>
-                <node concept="1mIQ4w" id="2McdWNXlVGZ" role="2OqNvi">
-                  <node concept="chp4Y" id="2McdWNXlVIb" role="cj9EA">
-                    <ref role="cht4Q" to="7ggn:6HWpSUEuark" resolve="NodeRuleSet" />
-                  </node>
-                </node>
-              </node>
-            </node>
-          </node>
           <node concept="3clFbJ" id="67uyCwCTtFQ" role="3cqZAp">
             <node concept="3clFbS" id="67uyCwCTtFS" role="3clFbx">
               <node concept="2MkqsV" id="67uyCwCTuZd" role="3cqZAp">
