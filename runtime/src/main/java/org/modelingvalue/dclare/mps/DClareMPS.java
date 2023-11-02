@@ -956,7 +956,7 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
     }
 
     public static <T> T post(Supplier<T> supplier) {
-        return LeafTransaction.getCurrent().universeTransaction().postState().get(supplier);
+        return LeafTransaction.getCurrent().current().get(supplier);
     }
 
     public UniverseTransaction universeTransaction() {
