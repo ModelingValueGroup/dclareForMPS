@@ -227,6 +227,13 @@
       </concept>
       <concept id="1073239437375" name="jetbrains.mps.baseLanguage.structure.NotEqualsExpression" flags="nn" index="3y3z36" />
       <concept id="1081855346303" name="jetbrains.mps.baseLanguage.structure.BreakStatement" flags="nn" index="3zACq4" />
+      <concept id="1184950988562" name="jetbrains.mps.baseLanguage.structure.ArrayCreator" flags="nn" index="3$_iS1">
+        <child id="1184951007469" name="componentType" index="3$_nBY" />
+        <child id="1184952969026" name="dimensionExpression" index="3$GQph" />
+      </concept>
+      <concept id="1184952934362" name="jetbrains.mps.baseLanguage.structure.DimensionExpression" flags="nn" index="3$GHV9">
+        <child id="1184953288404" name="expression" index="3$I4v7" />
+      </concept>
       <concept id="1178549954367" name="jetbrains.mps.baseLanguage.structure.IVisible" flags="ng" index="1B3ioH">
         <child id="1178549979242" name="visibility" index="1B3o_S" />
       </concept>
@@ -15867,25 +15874,52 @@
             </node>
           </node>
         </node>
+        <node concept="3cpWs8" id="AtimHg$7ZV" role="3cqZAp">
+          <node concept="3cpWsn" id="AtimHg$7ZW" role="3cpWs9">
+            <property role="TrG5h" value="vp" />
+            <node concept="17QB3L" id="AtimHg$7RA" role="1tU5fm" />
+            <node concept="2OqwBi" id="AtimHg$7ZX" role="33vP2m">
+              <node concept="37vLTw" id="AtimHg$7ZY" role="2Oq$k0">
+                <ref role="3cqZAo" node="1WZgungw2B7" resolve="root" />
+              </node>
+              <node concept="3TrcHB" id="AtimHg$7ZZ" role="2OqNvi">
+                <ref role="3TsBF5" to="tpck:hnGE5uv" resolve="virtualPackage" />
+              </node>
+            </node>
+          </node>
+        </node>
         <node concept="3cpWs8" id="4$bpWrMMplO" role="3cqZAp">
           <node concept="3cpWsn" id="4$bpWrMMplP" role="3cpWs9">
             <property role="TrG5h" value="virtualPackage" />
             <node concept="10Q1$e" id="5S9goliTKd2" role="1tU5fm">
               <node concept="17QB3L" id="4$bpWrMMpeH" role="10Q1$1" />
             </node>
-            <node concept="2OqwBi" id="5S9goliTIh5" role="33vP2m">
-              <node concept="2OqwBi" id="4$bpWrMMplQ" role="2Oq$k0">
-                <node concept="37vLTw" id="1WZgungw3b7" role="2Oq$k0">
-                  <ref role="3cqZAo" node="1WZgungw2B7" resolve="root" />
-                </node>
-                <node concept="3TrcHB" id="4$bpWrMMplS" role="2OqNvi">
-                  <ref role="3TsBF5" to="tpck:hnGE5uv" resolve="virtualPackage" />
+            <node concept="3K4zz7" id="AtimHg$eDf" role="33vP2m">
+              <node concept="2ShNRf" id="AtimHg$ljR" role="3K4GZi">
+                <node concept="3$_iS1" id="AtimHg$Dwk" role="2ShVmc">
+                  <node concept="3$GHV9" id="AtimHg$Dwm" role="3$GQph">
+                    <node concept="3cmrfG" id="AtimHg$DCo" role="3$I4v7">
+                      <property role="3cmrfH" value="0" />
+                    </node>
+                  </node>
+                  <node concept="17QB3L" id="AtimHg$DuB" role="3$_nBY" />
                 </node>
               </node>
-              <node concept="liA8E" id="5S9goliTIEP" role="2OqNvi">
-                <ref role="37wK5l" to="wyt6:~String.split(java.lang.String)" resolve="split" />
-                <node concept="Xl_RD" id="5S9goliTIO2" role="37wK5m">
-                  <property role="Xl_RC" value="\\." />
+              <node concept="3y3z36" id="AtimHg$e6r" role="3K4Cdx">
+                <node concept="10Nm6u" id="AtimHg$eyG" role="3uHU7w" />
+                <node concept="37vLTw" id="AtimHg$dc$" role="3uHU7B">
+                  <ref role="3cqZAo" node="AtimHg$7ZW" resolve="vp" />
+                </node>
+              </node>
+              <node concept="2OqwBi" id="5S9goliTIh5" role="3K4E3e">
+                <node concept="37vLTw" id="AtimHg$800" role="2Oq$k0">
+                  <ref role="3cqZAo" node="AtimHg$7ZW" resolve="vp" />
+                </node>
+                <node concept="liA8E" id="5S9goliTIEP" role="2OqNvi">
+                  <ref role="37wK5l" to="wyt6:~String.split(java.lang.String)" resolve="split" />
+                  <node concept="Xl_RD" id="5S9goliTIO2" role="37wK5m">
+                    <property role="Xl_RC" value="\\." />
+                  </node>
                 </node>
               </node>
             </node>
