@@ -17325,15 +17325,73 @@
             </node>
           </node>
         </node>
-        <node concept="3cpWs6" id="JuSt8W5Wv0" role="3cqZAp">
-          <node concept="BsUDl" id="3xwsMyQkEzi" role="3cqZAk">
-            <ref role="37wK5l" node="JuSt8W4$Q2" resolve="hasSuperParametersOf" />
-            <node concept="1PxgMI" id="98RYWuzqwb" role="37wK5m">
-              <node concept="chp4Y" id="98RYWuzr8K" role="3oSUPX">
-                <ref role="cht4Q" to="7ggn:3$OkZkHRDLt" resolve="Method" />
+        <node concept="3cpWs8" id="64dupBnsVjl" role="3cqZAp">
+          <node concept="3cpWsn" id="64dupBnsVjm" role="3cpWs9">
+            <property role="TrG5h" value="superContext" />
+            <node concept="3Tqbb2" id="64dupBnsToy" role="1tU5fm">
+              <ref role="ehGHo" to="7ggn:61p65V8x$6I" resolve="ThisContext" />
+            </node>
+            <node concept="2OqwBi" id="64dupBnsVjn" role="33vP2m">
+              <node concept="13iPFW" id="gjwJX67opQ" role="2Oq$k0" />
+              <node concept="2Xjw5R" id="64dupBnsVjp" role="2OqNvi">
+                <node concept="1xMEDy" id="64dupBnsVjq" role="1xVPHs">
+                  <node concept="chp4Y" id="64dupBnsVjr" role="ri$Ld">
+                    <ref role="cht4Q" to="7ggn:61p65V8x$6I" resolve="ThisContext" />
+                  </node>
+                </node>
+                <node concept="1xIGOp" id="64dupBnsVjs" role="1xVPHs" />
               </node>
-              <node concept="37vLTw" id="2BHiRxghfK4" role="1m5AlR">
+            </node>
+          </node>
+        </node>
+        <node concept="3cpWs8" id="gjwJX67oND" role="3cqZAp">
+          <node concept="3cpWsn" id="gjwJX67oNG" role="3cpWs9">
+            <property role="TrG5h" value="subContext" />
+            <node concept="3Tqbb2" id="gjwJX67oNH" role="1tU5fm">
+              <ref role="ehGHo" to="7ggn:61p65V8x$6I" resolve="ThisContext" />
+            </node>
+            <node concept="2OqwBi" id="gjwJX67oNI" role="33vP2m">
+              <node concept="37vLTw" id="gjwJX67oTm" role="2Oq$k0">
                 <ref role="3cqZAo" node="hEwIB1U" resolve="subMethod" />
+              </node>
+              <node concept="2Xjw5R" id="gjwJX67oNK" role="2OqNvi">
+                <node concept="1xMEDy" id="gjwJX67oNL" role="1xVPHs">
+                  <node concept="chp4Y" id="gjwJX67oNM" role="ri$Ld">
+                    <ref role="cht4Q" to="7ggn:61p65V8x$6I" resolve="ThisContext" />
+                  </node>
+                </node>
+                <node concept="1xIGOp" id="gjwJX67oNN" role="1xVPHs" />
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="3cpWs6" id="JuSt8W5Wv0" role="3cqZAp">
+          <node concept="1Wc70l" id="gjwJX67pTu" role="3cqZAk">
+            <node concept="BsUDl" id="3xwsMyQkEzi" role="3uHU7w">
+              <ref role="37wK5l" node="JuSt8W4$Q2" resolve="hasSuperParametersOf" />
+              <node concept="1PxgMI" id="98RYWuzqwb" role="37wK5m">
+                <node concept="chp4Y" id="98RYWuzr8K" role="3oSUPX">
+                  <ref role="cht4Q" to="7ggn:3$OkZkHRDLt" resolve="Method" />
+                </node>
+                <node concept="37vLTw" id="2BHiRxghfK4" role="1m5AlR">
+                  <ref role="3cqZAo" node="hEwIB1U" resolve="subMethod" />
+                </node>
+              </node>
+            </node>
+            <node concept="2OqwBi" id="gjwJX67piK" role="3uHU7B">
+              <node concept="37vLTw" id="gjwJX67p51" role="2Oq$k0">
+                <ref role="3cqZAo" node="64dupBnsVjm" resolve="superContext" />
+              </node>
+              <node concept="2qgKlT" id="gjwJX67puW" role="2OqNvi">
+                <ref role="37wK5l" node="58RYP7nvur4" resolve="isTypeInScope" />
+                <node concept="2OqwBi" id="gjwJX67pL7" role="37wK5m">
+                  <node concept="37vLTw" id="gjwJX67pB3" role="2Oq$k0">
+                    <ref role="3cqZAo" node="gjwJX67oNG" resolve="subContext" />
+                  </node>
+                  <node concept="2qgKlT" id="gjwJX67pNK" role="2OqNvi">
+                    <ref role="37wK5l" node="29R9$zZWsRH" resolve="getContextType" />
+                  </node>
+                </node>
               </node>
             </node>
           </node>
