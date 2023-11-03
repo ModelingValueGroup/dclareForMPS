@@ -613,10 +613,12 @@
           <module ref="fbc14279-5e2a-4c87-a5d1-5f7061e6c456(jetbrains.mps.debugger.api.lang)" kind="cl" />
           <module ref="bfbdd672-7ff5-403f-af4f-16da5226f34c(jetbrains.mps.findUsages.runtime)" kind="cl" />
           <module ref="cae9c33a-938f-42e8-8f0f-26f001c0af63(jetbrains.mps.ide.devkit.editor)" kind="cl" />
+          <module ref="5b1f863d-65a0-41a6-a801-33896be24202(jetbrains.mps.ide.editor)" kind="cl" />
           <module ref="a381759b-acec-4e2e-8745-7bf905520fca(jetbrains.mps.ide.modelchecker.platform)" kind="cl" />
           <module ref="8d29d73f-ed99-4652-ae0a-083cdfe53c34(jetbrains.mps.ide.platform)" kind="cl" />
           <module ref="f606fec0-cf31-457c-9d51-9af1682cc4c2(jetbrains.mps.ide.refactoring)" kind="cl" />
           <module ref="25092e07-e655-497c-92fb-558a8e3080ed(jetbrains.mps.ide.ui)" kind="cl" />
+          <module ref="f33a6c9c-f660-4bdb-aecd-2d144c61f7d2(jetbrains.mps.java.platform)" kind="cl" />
           <module ref="b401a680-8325-4110-8fd3-84331ff25bef(jetbrains.mps.lang.generator)" kind="cl" />
           <module ref="c72da2b9-7cce-4447-8389-f407dc1158b7(jetbrains.mps.lang.structure)" kind="cl" />
         </dependencies>
@@ -875,6 +877,8 @@
       <library file="${artifacts.mps}/languages/workbench/jetbrains.mps.lang.plugin.standalone.jar" />
       <library file="${artifacts.mps}/languages/xml/jetbrains.mps.core.xml.jar" />
       <library file="${artifacts.mps}/plugins/mps-devkit/languages/jetbrains.mps.ide.devkit.editor.jar" />
+      <library file="${artifacts.mps}/plugins/mps-java/modules/jetbrains.mps.java.core.jar" />
+      <library file="${artifacts.mps}/plugins/mps-java/modules/jetbrains.mps.java.platform.jar" />
       <chunk>
         <module file="${basedir}/solutions/DclareForMPS.build/DclareForMPS.build.msd" />
         <module file="${basedir}/languages/DclareMPS/DclareMPS.mpl" />
@@ -1308,6 +1312,8 @@
         <pathelement path="${build.tmp}/java/out/DclareMPSRuntime" />
         <pathelement path="${build.tmp}/java/out/DclareMessages" />
         <pathelement path="${build.tmp}/java/out/DclareRuntime" />
+        <fileset file="${artifacts.mps}/plugins/mps-java/lib/java-core.jar" />
+        <fileset file="${artifacts.mps}/plugins/mps-java/lib/java-platform.jar" />
         <fileset file="${artifacts.mps}/plugins/mps-modelchecker/lib/modelchecker.jar" />
         <fileset file="${dclare_home}/solutions/DclareMPSRuntime/lib/runtime.jar" />
         <fileset file="${dclare_home}/solutions/DclareRuntime/lib/dclare.jar" />
