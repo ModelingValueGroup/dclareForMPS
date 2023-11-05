@@ -54,7 +54,7 @@ public class Signature extends IdentifiedByArray implements Comparable<Signature
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public boolean isSubOf(Signature sup) {
+    public boolean isSubOf(Signature sup, boolean flipAspect) {
         if (size() != sup.size()) {
             return false;
         } else {
@@ -76,7 +76,8 @@ public class Signature extends IdentifiedByArray implements Comparable<Signature
                         return false;
                     }
                 } else if (get(i) instanceof IAspect && sup.get(i) instanceof IAspect) {
-                    if (!IAspect.ALL_DEPENDENCIES.get((IAspect) get(i)).contains((IAspect) sup.get(i))) {
+                    if (flipAspect ? !IAspect.ALL_DEPENDENCIES.get((IAspect) sup.get(i)).contains((IAspect) get(i)) : //
+                            !IAspect.ALL_DEPENDENCIES.get((IAspect) get(i)).contains((IAspect) sup.get(i))) {
                         return false;
                     }
                 } else {
@@ -91,9 +92,9 @@ public class Signature extends IdentifiedByArray implements Comparable<Signature
     public int compareTo(Signature o) {
         if (equals(o)) {
             return 0;
-        } else if (isSubOf(o)) {
+        } else if (isSubOf(o, false)) {
             return -1;
-        } else if (o.isSubOf(this)) {
+        } else if (o.isSubOf(this, false)) {
             return 1;
         } else {
             return Integer.compare(hashCode(), o.hashCode());
