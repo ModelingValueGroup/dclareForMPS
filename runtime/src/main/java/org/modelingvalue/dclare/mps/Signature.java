@@ -24,8 +24,8 @@ import org.modelingvalue.collections.util.IdentifiedByArray;
 public class Signature extends IdentifiedByArray implements Comparable<Signature> {
 
     public static Signature of(Signature def, Object[] args) {
-        Object[] id = new Object[args.length];
-        for (int i = 0; i < id.length; i++) {
+        Object[] id = new Object[args.length + 1];
+        for (int i = 0; i < args.length; i++) {
             if (args[i] == null) {
                 id[i] = def.get(i);
             } else if (args[i] instanceof SNode) {
@@ -36,6 +36,7 @@ public class Signature extends IdentifiedByArray implements Comparable<Signature
                 id[i] = args[i].getClass();
             }
         }
+        id[args.length] = def.get(args.length);
         return of(id);
     }
 
@@ -72,6 +73,10 @@ public class Signature extends IdentifiedByArray implements Comparable<Signature
                     }
                 } else if ((get(i) instanceof SAbstractConcept || get(i) instanceof SStructClass) && sup.get(i) instanceof Class) {
                     if (sup.get(i) != Object.class) {
+                        return false;
+                    }
+                } else if (get(i) instanceof IAspect && sup.get(i) instanceof IAspect) {
+                    if (!IAspect.ALL_DEPENDENCIES.get((IAspect) get(i)).contains((IAspect) sup.get(i))) {
                         return false;
                     }
                 } else {
