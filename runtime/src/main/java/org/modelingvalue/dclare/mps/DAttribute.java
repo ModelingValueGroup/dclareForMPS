@@ -15,7 +15,13 @@
 
 package org.modelingvalue.dclare.mps;
 
-import jetbrains.mps.smodel.adapter.structure.property.InvalidProperty;
+import static org.modelingvalue.dclare.CoreSetableModifier.*;
+
+import java.util.Collections;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.function.Supplier;
+
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.jetbrains.mps.openapi.language.SProperty;
 import org.jetbrains.mps.openapi.model.EditableSModel;
@@ -30,14 +36,7 @@ import org.modelingvalue.dclare.LeafTransaction;
 import org.modelingvalue.dclare.Setable;
 import org.modelingvalue.dclare.SetableModifier;
 
-import java.util.Collections;
-import java.util.function.BiFunction;
-import java.util.function.Function;
-import java.util.function.Supplier;
-
-import static org.modelingvalue.dclare.CoreSetableModifier.containment;
-import static org.modelingvalue.dclare.CoreSetableModifier.mandatory;
-import static org.modelingvalue.dclare.CoreSetableModifier.synthetic;
+import jetbrains.mps.smodel.adapter.structure.property.InvalidProperty;
 
 @SuppressWarnings({"rawtypes", "unused"})
 public interface DAttribute<O, T> extends DFeature {
@@ -45,7 +44,7 @@ public interface DAttribute<O, T> extends DFeature {
     @SuppressWarnings("unchecked")
     static <C, V> DAttribute<C, V> of(String id, String name, IRuleSet ruleSet, boolean syn, boolean optional, boolean composite, int identifyingNr, boolean isPublic, Function<C, Object> def, Class<?> cls, SLanguage oppositeLanguage, String opposite, Supplier<SNodeReference> source, Function<C, V> deriver) {
         boolean idAttr = identifyingNr >= 0 && (ruleSet == null || ruleSet.getAnonymousType() != null);
-        SetableModifier[] mods = {synthetic.iff(syn), mandatory.iff(idAttr || (!optional && identifyingNr < 0)), containment.iff(composite)};
+        SetableModifier[] mods = {synthetic.iff(syn), mandatory.iff(idAttr || (!optional && identifyingNr < 0)), containment.iff(composite), IAspect.DIRECTION.get(ruleSet.getAspect())};
         return idAttr ? new DIdentifyingAttribute(id, name, ruleSet, identifyingNr, cls, source, mods) : //
                 deriver != null ? new DConstant(id, name, ruleSet, cls, source, deriver, mods) : //
                         new DObservedAttribute(id, name, ruleSet, identifyingNr >= 0, isPublic, def, cls, opposite != null ? () -> of(oppositeLanguage, opposite) : null, source, mods);

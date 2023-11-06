@@ -206,11 +206,11 @@ public abstract class DObject implements Mutable {
 
     protected abstract DObjectType<?> getType();
 
-    public static <O extends DObject> NonCheckingObserver<O> observer(String id, Consumer<O> action, LeafModifier... modifiers) {
+    public static <O extends DObject> NonCheckingObserver<O> observer(String id, Consumer<O> action, LeafModifier<?>... modifiers) {
         return NonCheckingObserver.of(id, action, modifiers);
     }
 
-    public static <O extends DObject, V> NonCheckingObserver<O> observer(Setable<O, V> setable, Function<O, V> value, LeafModifier... modifiers) {
+    public static <O extends DObject, V> NonCheckingObserver<O> observer(Setable<O, V> setable, Function<O, V> value, LeafModifier<?>... modifiers) {
         return NonCheckingObserver.of(setable, value, modifiers);
     }
 
