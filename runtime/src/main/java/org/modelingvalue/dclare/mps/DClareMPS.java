@@ -270,19 +270,20 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
     }
 
     protected boolean isActiveAspect(IAspect aspect) {
-        if (aspect.isAllwaysOn()) {
-            return true;
-        } else if (aspect.isOnDemand()) {
-            return false;
-        } else {
+        if (!aspect.isAllwaysOn() && !aspect.isOnDemand()) {
             String[] inactiveAspects = config.getInactiveAspects();
             for (String inactiveAspect : inactiveAspects) {
                 if (inactiveAspect.equals(aspect.getId())) {
                     return false;
                 }
             }
-            return true;
         }
+        for (IAspect dep : aspect.getDependencies()) {
+            if (!isActiveAspect(dep)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public boolean isCollaberationEnabled() {
