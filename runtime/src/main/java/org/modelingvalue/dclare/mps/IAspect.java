@@ -30,7 +30,7 @@ public interface IAspect {
         return DClareMPS.ASPECT_MAP.get(language).get(id);
     }
 
-    Constant<IAspect, Direction>    DIRECTION        = Constant.of("DIRECTION", a -> Direction.of(a, () -> {
+    Constant<IAspect, Direction>    DIRECTION        = Constant.of("DIRECTION", a -> Direction.of(a, a.isOnDemand(), () -> {
                                                          return Collection.of(a.getOpposites()).sequential().map(o -> IAspect.DIRECTION.get(o)).asSet();
                                                      }));
 
