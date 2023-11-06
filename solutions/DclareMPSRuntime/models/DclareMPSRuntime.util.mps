@@ -7386,6 +7386,34 @@
       <node concept="3Tm1VV" id="RraJEThJqr" role="1B3o_S" />
       <node concept="3cqZAl" id="RraJETikSZ" role="3clF45" />
     </node>
+    <node concept="2tJIrI" id="3p9VReb6NYI" role="jymVt" />
+    <node concept="2YIFZL" id="3p9VReb92Ta" role="jymVt">
+      <property role="TrG5h" value="deriveLazy" />
+      <node concept="3clFbS" id="3p9VReb92Td" role="3clF47">
+        <node concept="3clFbF" id="3p9VReb9HRm" role="3cqZAp">
+          <node concept="2OqwBi" id="3p9VReb9P3t" role="3clFbG">
+            <node concept="2YIFZM" id="3p9VReb9KEX" role="2Oq$k0">
+              <ref role="37wK5l" to="t4tl:~DClareMPS.dClareForObject(java.lang.Object)" resolve="dClareForObject" />
+              <ref role="1Pybhc" to="t4tl:~DClareMPS" resolve="DClareMPS" />
+              <node concept="37vLTw" id="3p9VReb9NAx" role="37wK5m">
+                <ref role="3cqZAo" node="3p9VReb9El6" resolve="project" />
+              </node>
+            </node>
+            <node concept="liA8E" id="3p9VReb9Qcy" role="2OqNvi">
+              <ref role="37wK5l" to="t4tl:~DClareMPS.deriveLazy()" resolve="deriveLazy" />
+            </node>
+          </node>
+        </node>
+      </node>
+      <node concept="3Tm1VV" id="3p9VReb8Df1" role="1B3o_S" />
+      <node concept="3cqZAl" id="3p9VReb9qvk" role="3clF45" />
+      <node concept="37vLTG" id="3p9VReb9El6" role="3clF46">
+        <property role="TrG5h" value="project" />
+        <node concept="3uibUv" id="3p9VReb9El5" role="1tU5fm">
+          <ref role="3uigEE" to="z1c3:~MPSProject" resolve="MPSProject" />
+        </node>
+      </node>
+    </node>
     <node concept="2tJIrI" id="3jCDJ5bnZKZ" role="jymVt" />
     <node concept="2YIFZL" id="3jCDJ5bPZQX" role="jymVt">
       <property role="TrG5h" value="serializeNode" />
