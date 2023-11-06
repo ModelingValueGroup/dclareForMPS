@@ -1016,6 +1016,10 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
         return null;
     }
 
+    public void deriveLazy() {
+        imperativeState().deriveLazy(this::handleMPSDelta);
+    }
+
     private static String render(Object o) {
         return o == null ? "<null>" : "'" + o + "' [" + o.getClass() + "]";
     }
