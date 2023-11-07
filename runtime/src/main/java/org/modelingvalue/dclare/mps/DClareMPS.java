@@ -265,10 +265,6 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
         return imperativeState().get(() -> DRepository.ALL_ASPECTS.get(getRepository()));
     }
 
-    protected List<IAspect> getAllDynamicAspects() {
-        return imperativeState().get(() -> DRepository.ALL_DYNAMIC_ASPECTS.get(getRepository()));
-    }
-
     protected boolean isActiveAspect(IAspect aspect) {
         if (!aspect.isAllwaysOn() && !aspect.isOnDemand()) {
             String[] inactiveAspects = config.getInactiveAspects();

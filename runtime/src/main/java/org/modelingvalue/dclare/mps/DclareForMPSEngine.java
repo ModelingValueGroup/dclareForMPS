@@ -291,7 +291,7 @@ public class DclareForMPSEngine implements DeployListener, IBreakpointManagerLis
 
         private void updateStatus(Status status, DClareMPS current) {
             DclareForMpsStatus dclareForMpsStatus = new DclareForMpsStatus(status, current);
-            List<IAspect> aspects = status.mood == starting ? current.getAllDynamicAspects() : prevAspects;
+            List<IAspect> aspects = status.mood == starting ? current.getAllAspects() : prevAspects;
             DefaultMap<DMessageType, List<DMessage>> messages = status.mood == starting || status.mood == idle || status.mood == stopped ? current.getMessages() : prevMessages;
             current.readInEDT(() -> engineStatusHandler.status(dclareForMpsStatus));
             if (status.mood == starting) {

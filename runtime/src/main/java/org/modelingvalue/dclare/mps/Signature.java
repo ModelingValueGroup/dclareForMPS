@@ -24,7 +24,7 @@ import org.modelingvalue.collections.util.IdentifiedByArray;
 public class Signature extends IdentifiedByArray implements Comparable<Signature> {
 
     public static Signature of(Signature def, Object[] args) {
-        Object[] id = new Object[args.length + 1];
+        Object[] id = new Object[args.length + 2];
         for (int i = 0; i < args.length; i++) {
             if (args[i] == null) {
                 id[i] = def.get(i);
@@ -37,6 +37,7 @@ public class Signature extends IdentifiedByArray implements Comparable<Signature
             }
         }
         id[args.length] = def.get(args.length);
+        id[args.length + 1] = def.get(args.length + 1);
         return of(id);
     }
 
@@ -54,30 +55,32 @@ public class Signature extends IdentifiedByArray implements Comparable<Signature
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public boolean isSubOf(Signature sup, boolean flipAspect) {
+    public boolean isSubOf(Signature sup, boolean flipLast2) {
         if (size() != sup.size()) {
             return false;
         } else {
+            int flipIndex = flipLast2 ? size() - 2 : size();
             for (int i = 0; i < size(); i++) {
-                if (get(i) instanceof SAbstractConcept && sup.get(i) instanceof SAbstractConcept) {
-                    if (!((SAbstractConcept) get(i)).isSubConceptOf((SAbstractConcept) sup.get(i))) {
+                Object subType = i >= flipIndex ? sup.get(i) : get(i);
+                Object supType = i >= flipIndex ? get(i) : sup.get(i);
+                if (subType instanceof SAbstractConcept && supType instanceof SAbstractConcept) {
+                    if (!((SAbstractConcept) subType).isSubConceptOf((SAbstractConcept) supType)) {
                         return false;
                     }
-                } else if (get(i) instanceof SStructClass && sup.get(i) instanceof SStructClass) {
-                    if (!((SStructClass) sup.get(i)).isAssignableFrom((SStructClass) get(i))) {
+                } else if (subType instanceof SStructClass && supType instanceof SStructClass) {
+                    if (!((SStructClass) supType).isAssignableFrom((SStructClass) subType)) {
                         return false;
                     }
-                } else if (get(i) instanceof Class && sup.get(i) instanceof Class) {
-                    if (!((Class) sup.get(i)).isAssignableFrom((Class) get(i))) {
+                } else if (subType instanceof IAspect && supType instanceof IAspect) {
+                    if (!IAspect.ALL_DEPENDENCIES.get((IAspect) subType).contains((IAspect) supType)) {
                         return false;
                     }
-                } else if ((get(i) instanceof SAbstractConcept || get(i) instanceof SStructClass) && sup.get(i) instanceof Class) {
-                    if (sup.get(i) != Object.class) {
+                } else if (subType instanceof Class && supType instanceof Class) {
+                    if (!((Class) supType).isAssignableFrom((Class) subType)) {
                         return false;
                     }
-                } else if (get(i) instanceof IAspect && sup.get(i) instanceof IAspect) {
-                    if (flipAspect ? !IAspect.ALL_DEPENDENCIES.get((IAspect) sup.get(i)).contains((IAspect) get(i)) : //
-                            !IAspect.ALL_DEPENDENCIES.get((IAspect) get(i)).contains((IAspect) sup.get(i))) {
+                } else if ((subType instanceof SAbstractConcept || subType instanceof SStructClass || subType instanceof IAspect) && supType instanceof Class) {
+                    if (supType != Object.class) {
                         return false;
                     }
                 } else {
