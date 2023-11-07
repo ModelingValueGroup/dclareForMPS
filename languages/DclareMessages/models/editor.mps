@@ -166,6 +166,7 @@
         <reference id="1068581517664" name="variableDeclaration" index="3cqZAo" />
       </concept>
       <concept id="1068498886294" name="jetbrains.mps.baseLanguage.structure.AssignmentExpression" flags="nn" index="37vLTI" />
+      <concept id="1225271408483" name="jetbrains.mps.baseLanguage.structure.IsNotEmptyOperation" flags="nn" index="17RvpY" />
       <concept id="4972933694980447171" name="jetbrains.mps.baseLanguage.structure.BaseVariableDeclaration" flags="ng" index="19Szcq">
         <child id="5680397130376446158" name="type" index="1tU5fm" />
       </concept>
@@ -456,6 +457,67 @@
                   </node>
                 </node>
                 <node concept="3GX2aA" id="5a9BD_D6CGK" role="2OqNvi" />
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="3EZMnI" id="5kd$Q1HBC9Z" role="3EZMnx">
+          <node concept="2iRfu4" id="5kd$Q1HBCa0" role="2iSdaV" />
+          <node concept="3F0ifn" id="5kd$Q1HCVji" role="3EZMnx">
+            <property role="3F0ifm" value="," />
+          </node>
+          <node concept="1HlG4h" id="5kd$Q1HBCHe" role="3EZMnx">
+            <ref role="1k5W1q" to="tpen:hFITtyA" resolve="CompactKeyWord" />
+            <node concept="1HfYo3" id="5kd$Q1HBCHf" role="1HlULh">
+              <node concept="3TQlhw" id="5kd$Q1HBCHg" role="1Hhtcw">
+                <node concept="3clFbS" id="5kd$Q1HBCHh" role="2VODD2">
+                  <node concept="3clFbF" id="5kd$Q1HBCHi" role="3cqZAp">
+                    <node concept="2OqwBi" id="5kd$Q1HBCHj" role="3clFbG">
+                      <node concept="pncrf" id="5kd$Q1HBCHk" role="2Oq$k0" />
+                      <node concept="3TrcHB" id="5kd$Q1HBCHl" role="2OqNvi">
+                        <ref role="3TsBF5" to="wknp:5kd$Q1Hmv2c" resolve="onDemand" />
+                      </node>
+                    </node>
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+          <node concept="3F0ifn" id="5kd$Q1HCNc7" role="3EZMnx">
+            <property role="3F0ifm" value=":" />
+          </node>
+          <node concept="1HlG4h" id="5kd$Q1Hmkyt" role="3EZMnx">
+            <ref role="1ERwB7" node="5kd$Q1Hmoka" resolve="RunLazyActions" />
+            <node concept="VPXOz" id="5kd$Q1Hmkyu" role="3F10Kt">
+              <property role="VOm3f" value="true" />
+            </node>
+            <node concept="30gYXW" id="5kd$Q1Hmkyv" role="3F10Kt">
+              <property role="Vb096" value="hEZAO13/white" />
+            </node>
+            <node concept="1HfYo3" id="5kd$Q1Hmkyw" role="1HlULh">
+              <node concept="3TQlhw" id="5kd$Q1Hmkyx" role="1Hhtcw">
+                <node concept="3clFbS" id="5kd$Q1Hmkyy" role="2VODD2">
+                  <node concept="3clFbF" id="5kd$Q1Hmkyz" role="3cqZAp">
+                    <node concept="Xl_RD" id="5kd$Q1HmkyA" role="3clFbG">
+                      <property role="Xl_RC" value="RUN" />
+                    </node>
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+          <node concept="pkWqt" id="5kd$Q1Hms9U" role="pqm2j">
+            <node concept="3clFbS" id="5kd$Q1Hms9V" role="2VODD2">
+              <node concept="3clFbF" id="5kd$Q1HBAKS" role="3cqZAp">
+                <node concept="2OqwBi" id="5kd$Q1HBBIL" role="3clFbG">
+                  <node concept="2OqwBi" id="5kd$Q1HBAWi" role="2Oq$k0">
+                    <node concept="pncrf" id="5kd$Q1HBAKR" role="2Oq$k0" />
+                    <node concept="3TrcHB" id="5kd$Q1HBB5E" role="2OqNvi">
+                      <ref role="3TsBF5" to="wknp:5kd$Q1Hmv2c" resolve="onDemand" />
+                    </node>
+                  </node>
+                  <node concept="17RvpY" id="5kd$Q1HBC93" role="2OqNvi" />
+                </node>
               </node>
             </node>
           </node>
@@ -2329,6 +2391,44 @@
               </node>
               <node concept="37vLTw" id="4wENxdCO9Z7" role="37wK5m">
                 <ref role="3cqZAo" node="4wENxdCN_8M" resolve="shared" />
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+  </node>
+  <node concept="1h_SRR" id="5kd$Q1Hmoka">
+    <property role="TrG5h" value="RunLazyActions" />
+    <ref role="1h_SK9" to="wknp:7e_PmaZxgoP" resolve="MessageSet" />
+    <node concept="1hA7zw" id="5kd$Q1Hmokb" role="1h_SK8">
+      <property role="1hAc7j" value="1FSxSwWqMNJ/click_action_id" />
+      <node concept="1hAIg9" id="5kd$Q1Hmokc" role="1hA7z_">
+        <node concept="3clFbS" id="5kd$Q1Hmokd" role="2VODD2">
+          <node concept="3cpWs8" id="5kd$Q1Hmokx" role="3cqZAp">
+            <node concept="3cpWsn" id="5kd$Q1Hmoky" role="3cpWs9">
+              <property role="TrG5h" value="engine" />
+              <node concept="3uibUv" id="5kd$Q1Hmokz" role="1tU5fm">
+                <ref role="3uigEE" to="t4tl:~DclareForMPSEngine" resolve="DclareForMPSEngine" />
+              </node>
+              <node concept="2YIFZM" id="5kd$Q1Hmok$" role="33vP2m">
+                <ref role="1Pybhc" to="u4ym:30fQumnG8Au" resolve="DclareUtil" />
+                <ref role="37wK5l" to="u4ym:6g03R83trNJ" resolve="getEngine" />
+                <node concept="1Q80Hx" id="5kd$Q1Hmok_" role="37wK5m" />
+              </node>
+            </node>
+          </node>
+          <node concept="3clFbF" id="5kd$Q1Hmrjl" role="3cqZAp">
+            <node concept="2YIFZM" id="5kd$Q1Hmroh" role="3clFbG">
+              <ref role="37wK5l" to="u4ym:3p9VReb92Ta" resolve="deriveLazy" />
+              <ref role="1Pybhc" to="u4ym:30fQumnG8Au" resolve="DclareUtil" />
+              <node concept="2OqwBi" id="5kd$Q1HmrFS" role="37wK5m">
+                <node concept="37vLTw" id="5kd$Q1Hmru6" role="2Oq$k0">
+                  <ref role="3cqZAo" node="5kd$Q1Hmoky" resolve="engine" />
+                </node>
+                <node concept="liA8E" id="5kd$Q1HmrW$" role="2OqNvi">
+                  <ref role="37wK5l" to="t4tl:~DclareForMPSEngine.getDClareMPS()" resolve="getDClareMPS" />
+                </node>
               </node>
             </node>
           </node>
