@@ -235,7 +235,11 @@ public interface DAttribute<O, T> extends DFeature {
             if (object == null) {
                 throw new NullPointerException("attempt to read null." + this);
             }
-            return object.get(this);
+            V result = object.get(this);
+            if (result == null) {
+                throw new NullPointerException(object + "." + this + "=" + result);
+            }
+            return result;
         }
 
         public int index() {

@@ -470,7 +470,7 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
                         String.format("%-5s: %-20s [%d changes]", "run", feature(r.observer()), r.nrOfChanges()))), //
                 (m, r, s) -> m.addSubMessage(new DMessage((DObject) s.mutable(), (DObserved) s.observed(), DMessageType.error, //
                         String.format("%-5s: %-20s = %s", "read", s.observed(), r.read().get(s)))), //
-                (m, w, s) -> m.subMessages().last().addSubMessage(new DMessage((DObject) s.mutable(), (DObserved) s.observed(), DMessageType.error, //
+                (m, w, s) -> m.addSubMessage(new DMessage((DObject) s.mutable(), (DObserved) s.observed(), DMessageType.error, //
                         String.format("%-5s: %-20s = %s", "write", s.observed(), w.written().get(s)))), //
                 m -> m.subMessages().last(), universeTransaction().stats().maxNrOfChanges());
         addMessage(message);
@@ -1013,7 +1013,7 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
     }
 
     public void deriveLazy() {
-        imperativeState().deriveLazy(this::handleMPSDelta);
+        universeTransaction.deriveLazy();
     }
 
     private static String render(Object o) {
