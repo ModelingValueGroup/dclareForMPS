@@ -56,6 +56,7 @@ import org.modelingvalue.collections.util.ContextThread.ContextPool;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.collections.util.Triple;
 import org.modelingvalue.dclare.*;
+import org.modelingvalue.dclare.Priority.Queued;
 import org.modelingvalue.dclare.UniverseTransaction.Status;
 import org.modelingvalue.dclare.ex.*;
 import org.modelingvalue.dclare.mps.DAttribute.DObservedAttribute;
@@ -807,15 +808,19 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
         changeHandlers.init(Map.of());
     }
 
+    private void handleMPSDelta(State imper, State dclare) {
+        handleMPSDelta(imper, dclare, true, ImperativeTransaction.SETTED_MAP);
+    }
+
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public void handleMPSDelta(State imper, State dclare, boolean last, DefaultMap<Object, Set<Setable>> setted) {
+    private void handleMPSDelta(State imper, State dclare, boolean last, DefaultMap<Object, Set<Setable>> setted) {
         if (isRunning() && !universeTransaction.isKilled()) {
             if (config.isTraceDclare()) {
                 System.err.println(DclareTrace.getLineStart("COMMIT", mpsTransaction) + "START " + this);
             }
             boolean changed = false;
             Map<DObject, Map<DObserved, Pair<Object, Object>>>[] diff = new Map[]{imper.diff(dclare, //
-                    o -> o instanceof DObject && ((DObject) o).isActive() && !((DObject) o).isDclareOnly(), //
+                    o -> o instanceof DObject && ((DObject) o).isActive(dclare) && ((DObject) o).getMPSModule(dclare) != null, //
                     s -> s instanceof DObserved && !((DObserved) s).isDclareOnly()).asMap(e -> (Entry) e)};
             if (!diff[0].isEmpty()) {
                 changed = true;
@@ -829,7 +834,8 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
                 if (!setted.isEmpty()) {
                     changed = true;
                     read(() -> {
-                        for (DObject dObject : setted.filter(e -> e.getValue().anyMatch(s -> s instanceof DObserved && !((DObserved) s).isDclareOnly())).map(Entry::getKey).filter(DObject.class)) {
+                        for (DObject dObject : setted.filter(e -> e.getValue().anyMatch(s -> s instanceof DObserved && //
+                                !((DObserved) s).isDclareOnly())).map(Entry::getKey).filter(DObject.class)) {
                             addToChanged(dObject);
                         }
                     });
@@ -1030,7 +1036,7 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
             }
             if (dObject.isExternal()) {
                 return state.derive(supplier, universeTransaction().constantState());
-            } else if (dObject.isActive() && isRunning()) {
+            } else if (dObject.isActive(state) && isRunning()) {
                 try {
                     if (Thread.currentThread() == commandThread) {
                         return LeafTransaction.getContext().get(mpsTransaction, supplier);
@@ -1132,6 +1138,15 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
             }
             return txid;
         }
+
+        @Override
+        protected State deriveLazy(Universe universe) {
+            ActionTransaction current = (ActionTransaction) LeafTransaction.getCurrent();
+            State pre = current.state();
+            State post = super.deriveLazy(universe);
+            mpsTransaction.schedule(() -> handleMPSDelta(pre, post));
+            return post;
+        }
     }
 
     private static final class MPSState extends State {
@@ -1140,6 +1155,17 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
         @SuppressWarnings("rawtypes")
         private MPSState(UniverseTransaction universeTransaction, StateMap stateMap) {
             super(universeTransaction, stateMap);
+        }
+
+        @SuppressWarnings("rawtypes")
+        private MPSState(UniverseTransaction universeTransaction, DefaultMap<Object, DefaultMap<Setable, Object>> map, Queued<Action<?>>[] actions, Queued<Mutable>[] children) {
+            super(universeTransaction, map, actions, children);
+        }
+
+        @SuppressWarnings("rawtypes")
+        @Override
+        protected State createState(DefaultMap<Object, DefaultMap<Setable, Object>> newMap, Queued<Action<?>>[] actions, Queued<Mutable>[] children) {
+            return new MPSState(universeTransaction(), newMap, actions, children);
         }
 
         @SuppressWarnings({"unchecked", "rawtypes"})
@@ -1186,13 +1212,12 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
         }
 
         private <O> boolean getFromMPS(O object) {
-            return object instanceof DObject && !isPreState() && //
-                    (ObserverTransaction.RIPPLE_OUT.get() || (LeafTransaction.getCurrent() instanceof IdentityDerivationTransaction));
+            return object instanceof DObject && !isPreState() && LeafTransaction.getCurrent() instanceof AbstractDerivationTransaction;
         }
 
         private boolean isPreState() {
             UniverseTransaction utx = universeTransaction();
-            return this == utx.preState() || this == utx.preStartState(Priority.OUTER).state();
+            return this == utx.preState() || this == utx.emptyState() || this == utx.preStartState(Priority.OUTER).state();
         }
     }
 

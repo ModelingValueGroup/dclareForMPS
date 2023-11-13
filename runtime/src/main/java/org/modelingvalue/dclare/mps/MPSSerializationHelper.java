@@ -27,8 +27,10 @@ import org.jetbrains.mps.openapi.module.SModule;
 import org.jetbrains.mps.openapi.module.SModuleId;
 import org.jetbrains.mps.openapi.persistence.PersistenceFacade;
 import org.modelingvalue.collections.List;
+import org.modelingvalue.dclare.LeafTransaction;
 import org.modelingvalue.dclare.Mutable;
 import org.modelingvalue.dclare.Setable;
+import org.modelingvalue.dclare.State;
 import org.modelingvalue.dclare.mps.DAttribute.DObservedAttribute;
 import org.modelingvalue.dclare.sync.Converters;
 import org.modelingvalue.dclare.sync.SerialisationPool.BaseConverter;
@@ -56,15 +58,24 @@ public class MPSSerializationHelper extends SerializationHelperWithPool<DObjectT
         return PersistenceFacade.getInstance();
     }
 
+    @SuppressWarnings("rawtypes")
     @Override
     public Predicate<Mutable> mutableFilter() {
         return m -> {
-            boolean ret = false;
-            DModel model = m.dAncestor(DModel.class);
-            if (model == null || model.isShared()) {
-                ret = (m instanceof DModel || m instanceof DNode || m instanceof DServerMetaData) && ((DObject) m).isActive() && !((DObject) m).isDclareOnly();
+            if (m instanceof DServerMetaData) {
+                State state = LeafTransaction.getCurrent().current();
+                return ((DServerMetaData) m).isActive(state);
             }
-            return ret;
+            if (m instanceof DNode) {
+                State state = LeafTransaction.getCurrent().current();
+                DModel model = m.dAncestor(state, DModel.class, s -> s instanceof DObserved && !((DObserved) s).isDclareOnly());
+                return model != null && model.isActive(state) && model.isShared();
+            }
+            if (m instanceof DModel) {
+                State state = LeafTransaction.getCurrent().current();
+                return ((DModel) m).isActive(state) && ((DModel) m).isShared();
+            }
+            return false;
         };
     }
 

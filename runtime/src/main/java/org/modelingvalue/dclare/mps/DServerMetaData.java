@@ -67,4 +67,9 @@ public class DServerMetaData extends DObject {
         throw new UnsupportedOperationException();
     }
 
+    @Override
+    protected boolean isDclareOnly() {
+        return true;
+    }
+
 }

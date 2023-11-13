@@ -135,7 +135,7 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     private static final DObserved<DModel, Boolean>                              SHARED                     = DObserved.of("SHARED", Boolean.FALSE, null, null, (tx, m, b, a) -> {
-                                                                                                                DServerMetaData smd = dClareMPS().getServerMetaData();
+                                                                                                                DServerMetaData smd = dClareMPS(tx).getServerMetaData();
                                                                                                                 if (a) {
                                                                                                                     SHARED_MODELS.add(smd, m);
                                                                                                                 } else {

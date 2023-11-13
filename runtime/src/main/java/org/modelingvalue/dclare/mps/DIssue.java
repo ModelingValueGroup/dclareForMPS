@@ -161,7 +161,7 @@ public class DIssue extends DIdentifiedObject {
     }
 
     @Override
-    public boolean isDclareOnly() {
+    protected boolean isDclareOnly() {
         return true;
     }
 

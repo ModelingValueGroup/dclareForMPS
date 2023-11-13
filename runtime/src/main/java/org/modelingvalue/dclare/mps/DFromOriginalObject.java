@@ -54,4 +54,9 @@ public abstract class DFromOriginalObject<O> extends DObject {
         return true;
     }
 
+    @Override
+    protected boolean isDclareOnly() {
+        return false;
+    }
+
 }

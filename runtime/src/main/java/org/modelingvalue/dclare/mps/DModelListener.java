@@ -31,6 +31,7 @@ import org.jetbrains.mps.openapi.module.SRepository;
 import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
+import org.modelingvalue.dclare.LeafTransaction;
 
 import jetbrains.mps.project.DevKit;
 import jetbrains.mps.smodel.MPSModuleRepository;
@@ -112,7 +113,7 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
             DNode dNode = DNode.of(sNode.getConcept(), ref, sNode);
             if (event.isRoot()) {
                 DModel dModel = DModel.of(event.getModel());
-                if (a().isShared() || DObject.READ_OBSERVEDS.get(dModel).contains(DModel.ROOTS) || dNode.isActive()) {
+                if (a().isShared() || DObject.READ_OBSERVEDS.get(dModel).contains(DModel.ROOTS) || dNode.isActive(LeafTransaction.getCurrent().current())) {
                     DModel.ROOTS.set(dModel, Set::remove, dNode);
                 }
             } else {
@@ -120,12 +121,12 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
                 DNode changed = DNode.of(event.getParent());
                 if (al.isMultiple()) {
                     DObserved<DNode, List<DNode>> dObserved = DNode.MANY_CONTAINMENT.get(al);
-                    if (a().isShared() || DObject.READ_OBSERVEDS.get(changed).contains(dObserved) || dNode.isActive()) {
+                    if (a().isShared() || DObject.READ_OBSERVEDS.get(changed).contains(dObserved) || dNode.isActive(LeafTransaction.getCurrent().current())) {
                         dObserved.set(changed, List::remove, dNode);
                     }
                 } else {
                     DObserved<DNode, DNode> dObserved = DNode.SINGLE_CONTAINMENT.get(al);
-                    if (a().isShared() || DObject.READ_OBSERVEDS.get(changed).contains(dObserved) || dNode.isActive()) {
+                    if (a().isShared() || DObject.READ_OBSERVEDS.get(changed).contains(dObserved) || dNode.isActive(LeafTransaction.getCurrent().current())) {
                         dObserved.set(changed, (v, e) -> e.equals(v) ? null : v, dNode);
                     }
                 }

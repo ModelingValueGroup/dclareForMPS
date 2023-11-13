@@ -106,7 +106,7 @@ public class DStructObject extends DIdentifiedObject implements SStructObject {
     }
 
     @Override
-    public boolean isDclareOnly() {
+    protected boolean isDclareOnly() {
         return true;
     }
 
