@@ -12352,6 +12352,7 @@
   <node concept="2Rb1jd" id="3HJBHARsh6E">
     <property role="TrG5h" value="DIAGRAM" />
     <property role="3GE5qa" value="diagrams" />
+    <property role="2bPw2W" value="true" />
     <node concept="2RaPxm" id="3HJBHARtGgi" role="2RaPxw">
       <ref role="2RaPxn" node="WHdioYVYbd" resolve="GUI" />
     </node>
