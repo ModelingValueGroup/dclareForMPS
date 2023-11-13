@@ -15,7 +15,7 @@
 
 package org.modelingvalue.dclare.mps;
 
-import static org.modelingvalue.dclare.SetableModifier.*;
+import static org.modelingvalue.dclare.CoreSetableModifier.*;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -162,7 +162,7 @@ public abstract class DObject implements Mutable {
     @SuppressWarnings("unchecked")
     public static Set<DObject> getDObjectSet(Object v) {
         if (v instanceof Collection) {
-            return ((Collection) v).toSet();
+            return ((Collection) v).asSet();
         } else if (v instanceof java.util.Collection) {
             return Set.of((java.util.Collection) v);
         } else {
@@ -206,11 +206,11 @@ public abstract class DObject implements Mutable {
 
     protected abstract DObjectType<?> getType();
 
-    public static <O extends DObject> NonCheckingObserver<O> observer(String id, Consumer<O> action, LeafModifier... modifiers) {
+    public static <O extends DObject> NonCheckingObserver<O> observer(String id, Consumer<O> action, LeafModifier<?>... modifiers) {
         return NonCheckingObserver.of(id, action, modifiers);
     }
 
-    public static <O extends DObject, V> NonCheckingObserver<O> observer(Setable<O, V> setable, Function<O, V> value, LeafModifier... modifiers) {
+    public static <O extends DObject, V> NonCheckingObserver<O> observer(Setable<O, V> setable, Function<O, V> value, LeafModifier<?>... modifiers) {
         return NonCheckingObserver.of(setable, value, modifiers);
     }
 
@@ -227,6 +227,16 @@ public abstract class DObject implements Mutable {
     public ConstantState dMemoization(AbstractDerivationTransaction tx) {
         ConstantState constantState = tx.universeTransaction().constantState();
         return constantState.isSet(tx, this, Mutable.D_PARENT_CONTAINING.constant()) || isExternal() ? constantState : Mutable.super.dMemoization(tx);
+    }
+
+    @Override
+    public boolean dIsOrphan(State state) {
+        return Mutable.super.dIsOrphan(state) && !isExternal() && !isConstantContained();
+    }
+
+    private boolean isConstantContained() {
+        LeafTransaction tx = LeafTransaction.getCurrent();
+        return tx.universeTransaction().constantState().isSet(tx, this, Mutable.D_PARENT_CONTAINING.constant());
     }
 
     public abstract boolean isExternal();

@@ -15,8 +15,8 @@
 
 package org.modelingvalue.dclare.mps;
 
-import static org.modelingvalue.dclare.SetableModifier.containment;
-import static org.modelingvalue.dclare.SetableModifier.plumbing;
+import static org.modelingvalue.dclare.CoreSetableModifier.containment;
+import static org.modelingvalue.dclare.CoreSetableModifier.plumbing;
 
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -51,21 +51,25 @@ public class DRepository extends DFromOriginalObject<ProjectRepository> implemen
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     protected static final DObserved<DRepository, Set<DModule>>                   MODULES                             = DObserved.of("MODULES", Set.of(), r -> {
-                                                                                                                          return Collection.of(dClareMPS().project.getProjectModules()).map(DModule::of).toSet();
+                                                                                                                          return Collection.of(dClareMPS().project.getProjectModules()).map(DModule::of).asSet();
                                                                                                                       }, null, containment);
 
     public static final Constant<DRepository, Set<SLanguage>>                     ALL_LANGUAGES_WITH_RULES            = Constant.of("ALL_LANGUAGES_WITH_RULES", Set.of(), r -> {
-                                                                                                                          return MODULES.get(r).flatMap(m -> DModule.LANGUAGES_WITH_RULES.get(m)).toSet();
+                                                                                                                          return MODULES.get(r).flatMap(m -> DModule.LANGUAGES_WITH_RULES.get(m)).asSet();
+                                                                                                                      });
+
+    public static final Constant<DRepository, Set<SLanguage>>                     ALL_LANGUAGES                       = Constant.of("ALL_LANGUAGES", Set.of(), r -> {
+                                                                                                                          return MODULES.get(r).flatMap(m -> DModule.LANGUAGES.get(m)).asSet();
                                                                                                                       });
     @SuppressWarnings({"unchecked", "rawtypes"})
     protected static final Observed<DRepository, Set<SLanguage>>                  CONTAINED_LANGUAGES_WITH_RULES      = Observed.of("CONTAINED_LANGUAGES_WITH_RULES", Set.of());
 
     public static final Constant<DRepository, List<IAspect>>                      ALL_ASPECTS                         = Constant.of("ALL_ASPECTS", List.of(), r -> {
-                                                                                                                          return ALL_LANGUAGES_WITH_RULES.get(r).flatMap(l -> DClareMPS.ASPECTS.get(l)).sortedBy(IAspect::getName).toList();
+                                                                                                                          return ALL_LANGUAGES.get(r).flatMap(l -> DClareMPS.ASPECTS.get(l)).sortedBy(IAspect::getName).asList();
                                                                                                                       });
 
     public static final Constant<DRepository, QualifiedSet<String, INativeGroup>> ALL_NATIVE_GROUPS                   = Constant.of("ALL_NATIVE_GROUPS", QualifiedSet.of(INativeGroup::getId), r -> {
-                                                                                                                          return ALL_LANGUAGES_WITH_RULES.get(r).flatMap(l -> DClareMPS.NATIVE_GROUPS.get(l)).toQualifiedSet(INativeGroup::getId);
+                                                                                                                          return ALL_LANGUAGES_WITH_RULES.get(r).flatMap(l -> DClareMPS.NATIVE_GROUPS.get(l)).asQualifiedSet(INativeGroup::getId);
                                                                                                                       });
 
     @SuppressWarnings({"rawtypes", "unchecked"})
@@ -74,7 +78,7 @@ public class DRepository extends DFromOriginalObject<ProjectRepository> implemen
     protected static final Setable<DRepository, Set<IssueKindReportItem>>         ALL_MPS_ISSUES                      = Setable.of("$ALL_MPS_ISSUES", Set.of());
 
     private static final Observer<DRepository>                                    CONTAINED_LANGUAGES_WITH_RULES_RULE = DObject.observer(CONTAINED_LANGUAGES_WITH_RULES, r -> {
-                                                                                                                          return ALL_LANGUAGES_WITH_RULES.get(r).filter(r::isContainedLanguage).toSet();
+                                                                                                                          return ALL_LANGUAGES_WITH_RULES.get(r).filter(r::isContainedLanguage).asSet();
                                                                                                                       });
 
     @SuppressWarnings("rawtypes")

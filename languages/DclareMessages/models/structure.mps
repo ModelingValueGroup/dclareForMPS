@@ -3,12 +3,39 @@
   <persistence version="9" />
   <languages>
     <use id="c72da2b9-7cce-4447-8389-f407dc1158b7" name="jetbrains.mps.lang.structure" version="9" />
+    <use id="ce36526d-d793-4b8b-88e9-d1815f616441" name="DclareGui" version="0" />
     <devkit ref="78434eb8-b0e5-444b-850d-e7c4ad2da9ab(jetbrains.mps.devkit.aspect.structure)" />
   </languages>
   <imports>
     <import index="tpck" ref="r:00000000-0000-4000-0000-011c89590288(jetbrains.mps.lang.core.structure)" implicit="true" />
   </imports>
   <registry>
+    <language id="ce36526d-d793-4b8b-88e9-d1815f616441" name="DclareGui">
+      <concept id="3484711917226236494" name="DclareGui.structure.NodeLayout" flags="ng" index="2iyNl8">
+        <property id="3484711917226236527" name="x" index="2iyNlD" />
+        <property id="3484711917226236529" name="y" index="2iyNlR" />
+        <reference id="3484711917226236495" name="node" index="2iyNl9" />
+        <child id="3484711917226236562" name="edges" index="2iyNmk" />
+      </concept>
+      <concept id="3484711917226236493" name="DclareGui.structure.IDiagram" flags="ng" index="2iyNlb">
+        <child id="3484711917226236497" name="nodes" index="2iyNln" />
+      </concept>
+      <concept id="3484711917226236502" name="DclareGui.structure.JointLayout" flags="ng" index="2iyNlg">
+        <property id="3484711917226238919" name="x" index="2iyKN1" />
+        <property id="3484711917226238921" name="y" index="2iyKNf" />
+      </concept>
+      <concept id="3484711917226236499" name="DclareGui.structure.EdgeLayout" flags="ng" index="2iyNll">
+        <reference id="3484711917226236500" name="association" index="2iyNli" />
+        <child id="3484711917226238916" name="joints" index="2iyKN2" />
+      </concept>
+      <concept id="7047795444050573225" name="DclareGui.structure.ConceptRef" flags="ng" index="3PzJGO">
+        <reference id="7047795444050573226" name="concept" index="3PzJGR" />
+      </concept>
+      <concept id="7047795444050361669" name="DclareGui.structure.ConceptDiagram" flags="ng" index="3PWz7o">
+        <property id="1206108215291310920" name="manual" index="5CCp0" />
+        <child id="7047795444050399797" name="concepts" index="3PWPUC" />
+      </concept>
+    </language>
     <language id="c72da2b9-7cce-4447-8389-f407dc1158b7" name="jetbrains.mps.lang.structure">
       <concept id="3348158742936976480" name="jetbrains.mps.lang.structure.structure.EnumerationMemberDeclaration" flags="ng" index="25R33">
         <property id="1421157252384165432" name="memberId" index="3tVfz5" />
@@ -122,6 +149,11 @@
       <property role="IQ2nx" value="1908077416936321141" />
       <property role="TrG5h" value="on" />
       <ref role="AX2Wp" to="tpck:fKAQMTB" resolve="boolean" />
+    </node>
+    <node concept="1TJgyi" id="5kd$Q1Hmv2c" role="1TKVEl">
+      <property role="IQ2nx" value="6128716710281867404" />
+      <property role="TrG5h" value="onDemand" />
+      <ref role="AX2Wp" to="tpck:fKAOsGN" resolve="string" />
     </node>
     <node concept="1TJgyj" id="7e_PmaZxgoQ" role="1TKVEi">
       <property role="IQ2ns" value="8333301305615648310" />
@@ -255,6 +287,11 @@
       <property role="TrG5h" value="id" />
       <ref role="AX2Wp" to="tpck:fKAOsGN" resolve="string" />
     </node>
+    <node concept="1TJgyi" id="4gWpyuY4FS3" role="1TKVEl">
+      <property role="IQ2nx" value="4916917214060396035" />
+      <property role="TrG5h" value="onDemand" />
+      <ref role="AX2Wp" to="tpck:fKAQMTB" resolve="boolean" />
+    </node>
     <node concept="PrWs8" id="3gm2YTwH79F" role="PzmwI">
       <ref role="PrY4T" to="tpck:h0TrEE$" resolve="INamedConcept" />
     </node>
@@ -293,6 +330,115 @@
     </node>
     <node concept="PrWs8" id="RraJETgzZX" role="PzmwI">
       <ref role="PrY4T" to="tpck:h0TrEE$" resolve="INamedConcept" />
+    </node>
+  </node>
+  <node concept="3PWz7o" id="67eN9QkCj6Y">
+    <property role="TrG5h" value="digram" />
+    <property role="5CCp0" value="true" />
+    <node concept="2iyNl8" id="67eN9QkCtpA" role="2iyNln">
+      <property role="2iyNlD" value="180" />
+      <property role="2iyNlR" value="64" />
+      <ref role="2iyNl9" node="7e_PmaZxgoP" resolve="MessageSet" />
+      <node concept="2iyNll" id="67eN9QkCtpF" role="2iyNmk">
+        <ref role="2iyNli" node="7e_PmaZxgoQ" resolve="errors" />
+      </node>
+      <node concept="2iyNll" id="67eN9QkCtpG" role="2iyNmk">
+        <ref role="2iyNli" node="30f$n$3bYxD" resolve="warnings" />
+        <node concept="2iyNlg" id="67eN9QkCtqg" role="2iyKN2">
+          <property role="2iyKN1" value="60" />
+          <property role="2iyKNf" value="320" />
+        </node>
+      </node>
+      <node concept="2iyNll" id="67eN9QkCtpH" role="2iyNmk">
+        <ref role="2iyNli" node="30f$n$3bYxH" resolve="infos" />
+        <node concept="2iyNlg" id="67eN9QkCtqt" role="2iyKN2">
+          <property role="2iyKN1" value="40" />
+          <property role="2iyKNf" value="60" />
+        </node>
+        <node concept="2iyNlg" id="67eN9QkCtqv" role="2iyKN2">
+          <property role="2iyKN1" value="40" />
+          <property role="2iyKNf" value="400" />
+        </node>
+      </node>
+      <node concept="2iyNll" id="67eN9QkCtpI" role="2iyNmk">
+        <ref role="2iyNli" node="30f$n$3bYxM" resolve="debugs" />
+        <node concept="2iyNlg" id="67eN9QkCtqb" role="2iyKN2">
+          <property role="2iyKN1" value="320" />
+          <property role="2iyKNf" value="320" />
+        </node>
+      </node>
+      <node concept="2iyNll" id="67eN9QkCtpJ" role="2iyNmk">
+        <ref role="2iyNli" node="3gm2YTwH79v" resolve="aspects" />
+      </node>
+      <node concept="2iyNll" id="67eN9QkCtpK" role="2iyNmk">
+        <ref role="2iyNli" node="RraJETgzZZ" resolve="models" />
+      </node>
+    </node>
+    <node concept="2iyNl8" id="67eN9QkCtpB" role="2iyNln">
+      <property role="2iyNlD" value="594" />
+      <property role="2iyNlR" value="359" />
+      <ref role="2iyNl9" node="3_wkb9eGwqx" resolve="AspectSettingDependency" />
+      <node concept="2iyNll" id="67eN9QkCtpM" role="2iyNmk">
+        <ref role="2iyNli" node="3_wkb9eGwqy" resolve="aspect" />
+      </node>
+    </node>
+    <node concept="2iyNl8" id="67eN9QkCtpC" role="2iyNln">
+      <property role="2iyNlD" value="440" />
+      <property role="2iyNlR" value="360" />
+      <ref role="2iyNl9" node="RraJETgzZW" resolve="ModelSettings" />
+      <node concept="2iyNll" id="67eN9QkVrxj" role="2iyNmk">
+        <ref role="2iyNli" to="tpck:h0TrEE$" resolve="INamedConcept" />
+      </node>
+    </node>
+    <node concept="2iyNl8" id="67eN9QkCtpD" role="2iyNln">
+      <property role="2iyNlD" value="180" />
+      <property role="2iyNlR" value="344" />
+      <ref role="2iyNl9" node="7e_PmaZxfwQ" resolve="Message" />
+      <node concept="2iyNll" id="67eN9QkCtpN" role="2iyNmk">
+        <ref role="2iyNli" node="7e_PmaZxfxA" resolve="children" />
+        <node concept="2iyNlg" id="67eN9QkFevl" role="2iyKN2">
+          <property role="2iyKN1" value="400" />
+          <property role="2iyKNf" value="420" />
+        </node>
+        <node concept="2iyNlg" id="67eN9QkFhWs" role="2iyKN2">
+          <property role="2iyKN1" value="180" />
+          <property role="2iyKNf" value="460" />
+        </node>
+      </node>
+    </node>
+    <node concept="2iyNl8" id="67eN9QkCtpE" role="2iyNln">
+      <property role="2iyNlD" value="591" />
+      <property role="2iyNlR" value="61" />
+      <ref role="2iyNl9" node="3gm2YTwH79_" resolve="AspectSettings" />
+      <node concept="2iyNll" id="67eN9QkVrxk" role="2iyNmk">
+        <ref role="2iyNli" to="tpck:h0TrEE$" resolve="INamedConcept" />
+      </node>
+      <node concept="2iyNll" id="67eN9QkCtpL" role="2iyNmk">
+        <ref role="2iyNli" node="3_wkb9eGAzO" resolve="dependencies" />
+      </node>
+    </node>
+    <node concept="2iyNl8" id="67eN9QkVrxi" role="2iyNln">
+      <property role="2iyNlD" value="440" />
+      <property role="2iyNlR" value="200" />
+      <ref role="2iyNl9" to="tpck:h0TrEE$" resolve="INamedConcept" />
+    </node>
+    <node concept="3PzJGO" id="67eN9QkCtnY" role="3PWPUC">
+      <ref role="3PzJGR" node="7e_PmaZxgoP" resolve="MessageSet" />
+    </node>
+    <node concept="3PzJGO" id="67eN9QkCtnZ" role="3PWPUC">
+      <ref role="3PzJGR" node="3_wkb9eGwqx" resolve="AspectSettingDependency" />
+    </node>
+    <node concept="3PzJGO" id="67eN9QkCto0" role="3PWPUC">
+      <ref role="3PzJGR" node="RraJETgzZW" resolve="ModelSettings" />
+    </node>
+    <node concept="3PzJGO" id="67eN9QkCto1" role="3PWPUC">
+      <ref role="3PzJGR" node="7e_PmaZxfwQ" resolve="Message" />
+    </node>
+    <node concept="3PzJGO" id="67eN9QkCto2" role="3PWPUC">
+      <ref role="3PzJGR" node="3gm2YTwH79_" resolve="AspectSettings" />
+    </node>
+    <node concept="3PzJGO" id="67eN9QkVrxb" role="3PWPUC">
+      <ref role="3PzJGR" to="tpck:h0TrEE$" resolve="INamedConcept" />
     </node>
   </node>
 </model>

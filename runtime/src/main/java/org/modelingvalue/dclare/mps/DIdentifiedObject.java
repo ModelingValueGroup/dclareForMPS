@@ -72,11 +72,11 @@ public abstract class DIdentifiedObject extends DObject {
     }
 
     public Set<String> getAnonymousTypes() {
-        return deriveReasons().filter(DQuotation.class).map(DDerive::anonymousType).notNull().toSet();
+        return deriveReasons().filter(DQuotation.class).map(DDerive::anonymousType).notNull().asSet();
     }
 
     public Set<SLanguage> getAnonymousLanguages() {
-        return deriveReasons().filter(DQuotation.class).map(DDerive::aspect).flatMap(d -> IAspect.ALL_DEPENDENCIES.get(d)).map(IAspect::getLanguage).toSet();
+        return deriveReasons().filter(DQuotation.class).map(DDerive::aspect).flatMap(d -> IAspect.ALL_DEPENDENCIES.get(d)).map(IAspect::getLanguage).asSet();
     }
 
     protected static <D extends DIdentifiedObject> D quotationConstruct(IRuleSet ruleSet, String anonymousType, Object[] ctx, Supplier<D> supplier) {

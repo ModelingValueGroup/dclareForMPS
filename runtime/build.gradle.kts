@@ -18,9 +18,9 @@ plugins {
     `maven-publish`
 }
 dependencies {
-    implementation("org.modelingvalue:mvg-json:3.1.0-BRANCHED")
-    implementation("org.modelingvalue:immutable-collections:3.1.0-BRANCHED")
-    implementation("org.modelingvalue:dclare:3.1.0-BRANCHED")
+    implementation("org.modelingvalue:mvg-json:4.0.0-BRANCHED")
+    implementation("org.modelingvalue:immutable-collections:4.0.0-BRANCHED")
+    implementation("org.modelingvalue:dclare:4.0.0-BRANCHED")
 
     compileOnly(mpsJar("debugger-api"))
     compileOnly(mpsJar("forms_rt"))
@@ -33,7 +33,8 @@ dependencies {
     compileOnly(mpsJar("mps-openapi"))
     compileOnly(mpsJar("mps-platform"))
     compileOnly(mpsJar("mps-project-check"))
-    compileOnly(mpsJar("platform-api"))
+    compileOnly(mpsJar("mps-platform"))
+    compileOnly(mpsJar("app"))
     compileOnly(mpsJar("util"))
 }
 publishing {

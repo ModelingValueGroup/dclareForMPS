@@ -31,7 +31,7 @@ public abstract class DMethod<R> implements DFeature {
     private static final Constant<Pair<String, Signature>, DMethod> D_METHOD        = Constant.of("D_METHOD", p -> {
                                                                                         Set<SLanguage> langs = DRepository.ALL_LANGUAGES_WITH_RULES.get(DClareMPS.instance().getRepository());
                                                                                         for (DMethod method : DClareMPS.METHOD_MAP.get(langs).get(Pair.of(p.a(), p.b().size()))) {
-                                                                                            if (p.b().isSubOf(method.signature())) {
+                                                                                            if (p.b().isSubOf(method.signature(), true)) {
                                                                                                 return method;
                                                                                             }
                                                                                         }

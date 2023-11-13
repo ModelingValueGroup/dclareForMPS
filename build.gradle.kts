@@ -21,12 +21,12 @@ defaultTasks(
 )
 plugins {
     id("org.modelingvalue.gradle.mvgplugin") version "1.1.3"
-    id("com.dorongold.task-tree") version "2.1.1" // to get a task-tree generation task
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // import ant file:
 try {
+    val version_mps: String by project
     if (!mvgmps.mpsInstallDir.isDirectory)
         throw GradleException("You need to first run './gradlew --build-file bootstrap.gradle.kts' to download MPS")
 
@@ -35,6 +35,7 @@ try {
     ant.setProperty("version", version)
     ant.setProperty("versionExtra", mvgmps.versionExtra)
     ant.setProperty("versionStamp", mvgmps.versionStamp)
+    ant.setProperty("version_mps", version_mps)
 // WORKAROUND START (see https://youtrack.jetbrains.com/issue/MPS-34059)
 //     for UTF-8 chars used in MPS: add file.encoding to jvmargs, crude but works for now
     val antScript = resources.text.fromString(gradle.rootProject.projectDir.resolve("mps_build.xml").readLines().joinToString(separator = System.lineSeparator()) {
@@ -65,15 +66,23 @@ try {
             ant.setProperty("versionStamp", mvgmps.versionStamp)
         }
     }
-    val cleanGenDirs = tasks.create("clean_gen_dirs") {
+    val clean_gen_dirs = tasks.create("clean_gen_dirs") {
         group = "build"
         doLast {
-            listOf("languages", "solutions").forEach { d ->
-                File(d).walkTopDown().filter {
+            listOf("languages", "solutions").forEach {
+                val d = project.projectDir.resolve(it)
+                println("INFO: cleaning all _gen dirs from: $d")
+                d.walkTopDown().filter {
                     it.name.contains("_gen")
                 }.forEach {
                     it.deleteRecursively()
                 }
+            }
+            val buildDir = project.projectDir.resolve("build")
+            listOf("tmp", "artifacts").forEach {
+                val d = buildDir.resolve(it)
+                println("INFO: cleaning from build dir: $d")
+                d.deleteRecursively()
             }
         }
     }
@@ -83,14 +92,14 @@ try {
     }
     tasks.create("clean") {
         group = "build"
-        dependsOn(cleanGenDirs)
+        dependsOn(clean_gen_dirs)
     }
     tasks.create("publish") {
         group = "publishing"
         dependsOn(tasks.named("mpsant-assemble"))
     }
 } catch (e: Exception) {
-    println("problem with importing ant: $e")
+    println("problem with import of ant file mps_build.xml: " + e)
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // upload plugin to jetbrains

@@ -30,19 +30,19 @@ public class DModuleType extends DObjectType<Set<SLanguage>> {
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
-        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getModuleRules())).toSet();
+        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getModuleRules())).asSet();
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
     public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
-        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getModuleAttributes())).toSet();
+        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getModuleAttributes())).asSet();
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
     public Set<INative> getNatives(Set<IRuleSet> ruleSets) {
-        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getModuleNatives())).toSet();
+        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getModuleNatives())).asSet();
     }
 
     @Override

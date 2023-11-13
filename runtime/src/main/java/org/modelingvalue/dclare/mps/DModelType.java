@@ -31,19 +31,19 @@ public class DModelType extends DObjectType<Pair<Set<SLanguage>, Set<String>>> {
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     public Set<DRule> getRules(Set<IRuleSet> ruleSets) {
-        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getModelRules(getAnonymousTypes()))).toSet();
+        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getModelRules(getAnonymousTypes()))).asSet();
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
     public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
-        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getModelAttributes(getAnonymousTypes()))).toSet();
+        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getModelAttributes(getAnonymousTypes()))).asSet();
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
     public Set<INative> getNatives(Set<IRuleSet> ruleSets) {
-        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getModelNatives(getAnonymousTypes()))).toSet();
+        return (Set) ruleSets.flatMap(rs -> Collection.of(rs.getModelNatives(getAnonymousTypes()))).asSet();
     }
 
     @Override

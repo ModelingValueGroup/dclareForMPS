@@ -15,7 +15,7 @@
 
 package org.modelingvalue.dclare.mps;
 
-import static org.modelingvalue.dclare.SetableModifier.containment;
+import static org.modelingvalue.dclare.CoreSetableModifier.containment;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -56,7 +56,7 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
     private static final Constant<Set<SLanguage>, DModuleType> MODULE_TYPE          = Constant.of("MODULE_TYPE", DModuleType::new);
 
     public static final DObserved<DModule, Set<DModel>>        MODELS               = DObserved.of("MODELS", Set.of(), m -> {
-                                                                                        return m.models().map(DModel::of).toSet();
+                                                                                        return m.models().map(DModel::of).asSet();
                                                                                     }, (m, pre, post) -> {
                                                                                         if (m.isSolution()) {
                                                                                             SModule sModule = m.original();
@@ -73,15 +73,15 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
                                                                                     }, containment);
 
     public static final DObserved<DModule, Set<SLanguage>>     LANGUAGES            = DObserved.of("LANGUAGES", Set.of(), m -> {
-                                                                                        return Collection.of(m.original().getUsedLanguages()).toSet();
+                                                                                        return Collection.of(m.original().getUsedLanguages()).asSet();
                                                                                     }, null);
 
     public static final DObserved<DModule, Set<DDependency>>   DEPENDENCIES         = DObserved.of("DEPENDENCIES", Set.of(), m -> {
-                                                                                        return Collection.of(m.original().getDeclaredDependencies()).map(DDependency::new).toSet();
+                                                                                        return Collection.of(m.original().getDeclaredDependencies()).map(DDependency::new).asSet();
                                                                                     }, null);
 
     public static final Constant<DModule, Set<SLanguage>>      LANGUAGES_WITH_RULES = Constant.of("LANGUAGES_WITH_RULE_ASPECT", Set.of(), m -> {
-                                                                                        return LANGUAGES.get(m).filter(l -> !DClareMPS.ACTIVE_RULE_SETS.get(l).isEmpty()).toSet();
+                                                                                        return LANGUAGES.get(m).filter(l -> !DClareMPS.ACTIVE_RULE_SETS.get(l).isEmpty()).asSet();
                                                                                     });
     @SuppressWarnings("rawtypes")
     protected static final Set<Observer>                       OBSERVERS            = DObject.OBSERVERS;
@@ -211,7 +211,7 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
     }
 
     public void setModels(Iterable<DModel> models) {
-        MODELS.set(this, Collection.of(models).notNull().map(DModel::of).toSet());
+        MODELS.set(this, Collection.of(models).notNull().map(DModel::of).asSet());
     }
 
     @Override
