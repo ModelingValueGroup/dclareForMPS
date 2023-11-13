@@ -238,6 +238,9 @@
         <child id="1175517851849" name="errorString" index="2MkJ7o" />
       </concept>
       <concept id="1179832490862" name="jetbrains.mps.lang.typesystem.structure.CreateStrongLessThanInequationStatement" flags="nn" index="2NvLDW" />
+      <concept id="1227096498176" name="jetbrains.mps.lang.typesystem.structure.PropertyMessageTarget" flags="ng" index="2ODE4t">
+        <reference id="1227096521710" name="propertyDeclaration" index="2ODJFN" />
+      </concept>
       <concept id="1227096620180" name="jetbrains.mps.lang.typesystem.structure.ReferenceMessageTarget" flags="ng" index="2OE7Q9">
         <reference id="1227096645744" name="linkDeclaration" index="2OEe5H" />
       </concept>
@@ -5168,6 +5171,29 @@
                 </node>
               </node>
             </node>
+          </node>
+        </node>
+      </node>
+      <node concept="3clFbJ" id="67eN9Qk6HMO" role="3cqZAp">
+        <node concept="3clFbS" id="67eN9Qk6HMQ" role="3clFbx">
+          <node concept="2MkqsV" id="67eN9Qk6Qlm" role="3cqZAp">
+            <node concept="Xl_RD" id="67eN9Qk77bF" role="2MkJ7o">
+              <property role="Xl_RC" value="Not yet supported" />
+            </node>
+            <node concept="1YBJjd" id="67eN9Qk6Ql_" role="1urrMF">
+              <ref role="1YBMHb" node="2_SJ50nrTTG" resolve="aspect" />
+            </node>
+            <node concept="2ODE4t" id="67eN9Qk74Rj" role="1urrC5">
+              <ref role="2ODJFN" to="7ggn:5KWJgbnUFQY" resolve="allwaysOn" />
+            </node>
+          </node>
+        </node>
+        <node concept="2OqwBi" id="67eN9Qk6Kkl" role="3clFbw">
+          <node concept="1YBJjd" id="67eN9Qk6Kaw" role="2Oq$k0">
+            <ref role="1YBMHb" node="2_SJ50nrTTG" resolve="aspect" />
+          </node>
+          <node concept="3TrcHB" id="67eN9Qk6MY8" role="2OqNvi">
+            <ref role="3TsBF5" to="7ggn:475V1oonwez" resolve="onDemand" />
           </node>
         </node>
       </node>
