@@ -24,6 +24,7 @@ import org.modelingvalue.dclare.DclareConfig;
 public class DclareForMpsConfig {
     private static final boolean      ON_MODE_DEFAULT                             = Boolean.getBoolean("ON_MODE");
     private static final boolean      COLORFUL_EDITORS_DEFAULT                    = Boolean.getBoolean("COLORFUL_EDITORS");
+    private static final boolean      SHOW_ASPECT_RULE_SETS_IN_RULES_TAB_DEFAULT  = Boolean.getBoolean("SHOW_ASPECT_RULE_SETS_IN_RULES_TAB_DEFAULT");
     private static final boolean      TRACE_DCLARE_DEFAULT                        = Boolean.getBoolean("DCLARE_TRACE");
     private static final boolean      TRACE_ACTIVATION_DEFAULT                    = Boolean.getBoolean("TRACE_ACTIVATION");
     private static final boolean      TRACE_MPS_MODEL_CHANGES_DEFAULT             = Boolean.getBoolean("TRACE_MPS_MODEL_CHANGES");
@@ -36,6 +37,7 @@ public class DclareForMpsConfig {
     private final EngineStatusHandler statusHandler;
     private final boolean             onMode;
     private final boolean             colorfulEditors;
+    private final boolean             showAspectRuleSetsInRulesTab;
     private final boolean             traceDclare;
     private final boolean             traceActivation;
     private final boolean             traceMPSModelChanges;
@@ -50,6 +52,7 @@ public class DclareForMpsConfig {
         statusHandler = null;
         onMode = ON_MODE_DEFAULT;
         colorfulEditors = COLORFUL_EDITORS_DEFAULT;
+        showAspectRuleSetsInRulesTab = SHOW_ASPECT_RULE_SETS_IN_RULES_TAB_DEFAULT;
         traceDclare = TRACE_DCLARE_DEFAULT;
         traceActivation = TRACE_ACTIVATION_DEFAULT;
         traceMPSModelChanges = TRACE_MPS_MODEL_CHANGES_DEFAULT;
@@ -60,11 +63,12 @@ public class DclareForMpsConfig {
     }
 
     //============================================================================
-    private DclareForMpsConfig(DclareConfig config, EngineStatusHandler statusHandler, boolean onMode, boolean colorfulEditors, boolean traceDclare, boolean dclareActivation, boolean traceMPSModelChanges, boolean disableAutoModelCheck, boolean remoteModelSynchronization, String remoteModelSynchronizationServer, String[] inactiveAspects) {
+    private DclareForMpsConfig(DclareConfig config, EngineStatusHandler statusHandler, boolean onMode, boolean colorfulEditors, boolean showAspectRuleSetsInRulesTab, boolean traceDclare, boolean dclareActivation, boolean traceMPSModelChanges, boolean disableAutoModelCheck, boolean remoteModelSynchronization, String remoteModelSynchronizationServer, String[] inactiveAspects) {
         this.config = config;
         this.statusHandler = statusHandler;
         this.onMode = onMode;
         this.colorfulEditors = colorfulEditors;
+        this.showAspectRuleSetsInRulesTab = showAspectRuleSetsInRulesTab;
         this.traceDclare = traceDclare;
         this.traceActivation = dclareActivation;
         this.traceMPSModelChanges = traceMPSModelChanges;
@@ -74,8 +78,8 @@ public class DclareForMpsConfig {
         this.inactiveAspects = inactiveAspects;
     }
 
-    protected DclareForMpsConfig create(DclareConfig config, EngineStatusHandler statusHandler, boolean onMode, boolean colorfulEditors, boolean dclareTrace, boolean dclareActivation, boolean traceMPSModelChanges, boolean disableAutoModelCheck, boolean remoteModelSynchronization, String remoteModelSynchronizationServer, String[] inactiveAspects) {
-        return new DclareForMpsConfig(config, statusHandler, onMode, colorfulEditors, dclareTrace, dclareActivation, traceMPSModelChanges, disableAutoModelCheck, remoteModelSynchronization, remoteModelSynchronizationServer, inactiveAspects);
+    protected DclareForMpsConfig create(DclareConfig config, EngineStatusHandler statusHandler, boolean onMode, boolean colorfulEditors, boolean showAspectRuleSetsInRulesTab, boolean dclareTrace, boolean dclareActivation, boolean traceMPSModelChanges, boolean disableAutoModelCheck, boolean remoteModelSynchronization, String remoteModelSynchronizationServer, String[] inactiveAspects) {
+        return new DclareForMpsConfig(config, statusHandler, onMode, colorfulEditors, showAspectRuleSetsInRulesTab, dclareTrace, dclareActivation, traceMPSModelChanges, disableAutoModelCheck, remoteModelSynchronization, remoteModelSynchronizationServer, inactiveAspects);
     }
 
     //============================================================================
@@ -88,130 +92,134 @@ public class DclareForMpsConfig {
             return false;
         }
         DclareForMpsConfig that = (DclareForMpsConfig) o;
-        return Objects.equals(config, that.config) && Objects.equals(statusHandler, that.statusHandler) && Objects.equals(onMode, that.onMode) && Objects.equals(colorfulEditors, that.colorfulEditors) && Objects.equals(traceDclare, that.traceDclare) && Objects.equals(traceActivation, that.traceActivation) && //
+        return Objects.equals(config, that.config) && Objects.equals(statusHandler, that.statusHandler) && Objects.equals(onMode, that.onMode) && Objects.equals(colorfulEditors, that.colorfulEditors) && Objects.equals(showAspectRuleSetsInRulesTab, that.showAspectRuleSetsInRulesTab) && Objects.equals(traceDclare, that.traceDclare) && Objects.equals(traceActivation, that.traceActivation) && //
                 Objects.equals(traceMPSModelChanges, that.traceMPSModelChanges) && Objects.equals(disableAutoModelCheck, that.disableAutoModelCheck) && Objects.equals(remoteModelSynchronization, that.remoteModelSynchronization) && Objects.equals(remoteModelSynchronizationServer, that.remoteModelSynchronizationServer) && Arrays.equals(inactiveAspects, that.inactiveAspects);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, remoteModelSynchronization, remoteModelSynchronizationServer, Arrays.hashCode(inactiveAspects));
+        return Objects.hash(config, statusHandler, onMode, colorfulEditors, showAspectRuleSetsInRulesTab, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, remoteModelSynchronization, remoteModelSynchronizationServer, Arrays.hashCode(inactiveAspects));
     }
 
     //============================================================================
     public DclareForMpsConfig withStatusHandler(EngineStatusHandler statusHandler) {
-        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, remoteModelSynchronization, remoteModelSynchronizationServer, inactiveAspects);
+        return create(config, statusHandler, onMode, colorfulEditors, showAspectRuleSetsInRulesTab, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, remoteModelSynchronization, remoteModelSynchronizationServer, inactiveAspects);
     }
 
     public DclareForMpsConfig withOnMode(boolean onMode) {
-        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, remoteModelSynchronization, remoteModelSynchronizationServer, inactiveAspects);
+        return create(config, statusHandler, onMode, colorfulEditors, showAspectRuleSetsInRulesTab, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, remoteModelSynchronization, remoteModelSynchronizationServer, inactiveAspects);
     }
 
     public DclareForMpsConfig withColorfulEditors(boolean colorfulEditors) {
-        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, remoteModelSynchronization, remoteModelSynchronizationServer, inactiveAspects);
+        return create(config, statusHandler, onMode, colorfulEditors, showAspectRuleSetsInRulesTab, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, remoteModelSynchronization, remoteModelSynchronizationServer, inactiveAspects);
+    }
+
+    public DclareForMpsConfig withShowAspectRuleSetsInRulesTab(boolean showAspectRuleSetsInRulesTab) {
+        return create(config, statusHandler, onMode, colorfulEditors, showAspectRuleSetsInRulesTab, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, remoteModelSynchronization, remoteModelSynchronizationServer, inactiveAspects);
     }
 
     public DclareForMpsConfig withDclareTrace(boolean dclareTrace) {
-        return create(config, statusHandler, onMode, colorfulEditors, dclareTrace, traceActivation, traceMPSModelChanges, disableAutoModelCheck, remoteModelSynchronization, remoteModelSynchronizationServer, inactiveAspects);
+        return create(config, statusHandler, onMode, colorfulEditors, showAspectRuleSetsInRulesTab, dclareTrace, traceActivation, traceMPSModelChanges, disableAutoModelCheck, remoteModelSynchronization, remoteModelSynchronizationServer, inactiveAspects);
     }
 
     public DclareForMpsConfig withDclareActivation(boolean dclareActivation) {
-        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, dclareActivation, traceMPSModelChanges, disableAutoModelCheck, remoteModelSynchronization, remoteModelSynchronizationServer, inactiveAspects);
+        return create(config, statusHandler, onMode, colorfulEditors, showAspectRuleSetsInRulesTab, traceDclare, dclareActivation, traceMPSModelChanges, disableAutoModelCheck, remoteModelSynchronization, remoteModelSynchronizationServer, inactiveAspects);
     }
 
     public DclareForMpsConfig withMPSModelChangesTrace(boolean traceMPSModelChanges) {
-        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, remoteModelSynchronization, remoteModelSynchronizationServer, inactiveAspects);
+        return create(config, statusHandler, onMode, colorfulEditors, showAspectRuleSetsInRulesTab, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, remoteModelSynchronization, remoteModelSynchronizationServer, inactiveAspects);
     }
 
     public DclareForMpsConfig withDisableAutoModelCheck(boolean disableAutoModelCheck) {
-        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, remoteModelSynchronization, remoteModelSynchronizationServer, inactiveAspects);
+        return create(config, statusHandler, onMode, colorfulEditors, showAspectRuleSetsInRulesTab, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, remoteModelSynchronization, remoteModelSynchronizationServer, inactiveAspects);
     }
 
     public DclareForMpsConfig withRemoteModelSynchronization(boolean remoteModelSynchronization) {
-        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, remoteModelSynchronization, remoteModelSynchronizationServer, inactiveAspects);
+        return create(config, statusHandler, onMode, colorfulEditors, showAspectRuleSetsInRulesTab, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, remoteModelSynchronization, remoteModelSynchronizationServer, inactiveAspects);
     }
 
     public DclareForMpsConfig withRemoteModelSynchronizationServer(String remoteModelSynchronizationServer) {
-        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, remoteModelSynchronization, remoteModelSynchronizationServer, inactiveAspects);
+        return create(config, statusHandler, onMode, colorfulEditors, showAspectRuleSetsInRulesTab, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, remoteModelSynchronization, remoteModelSynchronizationServer, inactiveAspects);
     }
 
     public DclareForMpsConfig withInactiveAspects(String[] inactiveAspects) {
-        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, remoteModelSynchronization, remoteModelSynchronizationServer, inactiveAspects);
+        return create(config, statusHandler, onMode, colorfulEditors, showAspectRuleSetsInRulesTab, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, remoteModelSynchronization, remoteModelSynchronizationServer, inactiveAspects);
     }
 
     //=== base config entries
     public DclareForMpsConfig withDevMode(boolean devMode) {
         DclareConfig config = this.config.withDevMode(devMode);
-        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, remoteModelSynchronization, remoteModelSynchronizationServer, inactiveAspects);
+        return create(config, statusHandler, onMode, colorfulEditors, showAspectRuleSetsInRulesTab, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, remoteModelSynchronization, remoteModelSynchronizationServer, inactiveAspects);
     }
 
     public DclareForMpsConfig withCheckOrphanState(boolean checkOrphanState) {
         DclareConfig config = this.config.withCheckOrphanState(checkOrphanState);
-        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, remoteModelSynchronization, remoteModelSynchronizationServer, inactiveAspects);
+        return create(config, statusHandler, onMode, colorfulEditors, showAspectRuleSetsInRulesTab, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, remoteModelSynchronization, remoteModelSynchronizationServer, inactiveAspects);
     }
 
     public DclareForMpsConfig withRunSequential(boolean runSequential) {
         DclareConfig config = this.config.withRunSequential(runSequential);
-        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, remoteModelSynchronization, remoteModelSynchronizationServer, inactiveAspects);
+        return create(config, statusHandler, onMode, colorfulEditors, showAspectRuleSetsInRulesTab, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, remoteModelSynchronization, remoteModelSynchronizationServer, inactiveAspects);
     }
 
     public DclareForMpsConfig withTraceUniverse(boolean traceUniverse) {
         DclareConfig config = this.config.withTraceUniverse(traceUniverse);
-        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, remoteModelSynchronization, remoteModelSynchronizationServer, inactiveAspects);
+        return create(config, statusHandler, onMode, colorfulEditors, showAspectRuleSetsInRulesTab, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, remoteModelSynchronization, remoteModelSynchronizationServer, inactiveAspects);
     }
 
     public DclareForMpsConfig withTraceMutable(boolean traceMutable) {
         DclareConfig config = this.config.withTraceMutable(traceMutable);
-        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, remoteModelSynchronization, remoteModelSynchronizationServer, inactiveAspects);
+        return create(config, statusHandler, onMode, colorfulEditors, showAspectRuleSetsInRulesTab, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, remoteModelSynchronization, remoteModelSynchronizationServer, inactiveAspects);
     }
 
     public DclareForMpsConfig withTraceMatching(boolean traceMatching) {
         DclareConfig config = this.config.withTraceMatching(traceMatching);
-        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, remoteModelSynchronization, remoteModelSynchronizationServer, inactiveAspects);
+        return create(config, statusHandler, onMode, colorfulEditors, showAspectRuleSetsInRulesTab, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, remoteModelSynchronization, remoteModelSynchronizationServer, inactiveAspects);
     }
 
     public DclareForMpsConfig withTraceActions(boolean traceActions) {
         DclareConfig config = this.config.withTraceActions(traceActions);
-        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, remoteModelSynchronization, remoteModelSynchronizationServer, inactiveAspects);
+        return create(config, statusHandler, onMode, colorfulEditors, showAspectRuleSetsInRulesTab, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, remoteModelSynchronization, remoteModelSynchronizationServer, inactiveAspects);
     }
 
     public DclareForMpsConfig withTraceRippleOut(boolean traceRippleOut) {
         DclareConfig config = this.config.withTraceRippleOut(traceRippleOut);
-        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, remoteModelSynchronization, remoteModelSynchronizationServer, inactiveAspects);
+        return create(config, statusHandler, onMode, colorfulEditors, showAspectRuleSetsInRulesTab, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, remoteModelSynchronization, remoteModelSynchronizationServer, inactiveAspects);
     }
 
     public DclareForMpsConfig withTraceDerivation(boolean traceDerivation) {
         DclareConfig config = this.config.withTraceDerivation(traceDerivation);
-        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, remoteModelSynchronization, remoteModelSynchronizationServer, inactiveAspects);
+        return create(config, statusHandler, onMode, colorfulEditors, showAspectRuleSetsInRulesTab, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, remoteModelSynchronization, remoteModelSynchronizationServer, inactiveAspects);
     }
 
     public DclareForMpsConfig withMaxInInQueue(int maxInInQueue) {
         DclareConfig config = this.config.withMaxInInQueue(maxInInQueue);
-        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, remoteModelSynchronization, remoteModelSynchronizationServer, inactiveAspects);
+        return create(config, statusHandler, onMode, colorfulEditors, showAspectRuleSetsInRulesTab, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, remoteModelSynchronization, remoteModelSynchronizationServer, inactiveAspects);
     }
 
     public DclareForMpsConfig withMaxTotalNrOfChanges(int maxTotalNrOfChanges) {
         DclareConfig config = this.config.withMaxTotalNrOfChanges(maxTotalNrOfChanges);
-        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, remoteModelSynchronization, remoteModelSynchronizationServer, inactiveAspects);
+        return create(config, statusHandler, onMode, colorfulEditors, showAspectRuleSetsInRulesTab, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, remoteModelSynchronization, remoteModelSynchronizationServer, inactiveAspects);
     }
 
     public DclareForMpsConfig withMaxNrOfChanges(int maxNrOfChanges) {
         DclareConfig config = this.config.withMaxNrOfChanges(maxNrOfChanges);
-        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, remoteModelSynchronization, remoteModelSynchronizationServer, inactiveAspects);
+        return create(config, statusHandler, onMode, colorfulEditors, showAspectRuleSetsInRulesTab, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, remoteModelSynchronization, remoteModelSynchronizationServer, inactiveAspects);
     }
 
     public DclareForMpsConfig withMaxNrOfObserved(int maxNrOfObserved) {
         DclareConfig config = this.config.withMaxNrOfObserved(maxNrOfObserved);
-        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, remoteModelSynchronization, remoteModelSynchronizationServer, inactiveAspects);
+        return create(config, statusHandler, onMode, colorfulEditors, showAspectRuleSetsInRulesTab, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, remoteModelSynchronization, remoteModelSynchronizationServer, inactiveAspects);
     }
 
     public DclareForMpsConfig withMaxNrOfObservers(int maxNrOfObservers) {
         DclareConfig config = this.config.withMaxNrOfObservers(maxNrOfObservers);
-        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, remoteModelSynchronization, remoteModelSynchronizationServer, inactiveAspects);
+        return create(config, statusHandler, onMode, colorfulEditors, showAspectRuleSetsInRulesTab, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, remoteModelSynchronization, remoteModelSynchronizationServer, inactiveAspects);
     }
 
     public DclareForMpsConfig withMaxNrOfHistory(int maxNrOfHistory) {
         DclareConfig config = this.config.withMaxNrOfHistory(maxNrOfHistory);
-        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, remoteModelSynchronization, remoteModelSynchronizationServer, inactiveAspects);
+        return create(config, statusHandler, onMode, colorfulEditors, showAspectRuleSetsInRulesTab, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, remoteModelSynchronization, remoteModelSynchronizationServer, inactiveAspects);
     }
 
     //============================================================================
@@ -225,6 +233,10 @@ public class DclareForMpsConfig {
 
     public boolean isColorfulEditors() {
         return colorfulEditors;
+    }
+
+    public boolean isShowAspectRuleSetsInRulesTab() {
+        return showAspectRuleSetsInRulesTab;
     }
 
     public boolean isTraceDclare() {
