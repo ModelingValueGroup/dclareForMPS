@@ -333,7 +333,7 @@
     </node>
   </node>
   <node concept="3PWz7o" id="67eN9QkCj6Y">
-    <property role="TrG5h" value="digram" />
+    <property role="TrG5h" value="diagram" />
     <property role="5CCp0" value="true" />
     <node concept="2iyNl8" id="67eN9QkCtpA" role="2iyNln">
       <property role="2iyNlD" value="180" />
@@ -345,8 +345,8 @@
       <node concept="2iyNll" id="67eN9QkCtpG" role="2iyNmk">
         <ref role="2iyNli" node="30f$n$3bYxD" resolve="warnings" />
         <node concept="2iyNlg" id="67eN9QkCtqg" role="2iyKN2">
-          <property role="2iyKN1" value="60" />
-          <property role="2iyKNf" value="320" />
+          <property role="2iyKN1" value="80" />
+          <property role="2iyKNf" value="300" />
         </node>
       </node>
       <node concept="2iyNll" id="67eN9QkCtpH" role="2iyNmk">
@@ -357,13 +357,13 @@
         </node>
         <node concept="2iyNlg" id="67eN9QkCtqv" role="2iyKN2">
           <property role="2iyKN1" value="40" />
-          <property role="2iyKNf" value="400" />
+          <property role="2iyKNf" value="340" />
         </node>
       </node>
       <node concept="2iyNll" id="67eN9QkCtpI" role="2iyNmk">
         <ref role="2iyNli" node="30f$n$3bYxM" resolve="debugs" />
         <node concept="2iyNlg" id="67eN9QkCtqb" role="2iyKN2">
-          <property role="2iyKN1" value="320" />
+          <property role="2iyKN1" value="280" />
           <property role="2iyKNf" value="320" />
         </node>
       </node>
@@ -375,11 +375,19 @@
       </node>
     </node>
     <node concept="2iyNl8" id="67eN9QkCtpB" role="2iyNln">
-      <property role="2iyNlD" value="594" />
-      <property role="2iyNlR" value="359" />
+      <property role="2iyNlD" value="591" />
+      <property role="2iyNlR" value="462" />
       <ref role="2iyNl9" node="3_wkb9eGwqx" resolve="AspectSettingDependency" />
       <node concept="2iyNll" id="67eN9QkCtpM" role="2iyNmk">
         <ref role="2iyNli" node="3_wkb9eGwqy" resolve="aspect" />
+        <node concept="2iyNlg" id="1bDgvLYvDOT" role="2iyKN2">
+          <property role="2iyKNf" value="460" />
+          <property role="2iyKN1" value="680" />
+        </node>
+        <node concept="2iyNlg" id="1bDgvLYvDP0" role="2iyKN2">
+          <property role="2iyKNf" value="60" />
+          <property role="2iyKN1" value="680" />
+        </node>
       </node>
     </node>
     <node concept="2iyNl8" id="67eN9QkCtpC" role="2iyNln">
@@ -397,12 +405,12 @@
       <node concept="2iyNll" id="67eN9QkCtpN" role="2iyNmk">
         <ref role="2iyNli" node="7e_PmaZxfxA" resolve="children" />
         <node concept="2iyNlg" id="67eN9QkFevl" role="2iyKN2">
-          <property role="2iyKN1" value="400" />
-          <property role="2iyKNf" value="420" />
+          <property role="2iyKN1" value="260" />
+          <property role="2iyKNf" value="440" />
         </node>
         <node concept="2iyNlg" id="67eN9QkFhWs" role="2iyKN2">
-          <property role="2iyKN1" value="180" />
-          <property role="2iyKNf" value="460" />
+          <property role="2iyKN1" value="80" />
+          <property role="2iyKNf" value="440" />
         </node>
       </node>
     </node>
