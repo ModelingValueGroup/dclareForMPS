@@ -7,6 +7,7 @@
   </languages>
   <imports>
     <import index="tpce" ref="r:00000000-0000-4000-0000-011c89590292(jetbrains.mps.lang.structure.structure)" />
+    <import index="7ggn" ref="r:38c3b7db-3776-47fb-ba27-a4f002c4edc7(DclareMPS.structure)" />
     <import index="tpck" ref="r:00000000-0000-4000-0000-011c89590288(jetbrains.mps.lang.core.structure)" implicit="true" />
   </imports>
   <registry>
@@ -199,6 +200,52 @@
       <property role="20kJfa" value="concept" />
       <property role="20lbJX" value="fLJekj4/_1" />
       <ref role="20lvS9" to="tpce:h0PkWnZ" resolve="AbstractConceptDeclaration" />
+    </node>
+  </node>
+  <node concept="1TIwiD" id="5hEUvARta2y">
+    <property role="EcuMT" value="6082931505451278498" />
+    <property role="TrG5h" value="StructDiagram" />
+    <property role="3GE5qa" value="struct_diagram" />
+    <property role="19KtqR" value="true" />
+    <ref role="1TJDcQ" to="tpck:gw2VY9q" />
+    <node concept="1TJgyj" id="5hEUvARtaAj" role="1TKVEi">
+      <property role="IQ2ns" value="6082931505451280787" />
+      <property role="20lmBu" value="fLJjDmT/aggregation" />
+      <property role="20kJfa" value="structs" />
+      <property role="20lbJX" value="fLJekj5/_0__n" />
+      <ref role="20lvS9" node="5hEUvARtaxp" resolve="StructRef" />
+    </node>
+    <node concept="PrWs8" id="5hEUvARta2z" role="PzmwI">
+      <ref role="PrY4T" node="3psr82$eZ54" resolve="IDiagram" />
+    </node>
+    <node concept="PrWs8" id="5hEUvARta2_" role="PzmwI">
+      <ref role="PrY4T" to="tpck:h0TrEE$" resolve="INamedConcept" />
+    </node>
+    <node concept="1irR5M" id="5hEUvARta2C" role="rwd14">
+      <property role="2$rrk2" value="104" />
+      <node concept="1irR9m" id="5hEUvARta2G" role="1irR9h">
+        <node concept="3PKj8D" id="5hEUvARta2Z" role="3PKjn_">
+          <property role="3PKj8l" value="00ddff" />
+        </node>
+      </node>
+      <node concept="1irPie" id="5hEUvARta2P" role="1irR9h">
+        <property role="1irPi9" value="D" />
+        <node concept="3PKj8D" id="5hEUvARta2W" role="3PKjny">
+          <property role="3PKj8l" value="000055" />
+        </node>
+      </node>
+    </node>
+  </node>
+  <node concept="1TIwiD" id="5hEUvARtaxp">
+    <property role="EcuMT" value="6082931505451280473" />
+    <property role="3GE5qa" value="struct_diagram" />
+    <property role="TrG5h" value="StructRef" />
+    <ref role="1TJDcQ" to="tpck:gw2VY9q" />
+    <node concept="1TJgyj" id="5hEUvARtaxq" role="1TKVEi">
+      <property role="IQ2ns" value="6082931505451280474" />
+      <property role="20kJfa" value="struct" />
+      <property role="20lbJX" value="fLJekj4/_1" />
+      <ref role="20lvS9" to="7ggn:4$bpWrNHO7E" resolve="StructClass" />
     </node>
   </node>
 </model>

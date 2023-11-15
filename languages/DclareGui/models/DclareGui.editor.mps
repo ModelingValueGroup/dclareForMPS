@@ -371,5 +371,38 @@
       </node>
     </node>
   </node>
+  <node concept="24kQdi" id="5hEUvARta32">
+    <property role="3GE5qa" value="struct_diagram" />
+    <ref role="1XX52x" to="53d4:5hEUvARta2y" resolve="StructDiagram" />
+    <node concept="3EZMnI" id="5hEUvARta34" role="2wV5jI">
+      <node concept="2iRkQZ" id="5hEUvARta35" role="2iSdaV" />
+      <node concept="3EZMnI" id="5hEUvARta36" role="3EZMnx">
+        <node concept="2iRfu4" id="5hEUvARta37" role="2iSdaV" />
+        <node concept="3F0ifn" id="5hEUvARta38" role="3EZMnx">
+          <property role="3F0ifm" value="diagram" />
+        </node>
+        <node concept="3F0A7n" id="5hEUvARta39" role="3EZMnx">
+          <ref role="1NtTu8" to="tpck:h0TrG11" resolve="name" />
+        </node>
+      </node>
+      <node concept="PMmxH" id="5hEUvARta3a" role="3EZMnx">
+        <ref role="PMmxG" node="31sbKqyPMrZ" resolve="IEditorComponent" />
+      </node>
+      <node concept="2w$q5c" id="5hEUvARta3b" role="2whIAn" />
+    </node>
+  </node>
+  <node concept="24kQdi" id="5hEUvARtaA5">
+    <property role="3GE5qa" value="struct_diagram" />
+    <ref role="1XX52x" to="53d4:5hEUvARtaxp" resolve="StructRef" />
+    <node concept="1iCGBv" id="5hEUvARtaA7" role="2wV5jI">
+      <ref role="1NtTu8" to="53d4:5hEUvARtaxq" resolve="struct" />
+      <node concept="1sVBvm" id="5hEUvARtaA9" role="1sWHZn">
+        <node concept="3F0A7n" id="5hEUvARtaAg" role="2wV5jI">
+          <property role="1Intyy" value="true" />
+          <ref role="1NtTu8" to="tpck:h0TrG11" resolve="name" />
+        </node>
+      </node>
+    </node>
+  </node>
 </model>
 
