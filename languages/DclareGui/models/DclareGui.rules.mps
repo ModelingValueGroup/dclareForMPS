@@ -495,6 +495,9 @@
         <child id="1201654602639" name="key" index="38cxEo" />
       </concept>
       <concept id="1203518072036" name="jetbrains.mps.baseLanguage.collections.structure.SmartClosureParameterDeclaration" flags="ig" index="Rh6nW" />
+      <concept id="1205679737078" name="jetbrains.mps.baseLanguage.collections.structure.SortOperation" flags="nn" index="2S7cBI">
+        <child id="1205679832066" name="ascending" index="2S7zOq" />
+      </concept>
       <concept id="1171391069720" name="jetbrains.mps.baseLanguage.collections.structure.GetIndexOfOperation" flags="nn" index="2WmjW8" />
       <concept id="1162935959151" name="jetbrains.mps.baseLanguage.collections.structure.GetSizeOperation" flags="nn" index="34oBXx" />
       <concept id="5232196642625574978" name="jetbrains.mps.baseLanguage.collections.structure.HeadListOperation" flags="nn" index="1eb2ty">
@@ -504,6 +507,7 @@
         <child id="5232196642625575056" name="fromIndex" index="1eb2uK" />
       </concept>
       <concept id="1201872418428" name="jetbrains.mps.baseLanguage.collections.structure.GetKeysOperation" flags="nn" index="3lbrtF" />
+      <concept id="1178286324487" name="jetbrains.mps.baseLanguage.collections.structure.SortDirection" flags="nn" index="1nlBCl" />
       <concept id="1197683403723" name="jetbrains.mps.baseLanguage.collections.structure.MapType" flags="in" index="3rvAFt">
         <child id="1197683466920" name="keyType" index="3rvQeY" />
         <child id="1197683475734" name="valueType" index="3rvSg0" />
@@ -14068,6 +14072,54 @@
               <node concept="2jxLKc" id="2QCHpoww0Q3" role="1tU5fm" />
             </node>
           </node>
+        </node>
+      </node>
+    </node>
+    <node concept="32q3_s" id="3jHNPFKWoVA" role="1FPzNG">
+      <property role="TrG5h" value="superYPosition" />
+      <node concept="10Oyi0" id="3jHNPFKWsv$" role="1tU5fm" />
+      <node concept="2_n6$v" id="3jHNPFKZ8S8" role="33vP2m">
+        <node concept="3cmrfG" id="3jHNPFKZcoo" role="2_mOWp">
+          <property role="3cmrfH" value="0" />
+        </node>
+        <node concept="2OqwBi" id="3jHNPFKYHV0" role="2Oq$k0">
+          <node concept="2OqwBi" id="3jHNPFKXB_X" role="2Oq$k0">
+            <node concept="2OqwBi" id="3jHNPFKXsgg" role="2Oq$k0">
+              <node concept="1SfVH9" id="3jHNPFKXo1f" role="2Oq$k0">
+                <ref role="3cqZAo" node="2QCHpoww0Pw" resolve="superRectangles" />
+              </node>
+              <node concept="13MTOL" id="3jHNPFKXyO8" role="2OqNvi">
+                <ref role="13MTZf" node="2xAA8jfCCHw" resolve="position" />
+              </node>
+            </node>
+            <node concept="2S7cBI" id="3jHNPFKYrWJ" role="2OqNvi">
+              <node concept="1bVj0M" id="3jHNPFKYrWL" role="23t8la">
+                <node concept="3clFbS" id="3jHNPFKYrWM" role="1bW5cS">
+                  <node concept="3clFbF" id="3jHNPFKYAhS" role="3cqZAp">
+                    <node concept="2OqwBi" id="3jHNPFKYAqz" role="3clFbG">
+                      <node concept="37vLTw" id="3jHNPFKYAhR" role="2Oq$k0">
+                        <ref role="3cqZAo" node="3jHNPFKYrWN" resolve="p" />
+                      </node>
+                      <node concept="2$Gk$L" id="3jHNPFKYE9r" role="2OqNvi">
+                        <ref role="37wK5l" node="7ESv7kyhK1A" resolve="y" />
+                      </node>
+                    </node>
+                  </node>
+                </node>
+                <node concept="Rh6nW" id="3jHNPFKYrWN" role="1bW2Oz">
+                  <property role="TrG5h" value="p" />
+                  <node concept="2jxLKc" id="3jHNPFKYrWO" role="1tU5fm" />
+                </node>
+              </node>
+              <node concept="1nlBCl" id="3jHNPFKYrWP" role="2S7zOq">
+                <property role="3clFbU" value="true" />
+              </node>
+            </node>
+          </node>
+          <node concept="1yVyf7" id="3jHNPFKYPWd" role="2OqNvi" />
+        </node>
+        <node concept="2$Gk$L" id="3jHNPFKYXFN" role="2OqNvi">
+          <ref role="37wK5l" node="7ESv7kyhK1A" resolve="y" />
         </node>
       </node>
     </node>
