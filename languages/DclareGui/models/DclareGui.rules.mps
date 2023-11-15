@@ -11240,7 +11240,7 @@
       <node concept="10P55v" id="2Jp98iqeEDQ" role="1tU5fm" />
       <node concept="3cpWs3" id="4OSO3Ox_3wt" role="33vP2m">
         <node concept="3b6qkQ" id="4OSO3Ox_4SX" role="3uHU7w">
-          <property role="$nhwW" value="40.0" />
+          <property role="$nhwW" value="80.0" />
         </node>
         <node concept="2OqwBi" id="2Jp98iqf1Af" role="3uHU7B">
           <node concept="1SfVH9" id="3OZjsowrnIZ" role="2Oq$k0">
