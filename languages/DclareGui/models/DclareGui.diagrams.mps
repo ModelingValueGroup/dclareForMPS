@@ -13,6 +13,12 @@
     <import index="7ggn" ref="r:38c3b7db-3776-47fb-ba27-a4f002c4edc7(DclareMPS.structure)" />
   </imports>
   <registry>
+    <language id="86ef8290-12bb-4ca7-947f-093788f263a9" name="jetbrains.mps.lang.project">
+      <concept id="1855399583446016268" name="jetbrains.mps.lang.project.structure.ModuleReference" flags="ng" index="A2Dkr">
+        <property id="1855399583446016270" name="qualifiedName" index="A2Dkp" />
+        <property id="1855399583446016269" name="uuid" index="A2Dkq" />
+      </concept>
+    </language>
     <language id="ce36526d-d793-4b8b-88e9-d1815f616441" name="DclareGui">
       <concept id="3484711917226236494" name="DclareGui.structure.NodeLayout" flags="ng" index="2iyNl8">
         <property id="3484711917226236527" name="x" index="2iyNlD" />
@@ -35,6 +41,7 @@
         <reference id="6082931505451280474" name="struct" index="3z7$6z" />
       </concept>
       <concept id="6082931505451278498" name="DclareGui.structure.StructDiagram" flags="ng" index="3z7$_r">
+        <child id="2964143021971595307" name="drawnModuleREf" index="2pcM1O" />
         <child id="6082931505451280787" name="structs" index="3z7$1E" />
       </concept>
       <concept id="7047795444050573225" name="DclareGui.structure.ConceptRef" flags="ng" index="3PzJGO">
@@ -42,6 +49,7 @@
       </concept>
       <concept id="7047795444050361669" name="DclareGui.structure.ConceptDiagram" flags="ng" index="3PWz7o">
         <property id="1206108215291310920" name="manual" index="5CCp0" />
+        <child id="8262838778048032315" name="drawnModuleREf" index="1FiUSG" />
         <child id="7047795444050399797" name="concepts" index="3PWPUC" />
       </concept>
     </language>
@@ -386,6 +394,10 @@
         <ref role="2iyNli" to="q3xn:3OZjsowp$AG" resolve="DMultiLineEdge" />
       </node>
     </node>
+    <node concept="A2Dkr" id="2$yK5YKoP1e" role="2pcM1O">
+      <property role="A2Dkp" value="DclareGui" />
+      <property role="A2Dkq" value="ce36526d-d793-4b8b-88e9-d1815f616441" />
+    </node>
   </node>
   <node concept="3PWz7o" id="7BVZ4Aes_qp">
     <property role="TrG5h" value="concepts" />
@@ -518,6 +530,10 @@
     </node>
     <node concept="3PzJGO" id="7BVZ4Aes_y2" role="3PWPUC">
       <ref role="3PzJGR" to="7ggn:4$bpWrNHO7E" resolve="StructClass" />
+    </node>
+    <node concept="A2Dkr" id="7aFw1sqwd7k" role="1FiUSG">
+      <property role="A2Dkp" value="DclareGui" />
+      <property role="A2Dkq" value="ce36526d-d793-4b8b-88e9-d1815f616441" />
     </node>
   </node>
 </model>

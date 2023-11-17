@@ -869,6 +869,11 @@
             <ref role="3bR37D" node="5TmHY1kYraS" resolve="DclareMPS" />
           </node>
         </node>
+        <node concept="1SiIV0" id="7aFw1sqbGJO" role="3bR37C">
+          <node concept="3bR9La" id="7aFw1sqbGJP" role="1SiIV1">
+            <ref role="3bR37D" to="ffeo:7Kfy9QB6L8Y" resolve="jetbrains.mps.lang.project" />
+          </node>
+        </node>
       </node>
       <node concept="1E1JtA" id="1OC_PYbrjI5" role="2G$12L">
         <property role="TrG5h" value="DclareRuntime" />

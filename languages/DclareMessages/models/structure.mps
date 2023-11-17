@@ -10,6 +10,12 @@
     <import index="tpck" ref="r:00000000-0000-4000-0000-011c89590288(jetbrains.mps.lang.core.structure)" implicit="true" />
   </imports>
   <registry>
+    <language id="86ef8290-12bb-4ca7-947f-093788f263a9" name="jetbrains.mps.lang.project">
+      <concept id="1855399583446016268" name="jetbrains.mps.lang.project.structure.ModuleReference" flags="ng" index="A2Dkr">
+        <property id="1855399583446016270" name="qualifiedName" index="A2Dkp" />
+        <property id="1855399583446016269" name="uuid" index="A2Dkq" />
+      </concept>
+    </language>
     <language id="ce36526d-d793-4b8b-88e9-d1815f616441" name="DclareGui">
       <concept id="3484711917226236494" name="DclareGui.structure.NodeLayout" flags="ng" index="2iyNl8">
         <property id="3484711917226236527" name="x" index="2iyNlD" />
@@ -33,6 +39,7 @@
       </concept>
       <concept id="7047795444050361669" name="DclareGui.structure.ConceptDiagram" flags="ng" index="3PWz7o">
         <property id="1206108215291310920" name="manual" index="5CCp0" />
+        <child id="8262838778048032315" name="drawnModuleREf" index="1FiUSG" />
         <child id="7047795444050399797" name="concepts" index="3PWPUC" />
       </concept>
     </language>
@@ -443,6 +450,10 @@
     </node>
     <node concept="3PzJGO" id="67eN9QkCto2" role="3PWPUC">
       <ref role="3PzJGR" node="3gm2YTwH79_" resolve="AspectSettings" />
+    </node>
+    <node concept="A2Dkr" id="7aFw1sqwd7j" role="1FiUSG">
+      <property role="A2Dkp" value="DclareMessages" />
+      <property role="A2Dkq" value="15ef76ea-e875-4ecb-ba93-f3d16cc9b71a" />
     </node>
   </node>
 </model>

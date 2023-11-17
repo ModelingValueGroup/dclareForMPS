@@ -9,6 +9,7 @@
     <import index="tpce" ref="r:00000000-0000-4000-0000-011c89590292(jetbrains.mps.lang.structure.structure)" />
     <import index="7ggn" ref="r:38c3b7db-3776-47fb-ba27-a4f002c4edc7(DclareMPS.structure)" />
     <import index="tpck" ref="r:00000000-0000-4000-0000-011c89590288(jetbrains.mps.lang.core.structure)" implicit="true" />
+    <import index="hypd" ref="r:aa31e43e-9240-4f4d-b6db-5c1c9a86c59e(jetbrains.mps.lang.project.structure)" implicit="true" />
   </imports>
   <registry>
     <language id="982eb8df-2c96-4bd7-9963-11712ea622e5" name="jetbrains.mps.lang.resources">
@@ -175,6 +176,13 @@
       <property role="20lbJX" value="fLJekj5/_0__n" />
       <ref role="20lvS9" node="67eN9Qkg3uD" resolve="ConceptRef" />
     </node>
+    <node concept="1TJgyj" id="7aFw1spS2SV" role="1TKVEi">
+      <property role="IQ2ns" value="8262838778048032315" />
+      <property role="20lmBu" value="fLJjDmT/aggregation" />
+      <property role="20kJfa" value="drawnModuleREf" />
+      <property role="20lbJX" value="fLJekj4/_1" />
+      <ref role="20lvS9" to="hypd:1AZH1sZHi4c" resolve="ModuleReference" />
+    </node>
     <node concept="1irR5M" id="67eN9QkChOV" role="rwd14">
       <property role="2$rrk2" value="101" />
       <node concept="1irR9m" id="67eN9QkChP6" role="1irR9h">
@@ -208,12 +216,24 @@
     <property role="3GE5qa" value="struct_diagram" />
     <property role="19KtqR" value="true" />
     <ref role="1TJDcQ" to="tpck:gw2VY9q" />
+    <node concept="1TJgyi" id="2$yK5YK5zMw" role="1TKVEl">
+      <property role="IQ2nx" value="2964143021971881120" />
+      <property role="TrG5h" value="manual" />
+      <ref role="AX2Wp" to="tpck:fKAQMTB" resolve="boolean" />
+    </node>
     <node concept="1TJgyj" id="5hEUvARtaAj" role="1TKVEi">
       <property role="IQ2ns" value="6082931505451280787" />
       <property role="20lmBu" value="fLJjDmT/aggregation" />
       <property role="20kJfa" value="structs" />
       <property role="20lbJX" value="fLJekj5/_0__n" />
       <ref role="20lvS9" node="5hEUvARtaxp" resolve="StructRef" />
+    </node>
+    <node concept="1TJgyj" id="2$yK5YK4u0F" role="1TKVEi">
+      <property role="IQ2ns" value="2964143021971595307" />
+      <property role="20lmBu" value="fLJjDmT/aggregation" />
+      <property role="20kJfa" value="drawnModuleREf" />
+      <property role="20lbJX" value="fLJekj4/_1" />
+      <ref role="20lvS9" to="hypd:1AZH1sZHi4c" resolve="ModuleReference" />
     </node>
     <node concept="PrWs8" id="5hEUvARta2z" role="PzmwI">
       <ref role="PrY4T" node="3psr82$eZ54" resolve="IDiagram" />
