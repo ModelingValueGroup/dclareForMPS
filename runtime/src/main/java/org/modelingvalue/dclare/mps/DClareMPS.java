@@ -333,7 +333,9 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
         checkerRegistry.registerChecker(nodeChecker);
         ModelsExtractorImpl modelExtractor = new ModelCheckerBuilder.ModelsExtractorImpl().excludeGenerators();
         @SuppressWarnings("RedundantCast") // strange double cast to satisfy javac
-        java.util.List<? extends IChecker<?, ? extends IssueKindReportItem>> checkers = (java.util.List<? extends IChecker<?, ? extends IssueKindReportItem>>) (java.util.List<IChecker<?, ?>>) checkerRegistry.getCheckers();
+        java.util.List<? extends IChecker<?, ? extends IssueKindReportItem>> checkers = config.isAutoMPSModelCheck() ? //
+                (java.util.List<? extends IChecker<?, ? extends IssueKindReportItem>>) (java.util.List<IChecker<?, ?>>) checkerRegistry.getCheckers() : //
+                Collection.of(moduleChecker, modelChecker, nodeChecker).toList();
         mpsChecker = new DclareModelCheckerBuilder(this, modelExtractor).createChecker(checkers);
         Highlighter highlighter = project.getComponent(Highlighter.class);
         highlighter.addChecker(languageEditorChecker);
@@ -874,7 +876,7 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
                     }
                 }
             }
-            if (changed) {
+            if (changed && !config.isDisableAutoModelCheck()) {
                 addToChanged(dObject);
             }
         }
