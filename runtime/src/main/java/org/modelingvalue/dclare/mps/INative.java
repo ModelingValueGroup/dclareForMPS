@@ -26,9 +26,9 @@ public interface INative<O> extends DFeature {
         return List.of(n.getChangeHandlers());
     });
 
-    void init(O context, DObject parent, INativeRunner nativeRunner);
+    void init(O context, DMutable parent, INativeRunner nativeRunner);
 
-    void exit(O context, DObject parent, INativeRunner nativeRunner);
+    void exit(O context, DMutable parent, INativeRunner nativeRunner);
 
     @SuppressWarnings("rawtypes")
     java.util.List<IChangeHandler> getChangeHandlers();

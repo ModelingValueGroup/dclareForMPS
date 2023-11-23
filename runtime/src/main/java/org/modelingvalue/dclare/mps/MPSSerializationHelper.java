@@ -38,7 +38,7 @@ import org.modelingvalue.dclare.sync.Util;
 import jetbrains.mps.project.DevKit;
 import jetbrains.mps.project.ProjectRepository;
 
-public class MPSSerializationHelper extends SerializationHelperWithPool<DObjectType<?>, DObject, DObserved<DObject, Object>> {
+public class MPSSerializationHelper extends SerializationHelperWithPool<DObjectType<?>, DMutable, DObserved<DMutable, Object>> {
     public MPSSerializationHelper(ProjectRepository repos) {
         super(Converters.ALL.appendList(List.of( //
                 new DevKitConverter(repos), //
@@ -62,7 +62,7 @@ public class MPSSerializationHelper extends SerializationHelperWithPool<DObjectT
             boolean ret = false;
             DModel model = m.dAncestor(DModel.class);
             if (model == null || model.isShared()) {
-                ret = (m instanceof DModel || m instanceof DNode || m instanceof DServerMetaData) && ((DObject) m).isActive() && !((DObject) m).isDclareOnly();
+                ret = (m instanceof DModel || m instanceof DNode || m instanceof DServerMetaData) && ((DMutable) m).isActive() && !((DMutable) m).isDclareOnly();
             }
             return ret;
         };
@@ -70,15 +70,15 @@ public class MPSSerializationHelper extends SerializationHelperWithPool<DObjectT
 
     @SuppressWarnings("rawtypes")
     @Override
-    public Predicate<Setable<DObject, ?>> setableFilter() {
-        return s -> s instanceof DObserved && s != DObject.DCLARE_ISSUES && !(s instanceof DObservedAttribute) && !((DObserved) s).isDclareOnly();
+    public Predicate<Setable<DMutable, ?>> setableFilter() {
+        return s -> s instanceof DObserved && s != DMutable.DCLARE_ISSUES && !(s instanceof DObservedAttribute) && !((DObserved) s).isDclareOnly();
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public DObjectType<?> getMutableClass(DObject s) {
-        DObjectType<DObject> type = (DObjectType<DObject>) DObject.TYPE.get(s);
-        return type != DObject.TYPE.getDefault(s) ? type : (DObjectType<DObject>) s.getType();
+    public DObjectType<?> getMutableClass(DMutable s) {
+        DObjectType<DMutable> type = (DObjectType<DMutable>) DMutable.TYPE.get(s);
+        return type != DMutable.TYPE.getDefault(s) ? type : (DObjectType<DMutable>) s.getType();
     }
 
     private static class DevKitConverter extends BaseConverter<DevKit> {
@@ -97,7 +97,7 @@ public class MPSSerializationHelper extends SerializationHelperWithPool<DObjectT
         @Override
         public DevKit deserialize(String string, Object context) {
             SModuleId id = mpsPersist().createModuleId(string);
-            SModule module = DObject.dClareMPS().read(() -> repos.getModule(id));
+            SModule module = DMutable.dClareMPS().read(() -> repos.getModule(id));
             if (!(module instanceof DevKit)) {
                 throw new IllegalArgumentException("Module " + id + " is not a DevKit, it is " + (module == null ? "<null>" : "a " + module.getClass().getSimpleName() + "!"));
             }
@@ -121,7 +121,7 @@ public class MPSSerializationHelper extends SerializationHelperWithPool<DObjectT
         @Override
         public DModule deserialize(String string, Object context) {
             SModuleId id = mpsPersist().createModuleId(string);
-            SModule module = DObject.dClareMPS().read(() -> repos.getModule(id));
+            SModule module = DMutable.dClareMPS().read(() -> repos.getModule(id));
             return DModule.of(module);
         }
     }
@@ -220,24 +220,24 @@ public class MPSSerializationHelper extends SerializationHelperWithPool<DObjectT
         }
     }
 
-    private static class DObservedConverter extends BaseConverter<DObserved<DObject, Object>> {
+    private static class DObservedConverter extends BaseConverter<DObserved<DMutable, Object>> {
         @SuppressWarnings({"unchecked", "rawtypes"})
         public DObservedConverter() {
-            super((Class<DObserved<DObject, Object>>) (Class) DObserved.class);
+            super((Class<DObserved<DMutable, Object>>) (Class) DObserved.class);
         }
 
         @Override
-        public String serialize(DObserved<DObject, Object> setable, Object context) {
+        public String serialize(DObserved<DMutable, Object> setable, Object context) {
             return setable.id().toString();
         }
 
         @SuppressWarnings("unchecked")
         @Override
-        public DObserved<DObject, Object> deserialize(String string, Object context) {
+        public DObserved<DMutable, Object> deserialize(String string, Object context) {
             assert context instanceof DObjectType;
 
-            DObjectType<DObject> clazz = (DObjectType<DObject>) context;
-            return (DObserved<DObject, Object>) clazz.dSetables().filter(x -> x.id().toString().equals(string)).findFirst().orElseThrow();
+            DObjectType<DMutable> clazz = (DObjectType<DMutable>) context;
+            return (DObserved<DMutable, Object>) clazz.dSetables().filter(x -> x.id().toString().equals(string)).findFirst().orElseThrow();
         }
     }
 }

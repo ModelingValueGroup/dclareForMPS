@@ -67,20 +67,20 @@ public interface DRule<O> extends DFeature {
 
         @Override
         protected final void doRun(State pre, UniverseTransaction universeTransaction) {
-            DObject dObject = mutable();
+            DMutable dObject = mutable();
             issues.init(Set.of());
             try {
                 if (!dObject.isObsolete(rule().ruleSet().getAnonymousType())) {
                     super.doRun(pre, universeTransaction);
                 }
             } finally {
-                DObject.CONTAINED_DCLARE_ISSUES.set(dObject, (b, a) -> a.addAll(b.exclude(i -> i.getRule().equals(rule()))), issues.result());
+                DMutable.CONTAINED_DCLARE_ISSUES.set(dObject, (b, a) -> a.addAll(b.exclude(i -> i.getRule().equals(rule()))), issues.result());
             }
         }
 
         @Override
-        public DObject mutable() {
-            return (DObject) super.mutable();
+        public DMutable mutable() {
+            return (DMutable) super.mutable();
         }
 
         @Override

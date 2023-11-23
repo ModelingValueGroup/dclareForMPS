@@ -75,7 +75,7 @@ import static org.modelingvalue.dclare.CoreSetableModifier.plumbing;
 import static org.modelingvalue.dclare.CoreSetableModifier.synthetic;
 
 @SuppressWarnings("unused")
-public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implements SNode {
+public class DNode extends DNewable<DNode, SNodeReference, SNode> implements SNode {
 
     private static final SConcept QUOTATION_CONCEPT                = MetaAdapterFactory.getConcept(0x3a13115c633c4c5cL, 0xbbcc75c4219e9555L, 0x1168c104659L, "jetbrains.mps.lang.quotation.structure.Quotation");
     private static final SConcept ANTI_QUOTATION_CONCEPT           = MetaAdapterFactory.getConcept(0x3a13115c633c4c5cL, 0xbbcc75c4219e9555L, 0x1168c104658L, "jetbrains.mps.lang.quotation.structure.Antiquotation");
@@ -133,7 +133,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
         SNode sRoot = sNode != null ? sNode.getContainingRoot() : null;
         return sRoot != null ? DNode.of(sRoot) : null;
     }, null, (tx, o, pre, post) -> {
-        Set<Pair<DObject, IssueKindReportItem>> items = MPS_ISSUES.get(o);
+        Set<Pair<DMutable, IssueKindReportItem>> items = MPS_ISSUES.get(o);
         if (pre != null) {
             DNode.ALL_MPS_ISSUES.set(pre, Set::removeAll, items);
         }
@@ -203,13 +203,13 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
     @SuppressWarnings({"deprecation", "removal"})
     public static final Constant<SReferenceLink, DObserved<DNode, Set<DNode>>> OPPOSITE  = Constant.of("OPPOSITE", sr -> DObserved.of(Pair.of(sr, "OPPOSITE"), Set.of(), () -> DNode.REFERENCE.get(sr), null, null, () -> sr.getDeclarationNode().getReference(), synthetic));
 
-    private static final Observer<DNode> MODEL_RULE = DObject.observer(MODEL, o -> {
+    private static final Observer<DNode> MODEL_RULE = DMutable.observer(MODEL, o -> {
         DNode p = o.getAncestor(DNode.class);
         return p != null ? MODEL.get(p) : o.getAncestor(DModel.class);
     });
 
     @SuppressWarnings("unchecked")
-    private static final Observer<DNode> ACTIVATE_RULE = DObject.observer("$NODE_ACTIVATE_RULE", n -> {
+    private static final Observer<DNode> ACTIVATE_RULE = DMutable.observer("$NODE_ACTIVATE_RULE", n -> {
         if (!n.isExternal() && n.isShared() && n.isRead()) {
             DNode.INDEX.triggerInitRead(n);
             DNode.ROOT.triggerInitRead(n);
@@ -217,7 +217,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
         }
     });
 
-    private static final Observer<DNode> ROOT_RULE = DObject.observer(ROOT, o -> {
+    private static final Observer<DNode> ROOT_RULE = DMutable.observer(ROOT, o -> {
         DNode p = o.getParent();
         return p != null ? ROOT.get(p) : o;
     });
@@ -279,15 +279,15 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
     @SuppressWarnings("rawtypes")
     protected static final Constant<SConcept, Set<Observer>> CONCEPT_OBSERVERS = Constant.of("$CONCEPT_OBSERVERS", c -> Set.of());
 
-    protected static final Setable<DNode, Set<Pair<DObject, IssueKindReportItem>>> ALL_MPS_ISSUES = Setable.of("$ALL_MPS_ISSUES", Set.of(), (tx, o, pre, post) -> {
+    protected static final Setable<DNode, Set<Pair<DMutable, IssueKindReportItem>>> ALL_MPS_ISSUES = Setable.of("$ALL_MPS_ISSUES", Set.of(), (tx, o, pre, post) -> {
         DRepository repos = DClareMPS.instance().getRepository();
-        Setable.<Set<Pair<DObject, IssueKindReportItem>>, Pair<DObject, IssueKindReportItem>>diff(pre, post,                                                                            //
+        Setable.<Set<Pair<DMutable, IssueKindReportItem>>, Pair<DMutable, IssueKindReportItem>>diff(pre, post,                                                                            //
                                                                                                   a -> {
-                                                                                                      DObject.MPS_ISSUES.set(a.a(), Set::add, a);
+                                                                                                      DMutable.MPS_ISSUES.set(a.a(), Set::add, a);
                                                                                                       DRepository.ALL_MPS_ISSUES.set(repos, Set::add, a.b());
                                                                                                   },                                                                                                                                                                       //
                                                                                                   r -> {
-                                                                                                      DObject.MPS_ISSUES.set(r.a(), Set::remove, r);
+                                                                                                      DMutable.MPS_ISSUES.set(r.a(), Set::remove, r);
                                                                                                       DRepository.ALL_MPS_ISSUES.set(repos, Set::remove, r.b());
                                                                                                   });
     });
@@ -299,7 +299,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
     }, null, plumbing);
 
     @SuppressWarnings("rawtypes")
-    private static final Observer<DNode> INDEX_RULE = DObject.observer(INDEX, o -> {
+    private static final Observer<DNode> INDEX_RULE = DMutable.observer(INDEX, o -> {
         Pair<Mutable, Setable<Mutable, ?>> pc       = o.dParentContaining();
         Object                             children = pc != null ? pc.b().get(pc.a()) : null;
         return o.equals(children) ? 0 : children instanceof List ? ((List) children).firstIndexOf(o) : -1;
@@ -309,7 +309,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
     protected static final Observed<DNode, Boolean> QUOTED = Observed.of("QUOTED", Boolean.FALSE, plumbing);
 
     @SuppressWarnings("rawtypes")
-    private static final Observer<DNode> QUOTED_RULE = DObject.observer(QUOTED, o -> {
+    private static final Observer<DNode> QUOTED_RULE = DMutable.observer(QUOTED, o -> {
         DNode p = o.getParent();
         return p != null && (p.isQuotation() || (!p.isAntiQuotation() && QUOTED.get(p)));
     });
@@ -317,10 +317,10 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
     private static final Setable<DNode, SNodeId> NODE_ID = Setable.of("NODE_ID", null);
 
     @SuppressWarnings("rawtypes")
-    protected static final Set<Observer> OBSERVERS = DNewableObject.OBSERVERS.addAll(Set.of(ROOT_RULE, MODEL_RULE, INDEX_RULE, ACTIVATE_RULE, QUOTED_RULE));
+    protected static final Set<Observer> OBSERVERS = DNewable.OBSERVERS.addAll(Set.of(ROOT_RULE, MODEL_RULE, INDEX_RULE, ACTIVATE_RULE, QUOTED_RULE));
 
     @SuppressWarnings("rawtypes")
-    protected static final Set<Setable> SETABLES = DNewableObject.SETABLES.addAll(Set.of(ROOT, MODEL, USER_OBJECTS, ALL_MPS_ISSUES, INDEX, NODE_ID, QUOTED));
+    protected static final Set<Setable> SETABLES = DNewable.SETABLES.addAll(Set.of(ROOT, MODEL, USER_OBJECTS, ALL_MPS_ISSUES, INDEX, NODE_ID, QUOTED));
 
     private static void removeWhenAllreadyContained(SNode newParent, SContainmentLink link, SNode node) {
         SNode oldParent = node.getParent();
@@ -497,7 +497,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
 
     @Override
     protected DNodeType getType() {
-        DObject        dParent = dObjectParent();
+        DMutable        dParent = dObjectParent();
         Set<SLanguage> ls      = (dParent != null && !dParent.isExternal() ? dParent : getContextObject()).dClass().getLanguages();
         if (QUOTED.get(this)) {
             return NODE_TYPE.get(Quadruple.of(ls, SNodeUtil.concept_BaseConcept, Set.of(), Set.of()));
@@ -1199,7 +1199,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
     @Override
     @SuppressWarnings("rawtypes")
     protected void readObservedDeep() {
-        Set<Observed> read = DNewableObject.READ_OBSERVEDS.get(this);
+        Set<Observed> read = DNewable.READ_OBSERVEDS.get(this);
         readObserved(read, INDEX);
         readObserved(read, ROOT);
         readObserved(read, MODEL);
@@ -1232,7 +1232,7 @@ public class DNode extends DNewableObject<DNode, SNodeReference, SNode> implemen
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
-    protected Pair<DObject, DObserved<DObject, ?>> readParent() {
+    protected Pair<DMutable, DObserved<DMutable, ?>> readParent() {
         SNode original = tryOriginal();
         if (original == null) {
             throw new NullPointerException("original of " + this + " returned null in readParent()");

@@ -128,11 +128,11 @@ public abstract class DObjectType<I> implements MutableClass {
     }
 
     protected Collection<Observer> observers() {
-        return DObject.OBSERVERS;
+        return DMutable.OBSERVERS;
     }
 
     protected Collection<Setable> setables() {
-        return DObject.SETABLES;
+        return DMutable.SETABLES;
     }
 
 }

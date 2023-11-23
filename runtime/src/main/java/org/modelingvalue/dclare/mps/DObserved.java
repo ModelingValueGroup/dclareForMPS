@@ -33,37 +33,37 @@ import org.modelingvalue.dclare.*;
 import org.modelingvalue.dclare.ex.ThrowableError;
 
 @SuppressWarnings("unused")
-public class DObserved<O extends DObject, T> extends Observed<O, T> implements DFeature {
+public class DObserved<O extends DMutable, T> extends Observed<O, T> implements DFeature {
 
-    public static <C extends DObject, V> DObserved<C, V> of(Object id, V def, Function<C, V> fromMPS, TriConsumer<C, V, V> toMPS, SetableModifier<?>... modifiers) {
+    public static <C extends DMutable, V> DObserved<C, V> of(Object id, V def, Function<C, V> fromMPS, TriConsumer<C, V, V> toMPS, SetableModifier<?>... modifiers) {
         return new DObserved<>(id, c -> def, null, fromMPS, toMPS, null, null, modifiers);
     }
 
-    public static <C extends DObject, V> DObserved<C, V> of(Object id, V def, Function<C, V> fromMPS, TriConsumer<C, V, V> toMPS, Supplier<SNodeReference> source, SetableModifier<?>... modifiers) {
+    public static <C extends DMutable, V> DObserved<C, V> of(Object id, V def, Function<C, V> fromMPS, TriConsumer<C, V, V> toMPS, Supplier<SNodeReference> source, SetableModifier<?>... modifiers) {
         return new DObserved<>(id, c -> def, null, fromMPS, toMPS, null, source, modifiers);
     }
 
-    public static <C extends DObject, V> DObserved<C, V> of(Object id, V def, Function<C, V> fromMPS, TriConsumer<C, V, V> toMPS, QuadConsumer<LeafTransaction, C, V, V> changed, SetableModifier<?>... modifiers) {
+    public static <C extends DMutable, V> DObserved<C, V> of(Object id, V def, Function<C, V> fromMPS, TriConsumer<C, V, V> toMPS, QuadConsumer<LeafTransaction, C, V, V> changed, SetableModifier<?>... modifiers) {
         return new DObserved<>(id, c -> def, null, fromMPS, toMPS, changed, null, modifiers);
     }
 
-    public static <C extends DObject, V> DObserved<C, V> of(Object id, V def, Function<C, V> fromPMS, TriConsumer<C, V, V> toMPS, QuadConsumer<LeafTransaction, C, V, V> changed, Supplier<SNodeReference> source, SetableModifier<?>... modifiers) {
+    public static <C extends DMutable, V> DObserved<C, V> of(Object id, V def, Function<C, V> fromPMS, TriConsumer<C, V, V> toMPS, QuadConsumer<LeafTransaction, C, V, V> changed, Supplier<SNodeReference> source, SetableModifier<?>... modifiers) {
         return new DObserved<>(id, c -> def, null, null, toMPS, changed, source, modifiers);
     }
 
-    public static <C extends DObject, V> DObserved<C, V> of(Object id, V def, Supplier<Setable<?, ?>> opposite, Function<C, V> fromPMS, TriConsumer<C, V, V> toMPS, SetableModifier<?>... modifiers) {
+    public static <C extends DMutable, V> DObserved<C, V> of(Object id, V def, Supplier<Setable<?, ?>> opposite, Function<C, V> fromPMS, TriConsumer<C, V, V> toMPS, SetableModifier<?>... modifiers) {
         return new DObserved<>(id, c -> def, opposite, fromPMS, toMPS, null, null, modifiers);
     }
 
-    public static <C extends DObject, V> DObserved<C, V> of(Object id, V def, Supplier<Setable<?, ?>> opposite, Function<C, V> fromPMS, TriConsumer<C, V, V> toMPS, QuadConsumer<LeafTransaction, C, V, V> changed, SetableModifier<?>... modifiers) {
+    public static <C extends DMutable, V> DObserved<C, V> of(Object id, V def, Supplier<Setable<?, ?>> opposite, Function<C, V> fromPMS, TriConsumer<C, V, V> toMPS, QuadConsumer<LeafTransaction, C, V, V> changed, SetableModifier<?>... modifiers) {
         return new DObserved<>(id, c -> def, opposite, fromPMS, toMPS, changed, null, modifiers);
     }
 
-    public static <C extends DObject, V> DObserved<C, V> of(Object id, V def, Supplier<Setable<?, ?>> opposite, Function<C, V> fromPMS, TriConsumer<C, V, V> toMPS, Supplier<SNodeReference> source, SetableModifier<?>... modifiers) {
+    public static <C extends DMutable, V> DObserved<C, V> of(Object id, V def, Supplier<Setable<?, ?>> opposite, Function<C, V> fromPMS, TriConsumer<C, V, V> toMPS, Supplier<SNodeReference> source, SetableModifier<?>... modifiers) {
         return new DObserved<>(id, c -> def, opposite, fromPMS, toMPS, null, source, modifiers);
     }
 
-    public static <C extends DObject, V> DObserved<C, V> of(Object id, V def, Supplier<Setable<?, ?>> opposite, Function<C, V> fromPMS, TriConsumer<C, V, V> toMPS, QuadConsumer<LeafTransaction, C, V, V> changed, Supplier<SNodeReference> source, SetableModifier<?>... modifiers) {
+    public static <C extends DMutable, V> DObserved<C, V> of(Object id, V def, Supplier<Setable<?, ?>> opposite, Function<C, V> fromPMS, TriConsumer<C, V, V> toMPS, QuadConsumer<LeafTransaction, C, V, V> changed, Supplier<SNodeReference> source, SetableModifier<?>... modifiers) {
         return new DObserved<>(id, c -> def, opposite, fromPMS, toMPS, changed, source, modifiers);
     }
 
@@ -108,7 +108,7 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
 
     @SuppressWarnings("rawtypes")
     private void initRead(O object) {
-        if (!DObject.READ_OBSERVEDS.add(object, this).contains(this)) {
+        if (!DMutable.READ_OBSERVEDS.add(object, this).contains(this)) {
             if (DClareMPS.instance().getConfig().isTraceActivation()) {
                 LeafTransaction current = LeafTransaction.getCurrent();
                 current.runNonObserving(() -> System.err.println(DclareTrace.getLineStart("ACTIVATE", current) + object + "." + this));
@@ -136,7 +136,7 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
             try {
                 toMPS.accept(object, pre, post);
             } catch (Throwable t) {
-                DObject.dClareMPS().addThrowable(new ThrowableError(object, this, Instant.now(), t));
+                DMutable.dClareMPS().addThrowable(new ThrowableError(object, this, Instant.now(), t));
             }
         }
     }
@@ -168,13 +168,13 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
             if (object.isRead()) {
                 if (object.readConstant()) {
                     return fromMPS(object);
-                } else if (!isDclareOnly() && object.isObserving() && !DObject.READ_OBSERVEDS.get(object).contains(this)) {
+                } else if (!isDclareOnly() && object.isObserving() && !DMutable.READ_OBSERVEDS.get(object).contains(this)) {
                     triggerInitRead(object);
                     object.activate();
                     super.get(object);
                     return fromMPS(object); // TODO: Work-around: Fix Ripple-out based on State history!!!
                 }
-            } else if (!isDclareOnly() && object.isObserving() && !DObject.READ_OBSERVEDS.add(object, this).contains(this) && DClareMPS.instance().getConfig().isTraceActivation()) {
+            } else if (!isDclareOnly() && object.isObserving() && !DMutable.READ_OBSERVEDS.add(object, this).contains(this) && DClareMPS.instance().getConfig().isTraceActivation()) {
                 tx.runNonObserving(() -> System.err.println(DclareTrace.getLineStart("ACTIVATE", tx) + object + "." + this));
             }
         }
@@ -188,12 +188,12 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
         if (isRead() && !isDclareOnly() && object.isObserving()) {
             LeafTransaction tx = LeafTransaction.getCurrent();
             if (object.isRead()) {
-                if (!DObject.READ_OBSERVEDS.get(object).contains(this)) {
+                if (!DMutable.READ_OBSERVEDS.get(object).contains(this)) {
                     triggerInitRead(object);
                     ((ObserverTransaction) tx).retrigger(Priority.INNER);
                     return super.get(object);
                 }
-            } else if (!DObject.READ_OBSERVEDS.add(object, this).contains(this) && DClareMPS.instance().getConfig().isTraceActivation()) {
+            } else if (!DMutable.READ_OBSERVEDS.add(object, this).contains(this) && DClareMPS.instance().getConfig().isTraceActivation()) {
                 tx.runNonObserving(() -> System.err.println(DclareTrace.getLineStart("ACTIVATE", tx) + object + "." + this));
             }
         }
@@ -203,7 +203,7 @@ public class DObserved<O extends DObject, T> extends Observed<O, T> implements D
 
     private void activateReferenced(O object, T value) {
         if (isReference() && object.isObserving()) {
-            for (DObject r : collection(value).filter(DObject.class)) {
+            for (DMutable r : collection(value).filter(DMutable.class)) {
                 r.activate();
             }
         }

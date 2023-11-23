@@ -22,7 +22,7 @@ import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.Setable;
 
-public class DServerMetaData extends DObject {
+public class DServerMetaData extends DMutable {
 
     protected static final DServerMetaDataType                     SERVER_METADATA_TYPE = new DServerMetaDataType();
 
@@ -30,10 +30,10 @@ public class DServerMetaData extends DObject {
                                                                                         }, plumbing);
 
     @SuppressWarnings("rawtypes")
-    protected static final Set<Observer>                           OBSERVERS            = DObject.OBSERVERS;
+    protected static final Set<Observer>                           OBSERVERS            = DMutable.OBSERVERS;
 
     @SuppressWarnings("rawtypes")
-    protected static final Set<Setable>                            SETABLES             = DObject.SETABLES.add(SHARED_MODELS);
+    protected static final Set<Setable>                            SETABLES             = DMutable.SETABLES.add(SHARED_MODELS);
 
     public DServerMetaData() {
     }
@@ -63,7 +63,7 @@ public class DServerMetaData extends DObject {
     }
 
     @Override
-    protected Pair<DObject, DObserved<DObject, ?>> readParent() {
+    protected Pair<DMutable, DObserved<DMutable, ?>> readParent() {
         throw new UnsupportedOperationException();
     }
 

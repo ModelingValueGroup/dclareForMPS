@@ -50,7 +50,7 @@ import jetbrains.mps.smodel.MPSModuleRepository;
 import jetbrains.mps.smodel.SModelInternal;
 
 @SuppressWarnings("unused")
-public class DModel extends DNewableObject<DModel, SModelReference, SModel> implements SModel {
+public class DModel extends DNewable<DModel, SModelReference, SModel> implements SModel {
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     private static final Consumer<DModel>                                        INIT_ROOT_CONSUMER         = m -> m.addRoot(((Pair<String, DNode>) ((Action) LeafTransaction.getCurrent().leaf()).id()).b());
@@ -143,9 +143,9 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
                                                                                                                 }
                                                                                                             }, plumbing);
 
-    private static final Observer<DModel>                                        USED_DCLARE_LANGUAGES_RULE = DObject.observer(USED_DCLARE_LANGUAGES, DModel::allUsedDClareLanguages);
+    private static final Observer<DModel>                                        USED_DCLARE_LANGUAGES_RULE = DMutable.observer(USED_DCLARE_LANGUAGES, DModel::allUsedDClareLanguages);
 
-    private static final Observer<DModel>                                        ACTIVATE_RULE              = DObject.observer("$MODEL_ACTIVATE_RULE", m -> {
+    private static final Observer<DModel>                                        ACTIVATE_RULE              = DMutable.observer("$MODEL_ACTIVATE_RULE", m -> {
                                                                                                                 if (!m.isExternal()) {
                                                                                                                     boolean shared = SHARED.get(m);
                                                                                                                     if (shared || (!USED_DCLARE_LANGUAGES.get(m).isEmpty() && LOADED.get(m))) {
@@ -161,10 +161,10 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
                                                                                                                 }
                                                                                                             });
     @SuppressWarnings("rawtypes")
-    protected static final Set<Observer>                                         OBSERVERS                  = DNewableObject.OBSERVERS.addAll(Set.of(ACTIVATE_RULE, USED_DCLARE_LANGUAGES_RULE));
+    protected static final Set<Observer>                                         OBSERVERS                  = DNewable.OBSERVERS.addAll(Set.of(ACTIVATE_RULE, USED_DCLARE_LANGUAGES_RULE));
 
     @SuppressWarnings("rawtypes")
-    protected static final Set<Setable>                                          SETABLES                   = DNewableObject.SETABLES.addAll(Set.of(NAME, ROOTS, MODEL_ROOT, USED_MODELS, USED_LANGUAGES, USED_DEVKITS, LOADED, SHARED, USED_DCLARE_LANGUAGES));
+    protected static final Set<Setable>                                          SETABLES                   = DNewable.SETABLES.addAll(Set.of(NAME, ROOTS, MODEL_ROOT, USED_MODELS, USED_LANGUAGES, USED_DEVKITS, LOADED, SHARED, USED_DCLARE_LANGUAGES));
 
     public static DModel of(IRuleSet ruleSet, String anonymousType, Object[] identity, boolean temporal) {
         return quotationConstruct(ruleSet, anonymousType, identity, //
@@ -351,7 +351,7 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
     @Override
     @SuppressWarnings("rawtypes")
     protected void readObservedDeep() {
-        Set<Observed> read = DNewableObject.READ_OBSERVEDS.get(this);
+        Set<Observed> read = DNewable.READ_OBSERVEDS.get(this);
         readObserved(read, NAME);
         readObserved(read, LOADED);
         readObserved(read, USED_LANGUAGES);
@@ -604,7 +604,7 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
-    protected Pair<DObject, DObserved<DObject, ?>> readParent() {
+    protected Pair<DMutable, DObserved<DMutable, ?>> readParent() {
         SModule sModule = dClareMPS().read(() -> tryOriginal().getModule());
         return sModule != null ? (Pair) Pair.of(DModule.of(sModule), DModule.MODELS) : null;
     }

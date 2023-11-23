@@ -99,7 +99,7 @@ public interface DAttribute<O, T> extends DFeature {
         return null;
     }
 
-    final class DObservedAttribute<C extends DObject, V> extends DObserved<C, V> implements DAttribute<C, V> {
+    final class DObservedAttribute<C extends DMutable, V> extends DObserved<C, V> implements DAttribute<C, V> {
 
         private final String    name;
         private final Class<?>  cls;
@@ -213,7 +213,7 @@ public interface DAttribute<O, T> extends DFeature {
 
     }
 
-    final class DIdentifyingAttribute<C extends DIdentifiedObject, V> extends Setable<C, V> implements DAttribute<C, V> {
+    final class DIdentifyingAttribute<C extends DIdentified, V> extends Setable<C, V> implements DAttribute<C, V> {
 
         private final String                   name;
         private final int                      index;

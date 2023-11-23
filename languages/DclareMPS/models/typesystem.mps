@@ -8815,7 +8815,7 @@
               <node concept="2pIpSj" id="3ANOQoW2YN4" role="2pJxcM">
                 <ref role="2pIpSl" to="tpee:g7uigIF" resolve="classifier" />
                 <node concept="36bGnv" id="3ANOQoW2ZiH" role="28nt2d">
-                  <ref role="36bGnp" to="t4tl:~DObject" resolve="DObject" />
+                  <ref role="36bGnp" to="t4tl:~DMutable" resolve="DMutable" />
                 </node>
               </node>
             </node>

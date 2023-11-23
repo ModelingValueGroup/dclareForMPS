@@ -15,7 +15,7 @@
 
 package org.modelingvalue.dclare.mps;
 
-public abstract class DFromOriginalObject<O> extends DObject {
+public abstract class DFromOriginalObject<O> extends DMutable {
 
     private final O original;
 
