@@ -12906,15 +12906,10 @@
                         <ref role="2Pygpw" node="4NMtPTvGXWc" resolve="y" />
                         <node concept="3cpWs3" id="t2PHHuoJCe" role="2PygpA">
                           <node concept="3b6qkQ" id="t2PHHuoK60" role="3uHU7w">
-                            <property role="$nhwW" value="20.0" />
+                            <property role="$nhwW" value="120.0d" />
                           </node>
-                          <node concept="2OqwBi" id="t2PHHu$hT9" role="3uHU7B">
-                            <node concept="1SfVH9" id="t2PHHu$hTa" role="2Oq$k0">
-                              <ref role="3cqZAo" node="2xAA8jfCCHw" resolve="position" />
-                            </node>
-                            <node concept="32jkxy" id="t2PHHu$hTb" role="2OqNvi">
-                              <ref role="3cqZAo" node="4NMtPTvGXWc" resolve="y" />
-                            </node>
+                          <node concept="37vLTw" id="7BlvFqmzQ2C" role="3uHU7B">
+                            <ref role="3cqZAo" node="t2PHHuon45" resolve="ySuperMax" />
                           </node>
                         </node>
                       </node>
