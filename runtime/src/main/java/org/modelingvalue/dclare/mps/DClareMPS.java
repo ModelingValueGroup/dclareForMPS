@@ -56,6 +56,7 @@ import org.modelingvalue.collections.util.ContextThread.ContextPool;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.collections.util.Triple;
 import org.modelingvalue.dclare.*;
+import org.modelingvalue.dclare.Priority.Queued;
 import org.modelingvalue.dclare.UniverseTransaction.Status;
 import org.modelingvalue.dclare.ex.*;
 import org.modelingvalue.dclare.mps.DAttribute.DObservedAttribute;
@@ -212,7 +213,7 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
     private final AtomicLong                                                                                           counter                  = new AtomicLong(0L);
     private final DRepository                                                                                          dRepository;
     private final DServerMetaData                                                                                      dServerMetaData;
-    private final Comparator<? super Triple<DMutable, DFeature, Throwable>>                                             messageComparator        = (a, b) -> universeTransaction().compareThrowable(a.c(), b.c());
+    private final Comparator<? super Triple<DMutable, DFeature, Throwable>>                                            messageComparator        = (a, b) -> universeTransaction().compareThrowable(a.c(), b.c());
     //
     private DefaultMap<DMessageType, List<DMessage>>                                                                   messages                 = EMPTY_MESSAGE_LIST_MAP;
     private boolean                                                                                                    running                  = false;
@@ -1144,20 +1145,32 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
             super(universeTransaction, stateMap);
         }
 
+        @SuppressWarnings("rawtypes")
+        private MPSState(UniverseTransaction universeTransaction, DefaultMap<Object, DefaultMap<Setable, Object>> map, Queued<Action<?>>[] actions, Queued<Mutable>[] children) {
+            super(universeTransaction, map, actions, children);
+        }
+
+        @SuppressWarnings("rawtypes")
+        @Override
+        protected State newState(DefaultMap<Object, DefaultMap<Setable, Object>> newMap, Queued<Action<?>>[] actions, Queued<Mutable>[] children) {
+            return new MPSState(universeTransaction(), newMap, actions, children);
+        }
+
         @SuppressWarnings({"unchecked", "rawtypes"})
         @Override
         public <O, T> T get(O object, Getable<O, T> property) {
-            if (getFromMPS(object)) {
-                DMutable dObject = (DMutable) object;
-                if (dObject.isRead()) {
-                    if (property instanceof DObserved) {
-                        DObserved<DMutable, T> dObserved = (DObserved<DMutable, T>) property;
-                        if (dObserved.isRead() && !dObserved.isDclareOnly() && !super.get(dObject, DMutable.READ_OBSERVEDS).contains(property)) {
-                            return dObserved.fromMPS(dObject);
-                        }
-                    } else if (property == Mutable.D_PARENT_CONTAINING && super.get((Mutable) object, Mutable.D_PARENT_CONTAINING) == null) {
-                        return (T) dObject.readParent();
+            if (property instanceof DObserved) {
+                DObserved<DMutable, T> dObserved = (DObserved<DMutable, T>) property;
+                if (dObserved.isRead() && !dObserved.isDclareOnly() && getFromMPS(object)) {
+                    DMutable dObject = (DMutable) object;
+                    if (dObject.isRead() && !super.get(dObject, DMutable.READ_OBSERVEDS).contains(property)) {
+                        return dObserved.fromMPS(dObject);
                     }
+                }
+            } else if (property == Mutable.D_PARENT_CONTAINING && getFromMPS(object)) {
+                DMutable dObject = (DMutable) object;
+                if (dObject.isRead() && super.get((Mutable) object, Mutable.D_PARENT_CONTAINING) == null) {
+                    return (T) dObject.readParent();
                 }
             }
             return super.get(object, property);
@@ -1194,7 +1207,7 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
 
         private boolean isPreState() {
             UniverseTransaction utx = universeTransaction();
-            return this == utx.preState() || this == utx.preStartState(Priority.OUTER).state();
+            return this == utx.emptyState() || this == utx.preState() || this == utx.preStartState(Priority.OUTER).state();
         }
     }
 
