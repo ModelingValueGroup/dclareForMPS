@@ -122,6 +122,9 @@
     <property role="34LRSv" value=":=" />
     <property role="3GE5qa" value="expressions" />
     <ref role="1TJDcQ" to="tpee:fz7vLUm" resolve="AssignmentExpression" />
+    <node concept="PrWs8" id="2u2ha1pPlyM" role="PzmwI">
+      <ref role="PrY4T" node="6aMI9gI2yLt" resolve="IAttributeTarget" />
+    </node>
   </node>
   <node concept="1TIwiD" id="29R9$zYWiFR">
     <property role="EcuMT" value="2483495814474836727" />
