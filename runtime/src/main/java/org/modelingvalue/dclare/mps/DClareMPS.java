@@ -1159,18 +1159,20 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
         @SuppressWarnings({"unchecked", "rawtypes"})
         @Override
         public <O, T> T get(O object, Getable<O, T> property) {
-            if (property instanceof DObserved) {
-                DObserved<DMutable, T> dObserved = (DObserved<DMutable, T>) property;
-                if (dObserved.isRead() && !dObserved.isDclareOnly() && getFromMPS(object)) {
-                    DMutable dObject = (DMutable) object;
-                    if (dObject.isRead() && !super.get(dObject, DMutable.READ_OBSERVEDS).contains(property)) {
-                        return dObserved.fromMPS(dObject);
+            if (object instanceof DMutable) {
+                if (property instanceof DObserved) {
+                    DObserved<DMutable, T> dObserved = (DObserved<DMutable, T>) property;
+                    if (dObserved.isRead()) {
+                        DMutable dObject = (DMutable) object;
+                        if (dObject.isRead() && !super.get(dObject, DMutable.READ_OBSERVEDS).contains(property)) {
+                            return dObserved.fromMPS(dObject);
+                        }
                     }
-                }
-            } else if (property == Mutable.D_PARENT_CONTAINING && getFromMPS(object)) {
-                DMutable dObject = (DMutable) object;
-                if (dObject.isRead() && super.get((Mutable) object, Mutable.D_PARENT_CONTAINING) == null) {
-                    return (T) dObject.readParent();
+                } else if (property == Mutable.D_PARENT_CONTAINING) {
+                    DMutable dObject = (DMutable) object;
+                    if (dObject.isRead() && super.get((Mutable) object, Mutable.D_PARENT_CONTAINING) == null) {
+                        return (T) dObject.readParent();
+                    }
                 }
             }
             return super.get(object, property);
@@ -1179,10 +1181,11 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
         @SuppressWarnings({"rawtypes", "unchecked"})
         @Override
         public <O, A, B> A getA(O object, Getable<O, Pair<A, B>> property) {
-            if (property == (Getable) Mutable.D_PARENT_CONTAINING && getFromMPS(object)) {
+            if (object instanceof DMutable && property == (Getable) Mutable.D_PARENT_CONTAINING) {
                 DMutable dObject = (DMutable) object;
                 if (dObject.isRead() && super.get((Mutable) object, Mutable.D_PARENT_CONTAINING) == null) {
-                    return (A) dObject.readParent().a();
+                    Pair<DMutable, DObserved<DMutable, ?>> p = dObject.readParent();
+                    return p == null ? null : (A) p.a();
                 }
             }
             return super.getA(object, property);
@@ -1191,23 +1194,19 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
         @SuppressWarnings({"rawtypes", "unchecked"})
         @Override
         public <O, A, B> B getB(O object, Getable<O, Pair<A, B>> property) {
-            if (property == (Getable) Mutable.D_PARENT_CONTAINING && getFromMPS(object)) {
+            if (object instanceof DMutable && property == (Getable) Mutable.D_PARENT_CONTAINING) {
                 DMutable dObject = (DMutable) object;
                 if (dObject.isRead() && super.get((Mutable) object, Mutable.D_PARENT_CONTAINING) == null) {
-                    return (B) dObject.readParent().b();
+                    Pair<DMutable, DObserved<DMutable, ?>> p = dObject.readParent();
+                    return p == null ? null : (B) p.b();
                 }
             }
             return super.getB(object, property);
         }
 
-        private <O> boolean getFromMPS(O object) {
-            return object instanceof DMutable && !isPreState() && //
-                    (ObserverTransaction.RIPPLE_OUT.get() || (LeafTransaction.getCurrent() instanceof IdentityDerivationTransaction));
-        }
-
-        private boolean isPreState() {
-            UniverseTransaction utx = universeTransaction();
-            return this == utx.emptyState() || this == utx.preState() || this == utx.preStartState(Priority.OUTER).state();
+        @Override
+        public <O, T> T getRaw(O object, Getable<O, T> property) {
+            return super.get(object, property);
         }
     }
 

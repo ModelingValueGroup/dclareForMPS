@@ -28,9 +28,9 @@ public abstract class DNewable<T extends DNewable, R, S> extends DIdentifiedMuta
     protected static final Action<DNewable>         READ_OBSERVED_DEEP = Action.of("$READ_OBSERVED_DEEP", DNewable::readObservedDeep);
 
     @SuppressWarnings("unchecked")
-    protected static final Set<Observer>                  OBSERVERS          = DMutable.OBSERVERS;
+    protected static final Set<Observer>            OBSERVERS          = DMutable.OBSERVERS;
 
-    protected static final Set<Setable>                   SETABLES           = DMutable.SETABLES;
+    protected static final Set<Setable>             SETABLES           = DMutable.SETABLES;
 
     protected static <D extends DNewable> D copyRootConstruct(IRuleSet ruleSet, String anonymousType, Object[] ctx, DNode copiedRoot, Supplier<D> supplier) {
         LeafTransaction tx = LeafTransaction.getCurrent();

@@ -113,7 +113,7 @@ public class DObserved<O extends DMutable, T> extends Observed<O, T> implements 
                 LeafTransaction current = LeafTransaction.getCurrent();
                 current.runNonObserving(() -> System.err.println(DclareTrace.getLineStart("ACTIVATE", current) + object + "." + this));
             }
-            set(object, fromMPS(object));
+            super.set(object, fromMPS(object));
         }
     }
 
@@ -123,7 +123,7 @@ public class DObserved<O extends DMutable, T> extends Observed<O, T> implements 
     }
 
     private void reRead(O object) {
-        set(object, fromMPS(object));
+        super.set(object, fromMPS(object));
     }
 
     @SuppressWarnings("unchecked")
@@ -167,18 +167,15 @@ public class DObserved<O extends DMutable, T> extends Observed<O, T> implements 
         if (isRead()) {
             if (object.isRead()) {
                 if (object.readConstant()) {
-                    return fromMPS(object);
+                    return super.get(object);
                 } else if (!isDclareOnly() && object.isObserving() && !DMutable.READ_OBSERVEDS.get(object).contains(this)) {
                     triggerInitRead(object);
-                    object.activate();
-                    super.get(object);
-                    return fromMPS(object); // TODO: Work-around: Fix Ripple-out based on State history!!!
                 }
             } else if (!isDclareOnly() && object.isObserving() && !DMutable.READ_OBSERVEDS.add(object, this).contains(this) && DClareMPS.instance().getConfig().isTraceActivation()) {
                 tx.runNonObserving(() -> System.err.println(DclareTrace.getLineStart("ACTIVATE", tx) + object + "." + this));
             }
         }
-        object.activate();
+        object.activate(false);
         return super.get(object);
     }
 
@@ -197,16 +194,12 @@ public class DObserved<O extends DMutable, T> extends Observed<O, T> implements 
                 tx.runNonObserving(() -> System.err.println(DclareTrace.getLineStart("ACTIVATE", tx) + object + "." + this));
             }
         }
-        activateReferenced(object, value);
-        return super.set(object, value);
-    }
-
-    private void activateReferenced(O object, T value) {
         if (isReference() && object.isObserving()) {
             for (DMutable r : collection(value).filter(DMutable.class)) {
-                r.activate();
+                r.activate(true);
             }
         }
+        return super.set(object, value);
     }
 
     @Override

@@ -266,19 +266,19 @@ public abstract class DMutable implements DObject, Mutable {
         if (isRead() && readConstant()) {
             return (Pair) readParent();
         }
-        activate();
+        activate(false);
         return Mutable.super.dParentContaining();
     }
 
     @Override
     public void dChangedParentContaining(Pair<Mutable, Setable<Mutable, ?>> pre, Pair<Mutable, Setable<Mutable, ?>> post) {
         if (post != null && post.a() instanceof DMutable) {
-            ((DMutable) post.a()).activate();
+            ((DMutable) post.a()).activate(true);
         }
         Mutable.super.dChangedParentContaining(pre, post);
     }
 
-    protected void activate() {
+    protected void activate(boolean changed) {
     }
 
     protected abstract Pair<DMutable, DObserved<DMutable, ?>> readParent();
