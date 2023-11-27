@@ -411,7 +411,7 @@
       </node>
     </node>
     <node concept="2iyNl8" id="67eN9QkCtpE" role="2iyNln">
-      <property role="2iyNlD" value="680" />
+      <property role="2iyNlD" value="700" />
       <property role="2iyNlR" value="340" />
       <ref role="2iyNl9" node="3gm2YTwH79_" resolve="AspectSettings" />
       <node concept="2iyNll" id="67eN9QkVrxk" role="2iyNmk">
@@ -419,13 +419,13 @@
       </node>
       <node concept="2iyNll" id="67eN9QkCtpL" role="2iyNmk">
         <ref role="2iyNli" node="3_wkb9eGAzO" resolve="dependencies" />
-        <node concept="2iyNlg" id="5$hAhBu_SrK" role="2iyKN2">
-          <property role="2iyKN1" value="780" />
+        <node concept="2iyNlg" id="6FHmkWMU8tG" role="2iyKN2">
+          <property role="2iyKN1" value="620" />
           <property role="2iyKNf" value="440" />
         </node>
-        <node concept="2iyNlg" id="2$ONhhVnPc" role="2iyKN2">
+        <node concept="2iyNlg" id="6FHmkWMU8tH" role="2iyKN2">
+          <property role="2iyKN1" value="800" />
           <property role="2iyKNf" value="440" />
-          <property role="2iyKN1" value="580" />
         </node>
       </node>
     </node>
