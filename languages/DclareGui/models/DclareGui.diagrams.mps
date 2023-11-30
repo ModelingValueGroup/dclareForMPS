@@ -439,7 +439,7 @@
     </node>
     <node concept="2iyNl8" id="7BVZ4Aes_r7" role="2iyNln">
       <property role="2iyNlD" value="340" />
-      <property role="2iyNlR" value="40" />
+      <property role="2iyNlR" value="60" />
       <ref role="2iyNl9" to="53d4:3psr82$c6ii" resolve="IEditor" />
     </node>
     <node concept="2iyNl8" id="7BVZ4Aes_qH" role="2iyNln">
