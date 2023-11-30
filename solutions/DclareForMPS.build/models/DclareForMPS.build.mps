@@ -1077,6 +1077,11 @@
             <ref role="3bR37D" to="ffeo:mXGwHwhVPj" resolve="JDK" />
           </node>
         </node>
+        <node concept="1SiIV0" id="3fP48FwKJVg" role="3bR37C">
+          <node concept="3bR9La" id="3fP48FwKJVh" role="1SiIV1">
+            <ref role="3bR37D" to="ffeo:4m1I2e4jdlp" resolve="MPS.Boot" />
+          </node>
+        </node>
       </node>
       <node concept="1E1JtA" id="5TmHY1kYrb4" role="2G$12L">
         <property role="TrG5h" value="DclareMPSPlugin" />

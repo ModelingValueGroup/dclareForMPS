@@ -2076,30 +2076,44 @@
             </node>
           </node>
           <node concept="3clFbJ" id="67uyCwCTw6M" role="3cqZAp">
-            <node concept="1Wc70l" id="6t3mfVt$d6R" role="3clFbw">
-              <node concept="3fqX7Q" id="6t3mfVt$dQk" role="3uHU7w">
-                <node concept="2OqwBi" id="6t3mfVt$hnu" role="3fr31v">
-                  <node concept="37vLTw" id="6t3mfVt$h8z" role="2Oq$k0">
-                    <ref role="3cqZAo" node="67uyCwCTEa4" resolve="elementType" />
+            <node concept="1Wc70l" id="5PFtE$o$D9R" role="3clFbw">
+              <node concept="1Wc70l" id="6t3mfVt$d6R" role="3uHU7B">
+                <node concept="3fqX7Q" id="67uyCwCTGPS" role="3uHU7B">
+                  <node concept="2OqwBi" id="67uyCwCTH3b" role="3fr31v">
+                    <node concept="2pJPEk" id="67uyCwCTGQa" role="2Oq$k0">
+                      <node concept="2pJPED" id="67uyCwCTGRY" role="2pJPEn">
+                        <ref role="2pJxaS" to="7ggn:3Qetf3cPPAL" resolve="StructType" />
+                      </node>
+                    </node>
+                    <node concept="2qgKlT" id="67uyCwCTHeQ" role="2OqNvi">
+                      <ref role="37wK5l" to="tpek:hKBOZqh" resolve="isSupersetOf" />
+                      <node concept="37vLTw" id="67uyCwCTHlY" role="37wK5m">
+                        <ref role="3cqZAo" node="67uyCwCTEa4" resolve="elementType" />
+                      </node>
+                    </node>
                   </node>
-                  <node concept="1mIQ4w" id="6t3mfVt$hAl" role="2OqNvi">
-                    <node concept="chp4Y" id="6t3mfVt$hGV" role="cj9EA">
-                      <ref role="cht4Q" to="tp25:gzTqbfa" resolve="SNodeType" />
+                </node>
+                <node concept="3fqX7Q" id="6t3mfVt$dQk" role="3uHU7w">
+                  <node concept="2OqwBi" id="6t3mfVt$hnu" role="3fr31v">
+                    <node concept="37vLTw" id="6t3mfVt$h8z" role="2Oq$k0">
+                      <ref role="3cqZAo" node="67uyCwCTEa4" resolve="elementType" />
+                    </node>
+                    <node concept="1mIQ4w" id="6t3mfVt$hAl" role="2OqNvi">
+                      <node concept="chp4Y" id="6t3mfVt$hGV" role="cj9EA">
+                        <ref role="cht4Q" to="tp25:gzTqbfa" resolve="SNodeType" />
+                      </node>
                     </node>
                   </node>
                 </node>
               </node>
-              <node concept="3fqX7Q" id="67uyCwCTGPS" role="3uHU7B">
-                <node concept="2OqwBi" id="67uyCwCTH3b" role="3fr31v">
-                  <node concept="2pJPEk" id="67uyCwCTGQa" role="2Oq$k0">
-                    <node concept="2pJPED" id="67uyCwCTGRY" role="2pJPEn">
-                      <ref role="2pJxaS" to="7ggn:3Qetf3cPPAL" resolve="StructType" />
-                    </node>
+              <node concept="3fqX7Q" id="5PFtE$o$DlI" role="3uHU7w">
+                <node concept="2OqwBi" id="5PFtE$o$DlJ" role="3fr31v">
+                  <node concept="37vLTw" id="5PFtE$o$DlK" role="2Oq$k0">
+                    <ref role="3cqZAo" node="67uyCwCTEa4" resolve="elementType" />
                   </node>
-                  <node concept="2qgKlT" id="67uyCwCTHeQ" role="2OqNvi">
-                    <ref role="37wK5l" to="tpek:hKBOZqh" resolve="isSupersetOf" />
-                    <node concept="37vLTw" id="67uyCwCTHlY" role="37wK5m">
-                      <ref role="3cqZAo" node="67uyCwCTEa4" resolve="elementType" />
+                  <node concept="1mIQ4w" id="5PFtE$o$DlL" role="2OqNvi">
+                    <node concept="chp4Y" id="5PFtE$o$DlM" role="cj9EA">
+                      <ref role="cht4Q" to="tp25:gCH_c3d" resolve="SModelType" />
                     </node>
                   </node>
                 </node>
@@ -2108,7 +2122,7 @@
             <node concept="3clFbS" id="67uyCwCTw6O" role="3clFbx">
               <node concept="2MkqsV" id="67uyCwCTHrS" role="3cqZAp">
                 <node concept="Xl_RD" id="67uyCwCTHs7" role="2MkJ7o">
-                  <property role="Xl_RC" value="The type of an composite attribute must be a struct or node or a collection of structs or nodes" />
+                  <property role="Xl_RC" value="The type of an composite attribute must be a struct, node or model (or a collection of structs, nodes or models)" />
                 </node>
                 <node concept="1YBJjd" id="67uyCwCTHv_" role="1urrMF">
                   <ref role="1YBMHb" node="67uyCwCTvaD" resolve="attribute" />
