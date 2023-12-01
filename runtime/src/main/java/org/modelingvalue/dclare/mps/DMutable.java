@@ -77,6 +77,9 @@ public abstract class DMutable implements DObject, Mutable {
                                                                                                                        if (a.hasNatives()) {
                                                                                                                            DMutable.CONTAINED.set(o, true);
                                                                                                                        }
+                                                                                                                       if (!a.getObservers().isEmpty() || !a.getAttributes().isEmpty()) {
+                                                                                                                           o.readChildren();
+                                                                                                                       }
                                                                                                                    }, plumbing);
 
     private static final Observer<DMutable>                                              TYPE_RULE                 = observer(TYPE, DMutable::getType);
@@ -279,6 +282,9 @@ public abstract class DMutable implements DObject, Mutable {
     }
 
     protected void activate(boolean changed) {
+    }
+
+    protected void readChildren() {
     }
 
     protected abstract Pair<DMutable, DObserved<DMutable, ?>> readParent();

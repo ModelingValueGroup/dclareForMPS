@@ -1164,11 +1164,17 @@ public class DNode extends DNewable<DNode, SNodeReference, SNode> implements SNo
     @SuppressWarnings("unchecked")
     @Override
     protected void read() {
-        DNode.CONCEPT_INIT_DOBSERVEDS.get(getConcept()).forEachOrdered(o -> o.triggerInitRead(this));
         MODEL.triggerInitRead(this);
         if (isINamedConcept) {
             PROPERTY.get(SNodeUtil.property_INamedConcept_name).triggerInitRead(this);
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    protected void readChildren() {
+        SConcept concept = getConcept();
+        DNode.CONCEPT_INIT_DOBSERVEDS.get(concept).forEachOrdered(o -> o.triggerInitRead(this));
     }
 
     @Override
