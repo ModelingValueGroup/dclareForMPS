@@ -245,6 +245,7 @@
       </concept>
       <concept id="1070534058343" name="jetbrains.mps.baseLanguage.structure.NullLiteral" flags="nn" index="10Nm6u" />
       <concept id="1070534370425" name="jetbrains.mps.baseLanguage.structure.IntegerType" flags="in" index="10Oyi0" />
+      <concept id="1070534436861" name="jetbrains.mps.baseLanguage.structure.FloatType" flags="in" index="10OMs4" />
       <concept id="1070534513062" name="jetbrains.mps.baseLanguage.structure.DoubleType" flags="in" index="10P55v" />
       <concept id="1070534644030" name="jetbrains.mps.baseLanguage.structure.BooleanType" flags="in" index="10P_77" />
       <concept id="1070534760951" name="jetbrains.mps.baseLanguage.structure.ArrayType" flags="in" index="10Q1$e">
@@ -6336,39 +6337,85 @@
     </node>
     <node concept="32q3_s" id="AO_ohtcSsj" role="1FPzNG">
       <property role="TrG5h" value="editorHints" />
-      <property role="KodbT" value="true" />
       <node concept="10Q1$e" id="AO_ohtcSsk" role="1tU5fm">
         <node concept="17QB3L" id="AO_ohtcSsl" role="10Q1$1" />
       </node>
     </node>
-    <node concept="32q3_s" id="6FHmkWKN04o" role="1FPzNG">
-      <property role="TrG5h" value="defaultFont" />
-      <property role="KodbT" value="true" />
-      <node concept="3uibUv" id="6FHmkWKN04p" role="1tU5fm">
-        <ref role="3uigEE" to="z60i:~Font" resolve="Font" />
-      </node>
-    </node>
     <node concept="32q3_s" id="6FHmkWL3dyy" role="1FPzNG">
       <property role="TrG5h" value="scaledFont" />
-      <property role="KodbT" value="true" />
       <node concept="3uibUv" id="6FHmkWL3dyz" role="1tU5fm">
         <ref role="3uigEE" to="z60i:~Font" resolve="Font" />
       </node>
     </node>
+    <node concept="32q3_s" id="wmZFSN8ZyT" role="1FPzNG">
+      <property role="TrG5h" value="scaledFontSize" />
+      <node concept="10OMs4" id="wmZFSNoEec" role="1tU5fm" />
+      <node concept="2OqwBi" id="wmZFSN94Pl" role="33vP2m">
+        <node concept="1SfVH9" id="wmZFSN94Pm" role="2Oq$k0">
+          <ref role="3cqZAo" node="6FHmkWL3dyy" resolve="scaledFont" />
+        </node>
+        <node concept="liA8E" id="wmZFSN94Pn" role="2OqNvi">
+          <ref role="37wK5l" to="z60i:~Font.getSize2D()" resolve="getSize2D" />
+        </node>
+      </node>
+    </node>
+    <node concept="32q3_s" id="wmZFSN8_vK" role="1FPzNG">
+      <property role="TrG5h" value="unScaledFontSize" />
+      <node concept="10OMs4" id="wmZFSN8_vE" role="1tU5fm" />
+      <node concept="2OqwBi" id="wmZFSN8_vF" role="33vP2m">
+        <node concept="2OqwBi" id="wmZFSN8_vG" role="2Oq$k0">
+          <node concept="10M0yZ" id="wmZFSN8_vH" role="2Oq$k0">
+            <ref role="3cqZAo" to="exr9:~EditorComponentSettingsImpl.DEFAULT_SETTINGS" resolve="DEFAULT_SETTINGS" />
+            <ref role="1PxDUh" to="exr9:~EditorComponentSettingsImpl" resolve="EditorComponentSettingsImpl" />
+          </node>
+          <node concept="liA8E" id="wmZFSN8_vI" role="2OqNvi">
+            <ref role="37wK5l" to="cj4x:~EditorComponentSettings.getDefaultFont()" resolve="getDefaultFont" />
+          </node>
+        </node>
+        <node concept="liA8E" id="wmZFSN8_vJ" role="2OqNvi">
+          <ref role="37wK5l" to="z60i:~Font.getSize2D()" resolve="getSize2D" />
+        </node>
+      </node>
+    </node>
+    <node concept="32q3_s" id="6FHmkWKN04o" role="1FPzNG">
+      <property role="TrG5h" value="usScaledFont" />
+      <node concept="3uibUv" id="6FHmkWKN04p" role="1tU5fm">
+        <ref role="3uigEE" to="z60i:~Font" resolve="Font" />
+      </node>
+      <node concept="2OqwBi" id="wmZFSN8xOl" role="33vP2m">
+        <node concept="1SfVH9" id="wmZFSN8xmh" role="2Oq$k0">
+          <ref role="3cqZAo" node="6FHmkWL3dyy" resolve="scaledFont" />
+        </node>
+        <node concept="liA8E" id="wmZFSN8zPo" role="2OqNvi">
+          <ref role="37wK5l" to="z60i:~Font.deriveFont(float)" resolve="deriveFont" />
+          <node concept="1SfVH9" id="wmZFSN8_vM" role="37wK5m">
+            <ref role="3cqZAo" node="wmZFSN8_vK" />
+          </node>
+        </node>
+      </node>
+    </node>
     <node concept="32q3_s" id="1bDgvLYgfGm" role="1FPzNG">
-      <property role="KodbT" value="true" />
-      <property role="TrG5h" value="defaultFontMetrics" />
+      <property role="TrG5h" value="usScaledFontMetrics" />
       <node concept="3uibUv" id="1bDgvLYgiyU" role="1tU5fm">
         <ref role="3uigEE" to="z60i:~FontMetrics" resolve="FontMetrics" />
+      </node>
+      <node concept="2OqwBi" id="wmZFSN9gzP" role="33vP2m">
+        <node concept="2YIFZM" id="wmZFSN9gzQ" role="2Oq$k0">
+          <ref role="37wK5l" to="z60i:~Toolkit.getDefaultToolkit()" resolve="getDefaultToolkit" />
+          <ref role="1Pybhc" to="z60i:~Toolkit" resolve="Toolkit" />
+        </node>
+        <node concept="liA8E" id="wmZFSN9gzR" role="2OqNvi">
+          <ref role="37wK5l" to="z60i:~Toolkit.getFontMetrics(java.awt.Font)" resolve="getFontMetrics" />
+          <node concept="1SfVH9" id="wmZFSN9gzS" role="37wK5m">
+            <ref role="3cqZAo" node="6FHmkWKN04o" resolve="usScaledFont" />
+          </node>
+        </node>
       </node>
     </node>
     <node concept="32q3_s" id="6QF1CPNqors" role="1FPzNG">
       <property role="TrG5h" value="textHeight" />
       <node concept="10Oyi0" id="6QF1CPNq$R0" role="1tU5fm" />
-      <node concept="2_n6$v" id="6QF1CPNqO6H" role="33vP2m">
-        <node concept="3cmrfG" id="6QF1CPNtWX6" role="2_mOWp">
-          <property role="3cmrfH" value="13" />
-        </node>
+      <node concept="2OqwBi" id="wmZFSMr2Ri" role="33vP2m">
         <node concept="1SfVH9" id="6QF1CPNqIsA" role="2Oq$k0">
           <ref role="3cqZAo" node="1bDgvLYgfGm" resolve="defaultFontMetrics" />
         </node>
@@ -6377,57 +6424,33 @@
         </node>
       </node>
     </node>
-    <node concept="32q3_s" id="QwQmtNmQS8" role="1FPzNG">
-      <property role="TrG5h" value="dPanel" />
-      <property role="KodbT" value="true" />
-      <node concept="3uibUv" id="QwQmtNmUl4" role="1tU5fm">
-        <ref role="3uigEE" to="u4ym:5uiQOXmFP5Y" resolve="DPanel" />
-      </node>
-    </node>
     <node concept="3tBE6w" id="6FHmkWMxyY9" role="1FPzNG">
       <node concept="3clFbF" id="6FHmkWMx$rU" role="30jUnX">
         <node concept="E34o$" id="6FHmkWMx_sQ" role="3clFbG">
           <node concept="1SfVH9" id="6FHmkWMx$rT" role="37vLTJ">
             <ref role="3cqZAo" node="6FHmkWMhQ2O" resolve="scale" />
           </node>
-          <node concept="3K4zz7" id="6QF1CPN9M3$" role="37vLTx">
-            <node concept="FJ1c_" id="6QF1CPN9Pbo" role="3K4E3e">
-              <node concept="2OqwBi" id="6QF1CPN9QhD" role="3uHU7w">
-                <node concept="1SfVH9" id="6QF1CPN9Px_" role="2Oq$k0">
-                  <ref role="3cqZAo" node="6FHmkWKN04o" resolve="defaultFont" />
+          <node concept="10QFUN" id="wmZFSN4nFm" role="37vLTx">
+            <node concept="10P55v" id="wmZFSN4oko" role="10QFUM" />
+            <node concept="1eOMI4" id="wmZFSN4p9J" role="10QFUP">
+              <node concept="FJ1c_" id="6QF1CPN9Pbo" role="1eOMHV">
+                <node concept="1SfVH9" id="wmZFSN9oAF" role="3uHU7B">
+                  <ref role="3cqZAo" node="wmZFSN8ZyT" resolve="scaledFontSize" />
                 </node>
-                <node concept="liA8E" id="6QF1CPN9Rf$" role="2OqNvi">
-                  <ref role="37wK5l" to="z60i:~Font.getSize2D()" resolve="getSize2D" />
+                <node concept="1SfVH9" id="wmZFSN9pts" role="3uHU7w">
+                  <ref role="3cqZAo" node="wmZFSN8_vK" resolve="unSclaledFontSize" />
                 </node>
-              </node>
-              <node concept="2OqwBi" id="6QF1CPN9NrK" role="3uHU7B">
-                <node concept="1SfVH9" id="6QF1CPN9MFl" role="2Oq$k0">
-                  <ref role="3cqZAo" node="6FHmkWL3dyy" resolve="scaledFont" />
-                </node>
-                <node concept="liA8E" id="6QF1CPN9Op_" role="2OqNvi">
-                  <ref role="37wK5l" to="z60i:~Font.getSize2D()" resolve="getSize2D" />
-                </node>
-              </node>
-            </node>
-            <node concept="3b6qkQ" id="6QF1CPN9Msf" role="3K4GZi">
-              <property role="$nhwW" value="1.0d" />
-            </node>
-            <node concept="1Wc70l" id="6QF1CPN9KrN" role="3K4Cdx">
-              <node concept="3y3z36" id="6QF1CPN9LuZ" role="3uHU7w">
-                <node concept="10Nm6u" id="6QF1CPN9LZw" role="3uHU7w" />
-                <node concept="1SfVH9" id="6QF1CPN9KKr" role="3uHU7B">
-                  <ref role="3cqZAo" node="6FHmkWKN04o" resolve="defaultFont" />
-                </node>
-              </node>
-              <node concept="3y3z36" id="6QF1CPN9J_P" role="3uHU7B">
-                <node concept="1SfVH9" id="6QF1CPN9J2P" role="3uHU7B">
-                  <ref role="3cqZAo" node="6FHmkWL3dyy" resolve="scaledFont" />
-                </node>
-                <node concept="10Nm6u" id="6QF1CPN9KnY" role="3uHU7w" />
               </node>
             </node>
           </node>
         </node>
+      </node>
+    </node>
+    <node concept="32q3_s" id="QwQmtNmQS8" role="1FPzNG">
+      <property role="TrG5h" value="dPanel" />
+      <property role="KodbT" value="true" />
+      <node concept="3uibUv" id="QwQmtNmUl4" role="1tU5fm">
+        <ref role="3uigEE" to="u4ym:5uiQOXmFP5Y" resolve="DPanel" />
       </node>
     </node>
     <node concept="32q3_s" id="Vg5FsxyVVS" role="1FPzNG">
@@ -6825,26 +6848,16 @@
                                     </node>
                                   </node>
                                 </node>
-                                <node concept="3clFbJ" id="35HVCqFLbkw" role="3cqZAp">
-                                  <node concept="3clFbS" id="35HVCqFLbky" role="3clFbx">
-                                    <node concept="3clFbF" id="35HVCqFLiL3" role="3cqZAp">
-                                      <node concept="2OqwBi" id="35HVCqFLk4R" role="3clFbG">
-                                        <node concept="37vLTw" id="35HVCqFLiL1" role="2Oq$k0">
-                                          <ref role="3cqZAo" node="3nsHMGrWGYu" resolve="g2d" />
-                                        </node>
-                                        <node concept="liA8E" id="35HVCqFLliv" role="2OqNvi">
-                                          <ref role="37wK5l" to="z60i:~Graphics.setFont(java.awt.Font)" resolve="setFont" />
-                                          <node concept="1SfVH9" id="35HVCqFLmKm" role="37wK5m">
-                                            <ref role="3cqZAo" node="6FHmkWKN04o" resolve="defaultFont" />
-                                          </node>
-                                        </node>
-                                      </node>
+                                <node concept="3clFbF" id="35HVCqFLiL3" role="3cqZAp">
+                                  <node concept="2OqwBi" id="35HVCqFLk4R" role="3clFbG">
+                                    <node concept="37vLTw" id="35HVCqFLiL1" role="2Oq$k0">
+                                      <ref role="3cqZAo" node="3nsHMGrWGYu" resolve="g2d" />
                                     </node>
-                                  </node>
-                                  <node concept="3y3z36" id="35HVCqFLeiL" role="3clFbw">
-                                    <node concept="10Nm6u" id="35HVCqFLhEP" role="3uHU7w" />
-                                    <node concept="1SfVH9" id="35HVCqFLcBV" role="3uHU7B">
-                                      <ref role="3cqZAo" node="6FHmkWKN04o" resolve="defaultFont" />
+                                    <node concept="liA8E" id="35HVCqFLliv" role="2OqNvi">
+                                      <ref role="37wK5l" to="z60i:~Graphics.setFont(java.awt.Font)" resolve="setFont" />
+                                      <node concept="1SfVH9" id="wmZFSMO_T9" role="37wK5m">
+                                        <ref role="3cqZAo" node="6FHmkWKN04o" resolve="usScaledFont" />
+                                      </node>
                                     </node>
                                   </node>
                                 </node>
@@ -7199,29 +7212,6 @@
               </node>
               <node concept="1SfVH9" id="QwQmtNnEpi" role="37vLTJ">
                 <ref role="3cqZAo" node="QwQmtNmQS8" resolve="dPanel" />
-              </node>
-            </node>
-          </node>
-        </node>
-      </node>
-      <node concept="1OA0iZ" id="35HVCqFLo0e" role="1OA3xZ">
-        <ref role="1OA0iW" node="6FHmkWKN04o" resolve="scaledFont" />
-        <node concept="3clFbS" id="35HVCqFLo0f" role="1OA0iB">
-          <node concept="3clFbF" id="35HVCqFLqYx" role="3cqZAp">
-            <node concept="E34o$" id="35HVCqFLqYy" role="3clFbG">
-              <node concept="2OqwBi" id="35HVCqFLqYz" role="37vLTx">
-                <node concept="5IyTM" id="35HVCqFLqY$" role="2Oq$k0">
-                  <ref role="3cqZAo" node="3nsHMGrWoxt" resolve="panel" />
-                </node>
-                <node concept="liA8E" id="35HVCqFLqY_" role="2OqNvi">
-                  <ref role="37wK5l" to="dxuu:~JComponent.getFontMetrics(java.awt.Font)" resolve="getFontMetrics" />
-                  <node concept="1SfVH9" id="35HVCqFLrKX" role="37wK5m">
-                    <ref role="3cqZAo" node="6FHmkWKN04o" resolve="scaledFont" />
-                  </node>
-                </node>
-              </node>
-              <node concept="1SfVH9" id="35HVCqFLqYD" role="37vLTJ">
-                <ref role="3cqZAo" node="1bDgvLYgfGm" resolve="fontMetrics" />
               </node>
             </node>
           </node>
@@ -12025,7 +12015,7 @@
       <node concept="10P55v" id="2Jp98iqeEDQ" role="1tU5fm" />
       <node concept="3cpWs3" id="4OSO3Ox_3wt" role="33vP2m">
         <node concept="3b6qkQ" id="4OSO3Ox_4SX" role="3uHU7w">
-          <property role="$nhwW" value="80.0" />
+          <property role="$nhwW" value="80.0d" />
         </node>
         <node concept="2OqwBi" id="2Jp98iqf1Af" role="3uHU7B">
           <node concept="1SfVH9" id="3OZjsowrnIZ" role="2Oq$k0">
@@ -12068,7 +12058,7 @@
       <node concept="10P55v" id="3OZjsowr7Xr" role="1tU5fm" />
       <node concept="3cpWs3" id="4OSO3OxBcXK" role="33vP2m">
         <node concept="3b6qkQ" id="4OSO3OxBec1" role="3uHU7w">
-          <property role="$nhwW" value="10.0" />
+          <property role="$nhwW" value="10.0d" />
         </node>
         <node concept="2OqwBi" id="3OZjsowr7Xs" role="3uHU7B">
           <node concept="1SfVH9" id="3OZjsowrsiZ" role="2Oq$k0">
@@ -12223,13 +12213,6 @@
         <node concept="17QB3L" id="AO_oht8Mli" role="10Q1$1" />
       </node>
     </node>
-    <node concept="32q3_s" id="6FHmkWL2D0Z" role="1FPzNG">
-      <property role="TrG5h" value="defaultFont" />
-      <property role="KodbT" value="true" />
-      <node concept="3uibUv" id="6FHmkWL2E9m" role="1tU5fm">
-        <ref role="3uigEE" to="z60i:~Font" resolve="Font" />
-      </node>
-    </node>
     <node concept="32q3_s" id="6FHmkWL3wP0" role="1FPzNG">
       <property role="TrG5h" value="scaledFont" />
       <property role="KodbT" value="true" />
@@ -12254,22 +12237,6 @@
       </node>
       <node concept="3Tm1VV" id="6FHmkWK66ez" role="1B3o_S" />
       <node concept="3clFbS" id="6FHmkWK66e$" role="3clF47">
-        <node concept="3clFbF" id="6FHmkWL2MwE" role="3cqZAp">
-          <node concept="E34o$" id="6FHmkWL2MTk" role="3clFbG">
-            <node concept="1SfVH9" id="6FHmkWL2MwC" role="37vLTJ">
-              <ref role="3cqZAo" node="6FHmkWL2D0Z" resolve="defaultSettings" />
-            </node>
-            <node concept="2OqwBi" id="6FHmkWL3pjK" role="37vLTx">
-              <node concept="10M0yZ" id="6FHmkWL2_mc" role="2Oq$k0">
-                <ref role="3cqZAo" to="exr9:~EditorComponentSettingsImpl.DEFAULT_SETTINGS" resolve="DEFAULT_SETTINGS" />
-                <ref role="1PxDUh" to="exr9:~EditorComponentSettingsImpl" resolve="EditorComponentSettingsImpl" />
-              </node>
-              <node concept="liA8E" id="6FHmkWL3qB4" role="2OqNvi">
-                <ref role="37wK5l" to="cj4x:~EditorComponentSettings.getDefaultFont()" resolve="getDefaultFont" />
-              </node>
-            </node>
-          </node>
-        </node>
         <node concept="3cpWs8" id="6FHmkWK67YK" role="3cqZAp">
           <node concept="3cpWsn" id="6FHmkWK67YL" role="3cpWs9">
             <property role="TrG5h" value="editorComponent" />
@@ -12443,21 +12410,6 @@
           </node>
         </node>
         <node concept="3clFbS" id="AO_ohtcQ2y" role="3clFbx">
-          <node concept="3clFbF" id="6FHmkWL3nqE" role="3cqZAp">
-            <node concept="E34o$" id="6FHmkWL3nqF" role="3clFbG">
-              <node concept="1SfVH9" id="6FHmkWL3nqH" role="37vLTx">
-                <ref role="3cqZAo" node="6FHmkWL2D0Z" resolve="defaultFont" />
-              </node>
-              <node concept="2OqwBi" id="6FHmkWL3nqJ" role="37vLTJ">
-                <node concept="1SfVH9" id="6FHmkWL3nqK" role="2Oq$k0">
-                  <ref role="3cqZAo" node="4Oa6zNZz9Lj" resolve="canvas" />
-                </node>
-                <node concept="32jkxy" id="6FHmkWL3nqL" role="2OqNvi">
-                  <ref role="3cqZAo" node="6FHmkWKN04o" resolve="defaultFont" />
-                </node>
-              </node>
-            </node>
-          </node>
           <node concept="3clFbF" id="AO_ohtcTGB" role="3cqZAp">
             <node concept="E34o$" id="AO_ohtcVpF" role="3clFbG">
               <node concept="1SfVH9" id="AO_ohtcVIQ" role="37vLTx">
@@ -15932,7 +15884,7 @@
                           </node>
                           <node concept="17qRlL" id="6xUXWqdkOcR" role="3uHU7w">
                             <node concept="3b6qkQ" id="6xUXWqdkOcS" role="3uHU7w">
-                              <property role="$nhwW" value="50.0" />
+                              <property role="$nhwW" value="20.0" />
                             </node>
                             <node concept="1SfVH9" id="6xUXWqdkOcT" role="3uHU7B">
                               <ref role="3cqZAo" node="76DRFzMWjEn" resolve="filling" />
