@@ -309,6 +309,10 @@
     <property role="3GE5qa" value="diagrams" />
     <ref role="1XX52x" to="53d4:31sbKqyPLDm" resolve="JointLayout" />
     <node concept="3EZMnI" id="31sbKqyPMfC" role="2wV5jI">
+      <node concept="3F0A7n" id="3VTkizYIetd" role="3EZMnx">
+        <ref role="1NtTu8" to="53d4:3VTkizYHXZo" resolve="identity" />
+      </node>
+      <node concept="35HoNQ" id="3VTkizYIesT" role="3EZMnx" />
       <node concept="2iRfu4" id="31sbKqyPMfD" role="2iSdaV" />
       <node concept="3F0ifn" id="31sbKqyPMfE" role="3EZMnx">
         <property role="3F0ifm" value="x" />
@@ -671,16 +675,28 @@
     </node>
     <node concept="3EZMnI" id="67eN9QkViCq" role="6VMZX">
       <node concept="2iRkQZ" id="67eN9QkViCr" role="2iSdaV" />
-      <node concept="3EZMnI" id="67eN9QkViD9" role="3EZMnx">
-        <node concept="2iRfu4" id="67eN9QkViDa" role="2iSdaV" />
-        <node concept="3F0ifn" id="67eN9QkViDm" role="3EZMnx">
+      <node concept="3EZMnI" id="4w3I0IX44R4" role="3EZMnx">
+        <node concept="2iRfu4" id="4w3I0IX44R5" role="2iSdaV" />
+        <node concept="3F0ifn" id="4w3I0IX44R6" role="3EZMnx">
           <property role="3F0ifm" value="manual" />
         </node>
-        <node concept="3F0ifn" id="67eN9QkViDp" role="3EZMnx">
+        <node concept="3F0ifn" id="4w3I0IX44R7" role="3EZMnx">
           <property role="3F0ifm" value="selection" />
         </node>
-        <node concept="3F0A7n" id="12WXgwl7BMy" role="3EZMnx">
+        <node concept="3F0A7n" id="4w3I0IX44R8" role="3EZMnx">
           <ref role="1NtTu8" to="53d4:12WXgwl7Bd8" resolve="manual" />
+        </node>
+        <node concept="3F0ifn" id="4w3I0IX44R9" role="3EZMnx">
+          <property role="3F0ifm" value=" " />
+        </node>
+        <node concept="3F0ifn" id="4w3I0IX44Ra" role="3EZMnx">
+          <property role="3F0ifm" value="auto" />
+        </node>
+        <node concept="3F0ifn" id="4w3I0IX44Rb" role="3EZMnx">
+          <property role="3F0ifm" value="layout" />
+        </node>
+        <node concept="3F0A7n" id="4w3I0IX44Rc" role="3EZMnx">
+          <ref role="1NtTu8" to="53d4:6FHmkWJHQpQ" resolve="autoLayout" />
         </node>
       </node>
       <node concept="3F0ifn" id="67eN9QkViCO" role="3EZMnx" />
