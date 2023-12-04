@@ -8368,6 +8368,24 @@
   </node>
   <node concept="312cEu" id="7wc8RN4MMv1">
     <property role="TrG5h" value="D2D" />
+    <node concept="2tJIrI" id="1zO1whYz7Qy" role="jymVt" />
+    <node concept="Wx3nA" id="1zO1whYz9pk" role="jymVt">
+      <property role="TrG5h" value="RANDOM" />
+      <property role="3TUv4t" value="true" />
+      <node concept="3Tm1VV" id="1zO1whYz8Am" role="1B3o_S" />
+      <node concept="3uibUv" id="1zO1whYza7B" role="1tU5fm">
+        <ref role="3uigEE" to="33ny:~Random" resolve="Random" />
+      </node>
+      <node concept="2ShNRf" id="1zO1whYzai4" role="33vP2m">
+        <node concept="1pGfFk" id="1zO1whYzaev" role="2ShVmc">
+          <ref role="37wK5l" to="33ny:~Random.&lt;init&gt;(long)" resolve="Random" />
+          <node concept="2YIFZM" id="1zO1whYzara" role="37wK5m">
+            <ref role="37wK5l" to="wyt6:~System.currentTimeMillis()" resolve="currentTimeMillis" />
+            <ref role="1Pybhc" to="wyt6:~System" resolve="System" />
+          </node>
+        </node>
+      </node>
+    </node>
     <node concept="2tJIrI" id="7wc8RN4MMx6" role="jymVt" />
     <node concept="2YIFZL" id="7wc8RN4MM$Y" role="jymVt">
       <property role="TrG5h" value="drawRect" />

@@ -1883,6 +1883,42 @@
           </node>
         </node>
       </node>
+      <node concept="3F0ifn" id="2Q8IysUzXwh" role="3EZMnx">
+        <property role="3F0ifm" value="atomic" />
+        <ref role="1k5W1q" to="tpen:hgVS8CF" resolve="KeyWord" />
+        <node concept="Veino" id="2Q8IysUzXwi" role="3F10Kt">
+          <node concept="3ZlJ5R" id="2Q8IysUzXwj" role="VblUZ">
+            <node concept="3clFbS" id="2Q8IysUzXwk" role="2VODD2">
+              <node concept="3clFbF" id="2Q8IysUzXwl" role="3cqZAp">
+                <node concept="2YIFZM" id="2Q8IysUzXwm" role="3clFbG">
+                  <ref role="37wK5l" to="u4ym:2HLAWGSyups" resolve="ifColor" />
+                  <ref role="1Pybhc" to="u4ym:30fQumnG8Au" resolve="DclareUtil" />
+                  <node concept="1Q80Hx" id="2Q8IysUzXwn" role="37wK5m" />
+                  <node concept="2nou5x" id="2Q8IysUzXwo" role="37wK5m">
+                    <property role="2noCCI" value="71F496" />
+                  </node>
+                  <node concept="10M0yZ" id="2Q8IysUzXwp" role="37wK5m">
+                    <ref role="3cqZAo" to="z60i:~Color.white" resolve="white" />
+                    <ref role="1PxDUh" to="z60i:~Color" resolve="Color" />
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="pkWqt" id="2Q8IysUzXwq" role="pqm2j">
+          <node concept="3clFbS" id="2Q8IysUzXwr" role="2VODD2">
+            <node concept="3clFbF" id="2Q8IysUzXws" role="3cqZAp">
+              <node concept="2OqwBi" id="2Q8IysUzXwt" role="3clFbG">
+                <node concept="pncrf" id="2Q8IysUzXwu" role="2Oq$k0" />
+                <node concept="3TrcHB" id="2Q8IysUzXwv" role="2OqNvi">
+                  <ref role="3TsBF5" to="7ggn:2Q8IysUzbnc" resolve="atomic" />
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
       <node concept="3F0ifn" id="3Qetf3dy0_E" role="3EZMnx">
         <property role="3F0ifm" value="identifying" />
         <ref role="1k5W1q" to="tpen:hgVS8CF" resolve="KeyWord" />

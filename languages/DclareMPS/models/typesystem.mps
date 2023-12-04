@@ -9877,5 +9877,50 @@
       </node>
     </node>
   </node>
+  <node concept="18kY7G" id="2Q8IysUCnQg">
+    <property role="3GE5qa" value="attributes" />
+    <property role="TrG5h" value="atomicChecker" />
+    <node concept="3clFbS" id="2Q8IysUCnQh" role="18ibNy">
+      <node concept="3clFbJ" id="2Q8IysUCnQi" role="3cqZAp">
+        <node concept="3clFbS" id="2Q8IysUCnQj" role="3clFbx">
+          <node concept="3clFbJ" id="2Q8IysUCnQk" role="3cqZAp">
+            <node concept="3clFbS" id="2Q8IysUCnQl" role="3clFbx">
+              <node concept="2MkqsV" id="2Q8IysUCnQm" role="3cqZAp">
+                <node concept="Xl_RD" id="2Q8IysUCnQn" role="2MkJ7o">
+                  <property role="Xl_RC" value="A atomic attribute must have a value equation" />
+                </node>
+                <node concept="1YBJjd" id="2Q8IysUCnQo" role="1urrMF">
+                  <ref role="1YBMHb" node="2Q8IysUCnQD" resolve="attribute" />
+                </node>
+              </node>
+            </node>
+            <node concept="3clFbC" id="2Q8IysUCnQp" role="3clFbw">
+              <node concept="10Nm6u" id="2Q8IysUCnQq" role="3uHU7w" />
+              <node concept="2OqwBi" id="2Q8IysUCnQr" role="3uHU7B">
+                <node concept="1YBJjd" id="2Q8IysUCnQs" role="2Oq$k0">
+                  <ref role="1YBMHb" node="2Q8IysUCnQD" resolve="attribute" />
+                </node>
+                <node concept="3TrEf2" id="2Q8IysUCnQt" role="2OqNvi">
+                  <ref role="3Tt5mk" to="tpee:fz3vP1I" resolve="initializer" />
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="2OqwBi" id="2Q8IysUCnQA" role="3clFbw">
+          <node concept="1YBJjd" id="2Q8IysUCnQB" role="2Oq$k0">
+            <ref role="1YBMHb" node="2Q8IysUCnQD" resolve="attribute" />
+          </node>
+          <node concept="3TrcHB" id="2Q8IysUCnQC" role="2OqNvi">
+            <ref role="3TsBF5" to="7ggn:2Q8IysUzbnc" resolve="atomic" />
+          </node>
+        </node>
+      </node>
+    </node>
+    <node concept="1YaCAy" id="2Q8IysUCnQD" role="1YuTPh">
+      <property role="TrG5h" value="attribute" />
+      <ref role="1YaFvo" to="7ggn:4$MeK2bmw9s" resolve="Attribute" />
+    </node>
+  </node>
 </model>
 
