@@ -37,12 +37,8 @@
         <reference id="3484711917226236500" name="association" index="2iyNli" />
         <child id="3484711917226238916" name="joints" index="2iyKN2" />
       </concept>
-      <concept id="6082931505451280473" name="DclareGui.structure.StructRef" flags="ng" index="3z7$6w">
-        <reference id="6082931505451280474" name="struct" index="3z7$6z" />
-      </concept>
       <concept id="6082931505451278498" name="DclareGui.structure.StructDiagram" flags="ng" index="3z7$_r">
         <child id="2964143021971595307" name="drawnModuleREf" index="2pcM1O" />
-        <child id="6082931505451280787" name="structs" index="3z7$1E" />
       </concept>
       <concept id="7047795444050573225" name="DclareGui.structure.ConceptRef" flags="ng" index="3PzJGO">
         <reference id="7047795444050573226" name="concept" index="3PzJGR" />
@@ -119,99 +115,6 @@
       <node concept="2iyNll" id="3jHNPFKMxTT" role="2iyNmk">
         <ref role="2iyNli" to="q3xn:WHdioYVYaT" resolve="DVisible" />
       </node>
-    </node>
-    <node concept="3z7$6w" id="5hEUvARWRfC" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:3HJBHARsh7U" resolve="ConceptDiagramCanvas" />
-    </node>
-    <node concept="3z7$6w" id="5hEUvARWRfS" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:3HJBHARtgyV" resolve="ConceptRectangle" />
-    </node>
-    <node concept="3z7$6w" id="5hEUvARWRfK" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:6YJvVULPUly" resolve="ConceptSpecialisationLine" />
-    </node>
-    <node concept="3z7$6w" id="5hEUvARWRfT" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:skgx$J4Z32" resolve="DCanvas" />
-    </node>
-    <node concept="3z7$6w" id="5hEUvARWRfF" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:skgx$J4Z4h" resolve="DCircleShape" />
-    </node>
-    <node concept="3z7$6w" id="5hEUvARWRf_" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:skgx$J4Z2F" resolve="DComponent" />
-    </node>
-    <node concept="3z7$6w" id="5hEUvARWRfW" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:skgx$J4Z2s" resolve="DContainer" />
-    </node>
-    <node concept="3z7$6w" id="5hEUvARWRfy" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:2gyk5S1Dvn0" resolve="DDeviceInput" />
-    </node>
-    <node concept="3z7$6w" id="5hEUvARWRfz" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:3OZjsowr30i" resolve="DDiagramCanvas" />
-    </node>
-    <node concept="3z7$6w" id="5hEUvARWRfO" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:4NMtPTvGXY5" resolve="DDimension" />
-    </node>
-    <node concept="3z7$6w" id="5hEUvARWRfx" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:3OZjsowptDc" resolve="DFilledNode" />
-    </node>
-    <node concept="3z7$6w" id="5hEUvARWRfJ" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:skgx$J4Z45" resolve="DFilledShape" />
-    </node>
-    <node concept="3z7$6w" id="5hEUvARWRfL" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:skgx$J4Z3D" resolve="DFrame" />
-    </node>
-    <node concept="3z7$6w" id="5hEUvARWRfI" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:7wc8RN4MUFm" resolve="DImage" />
-    </node>
-    <node concept="3z7$6w" id="5hEUvARWRfQ" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:6YJvVULTHtj" resolve="DLineSegment" />
-    </node>
-    <node concept="3z7$6w" id="5hEUvARWRfR" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:2xAA8jfpttw" resolve="DMenu" />
-    </node>
-    <node concept="3z7$6w" id="5hEUvARWRfN" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:2xAA8jfpttH" resolve="DMenuItem" />
-    </node>
-    <node concept="3z7$6w" id="5hEUvARWRfU" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:2xAA8jfoMuD" resolve="DMenubar" />
-    </node>
-    <node concept="3z7$6w" id="5hEUvARWRfD" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:3OZjsowp$AG" resolve="DMultiLineEdge" />
-    </node>
-    <node concept="3z7$6w" id="5hEUvARWRfB" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:skgx$J4Z3O" resolve="DMultiLineShape" />
-    </node>
-    <node concept="3z7$6w" id="5hEUvARWRfE" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:681X9Tz0KVS" resolve="DNodeComponent" />
-    </node>
-    <node concept="3z7$6w" id="5hEUvARWRfP" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:skgx$J4Z3d" resolve="DPanel" />
-    </node>
-    <node concept="3z7$6w" id="5hEUvARWRf$" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:4NMtPTvGW7r" resolve="DPoint" />
-    </node>
-    <node concept="3z7$6w" id="5hEUvARWRfM" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:skgx$J4Z4a" resolve="DRectangleShape" />
-    </node>
-    <node concept="3z7$6w" id="5hEUvARWRfA" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:skgx$J4Z2r" resolve="DShape" />
-    </node>
-    <node concept="3z7$6w" id="5hEUvARWRfV" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:skgx$J4Z3o" resolve="DSplitPane" />
-    </node>
-    <node concept="3z7$6w" id="5hEUvARWRfG" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:WHdioYVYaT" resolve="DVisible" />
-    </node>
-    <node concept="3z7$6w" id="5hEUvARWRfH" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:67eN9QkfT0n" resolve="LinkLine" />
-    </node>
-    <node concept="3z7$6w" id="2QCHpowuQyi" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:2QCHpowuQyh" resolve="StructDiagramCanvas" />
-    </node>
-    <node concept="3z7$6w" id="2QCHpowuSLK" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:2QCHpowuSLJ" resolve="StructRectangle" />
-    </node>
-    <node concept="3z7$6w" id="2QCHpowuSMG" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:2QCHpowuSMF" resolve="StructSpecialisationLine" />
     </node>
     <node concept="2iyNl8" id="3jHNPFKMxTi" role="2iyNln">
       <property role="2iyNlR" value="140" />
@@ -504,14 +407,14 @@
     <node concept="3PzJGO" id="7BVZ4Aes_sV" role="3PWPUC">
       <ref role="3PzJGR" to="tpce:h0PkWnZ" resolve="AbstractConceptDeclaration" />
     </node>
-    <node concept="3PzJGO" id="7BVZ4Aes_qD" role="3PWPUC">
-      <ref role="3PzJGR" to="53d4:31sbKqyPLDj" resolve="EdgeLayout" />
-    </node>
     <node concept="3PzJGO" id="7BVZ4Aes_qM" role="3PWPUC">
       <ref role="3PzJGR" to="53d4:3psr82$eZ54" resolve="IDiagram" />
     </node>
     <node concept="3PzJGO" id="7BVZ4Aes_r1" role="3PWPUC">
       <ref role="3PzJGR" to="53d4:3psr82$c6ii" resolve="IEditor" />
+    </node>
+    <node concept="3PzJGO" id="7BVZ4Aes_qD" role="3PWPUC">
+      <ref role="3PzJGR" to="53d4:31sbKqyPLDj" resolve="EdgeLayout" />
     </node>
     <node concept="3PzJGO" id="7BVZ4Aes_qw" role="3PWPUC">
       <ref role="3PzJGR" to="53d4:67eN9Qkg3uD" resolve="ConceptRef" />
