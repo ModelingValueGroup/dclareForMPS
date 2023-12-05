@@ -12641,16 +12641,23 @@
     <node concept="32q3_s" id="2_HXTiZvKb2" role="1FPzNG">
       <property role="TrG5h" value="gravitySqrt" />
       <node concept="10P55v" id="2_HXTiZvKaV" role="1tU5fm" />
-      <node concept="2YIFZM" id="2_HXTiZvKaW" role="33vP2m">
-        <ref role="37wK5l" to="wyt6:~Math.sqrt(double)" resolve="sqrt" />
+      <node concept="2YIFZM" id="7AHT$9NKoof" role="33vP2m">
+        <ref role="37wK5l" to="wyt6:~Math.max(double,double)" resolve="max" />
         <ref role="1Pybhc" to="wyt6:~Math" resolve="Math" />
-        <node concept="10QFUN" id="2_HXTiZvKaX" role="37wK5m">
-          <node concept="10P55v" id="2_HXTiZvKaY" role="10QFUM" />
-          <node concept="2OqwBi" id="2_HXTiZvKaZ" role="10QFUP">
-            <node concept="1SfVH9" id="2_HXTiZvKb0" role="2Oq$k0">
-              <ref role="3cqZAo" node="3VTki$1mXbk" resolve="movableNodes" />
+        <node concept="3b6qkQ" id="7AHT$9NKoog" role="37wK5m">
+          <property role="$nhwW" value="2.0d" />
+        </node>
+        <node concept="2YIFZM" id="7AHT$9NKooh" role="37wK5m">
+          <ref role="37wK5l" to="wyt6:~Math.sqrt(double)" resolve="sqrt" />
+          <ref role="1Pybhc" to="wyt6:~Math" resolve="Math" />
+          <node concept="10QFUN" id="7AHT$9NKooi" role="37wK5m">
+            <node concept="10P55v" id="7AHT$9NKooj" role="10QFUM" />
+            <node concept="2OqwBi" id="7AHT$9NKook" role="10QFUP">
+              <node concept="1SfVH9" id="7AHT$9NKool" role="2Oq$k0">
+                <ref role="3cqZAo" node="3VTki$1mXbk" resolve="movableNodes" />
+              </node>
+              <node concept="34oBXx" id="7AHT$9NKoom" role="2OqNvi" />
             </node>
-            <node concept="34oBXx" id="2_HXTiZvKb1" role="2OqNvi" />
           </node>
         </node>
       </node>
