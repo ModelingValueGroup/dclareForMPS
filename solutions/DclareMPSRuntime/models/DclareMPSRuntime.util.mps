@@ -1568,6 +1568,40 @@
       </node>
     </node>
     <node concept="2tJIrI" id="4ONkEkNo3RL" role="jymVt" />
+    <node concept="2YIFZL" id="6TDJaymqYW$" role="jymVt">
+      <property role="TrG5h" value="getFixPointGroup" />
+      <node concept="37vLTG" id="6TDJaymqYW_" role="3clF46">
+        <property role="TrG5h" value="language" />
+        <property role="3TUv4t" value="true" />
+        <node concept="3uibUv" id="6TDJaymqYWA" role="1tU5fm">
+          <ref role="3uigEE" to="c17a:~SLanguage" resolve="SLanguage" />
+        </node>
+      </node>
+      <node concept="37vLTG" id="6TDJaymqYWB" role="3clF46">
+        <property role="TrG5h" value="id" />
+        <property role="3TUv4t" value="true" />
+        <node concept="17QB3L" id="6TDJaymqYWC" role="1tU5fm" />
+      </node>
+      <node concept="3clFbS" id="6TDJaymqYWD" role="3clF47">
+        <node concept="3cpWs6" id="6TDJaymqYWE" role="3cqZAp">
+          <node concept="2YIFZM" id="6TDJaymqYWF" role="3cqZAk">
+            <ref role="1Pybhc" to="t4tl:~IFixPointGroup" resolve="IFixPointGroup" />
+            <ref role="37wK5l" to="t4tl:~IFixPointGroup.of(org.jetbrains.mps.openapi.language.SLanguage,java.lang.String)" resolve="of" />
+            <node concept="37vLTw" id="6TDJaymqYWG" role="37wK5m">
+              <ref role="3cqZAo" node="6TDJaymqYW_" resolve="language" />
+            </node>
+            <node concept="37vLTw" id="6TDJaymqYWH" role="37wK5m">
+              <ref role="3cqZAo" node="6TDJaymqYWB" resolve="id" />
+            </node>
+          </node>
+        </node>
+      </node>
+      <node concept="3Tm1VV" id="6TDJaymqYWI" role="1B3o_S" />
+      <node concept="3uibUv" id="6TDJaymqYWJ" role="3clF45">
+        <ref role="3uigEE" to="t4tl:~IFixPointGroup" resolve="IFixPointGroup" />
+      </node>
+    </node>
+    <node concept="2tJIrI" id="6TDJaymqAvZ" role="jymVt" />
     <node concept="2YIFZL" id="4ONkEkNofto" role="jymVt">
       <property role="TrG5h" value="getNativeGroup" />
       <node concept="37vLTG" id="4ONkEkNoftp" role="3clF46">

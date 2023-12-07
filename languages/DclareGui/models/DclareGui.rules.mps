@@ -44,6 +44,7 @@
   </imports>
   <registry>
     <language id="c32b788d-8e4b-4023-97f5-3e90d04ed77b" name="DclareMPS">
+      <concept id="2749500021173023020" name="DclareMPS.structure.FixPointGroup" flags="ng" index="21Q_Uv" />
       <concept id="4010647915821593701" name="DclareMPS.structure.MethodCall" flags="ng" index="2275Hy" />
       <concept id="4985363384999243769" name="DclareMPS.structure.AspectRuleSet" flags="ng" index="22cvTG">
         <property id="4378867844617511299" name="ruleSetName" index="202BMp" />
@@ -75,6 +76,7 @@
       <concept id="5858913584106642961" name="DclareMPS.structure.Aspect" flags="ng" index="2Rb1jd">
         <property id="6646394970002079166" name="allwaysOn" index="2bPw2W" />
         <property id="8690218989273699402" name="primitiveTypeDefaults" index="2WACxE" />
+        <reference id="2749500021173023025" name="fixpointGroup" index="21Q_U2" />
         <child id="5858913584106721980" name="dependencies" index="2RaPxw" />
       </concept>
       <concept id="5263414693702615530" name="DclareMPS.structure.StructClass" flags="ng" index="2UJ2oG">
@@ -17649,6 +17651,19 @@
     <property role="3GE5qa" value="diagram" />
     <ref role="311c5K" to="53d4:3psr82$eZ54" resolve="IDiagram" />
     <ref role="2RaPBF" node="3HJBHARsh6E" resolve="DIAGRAM" />
+  </node>
+  <node concept="21Q_Uv" id="6TDJaynos3h">
+    <property role="3GE5qa" value="auto_layout" />
+    <property role="TrG5h" value="AUTO_LAYOUT_GROUP" />
+  </node>
+  <node concept="2Rb1jd" id="6TDJaynos3i">
+    <property role="3GE5qa" value="auto_layout" />
+    <property role="TrG5h" value="AUTO_LAYOUT" />
+    <property role="2bPw2W" value="true" />
+    <ref role="21Q_U2" node="6TDJaynos3h" resolve="AUTO_LAYOUT" />
+    <node concept="2RaPxm" id="6TDJaynos3j" role="2RaPxw">
+      <ref role="2RaPxn" node="3HJBHARsh6E" resolve="DIAGRAM" />
+    </node>
   </node>
 </model>
 
