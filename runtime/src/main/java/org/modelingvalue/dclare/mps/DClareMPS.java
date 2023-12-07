@@ -120,6 +120,9 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
     protected static final Constant<SLanguage, Map<String, IAspect>>                                                   ASPECT_MAP               = Constant.of("ASPECT_MAP", l -> {
                                                                                                                                                     return DClareMPS.ASPECTS.get(l).asMap(a -> Entry.of(a.getId(), a));
                                                                                                                                                 });
+    protected static final Constant<SLanguage, Map<String, IFixPointGroup>>                                            FIXPOINT_GROUP_MAP       = Constant.of("FIXPOINT_GROUP_MAP", l -> {
+                                                                                                                                                    return DClareMPS.FIXPOINT_GROUPS.get(l).asMap(a -> Entry.of(a.getId(), a));
+                                                                                                                                                });
     protected static final Constant<SLanguage, Map<String, DMethod<?>>>                                                ALL_METHODS_MAP          = Constant.of("ALL_METHODS_MAP", l -> {
                                                                                                                                                     Collection<DMethod<?>> methods = DClareMPS.RULE_SETS.get(l).flatMap(rs -> Collection.of(rs.getAllMethods()));
                                                                                                                                                     return methods.asMap(m -> Entry.of(m.id(), m));
@@ -184,6 +187,10 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
     public static final Constant<SLanguage, Set<IAspect>>                                                              ASPECTS                  = Constant.of("ASPECTS", Set.of(), l -> {
                                                                                                                                                     IRuleAspect aspect = RULE_ASPECT.get(l);
                                                                                                                                                     return aspect != null ? Collection.of(aspect.getAspects()).asSet() : Set.of();
+                                                                                                                                                });
+    public static final Constant<SLanguage, Set<IFixPointGroup>>                                                       FIXPOINT_GROUPS          = Constant.of("FIXPOINT_GROUPS", Set.of(), l -> {
+                                                                                                                                                    IRuleAspect aspect = RULE_ASPECT.get(l);
+                                                                                                                                                    return aspect != null ? Collection.of(aspect.getFixPointGroups()).asSet() : Set.of();
                                                                                                                                                 });
     protected static final Constant<SLanguage, Map<String, INativeGroup>>                                              NATIVE_GROUP_MAP         = Constant.of("NATIVE_GROUP_MAP", l -> {
                                                                                                                                                     return DClareMPS.NATIVE_GROUPS.get(l).asMap(a -> Entry.of(a.getId(), a));

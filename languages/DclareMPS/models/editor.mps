@@ -6959,6 +6959,27 @@
         <node concept="VechU" id="67eN9Qk7JhA" role="3F10Kt">
           <property role="Vb096" value="fLJRk5A/lightGray" />
         </node>
+        <node concept="ljvvj" id="6TDJaynos7G" role="3F10Kt">
+          <property role="VOm3f" value="true" />
+        </node>
+      </node>
+      <node concept="3F0ifn" id="6TDJaynos4W" role="3EZMnx">
+        <property role="3F0ifm" value="fixpoint" />
+        <node concept="lj46D" id="6TDJaynos7J" role="3F10Kt">
+          <property role="VOm3f" value="true" />
+        </node>
+      </node>
+      <node concept="3F0ifn" id="6TDJaynos6e" role="3EZMnx">
+        <property role="3F0ifm" value="group" />
+      </node>
+      <node concept="1iCGBv" id="6TDJaynos76" role="3EZMnx">
+        <ref role="1NtTu8" to="7ggn:2oCbVeBWB4L" resolve="fixpointGroup" />
+        <node concept="1sVBvm" id="6TDJaynos78" role="1sWHZn">
+          <node concept="3F0A7n" id="6TDJaynos7D" role="2wV5jI">
+            <property role="1Intyy" value="true" />
+            <ref role="1NtTu8" to="tpck:h0TrG11" resolve="name" />
+          </node>
+        </node>
       </node>
     </node>
     <node concept="3EZMnI" id="7ypR2340Phe" role="6VMZX">
@@ -9891,6 +9912,22 @@
             </node>
           </node>
         </node>
+      </node>
+    </node>
+  </node>
+  <node concept="24kQdi" id="2oCbVeBWB4P">
+    <property role="3GE5qa" value="fixpoint" />
+    <ref role="1XX52x" to="7ggn:2oCbVeBWB4G" resolve="FixPointGroup" />
+    <node concept="3EZMnI" id="2oCbVeBWB4U" role="2wV5jI">
+      <node concept="2iRfu4" id="2oCbVeBWB4V" role="2iSdaV" />
+      <node concept="3F0ifn" id="2oCbVeBWB57" role="3EZMnx">
+        <property role="3F0ifm" value="fixpoint" />
+      </node>
+      <node concept="3F0ifn" id="2oCbVeBWB5k" role="3EZMnx">
+        <property role="3F0ifm" value="group" />
+      </node>
+      <node concept="3F0A7n" id="2oCbVeBWB4R" role="3EZMnx">
+        <ref role="1NtTu8" to="tpck:h0TrG11" resolve="name" />
       </node>
     </node>
   </node>
