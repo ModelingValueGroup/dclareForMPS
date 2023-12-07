@@ -476,12 +476,24 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
     private void addTooManyChangesExceptionMessage(DMutable context, DFeature feature, TooManyChangesException tmce) {
         DMessage message = new DMessage(context, feature, DMessageType.error, "Too many changes, running " + feature + " changes=" + tmce.getNrOfChanges());
         tmce.getLast().trace(message, //
-                (m, r) -> m.addSubMessage(new DMessage((DMutable) r.mutable(), feature(r.observer()), DMessageType.error, //
-                        String.format("%-5s: %-20s [%d changes]", "run", feature(r.observer()), r.nrOfChanges()))), //
-                (m, r, s) -> m.addSubMessage(new DMessage((DMutable) s.mutable(), (DObserved) s.observed(), DMessageType.error, //
-                        String.format("%-5s: %-20s = %s", "read", s.observed(), r.read().get(s)))), //
-                (m, w, s) -> m.addSubMessage(new DMessage((DMutable) s.mutable(), (DObserved) s.observed(), DMessageType.error, //
-                        String.format("%-5s: %-20s = %s", "write", s.observed(), w.written().get(s)))), //
+                (m, r) -> {
+                    if (r.mutable() instanceof DMutable) {
+                        m.addSubMessage(new DMessage((DMutable) r.mutable(), feature(r.observer()), DMessageType.error, //
+                                String.format("%-5s: %-20s [%d changes]", "run", feature(r.observer()), r.nrOfChanges())));
+                    }
+                }, //
+                (m, r, s) -> {
+                    if (s.mutable() instanceof DMutable && s.observed() instanceof DObserved) {
+                        m.addSubMessage(new DMessage((DMutable) s.mutable(), (DObserved) s.observed(), DMessageType.error, //
+                                String.format("%-5s: %-20s = %s", "read", s.observed(), r.read().get(s))));
+                    }
+                }, //
+                (m, w, s) -> {
+                    if (s.mutable() instanceof DMutable && s.observed() instanceof DObserved) {
+                        m.addSubMessage(new DMessage((DMutable) s.mutable(), (DObserved) s.observed(), DMessageType.error, //
+                                String.format("%-5s: %-20s = %s", "write", s.observed(), w.written().get(s))));
+                    }
+                }, //
                 m -> m.subMessages().last(), universeTransaction().stats().maxNrOfChanges());
         addMessage(message);
     }
@@ -492,15 +504,19 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
         DMessage message = new DMessage(object, feature, DMessageType.debug, "Run " + feature + ", at " + time);
         for (Entry<ObservedInstance, Object> read : dt.trace().read().filter(e -> !e.getKey().observed().isPlumbing())) {
             ObservedInstance s = read.getKey();
-            DObserved obs = (DObserved) s.observed();
-            String msg = String.format("%-5s: %-20s = %s", "read", obs, read.getValue());
-            message.addSubMessage(new DMessage((DMutable) s.mutable(), obs, DMessageType.debug, msg));
+            if (s.mutable() instanceof DMutable && s.observed() instanceof DObserved) {
+                DObserved obs = (DObserved) s.observed();
+                String msg = String.format("%-5s: %-20s = %s", "read", obs, read.getValue());
+                message.addSubMessage(new DMessage((DMutable) s.mutable(), obs, DMessageType.debug, msg));
+            }
         }
         for (Entry<ObservedInstance, Object> write : dt.trace().written().filter(e -> !e.getKey().observed().isPlumbing())) {
             ObservedInstance s = write.getKey();
-            DObserved obs = (DObserved) s.observed();
-            String msg = String.format("%-5s: %-20s = %s", "write", obs, write.getValue());
-            message.addSubMessage(new DMessage((DMutable) s.mutable(), obs, DMessageType.debug, msg));
+            if (s.mutable() instanceof DMutable && s.observed() instanceof DObserved) {
+                DObserved obs = (DObserved) s.observed();
+                String msg = String.format("%-5s: %-20s = %s", "write", obs, write.getValue());
+                message.addSubMessage(new DMessage((DMutable) s.mutable(), obs, DMessageType.debug, msg));
+            }
         }
         addMessage(message);
     }
