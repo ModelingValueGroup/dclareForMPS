@@ -44,7 +44,7 @@ jobs:
         run: ./gradlew --info --scan
 
       - name: "upload zip"
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: "DclareForMPS.zip"
           path: build/artifacts/DclareForMPS/DclareForMPS.zip
