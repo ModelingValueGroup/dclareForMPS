@@ -12821,46 +12821,83 @@
         </node>
         <node concept="3clFbJ" id="7zjHQApUBnq" role="3cqZAp">
           <node concept="3clFbS" id="7zjHQApUBns" role="3clFbx">
-            <node concept="3clFbF" id="3zaVTDehRAS" role="3cqZAp">
-              <node concept="2OqwBi" id="3zaVTDehRAT" role="3clFbG">
-                <node concept="2WthIp" id="3zaVTDehRMU" role="2Oq$k0" />
-                <node concept="liA8E" id="3zaVTDehRAV" role="2OqNvi">
-                  <ref role="37wK5l" to="71xd:~BaseTool.openTool(boolean)" resolve="openTool" />
-                  <node concept="3clFbT" id="3zaVTDehRAW" role="37wK5m">
-                    <property role="3clFbU" value="true" />
+            <node concept="3cpWs8" id="1JIU9w$gS67" role="3cqZAp">
+              <node concept="3cpWsn" id="1JIU9w$gS68" role="3cpWs9">
+                <property role="TrG5h" value="numErrors" />
+                <property role="3TUv4t" value="true" />
+                <node concept="10Oyi0" id="1JIU9w$gRnm" role="1tU5fm" />
+                <node concept="2OqwBi" id="1JIU9w$gS69" role="33vP2m">
+                  <node concept="liA8E" id="1JIU9w$gS6a" role="2OqNvi">
+                    <ref role="37wK5l" to="zrbp:~Collection.size()" resolve="size" />
+                  </node>
+                  <node concept="37vLTw" id="1JIU9w$gS6b" role="2Oq$k0">
+                    <ref role="3cqZAo" node="3woxxXsp4tG" resolve="errors" />
                   </node>
                 </node>
               </node>
             </node>
-            <node concept="3clFbF" id="4koLORdSGIi" role="3cqZAp">
-              <node concept="2YIFZM" id="4koLORdSTO$" role="3clFbG">
-                <ref role="37wK5l" to="dxuu:~JOptionPane.showMessageDialog(java.awt.Component,java.lang.Object,java.lang.String,int)" resolve="showMessageDialog" />
-                <ref role="1Pybhc" to="dxuu:~JOptionPane" resolve="JOptionPane" />
-                <node concept="10Nm6u" id="4koLORdTYr7" role="37wK5m" />
-                <node concept="3cpWs3" id="3woxxXsmL7g" role="37wK5m">
-                  <node concept="Xl_RD" id="3woxxXsmLAU" role="3uHU7w">
-                    <property role="Xl_RC" value=" errors" />
-                  </node>
-                  <node concept="3cpWs3" id="3woxxXslsmb" role="3uHU7B">
-                    <node concept="Xl_RD" id="4koLORdUojp" role="3uHU7B">
-                      <property role="Xl_RC" value="dclare engine stopped with " />
-                    </node>
-                    <node concept="2OqwBi" id="3woxxXsmkeU" role="3uHU7w">
-                      <node concept="liA8E" id="3woxxXspfru" role="2OqNvi">
-                        <ref role="37wK5l" to="zrbp:~Collection.size()" resolve="size" />
+            <node concept="3clFbF" id="1JIU9w$gmvm" role="3cqZAp">
+              <node concept="2YIFZM" id="1JIU9w$gn7s" role="3clFbG">
+                <ref role="37wK5l" to="dxuu:~SwingUtilities.invokeLater(java.lang.Runnable)" resolve="invokeLater" />
+                <ref role="1Pybhc" to="dxuu:~SwingUtilities" resolve="SwingUtilities" />
+                <node concept="2ShNRf" id="1JIU9w$gnBv" role="37wK5m">
+                  <node concept="YeOm9" id="1JIU9w$gPFY" role="2ShVmc">
+                    <node concept="1Y3b0j" id="1JIU9w$gPG1" role="YeSDq">
+                      <property role="2bfB8j" value="true" />
+                      <property role="373rjd" value="true" />
+                      <ref role="1Y3XeK" to="wyt6:~Runnable" resolve="Runnable" />
+                      <ref role="37wK5l" to="wyt6:~Object.&lt;init&gt;()" />
+                      <node concept="3Tm1VV" id="1JIU9w$gPG2" role="1B3o_S" />
+                      <node concept="3clFb_" id="1JIU9w$gPGg" role="jymVt">
+                        <property role="TrG5h" value="run" />
+                        <node concept="3Tm1VV" id="1JIU9w$gPGh" role="1B3o_S" />
+                        <node concept="3cqZAl" id="1JIU9w$gPGj" role="3clF45" />
+                        <node concept="3clFbS" id="1JIU9w$gPGk" role="3clF47">
+                          <node concept="3clFbF" id="3zaVTDehRAS" role="3cqZAp">
+                            <node concept="2OqwBi" id="3zaVTDehRAT" role="3clFbG">
+                              <node concept="2WthIp" id="3zaVTDehRMU" role="2Oq$k0" />
+                              <node concept="liA8E" id="3zaVTDehRAV" role="2OqNvi">
+                                <ref role="37wK5l" to="71xd:~BaseTool.openTool(boolean)" resolve="openTool" />
+                                <node concept="3clFbT" id="3zaVTDehRAW" role="37wK5m">
+                                  <property role="3clFbU" value="true" />
+                                </node>
+                              </node>
+                            </node>
+                          </node>
+                          <node concept="3clFbF" id="4koLORdSGIi" role="3cqZAp">
+                            <node concept="2YIFZM" id="4koLORdSTO$" role="3clFbG">
+                              <ref role="37wK5l" to="dxuu:~JOptionPane.showMessageDialog(java.awt.Component,java.lang.Object,java.lang.String,int)" resolve="showMessageDialog" />
+                              <ref role="1Pybhc" to="dxuu:~JOptionPane" resolve="JOptionPane" />
+                              <node concept="10Nm6u" id="4koLORdTYr7" role="37wK5m" />
+                              <node concept="3cpWs3" id="3woxxXsmL7g" role="37wK5m">
+                                <node concept="Xl_RD" id="3woxxXsmLAU" role="3uHU7w">
+                                  <property role="Xl_RC" value=" errors" />
+                                </node>
+                                <node concept="3cpWs3" id="3woxxXslsmb" role="3uHU7B">
+                                  <node concept="Xl_RD" id="4koLORdUojp" role="3uHU7B">
+                                    <property role="Xl_RC" value="dclare engine stopped with " />
+                                  </node>
+                                  <node concept="37vLTw" id="1JIU9w$gS6c" role="3uHU7w">
+                                    <ref role="3cqZAo" node="1JIU9w$gS68" resolve="size" />
+                                  </node>
+                                </node>
+                              </node>
+                              <node concept="Xl_RD" id="4koLORdUN0r" role="37wK5m">
+                                <property role="Xl_RC" value="dclare" />
+                              </node>
+                              <node concept="10M0yZ" id="3woxxXspi16" role="37wK5m">
+                                <ref role="3cqZAo" to="dxuu:~JOptionPane.ERROR_MESSAGE" resolve="ERROR_MESSAGE" />
+                                <ref role="1PxDUh" to="dxuu:~JOptionPane" resolve="JOptionPane" />
+                              </node>
+                            </node>
+                          </node>
+                        </node>
+                        <node concept="2AHcQZ" id="1JIU9w$gPGm" role="2AJF6D">
+                          <ref role="2AI5Lk" to="wyt6:~Override" />
+                        </node>
                       </node>
-                      <node concept="37vLTw" id="3woxxXspcmW" role="2Oq$k0">
-                        <ref role="3cqZAo" node="3woxxXsp4tG" resolve="errors" />
-                      </node>
                     </node>
                   </node>
-                </node>
-                <node concept="Xl_RD" id="4koLORdUN0r" role="37wK5m">
-                  <property role="Xl_RC" value="dclare" />
-                </node>
-                <node concept="10M0yZ" id="3woxxXspi16" role="37wK5m">
-                  <ref role="3cqZAo" to="dxuu:~JOptionPane.ERROR_MESSAGE" resolve="ERROR_MESSAGE" />
-                  <ref role="1PxDUh" to="dxuu:~JOptionPane" resolve="JOptionPane" />
                 </node>
               </node>
             </node>

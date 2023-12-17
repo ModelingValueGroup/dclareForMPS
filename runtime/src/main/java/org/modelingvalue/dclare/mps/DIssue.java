@@ -70,11 +70,10 @@ public class DIssue extends DIdentifiedMutable {
 
     public static DIssue of(Supplier<DMutable> object, Supplier<MessageStatus> severity, Supplier<MessageTarget> feature, Supplier<String> message, Object[] identity) {
         LeafTransaction tx = LeafTransaction.getCurrent();
-        if (!(tx instanceof DObserverTransaction)) {
+        if (!(tx instanceof DObserverTransaction obTx)) {
             // we can not store this issue, so we just return null
             return null;
         }
-        DObserverTransaction obTx = (DObserverTransaction) tx;
         DIssue issue = new DIssue(((DObserver<?>) obTx.cls()).rule(), object, severity, feature, message, identity);
         obTx.issues.change(s -> s.add(issue));
         return issue;
@@ -122,21 +121,25 @@ public class DIssue extends DIdentifiedMutable {
     }
 
     public void getItem(Consumer<IssueKindReportItem> consumer) {
-        DMutable o = getObject();
-        if (o instanceof DModule) {
-            SModule original = ((DModule) o).original();
+        DMutable o       = getObject();
+        String   message = getMessage();
+        if (message == null) {
+            message = "<no message>";
+        }
+        if (o instanceof DModule module) {
+            SModule original = module.original();
             if (original != null) {
-                consumer.accept(new DIssueModuleReportItem(getSeverity(), original, getMessage(), ruleId()));
+                consumer.accept(new DIssueModuleReportItem(getSeverity(), original, message, ruleId()));
             }
-        } else if (o instanceof DModel) {
-            SModel original = ((DModel) o).tryOriginal();
+        } else if (o instanceof DModel model) {
+            SModel original = model.tryOriginal();
             if (original != null) {
-                consumer.accept(new DIssueModelReportItem(getSeverity(), original, getMessage(), ruleId()));
+                consumer.accept(new DIssueModelReportItem(getSeverity(), original, message, ruleId()));
             }
-        } else if (o instanceof DNode) {
-            SNode original = ((DNode) o).tryOriginal();
+        } else if (o instanceof DNode node) {
+            SNode original = node.tryOriginal();
             if (original != null) {
-                consumer.accept(new DIssueNodeReportItem(getSeverity(), original, getFeature(), getMessage(), ruleId()));
+                consumer.accept(new DIssueNodeReportItem(getSeverity(), original, getFeature(), message, ruleId()));
             }
         }
     }
