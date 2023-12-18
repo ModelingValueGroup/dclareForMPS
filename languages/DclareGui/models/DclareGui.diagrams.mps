@@ -68,24 +68,24 @@
       <ref role="3PzJGR" to="53d4:31sbKqyPLDj" resolve="EdgeLayout" />
     </node>
     <node concept="2iyNl8" id="2h1RSEsmDqS" role="2iyNln">
-      <property role="2iyNlD" value="500" />
-      <property role="2iyNlR" value="425" />
+      <property role="2iyNlD" value="1177" />
+      <property role="2iyNlR" value="222" />
       <ref role="2iyNl9" to="53d4:67eN9QkffP5" resolve="ConceptDiagram" />
       <node concept="2iyNll" id="2h1RSEsmDr5" role="2iyNmk">
         <ref role="2iyNli" to="53d4:3psr82$eZ54" resolve="IDiagram" />
       </node>
     </node>
     <node concept="2iyNl8" id="2h1RSEsmDqT" role="2iyNln">
-      <property role="2iyNlD" value="229" />
-      <property role="2iyNlR" value="115" />
+      <property role="2iyNlD" value="439" />
+      <property role="2iyNlR" value="187" />
       <ref role="2iyNl9" to="53d4:31sbKqyPLDj" resolve="EdgeLayout" />
       <node concept="2iyNll" id="2h1RSEsmDr8" role="2iyNmk">
         <ref role="2iyNli" to="53d4:31sbKqyPMf4" resolve="joints" />
       </node>
     </node>
     <node concept="2iyNl8" id="1zO1wi16A7$" role="2iyNln">
-      <property role="2iyNlD" value="602" />
-      <property role="2iyNlR" value="250" />
+      <property role="2iyNlD" value="927" />
+      <property role="2iyNlR" value="229" />
       <ref role="2iyNl9" to="53d4:3psr82$eZ54" resolve="IDiagram" />
       <node concept="2iyNll" id="1zO1wi16A7_" role="2iyNmk">
         <ref role="2iyNli" to="53d4:3psr82$c6ii" resolve="IEditor" />
@@ -98,26 +98,26 @@
       <ref role="3PzJGR" to="53d4:3psr82$eZ54" resolve="IDiagram" />
     </node>
     <node concept="2iyNl8" id="1zO1whZjk3s" role="2iyNln">
-      <property role="2iyNlD" value="800" />
-      <property role="2iyNlR" value="132" />
+      <property role="2iyNlD" value="920" />
+      <property role="2iyNlR" value="380" />
       <ref role="2iyNl9" to="53d4:3psr82$c6ii" resolve="IEditor" />
     </node>
     <node concept="2iyNl8" id="2h1RSEsmDqU" role="2iyNln">
-      <property role="2iyNlD" value="85" />
-      <property role="2iyNlR" value="243" />
+      <property role="2iyNlD" value="208" />
+      <property role="2iyNlR" value="180" />
       <ref role="2iyNl9" to="53d4:31sbKqyPLDm" resolve="JointLayout" />
     </node>
     <node concept="2iyNl8" id="2h1RSEsmDqV" role="2iyNln">
-      <property role="2iyNlD" value="470" />
-      <property role="2iyNlR" value="94" />
+      <property role="2iyNlD" value="672" />
+      <property role="2iyNlR" value="209" />
       <ref role="2iyNl9" to="53d4:31sbKqyPLDe" resolve="NodeLayout" />
       <node concept="2iyNll" id="2h1RSEsmDr7" role="2iyNmk">
         <ref role="2iyNli" to="53d4:31sbKqyPLEi" resolve="edges" />
       </node>
     </node>
     <node concept="2iyNl8" id="2h1RSEsmDqW" role="2iyNln">
-      <property role="2iyNlD" value="715" />
-      <property role="2iyNlR" value="393" />
+      <property role="2iyNlD" value="940" />
+      <property role="2iyNlR" value="77" />
       <ref role="2iyNl9" to="53d4:5hEUvARta2y" resolve="StructDiagram" />
       <node concept="2iyNll" id="2h1RSEsmDr6" role="2iyNmk">
         <ref role="2iyNli" to="53d4:3psr82$eZ54" resolve="IDiagram" />
@@ -147,16 +147,16 @@
     <property role="TrG5h" value="structs" />
     <property role="mcfiE" value="true" />
     <node concept="2iyNl8" id="5eUHR06$$j5" role="2iyNln">
-      <property role="2iyNlR" value="426" />
-      <property role="2iyNlD" value="1580" />
+      <property role="2iyNlR" value="216" />
+      <property role="2iyNlD" value="1040" />
       <ref role="2iyNl9" to="q3xn:3HJBHARsh7U" resolve="ConceptDiagramCanvas" />
       <node concept="2iyNll" id="5eUHR06$$k8" role="2iyNmk">
         <ref role="2iyNli" to="q3xn:3OZjsowr30i" resolve="DDiagramCanvas" />
       </node>
     </node>
     <node concept="2iyNl8" id="5eUHR06$$j6" role="2iyNln">
-      <property role="2iyNlR" value="1444" />
-      <property role="2iyNlD" value="1785" />
+      <property role="2iyNlR" value="1066" />
+      <property role="2iyNlD" value="1652" />
       <ref role="2iyNl9" to="q3xn:3HJBHARtgyV" resolve="ConceptRectangle" />
       <node concept="2iyNll" id="5eUHR06$$jZ" role="2iyNmk">
         <ref role="2iyNli" to="q3xn:skgx$J4Z4a" resolve="DRectangleShape" />
@@ -166,69 +166,69 @@
       </node>
     </node>
     <node concept="2iyNl8" id="5eUHR06$$j7" role="2iyNln">
-      <property role="2iyNlR" value="1392" />
-      <property role="2iyNlD" value="271" />
+      <property role="2iyNlR" value="1084" />
+      <property role="2iyNlD" value="140" />
       <ref role="2iyNl9" to="q3xn:6YJvVULPUly" resolve="ConceptSpecialisationLine" />
       <node concept="2iyNll" id="5eUHR06$$k5" role="2iyNmk">
         <ref role="2iyNli" to="q3xn:3OZjsowp$AG" resolve="DMultiLineEdge" />
       </node>
     </node>
     <node concept="2iyNl8" id="5eUHR06$$j8" role="2iyNln">
-      <property role="2iyNlR" value="300" />
-      <property role="2iyNlD" value="1105" />
+      <property role="2iyNlR" value="401" />
+      <property role="2iyNlD" value="796" />
       <ref role="2iyNl9" to="q3xn:skgx$J4Z32" resolve="DCanvas" />
       <node concept="2iyNll" id="5eUHR06$$jR" role="2iyNmk">
         <ref role="2iyNli" to="q3xn:skgx$J4Z2F" resolve="DComponent" />
       </node>
     </node>
     <node concept="2iyNl8" id="5eUHR06$$j9" role="2iyNln">
-      <property role="2iyNlR" value="1298" />
-      <property role="2iyNlD" value="1223" />
+      <property role="2iyNlR" value="1059" />
+      <property role="2iyNlD" value="1059" />
       <ref role="2iyNl9" to="q3xn:skgx$J4Z4h" resolve="DCircleShape" />
       <node concept="2iyNll" id="5eUHR06$$jS" role="2iyNmk">
         <ref role="2iyNli" to="q3xn:skgx$J4Z45" resolve="DFilledShape" />
       </node>
     </node>
     <node concept="2iyNl8" id="5eUHR06$$ja" role="2iyNln">
-      <property role="2iyNlR" value="328" />
-      <property role="2iyNlD" value="734" />
+      <property role="2iyNlR" value="440" />
+      <property role="2iyNlD" value="506" />
       <ref role="2iyNl9" to="q3xn:skgx$J4Z2F" resolve="DComponent" />
       <node concept="2iyNll" id="5eUHR06$$jO" role="2iyNmk">
         <ref role="2iyNli" to="q3xn:skgx$J4Z2s" resolve="DContainer" />
       </node>
     </node>
     <node concept="2iyNl8" id="5eUHR06$$jb" role="2iyNln">
-      <property role="2iyNlR" value="497" />
-      <property role="2iyNlD" value="998" />
+      <property role="2iyNlR" value="565" />
+      <property role="2iyNlD" value="769" />
       <ref role="2iyNl9" to="q3xn:skgx$J4Z2s" resolve="DContainer" />
       <node concept="2iyNll" id="5eUHR06$$k7" role="2iyNmk">
         <ref role="2iyNli" to="q3xn:WHdioYVYaT" resolve="DVisible" />
       </node>
     </node>
     <node concept="2iyNl8" id="5eUHR06$$jc" role="2iyNln">
-      <property role="2iyNlR" value="892" />
-      <property role="2iyNlD" value="432" />
+      <property role="2iyNlR" value="702" />
+      <property role="2iyNlD" value="-68" />
       <ref role="2iyNl9" to="q3xn:2gyk5S1Dvn0" resolve="DDeviceInput" />
     </node>
     <node concept="2iyNl8" id="5eUHR06$$jd" role="2iyNln">
-      <property role="2iyNlR" value="317" />
-      <property role="2iyNlD" value="1454" />
+      <property role="2iyNlR" value="352" />
+      <property role="2iyNlD" value="1029" />
       <ref role="2iyNl9" to="q3xn:3OZjsowr30i" resolve="DDiagramCanvas" />
       <node concept="2iyNll" id="5eUHR06$$jW" role="2iyNmk">
         <ref role="2iyNli" to="q3xn:skgx$J4Z32" resolve="DCanvas" />
       </node>
     </node>
     <node concept="2iyNl8" id="5eUHR06$$jr" role="2iyNln">
-      <property role="2iyNlR" value="1288" />
-      <property role="2iyNlD" value="544" />
+      <property role="2iyNlR" value="987" />
+      <property role="2iyNlD" value="371" />
       <ref role="2iyNl9" to="q3xn:3OZjsowp$AG" resolve="DDiagramEdge" />
       <node concept="2iyNll" id="5eUHR06$$jX" role="2iyNmk">
         <ref role="2iyNli" to="q3xn:skgx$J4Z3O" resolve="DMultiLineShape" />
       </node>
     </node>
     <node concept="2iyNl8" id="5eUHR06$$jf" role="2iyNln">
-      <property role="2iyNlR" value="1244" />
-      <property role="2iyNlD" value="2034" />
+      <property role="2iyNlR" value="714" />
+      <property role="2iyNlD" value="1682" />
       <ref role="2iyNl9" to="q3xn:3VTki$0kFQZ" resolve="DDiagramJoint" />
       <node concept="2iyNll" id="5eUHR06$$jK" role="2iyNmk">
         <ref role="2iyNli" to="q3xn:3VTkizWCVbO" resolve="DJoint" />
@@ -238,8 +238,8 @@
       </node>
     </node>
     <node concept="2iyNl8" id="5eUHR06$$jg" role="2iyNln">
-      <property role="2iyNlR" value="1299" />
-      <property role="2iyNlD" value="1694" />
+      <property role="2iyNlR" value="981" />
+      <property role="2iyNlD" value="1494" />
       <ref role="2iyNl9" to="q3xn:3OZjsowptDc" resolve="DDiagramNode" />
       <node concept="2iyNll" id="5eUHR06$$jP" role="2iyNmk">
         <ref role="2iyNli" to="q3xn:skgx$J4Z45" resolve="DFilledShape" />
@@ -249,21 +249,21 @@
       </node>
     </node>
     <node concept="2iyNl8" id="5eUHR06$$jq" role="2iyNln">
-      <property role="2iyNlR" value="1144" />
-      <property role="2iyNlD" value="1810" />
+      <property role="2iyNlR" value="849" />
+      <property role="2iyNlD" value="1593" />
       <ref role="2iyNl9" to="q3xn:3VTki$0W76c" resolve="DDiagramVertice" />
       <node concept="2iyNll" id="5eUHR06$$jN" role="2iyNmk">
         <ref role="2iyNli" to="q3xn:3VTkizWGbn5" resolve="DVertice" />
       </node>
     </node>
     <node concept="2iyNl8" id="5eUHR06$$je" role="2iyNln">
-      <property role="2iyNlR" value="254" />
-      <property role="2iyNlD" value="2123" />
+      <property role="2iyNlR" value="220" />
+      <property role="2iyNlD" value="1700" />
       <ref role="2iyNl9" to="q3xn:4NMtPTvGXY5" resolve="DDimension" />
     </node>
     <node concept="2iyNl8" id="5eUHR06$$jh" role="2iyNln">
-      <property role="2iyNlR" value="1157" />
-      <property role="2iyNlD" value="1419" />
+      <property role="2iyNlR" value="946" />
+      <property role="2iyNlD" value="1215" />
       <ref role="2iyNl9" to="q3xn:skgx$J4Z45" resolve="DFilledShape" />
       <node concept="2iyNll" id="5eUHR06$$jD" role="2iyNmk">
         <ref role="2iyNli" to="q3xn:skgx$J4Z2r" resolve="DShape" />
@@ -273,142 +273,142 @@
       </node>
     </node>
     <node concept="2iyNl8" id="5eUHR06$$ji" role="2iyNln">
-      <property role="2iyNlR" value="627" />
-      <property role="2iyNlD" value="1253" />
+      <property role="2iyNlR" value="596" />
+      <property role="2iyNlD" value="1006" />
       <ref role="2iyNl9" to="q3xn:skgx$J4Z3D" resolve="DFrame" />
       <node concept="2iyNll" id="5eUHR06$$k6" role="2iyNmk">
         <ref role="2iyNli" to="q3xn:skgx$J4Z2s" resolve="DContainer" />
       </node>
     </node>
     <node concept="2iyNl8" id="5eUHR06$$jj" role="2iyNln">
-      <property role="2iyNlR" value="647" />
-      <property role="2iyNlD" value="182" />
+      <property role="2iyNlR" value="849" />
+      <property role="2iyNlD" value="2025" />
       <ref role="2iyNl9" to="q3xn:7wc8RN4MUFm" resolve="DImage" />
     </node>
     <node concept="2iyNl8" id="5eUHR06$$jk" role="2iyNln">
-      <property role="2iyNlR" value="1109" />
-      <property role="2iyNlD" value="1970" />
+      <property role="2iyNlR" value="683" />
+      <property role="2iyNlD" value="1447" />
       <ref role="2iyNl9" to="q3xn:3VTkizWCVbO" resolve="DJoint" />
       <node concept="2iyNll" id="5eUHR06$$jJ" role="2iyNmk">
         <ref role="2iyNli" to="q3xn:3VTkizWGbn5" resolve="DMovable" />
       </node>
     </node>
     <node concept="2iyNl8" id="5eUHR06$$jl" role="2iyNln">
-      <property role="2iyNlR" value="619" />
-      <property role="2iyNlD" value="2106" />
+      <property role="2iyNlR" value="757" />
+      <property role="2iyNlD" value="426" />
       <ref role="2iyNl9" to="q3xn:6YJvVULTHtj" resolve="DLineSegment" />
     </node>
     <node concept="2iyNl8" id="5eUHR06$$jm" role="2iyNln">
-      <property role="2iyNlR" value="355" />
-      <property role="2iyNlD" value="469" />
+      <property role="2iyNlR" value="258" />
+      <property role="2iyNlD" value="440" />
       <ref role="2iyNl9" to="q3xn:2xAA8jfpttw" resolve="DMenu" />
       <node concept="2iyNll" id="5eUHR06$$jH" role="2iyNmk">
         <ref role="2iyNli" to="q3xn:skgx$J4Z2F" resolve="DComponent" />
       </node>
     </node>
     <node concept="2iyNl8" id="5eUHR06$$jn" role="2iyNln">
-      <property role="2iyNlR" value="427" />
-      <property role="2iyNlD" value="783" />
+      <property role="2iyNlR" value="330" />
+      <property role="2iyNlD" value="621" />
       <ref role="2iyNl9" to="q3xn:2xAA8jfpttH" resolve="DMenuItem" />
       <node concept="2iyNll" id="5eUHR06$$jF" role="2iyNmk">
         <ref role="2iyNli" to="q3xn:skgx$J4Z2F" resolve="DComponent" />
       </node>
     </node>
     <node concept="2iyNl8" id="5eUHR06$$jo" role="2iyNln">
-      <property role="2iyNlR" value="489" />
-      <property role="2iyNlD" value="575" />
+      <property role="2iyNlR" value="585" />
+      <property role="2iyNlD" value="559" />
       <ref role="2iyNl9" to="q3xn:2xAA8jfoMuD" resolve="DMenubar" />
       <node concept="2iyNll" id="5eUHR06$$k2" role="2iyNmk">
         <ref role="2iyNli" to="q3xn:skgx$J4Z2F" resolve="DComponent" />
       </node>
     </node>
     <node concept="2iyNl8" id="5eUHR06$$js" role="2iyNln">
-      <property role="2iyNlR" value="1136" />
-      <property role="2iyNlD" value="804" />
+      <property role="2iyNlR" value="919" />
+      <property role="2iyNlD" value="650" />
       <ref role="2iyNl9" to="q3xn:skgx$J4Z3O" resolve="DMultiLineShape" />
       <node concept="2iyNll" id="5eUHR06$$jM" role="2iyNmk">
         <ref role="2iyNli" to="q3xn:skgx$J4Z2r" resolve="DShape" />
       </node>
     </node>
     <node concept="2iyNl8" id="5eUHR06$$jt" role="2iyNln">
-      <property role="2iyNlR" value="404" />
-      <property role="2iyNlD" value="969" />
+      <property role="2iyNlR" value="546" />
+      <property role="2iyNlD" value="338" />
       <ref role="2iyNl9" to="q3xn:681X9Tz0KVS" resolve="DNodeComponent" />
       <node concept="2iyNll" id="5eUHR06$$jU" role="2iyNmk">
         <ref role="2iyNli" to="q3xn:skgx$J4Z2F" resolve="DComponent" />
       </node>
     </node>
     <node concept="2iyNl8" id="5eUHR06$$ju" role="2iyNln">
-      <property role="2iyNlR" value="420" />
-      <property role="2iyNlD" value="535" />
+      <property role="2iyNlR" value="464" />
+      <property role="2iyNlD" value="196" />
       <ref role="2iyNl9" to="q3xn:skgx$J4Z3d" resolve="DPanel" />
       <node concept="2iyNll" id="5eUHR06$$jI" role="2iyNmk">
         <ref role="2iyNli" to="q3xn:skgx$J4Z2F" resolve="DComponent" />
       </node>
     </node>
     <node concept="2iyNl8" id="5eUHR06$$jv" role="2iyNln">
-      <property role="2iyNlR" value="461" />
-      <property role="2iyNlD" value="2139" />
+      <property role="2iyNlR" value="337" />
+      <property role="2iyNlD" value="2660" />
       <ref role="2iyNl9" to="q3xn:4NMtPTvGW7r" resolve="DPoint" />
     </node>
     <node concept="2iyNl8" id="5eUHR06$$jw" role="2iyNln">
-      <property role="2iyNlR" value="901" />
-      <property role="2iyNlD" value="183" />
+      <property role="2iyNlR" value="391" />
+      <property role="2iyNlD" value="2260" />
       <ref role="2iyNl9" to="q3xn:4LLmjMcNoIC" resolve="DQuadrant" />
     </node>
     <node concept="2iyNl8" id="5eUHR06$$jx" role="2iyNln">
-      <property role="2iyNlR" value="1337" />
-      <property role="2iyNlD" value="1537" />
+      <property role="2iyNlR" value="1070" />
+      <property role="2iyNlD" value="1367" />
       <ref role="2iyNl9" to="q3xn:skgx$J4Z4a" resolve="DRectangleShape" />
       <node concept="2iyNll" id="5eUHR06$$k1" role="2iyNmk">
         <ref role="2iyNli" to="q3xn:skgx$J4Z45" resolve="DFilledShape" />
       </node>
     </node>
     <node concept="2iyNl8" id="5eUHR06$$jy" role="2iyNln">
-      <property role="2iyNlR" value="981" />
-      <property role="2iyNlD" value="1098" />
+      <property role="2iyNlR" value="876" />
+      <property role="2iyNlD" value="921" />
       <ref role="2iyNl9" to="q3xn:skgx$J4Z2r" resolve="DShape" />
       <node concept="2iyNll" id="5eUHR06$$jT" role="2iyNmk">
         <ref role="2iyNli" to="q3xn:WHdioYVYaT" resolve="DVisible" />
       </node>
     </node>
     <node concept="2iyNl8" id="5eUHR06$$jz" role="2iyNln">
-      <property role="2iyNlR" value="422" />
-      <property role="2iyNlD" value="385" />
+      <property role="2iyNlR" value="346" />
+      <property role="2iyNlD" value="273" />
       <ref role="2iyNl9" to="q3xn:skgx$J4Z3o" resolve="DSplitPane" />
       <node concept="2iyNll" id="5eUHR06$$k9" role="2iyNmk">
         <ref role="2iyNli" to="q3xn:skgx$J4Z2F" resolve="DComponent" />
       </node>
     </node>
     <node concept="2iyNl8" id="5eUHR06$$jp" role="2iyNln">
-      <property role="2iyNlR" value="1016" />
-      <property role="2iyNlD" value="1687" />
+      <property role="2iyNlR" value="815" />
+      <property role="2iyNlD" value="1341" />
       <ref role="2iyNl9" to="q3xn:3VTkizWGbn5" resolve="DMovable" />
     </node>
     <node concept="2iyNl8" id="5eUHR06$$j$" role="2iyNln">
-      <property role="2iyNlR" value="668" />
-      <property role="2iyNlD" value="1079" />
+      <property role="2iyNlR" value="733" />
+      <property role="2iyNlD" value="832" />
       <ref role="2iyNl9" to="q3xn:WHdioYVYaT" resolve="DVisible" />
     </node>
     <node concept="2iyNl8" id="5eUHR06$$j_" role="2iyNln">
-      <property role="2iyNlR" value="1417" />
-      <property role="2iyNlD" value="438" />
+      <property role="2iyNlR" value="1105" />
+      <property role="2iyNlD" value="517" />
       <ref role="2iyNl9" to="q3xn:67eN9QkfT0n" resolve="LinkLine" />
       <node concept="2iyNll" id="5eUHR06$$jY" role="2iyNmk">
         <ref role="2iyNli" to="q3xn:3OZjsowp$AG" resolve="DMultiLineEdge" />
       </node>
     </node>
     <node concept="2iyNl8" id="5eUHR06$$jA" role="2iyNln">
-      <property role="2iyNlR" value="397" />
-      <property role="2iyNlD" value="1765" />
+      <property role="2iyNlR" value="432" />
+      <property role="2iyNlD" value="1247" />
       <ref role="2iyNl9" to="q3xn:2QCHpowuQyh" resolve="StructDiagramCanvas" />
       <node concept="2iyNll" id="5eUHR06$$jG" role="2iyNmk">
         <ref role="2iyNli" to="q3xn:3OZjsowr30i" resolve="DDiagramCanvas" />
       </node>
     </node>
     <node concept="2iyNl8" id="5eUHR06$$jB" role="2iyNln">
-      <property role="2iyNlR" value="1463" />
-      <property role="2iyNlD" value="1620" />
+      <property role="2iyNlR" value="1160" />
+      <property role="2iyNlD" value="1456" />
       <ref role="2iyNl9" to="q3xn:2QCHpowuSLJ" resolve="StructRectangle" />
       <node concept="2iyNll" id="5eUHR06$$k3" role="2iyNmk">
         <ref role="2iyNli" to="q3xn:skgx$J4Z4a" resolve="DRectangleShape" />
@@ -418,8 +418,8 @@
       </node>
     </node>
     <node concept="2iyNl8" id="5eUHR06$$jC" role="2iyNln">
-      <property role="2iyNlR" value="1446" />
-      <property role="2iyNlD" value="640" />
+      <property role="2iyNlR" value="890" />
+      <property role="2iyNlD" value="181" />
       <ref role="2iyNl9" to="q3xn:2QCHpowuSMF" resolve="StructSpecialisationLine" />
       <node concept="2iyNll" id="5eUHR06$$jV" role="2iyNmk">
         <ref role="2iyNli" to="q3xn:3OZjsowp$AG" resolve="DMultiLineEdge" />
@@ -539,25 +539,25 @@
     </node>
   </node>
   <node concept="3PWz7o" id="3sOksCm__DL">
-    <property role="TrG5h" value="two" />
+    <property role="TrG5h" value="three" />
     <property role="5CCp0" value="true" />
     <property role="mcfiE" value="true" />
     <node concept="2iyNl8" id="3sOksCpGeYg" role="2iyNln">
-      <property role="2iyNlD" value="340" />
-      <property role="2iyNlR" value="120" />
+      <property role="2iyNlD" value="692" />
+      <property role="2iyNlR" value="141" />
       <ref role="2iyNl9" to="53d4:3psr82$c6ii" resolve="IEditor" />
     </node>
     <node concept="2iyNl8" id="3sOksCpGeYh" role="2iyNln">
-      <property role="2iyNlD" value="337" />
-      <property role="2iyNlR" value="262" />
+      <property role="2iyNlD" value="480" />
+      <property role="2iyNlR" value="200" />
       <ref role="2iyNl9" to="53d4:3psr82$eZ54" resolve="IDiagram" />
       <node concept="2iyNll" id="3sOksCpGeYi" role="2iyNmk">
         <ref role="2iyNli" to="53d4:3psr82$c6ii" resolve="IEditor" />
       </node>
     </node>
     <node concept="2iyNl8" id="3sOksCpY3$A" role="2iyNln">
-      <property role="2iyNlD" value="165" />
-      <property role="2iyNlR" value="372" />
+      <property role="2iyNlD" value="256" />
+      <property role="2iyNlR" value="230" />
       <ref role="2iyNl9" to="53d4:67eN9QkffP5" resolve="ConceptDiagram" />
       <node concept="2iyNll" id="3sOksCpY3$B" role="2iyNmk">
         <ref role="2iyNli" to="53d4:3psr82$eZ54" resolve="IDiagram" />
@@ -575,400 +575,6 @@
     </node>
     <node concept="3PzJGO" id="3sOksCpY3$y" role="3PWPUC">
       <ref role="3PzJGR" to="53d4:67eN9QkffP5" resolve="ConceptDiagram" />
-    </node>
-  </node>
-  <node concept="3z7$_r" id="tXATMUmZaa">
-    <property role="mcfiE" value="true" />
-    <node concept="2iyNl8" id="tXATMUmZbk" role="2iyNln">
-      <property role="2iyNlD" value="965" />
-      <property role="2iyNlR" value="1397" />
-      <ref role="2iyNl9" to="q3xn:3HJBHARsh7U" resolve="ConceptDiagramCanvas" />
-      <node concept="2iyNll" id="tXATMUmZce" role="2iyNmk">
-        <ref role="2iyNli" to="q3xn:3OZjsowr30i" resolve="DDiagramCanvas" />
-      </node>
-    </node>
-    <node concept="2iyNl8" id="tXATMUmZbl" role="2iyNln">
-      <property role="2iyNlD" value="2087" />
-      <property role="2iyNlR" value="1035" />
-      <ref role="2iyNl9" to="q3xn:3HJBHARtgyV" resolve="ConceptRectangle" />
-      <node concept="2iyNll" id="tXATMUmZca" role="2iyNmk">
-        <ref role="2iyNli" to="q3xn:skgx$J4Z4a" resolve="DRectangleShape" />
-      </node>
-      <node concept="2iyNll" id="tXATMUmZcb" role="2iyNmk">
-        <ref role="2iyNli" to="q3xn:3OZjsowptDc" resolve="DDiagramNode" />
-      </node>
-    </node>
-    <node concept="2iyNl8" id="tXATMUmZbm" role="2iyNln">
-      <property role="2iyNlD" value="1463" />
-      <property role="2iyNlR" value="1458" />
-      <ref role="2iyNl9" to="q3xn:6YJvVULPUly" resolve="ConceptSpecialisationLine" />
-      <node concept="2iyNll" id="tXATMUmZc6" role="2iyNmk">
-        <ref role="2iyNli" to="q3xn:3OZjsowp$AG" resolve="DDiagramEdge" />
-      </node>
-    </node>
-    <node concept="2iyNl8" id="tXATMUmZbn" role="2iyNln">
-      <property role="2iyNlD" value="772" />
-      <property role="2iyNlR" value="1096" />
-      <ref role="2iyNl9" to="q3xn:skgx$J4Z32" resolve="DCanvas" />
-      <node concept="2iyNll" id="tXATMUmZc3" role="2iyNmk">
-        <ref role="2iyNli" to="q3xn:skgx$J4Z2F" resolve="DComponent" />
-      </node>
-    </node>
-    <node concept="2iyNl8" id="tXATMUmZbo" role="2iyNln">
-      <property role="2iyNlD" value="2104" />
-      <property role="2iyNlR" value="853" />
-      <ref role="2iyNl9" to="q3xn:skgx$J4Z4h" resolve="DCircleShape" />
-      <node concept="2iyNll" id="tXATMUmZbW" role="2iyNmk">
-        <ref role="2iyNli" to="q3xn:skgx$J4Z45" resolve="DFilledShape" />
-      </node>
-    </node>
-    <node concept="2iyNl8" id="tXATMUmZbp" role="2iyNln">
-      <property role="2iyNlD" value="492" />
-      <property role="2iyNlR" value="967" />
-      <ref role="2iyNl9" to="q3xn:skgx$J4Z2F" resolve="DComponent" />
-      <node concept="2iyNll" id="tXATMUmZcm" role="2iyNmk">
-        <ref role="2iyNli" to="q3xn:skgx$J4Z2s" resolve="DContainer" />
-      </node>
-    </node>
-    <node concept="2iyNl8" id="tXATMUmZbq" role="2iyNln">
-      <property role="2iyNlD" value="664" />
-      <property role="2iyNlR" value="728" />
-      <ref role="2iyNl9" to="q3xn:skgx$J4Z2s" resolve="DContainer" />
-      <node concept="2iyNll" id="tXATMUmZcn" role="2iyNmk">
-        <ref role="2iyNli" to="q3xn:WHdioYVYaT" resolve="DVisible" />
-      </node>
-    </node>
-    <node concept="2iyNl8" id="tXATMUmZbr" role="2iyNln">
-      <property role="2iyNlD" value="724" />
-      <property role="2iyNlR" value="199" />
-      <ref role="2iyNl9" to="q3xn:2gyk5S1Dvn0" resolve="DDeviceInput" />
-    </node>
-    <node concept="2iyNl8" id="tXATMUmZbs" role="2iyNln">
-      <property role="2iyNlD" value="837" />
-      <property role="2iyNlR" value="1272" />
-      <ref role="2iyNl9" to="q3xn:3OZjsowr30i" resolve="DDiagramCanvas" />
-      <node concept="2iyNll" id="tXATMUmZc7" role="2iyNmk">
-        <ref role="2iyNli" to="q3xn:skgx$J4Z32" resolve="DCanvas" />
-      </node>
-    </node>
-    <node concept="2iyNl8" id="tXATMUmZbt" role="2iyNln">
-      <property role="2iyNlD" value="1610" />
-      <property role="2iyNlR" value="1312" />
-      <ref role="2iyNl9" to="q3xn:3OZjsowp$AG" resolve="DDiagramEdge" />
-      <node concept="2iyNll" id="tXATMUmZcj" role="2iyNmk">
-        <ref role="2iyNli" to="q3xn:skgx$J4Z3O" resolve="DMultiLineShape" />
-      </node>
-    </node>
-    <node concept="2iyNl8" id="tXATMUmZbu" role="2iyNln">
-      <property role="2iyNlD" value="1885" />
-      <property role="2iyNlR" value="705" />
-      <ref role="2iyNl9" to="q3xn:3VTki$0kFQZ" resolve="DDiagramJoint" />
-      <node concept="2iyNll" id="tXATMUmZc0" role="2iyNmk">
-        <ref role="2iyNli" to="q3xn:3VTkizWCVbO" resolve="DJoint" />
-      </node>
-      <node concept="2iyNll" id="tXATMUmZc1" role="2iyNmk">
-        <ref role="2iyNli" to="q3xn:3VTki$0W76c" resolve="DDiagramVertice" />
-      </node>
-    </node>
-    <node concept="2iyNl8" id="tXATMUmZbv" role="2iyNln">
-      <property role="2iyNlD" value="1974" />
-      <property role="2iyNlR" value="863" />
-      <ref role="2iyNl9" to="q3xn:3OZjsowptDc" resolve="DDiagramNode" />
-      <node concept="2iyNll" id="tXATMUmZcf" role="2iyNmk">
-        <ref role="2iyNli" to="q3xn:skgx$J4Z45" resolve="DFilledShape" />
-      </node>
-      <node concept="2iyNll" id="tXATMUmZcg" role="2iyNmk">
-        <ref role="2iyNli" to="q3xn:3VTki$0W76c" resolve="DDiagramVertice" />
-      </node>
-    </node>
-    <node concept="2iyNl8" id="tXATMUmZbw" role="2iyNln">
-      <property role="2iyNlD" value="2041" />
-      <property role="2iyNlR" value="637" />
-      <ref role="2iyNl9" to="q3xn:3VTki$0W76c" resolve="DDiagramVertice" />
-      <node concept="2iyNll" id="tXATMUmZc8" role="2iyNmk">
-        <ref role="2iyNli" to="q3xn:3VTkizWGbn5" resolve="DVertice" />
-      </node>
-    </node>
-    <node concept="2iyNl8" id="tXATMUmZbx" role="2iyNln">
-      <property role="2iyNlD" value="329" />
-      <property role="2iyNlR" value="220" />
-      <ref role="2iyNl9" to="q3xn:4NMtPTvGXY5" resolve="DDimension" />
-    </node>
-    <node concept="2iyNl8" id="tXATMUmZby" role="2iyNln">
-      <property role="2iyNlD" value="1800" />
-      <property role="2iyNlR" value="765" />
-      <ref role="2iyNl9" to="q3xn:skgx$J4Z45" resolve="DFilledShape" />
-      <node concept="2iyNll" id="tXATMUmZch" role="2iyNmk">
-        <ref role="2iyNli" to="q3xn:skgx$J4Z2r" resolve="DShape" />
-      </node>
-      <node concept="2iyNll" id="tXATMUmZci" role="2iyNmk">
-        <ref role="2iyNli" to="q3xn:3VTkizWGbn5" resolve="DVertice" />
-      </node>
-    </node>
-    <node concept="2iyNl8" id="tXATMUmZbz" role="2iyNln">
-      <property role="2iyNlD" value="431" />
-      <property role="2iyNlR" value="791" />
-      <ref role="2iyNl9" to="q3xn:skgx$J4Z3D" resolve="DFrame" />
-      <node concept="2iyNll" id="tXATMUmZbS" role="2iyNmk">
-        <ref role="2iyNli" to="q3xn:skgx$J4Z2s" resolve="DContainer" />
-      </node>
-    </node>
-    <node concept="2iyNl8" id="tXATMUmZb$" role="2iyNln">
-      <property role="2iyNlD" value="897" />
-      <property role="2iyNlR" value="305" />
-      <ref role="2iyNl9" to="q3xn:7wc8RN4MUFm" resolve="DImage" />
-    </node>
-    <node concept="2iyNl8" id="tXATMUmZb_" role="2iyNln">
-      <property role="2iyNlD" value="1712" />
-      <property role="2iyNlR" value="597" />
-      <ref role="2iyNl9" to="q3xn:3VTkizWCVbO" resolve="DJoint" />
-      <node concept="2iyNll" id="tXATMUmZbU" role="2iyNmk">
-        <ref role="2iyNli" to="q3xn:3VTkizWGbn5" resolve="DVertice" />
-      </node>
-    </node>
-    <node concept="2iyNl8" id="tXATMUmZbA" role="2iyNln">
-      <property role="2iyNlD" value="526" />
-      <property role="2iyNlR" value="1726" />
-      <ref role="2iyNl9" to="q3xn:6YJvVULTHtj" resolve="DLineSegment" />
-    </node>
-    <node concept="2iyNl8" id="tXATMUmZbB" role="2iyNln">
-      <property role="2iyNlD" value="651" />
-      <property role="2iyNlR" value="1041" />
-      <ref role="2iyNl9" to="q3xn:2xAA8jfpttw" resolve="DMenu" />
-      <node concept="2iyNll" id="tXATMUmZck" role="2iyNmk">
-        <ref role="2iyNli" to="q3xn:skgx$J4Z2F" resolve="DComponent" />
-      </node>
-    </node>
-    <node concept="2iyNl8" id="tXATMUmZbC" role="2iyNln">
-      <property role="2iyNlD" value="533" />
-      <property role="2iyNlR" value="1194" />
-      <ref role="2iyNl9" to="q3xn:2xAA8jfpttH" resolve="DMenuItem" />
-      <node concept="2iyNll" id="tXATMUmZc5" role="2iyNmk">
-        <ref role="2iyNli" to="q3xn:skgx$J4Z2F" resolve="DComponent" />
-      </node>
-    </node>
-    <node concept="2iyNl8" id="tXATMUmZbD" role="2iyNln">
-      <property role="2iyNlD" value="223" />
-      <property role="2iyNlR" value="1029" />
-      <ref role="2iyNl9" to="q3xn:2xAA8jfoMuD" resolve="DMenubar" />
-      <node concept="2iyNll" id="tXATMUmZbZ" role="2iyNmk">
-        <ref role="2iyNli" to="q3xn:skgx$J4Z2F" resolve="DComponent" />
-      </node>
-    </node>
-    <node concept="2iyNl8" id="tXATMUmZbE" role="2iyNln">
-      <property role="2iyNlD" value="1486" />
-      <property role="2iyNlR" value="1051" />
-      <ref role="2iyNl9" to="q3xn:skgx$J4Z3O" resolve="DMultiLineShape" />
-      <node concept="2iyNll" id="tXATMUmZbV" role="2iyNmk">
-        <ref role="2iyNli" to="q3xn:skgx$J4Z2r" resolve="DShape" />
-      </node>
-    </node>
-    <node concept="2iyNl8" id="tXATMUmZbF" role="2iyNln">
-      <property role="2iyNlD" value="340" />
-      <property role="2iyNlR" value="1150" />
-      <ref role="2iyNl9" to="q3xn:681X9Tz0KVS" resolve="DNodeComponent" />
-      <node concept="2iyNll" id="tXATMUmZbT" role="2iyNmk">
-        <ref role="2iyNli" to="q3xn:skgx$J4Z2F" resolve="DComponent" />
-      </node>
-    </node>
-    <node concept="2iyNl8" id="tXATMUmZbG" role="2iyNln">
-      <property role="2iyNlD" value="254" />
-      <property role="2iyNlR" value="1098" />
-      <ref role="2iyNl9" to="q3xn:skgx$J4Z3d" resolve="DPanel" />
-      <node concept="2iyNll" id="tXATMUmZcc" role="2iyNmk">
-        <ref role="2iyNli" to="q3xn:skgx$J4Z2F" resolve="DComponent" />
-      </node>
-    </node>
-    <node concept="2iyNl8" id="tXATMUmZbH" role="2iyNln">
-      <property role="2iyNlD" value="1920" />
-      <property role="2iyNlR" value="161" />
-      <ref role="2iyNl9" to="q3xn:4NMtPTvGW7r" resolve="DPoint" />
-    </node>
-    <node concept="2iyNl8" id="tXATMUmZbI" role="2iyNln">
-      <property role="2iyNlD" value="205" />
-      <property role="2iyNlR" value="1477" />
-      <ref role="2iyNl9" to="q3xn:4LLmjMcNoIC" resolve="DQuadrant" />
-    </node>
-    <node concept="2iyNl8" id="tXATMUmZbJ" role="2iyNln">
-      <property role="2iyNlD" value="1933" />
-      <property role="2iyNlR" value="927" />
-      <ref role="2iyNl9" to="q3xn:skgx$J4Z4a" resolve="DRectangleShape" />
-      <node concept="2iyNll" id="tXATMUmZco" role="2iyNmk">
-        <ref role="2iyNli" to="q3xn:skgx$J4Z45" resolve="DFilledShape" />
-      </node>
-    </node>
-    <node concept="2iyNl8" id="tXATMUmZbK" role="2iyNln">
-      <property role="2iyNlD" value="1411" />
-      <property role="2iyNlR" value="754" />
-      <ref role="2iyNl9" to="q3xn:skgx$J4Z2r" resolve="DShape" />
-      <node concept="2iyNll" id="tXATMUmZc4" role="2iyNmk">
-        <ref role="2iyNli" to="q3xn:WHdioYVYaT" resolve="DVisible" />
-      </node>
-    </node>
-    <node concept="2iyNl8" id="tXATMUmZbL" role="2iyNln">
-      <property role="2iyNlD" value="447" />
-      <property role="2iyNlR" value="1107" />
-      <ref role="2iyNl9" to="q3xn:skgx$J4Z3o" resolve="DSplitPane" />
-      <node concept="2iyNll" id="tXATMUmZc2" role="2iyNmk">
-        <ref role="2iyNli" to="q3xn:skgx$J4Z2F" resolve="DComponent" />
-      </node>
-    </node>
-    <node concept="2iyNl8" id="tXATMUmZbM" role="2iyNln">
-      <property role="2iyNlD" value="1864" />
-      <property role="2iyNlR" value="526" />
-      <ref role="2iyNl9" to="q3xn:3VTkizWGbn5" resolve="DVertice" />
-    </node>
-    <node concept="2iyNl8" id="tXATMUmZbN" role="2iyNln">
-      <property role="2iyNlD" value="1033" />
-      <property role="2iyNlR" value="616" />
-      <ref role="2iyNl9" to="q3xn:WHdioYVYaT" resolve="DVisible" />
-    </node>
-    <node concept="2iyNl8" id="tXATMUmZbO" role="2iyNln">
-      <property role="2iyNlD" value="1822" />
-      <property role="2iyNlR" value="1434" />
-      <ref role="2iyNl9" to="q3xn:67eN9QkfT0n" resolve="LinkLine" />
-      <node concept="2iyNll" id="tXATMUmZcl" role="2iyNmk">
-        <ref role="2iyNli" to="q3xn:3OZjsowp$AG" resolve="DDiagramEdge" />
-      </node>
-    </node>
-    <node concept="2iyNl8" id="tXATMUmZbP" role="2iyNln">
-      <property role="2iyNlD" value="692" />
-      <property role="2iyNlR" value="1408" />
-      <ref role="2iyNl9" to="q3xn:2QCHpowuQyh" resolve="StructDiagramCanvas" />
-      <node concept="2iyNll" id="tXATMUmZcd" role="2iyNmk">
-        <ref role="2iyNli" to="q3xn:3OZjsowr30i" resolve="DDiagramCanvas" />
-      </node>
-    </node>
-    <node concept="2iyNl8" id="tXATMUmZbQ" role="2iyNln">
-      <property role="2iyNlD" value="1919" />
-      <property role="2iyNlR" value="1059" />
-      <ref role="2iyNl9" to="q3xn:2QCHpowuSLJ" resolve="StructRectangle" />
-      <node concept="2iyNll" id="tXATMUmZbX" role="2iyNmk">
-        <ref role="2iyNli" to="q3xn:skgx$J4Z4a" resolve="DRectangleShape" />
-      </node>
-      <node concept="2iyNll" id="tXATMUmZbY" role="2iyNmk">
-        <ref role="2iyNli" to="q3xn:3OZjsowptDc" resolve="DDiagramNode" />
-      </node>
-    </node>
-    <node concept="2iyNl8" id="tXATMUmZbR" role="2iyNln">
-      <property role="2iyNlD" value="1721" />
-      <property role="2iyNlR" value="1495" />
-      <ref role="2iyNl9" to="q3xn:2QCHpowuSMF" resolve="StructSpecialisationLine" />
-      <node concept="2iyNll" id="tXATMUmZc9" role="2iyNmk">
-        <ref role="2iyNli" to="q3xn:3OZjsowp$AG" resolve="DDiagramEdge" />
-      </node>
-    </node>
-    <node concept="3z7$6w" id="tXATMUmZac" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:3HJBHARsh7U" resolve="ConceptDiagramCanvas" />
-    </node>
-    <node concept="3z7$6w" id="tXATMUmZad" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:3HJBHARtgyV" resolve="ConceptRectangle" />
-    </node>
-    <node concept="3z7$6w" id="tXATMUmZae" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:6YJvVULPUly" resolve="ConceptSpecialisationLine" />
-    </node>
-    <node concept="3z7$6w" id="tXATMUmZaf" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:skgx$J4Z32" resolve="DCanvas" />
-    </node>
-    <node concept="3z7$6w" id="tXATMUmZag" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:skgx$J4Z4h" resolve="DCircleShape" />
-    </node>
-    <node concept="3z7$6w" id="tXATMUmZah" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:skgx$J4Z2F" resolve="DComponent" />
-    </node>
-    <node concept="3z7$6w" id="tXATMUmZai" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:skgx$J4Z2s" resolve="DContainer" />
-    </node>
-    <node concept="3z7$6w" id="tXATMUmZaj" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:2gyk5S1Dvn0" resolve="DDeviceInput" />
-    </node>
-    <node concept="3z7$6w" id="tXATMUmZak" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:3OZjsowr30i" resolve="DDiagramCanvas" />
-    </node>
-    <node concept="3z7$6w" id="tXATMUmZal" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:3OZjsowp$AG" resolve="DDiagramEdge" />
-    </node>
-    <node concept="3z7$6w" id="tXATMUmZam" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:3VTki$0kFQZ" resolve="DDiagramJoint" />
-    </node>
-    <node concept="3z7$6w" id="tXATMUmZan" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:3OZjsowptDc" resolve="DDiagramNode" />
-    </node>
-    <node concept="3z7$6w" id="tXATMUmZao" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:3VTki$0W76c" resolve="DDiagramVertice" />
-    </node>
-    <node concept="3z7$6w" id="tXATMUmZap" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:4NMtPTvGXY5" resolve="DDimension" />
-    </node>
-    <node concept="3z7$6w" id="tXATMUmZaq" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:skgx$J4Z45" resolve="DFilledShape" />
-    </node>
-    <node concept="3z7$6w" id="tXATMUmZar" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:skgx$J4Z3D" resolve="DFrame" />
-    </node>
-    <node concept="3z7$6w" id="tXATMUmZas" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:7wc8RN4MUFm" resolve="DImage" />
-    </node>
-    <node concept="3z7$6w" id="tXATMUmZat" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:3VTkizWCVbO" resolve="DJoint" />
-    </node>
-    <node concept="3z7$6w" id="tXATMUmZau" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:6YJvVULTHtj" resolve="DLineSegment" />
-    </node>
-    <node concept="3z7$6w" id="tXATMUmZav" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:2xAA8jfpttw" resolve="DMenu" />
-    </node>
-    <node concept="3z7$6w" id="tXATMUmZaw" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:2xAA8jfpttH" resolve="DMenuItem" />
-    </node>
-    <node concept="3z7$6w" id="tXATMUmZax" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:2xAA8jfoMuD" resolve="DMenubar" />
-    </node>
-    <node concept="3z7$6w" id="tXATMUmZay" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:skgx$J4Z3O" resolve="DMultiLineShape" />
-    </node>
-    <node concept="3z7$6w" id="tXATMUmZaz" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:681X9Tz0KVS" resolve="DNodeComponent" />
-    </node>
-    <node concept="3z7$6w" id="tXATMUmZa$" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:skgx$J4Z3d" resolve="DPanel" />
-    </node>
-    <node concept="3z7$6w" id="tXATMUmZa_" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:4NMtPTvGW7r" resolve="DPoint" />
-    </node>
-    <node concept="3z7$6w" id="tXATMUmZaA" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:4LLmjMcNoIC" resolve="DQuadrant" />
-    </node>
-    <node concept="3z7$6w" id="tXATMUmZaB" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:skgx$J4Z4a" resolve="DRectangleShape" />
-    </node>
-    <node concept="3z7$6w" id="tXATMUmZaC" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:skgx$J4Z2r" resolve="DShape" />
-    </node>
-    <node concept="3z7$6w" id="tXATMUmZaD" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:skgx$J4Z3o" resolve="DSplitPane" />
-    </node>
-    <node concept="3z7$6w" id="tXATMUmZaE" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:3VTkizWGbn5" resolve="DVertice" />
-    </node>
-    <node concept="3z7$6w" id="tXATMUmZaF" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:WHdioYVYaT" resolve="DVisible" />
-    </node>
-    <node concept="3z7$6w" id="tXATMUmZaG" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:67eN9QkfT0n" resolve="LinkLine" />
-    </node>
-    <node concept="3z7$6w" id="tXATMUmZaH" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:2QCHpowuQyh" resolve="StructDiagramCanvas" />
-    </node>
-    <node concept="3z7$6w" id="tXATMUmZaI" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:2QCHpowuSLJ" resolve="StructRectangle" />
-    </node>
-    <node concept="3z7$6w" id="tXATMUmZaJ" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:2QCHpowuSMF" resolve="StructSpecialisationLine" />
-    </node>
-    <node concept="A2Dkr" id="tXATMUmZab" role="2pcM1O">
-      <property role="A2Dkp" value="DclareGui" />
-      <property role="A2Dkq" value="ce36526d-d793-4b8b-88e9-d1815f616441" />
     </node>
   </node>
 </model>
