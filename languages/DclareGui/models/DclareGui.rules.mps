@@ -15430,7 +15430,7 @@
             <node concept="2Pygp_" id="2iFl1d5NZDx" role="2Pygpa">
               <ref role="2Pygpw" node="4NMtPTvGXWc" resolve="y" />
               <node concept="3b6qkQ" id="2iFl1d5O39a" role="2PygpA">
-                <property role="$nhwW" value="200.0d" />
+                <property role="$nhwW" value="100.0d" />
               </node>
             </node>
           </node>
@@ -17280,7 +17280,7 @@
             <node concept="2Pygp_" id="2iFl1d5O6Wh" role="2Pygpa">
               <ref role="2Pygpw" node="4NMtPTvGXWc" resolve="y" />
               <node concept="3b6qkQ" id="2iFl1d5O6Wi" role="2PygpA">
-                <property role="$nhwW" value="200.0d" />
+                <property role="$nhwW" value="100.0d" />
               </node>
             </node>
           </node>
@@ -18321,12 +18321,12 @@
       </node>
     </node>
     <node concept="32q3_s" id="7nCgMMOc7Xf" role="1FPzNG">
-      <property role="TrG5h" value="optimalMultiplier3" />
+      <property role="TrG5h" value="optimalMultiplier2" />
       <node concept="10P55v" id="7nCgMMOc7Xg" role="1tU5fm" />
       <node concept="2275Hy" id="7nCgMMOc7Xh" role="33vP2m">
         <ref role="37wK5l" node="hvihT2W6wN" resolve="optimalMultiplier" />
         <node concept="3b6qkQ" id="7nCgMMOc7Xi" role="37wK5m">
-          <property role="$nhwW" value="3.0d" />
+          <property role="$nhwW" value="2.0d" />
         </node>
       </node>
     </node>
@@ -19864,7 +19864,7 @@
         <node concept="3clFbF" id="5YLikCDf5$a" role="3cqZAp">
           <node concept="17qRlL" id="5YLikCDVgix" role="3clFbG">
             <node concept="3b6qkQ" id="5YLikCDViAq" role="3uHU7w">
-              <property role="$nhwW" value="3.0d" />
+              <property role="$nhwW" value="2.0d" />
             </node>
             <node concept="2YIFZM" id="1n$GrnqB6z7" role="3uHU7B">
               <ref role="37wK5l" to="wyt6:~Math.max(double,double)" resolve="max" />
@@ -20412,7 +20412,7 @@
       <node concept="3clFbS" id="hvihT2Wijn" role="3clF47">
         <node concept="3clFbF" id="hvihT2Wijo" role="3cqZAp">
           <node concept="3b6qkQ" id="hvihT2Wj_s" role="3clFbG">
-            <property role="$nhwW" value="0.8d" />
+            <property role="$nhwW" value="1.0d" />
           </node>
         </node>
       </node>
