@@ -13075,7 +13075,21 @@
       </node>
     </node>
     <node concept="2xpOpl" id="3OqCb4$vkkl" role="uR5co">
-      <node concept="3clFbS" id="3OqCb4$vkkm" role="2VODD2" />
+      <node concept="3clFbS" id="3OqCb4$vkkm" role="2VODD2">
+        <node concept="3clFbF" id="5RtI95vXiO2" role="3cqZAp">
+          <node concept="2OqwBi" id="5RtI95vXjDq" role="3clFbG">
+            <node concept="2OqwBi" id="5RtI95vXiO4" role="2Oq$k0">
+              <node concept="2WthIp" id="5RtI95vXiO5" role="2Oq$k0" />
+              <node concept="2BZ7hE" id="5RtI95vXiO6" role="2OqNvi">
+                <ref role="2WH_rO" node="3OqCb4$vqbk" resolve="panel" />
+              </node>
+            </node>
+            <node concept="liA8E" id="5RtI95vXkxQ" role="2OqNvi">
+              <ref role="37wK5l" node="5RtI95vX1f6" resolve="exit" />
+            </node>
+          </node>
+        </node>
+      </node>
     </node>
     <node concept="1QGGSu" id="32W_4IvFKnM" role="1nVCmq">
       <property role="1iqoE4" value="${module}/icons/Dclare.png" />
@@ -13343,6 +13357,27 @@
           <ref role="3uigEE" to="z1c3:~MPSProject" resolve="MPSProject" />
         </node>
       </node>
+    </node>
+    <node concept="2tJIrI" id="5RtI95vW7wD" role="jymVt" />
+    <node concept="3clFb_" id="5RtI95vX1f6" role="jymVt">
+      <property role="TrG5h" value="exit" />
+      <node concept="3clFbS" id="5RtI95vX1f9" role="3clF47">
+        <node concept="3clFbF" id="5RtI95wbBpt" role="3cqZAp">
+          <node concept="2OqwBi" id="5RtI95wbQo8" role="3clFbG">
+            <node concept="2OqwBi" id="5RtI95wbBpv" role="2Oq$k0">
+              <node concept="Xjq3P" id="5RtI95wbBpw" role="2Oq$k0" />
+              <node concept="2OwXpG" id="5RtI95wbBpx" role="2OqNvi">
+                <ref role="2Oxat5" node="3La3n2rObK2" resolve="editor" />
+              </node>
+            </node>
+            <node concept="liA8E" id="5RtI95wc5Gq" role="2OqNvi">
+              <ref role="37wK5l" to="exr9:~NodeEditorComponent.dispose()" resolve="dispose" />
+            </node>
+          </node>
+        </node>
+      </node>
+      <node concept="3Tm1VV" id="5RtI95vWGwe" role="1B3o_S" />
+      <node concept="3cqZAl" id="5RtI95vWYL5" role="3clF45" />
     </node>
     <node concept="2tJIrI" id="61KkDbfp_7k" role="jymVt" />
     <node concept="3clFb_" id="61KkDbfq3T1" role="jymVt">

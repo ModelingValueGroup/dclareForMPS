@@ -43,7 +43,7 @@ public abstract class DMethod<R> implements DFeature {
     @SuppressWarnings({"unchecked", "rawtypes"})
     public R invoke(Object[] args) {
         DMethod dMethod = DMethod.D_METHOD.get(Pair.of(name(), Signature.of(signature(), args)));
-        if (dMethod.isConstant()) {
+        if (dMethod.isConstant() && args.length == 0) {
             return (R) dMethod.METHOD_CONSTANT.get(ActualArguments.of(args));
         } else {
             return (R) dMethod.call(args);
