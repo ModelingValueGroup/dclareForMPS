@@ -14021,7 +14021,7 @@
       <node concept="3clFbS" id="2qFMNgU7v02" role="3clF47">
         <node concept="3clFbF" id="2qFMNgU7v03" role="3cqZAp">
           <node concept="3b6qkQ" id="2qFMNgU7v04" role="3clFbG">
-            <property role="$nhwW" value="0.2d" />
+            <property role="$nhwW" value="0.3d" />
           </node>
         </node>
       </node>
@@ -14033,7 +14033,7 @@
       <node concept="3clFbS" id="2qFMNgU7k3e" role="3clF47">
         <node concept="3clFbF" id="2qFMNgU7oov" role="3cqZAp">
           <node concept="3b6qkQ" id="2qFMNgU7oou" role="3clFbG">
-            <property role="$nhwW" value="2.0d" />
+            <property role="$nhwW" value="3.0d" />
           </node>
         </node>
       </node>
@@ -19894,7 +19894,7 @@
                                         <node concept="2$Gk$L" id="3FL2q0i$VmB" role="2OqNvi">
                                           <ref role="37wK5l" node="2xAA8jfB2O5" resolve="mult" />
                                           <node concept="3b6qkQ" id="3FL2q0i_2fA" role="37wK5m">
-                                            <property role="$nhwW" value="8.0d" />
+                                            <property role="$nhwW" value="10.0d" />
                                           </node>
                                         </node>
                                         <node concept="3KEV6E" id="7nCgMMNLFVg" role="2Oq$k0">
