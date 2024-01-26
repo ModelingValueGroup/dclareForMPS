@@ -19956,7 +19956,7 @@
                                             <ref role="3cqZAo" node="18l4$rRGGCA" resolve="power" />
                                           </node>
                                           <node concept="3b6qkQ" id="4IqIyUryhGW" role="3uHU7w">
-                                            <property role="$nhwW" value="-5.0d" />
+                                            <property role="$nhwW" value="-7.0d" />
                                           </node>
                                         </node>
                                         <node concept="37vLTw" id="4IqIyUryhGX" role="3uHU7w">
@@ -20662,7 +20662,7 @@
                                           <ref role="3cqZAo" node="7e$DSd9uS55" resolve="power" />
                                         </node>
                                         <node concept="3b6qkQ" id="38Z1dDeXhWB" role="3uHU7w">
-                                          <property role="$nhwW" value="-5.0d" />
+                                          <property role="$nhwW" value="-7.0d" />
                                         </node>
                                       </node>
                                       <node concept="37vLTw" id="4IqIyUrxEGM" role="3uHU7w">
