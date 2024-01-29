@@ -1805,6 +1805,30 @@
     <property role="EcuMT" value="3364871259132781200" />
     <property role="TrG5h" value="IInnerProvider" />
   </node>
+  <node concept="1TIwiD" id="2oCbVeBWB4G">
+    <property role="EcuMT" value="2749500021173023020" />
+    <property role="TrG5h" value="FixPointGroup" />
+    <property role="19KtqR" value="true" />
+    <property role="3GE5qa" value="fixpoint" />
+    <ref role="1TJDcQ" to="tpck:gw2VY9q" />
+    <node concept="PrWs8" id="2oCbVeBWB4H" role="PzmwI">
+      <ref role="PrY4T" to="tpck:h0TrEE$" resolve="INamedConcept" />
+    </node>
+    <node concept="1irR5M" id="2oCbVeBWB5r" role="rwd14">
+      <property role="2$rrk2" value="6" />
+      <node concept="1irR9m" id="2oCbVeBWB5w" role="1irR9h">
+        <node concept="3PKj8D" id="2oCbVeBWB5x" role="3PKjn_">
+          <property role="3PKj8l" value="00ddff" />
+        </node>
+      </node>
+      <node concept="1irPie" id="2oCbVeBWB5C" role="1irR9h">
+        <property role="1irPi9" value="F" />
+        <node concept="3PKj8D" id="2oCbVeBWB5D" role="3PKjny">
+          <property role="3PKj8l" value="000000" />
+        </node>
+      </node>
+    </node>
+  </node>
   <node concept="1TIwiD" id="6lcsnaOnoLC">
     <property role="EcuMT" value="7299333833526971496" />
     <property role="3GE5qa" value="models.builder" />
@@ -1902,29 +1926,33 @@
       <ref role="20lvS9" node="6lcsnaGYRnN" resolve="BuilderFeature" />
     </node>
   </node>
-  <node concept="1TIwiD" id="2oCbVeBWB4G">
-    <property role="EcuMT" value="2749500021173023020" />
-    <property role="TrG5h" value="FixPointGroup" />
-    <property role="19KtqR" value="true" />
-    <property role="3GE5qa" value="fixpoint" />
-    <ref role="1TJDcQ" to="tpck:gw2VY9q" />
-    <node concept="PrWs8" id="2oCbVeBWB4H" role="PzmwI">
-      <ref role="PrY4T" to="tpck:h0TrEE$" resolve="INamedConcept" />
+  <node concept="1TIwiD" id="6XLqJiNyz2l">
+    <property role="EcuMT" value="8030317209795047573" />
+    <property role="TrG5h" value="AllowsNonConstant" />
+    <property role="3GE5qa" value="closure-attributes" />
+    <ref role="1TJDcQ" node="6XLqJiNyI6M" resolve="ClosureAttribute" />
+    <node concept="M6xJ_" id="6XLqJiNyIMh" role="lGtFl">
+      <property role="Hh88m" value="allows non constant features" />
+      <node concept="tn0Fv" id="2ZFYisrGF9W" role="HhnKV" />
     </node>
-    <node concept="1irR5M" id="2oCbVeBWB5r" role="rwd14">
-      <property role="2$rrk2" value="6" />
-      <node concept="1irR9m" id="2oCbVeBWB5w" role="1irR9h">
-        <node concept="3PKj8D" id="2oCbVeBWB5x" role="3PKjn_">
-          <property role="3PKj8l" value="00ddff" />
-        </node>
-      </node>
-      <node concept="1irPie" id="2oCbVeBWB5C" role="1irR9h">
-        <property role="1irPi9" value="F" />
-        <node concept="3PKj8D" id="2oCbVeBWB5D" role="3PKjny">
-          <property role="3PKj8l" value="000000" />
-        </node>
-      </node>
+  </node>
+  <node concept="1TIwiD" id="1ViwZ7siZnR">
+    <property role="EcuMT" value="2220982641053398519" />
+    <property role="TrG5h" value="AllowsNative" />
+    <property role="3GE5qa" value="closure-attributes" />
+    <ref role="1TJDcQ" node="6XLqJiNyI6M" resolve="ClosureAttribute" />
+    <node concept="M6xJ_" id="1ViwZ7siZnS" role="lGtFl">
+      <property role="Hh88m" value="allows native features" />
+      <node concept="tn0Fv" id="2ZFYisrGF6K" role="HhnKV" />
     </node>
+  </node>
+  <node concept="1TIwiD" id="6XLqJiNyI6M">
+    <property role="EcuMT" value="8030317209795092914" />
+    <property role="TrG5h" value="ClosureAttribute" />
+    <property role="3GE5qa" value="closure-attributes" />
+    <property role="R5$K7" value="true" />
+    <ref role="1TJDcQ" to="tpck:4uZwTti3_$T" resolve="Attribute" />
+    <node concept="M6xJ_" id="6XLqJiNyIvt" role="lGtFl" />
   </node>
 </model>
 
