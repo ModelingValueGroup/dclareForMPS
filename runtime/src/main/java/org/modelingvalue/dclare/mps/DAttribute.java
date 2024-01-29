@@ -1,5 +1,5 @@
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// (C) Copyright 2018-2023 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
+// (C) Copyright 2018-2024 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
 //                                                                                                                     ~
 // Licensed under the GNU Lesser General Public License v3.0 (the 'License'). You may not use this file except in      ~
 // compliance with the License. You may obtain a copy of the License at: https://choosealicense.com/licenses/lgpl-3.0  ~
@@ -99,7 +99,7 @@ public interface DAttribute<O, T> extends DFeature {
         return null;
     }
 
-    final class DObservedAttribute<C extends DObject, V> extends DObserved<C, V> implements DAttribute<C, V> {
+    final class DObservedAttribute<C extends DMutable, V> extends DObserved<C, V> implements DAttribute<C, V> {
 
         private final String    name;
         private final Class<?>  cls;
@@ -213,7 +213,7 @@ public interface DAttribute<O, T> extends DFeature {
 
     }
 
-    final class DIdentifyingAttribute<C extends DIdentifiedObject, V> extends Setable<C, V> implements DAttribute<C, V> {
+    final class DIdentifyingAttribute<C extends DIdentified, V> extends Setable<C, V> implements DAttribute<C, V> {
 
         private final String                   name;
         private final int                      index;
@@ -235,7 +235,11 @@ public interface DAttribute<O, T> extends DFeature {
             if (object == null) {
                 throw new NullPointerException("attempt to read null." + this);
             }
-            return object.get(this);
+            V result = object.get(this);
+            if (result == null) {
+                throw new NullPointerException(object + "." + this + "=" + result);
+            }
+            return result;
         }
 
         public int index() {

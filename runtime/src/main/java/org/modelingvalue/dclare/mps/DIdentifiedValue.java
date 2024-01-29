@@ -16,62 +16,45 @@
 package org.modelingvalue.dclare.mps;
 
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
 
-import org.jetbrains.mps.openapi.model.SModel;
+import org.modelingvalue.collections.util.Age;
 
-import jetbrains.mps.errors.MessageStatus;
-import jetbrains.mps.errors.item.ModelReportItemBase;
-import jetbrains.mps.errors.item.RuleIdFlavouredItem;
+public abstract class DIdentifiedValue implements DIdentified {
 
-public class DIssueModelReportItem extends ModelReportItemBase implements RuleIdFlavouredItem {
+    protected Object[] identity;
 
-    private static final HashSet<ReportItemFlavour<?, ?>> FLAVOURS = new HashSet<>(Arrays.asList(FLAVOUR_ISSUE_KIND, FLAVOUR_MODEL, FLAVOUR_RULE_ID));
-
-    private final TypesystemRuleId                        ruleId;
-
-    public DIssueModelReportItem(MessageStatus severity, SModel model, String message, TypesystemRuleId ruleId) {
-        super(severity, model.getReference(), severity.getPresentation() + ": " + message);
-        this.ruleId = ruleId;
+    protected DIdentifiedValue(Object[] identity) {
+        this.identity = identity;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(ruleId, getSeverity(), getModel(), getMessage());
+        return Arrays.hashCode(identity);
     }
 
     @Override
     public boolean equals(Object obj) {
-        if (this == obj)
+        if (this == obj) {
             return true;
-        if (obj == null)
+        } else if (obj == null) {
             return false;
-        if (getClass() != obj.getClass())
+        } else if (getClass() != obj.getClass()) {
             return false;
-        DIssueModelReportItem other = (DIssueModelReportItem) obj;
-        return Objects.equals(ruleId, other.ruleId) //
-                && Objects.equals(getSeverity(), other.getSeverity()) //
-                && Objects.equals(getModel(), other.getModel())//
-                && Objects.equals(getMessage(), other.getMessage());
-    }
-
-    @Override
-    public Set<ReportItemFlavour<?, ?>> getIdFlavours() {
-        return FLAVOURS;
-    }
-
-    @Override
-    public ItemKind getIssueKind() {
-        return DIssue.ITEM_KIND;
-    }
-
-    @Override
-    public Collection<TypesystemRuleId> getRuleId() {
-        return Collections.singleton(ruleId);
+        } else {
+            DIdentifiedValue other = (DIdentifiedValue) obj;
+            if (other.identity == identity) {
+                return true;
+            } else if (!Arrays.equals(identity, other.identity)) {
+                return false;
+            } else {
+                if (Age.age(identity) > Age.age(other.identity)) {
+                    other.identity = identity;
+                } else {
+                    identity = other.identity;
+                }
+                return true;
+            }
+        }
     }
 
 }

@@ -249,7 +249,7 @@
       <node concept="3clFbS" id="3Qetf3e5FGL" role="2VODD2">
         <node concept="3clFbF" id="3Qetf3e5FGM" role="3cqZAp">
           <node concept="Xl_RD" id="3Qetf3e5FGN" role="3clFbG">
-            <property role="Xl_RC" value="Make Non Composite" />
+            <property role="Xl_RC" value="Make non Composite" />
           </node>
         </node>
       </node>
@@ -354,7 +354,7 @@
       <node concept="3clFbS" id="2UEyDf6OTcE" role="2VODD2">
         <node concept="3clFbF" id="2UEyDf6OTcF" role="3cqZAp">
           <node concept="Xl_RD" id="2UEyDf6OTcG" role="3clFbG">
-            <property role="Xl_RC" value="Make Non Identifying" />
+            <property role="Xl_RC" value="Make non Identifying" />
           </node>
         </node>
       </node>
@@ -534,7 +534,7 @@
       <node concept="3clFbS" id="4k6r071pP$3" role="2VODD2">
         <node concept="3clFbF" id="4k6r071pP$4" role="3cqZAp">
           <node concept="Xl_RD" id="4k6r071pP$5" role="3clFbG">
-            <property role="Xl_RC" value="Make Non Optional" />
+            <property role="Xl_RC" value="Make non Optional" />
           </node>
         </node>
       </node>
@@ -755,7 +755,7 @@
       <node concept="3clFbS" id="6aMI9gKVYyP" role="2VODD2">
         <node concept="3clFbF" id="6aMI9gKVYBT" role="3cqZAp">
           <node concept="Xl_RD" id="6aMI9gKVYBS" role="3clFbG">
-            <property role="Xl_RC" value="Make Non Public" />
+            <property role="Xl_RC" value="Make non Public" />
           </node>
         </node>
       </node>
@@ -896,7 +896,7 @@
           <node concept="3clFbS" id="3uCFKuPsWEP" role="3clFbx">
             <node concept="3cpWs6" id="3uCFKuPsYny" role="3cqZAp">
               <node concept="Xl_RD" id="3uCFKuPsYyl" role="3cqZAk">
-                <property role="Xl_RC" value="make non abstract" />
+                <property role="Xl_RC" value="Make non Abstract" />
               </node>
             </node>
           </node>
@@ -904,7 +904,7 @@
             <node concept="3clFbS" id="3uCFKuPsYJ8" role="9aQI4">
               <node concept="3cpWs6" id="3uCFKuPsYJP" role="3cqZAp">
                 <node concept="Xl_RD" id="3uCFKuPsYKJ" role="3cqZAk">
-                  <property role="Xl_RC" value="make abstract" />
+                  <property role="Xl_RC" value="Make Abstract" />
                 </node>
               </node>
             </node>
@@ -951,7 +951,7 @@
           <node concept="3clFbS" id="3uCFKuPt2Ec" role="3clFbx">
             <node concept="3cpWs6" id="3uCFKuPt2Ed" role="3cqZAp">
               <node concept="Xl_RD" id="3uCFKuPt2Ee" role="3cqZAk">
-                <property role="Xl_RC" value="make non final" />
+                <property role="Xl_RC" value="Make non Final" />
               </node>
             </node>
           </node>
@@ -959,7 +959,7 @@
             <node concept="3clFbS" id="3uCFKuPt2Eg" role="9aQI4">
               <node concept="3cpWs6" id="3uCFKuPt2Eh" role="3cqZAp">
                 <node concept="Xl_RD" id="3uCFKuPt2Ei" role="3cqZAk">
-                  <property role="Xl_RC" value="make final" />
+                  <property role="Xl_RC" value="Make Final" />
                 </node>
               </node>
             </node>
@@ -991,17 +991,17 @@
     </node>
   </node>
   <node concept="2S6QgY" id="60123R2Bhte">
-    <property role="TrG5h" value="SwitchAtomic" />
+    <property role="TrG5h" value="SwitchAtomicRule" />
     <ref role="2ZfgGC" to="7ggn:29R9$zZUovC" resolve="Rule" />
     <node concept="2S6ZIM" id="60123R2Bhtf" role="2ZfVej">
       <node concept="3clFbS" id="60123R2Bhtg" role="2VODD2">
         <node concept="3clFbF" id="60123R2Bhyg" role="3cqZAp">
           <node concept="3K4zz7" id="60123R2Bi8W" role="3clFbG">
             <node concept="Xl_RD" id="60123R2Bigm" role="3K4E3e">
-              <property role="Xl_RC" value="make nonatomic" />
+              <property role="Xl_RC" value="Make non Atomic" />
             </node>
             <node concept="Xl_RD" id="60123R2Biid" role="3K4GZi">
-              <property role="Xl_RC" value="make atomic" />
+              <property role="Xl_RC" value="Make Atomic" />
             </node>
             <node concept="2OqwBi" id="60123R2BhHQ" role="3K4Cdx">
               <node concept="2Sf5sV" id="60123R2Bhyf" role="2Oq$k0" />
@@ -1046,7 +1046,7 @@
           <node concept="3clFbS" id="1bjvCAP$6$N" role="3clFbx">
             <node concept="3cpWs6" id="1bjvCAP$70n" role="3cqZAp">
               <node concept="Xl_RD" id="1bjvCAP$718" role="3cqZAk">
-                <property role="Xl_RC" value="make non public" />
+                <property role="Xl_RC" value="Make non Public" />
               </node>
             </node>
           </node>
@@ -1054,7 +1054,7 @@
             <node concept="3clFbS" id="1bjvCAP$6_m" role="9aQI4">
               <node concept="3cpWs6" id="1bjvCAP$6HC" role="3cqZAp">
                 <node concept="Xl_RD" id="1bjvCAP$6ML" role="3cqZAk">
-                  <property role="Xl_RC" value="make public" />
+                  <property role="Xl_RC" value="Make Public" />
                 </node>
               </node>
             </node>
@@ -1101,7 +1101,7 @@
           <node concept="3clFbS" id="64dupBmWrXQ" role="3clFbx">
             <node concept="3cpWs6" id="64dupBmWrXR" role="3cqZAp">
               <node concept="Xl_RD" id="64dupBmWrXS" role="3cqZAk">
-                <property role="Xl_RC" value="make non constant" />
+                <property role="Xl_RC" value="Make non Constant" />
               </node>
             </node>
           </node>
@@ -1109,7 +1109,7 @@
             <node concept="3clFbS" id="64dupBmWrXU" role="9aQI4">
               <node concept="3cpWs6" id="64dupBmWrXV" role="3cqZAp">
                 <node concept="Xl_RD" id="64dupBmWrXW" role="3cqZAk">
-                  <property role="Xl_RC" value="make constant" />
+                  <property role="Xl_RC" value="Make Constant" />
                 </node>
               </node>
             </node>
@@ -1450,10 +1450,10 @@
         <node concept="3clFbF" id="2xAA8jfaZ9v" role="3cqZAp">
           <node concept="3K4zz7" id="2xAA8jfaZ9w" role="3clFbG">
             <node concept="Xl_RD" id="2xAA8jfaZ9x" role="3K4E3e">
-              <property role="Xl_RC" value="make immediate" />
+              <property role="Xl_RC" value="Make Immediate" />
             </node>
             <node concept="Xl_RD" id="2xAA8jfaZ9y" role="3K4GZi">
-              <property role="Xl_RC" value="make deferred" />
+              <property role="Xl_RC" value="Make Deferred" />
             </node>
             <node concept="2OqwBi" id="2xAA8jfaZ9z" role="3K4Cdx">
               <node concept="2Sf5sV" id="2xAA8jfaZ9$" role="2Oq$k0" />
@@ -1498,7 +1498,7 @@
           <node concept="3clFbS" id="5QJfFCjv_Ij" role="3clFbx">
             <node concept="3cpWs6" id="5QJfFCjv_Ik" role="3cqZAp">
               <node concept="Xl_RD" id="5QJfFCjv_Il" role="3cqZAk">
-                <property role="Xl_RC" value="make non native" />
+                <property role="Xl_RC" value="Make non Native" />
               </node>
             </node>
           </node>
@@ -1506,7 +1506,7 @@
             <node concept="3clFbS" id="5QJfFCjv_In" role="9aQI4">
               <node concept="3cpWs6" id="5QJfFCjv_Io" role="3cqZAp">
                 <node concept="Xl_RD" id="5QJfFCjv_Ip" role="3cqZAk">
-                  <property role="Xl_RC" value="make native" />
+                  <property role="Xl_RC" value="Make Native" />
                 </node>
               </node>
             </node>
@@ -1626,6 +1626,53 @@
             <node concept="liA8E" id="1nDBaIBPjPu" role="2OqNvi">
               <ref role="37wK5l" to="33ny:~List.remove(java.lang.Object)" resolve="remove" />
               <node concept="2Sf5sV" id="1nDBaIBPkId" role="37wK5m" />
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+  </node>
+  <node concept="2S6QgY" id="2Q8IysUzcHy">
+    <property role="TrG5h" value="SwitchAtomicAttribute" />
+    <property role="3GE5qa" value="attributes" />
+    <ref role="2ZfgGC" to="7ggn:4$MeK2bmw9s" resolve="Attribute" />
+    <node concept="2S6ZIM" id="2Q8IysUzcHz" role="2ZfVej">
+      <node concept="3clFbS" id="2Q8IysUzcH$" role="2VODD2">
+        <node concept="3clFbF" id="2Q8IysUzcH_" role="3cqZAp">
+          <node concept="3K4zz7" id="2Q8IysUzcHA" role="3clFbG">
+            <node concept="Xl_RD" id="2Q8IysUzcHB" role="3K4E3e">
+              <property role="Xl_RC" value="Make non Atomic" />
+            </node>
+            <node concept="Xl_RD" id="2Q8IysUzcHC" role="3K4GZi">
+              <property role="Xl_RC" value="Make Atomic" />
+            </node>
+            <node concept="2OqwBi" id="2Q8IysUzcHD" role="3K4Cdx">
+              <node concept="2Sf5sV" id="2Q8IysUzcHE" role="2Oq$k0" />
+              <node concept="3TrcHB" id="2Q8IysUzcHF" role="2OqNvi">
+                <ref role="3TsBF5" to="7ggn:2Q8IysUzbnc" resolve="atomic" />
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+    <node concept="2Sbjvc" id="2Q8IysUzcHG" role="2ZfgGD">
+      <node concept="3clFbS" id="2Q8IysUzcHH" role="2VODD2">
+        <node concept="3clFbF" id="2Q8IysUzcHI" role="3cqZAp">
+          <node concept="37vLTI" id="2Q8IysUzcHJ" role="3clFbG">
+            <node concept="3fqX7Q" id="2Q8IysUzcHK" role="37vLTx">
+              <node concept="2OqwBi" id="2Q8IysUzcHL" role="3fr31v">
+                <node concept="2Sf5sV" id="2Q8IysUzcHM" role="2Oq$k0" />
+                <node concept="3TrcHB" id="2Q8IysUzcHN" role="2OqNvi">
+                  <ref role="3TsBF5" to="7ggn:2Q8IysUzbnc" resolve="atomic" />
+                </node>
+              </node>
+            </node>
+            <node concept="2OqwBi" id="2Q8IysUzcHO" role="37vLTJ">
+              <node concept="2Sf5sV" id="2Q8IysUzcHP" role="2Oq$k0" />
+              <node concept="3TrcHB" id="2Q8IysUzcHQ" role="2OqNvi">
+                <ref role="3TsBF5" to="7ggn:2Q8IysUzbnc" resolve="atomic" />
+              </node>
             </node>
           </node>
         </node>

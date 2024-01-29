@@ -15,17 +15,22 @@
 
 package org.modelingvalue.dclare.mps;
 
-import org.modelingvalue.collections.DefaultMap;
-import org.modelingvalue.collections.List;
+import org.jetbrains.mps.openapi.language.SLanguage;
+import org.modelingvalue.dclare.Constant;
+import org.modelingvalue.dclare.CoreSetableModifier;
+import org.modelingvalue.dclare.FixpointGroup;
 
-public interface EngineStatusHandler {
+public interface IFixPointGroup {
 
-    void status(DclareForMpsStatus status);
+    Constant<IFixPointGroup, FixpointGroup> FIXPOINT_GROUP = Constant.of("FIXPOINT_GROUP", f -> FixpointGroup.of(f.getName()), CoreSetableModifier.durable);
 
-    void aspects(List<IAspect> apects, DclareForMpsStatus status);
+    @SuppressWarnings("unchecked")
+    static <C, V> IFixPointGroup of(SLanguage language, String id) {
+        return DClareMPS.FIXPOINT_GROUP_MAP.get(language).get(id);
+    }
 
-    void messages(DefaultMap<DMessageType, List<DMessage>> messages, DclareForMpsStatus status);
+    String getId();
 
-    void start(DclareForMpsStatus status);
+    String getName();
 
 }

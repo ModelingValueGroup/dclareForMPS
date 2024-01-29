@@ -1,5 +1,5 @@
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// (C) Copyright 2018-2023 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
+// (C) Copyright 2018-2024 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
 //                                                                                                                     ~
 // Licensed under the GNU Lesser General Public License v3.0 (the 'License'). You may not use this file except in      ~
 // compliance with the License. You may obtain a copy of the License at: https://choosealicense.com/licenses/lgpl-3.0  ~
@@ -67,20 +67,20 @@ public interface DRule<O> extends DFeature {
 
         @Override
         protected final void doRun(State pre, UniverseTransaction universeTransaction) {
-            DObject dObject = mutable();
+            DMutable dObject = mutable();
             issues.init(Set.of());
             try {
                 if (!dObject.isObsolete(rule().ruleSet().getAnonymousType())) {
                     super.doRun(pre, universeTransaction);
                 }
             } finally {
-                DObject.CONTAINED_DCLARE_ISSUES.set(dObject, (b, a) -> a.addAll(b.exclude(i -> i.getRule().equals(rule()))), issues.result());
+                DMutable.CONTAINED_DCLARE_ISSUES.set(dObject, (b, a) -> a.addAll(b.exclude(i -> i.getRule().equals(rule()))), issues.result());
             }
         }
 
         @Override
-        public DObject mutable() {
-            return (DObject) super.mutable();
+        public DMutable mutable() {
+            return (DMutable) super.mutable();
         }
 
         @Override

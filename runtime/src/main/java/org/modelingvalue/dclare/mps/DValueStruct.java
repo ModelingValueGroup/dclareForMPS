@@ -16,62 +16,52 @@
 package org.modelingvalue.dclare.mps;
 
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
-import org.jetbrains.mps.openapi.model.SModel;
+import org.modelingvalue.dclare.mps.DAttribute.DIdentifyingAttribute;
 
-import jetbrains.mps.errors.MessageStatus;
-import jetbrains.mps.errors.item.ModelReportItemBase;
-import jetbrains.mps.errors.item.RuleIdFlavouredItem;
+public class DValueStruct extends DIdentifiedValue implements SStructObject {
 
-public class DIssueModelReportItem extends ModelReportItemBase implements RuleIdFlavouredItem {
+    @SuppressWarnings("unchecked")
+    public static DValueStruct of(SStructClass cls, Object[] identity) {
+        assert cls.isValueClass();
+        for (int i = 0; i < identity.length; i++) {
+            Objects.requireNonNull(identity[i]);
+        }
+        identity = Arrays.copyOf(identity, identity.length + 1);
+        identity[identity.length - 1] = cls;
+        return new DValueStruct(identity);
+    }
 
-    private static final HashSet<ReportItemFlavour<?, ?>> FLAVOURS = new HashSet<>(Arrays.asList(FLAVOUR_ISSUE_KIND, FLAVOUR_MODEL, FLAVOUR_RULE_ID));
-
-    private final TypesystemRuleId                        ruleId;
-
-    public DIssueModelReportItem(MessageStatus severity, SModel model, String message, TypesystemRuleId ruleId) {
-        super(severity, model.getReference(), severity.getPresentation() + ": " + message);
-        this.ruleId = ruleId;
+    private DValueStruct(Object[] identity) {
+        super(identity);
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(ruleId, getSeverity(), getModel(), getMessage());
+    public SStructClass getSClass() {
+        return (SStructClass) identity[identity.length - 1];
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (getClass() != obj.getClass())
-            return false;
-        DIssueModelReportItem other = (DIssueModelReportItem) obj;
-        return Objects.equals(ruleId, other.ruleId) //
-                && Objects.equals(getSeverity(), other.getSeverity()) //
-                && Objects.equals(getModel(), other.getModel())//
-                && Objects.equals(getMessage(), other.getMessage());
+    public Object[] getIdentity() {
+        return identity;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public <V> V get(DIdentifyingAttribute<?, V> attr) {
+        return (V) identity[attr.index()];
+    }
+
+    @SuppressWarnings("rawtypes")
+    @Override
+    public java.util.List<DAttribute> getNonSyntheticAttributes() {
+        return getSClass().getIdentity().filter(DAttribute.class).toList();
     }
 
     @Override
-    public Set<ReportItemFlavour<?, ?>> getIdFlavours() {
-        return FLAVOURS;
-    }
-
-    @Override
-    public ItemKind getIssueKind() {
-        return DIssue.ITEM_KIND;
-    }
-
-    @Override
-    public Collection<TypesystemRuleId> getRuleId() {
-        return Collections.singleton(ruleId);
+    public String toString() {
+        return getSClass() + Arrays.toString(Arrays.copyOf(identity, identity.length - 1));
     }
 
 }
