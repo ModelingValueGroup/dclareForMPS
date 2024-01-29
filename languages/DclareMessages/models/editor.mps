@@ -1717,7 +1717,7 @@
             </node>
           </node>
           <node concept="3F0ifn" id="3$YMz8v47x2" role="3EZMnx">
-            <property role="3F0ifm" value=" " />
+            <property role="3F0ifm" value="▶" />
             <node concept="pkWqt" id="3$YMz8v47zG" role="pqm2j">
               <node concept="3clFbS" id="3$YMz8v47zH" role="2VODD2">
                 <node concept="3clFbF" id="3$YMz8v47C$" role="3cqZAp">
@@ -1731,6 +1731,9 @@
                   </node>
                 </node>
               </node>
+            </node>
+            <node concept="VechU" id="7Fg8lg1_aDa" role="3F10Kt">
+              <property role="Vb096" value="fLJRk5A/lightGray" />
             </node>
           </node>
           <node concept="3F0A7n" id="7N5dIksZgOb" role="3EZMnx">

@@ -1,5 +1,5 @@
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// (C) Copyright 2018-2023 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
+// (C) Copyright 2018-2024 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
 //                                                                                                                     ~
 // Licensed under the GNU Lesser General Public License v3.0 (the 'License'). You may not use this file except in      ~
 // compliance with the License. You may obtain a copy of the License at: https://choosealicense.com/licenses/lgpl-3.0  ~
@@ -21,41 +21,41 @@ import org.modelingvalue.collections.Set;
 import org.modelingvalue.dclare.*;
 
 @SuppressWarnings("rawtypes")
-public abstract class DNewableObject<T extends DNewableObject, R, S> extends DIdentifiedObject implements Newable {
+public abstract class DNewable<T extends DNewable, R, S> extends DIdentifiedMutable implements Newable {
 
-    private static final Constant<DNewableObject, Object> ORIGINAL           = Constant.of("$ORIGINAL", null);
+    private static final Constant<DNewable, Object> ORIGINAL           = Constant.of("$ORIGINAL", null);
 
-    protected static final Action<DNewableObject>         READ_OBSERVED_DEEP = Action.of("$READ_OBSERVED_DEEP", DNewableObject::readObservedDeep);
+    protected static final Action<DNewable>         READ_OBSERVED_DEEP = Action.of("$READ_OBSERVED_DEEP", DNewable::readObservedDeep);
 
     @SuppressWarnings("unchecked")
-    protected static final Set<Observer>                  OBSERVERS          = DObject.OBSERVERS;
+    protected static final Set<Observer>            OBSERVERS          = DMutable.OBSERVERS;
 
-    protected static final Set<Setable>                   SETABLES           = DObject.SETABLES;
+    protected static final Set<Setable>             SETABLES           = DMutable.SETABLES;
 
-    protected static <D extends DNewableObject> D copyRootConstruct(IRuleSet ruleSet, String anonymousType, Object[] ctx, DNode copiedRoot, Supplier<D> supplier) {
+    protected static <D extends DNewable> D copyRootConstruct(IRuleSet ruleSet, String anonymousType, Object[] ctx, DNode copiedRoot, Supplier<D> supplier) {
         LeafTransaction tx = LeafTransaction.getCurrent();
         return tx.construct(new DCopy(tx.mutable(), copiedRoot, ruleSet, anonymousType, ctx), supplier);
     }
 
-    protected static <D extends DNewableObject> D copyChildConstruct(DCopy root, DNode copiedChild, Supplier<D> supplier) {
+    protected static <D extends DNewable> D copyChildConstruct(DCopy root, DNode copiedChild, Supplier<D> supplier) {
         LeafTransaction tx = LeafTransaction.getCurrent();
         return tx.construct(new DCopy(copiedChild, root), supplier);
     }
 
     @SuppressWarnings("unchecked")
-    protected static <D extends DNewableObject, I, S> D referenceConstruct(I ref, Supplier<D> supplier) {
+    protected static <D extends DNewable, I, S> D referenceConstruct(I ref, Supplier<D> supplier) {
         LeafTransaction tx = LeafTransaction.getCurrent();
         return tx.directConstruct(new DRead(ref), supplier);
     }
 
     @SuppressWarnings("unchecked")
-    protected static <D extends DNewableObject, I, S> D originalConstruct(S original, I ref, Supplier<D> supplier) {
+    protected static <D extends DNewable, I, S> D originalConstruct(S original, I ref, Supplier<D> supplier) {
         D result = referenceConstruct(ref, supplier);
         ORIGINAL.force(result, original);
         return result;
     }
 
-    protected DNewableObject(Object[] identity) {
+    protected DNewable(Object[] identity) {
         super(identity);
     }
 
@@ -154,16 +154,16 @@ public abstract class DNewableObject<T extends DNewableObject, R, S> extends DId
             dObserved.triggerReRead(this);
             if (dObserved.containment()) {
                 for (Object child : dObserved.collection(dObserved.fromMPS(this))) {
-                    if (child instanceof DNewableObject) {
-                        READ_OBSERVED_DEEP.trigger((DNewableObject) child);
+                    if (child instanceof DNewable) {
+                        READ_OBSERVED_DEEP.trigger((DNewable) child);
                     }
                 }
             }
         } else if (dObserved.containment()) {
             Set<Object> set = dObserved.collection(dObserved.fromMPS(this)).asSet();
             for (Object child : dObserved.getCollection(this)) {
-                if (child instanceof DNewableObject && set.contains(child)) {
-                    READ_OBSERVED_DEEP.trigger((DNewableObject) child);
+                if (child instanceof DNewable && set.contains(child)) {
+                    READ_OBSERVED_DEEP.trigger((DNewable) child);
                 } else {
                     dObserved.remove(this, child);
                 }

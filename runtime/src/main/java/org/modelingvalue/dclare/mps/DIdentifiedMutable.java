@@ -1,5 +1,5 @@
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// (C) Copyright 2018-2023 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
+// (C) Copyright 2018-2024 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
 //                                                                                                                     ~
 // Licensed under the GNU Lesser General Public License v3.0 (the 'License'). You may not use this file except in      ~
 // compliance with the License. You may obtain a copy of the License at: https://choosealicense.com/licenses/lgpl-3.0  ~
@@ -29,11 +29,11 @@ import org.modelingvalue.dclare.IdentityDerivationTransaction;
 import org.modelingvalue.dclare.LeafTransaction;
 import org.modelingvalue.dclare.mps.DAttribute.DIdentifyingAttribute;
 
-public abstract class DIdentifiedObject extends DObject {
+public abstract class DIdentifiedMutable extends DMutable implements DIdentified {
 
     protected Object[] identity;
 
-    protected DIdentifiedObject(Object[] identity) {
+    protected DIdentifiedMutable(Object[] identity) {
         this.identity = identity;
     }
 
@@ -51,7 +51,7 @@ public abstract class DIdentifiedObject extends DObject {
         } else if (getClass() != obj.getClass()) {
             return false;
         } else {
-            DIdentifiedObject other = (DIdentifiedObject) obj;
+            DIdentifiedMutable other = (DIdentifiedMutable) obj;
             if (other.identity == identity) {
                 return true;
             } else if (!Arrays.equals(identity, other.identity)) {
@@ -79,13 +79,14 @@ public abstract class DIdentifiedObject extends DObject {
         return deriveReasons().filter(DQuotation.class).map(DDerive::aspect).flatMap(d -> IAspect.ALL_DEPENDENCIES.get(d)).map(IAspect::getLanguage).asSet();
     }
 
-    protected static <D extends DIdentifiedObject> D quotationConstruct(IRuleSet ruleSet, String anonymousType, Object[] ctx, Supplier<D> supplier) {
+    protected static <D extends DIdentifiedMutable> D quotationConstruct(IRuleSet ruleSet, String anonymousType, Object[] ctx, Supplier<D> supplier) {
         LeafTransaction tx = LeafTransaction.getCurrent();
         return tx.construct(new DQuotation(tx.mutable(), ruleSet, anonymousType, ctx), supplier);
     }
 
+    @Override
     @SuppressWarnings("unchecked")
-    protected <V> V get(DIdentifyingAttribute<?, V> attr) {
+    public <V> V get(DIdentifyingAttribute<?, V> attr) {
         if (attr.synthetic()) {
             Construction c = getQuotationConstruction(attr.anonymousType());
             if (c != null) {
@@ -117,14 +118,15 @@ public abstract class DIdentifiedObject extends DObject {
         return Arrays.toString(identity);
     }
 
+    @Override
     public Object[] getIdentity() {
         return identity;
     }
 
-    protected DObject getContextObject() {
+    protected DMutable getContextObject() {
         LeafTransaction tx = LeafTransaction.getCurrent();
-        return tx instanceof ActionTransaction && tx.mutable() instanceof DObject ? (DObject) tx.mutable() : //
-                tx instanceof IdentityDerivationTransaction && ((IdentityDerivationTransaction) tx).getContextMutable() instanceof DObject ? (DObject) ((IdentityDerivationTransaction) tx).getContextMutable() : //
+        return tx instanceof ActionTransaction && tx.mutable() instanceof DMutable ? (DMutable) tx.mutable() : //
+                tx instanceof IdentityDerivationTransaction && ((IdentityDerivationTransaction) tx).getContextMutable() instanceof DMutable ? (DMutable) ((IdentityDerivationTransaction) tx).getContextMutable() : //
                         DClareMPS.instance(tx).getRepository();
     }
 

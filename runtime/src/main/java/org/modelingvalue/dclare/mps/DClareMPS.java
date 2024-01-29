@@ -1,5 +1,5 @@
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// (C) Copyright 2018-2023 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
+// (C) Copyright 2018-2024 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
 //                                                                                                                     ~
 // Licensed under the GNU Lesser General Public License v3.0 (the 'License'). You may not use this file except in      ~
 // compliance with the License. You may obtain a copy of the License at: https://choosealicense.com/licenses/lgpl-3.0  ~
@@ -51,11 +51,12 @@ import org.modelingvalue.collections.Map;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Concurrent;
 import org.modelingvalue.collections.util.Context;
+import org.modelingvalue.collections.util.ContextPool;
 import org.modelingvalue.collections.util.ContextThread;
-import org.modelingvalue.collections.util.ContextThread.ContextPool;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.collections.util.Triple;
 import org.modelingvalue.dclare.*;
+import org.modelingvalue.dclare.Priority.Queued;
 import org.modelingvalue.dclare.UniverseTransaction.Status;
 import org.modelingvalue.dclare.ex.*;
 import org.modelingvalue.dclare.mps.DAttribute.DObservedAttribute;
@@ -118,6 +119,9 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
                                                                                                                                                 });
     protected static final Constant<SLanguage, Map<String, IAspect>>                                                   ASPECT_MAP               = Constant.of("ASPECT_MAP", l -> {
                                                                                                                                                     return DClareMPS.ASPECTS.get(l).asMap(a -> Entry.of(a.getId(), a));
+                                                                                                                                                });
+    protected static final Constant<SLanguage, Map<String, IFixPointGroup>>                                            FIXPOINT_GROUP_MAP       = Constant.of("FIXPOINT_GROUP_MAP", l -> {
+                                                                                                                                                    return DClareMPS.FIXPOINT_GROUPS.get(l).asMap(a -> Entry.of(a.getId(), a));
                                                                                                                                                 });
     protected static final Constant<SLanguage, Map<String, DMethod<?>>>                                                ALL_METHODS_MAP          = Constant.of("ALL_METHODS_MAP", l -> {
                                                                                                                                                     Collection<DMethod<?>> methods = DClareMPS.RULE_SETS.get(l).flatMap(rs -> Collection.of(rs.getAllMethods()));
@@ -184,6 +188,10 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
                                                                                                                                                     IRuleAspect aspect = RULE_ASPECT.get(l);
                                                                                                                                                     return aspect != null ? Collection.of(aspect.getAspects()).asSet() : Set.of();
                                                                                                                                                 });
+    public static final Constant<SLanguage, Set<IFixPointGroup>>                                                       FIXPOINT_GROUPS          = Constant.of("FIXPOINT_GROUPS", Set.of(), l -> {
+                                                                                                                                                    IRuleAspect aspect = RULE_ASPECT.get(l);
+                                                                                                                                                    return aspect != null ? Collection.of(aspect.getFixPointGroups()).asSet() : Set.of();
+                                                                                                                                                });
     protected static final Constant<SLanguage, Map<String, INativeGroup>>                                              NATIVE_GROUP_MAP         = Constant.of("NATIVE_GROUP_MAP", l -> {
                                                                                                                                                     return DClareMPS.NATIVE_GROUPS.get(l).asMap(a -> Entry.of(a.getId(), a));
                                                                                                                                                 });
@@ -212,7 +220,7 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
     private final AtomicLong                                                                                           counter                  = new AtomicLong(0L);
     private final DRepository                                                                                          dRepository;
     private final DServerMetaData                                                                                      dServerMetaData;
-    private final Comparator<? super Triple<DObject, DFeature, Throwable>>                                             messageComparator        = (a, b) -> universeTransaction().compareThrowable(a.c(), b.c());
+    private final Comparator<? super Triple<DMutable, DFeature, Throwable>>                                            messageComparator        = (a, b) -> universeTransaction().compareThrowable(a.c(), b.c());
     //
     private DefaultMap<DMessageType, List<DMessage>>                                                                   messages                 = EMPTY_MESSAGE_LIST_MAP;
     private boolean                                                                                                    running                  = false;
@@ -333,7 +341,9 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
         checkerRegistry.registerChecker(nodeChecker);
         ModelsExtractorImpl modelExtractor = new ModelCheckerBuilder.ModelsExtractorImpl().excludeGenerators();
         @SuppressWarnings("RedundantCast") // strange double cast to satisfy javac
-        java.util.List<? extends IChecker<?, ? extends IssueKindReportItem>> checkers = (java.util.List<? extends IChecker<?, ? extends IssueKindReportItem>>) (java.util.List<IChecker<?, ?>>) checkerRegistry.getCheckers();
+        java.util.List<? extends IChecker<?, ? extends IssueKindReportItem>> checkers = config.isAutoMPSModelCheck() ? //
+                (java.util.List<? extends IChecker<?, ? extends IssueKindReportItem>>) (java.util.List<IChecker<?, ?>>) checkerRegistry.getCheckers() : //
+                Collection.of(moduleChecker, modelChecker, nodeChecker).toList();
         mpsChecker = new DclareModelCheckerBuilder(this, modelExtractor).createChecker(checkers);
         Highlighter highlighter = project.getComponent(Highlighter.class);
         highlighter.addChecker(languageEditorChecker);
@@ -387,8 +397,8 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
     @SuppressWarnings("unused")
     // called from MPS
     public void addInfoMessage(String txType, Object object, String msg) {
-        DObject context = getRepository();
-        DFeature feature = DObject.INFOS;
+        DMutable context = getRepository();
+        DFeature feature = DMutable.INFOS;
         LeafTransaction ltx = LeafTransaction.getCurrent();
         if (ltx instanceof DObserverTransaction) {
             context = ((DObserverTransaction) ltx).mutable();
@@ -405,27 +415,27 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
     protected void addThrowables(Set<Throwable> throwables) {
         if (!universeTransaction.isKilled()) {
             universeTransaction.currentState().run(() -> {
-                Collection<Triple<DObject, DFeature, Throwable>> withContext = throwables.map(t -> {
-                    DObject object = getRepository();
+                Collection<Triple<DMutable, DFeature, Throwable>> withContext = throwables.map(t -> {
+                    DMutable object = getRepository();
                     DFeature feature = DRepository.EXCEPTIONS;
                     while (t instanceof TransactionException) {
                         if (((TransactionException) t).getTransactionClass() instanceof DObserver) {
                             feature = ((DObserver) ((TransactionException) t).getTransactionClass()).rule();
                         }
-                        if (((TransactionException) t).getTransactionClass() instanceof DObject) {
-                            object = (DObject) ((TransactionException) t).getTransactionClass();
+                        if (((TransactionException) t).getTransactionClass() instanceof DMutable) {
+                            object = (DMutable) ((TransactionException) t).getTransactionClass();
                         }
                         t = t.getCause();
                     }
                     if (t instanceof ConsistencyError) {
                         ConsistencyError ce = (ConsistencyError) t;
-                        object = ce.getObject() instanceof DObject ? (DObject) ce.getObject() : object;
+                        object = ce.getObject() instanceof DMutable ? (DMutable) ce.getObject() : object;
                         feature = ce.getFeature() instanceof DObserver ? ((DObserver) ce.getFeature()).rule() : //
                                 ce.getFeature() instanceof DFeature ? (DFeature) ce.getFeature() : feature;
                     }
                     return Triple.of(object, feature, t);
                 });
-                for (Triple<DObject, DFeature, Throwable> t : withContext.sorted(messageComparator).sequential()) {
+                for (Triple<DMutable, DFeature, Throwable> t : withContext.sorted(messageComparator).sequential()) {
                     addThrowable(t.a(), t.b(), t.c());
                 }
             });
@@ -436,7 +446,7 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
     }
 
     @SuppressWarnings("rawtypes")
-    private void addThrowable(DObject object, DFeature feature, Throwable t) {
+    private void addThrowable(DMutable object, DFeature feature, Throwable t) {
         if (t instanceof OutOfScopeException) {
             addOutOfScopeExceptionMessage(object, feature, (OutOfScopeException) t);
         } else if (t instanceof NonDeterministicException) {
@@ -463,34 +473,50 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
     }
 
     @SuppressWarnings("rawtypes")
-    private void addTooManyChangesExceptionMessage(DObject context, DFeature feature, TooManyChangesException tmce) {
+    private void addTooManyChangesExceptionMessage(DMutable context, DFeature feature, TooManyChangesException tmce) {
         DMessage message = new DMessage(context, feature, DMessageType.error, "Too many changes, running " + feature + " changes=" + tmce.getNrOfChanges());
         tmce.getLast().trace(message, //
-                (m, r) -> m.addSubMessage(new DMessage((DObject) r.mutable(), feature(r.observer()), DMessageType.error, //
-                        String.format("%-5s: %-20s [%d changes]", "run", feature(r.observer()), r.nrOfChanges()))), //
-                (m, r, s) -> m.addSubMessage(new DMessage((DObject) s.mutable(), (DObserved) s.observed(), DMessageType.error, //
-                        String.format("%-5s: %-20s = %s", "read", s.observed(), r.read().get(s)))), //
-                (m, w, s) -> m.addSubMessage(new DMessage((DObject) s.mutable(), (DObserved) s.observed(), DMessageType.error, //
-                        String.format("%-5s: %-20s = %s", "write", s.observed(), w.written().get(s)))), //
+                (m, r) -> {
+                    if (r.mutable() instanceof DMutable) {
+                        m.addSubMessage(new DMessage((DMutable) r.mutable(), feature(r.observer()), DMessageType.error, //
+                                String.format("%-5s: %-20s [%d changes]", "run", feature(r.observer()), r.nrOfChanges())));
+                    }
+                }, //
+                (m, r, s) -> {
+                    if (s.mutable() instanceof DMutable && s.observed() instanceof DObserved) {
+                        m.addSubMessage(new DMessage((DMutable) s.mutable(), (DObserved) s.observed(), DMessageType.error, //
+                                String.format("%-5s: %-20s = %s", "read", s.observed(), r.read().get(s))));
+                    }
+                }, //
+                (m, w, s) -> {
+                    if (s.mutable() instanceof DMutable && s.observed() instanceof DObserved) {
+                        m.addSubMessage(new DMessage((DMutable) s.mutable(), (DObserved) s.observed(), DMessageType.error, //
+                                String.format("%-5s: %-20s = %s", "write", s.observed(), w.written().get(s))));
+                    }
+                }, //
                 m -> m.subMessages().last(), universeTransaction().stats().maxNrOfChanges());
         addMessage(message);
     }
 
     @SuppressWarnings("rawtypes")
-    private void addDebugTraceMessage(DObject object, DFeature feature, DebugTrace dt) {
+    private void addDebugTraceMessage(DMutable object, DFeature feature, DebugTrace dt) {
         String time = DateTimeFormatter.ISO_LOCAL_TIME.format(ZonedDateTime.ofInstant(dt.trace().time(), ZoneId.systemDefault()));
         DMessage message = new DMessage(object, feature, DMessageType.debug, "Run " + feature + ", at " + time);
         for (Entry<ObservedInstance, Object> read : dt.trace().read().filter(e -> !e.getKey().observed().isPlumbing())) {
             ObservedInstance s = read.getKey();
-            DObserved obs = (DObserved) s.observed();
-            String msg = String.format("%-5s: %-20s = %s", "read", obs, read.getValue());
-            message.addSubMessage(new DMessage((DObject) s.mutable(), obs, DMessageType.debug, msg));
+            if (s.mutable() instanceof DMutable && s.observed() instanceof DObserved) {
+                DObserved obs = (DObserved) s.observed();
+                String msg = String.format("%-5s: %-20s = %s", "read", obs, read.getValue());
+                message.addSubMessage(new DMessage((DMutable) s.mutable(), obs, DMessageType.debug, msg));
+            }
         }
         for (Entry<ObservedInstance, Object> write : dt.trace().written().filter(e -> !e.getKey().observed().isPlumbing())) {
             ObservedInstance s = write.getKey();
-            DObserved obs = (DObserved) s.observed();
-            String msg = String.format("%-5s: %-20s = %s", "write", obs, write.getValue());
-            message.addSubMessage(new DMessage((DObject) s.mutable(), obs, DMessageType.debug, msg));
+            if (s.mutable() instanceof DMutable && s.observed() instanceof DObserved) {
+                DObserved obs = (DObserved) s.observed();
+                String msg = String.format("%-5s: %-20s = %s", "write", obs, write.getValue());
+                message.addSubMessage(new DMessage((DMutable) s.mutable(), obs, DMessageType.debug, msg));
+            }
         }
         addMessage(message);
     }
@@ -501,14 +527,14 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
     }
 
     @SuppressWarnings("rawtypes")
-    private void addTooManyObservedExceptionMessage(DObject context, DFeature feature, TooManyObservedException tmse) {
+    private void addTooManyObservedExceptionMessage(DMutable context, DFeature feature, TooManyObservedException tmse) {
         DMessage message = new DMessage(context, feature, DMessageType.error, tmse.getSimpleMessage());
         for (Entry<Observed, Set<Mutable>> e : tmse.getObserved()) {
             if (e.getKey() instanceof DObserved) {
                 DObserved observed = (DObserved) e.getKey();
                 for (Mutable o : e.getValue()) {
-                    if (o.dResolve(context) instanceof DObject) {
-                        message.addSubMessage(new DMessage((DObject) o.dResolve(context), observed, DMessageType.error, "Observed: " + observed));
+                    if (o.dResolve(context) instanceof DMutable) {
+                        message.addSubMessage(new DMessage((DMutable) o.dResolve(context), observed, DMessageType.error, "Observed: " + observed));
                     }
                 }
             }
@@ -517,14 +543,14 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
     }
 
     @SuppressWarnings("rawtypes")
-    private void addTooManyObserversExceptionMessage(DObject context, DFeature feature, TooManyObserversException tmse) {
+    private void addTooManyObserversExceptionMessage(DMutable context, DFeature feature, TooManyObserversException tmse) {
         DMessage message = new DMessage(context, feature, DMessageType.error, tmse.getSimpleMessage());
         for (Entry<Observer, Set<Mutable>> e : tmse.getObservers()) {
             if (e.getKey() instanceof DRule.DObserver) {
                 DRule rule = ((DRule.DObserver) e.getKey()).rule();
                 for (Mutable o : e.getValue()) {
-                    if (o.dResolve(context) instanceof DObject) {
-                        message.addSubMessage(new DMessage((DObject) o.dResolve(context), rule, DMessageType.error, "Rule: " + rule));
+                    if (o.dResolve(context) instanceof DMutable) {
+                        message.addSubMessage(new DMessage((DMutable) o.dResolve(context), rule, DMessageType.error, "Rule: " + rule));
                     }
                 }
             }
@@ -532,19 +558,19 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
         addMessage(message);
     }
 
-    private void addUnidentifiedExceptionMessage(DObject context, DFeature feature, UnidentifiedException uie) {
+    private void addUnidentifiedExceptionMessage(DMutable context, DFeature feature, UnidentifiedException uie) {
         addMessage(new DMessage(context, feature, DMessageType.error, uie.getMessage()));
     }
 
-    private void addReferencedOrphanExceptionMessage(DObject context, DFeature feature, ReferencedOrphanException roe) {
+    private void addReferencedOrphanExceptionMessage(DMutable context, DFeature feature, ReferencedOrphanException roe) {
         addMessage(new DMessage(context, feature, DMessageType.error, roe.getMessage()));
     }
 
-    private void addEmptyMandatoryExceptionMessage(DObject context, DFeature feature, EmptyMandatoryException eme) {
+    private void addEmptyMandatoryExceptionMessage(DMutable context, DFeature feature, EmptyMandatoryException eme) {
         addMessage(new DMessage(context, feature, DMessageType.error, eme.getMessage()));
     }
 
-    private void addNonDeterministicExceptionMessage(DObject context, DFeature feature, NonDeterministicException nde) {
+    private void addNonDeterministicExceptionMessage(DMutable context, DFeature feature, NonDeterministicException nde) {
         DMessage message = new DMessage(context, feature, DMessageType.error, nde.getMessage());
         for (StackTraceElement ste : nde.getStackTrace()) {
             message.addSubMessage(new DMessage(context, feature, DMessageType.error, ste));
@@ -552,11 +578,11 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
         addMessage(message);
     }
 
-    private void addOutOfScopeExceptionMessage(DObject context, DFeature feature, OutOfScopeException oose) {
+    private void addOutOfScopeExceptionMessage(DMutable context, DFeature feature, OutOfScopeException oose) {
         addMessage(new DMessage(context, feature, DMessageType.error, oose.getMessage()));
     }
 
-    private void addThrowableMessage(DObject context, DFeature feature, Throwable t) {
+    private void addThrowableMessage(DMutable context, DFeature feature, Throwable t) {
         DMessage message = new DMessage(context, feature, DMessageType.error, t);
         for (StackTraceElement ste : t.getStackTrace()) {
             message.addSubMessage(new DMessage(context, feature, DMessageType.error, ste));
@@ -701,9 +727,9 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
             if (config.isTraceDclare()) {
                 System.err.println(DclareTrace.getLineStart(nativeGroup.getName().toUpperCase(), it) + "START " + this);
             }
-            Map<DObject, Map<DObserved, Pair<Object, Object>>>[] diff = new Map[]{imper.diff(dclare, //
-                    o -> o instanceof DObject && (((DObject) o).isNative(nativeGroup) || !imper.get((DObject) o, DObject.TYPE).getNatives(nativeGroup).isEmpty()), //
-                    s -> s instanceof DObserved && (DObject.CONTAINED == s || ((DObserved) s).isNative(nativeGroup))).asMap(e -> (Entry) e)};
+            Map<DMutable, Map<DObserved, Pair<Object, Object>>>[] diff = new Map[]{imper.diff(dclare, //
+                    o -> o instanceof DMutable && (((DMutable) o).isNative(nativeGroup) || !imper.get((DMutable) o, DMutable.TYPE).getNatives(nativeGroup).isEmpty()), //
+                    s -> s instanceof DObserved && (DMutable.CONTAINED == s || ((DObserved) s).isNative(nativeGroup))).asMap(e -> (Entry) e)};
             if (!diff[0].isEmpty()) {
                 do {
                     toNative(nativeGroup, nativeRunner, imper, dclare, diff, diff[0].get(0).getKey());
@@ -720,7 +746,7 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    private void toNative(INativeGroup nativeGroup, INativeRunner nativeRunner, State pre, State post, Map<DObject, Map<DObserved, Pair<Object, Object>>>[] diff, DObject dObject) {
+    private void toNative(INativeGroup nativeGroup, INativeRunner nativeRunner, State pre, State post, Map<DMutable, Map<DObserved, Pair<Object, Object>>>[] diff, DMutable dObject) {
         Map<DObserved, Pair<Object, Object>> delta = diff[0].get(dObject);
         if (delta != null) {
             diff[0] = diff[0].removeKey(dObject);
@@ -730,27 +756,27 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
                     DAttribute dAttribute = (DAttribute) e.getKey();
                     Object preVal = e.getValue().a();
                     Object postVal = e.getValue().b();
-                    handleNativeChanges(nativeGroup, dObject, dAttribute, preVal, postVal, post.get(dObject, DObject.TYPE).getNatives(nativeGroup));
+                    handleNativeChanges(nativeGroup, dObject, dAttribute, preVal, postVal, post.get(dObject, DMutable.TYPE).getNatives(nativeGroup));
                 }
             }
         }
     }
 
     @SuppressWarnings({"rawtypes"})
-    private void parentToNative(INativeGroup nativeGroup, INativeRunner nativeRunner, State imper, State dclare, Map<DObject, Map<DObserved, Pair<Object, Object>>>[] diff, DObject dObject) {
+    private void parentToNative(INativeGroup nativeGroup, INativeRunner nativeRunner, State imper, State dclare, Map<DMutable, Map<DObserved, Pair<Object, Object>>>[] diff, DMutable dObject) {
         Pair<Mutable, Setable<Mutable, ?>> pair = dclare.get(dObject, Mutable.D_PARENT_CONTAINING);
-        if (pair != null && pair.a() instanceof DObject && pair.b() instanceof DObserved) {
-            toNative(nativeGroup, nativeRunner, imper, dclare, diff, (DObject) pair.a());
+        if (pair != null && pair.a() instanceof DMutable && pair.b() instanceof DObserved) {
+            toNative(nativeGroup, nativeRunner, imper, dclare, diff, (DMutable) pair.a());
         }
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    private boolean handleNativeExistence(INativeGroup nativeGroup, INativeRunner nativeRunner, State pre, State post, DObject dObject) {
-        boolean preC = pre.get(dObject, DObject.CONTAINED);
-        boolean postC = post.get(dObject, DObject.CONTAINED);
+    private boolean handleNativeExistence(INativeGroup nativeGroup, INativeRunner nativeRunner, State pre, State post, DMutable dObject) {
+        boolean preC = pre.get(dObject, DMutable.CONTAINED);
+        boolean postC = post.get(dObject, DMutable.CONTAINED);
         if (!preC && postC) {
-            DObject parent = (DObject) post.get(dObject, Mutable.D_PARENT_CONTAINING).a();
-            for (INative<DObject> n : post.get(dObject, DObject.TYPE).getNatives(nativeGroup)) {
+            DMutable parent = (DMutable) post.get(dObject, Mutable.D_PARENT_CONTAINING).a();
+            for (INative<DMutable> n : post.get(dObject, DMutable.TYPE).getNatives(nativeGroup)) {
                 n.init(dObject, parent, nativeRunner);
                 for (IChangeHandler h : INative.ALL_HANDLERS.get(n)) {
                     if (h.attribute() instanceof DObservedAttribute) {
@@ -764,8 +790,8 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
             }
             return true;
         } else if (preC && !postC) {
-            DObject parent = (DObject) pre.get(dObject, Mutable.D_PARENT_CONTAINING).a();
-            for (INative n : pre.get(dObject, DObject.TYPE).getNatives(nativeGroup)) {
+            DMutable parent = (DMutable) pre.get(dObject, Mutable.D_PARENT_CONTAINING).a();
+            for (INative n : pre.get(dObject, DMutable.TYPE).getNatives(nativeGroup)) {
                 n.exit(dObject, parent, nativeRunner);
             }
             return true;
@@ -775,7 +801,7 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
-    private void handleNativeChanges(INativeGroup nativeGroup, DObject dObject, DAttribute<?, ?> dAttribute, Object pre, Object post, List<INative> natives) {
+    private void handleNativeChanges(INativeGroup nativeGroup, DMutable dObject, DAttribute<?, ?> dAttribute, Object pre, Object post, List<INative> natives) {
         for (IChangeHandler h : dAttribute.handlers(nativeGroup)) {
             if (natives.contains(h.iNative())) {
                 nativeChange(nativeGroup, dObject, h, pre, post);
@@ -814,8 +840,8 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
                 System.err.println(DclareTrace.getLineStart("COMMIT", mpsTransaction) + "START " + this);
             }
             boolean changed = false;
-            Map<DObject, Map<DObserved, Pair<Object, Object>>>[] diff = new Map[]{imper.diff(dclare, //
-                    o -> o instanceof DObject && ((DObject) o).isActive() && !((DObject) o).isDclareOnly(), //
+            Map<DMutable, Map<DObserved, Pair<Object, Object>>>[] diff = new Map[]{imper.diff(dclare, //
+                    o -> o instanceof DMutable && ((DMutable) o).isActive() && !((DMutable) o).isDclareOnly(), //
                     s -> s instanceof DObserved && !((DObserved) s).isDclareOnly()).asMap(e -> (Entry) e)};
             if (!diff[0].isEmpty()) {
                 changed = true;
@@ -829,7 +855,7 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
                 if (!setted.isEmpty()) {
                     changed = true;
                     read(() -> {
-                        for (DObject dObject : setted.filter(e -> e.getValue().anyMatch(s -> s instanceof DObserved && !((DObserved) s).isDclareOnly())).map(Entry::getKey).filter(DObject.class)) {
+                        for (DMutable dObject : setted.filter(e -> e.getValue().anyMatch(s -> s instanceof DObserved && !((DObserved) s).isDclareOnly())).map(Entry::getKey).filter(DMutable.class)) {
                             addToChanged(dObject);
                         }
                     });
@@ -848,7 +874,7 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    private void toMPS(State pre, State post, Map<DObject, Map<DObserved, Pair<Object, Object>>>[] diff, DObject dObject) {
+    private void toMPS(State pre, State post, Map<DMutable, Map<DObserved, Pair<Object, Object>>>[] diff, DMutable dObject) {
         Map<DObserved, Pair<Object, Object>> delta = diff[0].get(dObject);
         if (delta != null) {
             diff[0] = diff[0].removeKey(dObject);
@@ -862,29 +888,29 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
                     changed = true;
                     if (dObserved.isReference()) {
                         DObserved.diff(preVal, postVal, a -> {
-                            if (a instanceof DObject) {
-                                parentToMPS(pre, post, diff, (DObject) a);
+                            if (a instanceof DMutable) {
+                                parentToMPS(pre, post, diff, (DMutable) a);
                             }
                         }, r -> {
                         });
                     }
                     dObserved.toMPS(dObject, preVal, postVal);
-                    if (getConfig().isTraceMPSModelChanges() && !(dObserved instanceof DObservedAttribute) && dObserved != DObject.CONTAINED) {
+                    if (getConfig().isTraceMPSModelChanges() && !(dObserved instanceof DObservedAttribute) && dObserved != DMutable.CONTAINED) {
                         System.err.println(DclareTrace.getLineStart("MPS", mpsTransaction) + "MODEL CHANGE " + dObject + "." + dObserved + " = " + State.shortValueDiffString(preVal, postVal));
                     }
                 }
             }
-            if (changed) {
+            if (changed && !config.isDisableAutoModelCheck()) {
                 addToChanged(dObject);
             }
         }
     }
 
     @SuppressWarnings({"rawtypes"})
-    private void parentToMPS(State imper, State dclare, Map<DObject, Map<DObserved, Pair<Object, Object>>>[] diff, DObject dObject) {
+    private void parentToMPS(State imper, State dclare, Map<DMutable, Map<DObserved, Pair<Object, Object>>>[] diff, DMutable dObject) {
         Pair<Mutable, Setable<Mutable, ?>> pair = dclare.get(dObject, Mutable.D_PARENT_CONTAINING);
-        if (pair != null && pair.a() instanceof DObject && pair.b() instanceof DObserved) {
-            toMPS(imper, dclare, diff, (DObject) pair.a());
+        if (pair != null && pair.a() instanceof DMutable && pair.b() instanceof DObserved) {
+            toMPS(imper, dclare, diff, (DMutable) pair.a());
         }
     }
 
@@ -915,7 +941,7 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
         return (T) value;
     }
 
-    private void addToChanged(DObject dObject) {
+    private void addToChanged(DMutable dObject) {
         if (dObject instanceof DModel) {
             SModel sModel = ((DModel) dObject).tryOriginal();
             if (sModel != null) {
@@ -1023,7 +1049,7 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
     private <T> T doGet(Object sObject, Supplier<T> supplier) {
         State state = imperativeState();
         return state.get(() -> GET_FROM_MPS.get(true, () -> {
-            DObject dObject = toDObject(sObject);
+            DMutable dObject = toDObject(sObject);
             if (sObject instanceof SNode) {
                 ((SNode) sObject).getProperty(DNode.PARENT_PROPERTY);
                 addObservedNode((SNode) sObject);
@@ -1048,7 +1074,7 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
     }
 
     @SuppressWarnings("unchecked")
-    private DObject toDObject(Object sObject) {
+    private DMutable toDObject(Object sObject) {
         if (sObject instanceof SNode) {
             return DNode.of(((SNode) sObject));
         } else if (sObject instanceof SModel) {
@@ -1142,18 +1168,32 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
             super(universeTransaction, stateMap);
         }
 
+        @SuppressWarnings("rawtypes")
+        private MPSState(UniverseTransaction universeTransaction, DefaultMap<Object, DefaultMap<Setable, Object>> map, Queued<Action<?>>[] actions, Queued<Mutable>[] children) {
+            super(universeTransaction, map, actions, children);
+        }
+
+        @SuppressWarnings("rawtypes")
+        @Override
+        protected State newState(DefaultMap<Object, DefaultMap<Setable, Object>> newMap, Queued<Action<?>>[] actions, Queued<Mutable>[] children) {
+            return new MPSState(universeTransaction(), newMap, actions, children);
+        }
+
         @SuppressWarnings({"unchecked", "rawtypes"})
         @Override
         public <O, T> T get(O object, Getable<O, T> property) {
-            if (getFromMPS(object)) {
-                DObject dObject = (DObject) object;
-                if (dObject.isRead()) {
-                    if (property instanceof DObserved) {
-                        DObserved<DObject, T> dObserved = (DObserved<DObject, T>) property;
-                        if (dObserved.isRead() && !dObserved.isDclareOnly() && !super.get(dObject, DObject.READ_OBSERVEDS).contains(property)) {
+            if (object instanceof DMutable) {
+                if (property instanceof DObserved) {
+                    DObserved<DMutable, T> dObserved = (DObserved<DMutable, T>) property;
+                    if (dObserved.isRead()) {
+                        DMutable dObject = (DMutable) object;
+                        if (dObject.isRead() && !super.get(dObject, DMutable.READ_OBSERVEDS).contains(property)) {
                             return dObserved.fromMPS(dObject);
                         }
-                    } else if (property == Mutable.D_PARENT_CONTAINING && super.get((Mutable) object, Mutable.D_PARENT_CONTAINING) == null) {
+                    }
+                } else if (property == Mutable.D_PARENT_CONTAINING) {
+                    DMutable dObject = (DMutable) object;
+                    if (dObject.isRead() && super.get((Mutable) object, Mutable.D_PARENT_CONTAINING) == null) {
                         return (T) dObject.readParent();
                     }
                 }
@@ -1164,10 +1204,11 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
         @SuppressWarnings({"rawtypes", "unchecked"})
         @Override
         public <O, A, B> A getA(O object, Getable<O, Pair<A, B>> property) {
-            if (property == (Getable) Mutable.D_PARENT_CONTAINING && getFromMPS(object)) {
-                DObject dObject = (DObject) object;
+            if (object instanceof DMutable && property == (Getable) Mutable.D_PARENT_CONTAINING) {
+                DMutable dObject = (DMutable) object;
                 if (dObject.isRead() && super.get((Mutable) object, Mutable.D_PARENT_CONTAINING) == null) {
-                    return (A) dObject.readParent().a();
+                    Pair<DMutable, DObserved<DMutable, ?>> p = dObject.readParent();
+                    return p == null ? null : (A) p.a();
                 }
             }
             return super.getA(object, property);
@@ -1176,23 +1217,19 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
         @SuppressWarnings({"rawtypes", "unchecked"})
         @Override
         public <O, A, B> B getB(O object, Getable<O, Pair<A, B>> property) {
-            if (property == (Getable) Mutable.D_PARENT_CONTAINING && getFromMPS(object)) {
-                DObject dObject = (DObject) object;
+            if (object instanceof DMutable && property == (Getable) Mutable.D_PARENT_CONTAINING) {
+                DMutable dObject = (DMutable) object;
                 if (dObject.isRead() && super.get((Mutable) object, Mutable.D_PARENT_CONTAINING) == null) {
-                    return (B) dObject.readParent().b();
+                    Pair<DMutable, DObserved<DMutable, ?>> p = dObject.readParent();
+                    return p == null ? null : (B) p.b();
                 }
             }
             return super.getB(object, property);
         }
 
-        private <O> boolean getFromMPS(O object) {
-            return object instanceof DObject && !isPreState() && //
-                    (ObserverTransaction.RIPPLE_OUT.get() || (LeafTransaction.getCurrent() instanceof IdentityDerivationTransaction));
-        }
-
-        private boolean isPreState() {
-            UniverseTransaction utx = universeTransaction();
-            return this == utx.preState() || this == utx.preStartState(Priority.OUTER).state();
+        @Override
+        public <O, T> T getRaw(O object, Getable<O, T> property) {
+            return super.get(object, property);
         }
     }
 
@@ -1202,7 +1239,7 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
             if (isRunning()) {
                 mpsTransaction.state().run(() -> {
                     DModule dModule = DModule.of(sModule);
-                    for (DIssue issue : DObject.DCLARE_ISSUES.get(dModule)) {
+                    for (DIssue issue : DMutable.DCLARE_ISSUES.get(dModule)) {
                         issue.getItem(i -> consumer.consume((ModuleReportItem) i));
                     }
                 });
@@ -1220,7 +1257,7 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
         public void check(SModel sModel, SRepository repository, Consumer<? super ModelReportItem> consumer, ProgressMonitor monitor) {
             if (isRunning()) {
                 mpsTransaction.state().run(() -> {
-                    for (DIssue issue : DObject.DCLARE_ISSUES.get(DModel.of(sModel))) {
+                    for (DIssue issue : DMutable.DCLARE_ISSUES.get(DModel.of(sModel))) {
                         issue.getItem(i -> consumer.consume((ModelReportItem) i));
                     }
                 });
@@ -1264,7 +1301,7 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
 
         @Override
         public void check(SNode sNode, SRepository repository, Consumer<? super NodeReportItem> consumer, ProgressMonitor monitor) {
-            for (DIssue issue : DObject.DCLARE_ISSUES.get(DNode.of(sNode))) {
+            for (DIssue issue : DMutable.DCLARE_ISSUES.get(DNode.of(sNode))) {
                 issue.getItem(i -> consumer.consume((NodeReportItem) i));
             }
         }
@@ -1323,7 +1360,7 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
         protected void checkNodeInEditor(SNode sNode, LanguageErrorsCollector errorsCollector, SRepository repository) {
             if (isRunning()) {
                 mpsTransaction.state().run(() -> {
-                    for (DIssue issue : DObject.DCLARE_ISSUES.get(DNode.of(sNode))) {
+                    for (DIssue issue : DMutable.DCLARE_ISSUES.get(DNode.of(sNode))) {
                         issue.getItem(i -> errorsCollector.addError((NodeReportItem) i));
                     }
                 });
@@ -1360,18 +1397,18 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
                     mpsTransaction.schedule(() -> {
                         for (SModule sModule : modules) {
                             DModule dModule = DModule.of(sModule);
-                            DObject.MPS_ISSUES.set(dModule, DObject.MPS_ISSUES.getDefault(dModule));
+                            DMutable.MPS_ISSUES.set(dModule, DMutable.MPS_ISSUES.getDefault(dModule));
                         }
                         for (SModel sModel : models) {
                             DModel dModel = DModel.of(sModel);
-                            DObject.MPS_ISSUES.set(dModel, DObject.MPS_ISSUES.getDefault(dModel));
+                            DMutable.MPS_ISSUES.set(dModel, DMutable.MPS_ISSUES.getDefault(dModel));
                         }
                         for (SNode root : roots) {
                             DNode dNode = DNode.of(root);
                             DNode.ALL_MPS_ISSUES.set(dNode, DNode.ALL_MPS_ISSUES.getDefault(dNode));
                         }
                         for (IssueKindReportItem item : reportItems) {
-                            DObject d = read(() -> context(item));
+                            DMutable d = read(() -> context(item));
                             if (d != null) {
                                 if (item instanceof NodeFlavouredItem) {
                                     DNode root = root(repos, (NodeFlavouredItem) item);
@@ -1379,7 +1416,7 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
                                         DNode.ALL_MPS_ISSUES.set(root, Set::add, Pair.of(d, item));
                                     }
                                 } else {
-                                    DObject.MPS_ISSUES.set(d, Set::add, Pair.of(d, item));
+                                    DMutable.MPS_ISSUES.set(d, Set::add, Pair.of(d, item));
                                 }
                             }
                         }
@@ -1399,7 +1436,7 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
         });
     }
 
-    protected DObject context(ReportItem item) {
+    protected DMutable context(ReportItem item) {
         SRepository repos = getRepository().original();
         if (item instanceof NodeFlavouredItem) {
             SNode s = ((NodeFlavouredItem) item).getNode().resolve(repos);

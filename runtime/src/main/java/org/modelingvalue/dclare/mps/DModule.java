@@ -1,5 +1,5 @@
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// (C) Copyright 2018-2023 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
+// (C) Copyright 2018-2024 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
 //                                                                                                                     ~
 // Licensed under the GNU Lesser General Public License v3.0 (the 'License'). You may not use this file except in      ~
 // compliance with the License. You may obtain a copy of the License at: https://choosealicense.com/licenses/lgpl-3.0  ~
@@ -84,10 +84,10 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
                                                                                         return LANGUAGES.get(m).filter(l -> !DClareMPS.ACTIVE_RULE_SETS.get(l).isEmpty()).asSet();
                                                                                     });
     @SuppressWarnings("rawtypes")
-    protected static final Set<Observer>                       OBSERVERS            = DObject.OBSERVERS;
+    protected static final Set<Observer>                       OBSERVERS            = DMutable.OBSERVERS;
 
     @SuppressWarnings("rawtypes")
-    protected static final Set<Setable>                        SETABLES             = DObject.SETABLES.addAll(Set.of(MODELS, LANGUAGES, DEPENDENCIES, LANGUAGES_WITH_RULES));
+    protected static final Set<Setable>                        SETABLES             = DMutable.SETABLES.addAll(Set.of(MODELS, LANGUAGES, DEPENDENCIES, LANGUAGES_WITH_RULES));
 
     public static DModule of(SModule original) {
         return original instanceof DModule ? (DModule) original : DMODULE.get(original);
@@ -280,7 +280,7 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
-    protected Pair<DObject, DObserved<DObject, ?>> readParent() {
+    protected Pair<DMutable, DObserved<DMutable, ?>> readParent() {
         return (Pair) Pair.of(dClareMPS().getRepository(), DRepository.MODULES);
     }
 
