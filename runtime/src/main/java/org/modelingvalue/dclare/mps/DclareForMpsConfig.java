@@ -115,7 +115,7 @@ public class DclareForMpsConfig {
     }
 
     public DclareForMpsConfig withColorfulEditors(boolean colorfulEditors) {
-        return create(config, statusHandler, onMode, colorfulEditors, showAspectRuleSetsInRulesTab, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, remoteModelSynchronization, remoteModelSynchronizationServer, inactiveAspects);
+        return create(config, statusHandler, onMode, colorfulEditors, showAspectRuleSetsInRulesTab, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, autoMPSModelCheck, remoteModelSynchronization, remoteModelSynchronizationServer, inactiveAspects);
     }
 
     public DclareForMpsConfig withShowAspectRuleSetsInRulesTab(boolean showAspectRuleSetsInRulesTab) {
@@ -139,7 +139,7 @@ public class DclareForMpsConfig {
     }
 
     public DclareForMpsConfig withAutoMPSModelCheck(boolean autoMPSModelCheck) {
-        return create(config, statusHandler, onMode, colorfulEditors, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, autoMPSModelCheck, remoteModelSynchronization, remoteModelSynchronizationServer, inactiveAspects);
+        return create(config, statusHandler, onMode, colorfulEditors, showAspectRuleSetsInRulesTab, traceDclare, traceActivation, traceMPSModelChanges, disableAutoModelCheck, autoMPSModelCheck, remoteModelSynchronization, remoteModelSynchronizationServer, inactiveAspects);
     }
 
     public DclareForMpsConfig withRemoteModelSynchronization(boolean remoteModelSynchronization) {
