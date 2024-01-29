@@ -122,6 +122,9 @@
     <property role="34LRSv" value=":=" />
     <property role="3GE5qa" value="expressions" />
     <ref role="1TJDcQ" to="tpee:fz7vLUm" resolve="AssignmentExpression" />
+    <node concept="PrWs8" id="2u2ha1pPlyM" role="PzmwI">
+      <ref role="PrY4T" node="6aMI9gI2yLt" resolve="IAttributeTarget" />
+    </node>
   </node>
   <node concept="1TIwiD" id="29R9$zYWiFR">
     <property role="EcuMT" value="2483495814474836727" />
@@ -277,6 +280,11 @@
     <node concept="1TJgyi" id="4ZoRzr2kIcs" role="1TKVEl">
       <property role="IQ2nx" value="5753592850735620892" />
       <property role="TrG5h" value="defaultInitializer" />
+      <ref role="AX2Wp" to="tpck:fKAQMTB" resolve="boolean" />
+    </node>
+    <node concept="1TJgyi" id="2Q8IysUzbnc" role="1TKVEl">
+      <property role="IQ2nx" value="3281077006188197324" />
+      <property role="TrG5h" value="atomic" />
       <ref role="AX2Wp" to="tpck:fKAQMTB" resolve="boolean" />
     </node>
   </node>
@@ -1300,6 +1308,11 @@
         </node>
       </node>
     </node>
+    <node concept="1TJgyj" id="2oCbVeBWB4L" role="1TKVEi">
+      <property role="IQ2ns" value="2749500021173023025" />
+      <property role="20kJfa" value="fixpointGroup" />
+      <ref role="20lvS9" node="2oCbVeBWB4G" resolve="FixPointGroup" />
+    </node>
   </node>
   <node concept="1TIwiD" id="4fD99RQo2bS">
     <property role="EcuMT" value="4893482730976715512" />
@@ -1808,14 +1821,6 @@
       <node concept="tn0Fv" id="2ZFYisrGF9W" role="HhnKV" />
     </node>
   </node>
-  <node concept="1TIwiD" id="6XLqJiNyI6M">
-    <property role="EcuMT" value="8030317209795092914" />
-    <property role="TrG5h" value="ClosureAttribute" />
-    <property role="3GE5qa" value="closure-attributes" />
-    <property role="R5$K7" value="true" />
-    <ref role="1TJDcQ" to="tpck:4uZwTti3_$T" resolve="Attribute" />
-    <node concept="M6xJ_" id="6XLqJiNyIvt" role="lGtFl" />
-  </node>
   <node concept="1TIwiD" id="1ViwZ7siZnR">
     <property role="EcuMT" value="2220982641053398519" />
     <property role="TrG5h" value="AllowsNative" />
@@ -1824,6 +1829,38 @@
     <node concept="M6xJ_" id="1ViwZ7siZnS" role="lGtFl">
       <property role="Hh88m" value="allows native features" />
       <node concept="tn0Fv" id="2ZFYisrGF6K" role="HhnKV" />
+    </node>
+  </node>
+  <node concept="1TIwiD" id="6XLqJiNyI6M">
+    <property role="EcuMT" value="8030317209795092914" />
+    <property role="TrG5h" value="ClosureAttribute" />
+    <property role="3GE5qa" value="closure-attributes" />
+    <property role="R5$K7" value="true" />
+    <ref role="1TJDcQ" to="tpck:4uZwTti3_$T" resolve="Attribute" />
+    <node concept="M6xJ_" id="6XLqJiNyIvt" role="lGtFl" />
+  </node>
+  <node concept="1TIwiD" id="2oCbVeBWB4G">
+    <property role="EcuMT" value="2749500021173023020" />
+    <property role="TrG5h" value="FixPointGroup" />
+    <property role="19KtqR" value="true" />
+    <property role="3GE5qa" value="fixpoint" />
+    <ref role="1TJDcQ" to="tpck:gw2VY9q" />
+    <node concept="PrWs8" id="2oCbVeBWB4H" role="PzmwI">
+      <ref role="PrY4T" to="tpck:h0TrEE$" resolve="INamedConcept" />
+    </node>
+    <node concept="1irR5M" id="2oCbVeBWB5r" role="rwd14">
+      <property role="2$rrk2" value="6" />
+      <node concept="1irR9m" id="2oCbVeBWB5w" role="1irR9h">
+        <node concept="3PKj8D" id="2oCbVeBWB5x" role="3PKjn_">
+          <property role="3PKj8l" value="00ddff" />
+        </node>
+      </node>
+      <node concept="1irPie" id="2oCbVeBWB5C" role="1irR9h">
+        <property role="1irPi9" value="F" />
+        <node concept="3PKj8D" id="2oCbVeBWB5D" role="3PKjny">
+          <property role="3PKj8l" value="000000" />
+        </node>
+      </node>
     </node>
   </node>
 </model>

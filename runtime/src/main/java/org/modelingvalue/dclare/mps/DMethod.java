@@ -1,5 +1,5 @@
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// (C) Copyright 2018-2023 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
+// (C) Copyright 2018-2024 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
 //                                                                                                                     ~
 // Licensed under the GNU Lesser General Public License v3.0 (the 'License'). You may not use this file except in      ~
 // compliance with the License. You may obtain a copy of the License at: https://choosealicense.com/licenses/lgpl-3.0  ~
@@ -31,7 +31,7 @@ public abstract class DMethod<R> implements DFeature {
     private static final Constant<Pair<String, Signature>, DMethod> D_METHOD        = Constant.of("D_METHOD", p -> {
                                                                                         Set<SLanguage> langs = DRepository.ALL_LANGUAGES_WITH_RULES.get(DClareMPS.instance().getRepository());
                                                                                         for (DMethod method : DClareMPS.METHOD_MAP.get(langs).get(Pair.of(p.a(), p.b().size()))) {
-                                                                                            if (p.b().isSubOf(method.signature())) {
+                                                                                            if (p.b().isSubOf(method.signature(), true)) {
                                                                                                 return method;
                                                                                             }
                                                                                         }
@@ -43,7 +43,7 @@ public abstract class DMethod<R> implements DFeature {
     @SuppressWarnings({"unchecked", "rawtypes"})
     public R invoke(Object[] args) {
         DMethod dMethod = DMethod.D_METHOD.get(Pair.of(name(), Signature.of(signature(), args)));
-        if (dMethod.isConstant()) {
+        if (dMethod.isConstant() && args.length == 0) {
             return (R) dMethod.METHOD_CONSTANT.get(ActualArguments.of(args));
         } else {
             return (R) dMethod.call(args);

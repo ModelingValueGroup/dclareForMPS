@@ -3,6 +3,7 @@
   <persistence version="9" />
   <languages>
     <use id="c72da2b9-7cce-4447-8389-f407dc1158b7" name="jetbrains.mps.lang.structure" version="9" />
+    <use id="ce36526d-d793-4b8b-88e9-d1815f616441" name="DclareGui" version="0" />
     <devkit ref="78434eb8-b0e5-444b-850d-e7c4ad2da9ab(jetbrains.mps.devkit.aspect.structure)" />
   </languages>
   <imports>
@@ -122,6 +123,11 @@
       <property role="IQ2nx" value="1908077416936321141" />
       <property role="TrG5h" value="on" />
       <ref role="AX2Wp" to="tpck:fKAQMTB" resolve="boolean" />
+    </node>
+    <node concept="1TJgyi" id="5kd$Q1Hmv2c" role="1TKVEl">
+      <property role="IQ2nx" value="6128716710281867404" />
+      <property role="TrG5h" value="onDemand" />
+      <ref role="AX2Wp" to="tpck:fKAOsGN" resolve="string" />
     </node>
     <node concept="1TJgyj" id="7e_PmaZxgoQ" role="1TKVEi">
       <property role="IQ2ns" value="8333301305615648310" />
@@ -254,6 +260,11 @@
       <property role="IQ2nx" value="623759443864562588" />
       <property role="TrG5h" value="id" />
       <ref role="AX2Wp" to="tpck:fKAOsGN" resolve="string" />
+    </node>
+    <node concept="1TJgyi" id="4gWpyuY4FS3" role="1TKVEl">
+      <property role="IQ2nx" value="4916917214060396035" />
+      <property role="TrG5h" value="onDemand" />
+      <ref role="AX2Wp" to="tpck:fKAQMTB" resolve="boolean" />
     </node>
     <node concept="PrWs8" id="3gm2YTwH79F" role="PzmwI">
       <ref role="PrY4T" to="tpck:h0TrEE$" resolve="INamedConcept" />

@@ -1,5 +1,5 @@
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// (C) Copyright 2018-2023 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
+// (C) Copyright 2018-2024 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
 //                                                                                                                     ~
 // Licensed under the GNU Lesser General Public License v3.0 (the 'License'). You may not use this file except in      ~
 // compliance with the License. You may obtain a copy of the License at: https://choosealicense.com/licenses/lgpl-3.0  ~
@@ -22,7 +22,7 @@ import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.Setable;
 
-public class DServerMetaData extends DObject {
+public class DServerMetaData extends DMutable {
 
     protected static final DServerMetaDataType                     SERVER_METADATA_TYPE = new DServerMetaDataType();
 
@@ -30,10 +30,10 @@ public class DServerMetaData extends DObject {
                                                                                         }, plumbing);
 
     @SuppressWarnings("rawtypes")
-    protected static final Set<Observer>                           OBSERVERS            = DObject.OBSERVERS;
+    protected static final Set<Observer>                           OBSERVERS            = DMutable.OBSERVERS;
 
     @SuppressWarnings("rawtypes")
-    protected static final Set<Setable>                            SETABLES             = DObject.SETABLES.add(SHARED_MODELS);
+    protected static final Set<Setable>                            SETABLES             = DMutable.SETABLES.add(SHARED_MODELS);
 
     public DServerMetaData() {
     }
@@ -63,7 +63,7 @@ public class DServerMetaData extends DObject {
     }
 
     @Override
-    protected Pair<DObject, DObserved<DObject, ?>> readParent() {
+    protected Pair<DMutable, DObserved<DMutable, ?>> readParent() {
         throw new UnsupportedOperationException();
     }
 

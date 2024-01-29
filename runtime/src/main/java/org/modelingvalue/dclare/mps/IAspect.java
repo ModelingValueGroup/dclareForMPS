@@ -1,5 +1,5 @@
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// (C) Copyright 2018-2023 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
+// (C) Copyright 2018-2024 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
 //                                                                                                                     ~
 // Licensed under the GNU Lesser General Public License v3.0 (the 'License'). You may not use this file except in      ~
 // compliance with the License. You may obtain a copy of the License at: https://choosealicense.com/licenses/lgpl-3.0  ~
@@ -16,6 +16,7 @@
 package org.modelingvalue.dclare.mps;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.Collection;
@@ -30,9 +31,15 @@ public interface IAspect {
         return DClareMPS.ASPECT_MAP.get(language).get(id);
     }
 
-    Constant<IAspect, Direction>    DIRECTION        = Constant.of("DIRECTION", a -> Direction.of(a, () -> {
-                                                         return Collection.of(a.getOpposites()).sequential().map(o -> IAspect.DIRECTION.get(o)).asSet();
-                                                     }));
+    Constant<IAspect, Direction>    DIRECTION        = Constant.of("DIRECTION", a -> {
+                                                         IFixPointGroup fpg = a.fixpointGroup();
+                                                         Supplier<Set<Direction>> sd = () -> Collection.of(a.getOpposites()).sequential().map(o -> IAspect.DIRECTION.get(o)).asSet();
+                                                         if (fpg != null) {
+                                                             return Direction.of(a, a.isOnDemand(), IFixPointGroup.FIXPOINT_GROUP.get(fpg), sd);
+                                                         } else {
+                                                             return Direction.of(a, a.isOnDemand(), sd);
+                                                         }
+                                                     });
 
     Constant<IAspect, Set<IAspect>> ALL_DEPENDENCIES = Constant.of("ALL_DEPENDENCIES", a -> {
                                                          return Collection.of(a.getDependencies()).flatMap(d -> IAspect.ALL_DEPENDENCIES.get(d)).asSet().add(a);
@@ -51,5 +58,7 @@ public interface IAspect {
     boolean isAllwaysOn();
 
     boolean isOnDemand();
+
+    IFixPointGroup fixpointGroup();
 
 }

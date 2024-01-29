@@ -1,5 +1,5 @@
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// (C) Copyright 2018-2023 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
+// (C) Copyright 2018-2024 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
 //                                                                                                                     ~
 // Licensed under the GNU Lesser General Public License v3.0 (the 'License'). You may not use this file except in      ~
 // compliance with the License. You may obtain a copy of the License at: https://choosealicense.com/licenses/lgpl-3.0  ~
@@ -23,39 +23,34 @@ import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.collections.util.Triple;
 import org.modelingvalue.dclare.Constant;
-import org.modelingvalue.dclare.State;
 
 @SuppressWarnings("unused")
-public class DStructObject extends DIdentifiedObject implements SStructObject {
+public class DMutableStruct extends DIdentifiedMutable implements SStructObject {
 
     private static final Constant<Triple<Set<SLanguage>, Set<String>, SStructClass>, DStructClass> CLASS_OBJECT_TYPE = Constant.of("CLASS_OBJECT_TYPE", DStructClass::new);
 
-    public static DStructObject of(SStructClass cls, Object[] identity) {
+    public static SStructObject of(IRuleSet ruleSet, String anonymousType, Object[] ctx, SStructClass cls, Object[] identity) {
+        return quotationConstruct(ruleSet, anonymousType, ctx, () -> of(cls, identity));
+    }
+
+    @SuppressWarnings("unchecked")
+    public static DMutableStruct of(SStructClass cls, Object[] identity) {
+        assert !cls.isValueClass();
         for (int i = 0; i < identity.length; i++) {
             Objects.requireNonNull(identity[i]);
         }
         identity = Arrays.copyOf(identity, identity.length + 1);
         identity[identity.length - 1] = cls;
-        return new DStructObject(identity);
+        return new DMutableStruct(identity);
     }
 
-    public static DStructObject of(IRuleSet ruleSet, String anonymousType, Object[] ctx, SStructClass cls, Object[] identity) {
-        return quotationConstruct(ruleSet, anonymousType, ctx, () -> of(cls, identity));
-    }
-
-    protected DStructObject(Object[] identity) {
+    private DMutableStruct(Object[] identity) {
         super(identity);
     }
 
     @Override
     public boolean isExternal() {
-        return getSClass().isValueClass();
-    }
-
-    @SuppressWarnings("rawtypes")
-    @Override
-    public boolean dIsOrphan(State state) {
-        return !isExternal() && super.dIsOrphan(state);
+        return false;
     }
 
     @Override
@@ -65,7 +60,7 @@ public class DStructObject extends DIdentifiedObject implements SStructObject {
 
     @Override
     protected DStructClass getType() {
-        DObject dParent = dObjectParent();
+        DMutable dParent = dObjectParent();
         Set<SLanguage> ls = (dParent != null && !dParent.isExternal() ? dParent : getContextObject()).dClass().getLanguages();
         SLanguage lang = getSClass().getLanguage();
         if (!DClareMPS.ACTIVE_RULE_SETS.get(lang).isEmpty()) {
@@ -116,7 +111,7 @@ public class DStructObject extends DIdentifiedObject implements SStructObject {
     }
 
     @Override
-    protected Pair<DObject, DObserved<DObject, ?>> readParent() {
+    protected Pair<DMutable, DObserved<DMutable, ?>> readParent() {
         throw new UnsupportedOperationException();
     }
 

@@ -1,5 +1,5 @@
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// (C) Copyright 2018-2023 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
+// (C) Copyright 2018-2024 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
 //                                                                                                                     ~
 // Licensed under the GNU Lesser General Public License v3.0 (the 'License'). You may not use this file except in      ~
 // compliance with the License. You may obtain a copy of the License at: https://choosealicense.com/licenses/lgpl-3.0  ~
@@ -15,16 +15,18 @@
 
 package org.modelingvalue.dclare.mps;
 
-import static org.modelingvalue.dclare.UniverseTransaction.Mood.*;
-
-import java.util.Objects;
-import java.util.WeakHashMap;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Consumer;
-import java.util.function.Function;
-
+import jetbrains.mps.classloading.ClassLoaderManager;
+import jetbrains.mps.classloading.DeployListener;
+import jetbrains.mps.debug.api.BreakpointManagerComponent;
+import jetbrains.mps.debug.api.BreakpointManagerComponent.IBreakpointManagerListener;
+import jetbrains.mps.debug.api.breakpoints.BreakpointLocation;
+import jetbrains.mps.debug.api.breakpoints.IBreakpoint;
+import jetbrains.mps.debug.api.breakpoints.ILocationBreakpoint;
+import jetbrains.mps.errors.item.IssueKindReportItem;
+import jetbrains.mps.ide.MPSCoreComponents;
+import jetbrains.mps.module.ReloadableModule;
+import jetbrains.mps.project.MPSProject;
+import jetbrains.mps.project.ProjectBase;
 import org.jetbrains.mps.openapi.model.SNode;
 import org.jetbrains.mps.openapi.model.SNodeReference;
 import org.jetbrains.mps.openapi.util.ProgressMonitor;
@@ -38,24 +40,21 @@ import org.modelingvalue.dclare.DclareTrace;
 import org.modelingvalue.dclare.LeafTransaction;
 import org.modelingvalue.dclare.UniverseTransaction.Status;
 
-import jetbrains.mps.classloading.ClassLoaderManager;
-import jetbrains.mps.classloading.DeployListener;
-import jetbrains.mps.debug.api.BreakpointManagerComponent;
-import jetbrains.mps.debug.api.BreakpointManagerComponent.IBreakpointManagerListener;
-import jetbrains.mps.debug.api.breakpoints.BreakpointLocation;
-import jetbrains.mps.debug.api.breakpoints.IBreakpoint;
-import jetbrains.mps.debug.api.breakpoints.ILocationBreakpoint;
-import jetbrains.mps.errors.item.IssueKindReportItem;
-import jetbrains.mps.ide.MPSCoreComponents;
-import jetbrains.mps.module.ReloadableModule;
-import jetbrains.mps.project.MPSProject;
-import jetbrains.mps.project.ProjectBase;
+import java.util.Objects;
+import java.util.WeakHashMap;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
+
+import static org.modelingvalue.dclare.UniverseTransaction.Mood.idle;
+import static org.modelingvalue.dclare.UniverseTransaction.Mood.starting;
+import static org.modelingvalue.dclare.UniverseTransaction.Mood.stopped;
 
 @SuppressWarnings("unused")
 public class DclareForMPSEngine implements DeployListener, IBreakpointManagerListener {
 
     private static Function<MPSProject, EngineStatusHandler>         STATUS_HANDLER_FUNCTION;
-    private static Consumer<DclareForMPSEngine>                      NEW_ENGINE_CONSUMER;
     private static final WeakHashMap<MPSProject, DclareForMPSEngine> ENGINE_MAP                = new WeakHashMap<>();
 
     private static final boolean                                     TRACE_ENGINE              = Boolean.getBoolean("TRACE_ENGINE");
@@ -64,10 +63,6 @@ public class DclareForMPSEngine implements DeployListener, IBreakpointManagerLis
 
     public static void setStatusHandlerFunction(Function<MPSProject, EngineStatusHandler> function) {
         STATUS_HANDLER_FUNCTION = function;
-    }
-
-    public static void setEngineConsumer(Consumer<DclareForMPSEngine> consumer) {
-        NEW_ENGINE_CONSUMER = consumer;
     }
 
     public static DclareForMPSEngine getEngine(MPSProject project) {
@@ -106,7 +101,6 @@ public class DclareForMPSEngine implements DeployListener, IBreakpointManagerLis
         moodUpdaterThread = new MoodUpdaterThread();
         newDClareMPS(project, new DclareForMpsConfig().withMaxNrOfHistory(MAX_NR_OF_HISTORY_FOR_MPS).withStatusHandler(engineStatusHandler));
         moodUpdaterThread.start();
-        NEW_ENGINE_CONSUMER.accept(this);
     }
 
     public MPSProject project() {
@@ -291,7 +285,7 @@ public class DclareForMPSEngine implements DeployListener, IBreakpointManagerLis
 
         private void updateStatus(Status status, DClareMPS current) {
             DclareForMpsStatus dclareForMpsStatus = new DclareForMpsStatus(status, current);
-            List<IAspect> aspects = status.mood == starting ? current.getAllDynamicAspects() : prevAspects;
+            List<IAspect> aspects = status.mood == starting ? current.getAllAspects() : prevAspects;
             DefaultMap<DMessageType, List<DMessage>> messages = status.mood == starting || status.mood == idle || status.mood == stopped ? current.getMessages() : prevMessages;
             current.readInEDT(() -> engineStatusHandler.status(dclareForMpsStatus));
             if (status.mood == starting) {

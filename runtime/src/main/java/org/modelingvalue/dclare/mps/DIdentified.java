@@ -15,17 +15,12 @@
 
 package org.modelingvalue.dclare.mps;
 
-import org.modelingvalue.collections.DefaultMap;
-import org.modelingvalue.collections.List;
+import org.modelingvalue.dclare.mps.DAttribute.DIdentifyingAttribute;
 
-public interface EngineStatusHandler {
+public interface DIdentified extends DObject {
 
-    void status(DclareForMpsStatus status);
+    public Object[] getIdentity();
 
-    void aspects(List<IAspect> apects, DclareForMpsStatus status);
-
-    void messages(DefaultMap<DMessageType, List<DMessage>> messages, DclareForMpsStatus status);
-
-    void start(DclareForMpsStatus status);
+    public <V> V get(DIdentifyingAttribute<?, V> attr);
 
 }

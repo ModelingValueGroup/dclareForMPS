@@ -824,7 +824,7 @@
                                     </node>
                                   </node>
                                   <node concept="liA8E" id="22j9zcgQKeL" role="2OqNvi">
-                                    <ref role="37wK5l" to="t4tl:~DNewableObject.tryOriginal()" resolve="tryOriginal" />
+                                    <ref role="37wK5l" to="t4tl:~DNewable.tryOriginal()" resolve="tryOriginal" />
                                   </node>
                                 </node>
                               </node>
@@ -2409,7 +2409,7 @@
                                         </node>
                                       </node>
                                       <node concept="liA8E" id="1O8e97N26s7" role="2OqNvi">
-                                        <ref role="37wK5l" to="t4tl:~DNewableObject.tryOriginal()" resolve="tryOriginal" />
+                                        <ref role="37wK5l" to="t4tl:~DNewable.tryOriginal()" resolve="tryOriginal" />
                                       </node>
                                     </node>
                                   </node>
@@ -2450,7 +2450,7 @@
                                         </node>
                                       </node>
                                       <node concept="liA8E" id="1O8e97N4ZFh" role="2OqNvi">
-                                        <ref role="37wK5l" to="t4tl:~DNewableObject.tryOriginal()" resolve="tryOriginal" />
+                                        <ref role="37wK5l" to="t4tl:~DNewable.tryOriginal()" resolve="tryOriginal" />
                                       </node>
                                     </node>
                                   </node>
@@ -2491,7 +2491,7 @@
                                         </node>
                                       </node>
                                       <node concept="liA8E" id="1O8e97N4ZAr" role="2OqNvi">
-                                        <ref role="37wK5l" to="t4tl:~DNewableObject.tryOriginal()" resolve="tryOriginal" />
+                                        <ref role="37wK5l" to="t4tl:~DNewable.tryOriginal()" resolve="tryOriginal" />
                                       </node>
                                     </node>
                                   </node>

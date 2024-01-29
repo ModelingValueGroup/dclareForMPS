@@ -1,5 +1,5 @@
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// (C) Copyright 2018-2023 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
+// (C) Copyright 2018-2024 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
 //                                                                                                                     ~
 // Licensed under the GNU Lesser General Public License v3.0 (the 'License'). You may not use this file except in      ~
 // compliance with the License. You may obtain a copy of the License at: https://choosealicense.com/licenses/lgpl-3.0  ~
@@ -15,7 +15,13 @@
 
 package org.modelingvalue.dclare.mps;
 
-import jetbrains.mps.smodel.adapter.structure.property.InvalidProperty;
+import static org.modelingvalue.dclare.CoreSetableModifier.*;
+
+import java.util.Collections;
+import java.util.function.BiFunction;
+import java.util.function.Function;
+import java.util.function.Supplier;
+
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.jetbrains.mps.openapi.language.SProperty;
 import org.jetbrains.mps.openapi.model.EditableSModel;
@@ -30,14 +36,7 @@ import org.modelingvalue.dclare.LeafTransaction;
 import org.modelingvalue.dclare.Setable;
 import org.modelingvalue.dclare.SetableModifier;
 
-import java.util.Collections;
-import java.util.function.BiFunction;
-import java.util.function.Function;
-import java.util.function.Supplier;
-
-import static org.modelingvalue.dclare.CoreSetableModifier.containment;
-import static org.modelingvalue.dclare.CoreSetableModifier.mandatory;
-import static org.modelingvalue.dclare.CoreSetableModifier.synthetic;
+import jetbrains.mps.smodel.adapter.structure.property.InvalidProperty;
 
 @SuppressWarnings({"rawtypes", "unused"})
 public interface DAttribute<O, T> extends DFeature {
@@ -45,7 +44,7 @@ public interface DAttribute<O, T> extends DFeature {
     @SuppressWarnings("unchecked")
     static <C, V> DAttribute<C, V> of(String id, String name, IRuleSet ruleSet, boolean syn, boolean optional, boolean composite, int identifyingNr, boolean isPublic, Function<C, Object> def, Class<?> cls, SLanguage oppositeLanguage, String opposite, Supplier<SNodeReference> source, Function<C, V> deriver) {
         boolean idAttr = identifyingNr >= 0 && (ruleSet == null || ruleSet.getAnonymousType() != null);
-        SetableModifier[] mods = {synthetic.iff(syn), mandatory.iff(idAttr || (!optional && identifyingNr < 0)), containment.iff(composite)};
+        SetableModifier[] mods = {synthetic.iff(syn), mandatory.iff(idAttr || (!optional && identifyingNr < 0)), containment.iff(composite), ruleSet == null ? null : IAspect.DIRECTION.get(ruleSet.getAspect())};
         return idAttr ? new DIdentifyingAttribute(id, name, ruleSet, identifyingNr, cls, source, mods) : //
                 deriver != null ? new DConstant(id, name, ruleSet, cls, source, deriver, mods) : //
                         new DObservedAttribute(id, name, ruleSet, identifyingNr >= 0, isPublic, def, cls, opposite != null ? () -> of(oppositeLanguage, opposite) : null, source, mods);
@@ -100,7 +99,7 @@ public interface DAttribute<O, T> extends DFeature {
         return null;
     }
 
-    final class DObservedAttribute<C extends DObject, V> extends DObserved<C, V> implements DAttribute<C, V> {
+    final class DObservedAttribute<C extends DMutable, V> extends DObserved<C, V> implements DAttribute<C, V> {
 
         private final String    name;
         private final Class<?>  cls;
@@ -214,7 +213,7 @@ public interface DAttribute<O, T> extends DFeature {
 
     }
 
-    final class DIdentifyingAttribute<C extends DIdentifiedObject, V> extends Setable<C, V> implements DAttribute<C, V> {
+    final class DIdentifyingAttribute<C extends DIdentified, V> extends Setable<C, V> implements DAttribute<C, V> {
 
         private final String                   name;
         private final int                      index;
@@ -236,7 +235,11 @@ public interface DAttribute<O, T> extends DFeature {
             if (object == null) {
                 throw new NullPointerException("attempt to read null." + this);
             }
-            return object.get(this);
+            V result = object.get(this);
+            if (result == null) {
+                throw new NullPointerException(object + "." + this + "=" + result);
+            }
+            return result;
         }
 
         public int index() {
