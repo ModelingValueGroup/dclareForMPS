@@ -140,6 +140,7 @@
         <property id="168363875802087287" name="showInUI" index="2gpH_U" />
         <property id="5944657839012629576" name="presentation" index="2BUmq6" />
       </concept>
+      <concept id="8383079901754291618" name="jetbrains.mps.lang.editor.structure.CellModel_NextEditor" flags="ng" index="B$lHz" />
       <concept id="3473224453637651916" name="jetbrains.mps.lang.editor.structure.TransformationLocation_SideTransform_PlaceInCellHolder" flags="ng" index="CtIbL">
         <property id="3473224453637651917" name="placeInCell" index="CtIbK" />
       </concept>
@@ -9914,6 +9915,12 @@
         </node>
       </node>
     </node>
+  </node>
+  <node concept="24kQdi" id="6XLqJiNyI8h">
+    <property role="3GE5qa" value="closure-attributes" />
+    <ref role="1XX52x" to="7ggn:6XLqJiNyI6M" resolve="ClosureAttribute" />
+    <node concept="B$lHz" id="6XLqJiNyIty" role="2wV5jI" />
+    <node concept="B$lHz" id="6XLqJiNyItF" role="6VMZX" />
   </node>
   <node concept="24kQdi" id="2oCbVeBWB4P">
     <property role="3GE5qa" value="fixpoint" />
