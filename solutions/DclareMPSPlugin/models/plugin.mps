@@ -18890,7 +18890,7 @@
                         <node concept="3KmjVe" id="4GWaWvOUj4" role="2Oq$k0" />
                         <node concept="2Zo12i" id="4GWaWvOUj5" role="2OqNvi">
                           <node concept="chp4Y" id="4GWaWvOUj6" role="2Zo12j">
-                            <ref role="cht4Q" to="7ggn:lSgC6t_tvD" resolve="ModelBuilderPart" />
+                            <ref role="cht4Q" to="7ggn:lSgC6t_tvD" resolve="ModelBuilderMember" />
                           </node>
                         </node>
                       </node>
