@@ -20,6 +20,8 @@
 
 package org.modelingvalue.dclare.mps;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
@@ -36,5 +38,13 @@ public interface INativeGroup {
     String getName();
 
     Consumer<Runnable> getScheduler(DClareMPS dclare);
+
+    default List<INativeGroup> getDependencies() {
+        return new ArrayList<>();
+    }
+
+    default List<INativeGroup> getDependents() {
+        return new ArrayList<>();
+    }
 
 }

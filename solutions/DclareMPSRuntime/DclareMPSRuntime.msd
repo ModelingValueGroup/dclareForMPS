@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <solution name="DclareMPSRuntime" uuid="55d6b6f5-8095-4cd0-a39b-779da8d12940" moduleVersion="0" pluginKind="PLUGIN_OTHER" compileInMPS="true">
   <models>
-    <modelRoot contentPath="${module}/models" type="default">
+    <modelRoot type="default" contentPath="${module}/models">
       <sourceRoot location="." />
     </modelRoot>
-    <modelRoot contentPath="${module}/lib" type="java_classes">
+    <modelRoot type="java_classes" contentPath="${module}/lib">
       <sourceRoot location="runtime.jar" />
     </modelRoot>
   </models>

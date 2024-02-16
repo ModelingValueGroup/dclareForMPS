@@ -310,6 +310,16 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
             deferredChangeHandlers = deferredChangeHandlers.put(ng.getId(), Concurrent.of(Map.of()));
             universeTransaction.addImperative(ng.getId(), this::handleNativeDelta, ng.getScheduler(this)::accept, false);
         }
+
+        for (INativeGroup ng : DRepository.ALL_NATIVE_GROUPS.get(getRepository())) {
+            for (INativeGroup before : ng.getDependencies()) {
+                universeTransaction.orderImperativeTransactions(before.getId(), ng.getId());
+            }
+            for (INativeGroup after : ng.getDependents()) {
+                universeTransaction.orderImperativeTransactions(ng.getId(), after.getId());
+            }
+        }
+
         mpsTransaction.schedule(() -> REPOSITORY_CONTAINER.set(this, getRepository()));
         mpsTransaction.schedule(() -> DSERVER_METADATA.set(this, dServerMetaData));
         if (isCollaberationEnabled()) {
