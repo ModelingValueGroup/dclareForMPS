@@ -884,6 +884,21 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
         if (delta != null) {
             diff[0] = diff[0].removeKey(dObject);
             parentToMPS(pre, post, diff, dObject);
+            if (dObject instanceof DNode) {
+                Pair<Mutable, Setable<Mutable, ?>> prePair = pre.get(dObject, Mutable.D_PARENT_CONTAINING);
+                Pair<Mutable, Setable<Mutable, ?>> postPair = post.get(dObject, Mutable.D_PARENT_CONTAINING);
+                if (prePair != null && postPair != null && //
+                        prePair.b() instanceof DObserved && ((DObserved) prePair.b()).isDclareOnly() && //
+                        postPair.b() instanceof DObserved && !((DObserved) postPair.b()).isDclareOnly()) {
+                    for (DObserved dObserved : DNode.CONCEPT_DOBSERVEDS.get(((DNode) dObject).getConcept())) {
+                        Object preVal = pre.get(dObject, dObserved);
+                        Object postVal = post.get(dObject, dObserved);
+                        if (Objects.equals(preVal, postVal) && !Objects.equals(dObserved.getDefault(dObject), postVal)) {
+                            delta = delta.add(dObserved, Pair.of(preVal, postVal));
+                        }
+                    }
+                }
+            }
             boolean changed = false;
             for (Entry<DObserved, Pair<Object, Object>> e : delta) {
                 DObserved dObserved = e.getKey();
