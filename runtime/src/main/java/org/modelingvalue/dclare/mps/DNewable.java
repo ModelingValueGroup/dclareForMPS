@@ -142,15 +142,15 @@ public abstract class DNewable<T extends DNewable, R, S> extends DIdentifiedMuta
     }
 
     @Override
-    public final void dActivate() {
-        Newable.super.dActivate();
-        start(dClareMPS());
+    public final void dActivate(LeafTransaction tx) {
+        Newable.super.dActivate(tx);
+        start(dClareMPS(tx));
     }
 
     @Override
     public final void dDeactivate(LeafTransaction tx) {
         Newable.super.dDeactivate(tx);
-        stop(dClareMPS());
+        stop(dClareMPS(tx));
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})

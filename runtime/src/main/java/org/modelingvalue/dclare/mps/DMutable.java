@@ -138,6 +138,10 @@ public abstract class DMutable implements DObject, Mutable {
         return DClareMPS.instance();
     }
 
+    public static DClareMPS dClareMPS(Transaction tx) {
+        return DClareMPS.instance(tx);
+    }
+
     public boolean isOwned() {
         return dParent() != null;
     }
@@ -180,8 +184,8 @@ public abstract class DMutable implements DObject, Mutable {
     }
 
     @Override
-    public void dActivate() {
-        Mutable.super.dActivate();
+    public void dActivate(LeafTransaction tx) {
+        Mutable.super.dActivate(tx);
         start(dClareMPS());
     }
 

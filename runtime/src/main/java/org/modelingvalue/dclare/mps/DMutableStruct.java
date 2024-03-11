@@ -28,6 +28,7 @@ import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.collections.util.Triple;
 import org.modelingvalue.dclare.Constant;
+import org.modelingvalue.dclare.LeafTransaction;
 
 @SuppressWarnings("unused")
 public class DMutableStruct extends DIdentifiedMutable implements SStructObject {
@@ -82,8 +83,8 @@ public class DMutableStruct extends DIdentifiedMutable implements SStructObject 
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
-    public void dActivate() {
-        super.dActivate();
+    public void dActivate(LeafTransaction tx) {
+        super.dActivate(tx);
         for (DAttribute id : getSClass().getIdentity()) {
             if (id.isComposite()) {
                 id.activate(this);
