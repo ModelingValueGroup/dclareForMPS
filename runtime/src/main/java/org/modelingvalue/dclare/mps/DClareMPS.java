@@ -1066,6 +1066,26 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
         return o == null ? "<null>" : "'" + o + "' [" + o.getClass() + "]";
     }
 
+    private final ILeafTransaction dummyTransaction = new ILeafTransaction() {
+        @Override
+        public <O, T> void changed(O object, Setable<O, T> setable, T preValue, T rawPreValue, T postValue) {
+        }
+
+        @Override
+        public <O, T> T set(O object, Setable<O, T> property, T post) {
+            return property.getDefault(object);
+        }
+
+        @Override
+        public State state() {
+            return imperativeState();
+        }
+
+        @Override
+        public <O extends Mutable> void trigger(O mutable, Action<O> action, Priority priority) {
+        }
+    };
+
     private <T> T doGet(Object sObject, Supplier<T> supplier) {
         State state = imperativeState();
         return state.get(() -> GET_FROM_MPS.get(true, () -> {
@@ -1088,7 +1108,7 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
                     return null;
                 }
             } else {
-                return state.derive(supplier, derivationState());
+                return state.derive(supplier, derivationState(), dummyTransaction);
             }
         }));
     }
