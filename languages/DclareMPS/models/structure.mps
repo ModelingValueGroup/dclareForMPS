@@ -1791,6 +1791,20 @@
         </node>
       </node>
     </node>
+    <node concept="1TJgyj" id="3r$WgusVMSD" role="1TKVEi">
+      <property role="IQ2ns" value="3955551387738123817" />
+      <property role="20lmBu" value="fLJjDmT/aggregation" />
+      <property role="20kJfa" value="dependencies" />
+      <property role="20lbJX" value="fLJekj5/_0__n" />
+      <ref role="20lvS9" node="3r$WgusVMSo" resolve="NativeGroupReference" />
+    </node>
+    <node concept="1TJgyj" id="3r$WgusVMSI" role="1TKVEi">
+      <property role="IQ2ns" value="3955551387738123822" />
+      <property role="20lmBu" value="fLJjDmT/aggregation" />
+      <property role="20kJfa" value="dependents" />
+      <property role="20lbJX" value="fLJekj5/_0__n" />
+      <ref role="20lvS9" node="3r$WgusVMSo" resolve="NativeGroupReference" />
+    </node>
   </node>
   <node concept="1TIwiD" id="6_fOQ$ATVaC">
     <property role="EcuMT" value="7588516345720320680" />
@@ -1834,18 +1848,44 @@
       </node>
     </node>
   </node>
-  <node concept="1TIwiD" id="6lcsnaOnoLC">
-    <property role="EcuMT" value="7299333833526971496" />
-    <property role="3GE5qa" value="models.builder" />
-    <property role="TrG5h" value="ModelBuilderInitFeature" />
-    <property role="34LRSv" value="feature" />
-    <ref role="1TJDcQ" node="1$Cs7K8W4Fy" resolve="ModelBuilderPart" />
-    <node concept="1TJgyj" id="6lcsnaOnoLE" role="1TKVEi">
-      <property role="IQ2ns" value="7299333833526971498" />
-      <property role="20lmBu" value="fLJjDmT/aggregation" />
-      <property role="20kJfa" value="feature" />
+  <node concept="1TIwiD" id="6XLqJiNyz2l">
+    <property role="EcuMT" value="8030317209795047573" />
+    <property role="TrG5h" value="AllowsNonConstant" />
+    <property role="3GE5qa" value="closure-attributes" />
+    <ref role="1TJDcQ" node="6XLqJiNyI6M" resolve="ClosureAttribute" />
+    <node concept="M6xJ_" id="6XLqJiNyIMh" role="lGtFl">
+      <property role="Hh88m" value="allows non constant features" />
+      <node concept="tn0Fv" id="2ZFYisrGF9W" role="HhnKV" />
+    </node>
+  </node>
+  <node concept="1TIwiD" id="1ViwZ7siZnR">
+    <property role="EcuMT" value="2220982641053398519" />
+    <property role="TrG5h" value="AllowsNative" />
+    <property role="3GE5qa" value="closure-attributes" />
+    <ref role="1TJDcQ" node="6XLqJiNyI6M" resolve="ClosureAttribute" />
+    <node concept="M6xJ_" id="1ViwZ7siZnS" role="lGtFl">
+      <property role="Hh88m" value="allows native features" />
+      <node concept="tn0Fv" id="2ZFYisrGF6K" role="HhnKV" />
+    </node>
+  </node>
+  <node concept="1TIwiD" id="6XLqJiNyI6M">
+    <property role="EcuMT" value="8030317209795092914" />
+    <property role="TrG5h" value="ClosureAttribute" />
+    <property role="3GE5qa" value="closure-attributes" />
+    <property role="R5$K7" value="true" />
+    <ref role="1TJDcQ" to="tpck:4uZwTti3_$T" resolve="Attribute" />
+    <node concept="M6xJ_" id="6XLqJiNyIvt" role="lGtFl" />
+  </node>
+  <node concept="1TIwiD" id="3r$WgusVMSo">
+    <property role="EcuMT" value="3955551387738123800" />
+    <property role="3GE5qa" value="native" />
+    <property role="TrG5h" value="NativeGroupReference" />
+    <ref role="1TJDcQ" to="tpck:gw2VY9q" />
+    <node concept="1TJgyj" id="3r$WgusVMSp" role="1TKVEi">
+      <property role="IQ2ns" value="3955551387738123801" />
+      <property role="20kJfa" value="nativeGroup" />
       <property role="20lbJX" value="fLJekj4/_1" />
-      <ref role="20lvS9" node="6lcsnaGYRnN" resolve="BuilderFeature" />
+      <ref role="20lvS9" node="4ONkEkNg$Za" resolve="NativeGroup" />
     </node>
   </node>
   <node concept="1TIwiD" id="6lcsnaOnoLN">
@@ -1858,33 +1898,23 @@
       <ref role="PrY4T" node="2UMr9kjxYag" resolve="IInnerProvider" />
     </node>
   </node>
-  <node concept="PlHQZ" id="6lcsnaGYRnN">
-    <property role="EcuMT" value="7299333833403102707" />
-    <property role="TrG5h" value="BuilderFeature" />
-  </node>
-  <node concept="1TIwiD" id="1$Cs7K8W4Fy">
-    <property role="EcuMT" value="1812822528044845794" />
-    <property role="3GE5qa" value="models.builder" />
-    <property role="TrG5h" value="ModelBuilderPart" />
-    <property role="R5$K7" value="true" />
-    <ref role="1TJDcQ" to="tpck:gw2VY9q" resolve="BaseConcept" />
-    <node concept="PrWs8" id="1$Cs7K8W4Fz" role="PzmwI">
-      <ref role="PrY4T" node="2UMr9kjxYag" resolve="IInnerProvider" />
-    </node>
-  </node>
-  <node concept="1TIwiD" id="6lcsnaNYYP3">
-    <property role="EcuMT" value="7299333833520573763" />
-    <property role="3GE5qa" value="nodes.builder" />
-    <property role="TrG5h" value="NodeBuilderInitFeature" />
+  <node concept="1TIwiD" id="6lcsnaGYUKT">
+    <property role="EcuMT" value="7299333833403116601" />
+    <property role="3GE5qa" value="structs.builder" />
+    <property role="TrG5h" value="StructBuilderInitFeature" />
     <property role="34LRSv" value="feature" />
-    <ref role="1TJDcQ" to="tp3r:4IP40Bi2KcT" resolve="NodeBuilderInitPart" />
-    <node concept="1TJgyj" id="6lcsnaNYZs8" role="1TKVEi">
-      <property role="IQ2ns" value="7299333833520576264" />
+    <ref role="1TJDcQ" node="6lcsnaOnoLN" resolve="StructBuilderInitPart" />
+    <node concept="1TJgyj" id="6lcsnaGYVf6" role="1TKVEi">
+      <property role="IQ2ns" value="7299333833403118534" />
       <property role="20lmBu" value="fLJjDmT/aggregation" />
       <property role="20kJfa" value="feature" />
       <property role="20lbJX" value="fLJekj4/_1" />
       <ref role="20lvS9" node="6lcsnaGYRnN" resolve="BuilderFeature" />
     </node>
+  </node>
+  <node concept="PlHQZ" id="6lcsnaGYRnN">
+    <property role="EcuMT" value="7299333833403102707" />
+    <property role="TrG5h" value="BuilderFeature" />
   </node>
   <node concept="1TIwiD" id="6lcsnaGXP9x">
     <property role="EcuMT" value="7299333833402831457" />
@@ -1917,47 +1947,43 @@
       <ref role="PrY4T" node="6lcsnaGYRnN" resolve="BuilderFeature" />
     </node>
   </node>
-  <node concept="1TIwiD" id="6lcsnaGYUKT">
-    <property role="EcuMT" value="7299333833403116601" />
-    <property role="3GE5qa" value="structs.builder" />
-    <property role="TrG5h" value="StructBuilderInitFeature" />
+  <node concept="1TIwiD" id="6lcsnaNYYP3">
+    <property role="EcuMT" value="7299333833520573763" />
+    <property role="3GE5qa" value="nodes.builder" />
+    <property role="TrG5h" value="NodeBuilderInitFeature" />
     <property role="34LRSv" value="feature" />
-    <ref role="1TJDcQ" node="6lcsnaOnoLN" resolve="StructBuilderInitPart" />
-    <node concept="1TJgyj" id="6lcsnaGYVf6" role="1TKVEi">
-      <property role="IQ2ns" value="7299333833403118534" />
+    <ref role="1TJDcQ" to="tp3r:4IP40Bi2KcT" resolve="NodeBuilderInitPart" />
+    <node concept="1TJgyj" id="6lcsnaNYZs8" role="1TKVEi">
+      <property role="IQ2ns" value="7299333833520576264" />
       <property role="20lmBu" value="fLJjDmT/aggregation" />
       <property role="20kJfa" value="feature" />
       <property role="20lbJX" value="fLJekj4/_1" />
       <ref role="20lvS9" node="6lcsnaGYRnN" resolve="BuilderFeature" />
     </node>
   </node>
-  <node concept="1TIwiD" id="6XLqJiNyz2l">
-    <property role="EcuMT" value="8030317209795047573" />
-    <property role="TrG5h" value="AllowsNonConstant" />
-    <property role="3GE5qa" value="closure-attributes" />
-    <ref role="1TJDcQ" node="6XLqJiNyI6M" resolve="ClosureAttribute" />
-    <node concept="M6xJ_" id="6XLqJiNyIMh" role="lGtFl">
-      <property role="Hh88m" value="allows non constant features" />
-      <node concept="tn0Fv" id="2ZFYisrGF9W" role="HhnKV" />
+  <node concept="1TIwiD" id="6lcsnaOnoLC">
+    <property role="EcuMT" value="7299333833526971496" />
+    <property role="3GE5qa" value="models.builder" />
+    <property role="TrG5h" value="ModelBuilderInitFeature" />
+    <property role="34LRSv" value="feature" />
+    <ref role="1TJDcQ" node="1$Cs7K8W4Fy" resolve="ModelBuilderPart" />
+    <node concept="1TJgyj" id="6lcsnaOnoLE" role="1TKVEi">
+      <property role="IQ2ns" value="7299333833526971498" />
+      <property role="20lmBu" value="fLJjDmT/aggregation" />
+      <property role="20kJfa" value="feature" />
+      <property role="20lbJX" value="fLJekj4/_1" />
+      <ref role="20lvS9" node="6lcsnaGYRnN" resolve="BuilderFeature" />
     </node>
   </node>
-  <node concept="1TIwiD" id="1ViwZ7siZnR">
-    <property role="EcuMT" value="2220982641053398519" />
-    <property role="TrG5h" value="AllowsNative" />
-    <property role="3GE5qa" value="closure-attributes" />
-    <ref role="1TJDcQ" node="6XLqJiNyI6M" resolve="ClosureAttribute" />
-    <node concept="M6xJ_" id="1ViwZ7siZnS" role="lGtFl">
-      <property role="Hh88m" value="allows native features" />
-      <node concept="tn0Fv" id="2ZFYisrGF6K" role="HhnKV" />
-    </node>
-  </node>
-  <node concept="1TIwiD" id="6XLqJiNyI6M">
-    <property role="EcuMT" value="8030317209795092914" />
-    <property role="TrG5h" value="ClosureAttribute" />
-    <property role="3GE5qa" value="closure-attributes" />
+  <node concept="1TIwiD" id="1$Cs7K8W4Fy">
+    <property role="EcuMT" value="1812822528044845794" />
+    <property role="3GE5qa" value="models.builder" />
+    <property role="TrG5h" value="ModelBuilderPart" />
     <property role="R5$K7" value="true" />
-    <ref role="1TJDcQ" to="tpck:4uZwTti3_$T" resolve="Attribute" />
-    <node concept="M6xJ_" id="6XLqJiNyIvt" role="lGtFl" />
+    <ref role="1TJDcQ" to="tpck:gw2VY9q" resolve="BaseConcept" />
+    <node concept="PrWs8" id="1$Cs7K8W4Fz" role="PzmwI">
+      <ref role="PrY4T" node="2UMr9kjxYag" resolve="IInnerProvider" />
+    </node>
   </node>
 </model>
 

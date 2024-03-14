@@ -1673,6 +1673,207 @@
                 <ref role="2AI5Lk" to="wyt6:~Override" resolve="Override" />
               </node>
             </node>
+            <node concept="2tJIrI" id="3r$WgutrdGk" role="jymVt" />
+            <node concept="312cEg" id="3r$WgutqGgQ" role="jymVt">
+              <property role="TrG5h" value="dependencies" />
+              <node concept="3Tm6S6" id="3r$WgutqGgR" role="1B3o_S" />
+              <node concept="3uibUv" id="3r$WgutqGgS" role="1tU5fm">
+                <ref role="3uigEE" to="33ny:~List" resolve="List" />
+                <node concept="3uibUv" id="3r$WgutqGgT" role="11_B2D">
+                  <ref role="3uigEE" to="t4tl:~INativeGroup" resolve="INativeGroup" />
+                </node>
+              </node>
+              <node concept="10Nm6u" id="3r$WgutqGgU" role="33vP2m" />
+            </node>
+            <node concept="312cEg" id="3r$WgutqGgV" role="jymVt">
+              <property role="TrG5h" value="dependents" />
+              <node concept="3Tm6S6" id="3r$WgutqGgW" role="1B3o_S" />
+              <node concept="3uibUv" id="3r$WgutqGgX" role="1tU5fm">
+                <ref role="3uigEE" to="33ny:~List" resolve="List" />
+                <node concept="3uibUv" id="3r$WgutqGgY" role="11_B2D">
+                  <ref role="3uigEE" to="t4tl:~INativeGroup" resolve="INativeGroup" />
+                </node>
+              </node>
+              <node concept="10Nm6u" id="3r$WgutqGgZ" role="33vP2m" />
+            </node>
+            <node concept="2tJIrI" id="3r$WgutqK5v" role="jymVt" />
+            <node concept="3clFb_" id="3r$WgutqMA8" role="jymVt">
+              <property role="TrG5h" value="getDependencies" />
+              <node concept="3Tm1VV" id="3r$WgutqMA9" role="1B3o_S" />
+              <node concept="3uibUv" id="3r$WgutqMAa" role="3clF45">
+                <ref role="3uigEE" to="33ny:~List" resolve="List" />
+                <node concept="3uibUv" id="3r$WgutqMAb" role="11_B2D">
+                  <ref role="3uigEE" to="t4tl:~INativeGroup" resolve="INativeGroup" />
+                </node>
+              </node>
+              <node concept="3clFbS" id="3r$WgutqMAc" role="3clF47">
+                <node concept="3clFbJ" id="3r$WgutqMAd" role="3cqZAp">
+                  <node concept="3clFbS" id="3r$WgutqMAe" role="3clFbx">
+                    <node concept="3clFbF" id="3r$WgutqMAf" role="3cqZAp">
+                      <node concept="37vLTI" id="3r$WgutqMAg" role="3clFbG">
+                        <node concept="2ShNRf" id="3r$WgutqMAh" role="37vLTx">
+                          <node concept="1pGfFk" id="3r$WgutqMAi" role="2ShVmc">
+                            <ref role="37wK5l" to="33ny:~ArrayList.&lt;init&gt;()" resolve="ArrayList" />
+                            <node concept="3uibUv" id="3r$WgutqMAj" role="1pMfVU">
+                              <ref role="3uigEE" to="t4tl:~INativeGroup" resolve="INativeGroup" />
+                            </node>
+                          </node>
+                        </node>
+                        <node concept="37vLTw" id="3r$WgutqMAk" role="37vLTJ">
+                          <ref role="3cqZAo" node="3r$WgutqGgQ" resolve="runsBefore" />
+                        </node>
+                      </node>
+                    </node>
+                    <node concept="3clFbF" id="3r$WgutqMAl" role="3cqZAp">
+                      <node concept="2OqwBi" id="3r$WgutqMAm" role="3clFbG">
+                        <node concept="37vLTw" id="3r$WgutqMAn" role="2Oq$k0">
+                          <ref role="3cqZAo" node="3r$WgutqGgQ" resolve="runsBefore" />
+                        </node>
+                        <node concept="liA8E" id="3r$WgutqMAo" role="2OqNvi">
+                          <ref role="37wK5l" to="33ny:~List.add(java.lang.Object)" resolve="add" />
+                          <node concept="37vLTw" id="3r$WgutsgT9" role="37wK5m">
+                            <ref role="3cqZAo" node="4ONkEkNhKuU" resolve="NATIVE_GROUP" />
+                            <node concept="5jKBG" id="3r$WgutsgTj" role="lGtFl">
+                              <ref role="v9R2y" node="3$gBO$Dp_IT" resolve="getNativeGroup" />
+                              <node concept="30H73N" id="3r$WgutsgTk" role="v9R3O" />
+                              <node concept="3NFfHV" id="3r$WgutsgTl" role="5jGum">
+                                <node concept="3clFbS" id="3r$WgutsgTm" role="2VODD2">
+                                  <node concept="3clFbF" id="3r$WgutsgTn" role="3cqZAp">
+                                    <node concept="2OqwBi" id="3r$WgutsgTo" role="3clFbG">
+                                      <node concept="30H73N" id="3r$WgutsgTp" role="2Oq$k0" />
+                                      <node concept="3TrEf2" id="3r$WgutsgTq" role="2OqNvi">
+                                        <ref role="3Tt5mk" to="7ggn:3r$WgusVMSp" resolve="nativeGroup" />
+                                      </node>
+                                    </node>
+                                  </node>
+                                </node>
+                              </node>
+                            </node>
+                          </node>
+                        </node>
+                      </node>
+                      <node concept="1WS0z7" id="3r$WgutqMAy" role="lGtFl">
+                        <node concept="3JmXsc" id="3r$WgutqMAz" role="3Jn$fo">
+                          <node concept="3clFbS" id="3r$WgutqMA$" role="2VODD2">
+                            <node concept="3clFbF" id="3r$WgutqMA_" role="3cqZAp">
+                              <node concept="2OqwBi" id="3r$WgutqMAA" role="3clFbG">
+                                <node concept="30H73N" id="3r$WgutqMAB" role="2Oq$k0" />
+                                <node concept="3Tsc0h" id="3r$WgutqMAC" role="2OqNvi">
+                                  <ref role="3TtcxE" to="7ggn:3r$WgusVMSD" resolve="dependencies" />
+                                </node>
+                              </node>
+                            </node>
+                          </node>
+                        </node>
+                      </node>
+                    </node>
+                  </node>
+                  <node concept="3clFbC" id="3r$WgutqMAD" role="3clFbw">
+                    <node concept="10Nm6u" id="3r$WgutqMAE" role="3uHU7w" />
+                    <node concept="37vLTw" id="3r$WgutqMAF" role="3uHU7B">
+                      <ref role="3cqZAo" node="3r$WgutqGgQ" resolve="runsBefore" />
+                    </node>
+                  </node>
+                </node>
+                <node concept="3cpWs6" id="3r$WgutqMAG" role="3cqZAp">
+                  <node concept="37vLTw" id="3r$WgutqMAH" role="3cqZAk">
+                    <ref role="3cqZAo" node="3r$WgutqGgQ" resolve="runsBefore" />
+                  </node>
+                </node>
+              </node>
+              <node concept="2AHcQZ" id="3r$WgutqMAI" role="2AJF6D">
+                <ref role="2AI5Lk" to="wyt6:~Override" resolve="Override" />
+              </node>
+            </node>
+            <node concept="2tJIrI" id="3r$WgutqMAJ" role="jymVt" />
+            <node concept="3clFb_" id="3r$WgutqMAK" role="jymVt">
+              <property role="TrG5h" value="getDependents" />
+              <node concept="3Tm1VV" id="3r$WgutqMAL" role="1B3o_S" />
+              <node concept="3uibUv" id="3r$WgutqMAM" role="3clF45">
+                <ref role="3uigEE" to="33ny:~List" resolve="List" />
+                <node concept="3uibUv" id="3r$WgutqMAN" role="11_B2D">
+                  <ref role="3uigEE" to="t4tl:~INativeGroup" resolve="INativeGroup" />
+                </node>
+              </node>
+              <node concept="3clFbS" id="3r$WgutqMAO" role="3clF47">
+                <node concept="3clFbJ" id="3r$WgutqMAP" role="3cqZAp">
+                  <node concept="3clFbS" id="3r$WgutqMAQ" role="3clFbx">
+                    <node concept="3clFbF" id="3r$WgutqMAR" role="3cqZAp">
+                      <node concept="37vLTI" id="3r$WgutqMAS" role="3clFbG">
+                        <node concept="2ShNRf" id="3r$WgutqMAT" role="37vLTx">
+                          <node concept="1pGfFk" id="3r$WgutqMAU" role="2ShVmc">
+                            <ref role="37wK5l" to="33ny:~ArrayList.&lt;init&gt;()" resolve="ArrayList" />
+                            <node concept="3uibUv" id="3r$WgutqMAV" role="1pMfVU">
+                              <ref role="3uigEE" to="t4tl:~INativeGroup" resolve="INativeGroup" />
+                            </node>
+                          </node>
+                        </node>
+                        <node concept="37vLTw" id="3r$WgutqMAW" role="37vLTJ">
+                          <ref role="3cqZAo" node="3r$WgutqGgV" resolve="runsAfter" />
+                        </node>
+                      </node>
+                    </node>
+                    <node concept="3clFbF" id="3r$WgutqMAX" role="3cqZAp">
+                      <node concept="2OqwBi" id="3r$WgutqMAY" role="3clFbG">
+                        <node concept="37vLTw" id="3r$WgutqMAZ" role="2Oq$k0">
+                          <ref role="3cqZAo" node="3r$WgutqGgV" resolve="runsAfter" />
+                        </node>
+                        <node concept="liA8E" id="3r$WgutqMB0" role="2OqNvi">
+                          <ref role="37wK5l" to="33ny:~List.add(java.lang.Object)" resolve="add" />
+                          <node concept="37vLTw" id="3r$Wgutsjsx" role="37wK5m">
+                            <ref role="3cqZAo" node="4ONkEkNhKuU" resolve="NATIVE_GROUP" />
+                            <node concept="5jKBG" id="3r$WgutsjsF" role="lGtFl">
+                              <ref role="v9R2y" node="3$gBO$Dp_IT" resolve="getNativeGroup" />
+                              <node concept="30H73N" id="3r$WgutsjsG" role="v9R3O" />
+                              <node concept="3NFfHV" id="3r$WgutsjsH" role="5jGum">
+                                <node concept="3clFbS" id="3r$WgutsjsI" role="2VODD2">
+                                  <node concept="3clFbF" id="3r$WgutsjsJ" role="3cqZAp">
+                                    <node concept="2OqwBi" id="3r$WgutsjsK" role="3clFbG">
+                                      <node concept="30H73N" id="3r$WgutsjsL" role="2Oq$k0" />
+                                      <node concept="3TrEf2" id="3r$WgutsjsM" role="2OqNvi">
+                                        <ref role="3Tt5mk" to="7ggn:3r$WgusVMSp" resolve="nativeGroup" />
+                                      </node>
+                                    </node>
+                                  </node>
+                                </node>
+                              </node>
+                            </node>
+                          </node>
+                        </node>
+                      </node>
+                      <node concept="1WS0z7" id="3r$WgutqMBa" role="lGtFl">
+                        <node concept="3JmXsc" id="3r$WgutqMBb" role="3Jn$fo">
+                          <node concept="3clFbS" id="3r$WgutqMBc" role="2VODD2">
+                            <node concept="3clFbF" id="3r$WgutqMBd" role="3cqZAp">
+                              <node concept="2OqwBi" id="3r$WgutqMBe" role="3clFbG">
+                                <node concept="30H73N" id="3r$WgutqMBf" role="2Oq$k0" />
+                                <node concept="3Tsc0h" id="3r$WgutqMBg" role="2OqNvi">
+                                  <ref role="3TtcxE" to="7ggn:3r$WgusVMSI" resolve="dependents" />
+                                </node>
+                              </node>
+                            </node>
+                          </node>
+                        </node>
+                      </node>
+                    </node>
+                  </node>
+                  <node concept="3clFbC" id="3r$WgutqMBh" role="3clFbw">
+                    <node concept="10Nm6u" id="3r$WgutqMBi" role="3uHU7w" />
+                    <node concept="37vLTw" id="3r$WgutqMBj" role="3uHU7B">
+                      <ref role="3cqZAo" node="3r$WgutqGgV" resolve="runsAfter" />
+                    </node>
+                  </node>
+                </node>
+                <node concept="3cpWs6" id="3r$WgutqMBk" role="3cqZAp">
+                  <node concept="37vLTw" id="3r$WgutqMBl" role="3cqZAk">
+                    <ref role="3cqZAo" node="3r$WgutqGgV" resolve="runsAfter" />
+                  </node>
+                </node>
+              </node>
+              <node concept="2AHcQZ" id="3r$WgutqMBm" role="2AJF6D">
+                <ref role="2AI5Lk" to="wyt6:~Override" resolve="Override" />
+              </node>
+            </node>
           </node>
         </node>
       </node>
