@@ -50,7 +50,7 @@ public interface DAttribute<O, T> extends DFeature {
     static <C, V> DAttribute<C, V> of(String id, String name, IRuleSet ruleSet, boolean syn, boolean optional, boolean composite, int identifyingNr, boolean isPublic, boolean doMatch, Function<C, Object> def, Class<?> cls, SLanguage oppositeLanguage, String opposite, Supplier<SNodeReference> source, Function<C, V> deriver) {
         boolean idAttr = identifyingNr >= 0 && (ruleSet == null || ruleSet.getAnonymousType() != null);
         SetableModifier[] mods = {synthetic.iff(syn), mandatory.iff(idAttr || (!optional && identifyingNr < 0)), containment.iff(composite), match.iff(doMatch), ruleSet == null ? null : IAspect.DIRECTION.get(ruleSet.getAspect())};
-        return idAttr ? new DIdentifyingAttribute(id, name, ruleSet, identifyingNr, cls, source, mods) : //
+        return idAttr ? new DIdentifyingAttribute(id, name, ruleSet, identifyingNr, cls, source, optional, mods) : //
                 deriver != null ? new DConstant(id, name, ruleSet, cls, source, deriver, mods) : //
                         new DObservedAttribute(id, name, ruleSet, identifyingNr >= 0, isPublic, def, cls, opposite != null ? () -> of(oppositeLanguage, opposite) : null, source, mods);
     }
@@ -225,14 +225,16 @@ public interface DAttribute<O, T> extends DFeature {
         private final Supplier<SNodeReference> source;
         private final Class<?>                 cls;
         private final IRuleSet                 ruleSet;
+        private final boolean                  optional;
 
-        public DIdentifyingAttribute(String id, String name, IRuleSet ruleSet, int index, Class<?> cls, Supplier<SNodeReference> source, SetableModifier... modifiers) {
+        public DIdentifyingAttribute(String id, String name, IRuleSet ruleSet, int index, Class<?> cls, Supplier<SNodeReference> source, boolean optional, SetableModifier... modifiers) {
             super(id, null, null, null, null, modifiers);
             this.name = name;
             this.index = index;
             this.source = source;
             this.cls = cls;
             this.ruleSet = ruleSet;
+            this.optional = optional;
         }
 
         @Override
@@ -241,7 +243,7 @@ public interface DAttribute<O, T> extends DFeature {
                 throw new NullPointerException("attempt to read null." + this);
             }
             V result = object.get(this);
-            if (result == null) {
+            if (result == null && isMandatory()) {
                 throw new NullPointerException(object + "." + this + "=" + result);
             }
             return result;
@@ -283,7 +285,7 @@ public interface DAttribute<O, T> extends DFeature {
 
         @Override
         public boolean isMandatory() {
-            return true;
+            return !optional;
         }
 
         @Override

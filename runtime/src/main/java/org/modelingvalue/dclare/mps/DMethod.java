@@ -64,4 +64,6 @@ public abstract class DMethod<R> implements DFeature {
 
     public abstract String id();
 
+    public abstract Class<?> resultCls();
+
 }

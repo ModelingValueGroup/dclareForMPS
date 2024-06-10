@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.Objects;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
+import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.collections.util.Triple;
@@ -42,8 +43,11 @@ public class DMutableStruct extends DIdentifiedMutable implements SStructObject 
     @SuppressWarnings("unchecked")
     public static DMutableStruct of(SStructClass cls, Object[] identity) {
         assert !cls.isValueClass();
+        List<DAttribute<?, ?>> id = cls.getIdentity();
         for (int i = 0; i < identity.length; i++) {
-            Objects.requireNonNull(identity[i]);
+            if (id.get(i).isMandatory()) {
+                Objects.requireNonNull(identity[i]);
+            }
         }
         identity = Arrays.copyOf(identity, identity.length + 1);
         identity[identity.length - 1] = cls;
