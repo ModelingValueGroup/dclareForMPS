@@ -9928,5 +9928,31 @@
       <ref role="1YaFvo" to="7ggn:4$MeK2bmw9s" resolve="Attribute" />
     </node>
   </node>
+  <node concept="1YbPZF" id="7HxEATzeWeN">
+    <property role="TrG5h" value="typeof_StructClassOperation" />
+    <property role="3GE5qa" value="structs" />
+    <node concept="3clFbS" id="7HxEATzeWeO" role="18ibNy">
+      <node concept="1Z5TYs" id="7HxEATzeWCi" role="3cqZAp">
+        <node concept="mw_s8" id="7HxEATzeWCj" role="1ZfhK$">
+          <node concept="1Z2H0r" id="7HxEATzeWCk" role="mwGJk">
+            <node concept="1YBJjd" id="7HxEATzeWCl" role="1Z2MuG">
+              <ref role="1YBMHb" node="7HxEATzeWeQ" resolve="structClassOperation" />
+            </node>
+          </node>
+        </node>
+        <node concept="mw_s8" id="7HxEATzeWCm" role="1ZfhKB">
+          <node concept="2pJPEk" id="7HxEATzeWCn" role="mwGJk">
+            <node concept="2pJPED" id="7HxEATzeWCo" role="2pJPEn">
+              <ref role="2pJxaS" to="7ggn:7HxEATz95uz" resolve="StructClassType" />
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+    <node concept="1YaCAy" id="7HxEATzeWeQ" role="1YuTPh">
+      <property role="TrG5h" value="structClassOperation" />
+      <ref role="1YaFvo" to="7ggn:7HxEATyVRwN" resolve="StructClassOperation" />
+    </node>
+  </node>
 </model>
 

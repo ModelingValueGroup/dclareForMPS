@@ -6650,6 +6650,50 @@
         </node>
       </node>
     </node>
+    <node concept="3aamgX" id="7HxEATyWAg0" role="3acgRq">
+      <ref role="30HIoZ" to="tpee:hqOqwz4" resolve="DotExpression" />
+      <node concept="gft3U" id="7HxEATyWAg1" role="1lVwrX">
+        <node concept="2YIFZM" id="7HxEATz4MHI" role="gfFT$">
+          <ref role="37wK5l" to="u4ym:7HxEATz0Gr7" resolve="sStructClass" />
+          <ref role="1Pybhc" to="u4ym:30fQumnG8Au" resolve="DclareUtil" />
+          <node concept="10Nm6u" id="7HxEATz4MHJ" role="37wK5m">
+            <node concept="29HgVG" id="7HxEATz4MHK" role="lGtFl">
+              <node concept="3NFfHV" id="7HxEATz4MHL" role="3NFExx">
+                <node concept="3clFbS" id="7HxEATz4MHM" role="2VODD2">
+                  <node concept="3clFbF" id="7HxEATz4MHN" role="3cqZAp">
+                    <node concept="2OqwBi" id="7HxEATz4MHO" role="3clFbG">
+                      <node concept="3TrEf2" id="7HxEATz4MHP" role="2OqNvi">
+                        <ref role="3Tt5mk" to="tpee:hqOq$gm" resolve="operand" />
+                      </node>
+                      <node concept="30H73N" id="7HxEATz4MHQ" role="2Oq$k0" />
+                    </node>
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+      <node concept="30G5F_" id="7HxEATyWAgo" role="30HLyM">
+        <node concept="3clFbS" id="7HxEATyWAgp" role="2VODD2">
+          <node concept="3clFbF" id="7HxEATyWAgq" role="3cqZAp">
+            <node concept="2OqwBi" id="7HxEATyWAgr" role="3clFbG">
+              <node concept="2OqwBi" id="7HxEATyWAgs" role="2Oq$k0">
+                <node concept="30H73N" id="7HxEATyWAgt" role="2Oq$k0" />
+                <node concept="3TrEf2" id="7HxEATyWAgu" role="2OqNvi">
+                  <ref role="3Tt5mk" to="tpee:hqOqNr4" />
+                </node>
+              </node>
+              <node concept="1mIQ4w" id="7HxEATyWAgv" role="2OqNvi">
+                <node concept="chp4Y" id="7HxEATyWAgw" role="cj9EA">
+                  <ref role="cht4Q" to="7ggn:7HxEATyVRwN" resolve="StructClassOperation" />
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
     <node concept="3aamgX" id="4xSxjgU2nHn" role="3acgRq">
       <ref role="30HIoZ" to="tpee:hqOqwz4" resolve="DotExpression" />
       <node concept="gft3U" id="4xSxjgU2FPo" role="1lVwrX">
@@ -8454,6 +8498,14 @@
       <node concept="gft3U" id="3Qetf3dafkd" role="1lVwrX">
         <node concept="3uibUv" id="25AJqx21E4O" role="gfFT$">
           <ref role="3uigEE" to="t4tl:~SStructObject" resolve="SStructObject" />
+        </node>
+      </node>
+    </node>
+    <node concept="3aamgX" id="7HxEATz98s4" role="3acgRq">
+      <ref role="30HIoZ" to="7ggn:4$bpWrNHO7E" resolve="StructClass" />
+      <node concept="gft3U" id="7HxEATz98s5" role="1lVwrX">
+        <node concept="3uibUv" id="7HxEATz98s6" role="gfFT$">
+          <ref role="3uigEE" to="t4tl:~SStructClass" resolve="SStructClass" />
         </node>
       </node>
     </node>
@@ -22712,6 +22764,15 @@
               </node>
             </node>
           </node>
+        </node>
+      </node>
+    </node>
+    <node concept="3aamgX" id="7HxEATz9Sa6" role="3aUrZf">
+      <property role="36QftV" value="true" />
+      <ref role="30HIoZ" to="7ggn:7HxEATz95uz" resolve="StructClassType" />
+      <node concept="gft3U" id="7HxEATz9Sa7" role="1lVwrX">
+        <node concept="3VsKOn" id="7HxEATz9Sqm" role="gfFT$">
+          <ref role="3VsUkX" to="t4tl:~SStructClass" resolve="SStructClass" />
         </node>
       </node>
     </node>

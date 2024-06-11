@@ -6113,6 +6113,32 @@
       </node>
     </node>
     <node concept="2tJIrI" id="25AJqx2bzI8" role="jymVt" />
+    <node concept="2YIFZL" id="7HxEATz0Gr7" role="jymVt">
+      <property role="TrG5h" value="sStructClass" />
+      <node concept="37vLTG" id="7HxEATz1jhh" role="3clF46">
+        <property role="TrG5h" value="struct" />
+        <node concept="3uibUv" id="7HxEATz1tZT" role="1tU5fm">
+          <ref role="3uigEE" to="t4tl:~SStructObject" resolve="SStructObject" />
+        </node>
+      </node>
+      <node concept="3clFbS" id="7HxEATz0Gra" role="3clF47">
+        <node concept="3cpWs6" id="7HxEATz1OcE" role="3cqZAp">
+          <node concept="2OqwBi" id="7HxEATz29Vp" role="3cqZAk">
+            <node concept="37vLTw" id="7HxEATz1Z1N" role="2Oq$k0">
+              <ref role="3cqZAo" node="7HxEATz1jhh" resolve="struct" />
+            </node>
+            <node concept="liA8E" id="7HxEATz2kCQ" role="2OqNvi">
+              <ref role="37wK5l" to="t4tl:~SStructObject.getSClass()" resolve="getSClass" />
+            </node>
+          </node>
+        </node>
+      </node>
+      <node concept="3Tm1VV" id="7HxEATyZIcv" role="1B3o_S" />
+      <node concept="3uibUv" id="7HxEATz0xQN" role="3clF45">
+        <ref role="3uigEE" to="t4tl:~SStructClass" resolve="SStructClass" />
+      </node>
+    </node>
+    <node concept="2tJIrI" id="7HxEATyZ6pX" role="jymVt" />
     <node concept="2YIFZL" id="2xAA8jguAQ4" role="jymVt">
       <property role="TrG5h" value="ancestor" />
       <node concept="3clFbS" id="2xAA8jguAQa" role="3clF47">

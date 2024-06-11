@@ -22092,5 +22092,31 @@
       <node concept="3clFbS" id="6lcsnaOnoMZ" role="2VODD2" />
     </node>
   </node>
+  <node concept="13h7C7" id="7HxEATz9H9D">
+    <property role="3GE5qa" value="structs" />
+    <ref role="13h7C2" to="7ggn:7HxEATz95uz" resolve="StructClassType" />
+    <node concept="13i0hz" id="7HxEATz9H9Y" role="13h7CS">
+      <property role="13i0iv" value="false" />
+      <property role="TrG5h" value="getJavaType" />
+      <property role="13i0it" value="false" />
+      <ref role="13i0hy" to="tpek:hEwIzO1" resolve="getJavaType" />
+      <node concept="3Tm1VV" id="7HxEATz9H9Z" role="1B3o_S" />
+      <node concept="3clFbS" id="7HxEATz9Ha0" role="3clF47">
+        <node concept="3clFbF" id="7HxEATz9Ha1" role="3cqZAp">
+          <node concept="2c44tf" id="7HxEATz9Ha2" role="3clFbG">
+            <node concept="3uibUv" id="7HxEATz9Ha3" role="2c44tc">
+              <ref role="3uigEE" to="t4tl:~SStructClass" resolve="SStructClass" />
+            </node>
+          </node>
+        </node>
+      </node>
+      <node concept="3Tqbb2" id="7HxEATz9Ha4" role="3clF45">
+        <ref role="ehGHo" to="tpee:fz3vP1H" resolve="Type" />
+      </node>
+    </node>
+    <node concept="13hLZK" id="7HxEATz9H9E" role="13h7CW">
+      <node concept="3clFbS" id="7HxEATz9H9F" role="2VODD2" />
+    </node>
+  </node>
 </model>
 
