@@ -10574,7 +10574,7 @@
     <node concept="3Tm1VV" id="5QJfFCjNkzV" role="1B3o_S" />
   </node>
   <node concept="312cEu" id="5uiQOXmFP5Y">
-    <property role="TrG5h" value="DPanel" />
+    <property role="TrG5h" value="JCanvas" />
     <node concept="312cEg" id="2kRpT$EZz37" role="jymVt">
       <property role="TrG5h" value="hints" />
       <node concept="3Tm6S6" id="2kRpT$EZx9J" role="1B3o_S" />
