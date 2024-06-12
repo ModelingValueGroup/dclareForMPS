@@ -43,7 +43,7 @@ public class DMutableStruct extends DIdentifiedMutable implements SStructObject 
     @SuppressWarnings("unchecked")
     public static DMutableStruct of(SStructClass cls, Object[] identity) {
         assert !cls.isValueClass();
-        List<DAttribute<?, ?>> id = cls.getIdentity();
+        List<DAttribute<?, ?>> id = cls.getCompleteIdentity();
         for (int i = 0; i < identity.length; i++) {
             if (id.get(i).isMandatory()) {
                 Objects.requireNonNull(identity[i]);
@@ -89,7 +89,7 @@ public class DMutableStruct extends DIdentifiedMutable implements SStructObject 
     @Override
     public void dActivate(LeafTransaction tx) {
         super.dActivate(tx);
-        for (DAttribute id : getSClass().getIdentity()) {
+        for (DAttribute id : getSClass().getCompleteIdentity()) {
             if (id.isComposite()) {
                 id.activate(this);
             }

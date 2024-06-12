@@ -61,7 +61,7 @@ public class DValueStruct extends DIdentifiedValue implements SStructObject {
     @SuppressWarnings("rawtypes")
     @Override
     public java.util.List<DAttribute> getNonSyntheticAttributes() {
-        return getSClass().getIdentity().filter(DAttribute.class).toList();
+        return getSClass().getCompleteIdentity().filter(DAttribute.class).toList();
     }
 
     @Override

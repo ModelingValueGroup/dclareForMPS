@@ -40,7 +40,7 @@ public class DStructClass extends DObjectType<Triple<Set<SLanguage>, Set<String>
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
     public Set<DAttribute> getAttributes(Set<IRuleSet> ruleSets) {
-        return (Set) Collection.concat(getSStructClass().getIdentity(), ruleSets.flatMap(rs -> Collection.of(rs.getStructAttributes(getSStructClass(), getAnonymousTypes())))).asSet();
+        return (Set) Collection.concat(getSStructClass().getCompleteIdentity(), ruleSets.flatMap(rs -> Collection.of(rs.getStructAttributes(getSStructClass(), getAnonymousTypes())))).asSet();
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})

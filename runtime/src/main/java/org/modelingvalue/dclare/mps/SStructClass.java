@@ -21,6 +21,7 @@
 package org.modelingvalue.dclare.mps;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
+import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.Set;
 
@@ -42,6 +43,7 @@ public class SStructClass {
     private final Set<SStructClass>      supers;
     private final SLanguage              language;
     private final boolean                isValueClass;
+    private final List<DAttribute<?, ?>> completeIdentity;
 
     private SStructClass(String id, String name, SLanguage language, List<DAttribute<?, ?>> identity, Set<SStructClass> supers, boolean isValueClass) {
         super();
@@ -51,6 +53,7 @@ public class SStructClass {
         this.supers = supers;
         this.identity = identity;
         this.isValueClass = isValueClass;
+        this.completeIdentity = Collection.concat(supers.flatMap(SStructClass::getCompleteIdentity), identity).distinct().asList();
     }
 
     @Override
@@ -91,6 +94,10 @@ public class SStructClass {
 
     public List<DAttribute<?, ?>> getIdentity() {
         return identity;
+    }
+
+    public List<DAttribute<?, ?>> getCompleteIdentity() {
+        return completeIdentity;
     }
 
     public Set<SStructClass> getSupers() {
