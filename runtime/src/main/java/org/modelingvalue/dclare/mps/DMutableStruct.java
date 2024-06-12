@@ -45,7 +45,7 @@ public class DMutableStruct extends DIdentifiedMutable implements SStructObject 
         assert !cls.isValueClass();
         List<DAttribute<?, ?>> id = cls.getIdentity();
         for (int i = 0; i < identity.length; i++) {
-            if (id.get(i).isMandatory()) {
+            if (i >= id.size() || id.get(i).isMandatory()) {
                 Objects.requireNonNull(identity[i]);
             }
         }
