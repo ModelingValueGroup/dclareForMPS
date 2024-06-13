@@ -10,6 +10,7 @@
     <import index="q3xn" ref="r:3ec44d77-eb4f-4600-add0-5e671af45a7b(DclareGui.rules)" />
     <import index="u4ym" ref="r:1a96ceaa-2946-43e0-af3f-cd05d77ee6d1(DclareMPSRuntime.util)" />
     <import index="hypd" ref="r:aa31e43e-9240-4f4d-b6db-5c1c9a86c59e(jetbrains.mps.lang.project.structure)" />
+    <import index="dxuu" ref="6354ebe7-c22a-4a0f-ac54-50b52ab9b065/java:javax.swing(JDK/)" />
     <import index="53d4" ref="r:0049729d-ba70-461b-8d8a-b0755e3bfabb(DclareGui.structure)" implicit="true" />
     <import index="tpck" ref="r:00000000-0000-4000-0000-011c89590288(jetbrains.mps.lang.core.structure)" implicit="true" />
     <import index="tpcu" ref="r:00000000-0000-4000-0000-011c89590282(jetbrains.mps.lang.core.behavior)" implicit="true" />
@@ -366,9 +367,9 @@
     </node>
   </node>
   <node concept="PKFIW" id="31sbKqyPMrZ">
-    <property role="TrG5h" value="IEditorComponent" />
+    <property role="TrG5h" value="IRootComponentComponent" />
     <property role="3GE5qa" value="gui" />
-    <ref role="1XX52x" to="53d4:3psr82$c6ii" resolve="IEditor" />
+    <ref role="1XX52x" to="53d4:3psr82$c6ii" resolve="IRootComponent" />
     <node concept="3EZMnI" id="Vg5FswJUJu" role="2wV5jI">
       <node concept="2iRfu4" id="6FHmkWLdGpn" role="2iSdaV" />
       <node concept="3gTLQM" id="Vg5FswJUDm" role="3EZMnx">
@@ -387,16 +388,16 @@
       </node>
       <node concept="pkWqt" id="Vg5FswJUPB" role="pqm2j">
         <node concept="3clFbS" id="Vg5FswJUPC" role="2VODD2">
-          <node concept="3cpWs8" id="1lgiJwuJ6d7" role="3cqZAp">
-            <node concept="3cpWsn" id="1lgiJwuJ6d8" role="3cpWs9">
-              <property role="TrG5h" value="jCanvas" />
-              <node concept="3uibUv" id="1lgiJwuJ61F" role="1tU5fm">
-                <ref role="3uigEE" to="u4ym:5uiQOXmFP5Y" resolve="DPanel" />
+          <node concept="3cpWs8" id="1HdCFYSJwNQ" role="3cqZAp">
+            <node concept="3cpWsn" id="1HdCFYSJwNR" role="3cpWs9">
+              <property role="TrG5h" value="jComponent" />
+              <node concept="3uibUv" id="1HdCFYSJwkH" role="1tU5fm">
+                <ref role="3uigEE" to="dxuu:~JComponent" resolve="JComponent" />
               </node>
-              <node concept="2OqwBi" id="1lgiJwuJ6d9" role="33vP2m">
-                <node concept="pncrf" id="1lgiJwuJ6da" role="2Oq$k0" />
-                <node concept="32jkxy" id="1lgiJwuJ6db" role="2OqNvi">
-                  <ref role="3cqZAo" to="q3xn:Vg5FswJWWZ" resolve="dPanel" />
+              <node concept="2OqwBi" id="1HdCFYSJwNS" role="33vP2m">
+                <node concept="pncrf" id="1HdCFYSJwNT" role="2Oq$k0" />
+                <node concept="32jkxy" id="1HdCFYSJwNU" role="2OqNvi">
+                  <ref role="3cqZAo" to="q3xn:Vg5FswJWWZ" resolve="jComponent" />
                 </node>
               </node>
             </node>
@@ -421,7 +422,7 @@
             <node concept="3y3z36" id="6FHmkWK6eGP" role="3clFbw">
               <node concept="10Nm6u" id="6FHmkWK6eXU" role="3uHU7w" />
               <node concept="37vLTw" id="6FHmkWK6dg1" role="3uHU7B">
-                <ref role="3cqZAo" node="1lgiJwuJ6d8" resolve="dPanel" />
+                <ref role="3cqZAo" node="1HdCFYSJwNR" resolve="jComponent" />
               </node>
             </node>
             <node concept="9aQIb" id="6FHmkWK6f2L" role="9aQIa">
@@ -1119,52 +1120,6 @@
                 <node concept="0IXxy" id="2Q8IysV1JCb" role="2Oq$k0" />
                 <node concept="3TrcHB" id="2Q8IysWbHEl" role="2OqNvi">
                   <ref role="3TsBF5" to="53d4:2Q8IysVI4Ud" resolve="autoLayout" />
-                </node>
-              </node>
-            </node>
-          </node>
-        </node>
-      </node>
-    </node>
-  </node>
-  <node concept="PKFIW" id="7HxEAT$Z6CF">
-    <property role="3GE5qa" value="grid" />
-    <property role="TrG5h" value="IGridComponent" />
-    <ref role="1XX52x" to="53d4:7HxEAT$Z6BK" resolve="IGridContainer" />
-    <node concept="3EZMnI" id="7HxEAT$Z8Zr" role="2wV5jI">
-      <node concept="2iRfu4" id="7HxEAT$Z8Zs" role="2iSdaV" />
-      <node concept="3gTLQM" id="7HxEAT$Z8Zt" role="3EZMnx">
-        <node concept="3Fmcul" id="7HxEAT$Z8Zu" role="3FoqZy">
-          <node concept="3clFbS" id="7HxEAT$Z8Zv" role="2VODD2">
-            <node concept="3clFbF" id="7HxEAT$Z8Zw" role="3cqZAp">
-              <node concept="2OqwBi" id="7HxEAT$Z8Zx" role="3clFbG">
-                <node concept="pncrf" id="7HxEAT$Z8Zy" role="2Oq$k0" />
-                <node concept="32jkxy" id="7HxEAT$Z8Zz" role="2OqNvi">
-                  <ref role="3cqZAo" to="q3xn:7HxEAT_7WiC" resolve="dPanel" />
-                </node>
-              </node>
-            </node>
-          </node>
-        </node>
-      </node>
-      <node concept="pkWqt" id="7HxEAT$Z8Z$" role="pqm2j">
-        <node concept="3clFbS" id="7HxEAT$Z8Z_" role="2VODD2">
-          <node concept="3clFbF" id="7HxEATBTMkC" role="3cqZAp">
-            <node concept="2OqwBi" id="7HxEATBTMxu" role="3clFbG">
-              <node concept="pncrf" id="7HxEATBTMkB" role="2Oq$k0" />
-              <node concept="2$Gk$L" id="7HxEATBTN1w" role="2OqNvi">
-                <ref role="37wK5l" to="q3xn:7HxEATBTvSO" resolve="update" />
-                <node concept="1Q80Hx" id="7HxEATBTNgv" role="37wK5m" />
-              </node>
-            </node>
-          </node>
-          <node concept="3clFbF" id="7HxEAT_dBas" role="3cqZAp">
-            <node concept="3y3z36" id="7HxEAT_dFCM" role="3clFbG">
-              <node concept="10Nm6u" id="7HxEAT_dGbX" role="3uHU7w" />
-              <node concept="2OqwBi" id="7HxEAT$Z8ZD" role="3uHU7B">
-                <node concept="pncrf" id="7HxEAT$Z8ZE" role="2Oq$k0" />
-                <node concept="32jkxy" id="7HxEAT$Z8ZF" role="2OqNvi">
-                  <ref role="3cqZAo" to="q3xn:7HxEAT_7WiC" resolve="jPanel" />
                 </node>
               </node>
             </node>

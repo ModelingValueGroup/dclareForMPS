@@ -138,7 +138,7 @@
     </node>
   </node>
   <node concept="PlHQZ" id="3psr82$c6ii">
-    <property role="TrG5h" value="IEditor" />
+    <property role="TrG5h" value="IRootComponent" />
     <property role="EcuMT" value="699348237883893817" />
     <property role="3GE5qa" value="gui" />
   </node>
@@ -159,7 +159,7 @@
       <ref role="20lvS9" node="31sbKqyPLDe" resolve="NodeLayout" />
     </node>
     <node concept="PrWs8" id="3psr82$cO_x" role="PrDN$">
-      <ref role="PrY4T" node="3psr82$c6ii" resolve="IEditor" />
+      <ref role="PrY4T" node="3psr82$c6ii" resolve="IRootComponent" />
     </node>
   </node>
   <node concept="1TIwiD" id="67eN9QkffP5">
@@ -277,11 +277,6 @@
       <property role="20lbJX" value="fLJekj4/_1" />
       <ref role="20lvS9" to="7ggn:4$bpWrNHO7E" resolve="StructClass" />
     </node>
-  </node>
-  <node concept="PlHQZ" id="7HxEAT$Z6BK">
-    <property role="EcuMT" value="8890574530523458032" />
-    <property role="TrG5h" value="IGridContainer" />
-    <property role="3GE5qa" value="grid" />
   </node>
 </model>
 
