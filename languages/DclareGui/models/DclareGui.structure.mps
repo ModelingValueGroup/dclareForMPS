@@ -280,8 +280,8 @@
   </node>
   <node concept="PlHQZ" id="7HxEAT$Z6BK">
     <property role="EcuMT" value="8890574530523458032" />
-    <property role="TrG5h" value="IListContainer" />
-    <property role="3GE5qa" value="list" />
+    <property role="TrG5h" value="IGridContainer" />
+    <property role="3GE5qa" value="grid" />
   </node>
 </model>
 

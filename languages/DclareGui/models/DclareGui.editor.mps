@@ -1128,9 +1128,9 @@
     </node>
   </node>
   <node concept="PKFIW" id="7HxEAT$Z6CF">
-    <property role="3GE5qa" value="list" />
-    <property role="TrG5h" value="IListComponent" />
-    <ref role="1XX52x" to="53d4:7HxEAT$Z6BK" resolve="IListContainer" />
+    <property role="3GE5qa" value="grid" />
+    <property role="TrG5h" value="IGridComponent" />
+    <ref role="1XX52x" to="53d4:7HxEAT$Z6BK" resolve="IGridContainer" />
     <node concept="3EZMnI" id="7HxEAT$Z8Zr" role="2wV5jI">
       <node concept="2iRfu4" id="7HxEAT$Z8Zs" role="2iSdaV" />
       <node concept="3gTLQM" id="7HxEAT$Z8Zt" role="3EZMnx">
