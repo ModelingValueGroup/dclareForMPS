@@ -369,7 +369,7 @@
   <node concept="PKFIW" id="31sbKqyPMrZ">
     <property role="TrG5h" value="IRootComponentComponent" />
     <property role="3GE5qa" value="gui" />
-    <ref role="1XX52x" to="53d4:3psr82$c6ii" resolve="IRootComponent" />
+    <ref role="1XX52x" to="53d4:3psr82$c6ii" resolve="ISingleRootComponent" />
     <node concept="3EZMnI" id="Vg5FswJUJu" role="2wV5jI">
       <node concept="2iRfu4" id="6FHmkWLdGpn" role="2iSdaV" />
       <node concept="3gTLQM" id="Vg5FswJUDm" role="3EZMnx">
@@ -483,7 +483,7 @@
           <node concept="VPM3Z" id="7aFw1sr3omY" role="3F10Kt" />
         </node>
         <node concept="3F1sOY" id="7aFw1spS31Q" role="3EZMnx">
-          <ref role="1NtTu8" to="53d4:7aFw1spS2SV" resolve="drawnModuleREf" />
+          <ref role="1NtTu8" to="53d4:7aFw1spS2SV" resolve="drawnModuleREF" />
           <node concept="OXEIz" id="7aFw1spS31Y" role="P5bDN">
             <node concept="1fxSsy" id="7aFw1spS320" role="OY2wv">
               <property role="1ezIyd" value="gWZP3tU/custom_" />
@@ -695,6 +695,15 @@
               </node>
             </node>
           </node>
+        </node>
+        <node concept="3F0ifn" id="7jkrzkZwzCy" role="3EZMnx">
+          <property role="3F0ifm" value="virtual" />
+        </node>
+        <node concept="3F0ifn" id="7jkrzkZw$nN" role="3EZMnx">
+          <property role="3F0ifm" value="package" />
+        </node>
+        <node concept="3F0A7n" id="7jkrzkZwz8x" role="3EZMnx">
+          <ref role="1NtTu8" to="53d4:7jkrzkZwtHY" resolve="virtualPackageFilter" />
         </node>
         <node concept="35HoNQ" id="2Q8IysV1Gde" role="3EZMnx" />
         <node concept="1HlG4h" id="2Q8IysVyELY" role="3EZMnx">
