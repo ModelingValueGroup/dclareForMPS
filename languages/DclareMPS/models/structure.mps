@@ -1959,22 +1959,22 @@
     <ref role="1TJDcQ" to="tpck:4uZwTti3_$T" resolve="Attribute" />
     <node concept="M6xJ_" id="6XLqJiNyIvt" role="lGtFl" />
   </node>
+  <node concept="1TIwiD" id="7HxEATyVRwN">
+    <property role="EcuMT" value="8890574530489055283" />
+    <property role="3GE5qa" value="structs" />
+    <property role="TrG5h" value="StructClassOperation" />
+    <property role="34LRSv" value="class" />
+    <ref role="1TJDcQ" to="tpck:gw2VY9q" resolve="BaseConcept" />
+    <node concept="PrWs8" id="7HxEATyVRxd" role="PzmwI">
+      <ref role="PrY4T" to="tpee:hqOqG0K" resolve="IOperation" />
+    </node>
+  </node>
   <node concept="1TIwiD" id="7HxEATz95uz">
     <property role="EcuMT" value="8890574530492520355" />
     <property role="3GE5qa" value="structs" />
     <property role="TrG5h" value="StructClassType" />
     <property role="34LRSv" value="StructClass" />
     <ref role="1TJDcQ" to="tpee:fz3vP1H" resolve="Type" />
-  </node>
-  <node concept="1TIwiD" id="7HxEATyVRwN">
-    <property role="EcuMT" value="8890574530489055283" />
-    <property role="3GE5qa" value="structs" />
-    <property role="TrG5h" value="StructClassOperation" />
-    <property role="34LRSv" value="class" />
-    <ref role="1TJDcQ" to="tpck:gw2VY9q" />
-    <node concept="PrWs8" id="7HxEATyVRxd" role="PzmwI">
-      <ref role="PrY4T" to="tpee:hqOqG0K" resolve="IOperation" />
-    </node>
   </node>
 </model>
 

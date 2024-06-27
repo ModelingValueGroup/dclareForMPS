@@ -6255,7 +6255,7 @@
                 <node concept="2DA6wF" id="7HxEATyW0QD" role="3uHU7B" />
                 <node concept="359W_D" id="7HxEATyW0QE" role="3uHU7w">
                   <ref role="359W_E" to="tpee:hqOqwz4" resolve="DotExpression" />
-                  <ref role="359W_F" to="tpee:hqOqNr4" />
+                  <ref role="359W_F" to="tpee:hqOqNr4" resolve="operation" />
                 </node>
               </node>
             </node>
@@ -6280,7 +6280,7 @@
                     <node concept="nLn13" id="7HxEATyW0QO" role="1m5AlR" />
                   </node>
                   <node concept="3TrEf2" id="7HxEATyW0QP" role="2OqNvi">
-                    <ref role="3Tt5mk" to="tpee:hqOq$gm" />
+                    <ref role="3Tt5mk" to="tpee:hqOq$gm" resolve="operand" />
                   </node>
                 </node>
                 <node concept="3JvlWi" id="7HxEATyW0QQ" role="2OqNvi" />

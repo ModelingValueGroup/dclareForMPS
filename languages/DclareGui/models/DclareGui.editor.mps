@@ -758,7 +758,7 @@
         </node>
       </node>
       <node concept="PMmxH" id="1CjrrCKbnX3" role="3EZMnx">
-        <ref role="PMmxG" node="31sbKqyPMrZ" resolve="IEditorComponent" />
+        <ref role="PMmxG" node="31sbKqyPMrZ" resolve="IRootComponentComponent" />
       </node>
       <node concept="2w$q5c" id="6E86S2AAv3q" role="2whIAn" />
     </node>
@@ -1072,7 +1072,7 @@
         </node>
       </node>
       <node concept="PMmxH" id="5hEUvARta3a" role="3EZMnx">
-        <ref role="PMmxG" node="31sbKqyPMrZ" resolve="IEditorComponent" />
+        <ref role="PMmxG" node="31sbKqyPMrZ" resolve="IRootComponentComponent" />
       </node>
       <node concept="2w$q5c" id="5hEUvARta3b" role="2whIAn" />
     </node>

@@ -2201,7 +2201,7 @@
             <ref role="37wK5l" node="7KGgScOhm5I" resolve="toSObject" />
             <node concept="2OqwBi" id="7KGgScOnfrT" role="37wK5m">
               <node concept="37vLTw" id="7KGgScOnfrU" role="2Oq$k0">
-                <ref role="3cqZAo" node="7KGgScOnfrK" resolve="attr" />
+                <ref role="3cqZAo" node="7KGgScOnfrK" resolve="meth" />
               </node>
               <node concept="liA8E" id="7KGgScOnfrV" role="2OqNvi">
                 <ref role="37wK5l" to="t4tl:~DMethod.resultCls()" resolve="resultCls" />
@@ -2440,7 +2440,7 @@
                           <node concept="37vLTG" id="7KGgScOhm76" role="1bW2Oz">
                             <property role="TrG5h" value="e" />
                             <node concept="3uibUv" id="7KGgScOhm77" role="1tU5fm">
-                              <ref role="3uigEE" to="33ny:~Map$Entry" resolve="Entry" />
+                              <ref role="3uigEE" to="33ny:~Map$Entry" resolve="Map.Entry" />
                             </node>
                           </node>
                         </node>
@@ -2463,7 +2463,7 @@
                           <node concept="37vLTG" id="7KGgScOhm7f" role="1bW2Oz">
                             <property role="TrG5h" value="e" />
                             <node concept="3uibUv" id="7KGgScOhm7g" role="1tU5fm">
-                              <ref role="3uigEE" to="33ny:~Map$Entry" resolve="Entry" />
+                              <ref role="3uigEE" to="33ny:~Map$Entry" resolve="Map.Entry" />
                             </node>
                           </node>
                         </node>
@@ -3086,7 +3086,7 @@
       <node concept="3clFbS" id="3DB41z9GGc7" role="3clF47">
         <node concept="3cpWs6" id="3DB41z9GGde" role="3cqZAp">
           <node concept="1rXfSq" id="3chl1Bv9tno" role="3cqZAk">
-            <ref role="37wK5l" node="3chl1Bv5enL" resolve="toAttrType" />
+            <ref role="37wK5l" node="3chl1Bv5enL" resolve="toType" />
             <node concept="2OqwBi" id="3chl1Bv9RwE" role="37wK5m">
               <node concept="37vLTw" id="3chl1Bv9RwF" role="2Oq$k0">
                 <ref role="3cqZAo" node="5GTBd9D1Bb5" resolve="attr" />
@@ -3130,10 +3130,10 @@
       <node concept="3clFbS" id="3chl1BvbhWA" role="3clF47">
         <node concept="3cpWs6" id="3chl1BvbhWB" role="3cqZAp">
           <node concept="1rXfSq" id="3chl1BvbhWC" role="3cqZAk">
-            <ref role="37wK5l" node="3chl1Bv5enL" resolve="toAttrType" />
+            <ref role="37wK5l" node="3chl1Bv5enL" resolve="toType" />
             <node concept="2OqwBi" id="3chl1BvbhWD" role="37wK5m">
               <node concept="37vLTw" id="3chl1BvbhWE" role="2Oq$k0">
-                <ref role="3cqZAo" node="3chl1BvbhWw" resolve="attr" />
+                <ref role="3cqZAo" node="3chl1BvbhWw" resolve="meth" />
               </node>
               <node concept="liA8E" id="3chl1BvbhWF" role="2OqNvi">
                 <ref role="37wK5l" to="t4tl:~DMethod.resultCls()" resolve="resultCls" />
@@ -7824,7 +7824,7 @@
                                       </node>
                                     </node>
                                     <node concept="37vLTw" id="7KGgScOpfD3" role="2Oq$k0">
-                                      <ref role="3cqZAo" node="7KGgScOpfCZ" resolve="of" />
+                                      <ref role="3cqZAo" node="7KGgScOpfCZ" resolve="method" />
                                     </node>
                                   </node>
                                 </node>

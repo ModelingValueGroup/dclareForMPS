@@ -6681,7 +6681,7 @@
               <node concept="2OqwBi" id="7HxEATyWAgs" role="2Oq$k0">
                 <node concept="30H73N" id="7HxEATyWAgt" role="2Oq$k0" />
                 <node concept="3TrEf2" id="7HxEATyWAgu" role="2OqNvi">
-                  <ref role="3Tt5mk" to="tpee:hqOqNr4" />
+                  <ref role="3Tt5mk" to="tpee:hqOqNr4" resolve="operation" />
                 </node>
               </node>
               <node concept="1mIQ4w" id="7HxEATyWAgv" role="2OqNvi">
@@ -11743,7 +11743,7 @@
                               <node concept="2OqwBi" id="3chl1BtgLlm" role="2Oq$k0">
                                 <node concept="2OqwBi" id="3chl1BtgLln" role="2Oq$k0">
                                   <node concept="3TrEf2" id="3chl1BtgLlo" role="2OqNvi">
-                                    <ref role="3Tt5mk" to="tpee:fzclF7X" />
+                                    <ref role="3Tt5mk" to="tpee:fzclF7X" resolve="returnType" />
                                   </node>
                                   <node concept="30H73N" id="3chl1BtgLlp" role="2Oq$k0" />
                                 </node>
@@ -11763,7 +11763,7 @@
                 </node>
               </node>
               <node concept="2AHcQZ" id="3chl1BteOlf" role="2AJF6D">
-                <ref role="2AI5Lk" to="wyt6:~Override" />
+                <ref role="2AI5Lk" to="wyt6:~Override" resolve="Override" />
               </node>
             </node>
           </node>
