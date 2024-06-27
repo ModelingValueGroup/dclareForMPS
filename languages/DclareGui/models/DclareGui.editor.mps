@@ -87,7 +87,6 @@
       </concept>
       <concept id="1088185857835" name="jetbrains.mps.lang.editor.structure.InlineEditorComponent" flags="ig" index="1sVBvm" />
       <concept id="1139848536355" name="jetbrains.mps.lang.editor.structure.CellModel_WithRole" flags="ng" index="1$h60E">
-        <property id="1139852716018" name="noTargetText" index="1$x2rV" />
         <property id="1140017977771" name="readOnly" index="1Intyy" />
         <reference id="1140103550593" name="relationDeclaration" index="1NtTu8" />
       </concept>
@@ -505,7 +504,7 @@
           <node concept="VPM3Z" id="7aFw1sr3omY" role="3F10Kt" />
         </node>
         <node concept="3F1sOY" id="7aFw1spS31Q" role="3EZMnx">
-          <ref role="1NtTu8" to="53d4:7aFw1spS2SV" resolve="drawnModuleREF" />
+          <ref role="1NtTu8" to="53d4:7aFw1spS2SV" resolve="drawnModuleREf" />
           <node concept="OXEIz" id="7aFw1spS31Y" role="P5bDN">
             <node concept="1fxSsy" id="7aFw1spS320" role="OY2wv">
               <property role="1ezIyd" value="gWZP3tU/custom_" />
@@ -726,7 +725,6 @@
           <property role="3F0ifm" value="package" />
         </node>
         <node concept="3F0A7n" id="7jkrzkZwz8x" role="3EZMnx">
-          <property role="1$x2rV" value="*" />
           <ref role="1NtTu8" to="53d4:7jkrzkZwtHY" resolve="virtualPackageFilter" />
         </node>
         <node concept="35HoNQ" id="2Q8IysV1Gde" role="3EZMnx" />
