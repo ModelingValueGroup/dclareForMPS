@@ -22155,6 +22155,10 @@
     </node>
     <node concept="3tBE6w" id="7jkrzkZ1ToX" role="1FPzNG">
       <node concept="3clFbF" id="7jkrzkZ1U3H" role="30jUnX">
+        <node concept="15s5l7" id="5xBPu5YcdPY" role="lGtFl">
+          <property role="1eyWvh" value="FLAVOUR_ISSUE_KIND=&quot;typesystem (typesystem)&quot;;FLAVOUR_MESSAGE=&quot;Error: type list&lt;struct&lt;DGridElement&gt;&gt; is not a subtype of sequence&lt;struct&lt;DComponent&gt;&gt;&quot;;FLAVOUR_RULE_ID=&quot;[r:b3bd6869-3f20-419a-be47-753c4d00d5e8(DclareMPS.typesystem)/6195841906576700135]&quot;;" />
+          <property role="huDt6" value="Error: type list&lt;struct&lt;DGridElement&gt;&gt; is not a subtype of sequence&lt;struct&lt;DComponent&gt;&gt;" />
+        </node>
         <node concept="E34o$" id="7jkrzkZ1WdV" role="3clFbG">
           <node concept="1SfVH9" id="7jkrzkZ1WwU" role="37vLTx">
             <ref role="3cqZAo" node="7HxEAT$YVhr" resolve="elements" />
