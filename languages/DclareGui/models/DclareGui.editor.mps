@@ -87,6 +87,7 @@
       </concept>
       <concept id="1088185857835" name="jetbrains.mps.lang.editor.structure.InlineEditorComponent" flags="ig" index="1sVBvm" />
       <concept id="1139848536355" name="jetbrains.mps.lang.editor.structure.CellModel_WithRole" flags="ng" index="1$h60E">
+        <property id="1139852716018" name="noTargetText" index="1$x2rV" />
         <property id="1140017977771" name="readOnly" index="1Intyy" />
         <reference id="1140103550593" name="relationDeclaration" index="1NtTu8" />
       </concept>
@@ -717,6 +718,7 @@
             </node>
           </node>
         </node>
+        <node concept="35HoNQ" id="5xBPu5Y$hUw" role="3EZMnx" />
         <node concept="3F0ifn" id="7jkrzkZwzCy" role="3EZMnx">
           <property role="3F0ifm" value="virtual" />
         </node>
@@ -724,6 +726,7 @@
           <property role="3F0ifm" value="package" />
         </node>
         <node concept="3F0A7n" id="7jkrzkZwz8x" role="3EZMnx">
+          <property role="1$x2rV" value="*" />
           <ref role="1NtTu8" to="53d4:7jkrzkZwtHY" resolve="virtualPackageFilter" />
         </node>
         <node concept="35HoNQ" id="2Q8IysV1Gde" role="3EZMnx" />
