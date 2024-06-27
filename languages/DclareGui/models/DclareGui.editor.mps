@@ -570,7 +570,7 @@
                             <ref role="ehGHo" to="hypd:1AZH1sZHi4c" resolve="ModuleReference" />
                           </node>
                           <node concept="37vLTw" id="b80zSObG2A" role="2HTEbv">
-                            <ref role="3cqZAo" node="b80zSObG2z" resolve="node" />
+                            <ref role="3cqZAo" node="b80zSObG2z" resolve="ref" />
                           </node>
                         </node>
                       </node>
@@ -620,7 +620,7 @@
                             </node>
                             <node concept="3QWeyG" id="b80zSObAu2" role="2OqNvi">
                               <node concept="37vLTw" id="b80zSObFaJ" role="576Qk">
-                                <ref role="3cqZAo" node="b80zSObFaE" resolve="seq" />
+                                <ref role="3cqZAo" node="b80zSObFaE" resolve="single" />
                               </node>
                             </node>
                           </node>

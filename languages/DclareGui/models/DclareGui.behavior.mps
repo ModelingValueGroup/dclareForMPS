@@ -163,9 +163,9 @@
                   <ref role="2Gs0qQ" node="4OSO3OxwkJn" resolve="node" />
                 </node>
                 <node concept="2qgKlT" id="4OSO3OxwtgF" role="2OqNvi">
-                  <ref role="37wK5l" node="4OSO3OxwlqN" resolve="zoom" />
+                  <ref role="37wK5l" node="4OSO3OxwlqN" resolve="transform" />
                   <node concept="37vLTw" id="4OSO3Oxwtma" role="37wK5m">
-                    <ref role="3cqZAo" node="5$hAhBuaDa6" resolve="x" />
+                    <ref role="3cqZAo" node="5$hAhBuaDa6" resolve="xy" />
                   </node>
                 </node>
               </node>
@@ -279,10 +279,10 @@
             <node concept="3clFbF" id="4OSO3OxwlqZ" role="3cqZAp">
               <node concept="2OqwBi" id="4OSO3Oxwlr0" role="3clFbG">
                 <node concept="2GrUjf" id="4OSO3Oxwlr1" role="2Oq$k0">
-                  <ref role="2Gs0qQ" node="4OSO3OxwlqU" resolve="node" />
+                  <ref role="2Gs0qQ" node="4OSO3OxwlqU" resolve="edge" />
                 </node>
                 <node concept="2qgKlT" id="4OSO3OxwrwX" role="2OqNvi">
-                  <ref role="37wK5l" node="4OSO3OxwlAu" resolve="zoom" />
+                  <ref role="37wK5l" node="4OSO3OxwlAu" resolve="transform" />
                   <node concept="37vLTw" id="5$hAhBtFZga" role="37wK5m">
                     <ref role="3cqZAo" node="46_tf6FEoGo" resolve="xy" />
                   </node>
@@ -335,7 +335,7 @@
                   <ref role="2Gs0qQ" node="4OSO3OxwlA_" resolve="joint" />
                 </node>
                 <node concept="2qgKlT" id="4OSO3OxwqTQ" role="2OqNvi">
-                  <ref role="37wK5l" node="4OSO3OxwlP0" resolve="zoom" />
+                  <ref role="37wK5l" node="4OSO3OxwlP0" resolve="transform" />
                   <node concept="37vLTw" id="5$hAhBtG0Jz" role="37wK5m">
                     <ref role="3cqZAo" node="46_tf6FEGT2" resolve="xy" />
                   </node>

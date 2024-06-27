@@ -167,7 +167,7 @@
     <property role="TrG5h" value="ConceptDiagram" />
     <property role="3GE5qa" value="concept_diagram" />
     <property role="19KtqR" value="true" />
-    <ref role="1TJDcQ" to="tpck:gw2VY9q" />
+    <ref role="1TJDcQ" to="tpck:gw2VY9q" resolve="BaseConcept" />
     <node concept="1TJgyi" id="12WXgwl7Bd8" role="1TKVEl">
       <property role="IQ2nx" value="1206108215291310920" />
       <property role="TrG5h" value="manual" />
@@ -212,7 +212,7 @@
     <property role="EcuMT" value="7047795444050573225" />
     <property role="3GE5qa" value="concept_diagram" />
     <property role="TrG5h" value="ConceptRef" />
-    <ref role="1TJDcQ" to="tpck:gw2VY9q" />
+    <ref role="1TJDcQ" to="tpck:gw2VY9q" resolve="BaseConcept" />
     <node concept="1TJgyj" id="67eN9Qkg3uE" role="1TKVEi">
       <property role="IQ2ns" value="7047795444050573226" />
       <property role="20kJfa" value="concept" />
@@ -225,7 +225,7 @@
     <property role="TrG5h" value="StructDiagram" />
     <property role="3GE5qa" value="struct_diagram" />
     <property role="19KtqR" value="true" />
-    <ref role="1TJDcQ" to="tpck:gw2VY9q" />
+    <ref role="1TJDcQ" to="tpck:gw2VY9q" resolve="BaseConcept" />
     <node concept="1TJgyi" id="2$yK5YK5zMw" role="1TKVEl">
       <property role="IQ2nx" value="2964143021971881120" />
       <property role="TrG5h" value="manual" />
@@ -270,7 +270,7 @@
     <property role="EcuMT" value="6082931505451280473" />
     <property role="3GE5qa" value="struct_diagram" />
     <property role="TrG5h" value="StructRef" />
-    <ref role="1TJDcQ" to="tpck:gw2VY9q" />
+    <ref role="1TJDcQ" to="tpck:gw2VY9q" resolve="BaseConcept" />
     <node concept="1TJgyj" id="5hEUvARtaxq" role="1TKVEi">
       <property role="IQ2ns" value="6082931505451280474" />
       <property role="20kJfa" value="struct" />

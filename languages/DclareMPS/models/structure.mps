@@ -1815,7 +1815,7 @@
     <property role="TrG5h" value="FixPointGroup" />
     <property role="19KtqR" value="true" />
     <property role="3GE5qa" value="fixpoint" />
-    <ref role="1TJDcQ" to="tpck:gw2VY9q" />
+    <ref role="1TJDcQ" to="tpck:gw2VY9q" resolve="BaseConcept" />
     <node concept="PrWs8" id="2oCbVeBWB4H" role="PzmwI">
       <ref role="PrY4T" to="tpck:h0TrEE$" resolve="INamedConcept" />
     </node>
@@ -1853,7 +1853,7 @@
     <property role="3GE5qa" value="structs.builder" />
     <property role="TrG5h" value="StructBuilderInitPart" />
     <property role="R5$K7" value="true" />
-    <ref role="1TJDcQ" to="tpck:gw2VY9q" />
+    <ref role="1TJDcQ" to="tpck:gw2VY9q" resolve="BaseConcept" />
     <node concept="PrWs8" id="6lcsnaOnoLQ" role="PzmwI">
       <ref role="PrY4T" node="2UMr9kjxYag" resolve="IInnerProvider" />
     </node>

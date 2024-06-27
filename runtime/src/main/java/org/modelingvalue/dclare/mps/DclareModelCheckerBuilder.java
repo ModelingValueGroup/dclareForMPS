@@ -131,21 +131,48 @@ public class DclareModelCheckerBuilder extends ModelCheckerBuilder {
             public String invoke(SModule m) {
                 return dClareMPS.read(() -> m.getModuleName());
             }
-        });
+        }) {
+            @Override
+            public void check(SModule toCheck, SRepository repository, Consumer<? super IssueKindReportItem> errorCollector, ProgressMonitor monitor) {
+                for (IChecker<SModule, ? extends IssueKindReportItem> c : moduleCheckers) {
+                    c.check(toCheck, repository, errorCollector, monitor);
+                }
+            }
+        };
 
-        IAbstractChecker<SModel, ? extends IssueKindReportItem> generalModelChecker = skipNullModules(new AggregatingChecker<SModel>(modelCheckers, new _FunctionTypes._return_P1_E0<String, SModel>() {
+        IAbstractChecker<SModel, ? extends IssueKindReportItem> generalModelChecker = new AggregatingChecker<SModel>(modelCheckers, new _FunctionTypes._return_P1_E0<String, SModel>() {
             @Override
             public String invoke(SModel m) {
                 return dClareMPS.read(() -> m.getName().getLongName());
             }
-        }));
+        }) {
+            @Override
+            public void check(SModel toCheck, SRepository repository, Consumer<? super IssueKindReportItem> errorCollector, ProgressMonitor monitor) {
+                SModule module = toCheck.getModule();
+                if (module != null) {
+                    for (IChecker<SModel, ? extends IssueKindReportItem> c : modelCheckers) {
+                        c.check(toCheck, repository, errorCollector, monitor);
+                    }
+                }
+            }
+        };
 
         IAbstractChecker<SNode, ? extends IssueKindReportItem> generalNodeChecker = new AggregatingChecker<SNode>(rootCheckers, new _FunctionTypes._return_P1_E0<String, SNode>() {
             @Override
             public String invoke(SNode n) {
                 return dClareMPS.read(() -> n.getName());
             }
-        });
+        }) {
+            @Override
+            public void check(SNode toCheck, SRepository repository, Consumer<? super IssueKindReportItem> errorCollector, ProgressMonitor monitor) {
+                SModel model = toCheck.getModel();
+                if (model != null) {
+                    for (IChecker<SNode, ? extends IssueKindReportItem> c : rootCheckers) {
+                        c.check(toCheck, repository, errorCollector, monitor);
+                    }
+                }
+            }
+        };
 
         return new IAbstractChecker<ItemsToCheck, IssueKindReportItem>() {
 
