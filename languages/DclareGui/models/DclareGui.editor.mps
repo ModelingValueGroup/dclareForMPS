@@ -11,6 +11,7 @@
     <import index="u4ym" ref="r:1a96ceaa-2946-43e0-af3f-cd05d77ee6d1(DclareMPSRuntime.util)" />
     <import index="hypd" ref="r:aa31e43e-9240-4f4d-b6db-5c1c9a86c59e(jetbrains.mps.lang.project.structure)" />
     <import index="dxuu" ref="6354ebe7-c22a-4a0f-ac54-50b52ab9b065/java:javax.swing(JDK/)" />
+    <import index="z60i" ref="6354ebe7-c22a-4a0f-ac54-50b52ab9b065/java:java.awt(JDK/)" />
     <import index="53d4" ref="r:0049729d-ba70-461b-8d8a-b0755e3bfabb(DclareGui.structure)" implicit="true" />
     <import index="tpck" ref="r:00000000-0000-4000-0000-011c89590288(jetbrains.mps.lang.core.structure)" implicit="true" />
     <import index="tpcu" ref="r:00000000-0000-4000-0000-011c89590282(jetbrains.mps.lang.core.behavior)" implicit="true" />
@@ -45,11 +46,13 @@
       </concept>
       <concept id="1186403694788" name="jetbrains.mps.lang.editor.structure.ColorStyleClassItem" flags="ln" index="VaVBg">
         <property id="1186403713874" name="color" index="Vb096" />
+        <child id="1186403803051" name="query" index="VblUZ" />
       </concept>
       <concept id="1186403751766" name="jetbrains.mps.lang.editor.structure.FontStyleStyleClassItem" flags="ln" index="Vb9p2">
         <property id="1186403771423" name="style" index="Vbekb" />
       </concept>
       <concept id="1186404549998" name="jetbrains.mps.lang.editor.structure.ForegroundColorStyleClassItem" flags="ln" index="VechU" />
+      <concept id="1186404574412" name="jetbrains.mps.lang.editor.structure.BackgroundColorStyleClassItem" flags="ln" index="Veino" />
       <concept id="1186414536763" name="jetbrains.mps.lang.editor.structure.BooleanStyleSheetItem" flags="ln" index="VOi$J">
         <property id="1186414551515" name="flag" index="VOm3f" />
       </concept>
@@ -92,6 +95,7 @@
       </concept>
       <concept id="1073389214265" name="jetbrains.mps.lang.editor.structure.EditorCellModel" flags="ng" index="3EYTF0">
         <reference id="1139959269582" name="actionMap" index="1ERwB7" />
+        <child id="1142887637401" name="renderingCondition" index="pqm2j" />
         <child id="1164826688380" name="menuDescriptor" index="P5bDN" />
       </concept>
       <concept id="1073389446423" name="jetbrains.mps.lang.editor.structure.CellModel_Collection" flags="sn" stub="3013115976261988961" index="3EZMnI">
@@ -128,6 +132,7 @@
       <concept id="1166049232041" name="jetbrains.mps.lang.editor.structure.AbstractComponent" flags="ng" index="1XWOmA">
         <reference id="1166049300910" name="conceptDeclaration" index="1XX52x" />
       </concept>
+      <concept id="1176809959526" name="jetbrains.mps.lang.editor.structure.QueryFunction_Color" flags="in" index="3ZlJ5R" />
     </language>
     <language id="c32b788d-8e4b-4023-97f5-3e90d04ed77b" name="DclareMPS">
       <concept id="7503535305242222763" name="DclareMPS.structure.MethodCallOperation" flags="ng" index="2$Gk$L" />
@@ -154,6 +159,12 @@
       </concept>
       <concept id="1070475926800" name="jetbrains.mps.baseLanguage.structure.StringLiteral" flags="nn" index="Xl_RD">
         <property id="1070475926801" name="value" index="Xl_RC" />
+      </concept>
+      <concept id="1081236700937" name="jetbrains.mps.baseLanguage.structure.StaticMethodCall" flags="nn" index="2YIFZM">
+        <reference id="1144433194310" name="classConcept" index="1Pybhc" />
+      </concept>
+      <concept id="1070533707846" name="jetbrains.mps.baseLanguage.structure.StaticFieldReference" flags="nn" index="10M0yZ">
+        <reference id="1144433057691" name="classifier" index="1PxDUh" />
       </concept>
       <concept id="1070534058343" name="jetbrains.mps.baseLanguage.structure.NullLiteral" flags="nn" index="10Nm6u" />
       <concept id="1068431474542" name="jetbrains.mps.baseLanguage.structure.VariableDeclaration" flags="ng" index="33uBYm">
@@ -727,34 +738,9 @@
         <node concept="3F0A7n" id="7jkrzkZwz8x" role="3EZMnx">
           <ref role="1NtTu8" to="53d4:7jkrzkZwtHY" resolve="virtualPackageFilter" />
         </node>
-        <node concept="35HoNQ" id="2Q8IysV1Gde" role="3EZMnx" />
-        <node concept="1HlG4h" id="2Q8IysVyELY" role="3EZMnx">
-          <ref role="1ERwB7" node="2Q8IysV1Iwg" resolve="AutoLayoutAction" />
-          <node concept="1HfYo3" id="2Q8IysVyEM0" role="1HlULh">
-            <node concept="3TQlhw" id="2Q8IysVyEM2" role="1Hhtcw">
-              <node concept="3clFbS" id="2Q8IysVyEM4" role="2VODD2">
-                <node concept="3clFbF" id="2Q8IysVyIxI" role="3cqZAp">
-                  <node concept="3K4zz7" id="2Q8IysVyKgH" role="3clFbG">
-                    <node concept="Xl_RD" id="2Q8IysVyKgV" role="3K4E3e">
-                      <property role="Xl_RC" value="AUTO LAYOUT" />
-                    </node>
-                    <node concept="Xl_RD" id="2Q8IysVyKqb" role="3K4GZi">
-                      <property role="Xl_RC" value="MANUAL LAYOUT" />
-                    </node>
-                    <node concept="2OqwBi" id="2Q8IysVyIRl" role="3K4Cdx">
-                      <node concept="pncrf" id="2Q8IysVyIxH" role="2Oq$k0" />
-                      <node concept="3TrcHB" id="2Q8IysVWNAD" role="2OqNvi">
-                        <ref role="3TsBF5" to="53d4:2Q8IysVI4Ud" resolve="autoLayout" />
-                      </node>
-                    </node>
-                  </node>
-                </node>
-              </node>
-            </node>
-          </node>
-          <node concept="VPXOz" id="2Q8IysVyF4J" role="3F10Kt">
-            <property role="VOm3f" value="true" />
-          </node>
+        <node concept="35HoNQ" id="5Y0My$aDdsy" role="3EZMnx" />
+        <node concept="PMmxH" id="5Y0My$aDatr" role="3EZMnx">
+          <ref role="PMmxG" node="5Y0My$aD8$e" resolve="IDiagramControls" />
         </node>
       </node>
       <node concept="PMmxH" id="1CjrrCKbnX3" role="3EZMnx">
@@ -816,9 +802,7 @@
         <node concept="3F0A7n" id="2$yK5YK5udx" role="3EZMnx">
           <ref role="1NtTu8" to="tpck:h0TrG11" resolve="name" />
         </node>
-        <node concept="3F0ifn" id="2$yK5YK5udy" role="3EZMnx">
-          <node concept="VPM3Z" id="2$yK5YK5udz" role="3F10Kt" />
-        </node>
+        <node concept="35HoNQ" id="5Y0My$aDfJa" role="3EZMnx" />
         <node concept="3F0ifn" id="2$yK5YK5ud$" role="3EZMnx">
           <property role="3F0ifm" value="drawn" />
           <node concept="VPM3Z" id="2$yK5YK5ud_" role="3F10Kt" />
@@ -1042,34 +1026,10 @@
           </node>
         </node>
         <node concept="35HoNQ" id="2Q8IysV1O7f" role="3EZMnx" />
-        <node concept="1HlG4h" id="2Q8IysVyLr4" role="3EZMnx">
-          <ref role="1ERwB7" node="2Q8IysV1Iwg" resolve="AutoLayoutAction" />
-          <node concept="1HfYo3" id="2Q8IysVyLr5" role="1HlULh">
-            <node concept="3TQlhw" id="2Q8IysVyLr6" role="1Hhtcw">
-              <node concept="3clFbS" id="2Q8IysVyLr7" role="2VODD2">
-                <node concept="3clFbF" id="2Q8IysVyLr8" role="3cqZAp">
-                  <node concept="3K4zz7" id="2Q8IysVyLr9" role="3clFbG">
-                    <node concept="Xl_RD" id="2Q8IysVyLra" role="3K4E3e">
-                      <property role="Xl_RC" value="AUTO LAYOUT" />
-                    </node>
-                    <node concept="Xl_RD" id="2Q8IysVyLrb" role="3K4GZi">
-                      <property role="Xl_RC" value="MANUAL LAYOUT" />
-                    </node>
-                    <node concept="2OqwBi" id="2Q8IysVyLrc" role="3K4Cdx">
-                      <node concept="pncrf" id="2Q8IysVyLrd" role="2Oq$k0" />
-                      <node concept="3TrcHB" id="2Q8IysVWOuY" role="2OqNvi">
-                        <ref role="3TsBF5" to="53d4:2Q8IysVI4Ud" resolve="autoLayout" />
-                      </node>
-                    </node>
-                  </node>
-                </node>
-              </node>
-            </node>
-          </node>
-          <node concept="VPXOz" id="2Q8IysVyLrf" role="3F10Kt">
-            <property role="VOm3f" value="true" />
-          </node>
+        <node concept="PMmxH" id="5Y0My$aDfyk" role="3EZMnx">
+          <ref role="PMmxG" node="5Y0My$aD8$e" resolve="IDiagramControls" />
         </node>
+        <node concept="35HoNQ" id="5Y0My$awlHC" role="3EZMnx" />
       </node>
       <node concept="PMmxH" id="5hEUvARta3a" role="3EZMnx">
         <ref role="PMmxG" node="31sbKqyPMrZ" resolve="IRootComponentComponent" />
@@ -1157,6 +1117,224 @@
           </node>
         </node>
       </node>
+    </node>
+  </node>
+  <node concept="1h_SRR" id="5Y0My$awdvb">
+    <property role="3GE5qa" value="diagrams" />
+    <property role="TrG5h" value="AntiCrossingsAction" />
+    <ref role="1h_SK9" to="53d4:3psr82$eZ54" resolve="IDiagram" />
+    <node concept="1hA7zw" id="5Y0My$awdvc" role="1h_SK8">
+      <property role="1hAc7j" value="1FSxSwWqMNJ/click_action_id" />
+      <node concept="1hAIg9" id="5Y0My$awdvd" role="1hA7z_">
+        <node concept="3clFbS" id="5Y0My$awdve" role="2VODD2">
+          <node concept="3clFbF" id="5Y0My$awdvf" role="3cqZAp">
+            <node concept="37vLTI" id="5Y0My$awdvg" role="3clFbG">
+              <node concept="3fqX7Q" id="5Y0My$awdvh" role="37vLTx">
+                <node concept="2OqwBi" id="5Y0My$awdvi" role="3fr31v">
+                  <node concept="0IXxy" id="5Y0My$awdvj" role="2Oq$k0" />
+                  <node concept="3TrcHB" id="5Y0My$awdvk" role="2OqNvi">
+                    <ref role="3TsBF5" to="53d4:5Y0My$awdrh" resolve="antiCrossings" />
+                  </node>
+                </node>
+              </node>
+              <node concept="2OqwBi" id="5Y0My$awdvl" role="37vLTJ">
+                <node concept="0IXxy" id="5Y0My$awdvm" role="2Oq$k0" />
+                <node concept="3TrcHB" id="5Y0My$awdvn" role="2OqNvi">
+                  <ref role="3TsBF5" to="53d4:5Y0My$awdrh" resolve="antiCrossings" />
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
+  </node>
+  <node concept="PKFIW" id="5Y0My$aD8$e">
+    <property role="3GE5qa" value="diagrams" />
+    <property role="TrG5h" value="IDiagramControls" />
+    <ref role="1XX52x" to="53d4:3psr82$eZ54" resolve="IDiagram" />
+    <node concept="3EZMnI" id="5Y0My$aDaEu" role="2wV5jI">
+      <node concept="1HlG4h" id="2Q8IysVyELY" role="3EZMnx">
+        <ref role="1ERwB7" node="2Q8IysV1Iwg" resolve="AutoLayoutAction" />
+        <node concept="1HfYo3" id="2Q8IysVyEM0" role="1HlULh">
+          <node concept="3TQlhw" id="2Q8IysVyEM2" role="1Hhtcw">
+            <node concept="3clFbS" id="2Q8IysVyEM4" role="2VODD2">
+              <node concept="3clFbF" id="2Q8IysVyIxI" role="3cqZAp">
+                <node concept="3K4zz7" id="2Q8IysVyKgH" role="3clFbG">
+                  <node concept="Xl_RD" id="2Q8IysVyKgV" role="3K4E3e">
+                    <property role="Xl_RC" value="AUTO LAYOUT" />
+                  </node>
+                  <node concept="Xl_RD" id="2Q8IysVyKqb" role="3K4GZi">
+                    <property role="Xl_RC" value="MANUAL LAYOUT" />
+                  </node>
+                  <node concept="2OqwBi" id="2Q8IysVyIRl" role="3K4Cdx">
+                    <node concept="pncrf" id="2Q8IysVyIxH" role="2Oq$k0" />
+                    <node concept="3TrcHB" id="2Q8IysVWNAD" role="2OqNvi">
+                      <ref role="3TsBF5" to="53d4:2Q8IysVI4Ud" resolve="autoLayout" />
+                    </node>
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="VPXOz" id="2Q8IysVyF4J" role="3F10Kt">
+          <property role="VOm3f" value="true" />
+        </node>
+        <node concept="Veino" id="5Y0My$aH3_N" role="3F10Kt">
+          <node concept="3ZlJ5R" id="5Y0My$aH3_O" role="VblUZ">
+            <node concept="3clFbS" id="5Y0My$aH3_P" role="2VODD2">
+              <node concept="3clFbF" id="5Y0My$aH3_Q" role="3cqZAp">
+                <node concept="3K4zz7" id="5Y0My$aH3_R" role="3clFbG">
+                  <node concept="2YIFZM" id="5Y0My$aH3_S" role="3K4E3e">
+                    <ref role="37wK5l" to="z60i:~Color.decode(java.lang.String)" resolve="decode" />
+                    <ref role="1Pybhc" to="z60i:~Color" resolve="Color" />
+                    <node concept="Xl_RD" id="5Y0My$aH3_T" role="37wK5m">
+                      <property role="Xl_RC" value="#ddddff" />
+                    </node>
+                  </node>
+                  <node concept="2OqwBi" id="5Y0My$aH3_U" role="3K4Cdx">
+                    <node concept="pncrf" id="5Y0My$aH3_V" role="2Oq$k0" />
+                    <node concept="3TrcHB" id="5Y0My$aH3_W" role="2OqNvi">
+                      <ref role="3TsBF5" to="53d4:2Q8IysVI4Ud" resolve="autoLayout" />
+                    </node>
+                  </node>
+                  <node concept="2YIFZM" id="5Y0My$aH3_X" role="3K4GZi">
+                    <ref role="37wK5l" to="z60i:~Color.decode(java.lang.String)" resolve="decode" />
+                    <ref role="1Pybhc" to="z60i:~Color" resolve="Color" />
+                    <node concept="Xl_RD" id="5Y0My$aH3_Y" role="37wK5m">
+                      <property role="Xl_RC" value="#dfdfff" />
+                    </node>
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="VechU" id="5Y0My$aDDuV" role="3F10Kt">
+          <node concept="3ZlJ5R" id="5Y0My$aDDw4" role="VblUZ">
+            <node concept="3clFbS" id="5Y0My$aDDw5" role="2VODD2">
+              <node concept="3clFbF" id="5Y0My$aDDGa" role="3cqZAp">
+                <node concept="3K4zz7" id="5Y0My$aDGO1" role="3clFbG">
+                  <node concept="10M0yZ" id="5Y0My$aDH4H" role="3K4E3e">
+                    <ref role="3cqZAo" to="z60i:~Color.black" resolve="black" />
+                    <ref role="1PxDUh" to="z60i:~Color" resolve="Color" />
+                  </node>
+                  <node concept="10M0yZ" id="5Y0My$aE3Vy" role="3K4GZi">
+                    <ref role="3cqZAo" to="z60i:~Color.gray" resolve="gray" />
+                    <ref role="1PxDUh" to="z60i:~Color" resolve="Color" />
+                  </node>
+                  <node concept="2OqwBi" id="5Y0My$aDE6T" role="3K4Cdx">
+                    <node concept="pncrf" id="5Y0My$aDDG9" role="2Oq$k0" />
+                    <node concept="3TrcHB" id="5Y0My$aDEGt" role="2OqNvi">
+                      <ref role="3TsBF5" to="53d4:2Q8IysVI4Ud" resolve="autoLayout" />
+                    </node>
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+      <node concept="3EZMnI" id="5Y0My$aDbLl" role="3EZMnx">
+        <node concept="2iRfu4" id="5Y0My$aDbLm" role="2iSdaV" />
+        <node concept="35HoNQ" id="5Y0My$awg04" role="3EZMnx" />
+        <node concept="1HlG4h" id="5Y0My$awgrY" role="3EZMnx">
+          <ref role="1ERwB7" node="5Y0My$awdvb" resolve="AntiCrossingsAction" />
+          <node concept="VPXOz" id="5Y0My$awi5R" role="3F10Kt">
+            <property role="VOm3f" value="true" />
+          </node>
+          <node concept="Veino" id="5Y0My$aEsOE" role="3F10Kt">
+            <node concept="3ZlJ5R" id="5Y0My$aFb4r" role="VblUZ">
+              <node concept="3clFbS" id="5Y0My$aFb4s" role="2VODD2">
+                <node concept="3clFbF" id="5Y0My$aFbgA" role="3cqZAp">
+                  <node concept="3K4zz7" id="5Y0My$aFeiw" role="3clFbG">
+                    <node concept="2YIFZM" id="5Y0My$aFemY" role="3K4E3e">
+                      <ref role="37wK5l" to="z60i:~Color.decode(java.lang.String)" resolve="decode" />
+                      <ref role="1Pybhc" to="z60i:~Color" resolve="Color" />
+                      <node concept="Xl_RD" id="5Y0My$aFepm" role="37wK5m">
+                        <property role="Xl_RC" value="#ddddff" />
+                      </node>
+                    </node>
+                    <node concept="2OqwBi" id="5Y0My$aFbFl" role="3K4Cdx">
+                      <node concept="pncrf" id="5Y0My$aFbg_" role="2Oq$k0" />
+                      <node concept="3TrcHB" id="5Y0My$aFcgU" role="2OqNvi">
+                        <ref role="3TsBF5" to="53d4:5Y0My$awdrh" resolve="antiCrossings" />
+                      </node>
+                    </node>
+                    <node concept="2YIFZM" id="5Y0My$aFeuo" role="3K4GZi">
+                      <ref role="37wK5l" to="z60i:~Color.decode(java.lang.String)" resolve="decode" />
+                      <ref role="1Pybhc" to="z60i:~Color" resolve="Color" />
+                      <node concept="Xl_RD" id="5Y0My$aFeup" role="37wK5m">
+                        <property role="Xl_RC" value="#dfdfff" />
+                      </node>
+                    </node>
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+          <node concept="VechU" id="5Y0My$aE4aF" role="3F10Kt">
+            <node concept="3ZlJ5R" id="5Y0My$aE4aG" role="VblUZ">
+              <node concept="3clFbS" id="5Y0My$aE4aH" role="2VODD2">
+                <node concept="3clFbF" id="5Y0My$aE4aI" role="3cqZAp">
+                  <node concept="3K4zz7" id="5Y0My$aE4aJ" role="3clFbG">
+                    <node concept="10M0yZ" id="5Y0My$aE4aK" role="3K4E3e">
+                      <ref role="3cqZAo" to="z60i:~Color.black" resolve="black" />
+                      <ref role="1PxDUh" to="z60i:~Color" resolve="Color" />
+                    </node>
+                    <node concept="10M0yZ" id="5Y0My$aE4aL" role="3K4GZi">
+                      <ref role="3cqZAo" to="z60i:~Color.gray" resolve="gray" />
+                      <ref role="1PxDUh" to="z60i:~Color" resolve="Color" />
+                    </node>
+                    <node concept="2OqwBi" id="5Y0My$aE4aM" role="3K4Cdx">
+                      <node concept="pncrf" id="5Y0My$aE4aN" role="2Oq$k0" />
+                      <node concept="3TrcHB" id="5Y0My$aE4aO" role="2OqNvi">
+                        <ref role="3TsBF5" to="53d4:5Y0My$awdrh" resolve="antiCrossings" />
+                      </node>
+                    </node>
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+          <node concept="1HfYo3" id="5Y0My$awgs0" role="1HlULh">
+            <node concept="3TQlhw" id="5Y0My$awgs2" role="1Hhtcw">
+              <node concept="3clFbS" id="5Y0My$awgs4" role="2VODD2">
+                <node concept="3clFbF" id="5Y0My$awim$" role="3cqZAp">
+                  <node concept="3K4zz7" id="5Y0My$awim_" role="3clFbG">
+                    <node concept="Xl_RD" id="5Y0My$awimA" role="3K4E3e">
+                      <property role="Xl_RC" value="ANTI CROSSINGS ACTIVE" />
+                    </node>
+                    <node concept="Xl_RD" id="5Y0My$awimB" role="3K4GZi">
+                      <property role="Xl_RC" value="ANTI CROSSINGS INACTIVE" />
+                    </node>
+                    <node concept="2OqwBi" id="5Y0My$awimC" role="3K4Cdx">
+                      <node concept="pncrf" id="5Y0My$awimD" role="2Oq$k0" />
+                      <node concept="3TrcHB" id="5Y0My$awimE" role="2OqNvi">
+                        <ref role="3TsBF5" to="53d4:5Y0My$awdrh" resolve="antiCrossings" />
+                      </node>
+                    </node>
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="pkWqt" id="5Y0My$aDbTX" role="pqm2j">
+          <node concept="3clFbS" id="5Y0My$aDbTY" role="2VODD2">
+            <node concept="3clFbF" id="5Y0My$aDbU4" role="3cqZAp">
+              <node concept="2OqwBi" id="5Y0My$awhmr" role="3clFbG">
+                <node concept="pncrf" id="5Y0My$awgS2" role="2Oq$k0" />
+                <node concept="3TrcHB" id="5Y0My$awi4R" role="2OqNvi">
+                  <ref role="3TsBF5" to="53d4:2Q8IysVI4Ud" resolve="autoLayout" />
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+      <node concept="2iRfu4" id="5Y0My$aDaEx" role="2iSdaV" />
     </node>
   </node>
 </model>
