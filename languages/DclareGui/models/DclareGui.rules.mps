@@ -14282,6 +14282,18 @@
       </node>
       <node concept="10P55v" id="5Y0My$9PMNe" role="3clF45" />
     </node>
+    <node concept="kUGYC" id="1JSUsWA1BHZ" role="1FPzNG">
+      <property role="TrG5h" value="centreGravityForce" />
+      <node concept="3Tm1VV" id="1JSUsWA1BI0" role="1B3o_S" />
+      <node concept="3clFbS" id="1JSUsWA1BI1" role="3clF47">
+        <node concept="3clFbF" id="1JSUsWA2o98" role="3cqZAp">
+          <node concept="3b6qkQ" id="1JSUsWA2o97" role="3clFbG">
+            <property role="$nhwW" value="0.8d" />
+          </node>
+        </node>
+      </node>
+      <node concept="10P55v" id="1JSUsWA233X" role="3clF45" />
+    </node>
     <node concept="kUGYC" id="2qFMNgU7Hon" role="1FPzNG">
       <property role="TrG5h" value="friction" />
       <node concept="3Tm1VV" id="2qFMNgU7Hoo" role="1B3o_S" />
@@ -19698,7 +19710,7 @@
           </node>
           <node concept="3cpWs8" id="5Y0My$9Qs1y" role="3cqZAp">
             <node concept="3cpWsn" id="5Y0My$9Qs1_" role="3cpWs9">
-              <property role="TrG5h" value="aniCrossingStrength" />
+              <property role="TrG5h" value="antiCrossingStrength" />
               <node concept="10P55v" id="5Y0My$9Qs1w" role="1tU5fm" />
               <node concept="3cpWsd" id="5Y0My$agcbv" role="33vP2m">
                 <node concept="3b6qkQ" id="5Y0My$aglrM" role="3uHU7B">
@@ -19711,6 +19723,20 @@
                   <node concept="2$Gk$L" id="5Y0My$9QCoA" role="2OqNvi">
                     <ref role="37wK5l" node="5Y0My$9PMN9" resolve="antiCrossingStrength" />
                   </node>
+                </node>
+              </node>
+            </node>
+          </node>
+          <node concept="3cpWs8" id="1JSUsW_Z6qq" role="3cqZAp">
+            <node concept="3cpWsn" id="1JSUsW_Z6qr" role="3cpWs9">
+              <property role="TrG5h" value="centreGravityForce" />
+              <node concept="10P55v" id="1JSUsW_YTO6" role="1tU5fm" />
+              <node concept="2OqwBi" id="1JSUsWA2GRw" role="33vP2m">
+                <node concept="37vLTw" id="1JSUsWA2BXc" role="2Oq$k0">
+                  <ref role="3cqZAo" node="2_HXTiY38jX" resolve="diagram" />
+                </node>
+                <node concept="2$Gk$L" id="1JSUsWA2NS_" role="2OqNvi">
+                  <ref role="37wK5l" node="1JSUsWA1BHZ" resolve="centreGravityForce" />
                 </node>
               </node>
             </node>
@@ -21239,9 +21265,6 @@
                     <node concept="2$Gk$L" id="4MNFnovaPPE" role="2OqNvi">
                       <ref role="37wK5l" node="2xAA8jfB2O5" resolve="mult" />
                       <node concept="17qRlL" id="18l4$rS3RER" role="37wK5m">
-                        <node concept="3b6qkQ" id="7jkrzkUXDCH" role="3uHU7w">
-                          <property role="$nhwW" value="0.8d" />
-                        </node>
                         <node concept="2OqwBi" id="18l4$rRZukh" role="3uHU7B">
                           <node concept="37vLTw" id="18l4$rRZsJ0" role="2Oq$k0">
                             <ref role="3cqZAo" node="4MNFnovaHI8" resolve="centreDelta" />
@@ -21249,6 +21272,9 @@
                           <node concept="32jkxy" id="18l4$rRZx8x" role="2OqNvi">
                             <ref role="3cqZAo" node="2xAA8jfAPnE" resolve="length" />
                           </node>
+                        </node>
+                        <node concept="37vLTw" id="1JSUsW_Z6qt" role="3uHU7w">
+                          <ref role="3cqZAo" node="1JSUsW_Z6qr" resolve="d" />
                         </node>
                       </node>
                     </node>
