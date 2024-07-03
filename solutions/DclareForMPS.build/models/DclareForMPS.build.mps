@@ -874,6 +874,21 @@
             <ref role="3bR37D" to="ffeo:7Kfy9QB6L8Y" resolve="jetbrains.mps.lang.project" />
           </node>
         </node>
+        <node concept="3rtmxn" id="26JKxysVTfC" role="3bR31x">
+          <node concept="3LXTmp" id="26JKxysVTfD" role="3rtmxm">
+            <node concept="3qWCbU" id="26JKxysVTfE" role="3LXTna">
+              <property role="3qWCbO" value="icons/**, resources/**" />
+            </node>
+            <node concept="55IIr" id="26JKxysVTfF" role="3LXTmr">
+              <node concept="2Ry0Ak" id="26JKxysVTfG" role="iGT6I">
+                <property role="2Ry0Am" value="languages" />
+                <node concept="2Ry0Ak" id="26JKxysVTfH" role="2Ry0An">
+                  <property role="2Ry0Am" value="DclareGui" />
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
       </node>
       <node concept="1E1JtA" id="1OC_PYbrjI5" role="2G$12L">
         <property role="TrG5h" value="DclareRuntime" />
@@ -947,6 +962,21 @@
                       <property role="2Ry0Am" value="mvg-json.jar" />
                     </node>
                   </node>
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="3rtmxn" id="26JKxysVTfx" role="3bR31x">
+          <node concept="3LXTmp" id="26JKxysVTfy" role="3rtmxm">
+            <node concept="3qWCbU" id="26JKxysVTfz" role="3LXTna">
+              <property role="3qWCbO" value="icons/**, resources/**" />
+            </node>
+            <node concept="55IIr" id="26JKxysVTf$" role="3LXTmr">
+              <node concept="2Ry0Ak" id="26JKxysVTf_" role="iGT6I">
+                <property role="2Ry0Am" value="solutions" />
+                <node concept="2Ry0Ak" id="26JKxysVTfA" role="2Ry0An">
+                  <property role="2Ry0Am" value="DclareRuntime" />
                 </node>
               </node>
             </node>

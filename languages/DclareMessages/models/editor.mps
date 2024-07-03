@@ -224,6 +224,7 @@
         <child id="3906496115198199033" name="conceptArgument" index="3oSUPX" />
       </concept>
       <concept id="1143226024141" name="jetbrains.mps.lang.smodel.structure.SModelType" flags="in" index="H_c77" />
+      <concept id="8329979535468945057" name="jetbrains.mps.lang.smodel.structure.Node_PresentationOperation" flags="ng" index="2Iv5rx" />
       <concept id="1139613262185" name="jetbrains.mps.lang.smodel.structure.Node_GetParentOperation" flags="nn" index="1mfA1w" />
       <concept id="1139621453865" name="jetbrains.mps.lang.smodel.structure.Node_IsInstanceOfOperation" flags="nn" index="1mIQ4w">
         <child id="1177027386292" name="conceptArgument" index="cj9EA" />
@@ -1602,8 +1603,11 @@
                             <node concept="Xl_RD" id="7N5dIksZgPH" role="3uHU7B">
                               <property role="Xl_RC" value=", attr " />
                             </node>
-                            <node concept="37vLTw" id="7N5dIksZgPJ" role="3uHU7w">
-                              <ref role="3cqZAo" node="7N5dIksZgP$" resolve="source" />
+                            <node concept="2OqwBi" id="26JKxysVTfh" role="3uHU7w">
+                              <node concept="37vLTw" id="7N5dIksZgPJ" role="2Oq$k0">
+                                <ref role="3cqZAo" node="7N5dIksZgP$" resolve="source" />
+                              </node>
+                              <node concept="2Iv5rx" id="26JKxysVTfi" role="2OqNvi" />
                             </node>
                           </node>
                         </node>
@@ -1776,8 +1780,11 @@
                           <node concept="Xl_RD" id="7N5dIksZgOv" role="3uHU7B">
                             <property role="Xl_RC" value=", attr " />
                           </node>
-                          <node concept="37vLTw" id="7N5dIksZgOx" role="3uHU7w">
-                            <ref role="3cqZAo" node="7N5dIksZgOm" resolve="source" />
+                          <node concept="2OqwBi" id="26JKxysVTfs" role="3uHU7w">
+                            <node concept="37vLTw" id="7N5dIksZgOx" role="2Oq$k0">
+                              <ref role="3cqZAo" node="7N5dIksZgOm" resolve="source" />
+                            </node>
+                            <node concept="2Iv5rx" id="26JKxysVTft" role="2OqNvi" />
                           </node>
                         </node>
                       </node>

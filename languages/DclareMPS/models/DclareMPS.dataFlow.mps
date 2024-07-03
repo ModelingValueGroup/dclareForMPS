@@ -2,8 +2,7 @@
 <model ref="r:ce1b8c02-bf50-4b8e-992e-eb7fc10fc14e(DclareMPS.dataFlow)">
   <persistence version="9" />
   <languages>
-    <use id="7fa12e9c-b949-4976-b4fa-19accbc320b4" name="jetbrains.mps.lang.dataFlow" version="1" />
-    <devkit ref="fbc25dd2-5da4-483a-8b19-70928e1b62d7(jetbrains.mps.devkit.general-purpose)" />
+    <devkit ref="00000000-0000-4000-0000-443879f56b80(jetbrains.mps.devkit.aspect.dataflow)" />
   </languages>
   <imports>
     <import index="7ggn" ref="r:38c3b7db-3776-47fb-ba27-a4f002c4edc7(DclareMPS.structure)" implicit="true" />
