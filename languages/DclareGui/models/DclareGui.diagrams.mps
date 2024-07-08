@@ -241,8 +241,8 @@
       </node>
     </node>
     <node concept="2iyNl8" id="7LgoFehxwh4" role="2iyNln">
-      <property role="2iyNlD" value="318" />
-      <property role="2iyNlR" value="415" />
+      <property role="2iyNlD" value="360" />
+      <property role="2iyNlR" value="400" />
       <ref role="2iyNl9" to="q3xn:6YJvVULTHtj" resolve="DLineSegment" />
     </node>
     <node concept="2iyNl8" id="7LgoFehxwh5" role="2iyNln">

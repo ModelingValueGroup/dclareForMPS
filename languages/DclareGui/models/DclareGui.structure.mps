@@ -86,7 +86,7 @@
       <property role="IQ2ns" value="3484711917226236495" />
       <property role="20kJfa" value="node" />
       <property role="20lbJX" value="fLJekj4/_1" />
-      <ref role="20lvS9" to="tpck:h0TrEE$" resolve="INamedConcept" />
+      <ref role="20lvS9" to="tpck:gw2VY9q" resolve="BaseConcept" />
     </node>
     <node concept="1TJgyj" id="31sbKqyPLEi" role="1TKVEi">
       <property role="IQ2ns" value="3484711917226236562" />
@@ -112,7 +112,7 @@
       <property role="IQ2ns" value="3484711917226236500" />
       <property role="20kJfa" value="association" />
       <property role="20lbJX" value="fLJekj4/_1" />
-      <ref role="20lvS9" to="tpck:h0TrEE$" resolve="INamedConcept" />
+      <ref role="20lvS9" to="tpck:gw2VY9q" resolve="BaseConcept" />
     </node>
   </node>
   <node concept="1TIwiD" id="31sbKqyPLDm">
@@ -153,6 +153,11 @@
       <property role="TrG5h" value="autoLayout" />
       <ref role="AX2Wp" to="tpck:fKAQMTB" resolve="boolean" />
     </node>
+    <node concept="1TJgyi" id="5Y0My$awdrh" role="1TKVEl">
+      <property role="IQ2nx" value="6881722508240803537" />
+      <property role="TrG5h" value="antiCrossings" />
+      <ref role="AX2Wp" to="tpck:fKAQMTB" resolve="boolean" />
+    </node>
     <node concept="1TJgyj" id="31sbKqyPLDh" role="1TKVEi">
       <property role="IQ2ns" value="3484711917226236497" />
       <property role="20lmBu" value="fLJjDmT/aggregation" />
@@ -162,11 +167,6 @@
     </node>
     <node concept="PrWs8" id="3psr82$cO_x" role="PrDN$">
       <ref role="PrY4T" node="3psr82$c6ii" resolve="ISingleRootComponent" />
-    </node>
-    <node concept="1TJgyi" id="5Y0My$awdrh" role="1TKVEl">
-      <property role="IQ2nx" value="6881722508240803537" />
-      <property role="TrG5h" value="antiCrossings" />
-      <ref role="AX2Wp" to="tpck:fKAQMTB" resolve="boolean" />
     </node>
   </node>
   <node concept="1TIwiD" id="67eN9QkffP5">
