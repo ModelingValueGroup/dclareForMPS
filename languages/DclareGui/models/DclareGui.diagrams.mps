@@ -1001,7 +1001,7 @@
       <property role="2iyNlR" value="1273" />
       <ref role="2iyNl9" to="7ggn:5Hwm38JY5Mc" resolve="NativeDeclaration" />
       <node concept="2iyNll" id="5pf0b7PZnYe" role="2iyNmk">
-        <ref role="2iyNli" to="7ggn:5Hwm38JY61d" />
+        <ref role="2iyNli" to="7ggn:5Hwm38JY61d" resolve="handlers" />
       </node>
       <node concept="2iyNll" id="5pf0b7PZnYf" role="2iyNmk">
         <ref role="2iyNli" to="7ggn:5Hwm38JY60x" />
@@ -1143,7 +1143,7 @@
         <ref role="2iyNli" to="7ggn:6_R8J$2ChSl" />
       </node>
       <node concept="2iyNll" id="5pf0b7PZnXp" role="2iyNmk">
-        <ref role="2iyNli" to="7ggn:55f2HNAp5cR" />
+        <ref role="2iyNli" to="7ggn:55f2HNAp5cR" resolve="aspect" />
       </node>
       <node concept="2iyNll" id="5pf0b7PZnXo" role="2iyNmk">
         <ref role="2iyNli" to="7ggn:4$bpWrNHVkZ" resolve="IAttributeOwner" />

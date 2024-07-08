@@ -9848,9 +9848,8 @@
                 </node>
                 <node concept="liA8E" id="5x0Fo$V8And" role="2OqNvi">
                   <ref role="37wK5l" to="z60i:~Graphics.setColor(java.awt.Color)" resolve="setColor" />
-                  <node concept="10M0yZ" id="5x0Fo$V8Ane" role="37wK5m">
-                    <ref role="1PxDUh" to="z60i:~Color" resolve="Color" />
-                    <ref role="3cqZAo" to="z60i:~Color.BLACK" resolve="BLACK" />
+                  <node concept="37vLTw" id="1kiV8EF1e08" role="37wK5m">
+                    <ref role="3cqZAo" node="7wc8RN4MQzD" resolve="cLine" />
                   </node>
                 </node>
               </node>
