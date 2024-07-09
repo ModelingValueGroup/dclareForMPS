@@ -23,6 +23,7 @@
     <dependency reexport="false">c72da2b9-7cce-4447-8389-f407dc1158b7(jetbrains.mps.lang.structure)</dependency>
     <dependency reexport="false">c32b788d-8e4b-4023-97f5-3e90d04ed77b(DclareMPS)</dependency>
     <dependency reexport="false">86ef8290-12bb-4ca7-947f-093788f263a9(jetbrains.mps.lang.project)</dependency>
+    <dependency reexport="false">3a8d80d2-32d9-f1f2-4443-6a1111e12ef3(MPS.Boot)</dependency>
   </dependencies>
   <languageVersions>
     <language slang="l:ce36526d-d793-4b8b-88e9-d1815f616441:DclareGui" version="0" />
@@ -57,6 +58,7 @@
     <module reference="55d6b6f5-8095-4cd0-a39b-779da8d12940(DclareMPSRuntime)" version="0" />
     <module reference="e584ff77-930e-4637-8df0-b4c8d3b6de91(DclareRuntime)" version="0" />
     <module reference="6354ebe7-c22a-4a0f-ac54-50b52ab9b065(JDK)" version="0" />
+    <module reference="3a8d80d2-32d9-f1f2-4443-6a1111e12ef3(MPS.Boot)" version="0" />
     <module reference="6ed54515-acc8-4d1e-a16c-9fd6cfe951ea(MPS.Core)" version="0" />
     <module reference="1ed103c3-3aa6-49b7-9c21-6765ee11f224(MPS.Editor)" version="0" />
     <module reference="498d89d2-c2e9-11e2-ad49-6cf049e62fe5(MPS.IDEA)" version="0" />
