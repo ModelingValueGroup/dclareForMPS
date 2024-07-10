@@ -24212,9 +24212,9 @@
           <node concept="liA8E" id="1kiV8EFprd6" role="2OqNvi">
             <ref role="37wK5l" to="bd8o:~Application.invokeLater(java.lang.Runnable,com.intellij.openapi.application.ModalityState)" resolve="invokeLater" />
             <node concept="1fE671" id="1kiV8EFpreh" role="37wK5m" />
-            <node concept="2YIFZM" id="2uyqCQrzGaA" role="37wK5m">
-              <ref role="37wK5l" to="bd8o:~ModalityState.nonModal()" resolve="nonModal" />
-              <ref role="1Pybhc" to="bd8o:~ModalityState" resolve="ModalityState" />
+            <node concept="10M0yZ" id="Jyzs9Rchqb" role="37wK5m">
+              <ref role="3cqZAo" to="bd8o:~ModalityState.NON_MODAL" resolve="NON_MODAL" />
+              <ref role="1PxDUh" to="bd8o:~ModalityState" resolve="ModalityState" />
             </node>
           </node>
           <node concept="2YIFZM" id="2uyqCQrzG1B" role="2Oq$k0">
