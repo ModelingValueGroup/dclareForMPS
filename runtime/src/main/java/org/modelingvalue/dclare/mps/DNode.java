@@ -957,7 +957,7 @@ public class DNode extends DNewable<DNode, SNodeReference, SNode> implements SNo
 
     @Override
     public boolean dIsOrphan(State state) {
-        return dCheckConsistency() && super.dIsOrphan(state);
+        return dCheckConsistency() && super.dIsOrphan(state) && !isRead();
     }
 
     @NotNull
