@@ -330,11 +330,12 @@ public class DNode extends DNewable<DNode, SNodeReference, SNode> implements SNo
 
     static public class DCopyObserver extends Observer<DNode> {
 
+        @SuppressWarnings("rawtypes")
         private static DCopyObserver of(IAspect aspect, DObserved<DNode, ?> observed, Consumer<DNode> action, LeafModifier... modifiers) {
             return new DCopyObserver(aspect, observed, action, modifiers);
         }
 
-        @SuppressWarnings({"unchecked", "RedundantSuppression"})
+        @SuppressWarnings({"unchecked", "RedundantSuppression", "rawtypes"})
         private DCopyObserver(IAspect aspect, DObserved<DNode, ?> observed, Consumer<DNode> action, LeafModifier... modifiers) {
             super(Pair.of(aspect, observed), action, Set.of(observed), modifiers);
         }
@@ -957,7 +958,7 @@ public class DNode extends DNewable<DNode, SNodeReference, SNode> implements SNo
 
     @Override
     public boolean dIsOrphan(State state) {
-        return dCheckConsistency() && super.dIsOrphan(state) && !isRead();
+        return dCheckConsistency() && super.dIsOrphan(state);
     }
 
     @NotNull
@@ -1194,12 +1195,23 @@ public class DNode extends DNewable<DNode, SNodeReference, SNode> implements SNo
 
     @Override
     protected void activate(boolean changed) {
-        if (!isExternal() && (changed ? isAction() : isObserving()) && isRead() && !isActive()) {
+        if (!isExternal() && (changed ? isAction() : isObserving()) && isRead()) {
+            doActivate();
+        }
+    }
+
+    protected void doActivate() {
+        if (!isActive()) {
             SNode root = dClareMPS().read(() -> tryOriginal().getContainingRoot());
             if (root != null) {
-                SModel model = dClareMPS().read(root::getModel);
-                if (model != null) {
-                    DModel.of(model).triggerAddRoot(DNode.of(root));
+                DNode dRoot = DNode.of(root);
+                if (!dRoot.isActive()) {
+                    SModel model = dClareMPS().read(root::getModel);
+                    if (model != null) {
+                        DModel dModel = DModel.of(model);
+                        dModel.doActivate();
+                        dModel.triggerAddRoot(dRoot);
+                    }
                 }
             }
         }

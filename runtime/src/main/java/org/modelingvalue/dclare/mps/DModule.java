@@ -24,6 +24,7 @@ import static org.modelingvalue.dclare.CoreSetableModifier.containment;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.function.Consumer;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.jetbrains.mps.openapi.model.EditableSModel;
@@ -39,7 +40,10 @@ import org.jetbrains.mps.openapi.persistence.ModelRoot;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
+import org.modelingvalue.dclare.Action;
 import org.modelingvalue.dclare.Constant;
+import org.modelingvalue.dclare.LeafModifier;
+import org.modelingvalue.dclare.LeafTransaction;
 import org.modelingvalue.dclare.Observer;
 import org.modelingvalue.dclare.Setable;
 import org.modelingvalue.dclare.State;
@@ -55,6 +59,9 @@ import jetbrains.mps.smodel.Language;
 
 @SuppressWarnings("unused")
 public class DModule extends DFromOriginalObject<SModule> implements SModule {
+    @SuppressWarnings({"unchecked", "rawtypes"})
+
+    private static final Consumer<DModule>                     INIT_MODEL_CONSUMER  = m -> m.addModel(((Pair<String, DModel>) ((Action) LeafTransaction.getCurrent().leaf()).id()).b());
 
     private static final Constant<SModule, DModule>            DMODULE              = Constant.of("DMODULE", DModule::new);
 
@@ -65,14 +72,14 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
                                                                                     }, (m, pre, post) -> {
                                                                                         if (m.isSolution()) {
                                                                                             SModule sModule = m.original();
-                                                                                            Setable.<Set<DModel>, DModel> diff(pre, post,                                          //
+                                                                                            Setable.<Set<DModel>, DModel> diff(pre, post,                                               //
                                                                                                     a -> {
                                                                                                         SModel sModel = a.original();
                                                                                                         if (sModel.getModule() != sModule) {
                                                                                                             ((SModuleBase) sModule).registerModel((SModelBase) sModel);
                                                                                                         }
                                                                                                         a.init(sModel);
-                                                                                                    },                                                                             //
+                                                                                                    },                                                                                  //
                                                                                                     r -> new ModelDeleteHelper(r.tryOriginal()).delete());
                                                                                         }
                                                                                     }, containment);
@@ -100,6 +107,14 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
 
     protected DModule(SModule original) {
         super(original);
+    }
+
+    protected void triggerAddModel(DModel model) {
+        Action.of(Pair.of("$ADD_MODEL", model), INIT_MODEL_CONSUMER, LeafModifier.preserved, LeafModifier.read).trigger(this);
+    }
+
+    private Object addModel(DModel b) {
+        return MODELS.add(this, b);
     }
 
     @Override

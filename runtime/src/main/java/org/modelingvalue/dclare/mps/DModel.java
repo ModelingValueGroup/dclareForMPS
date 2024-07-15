@@ -108,7 +108,7 @@ public class DModel extends DNewable<DModel, SModelReference, SModel> implements
     @SuppressWarnings({"deprecation", "removal"})
     public static final DObserved<DModel, Set<DevKit>>                           USED_DEVKITS               = DObserved.of("USED_DEVKITS", Set.of(), dModel -> {
                                                                                                                 SModelInternal sModel = (SModelInternal) dModel.tryOriginal();
-                                                                                                                return sModel != null ? Collection.of(sModel.importedDevkits()).                                                                                //
+                                                                                                                return sModel != null ? Collection.of(sModel.importedDevkits()).                                                                          //
                                                                                                                         map(r -> r.resolve(MPSModuleRepository.getInstance())).filter(DevKit.class).asSet() : Set.of();
                                                                                                             }, (dModel, pre, post) -> {
                                                                                                                 SModelInternal sModel = (SModelInternal) dModel.tryOriginal();
@@ -119,7 +119,7 @@ public class DModel extends DNewable<DModel, SModelReference, SModel> implements
 
     public static final DObserved<DModel, Set<DModel>>                           USED_MODELS                = DObserved.of("USED_MODELS", Set.of(), dModel -> {
                                                                                                                 SModelInternal sModel = (SModelInternal) dModel.tryOriginal();
-                                                                                                                return sModel != null ? Collection.of(((SModelInternal) sModel).getModelImports()).                                                             //
+                                                                                                                return sModel != null ? Collection.of(((SModelInternal) sModel).getModelImports()).                                                       //
                                                                                                                         map(r -> r.resolve(null)).notNull().map(DModel::of).asSet() : Set.of();
                                                                                                             }, (o, pre, post) -> {
                                                                                                                 SModelInternal sModel = (SModelInternal) o.tryOriginal();
@@ -612,6 +612,22 @@ public class DModel extends DNewable<DModel, SModelReference, SModel> implements
     protected Pair<DMutable, DObserved<DMutable, ?>> readParent() {
         SModule sModule = dClareMPS().read(() -> tryOriginal().getModule());
         return sModule != null ? (Pair) Pair.of(DModule.of(sModule), DModule.MODELS) : null;
+    }
+
+    @Override
+    protected void activate(boolean changed) {
+        if (!isExternal() && (changed ? isAction() : isObserving()) && isRead()) {
+            doActivate();
+        }
+    }
+
+    protected void doActivate() {
+        if (!isActive()) {
+            SModule module = dClareMPS().read(() -> tryOriginal().getModule());
+            if (module != null) {
+                DModule.of(module).triggerAddModel(this);
+            }
+        }
     }
 
 }
