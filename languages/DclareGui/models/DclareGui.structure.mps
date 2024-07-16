@@ -343,5 +343,35 @@
       <ref role="20lvS9" to="tpck:h0TrEE$" resolve="INamedConcept" />
     </node>
   </node>
+  <node concept="PlHQZ" id="1h9n_fg6T52">
+    <property role="EcuMT" value="1461803268125200706" />
+    <property role="3GE5qa" value="rules_diagram" />
+    <property role="TrG5h" value="DummyVariables" />
+    <node concept="1TJgyi" id="1h9n_fg6T5V" role="1TKVEl">
+      <property role="IQ2nx" value="1461803268125200763" />
+      <property role="TrG5h" value="model_name" />
+      <ref role="AX2Wp" to="tpck:fKAOsGN" resolve="string" />
+    </node>
+    <node concept="1TJgyi" id="1h9n_fg6T8u" role="1TKVEl">
+      <property role="IQ2nx" value="1461803268125200926" />
+      <property role="TrG5h" value="model_roots" />
+      <ref role="AX2Wp" to="tpck:fKAOsGN" resolve="string" />
+    </node>
+    <node concept="1TJgyi" id="1h9n_fg8ELT" role="1TKVEl">
+      <property role="IQ2nx" value="1461803268125666425" />
+      <property role="TrG5h" value="model_imports" />
+      <ref role="AX2Wp" to="tpck:fKAOsGN" resolve="string" />
+    </node>
+    <node concept="1TJgyi" id="1h9n_fg6VcG" role="1TKVEl">
+      <property role="IQ2nx" value="1461803268125209388" />
+      <property role="TrG5h" value="model_languages" />
+      <ref role="AX2Wp" to="tpck:fKAOsGN" resolve="string" />
+    </node>
+    <node concept="1TJgyi" id="1h9n_fg6Tp_" role="1TKVEl">
+      <property role="IQ2nx" value="1461803268125202021" />
+      <property role="TrG5h" value="module_models" />
+      <ref role="AX2Wp" to="tpck:fKAOsGN" resolve="string" />
+    </node>
+  </node>
 </model>
 
