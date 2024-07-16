@@ -25,7 +25,6 @@ import static org.modelingvalue.dclare.CoreSetableModifier.plumbing;
 import static org.modelingvalue.dclare.mps.DServerMetaData.SHARED_MODELS;
 
 import java.util.Collections;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -40,7 +39,12 @@ import org.jetbrains.mps.openapi.persistence.ModelRoot;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
-import org.modelingvalue.dclare.*;
+import org.modelingvalue.dclare.Constant;
+import org.modelingvalue.dclare.LeafTransaction;
+import org.modelingvalue.dclare.Observed;
+import org.modelingvalue.dclare.Observer;
+import org.modelingvalue.dclare.Setable;
+import org.modelingvalue.dclare.State;
 
 import jetbrains.mps.errors.item.ModelReportItem;
 import jetbrains.mps.extapi.model.SModelBase;
@@ -56,9 +60,6 @@ import jetbrains.mps.smodel.SModelInternal;
 
 @SuppressWarnings("unused")
 public class DModel extends DNewable<DModel, SModelReference, SModel> implements SModel {
-
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    private static final Consumer<DModel>                                        INIT_ROOT_CONSUMER         = m -> m.addRoot(((Pair<String, DNode>) ((Action) LeafTransaction.getCurrent().leaf()).id()).b());
 
     protected static final Constant<SModel, Boolean>                             EXTERNAL                   = Constant.of("EXTERNAL", DModel::isExternal);
 
@@ -174,14 +175,6 @@ public class DModel extends DNewable<DModel, SModelReference, SModel> implements
     public static DModel of(IRuleSet ruleSet, String anonymousType, Object[] identity, boolean temporal) {
         return quotationConstruct(ruleSet, anonymousType, identity, //
                 () -> new DModel(new Object[]{DClareMPS.uniqueLong(), temporal, false}));
-    }
-
-    protected void triggerAddRoot(DNode root) {
-        Action.of(Pair.of("$ADD_ROOT", root), INIT_ROOT_CONSUMER, LeafModifier.preserved, LeafModifier.read).trigger(this);
-    }
-
-    private Object addRoot(DNode b) {
-        return ROOTS.add(this, b);
     }
 
     @SuppressWarnings("deprecation")
@@ -612,22 +605,6 @@ public class DModel extends DNewable<DModel, SModelReference, SModel> implements
     protected Pair<DMutable, DObserved<DMutable, ?>> readParent() {
         SModule sModule = dClareMPS().read(() -> tryOriginal().getModule());
         return sModule != null ? (Pair) Pair.of(DModule.of(sModule), DModule.MODELS) : null;
-    }
-
-    @Override
-    protected void activate(boolean changed) {
-        if (!isExternal() && (changed ? isAction() : isObserving()) && isRead()) {
-            doActivate();
-        }
-    }
-
-    protected void doActivate() {
-        if (!isActive()) {
-            SModule module = dClareMPS().read(() -> tryOriginal().getModule());
-            if (module != null) {
-                DModule.of(module).triggerAddModel(this);
-            }
-        }
     }
 
 }

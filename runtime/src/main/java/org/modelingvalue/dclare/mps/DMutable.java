@@ -305,11 +305,13 @@ public abstract class DMutable implements DObject, Mutable {
     }
 
     protected boolean isActive() {
-        return !isExternal() && LeafTransaction.getCurrent().current().get(this, Mutable.D_PARENT_CONTAINING) != null;
+        return !isExternal() && LeafTransaction.getCurrent().current().getRaw(this, Mutable.D_PARENT_CONTAINING) != null;
     }
 
     protected boolean isNative(INativeGroup ng) {
         return !isExternal() && !dClass().getNatives(ng).isEmpty();
     }
 
+    protected void doActivate() {
+    }
 }

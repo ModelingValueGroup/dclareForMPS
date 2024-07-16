@@ -43,6 +43,7 @@ import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
 import org.modelingvalue.collections.util.Quadruple;
 import org.modelingvalue.collections.util.TriConsumer;
+import org.modelingvalue.collections.util.Triple;
 import org.modelingvalue.dclare.*;
 import org.modelingvalue.dclare.Construction.Reason;
 
@@ -1193,30 +1194,6 @@ public class DNode extends DNewable<DNode, SNodeReference, SNode> implements SNo
         DNode.CONCEPT_DOBSERVEDS.get(getConcept()).forEachOrdered(o -> readObserved(read, o));
     }
 
-    @Override
-    protected void activate(boolean changed) {
-        if (!isExternal() && (changed ? isAction() : isObserving()) && isRead()) {
-            doActivate();
-        }
-    }
-
-    protected void doActivate() {
-        if (!isActive()) {
-            SNode root = dClareMPS().read(() -> tryOriginal().getContainingRoot());
-            if (root != null) {
-                DNode dRoot = DNode.of(root);
-                if (!dRoot.isActive()) {
-                    SModel model = dClareMPS().read(root::getModel);
-                    if (model != null) {
-                        DModel dModel = DModel.of(model);
-                        dModel.doActivate();
-                        dModel.triggerAddRoot(dRoot);
-                    }
-                }
-            }
-        }
-    }
-
     protected DModel getDModelFromMPS() {
         SNodeReference ref = reference();
         SModel sModel = ref != null ? getModelFromMPS(ref) : null;
@@ -1264,5 +1241,23 @@ public class DNode extends DNewable<DNode, SNodeReference, SNode> implements SNo
     private boolean isAntiQuotation() {
         return getConcept().equals(ANTI_QUOTATION_CONCEPT) || getConcept().equals(LIST_ANTI_QUOTATION_CONCEPT) || //
                 getConcept().equals(PROPERTY_ANTI_QUOTATION_CONCEPT) || getConcept().equals(REFERENCE_ANTI_QUOTATION_CONCEPT);
+    }
+
+    @Override
+    protected void activate(boolean changed) {
+        if (!isExternal() && (changed ? isAction() : isObserving()) && isRead()) {
+            doActivate();
+        }
+    }
+
+    @Override
+    protected void doActivate() {
+        if (!isActive()) {
+            Pair<DMutable, DObserved<DMutable, ?>> parent = readParent();
+            Action.<DMutable> of(Triple.of(this, parent.a(), parent.b()), m -> {
+                parent.b().add(m, this);
+            }).trigger(parent.a());
+            parent.a().doActivate();
+        }
     }
 }
