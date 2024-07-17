@@ -15230,9 +15230,7 @@
                 <property role="3cmrfH" value="5" />
               </node>
             </node>
-            <node concept="1SfVH9" id="6nAq1fyzIYL" role="37wK5m">
-              <ref role="3cqZAo" node="3nsHMGrWhjH" resolve="color" />
-            </node>
+            <node concept="10Nm6u" id="2s7sN$Jb8An" role="37wK5m" />
             <node concept="10M0yZ" id="O1aJ6zBdsh" role="37wK5m">
               <ref role="3cqZAo" to="z60i:~Color.black" resolve="black" />
               <ref role="1PxDUh" to="z60i:~Color" resolve="Color" />
