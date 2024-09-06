@@ -115,7 +115,7 @@ public class DObserved<O extends DMutable, T> extends Observed<O, T> implements 
     private void initRead(O object) {
         if (!DMutable.READ_OBSERVEDS.add(object, this).contains(this)) {
             if (DClareMPS.instance().getConfig().isTraceActivation()) {
-                LeafTransaction current = LeafTransaction.getCurrent();
+                LeafTransaction current = currentLeaf(object);
                 current.runSilent(() -> System.err.println(DclareTrace.getLineStart("ACTIVATE", current) + object + "." + this));
             }
             super.set(object, fromMPS(object));
@@ -164,7 +164,7 @@ public class DObserved<O extends DMutable, T> extends Observed<O, T> implements 
     @SuppressWarnings("rawtypes")
     @Override
     public T get(O object) {
-        LeafTransaction tx = LeafTransaction.getCurrent();
+        LeafTransaction tx = currentLeaf(object);
         if (!(tx instanceof AbstractDerivationTransaction) && tx.universeTransaction().constantState().isSet(tx, object, Mutable.D_PARENT_CONTAINING.constant())) {
             DClareMPS dClareMPS = DClareMPS.instance(tx);
             return dClareMPS.imperativeState().derive(() -> super.get(object), dClareMPS.universeTransaction().constantState());
@@ -188,7 +188,7 @@ public class DObserved<O extends DMutable, T> extends Observed<O, T> implements 
     @Override
     public T set(O object, T value) {
         if (isRead() && !isDclareOnly() && object.isObserving()) {
-            LeafTransaction tx = LeafTransaction.getCurrent();
+            LeafTransaction tx = currentLeaf(object);
             if (object.isRead()) {
                 if (!DMutable.READ_OBSERVEDS.get(object).contains(this)) {
                     triggerInitRead(object);
