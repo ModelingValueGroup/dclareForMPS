@@ -15968,12 +15968,9 @@
       <node concept="3uibUv" id="2HxV8y$t1E7" role="1tU5fm">
         <ref role="3uigEE" to="ni5j:~Pattern" resolve="Pattern" />
       </node>
-      <node concept="2YIFZM" id="2HxV8y$ySb$" role="33vP2m">
-        <ref role="37wK5l" to="ni5j:~Pattern.compile(java.lang.String)" resolve="compile" />
-        <ref role="1Pybhc" to="ni5j:~Pattern" resolve="Pattern" />
-        <node concept="Xl_RD" id="2HxV8y$ySRB" role="37wK5m">
-          <property role="Xl_RC" value=".*" />
-        </node>
+      <node concept="10M0yZ" id="7CK16dWfZlB" role="33vP2m">
+        <ref role="3cqZAo" to="u4ym:7CK16dWfLVG" resolve="MATCH_ALL_PATTERN" />
+        <ref role="1PxDUh" to="u4ym:7wc8RN4MMv1" resolve="D2D" />
       </node>
     </node>
     <node concept="32q3_s" id="2HxV8y$Crlw" role="1FPzNG">
