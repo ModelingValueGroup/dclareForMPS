@@ -62,7 +62,7 @@ public class DclareForMPSEngine implements DeployListener, IBreakpointManagerLis
     private static final WeakHashMap<MPSProject, DclareForMPSEngine> ENGINE_MAP                = new WeakHashMap<>();
 
     private static final boolean                                     TRACE_ENGINE              = Boolean.getBoolean("TRACE_ENGINE");
-    public static final int                                          MAX_NR_OF_HISTORY_FOR_MPS = Integer.getInteger("MAX_NR_OF_HISTORY_FOR_MPS", 4) + 3;
+    public static final int                                          MAX_NR_OF_HISTORY_FOR_MPS = Integer.getInteger("MAX_NR_OF_HISTORY_FOR_MPS", 16) + 3;
     private static final AtomicInteger                               COUNTER                   = new AtomicInteger(0);
 
     public static void setStatusHandlerFunction(Function<MPSProject, EngineStatusHandler> function) {

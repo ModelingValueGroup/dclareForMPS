@@ -1254,10 +1254,12 @@ public class DNode extends DNewable<DNode, SNodeReference, SNode> implements SNo
     protected void doActivate() {
         if (!isActive()) {
             Pair<DMutable, DObserved<DMutable, ?>> parent = readParent();
-            Action.<DMutable> of(Triple.of(this, parent.a(), parent.b()), m -> {
-                parent.b().add(m, this);
-            }).trigger(parent.a());
-            parent.a().doActivate();
+            if (parent != null) {
+                Action.<DMutable> of(Triple.of(this, parent.a(), parent.b()), m -> {
+                    parent.b().add(m, this);
+                }).trigger(parent.a());
+                parent.a().doActivate();
+            }
         }
     }
 }
