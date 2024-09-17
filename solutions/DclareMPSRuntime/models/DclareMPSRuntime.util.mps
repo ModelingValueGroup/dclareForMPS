@@ -9245,21 +9245,6 @@
   <node concept="312cEu" id="7wc8RN4MMv1">
     <property role="TrG5h" value="D2D" />
     <node concept="2tJIrI" id="1zO1whYz7Qy" role="jymVt" />
-    <node concept="Wx3nA" id="7CK16dWfLVG" role="jymVt">
-      <property role="TrG5h" value="MATCH_ALL_PATTERN" />
-      <property role="3TUv4t" value="true" />
-      <node concept="3Tm1VV" id="7CK16dWfFR$" role="1B3o_S" />
-      <node concept="3uibUv" id="7CK16dWfR$E" role="1tU5fm">
-        <ref role="3uigEE" to="ni5j:~Pattern" resolve="Pattern" />
-      </node>
-      <node concept="2YIFZM" id="2HxV8y$ySb$" role="33vP2m">
-        <ref role="37wK5l" to="ni5j:~Pattern.compile(java.lang.String)" resolve="compile" />
-        <ref role="1Pybhc" to="ni5j:~Pattern" resolve="Pattern" />
-        <node concept="Xl_RD" id="2HxV8y$ySRB" role="37wK5m">
-          <property role="Xl_RC" value=".*" />
-        </node>
-      </node>
-    </node>
     <node concept="Wx3nA" id="1zO1whYz9pk" role="jymVt">
       <property role="TrG5h" value="RANDOM" />
       <property role="3TUv4t" value="true" />
