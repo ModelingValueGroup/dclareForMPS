@@ -175,10 +175,7 @@ public interface DAttribute<O, T> extends DFeature {
 
         @Override
         public V get(C object) {
-            if (object == null) {
-                throw new NullPointerException("attempt to read null." + this);
-            }
-            LeafTransaction tx = LeafTransaction.getCurrent();
+            LeafTransaction tx = currentLeaf(object);
             if (sProperty != null && object instanceof DNode && DClareMPS.GET_FROM_MPS.get() && !AbstractDerivationTransaction.isDeriving()) {
                 SNode sNode = ((DNode) object).tryOriginal();
                 if (sNode != null) {
@@ -324,7 +321,7 @@ public interface DAttribute<O, T> extends DFeature {
 
         @Override
         public void activate(C object) {
-            changed(LeafTransaction.getCurrent(), object, null, get(object));
+            changed(currentLeaf(object), object, null, get(object));
         }
 
     }

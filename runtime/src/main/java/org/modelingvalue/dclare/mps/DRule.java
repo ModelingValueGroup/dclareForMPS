@@ -37,8 +37,8 @@ public interface DRule<O> extends DFeature {
             super(rule, rule::run, Collection.of(rule.targets()).asSet(), //
                     rule.initialLowPriority() ? Priority.OUTER : Priority.one, //
                     IAspect.DIRECTION.get(rule.ruleSet().getAspect()), //
-                    LeafModifier.anonymous.iff(rule.ruleSet().getAnonymousType() != null), //
-                    LeafModifier.atomic.iff(rule.atomic()));
+                    CoreLeafModifier.anonymous.iff(rule.ruleSet().getAnonymousType() != null), //
+                    CoreLeafModifier.atomic.iff(rule.atomic()));
         }
 
         public DRule rule() {

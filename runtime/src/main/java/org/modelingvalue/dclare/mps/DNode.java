@@ -303,6 +303,14 @@ public class DNode extends DNewable<DNode, SNodeReference, SNode> implements SNo
     @SuppressWarnings("rawtypes")
     protected static final Set<Setable>                                                                      SETABLES                         = DNewable.SETABLES.addAll(Set.of(ROOT, MODEL, USER_OBJECTS, ALL_MPS_ISSUES, INDEX, NODE_ID, QUOTED));
 
+    private static final Consumer<DMutable>                                                                  ACTIVATOR                        = m -> {
+                                                                                                                                                  @SuppressWarnings("unchecked")
+                                                                                                                                                  Triple<DNode, DMutable, DObserved<DMutable, ?>> id = (Triple<DNode, DMutable, DObserved<DMutable, ?>>) LeafTransaction.getCurrent().leaf().id();
+                                                                                                                                                  if (!id.a().isActive()) {
+                                                                                                                                                      id.c().add(id.b(), id.a());
+                                                                                                                                                  }
+                                                                                                                                              };
+
     private static void removeWhenAllreadyContained(SNode newParent, SContainmentLink link, SNode node) {
         SNode oldParent = node.getParent();
         if (oldParent != null && (oldParent != newParent || link != node.getContainmentLink())) {
@@ -1253,11 +1261,11 @@ public class DNode extends DNewable<DNode, SNodeReference, SNode> implements SNo
     @Override
     protected void doActivate() {
         if (!isActive()) {
-            Pair<DMutable, DObserved<DMutable, ?>> parent = readParent();
-            Action.<DMutable> of(Triple.of(this, parent.a(), parent.b()), m -> {
-                parent.b().add(m, this);
-            }).trigger(parent.a());
-            parent.a().doActivate();
+            Pair<DMutable, DObserved<DMutable, ?>> pair = readParent();
+            if (pair != null) {
+                Action.<DMutable> of(Triple.of(this, pair.a(), pair.b()), ACTIVATOR).trigger(pair.a());
+                pair.a().doActivate();
+            }
         }
     }
 }

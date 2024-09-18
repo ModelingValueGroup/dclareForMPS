@@ -20,18 +20,15 @@
 
 package org.modelingvalue.dclare.mps;
 
-import jetbrains.mps.classloading.ClassLoaderManager;
-import jetbrains.mps.classloading.DeployListener;
-import jetbrains.mps.debug.api.BreakpointManagerComponent;
-import jetbrains.mps.debug.api.BreakpointManagerComponent.IBreakpointManagerListener;
-import jetbrains.mps.debug.api.breakpoints.BreakpointLocation;
-import jetbrains.mps.debug.api.breakpoints.IBreakpoint;
-import jetbrains.mps.debug.api.breakpoints.ILocationBreakpoint;
-import jetbrains.mps.errors.item.IssueKindReportItem;
-import jetbrains.mps.ide.MPSCoreComponents;
-import jetbrains.mps.module.ReloadableModule;
-import jetbrains.mps.project.MPSProject;
-import jetbrains.mps.project.ProjectBase;
+import static org.modelingvalue.dclare.UniverseTransaction.Mood.*;
+
+import java.util.Objects;
+import java.util.WeakHashMap;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
+
 import org.jetbrains.mps.openapi.model.SNode;
 import org.jetbrains.mps.openapi.model.SNodeReference;
 import org.jetbrains.mps.openapi.util.ProgressMonitor;
@@ -45,16 +42,18 @@ import org.modelingvalue.dclare.DclareTrace;
 import org.modelingvalue.dclare.LeafTransaction;
 import org.modelingvalue.dclare.UniverseTransaction.Status;
 
-import java.util.Objects;
-import java.util.WeakHashMap;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Function;
-
-import static org.modelingvalue.dclare.UniverseTransaction.Mood.idle;
-import static org.modelingvalue.dclare.UniverseTransaction.Mood.starting;
-import static org.modelingvalue.dclare.UniverseTransaction.Mood.stopped;
+import jetbrains.mps.classloading.ClassLoaderManager;
+import jetbrains.mps.classloading.DeployListener;
+import jetbrains.mps.debug.api.BreakpointManagerComponent;
+import jetbrains.mps.debug.api.BreakpointManagerComponent.IBreakpointManagerListener;
+import jetbrains.mps.debug.api.breakpoints.BreakpointLocation;
+import jetbrains.mps.debug.api.breakpoints.IBreakpoint;
+import jetbrains.mps.debug.api.breakpoints.ILocationBreakpoint;
+import jetbrains.mps.errors.item.IssueKindReportItem;
+import jetbrains.mps.ide.MPSCoreComponents;
+import jetbrains.mps.module.ReloadableModule;
+import jetbrains.mps.project.MPSProject;
+import jetbrains.mps.project.ProjectBase;
 
 @SuppressWarnings("unused")
 public class DclareForMPSEngine implements DeployListener, IBreakpointManagerListener {
@@ -63,7 +62,7 @@ public class DclareForMPSEngine implements DeployListener, IBreakpointManagerLis
     private static final WeakHashMap<MPSProject, DclareForMPSEngine> ENGINE_MAP                = new WeakHashMap<>();
 
     private static final boolean                                     TRACE_ENGINE              = Boolean.getBoolean("TRACE_ENGINE");
-    public static final int                                          MAX_NR_OF_HISTORY_FOR_MPS = Integer.getInteger("MAX_NR_OF_HISTORY_FOR_MPS", 4) + 3;
+    public static final int                                          MAX_NR_OF_HISTORY_FOR_MPS = Integer.getInteger("MAX_NR_OF_HISTORY_FOR_MPS", 16) + 3;
     private static final AtomicInteger                               COUNTER                   = new AtomicInteger(0);
 
     public static void setStatusHandlerFunction(Function<MPSProject, EngineStatusHandler> function) {
@@ -224,6 +223,11 @@ public class DclareForMPSEngine implements DeployListener, IBreakpointManagerLis
 
     public static void breakpoint() {
         System.err.println(DclareTrace.getLineStart("BRKPNT", LeafTransaction.getCurrent()));
+    }
+
+    public static <T> T breakpoint(T val) {
+        breakpoint();
+        return val;
     }
 
     public static <T> T print(Object ctx, T val) {
