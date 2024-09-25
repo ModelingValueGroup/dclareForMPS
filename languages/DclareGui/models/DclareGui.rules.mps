@@ -21166,7 +21166,7 @@
                                                               <ref role="3cqZAo" node="5miAuzDoBt3" resolve="e" />
                                                             </node>
                                                             <node concept="liA8E" id="3a6jtrRDR24" role="2OqNvi">
-                                                              <ref role="37wK5l" to="zrbp:~ContainingCollection.contains(java.lang.Object)" resolve="contains" />
+                                                              <ref role="37wK5l" to="zrbp:~Collection.contains(java.lang.Object)" resolve="contains" />
                                                               <node concept="37vLTw" id="3a6jtrRDZJD" role="37wK5m">
                                                                 <ref role="3cqZAo" node="5miAuzDoBsZ" resolve="aa" />
                                                               </node>
@@ -21207,7 +21207,7 @@
                                                               <ref role="3cqZAo" node="5miAuzDoBt3" resolve="e" />
                                                             </node>
                                                             <node concept="liA8E" id="50kGok8$l9S" role="2OqNvi">
-                                                              <ref role="37wK5l" to="zrbp:~ContainingCollection.contains(java.lang.Object)" resolve="contains" />
+                                                              <ref role="37wK5l" to="zrbp:~Collection.contains(java.lang.Object)" resolve="contains" />
                                                               <node concept="37vLTw" id="50kGok8$l9T" role="37wK5m">
                                                                 <ref role="3cqZAo" node="5miAuzDoBt1" resolve="aa" />
                                                               </node>
@@ -21684,7 +21684,7 @@
                                             </node>
                                           </node>
                                           <node concept="liA8E" id="5Y0My$9RpEz" role="2OqNvi">
-                                            <ref role="37wK5l" to="zrbp:~ContainingCollection.contains(java.lang.Object)" resolve="contains" />
+                                            <ref role="37wK5l" to="zrbp:~Collection.contains(java.lang.Object)" resolve="contains" />
                                             <node concept="37vLTw" id="5Y0My$9RpE$" role="37wK5m">
                                               <ref role="3cqZAo" node="5miAuzDoBtd" resolve="o" />
                                             </node>
