@@ -1016,9 +1016,9 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
         return itx != null ? itx.preState() : universeTransaction.preState();
     }
 
-    public static <T> T get(Object sObject, Supplier<T> supplier) {
+    public static <T> T get(Object sObject, Supplier<T> supplier, boolean derive) {
         DClareMPS dClareMPS = dClareForObject(sObject);
-        return dClareMPS != null ? dClareMPS.doGet(sObject, supplier) : null;
+        return dClareMPS != null ? dClareMPS.doGet(sObject, supplier, derive) : null;
     }
 
     private static ProjectManager projectManager;
@@ -1086,7 +1086,10 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
         }
     };
 
-    private <T> T doGet(Object sObject, Supplier<T> supplier) {
+    private <T> T doGet(Object sObject, Supplier<T> supplier, boolean derive) {
+        if (LeafTransaction.getCurrent() instanceof AbstractDerivationTransaction) {
+            return supplier.get();
+        }
         State state = imperativeState();
         return state.get(() -> GET_FROM_MPS.get(true, () -> {
             DMutable dObject = toDObject(sObject);
@@ -1096,7 +1099,7 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
             }
             if (dObject.isExternal()) {
                 return state.derive(supplier, universeTransaction().constantState());
-            } else if (dObject.isActive() && isRunning()) {
+            } else if (!derive && dObject.isActive() && isRunning()) {
                 try {
                     if (Thread.currentThread() == commandThread) {
                         return LeafTransaction.getContext().get(mpsTransaction, supplier);
