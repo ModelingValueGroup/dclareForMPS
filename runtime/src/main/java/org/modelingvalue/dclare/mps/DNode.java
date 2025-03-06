@@ -37,7 +37,6 @@ import org.jetbrains.mps.openapi.model.SNodeId;
 import org.jetbrains.mps.openapi.model.SNodeReference;
 import org.jetbrains.mps.openapi.model.SReference;
 import org.modelingvalue.collections.Collection;
-import org.modelingvalue.collections.Entry;
 import org.modelingvalue.collections.List;
 import org.modelingvalue.collections.Map;
 import org.modelingvalue.collections.Set;
@@ -638,7 +637,7 @@ public class DNode extends DNewable<DNode, SNodeReference, SNode> implements SNo
             if (references.isEmpty() && containments.isEmpty()) {
                 return concept;
             } else {
-                Map<Object, Object> map = Map.of(Entry.of(concept, concept));
+                Map<SAbstractLink, Object> map = Map.of();
                 for (SReferenceLink rl : references) {
                     DNode referenced = REFERENCE.get(rl).get(this);
                     map = map.put(rl, referenced != null ? referenced.dIdentity() : null);
