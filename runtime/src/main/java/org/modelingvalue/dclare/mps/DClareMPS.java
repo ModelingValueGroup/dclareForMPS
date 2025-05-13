@@ -92,6 +92,7 @@ import jetbrains.mps.project.Project;
 import jetbrains.mps.project.ProjectBase;
 import jetbrains.mps.project.ProjectManager;
 import jetbrains.mps.project.ProjectRepository;
+import jetbrains.mps.smodel.adapter.structure.language.SLanguageAdapter;
 import jetbrains.mps.smodel.language.LanguageRegistry;
 import jetbrains.mps.smodel.language.LanguageRuntime;
 
@@ -207,6 +208,8 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
     public static final Constant<SAbstractConcept, SLanguage>                                                          LANGUAGE                 = Constant.of("LANGUAGE", null, SAbstractConcept::getLanguage);
 
     public static final Constant<DevKit, Set<SLanguage>>                                                               DEVKIT_LANGUAGES         = Constant.of("DEVKIT_LANGUAGES", Set.of(), devkit -> Collection.of(devkit.getAllExportedLanguageIds()).asSet());
+
+    public static final Constant<SLanguage, Set<SLanguage>>                                                            EXTENDED_LANGUAGES       = Constant.of("EXTENDED_LANGUAGES", Set.of(), DClareMPS::extendedLanguages);
 
     protected static final Setable<DClareMPS, DRepository>                                                             REPOSITORY_CONTAINER     = Setable.of("REPOSITORY_CONTAINER", null, containment);
     private static final Setable<DClareMPS, DServerMetaData>                                                           DSERVER_METADATA         = Setable.of("SERVER_METADATA", null, containment);
@@ -1497,5 +1500,10 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
 
     protected void addObservedNode(SNode sNode) {
         engine.observedNodes.update(Set::add, sNode);
+    }
+
+    private static Set<SLanguage> extendedLanguages(SLanguage lang) {
+        Iterable<LanguageRuntime> extendedLanguages = ((SLanguageAdapter) lang).getLanguageDescriptor().getExtendedLanguages();
+        return Collection.of(extendedLanguages).map(LanguageRuntime::getIdentity).asSet();
     }
 }

@@ -65,14 +65,14 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
                                                                                     }, (m, pre, post) -> {
                                                                                         if (!m.isExternal()) {
                                                                                             SModule sModule = m.original();
-                                                                                            Setable.<Set<DModel>, DModel> diff(pre, post,                                          //
+                                                                                            Setable.<Set<DModel>, DModel> diff(pre, post,                                             //
                                                                                                     a -> {
                                                                                                         SModel sModel = a.original();
                                                                                                         if (sModel.getModule() != sModule) {
                                                                                                             ((SModuleBase) sModule).registerModel((SModelBase) sModel);
                                                                                                         }
                                                                                                         a.init(sModel);
-                                                                                                    },                                                                             //
+                                                                                                    },                                                                                //
                                                                                                     r -> new ModelDeleteHelper(r.tryOriginal()).delete());
                                                                                         }
                                                                                     }, containment);
@@ -81,12 +81,17 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
                                                                                         return Collection.of(m.original().getUsedLanguages()).asSet();
                                                                                     }, null);
 
+    public static final Constant<DModule, Set<SLanguage>>      ALL_LANGUAGES        = Constant.of("ALL_LANGUAGES", Set.of(), m -> {
+                                                                                        Set<SLanguage> set = LANGUAGES.get(m);
+                                                                                        return set.addAll(set.flatMap(DClareMPS.EXTENDED_LANGUAGES::get));
+                                                                                    });
+
     public static final DObserved<DModule, Set<DDependency>>   DEPENDENCIES         = DObserved.of("DEPENDENCIES", Set.of(), m -> {
                                                                                         return Collection.of(m.original().getDeclaredDependencies()).map(DDependency::new).asSet();
                                                                                     }, null);
 
     public static final Constant<DModule, Set<SLanguage>>      LANGUAGES_WITH_RULES = Constant.of("LANGUAGES_WITH_RULE_ASPECT", Set.of(), m -> {
-                                                                                        return LANGUAGES.get(m).filter(l -> !DClareMPS.ACTIVE_RULE_SETS.get(l).isEmpty()).asSet();
+                                                                                        return ALL_LANGUAGES.get(m).filter(l -> !DClareMPS.ACTIVE_RULE_SETS.get(l).isEmpty()).asSet();
                                                                                     });
     @SuppressWarnings("rawtypes")
     protected static final Set<Observer>                       OBSERVERS            = DMutable.OBSERVERS;
