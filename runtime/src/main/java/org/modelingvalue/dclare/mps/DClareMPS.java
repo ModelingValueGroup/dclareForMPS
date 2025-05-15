@@ -736,7 +736,7 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
                 System.err.println(DclareTrace.getLineStart(nativeGroup.getName().toUpperCase(), it) + "START " + this);
             }
             Map<DMutable, Map<DObserved, Pair<Object, Object>>>[] diff = new Map[]{imper.diff(dclare, //
-                    o -> o instanceof DMutable && (((DMutable) o).isNative(nativeGroup) || !imper.get((DMutable) o, DMutable.TYPE).getNatives(nativeGroup).isEmpty()), //
+                    o -> o instanceof DMutable && (((DMutable) o).isNative(nativeGroup) || !imper.getRaw((DMutable) o, DMutable.TYPE).getNatives(nativeGroup).isEmpty()), //
                     s -> s instanceof DObserved && (DMutable.CONTAINED == s || ((DObserved) s).isNative(nativeGroup))).asMap(e -> (Entry) e)};
             if (!diff[0].isEmpty()) {
                 do {
@@ -764,7 +764,7 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
                     DAttribute dAttribute = (DAttribute) e.getKey();
                     Object preVal = e.getValue().a();
                     Object postVal = e.getValue().b();
-                    handleNativeChanges(nativeGroup, dObject, dAttribute, preVal, postVal, post.get(dObject, DMutable.TYPE).getNatives(nativeGroup));
+                    handleNativeChanges(nativeGroup, dObject, dAttribute, preVal, postVal, post.getRaw(dObject, DMutable.TYPE).getNatives(nativeGroup));
                 }
             }
         }
@@ -772,7 +772,7 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
 
     @SuppressWarnings({"rawtypes"})
     private void parentToNative(INativeGroup nativeGroup, INativeRunner nativeRunner, State imper, State dclare, Map<DMutable, Map<DObserved, Pair<Object, Object>>>[] diff, DMutable dObject) {
-        Pair<Mutable, Setable<Mutable, ?>> pair = dclare.get(dObject, Mutable.D_PARENT_CONTAINING);
+        Pair<Mutable, Setable<Mutable, ?>> pair = dclare.getRaw(dObject, Mutable.D_PARENT_CONTAINING);
         if (pair != null && pair.a() instanceof DMutable && pair.b() instanceof DObserved) {
             toNative(nativeGroup, nativeRunner, imper, dclare, diff, (DMutable) pair.a());
         }
@@ -780,16 +780,16 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     private boolean handleNativeExistence(INativeGroup nativeGroup, INativeRunner nativeRunner, State pre, State post, DMutable dObject) {
-        boolean preC = pre.get(dObject, DMutable.CONTAINED);
-        boolean postC = post.get(dObject, DMutable.CONTAINED);
+        boolean preC = pre.getRaw(dObject, DMutable.CONTAINED);
+        boolean postC = post.getRaw(dObject, DMutable.CONTAINED);
         if (!preC && postC) {
-            DMutable parent = (DMutable) post.get(dObject, Mutable.D_PARENT_CONTAINING).a();
-            for (INative<DMutable> n : post.get(dObject, DMutable.TYPE).getNatives(nativeGroup)) {
+            DMutable parent = (DMutable) post.getRaw(dObject, Mutable.D_PARENT_CONTAINING).a();
+            for (INative<DMutable> n : post.getRaw(dObject, DMutable.TYPE).getNatives(nativeGroup)) {
                 n.init(dObject, parent, nativeRunner);
                 for (IChangeHandler h : INative.ALL_HANDLERS.get(n)) {
                     if (h.attribute() instanceof DObservedAttribute) {
-                        Object b = pre.get(dObject, (DObservedAttribute) h.attribute());
-                        Object a = post.get(dObject, (DObservedAttribute) h.attribute());
+                        Object b = pre.getRaw(dObject, (DObservedAttribute) h.attribute());
+                        Object a = post.getRaw(dObject, (DObservedAttribute) h.attribute());
                         nativeChange(nativeGroup, dObject, h, b, a);
                     } else {
                         nativeChange(nativeGroup, dObject, h, null, h.attribute().get(dObject));
@@ -798,8 +798,8 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
             }
             return true;
         } else if (preC && !postC) {
-            DMutable parent = (DMutable) pre.get(dObject, Mutable.D_PARENT_CONTAINING).a();
-            for (INative n : pre.get(dObject, DMutable.TYPE).getNatives(nativeGroup)) {
+            DMutable parent = (DMutable) pre.getRaw(dObject, Mutable.D_PARENT_CONTAINING).a();
+            for (INative n : pre.getRaw(dObject, DMutable.TYPE).getNatives(nativeGroup)) {
                 n.exit(dObject, parent, nativeRunner);
             }
             return true;
@@ -888,14 +888,14 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
             diff[0] = diff[0].removeKey(dObject);
             parentToMPS(pre, post, diff, dObject);
             if (dObject instanceof DNode) {
-                Pair<Mutable, Setable<Mutable, ?>> prePair = pre.get(dObject, Mutable.D_PARENT_CONTAINING);
-                Pair<Mutable, Setable<Mutable, ?>> postPair = post.get(dObject, Mutable.D_PARENT_CONTAINING);
+                Pair<Mutable, Setable<Mutable, ?>> prePair = pre.getRaw(dObject, Mutable.D_PARENT_CONTAINING);
+                Pair<Mutable, Setable<Mutable, ?>> postPair = post.getRaw(dObject, Mutable.D_PARENT_CONTAINING);
                 if (prePair != null && postPair != null && //
                         prePair.b() instanceof DObserved && ((DObserved) prePair.b()).isDclareOnly() && //
                         postPair.b() instanceof DObserved && !((DObserved) postPair.b()).isDclareOnly()) {
                     for (DObserved dObserved : DNode.CONCEPT_DOBSERVEDS.get(((DNode) dObject).getConcept())) {
-                        Object preVal = pre.get(dObject, dObserved);
-                        Object postVal = post.get(dObject, dObserved);
+                        Object preVal = pre.getRaw(dObject, dObserved);
+                        Object postVal = post.getRaw(dObject, dObserved);
                         if (Objects.equals(preVal, postVal) && !Objects.equals(dObserved.getDefault(dObject), postVal)) {
                             delta = delta.add(dObserved, Pair.of(preVal, postVal));
                         }
@@ -931,7 +931,7 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
 
     @SuppressWarnings({"rawtypes"})
     private void parentToMPS(State imper, State dclare, Map<DMutable, Map<DObserved, Pair<Object, Object>>>[] diff, DMutable dObject) {
-        Pair<Mutable, Setable<Mutable, ?>> pair = dclare.get(dObject, Mutable.D_PARENT_CONTAINING);
+        Pair<Mutable, Setable<Mutable, ?>> pair = dclare.getRaw(dObject, Mutable.D_PARENT_CONTAINING);
         if (pair != null && pair.a() instanceof DMutable && pair.b() instanceof DObserved) {
             toMPS(imper, dclare, diff, (DMutable) pair.a());
         }
@@ -1233,13 +1233,13 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
                     DObserved<DMutable, T> dObserved = (DObserved<DMutable, T>) property;
                     if (dObserved.isRead()) {
                         DMutable dObject = (DMutable) object;
-                        if (dObject.isRead() && !super.get(dObject, DMutable.READ_OBSERVEDS).contains(property)) {
+                        if (dObject.isRead() && !super.getRaw(dObject, DMutable.READ_OBSERVEDS).contains(property)) {
                             return dObserved.fromMPS(dObject);
                         }
                     }
                 } else if (property == Mutable.D_PARENT_CONTAINING) {
                     DMutable dObject = (DMutable) object;
-                    if (dObject.isRead() && super.get((Mutable) object, Mutable.D_PARENT_CONTAINING) == null) {
+                    if (dObject.isRead() && super.getRaw((Mutable) object, Mutable.D_PARENT_CONTAINING) == null) {
                         return (T) dObject.readParent();
                     }
                 }
@@ -1252,7 +1252,7 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
         public <O, A, B> A getA(O object, Getable<O, Pair<A, B>> property) {
             if (object instanceof DMutable && property == (Getable) Mutable.D_PARENT_CONTAINING) {
                 DMutable dObject = (DMutable) object;
-                if (dObject.isRead() && super.get((Mutable) object, Mutable.D_PARENT_CONTAINING) == null) {
+                if (dObject.isRead() && super.getRaw((Mutable) object, Mutable.D_PARENT_CONTAINING) == null) {
                     Pair<DMutable, DObserved<DMutable, ?>> p = dObject.readParent();
                     return p == null ? null : (A) p.a();
                 }
@@ -1265,7 +1265,7 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
         public <O, A, B> B getB(O object, Getable<O, Pair<A, B>> property) {
             if (object instanceof DMutable && property == (Getable) Mutable.D_PARENT_CONTAINING) {
                 DMutable dObject = (DMutable) object;
-                if (dObject.isRead() && super.get((Mutable) object, Mutable.D_PARENT_CONTAINING) == null) {
+                if (dObject.isRead() && super.getRaw((Mutable) object, Mutable.D_PARENT_CONTAINING) == null) {
                     Pair<DMutable, DObserved<DMutable, ?>> p = dObject.readParent();
                     return p == null ? null : (B) p.b();
                 }
