@@ -64,7 +64,7 @@ public class DRepository extends DFromOriginalObject<ProjectRepository> implemen
                                                                                                                       });
 
     public static final Constant<DRepository, Set<SLanguage>>                     ALL_LANGUAGES                       = Constant.of("ALL_LANGUAGES", Set.of(), r -> {
-                                                                                                                          return MODULES.get(r).flatMap(m -> DModule.LANGUAGES.get(m)).asSet();
+                                                                                                                          return MODULES.get(r).flatMap(m -> DModule.ALL_LANGUAGES.get(m)).asSet();
                                                                                                                       });
     @SuppressWarnings({"unchecked", "rawtypes"})
     protected static final Observed<DRepository, Set<SLanguage>>                  CONTAINED_LANGUAGES_WITH_RULES      = Observed.of("CONTAINED_LANGUAGES_WITH_RULES", Set.of());

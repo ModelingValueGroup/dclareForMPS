@@ -300,7 +300,11 @@ public class DModel extends DNewable<DModel, SModelReference, SModel> implements
                 accessoryLanguages = DRepository.CONTAINED_LANGUAGES_WITH_RULES.get(getRepository());
             }
         }
-        return Collection.concat(accessoryLanguages, USED_LANGUAGES.get(this), USED_DEVKITS.get(this).flatMap(dk -> DClareMPS.DEVKIT_LANGUAGES.get(dk))).filter(l -> !DClareMPS.ACTIVE_RULE_SETS.get(l).isEmpty()).asSet();
+        Set<SLanguage> set = Collection.concat(accessoryLanguages, //
+                USED_LANGUAGES.get(this), //
+                USED_DEVKITS.get(this).flatMap(dk -> DClareMPS.DEVKIT_LANGUAGES.get(dk))).asSet();
+        set = set.addAll(set.flatMap(DClareMPS.EXTENDED_LANGUAGES::get));
+        return set.filter(l -> !DClareMPS.ACTIVE_RULE_SETS.get(l).isEmpty()).asSet();
     }
 
     public java.util.Set<SLanguage> getUsedLanguages() {
