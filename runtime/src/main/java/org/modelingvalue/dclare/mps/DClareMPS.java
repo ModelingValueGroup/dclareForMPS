@@ -1233,13 +1233,13 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
                     DObserved<DMutable, T> dObserved = (DObserved<DMutable, T>) property;
                     if (dObserved.isRead()) {
                         DMutable dObject = (DMutable) object;
-                        if (dObject.isRead() && !super.getRaw(dObject, DMutable.READ_OBSERVEDS).contains(property)) {
+                        if (dObject.isRead() && !getRaw(dObject, DMutable.READ_OBSERVEDS).contains(property)) {
                             return dObserved.fromMPS(dObject);
                         }
                     }
                 } else if (property == Mutable.D_PARENT_CONTAINING) {
                     DMutable dObject = (DMutable) object;
-                    if (dObject.isRead() && super.getRaw((Mutable) object, Mutable.D_PARENT_CONTAINING) == null) {
+                    if (dObject.isRead() && getRaw((Mutable) object, Mutable.D_PARENT_CONTAINING) == null) {
                         return (T) dObject.readParent();
                     }
                 }
