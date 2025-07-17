@@ -127,7 +127,7 @@ public abstract class DMutable implements DObject, Mutable {
                                                                                                                            }
                                                                                                                        }
                                                                                                                    }, plumbing);
-
+    /**Maps for each node the observed attributes on which initRead has already been triggered (used to prevent re-read) */
     protected static final Setable<DMutable, Set<Observed>>                              READ_OBSERVEDS            = Setable.of("$READ_OBSERVEDS", Set.of(), plumbing, preserved);
 
     protected static final Set<Observer>                                                 OBSERVERS                 = Set.of(TYPE_RULE, CONTAINING_ATTRIBUTE_RULE);
@@ -270,6 +270,7 @@ public abstract class DMutable implements DObject, Mutable {
         return LeafTransaction.getCurrent() instanceof ActionTransaction;
     }
 
+    /** @return wether this object corresponds to an MPS node */
     protected abstract boolean isRead();
 
     @SuppressWarnings("unchecked")
@@ -290,6 +291,11 @@ public abstract class DMutable implements DObject, Mutable {
         Mutable.super.dChangedParentContaining(pre, post);
     }
 
+    /**
+     * Activate this node if it is allowed to be activated
+     * See {@link #isActive()}
+     * See {@link #doActivate()}
+     */
     protected void activate(boolean changed) {
     }
 
@@ -304,6 +310,7 @@ public abstract class DMutable implements DObject, Mutable {
         return !isExternal() ? Mutable.super.dAllObservers() : (Collection) dClass().observers();
     }
 
+    /** @return whether rules are executed on this node. This is the case true for all non-external nodes that are contained (in the universe) */
     protected boolean isActive() {
         return !isExternal() && LeafTransaction.getCurrent().current().getRaw(this, Mutable.D_PARENT_CONTAINING) != null;
     }
@@ -312,6 +319,8 @@ public abstract class DMutable implements DObject, Mutable {
         return !isExternal() && !dClass().getNatives(ng).isEmpty();
     }
 
+    /**Activate this node by ensuring the node is contained within the universe. Possible this means constructing the node's ancestors.
+     * If this node (tree) is an orphan it cannot be activated.*/
     protected void doActivate() {
     }
 }

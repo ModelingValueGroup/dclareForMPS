@@ -72,7 +72,9 @@ public class DObserved<O extends DMutable, T> extends Observed<O, T> implements 
         return new DObserved<>(id, c -> def, opposite, fromPMS, toMPS, changed, source, modifiers);
     }
 
-    private Function<O, T>                 fromMPS;
+    /**Evaluate and return the Dclare equivalent value of the MPS runtime equivalent relationship of this DObserved */
+    private Function<O, T>                 fromMPS; 
+    /**Set the MPS runtime equivalent relationship of this DObserved to the MPS runtime equivalent of its value*/
     private TriConsumer<O, T, T>           toMPS;
     private Action<O>                      initReadAction;
     private Action<O>                      reReadAction;
@@ -172,16 +174,16 @@ public class DObserved<O extends DMutable, T> extends Observed<O, T> implements 
         if (isRead()) {
             if (object.isRead()) {
                 if (object.readConstant()) {
-                    return super.get(object);
+                    return super.get(object); //this reads the attribute
                 } else if (!isDclareOnly() && object.isObserving() && !DMutable.READ_OBSERVEDS.get(object).contains(this)) {
-                    triggerInitRead(object);
+                    triggerInitRead(object); //this initializes the attribute via fromMPS
                 }
             } else if (!isDclareOnly() && object.isObserving() && !DMutable.READ_OBSERVEDS.add(object, this).contains(this) && DClareMPS.instance().getConfig().isTraceActivation()) {
                 tx.runSilent(() -> System.err.println(DclareTrace.getLineStart("ACTIVATE", tx) + object + "." + this));
             }
         }
         object.activate(false);
-        return super.get(object);
+        return super.get(object); // this reads the attribute
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
@@ -270,6 +272,7 @@ public class DObserved<O extends DMutable, T> extends Observed<O, T> implements 
         return result == null;
     }
 
+    /** @return wether commiting this object effects MPS objects (is toMPS undefined?) */
     public final boolean isDclareOnly() {
         return toMPS == null;
     }
@@ -278,6 +281,7 @@ public class DObserved<O extends DMutable, T> extends Observed<O, T> implements 
         return false;
     }
 
+    /** @return wether this attribute corresponds to an MPS object */
     protected boolean isRead() {
         return fromMPS != null;
     }

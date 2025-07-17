@@ -32,6 +32,9 @@ import org.modelingvalue.dclare.Setable;
 @SuppressWarnings("unused")
 public class DNodeType extends DObjectType<Quadruple<Set<SLanguage>, SConcept, Set<String>, Set<IAspect>>> {
 
+    /**
+     * @param q = language, concept, annonymous types, aspects
+     */
     public DNodeType(Quadruple<Set<SLanguage>, SConcept, Set<String>, Set<IAspect>> q) {
         super(q);
     }

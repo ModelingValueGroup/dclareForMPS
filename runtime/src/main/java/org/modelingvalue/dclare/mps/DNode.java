@@ -22,15 +22,22 @@ package org.modelingvalue.dclare.mps;
 
 import static org.modelingvalue.dclare.CoreSetableModifier.*;
 
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.mps.openapi.language.*;
 import org.jetbrains.mps.openapi.model.ResolveInfo;
 import org.jetbrains.mps.openapi.model.SModel;
+import org.jetbrains.mps.openapi.model.SModelName;
+import org.jetbrains.mps.openapi.module.SModule;
+import org.jetbrains.mps.openapi.module.SRepository;
 import org.jetbrains.mps.openapi.model.SModelReference;
 import org.jetbrains.mps.openapi.model.SNode;
 import org.jetbrains.mps.openapi.model.SNodeId;
@@ -49,8 +56,13 @@ import org.modelingvalue.dclare.Construction.Reason;
 
 import jetbrains.mps.errors.item.IssueKindReportItem;
 import jetbrains.mps.errors.item.NodeReportItem;
+import jetbrains.mps.extapi.module.SRepositoryRegistry;
+import jetbrains.mps.lang.smodel.generator.smodelAdapter.SModelOperations;
 import jetbrains.mps.lang.smodel.generator.smodelAdapter.SNodeOperations;
+import jetbrains.mps.project.GlobalScope;
 import jetbrains.mps.smodel.DynamicReference;
+import jetbrains.mps.smodel.NodeReadAccessCasterInEditor;
+import jetbrains.mps.smodel.SModelInternal;
 import jetbrains.mps.smodel.SNodeUtil;
 import jetbrains.mps.smodel.adapter.structure.MetaAdapterFactory;
 import jetbrains.mps.smodel.adapter.structure.property.InvalidProperty;
@@ -170,7 +182,9 @@ public class DNode extends DNewable<DNode, SNodeReference, SNode> implements SNo
                                                                                                                                                   }
                                                                                                                                               }, () -> sc.getDeclarationNode().getReference(), containment));
 
-    @SuppressWarnings({"deprecation", "removal"})
+    @SuppressWarnings({ "deprecation", "removal" })
+    // Map of MPS runtime references to their Dclare runtime equivalents:
+    //  a DObserved from the reference's containing node to its target node
     public static final Constant<SReferenceLink, DObserved<DNode, DNode>>                                    REFERENCE                        = Constant.of("REFERENCE", sr -> DObserved.of(sr, null, hasOpposite(sr) ? () -> DNode.OPPOSITE.get(sr) : null, dNode -> {
                                                                                                                                                   SNode orig = dNode.tryOriginal();
                                                                                                                                                   SReference ref = orig != null ? orig.getReference(sr) : null;
@@ -181,8 +195,58 @@ public class DNode extends DNewable<DNode, SNodeReference, SNode> implements SNo
                                                                                                                                                   SNode soll = post != null ? post.tryOriginal() : null;
                                                                                                                                                   sNode.setReferenceTarget(sr, soll);
                                                                                                                                               }, () -> sr.getDeclarationNode().getReference(), orphansAllowed));
-    @SuppressWarnings({"deprecation", "removal"})
-    public static final Constant<SReferenceLink, DObserved<DNode, Set<DNode>>>                               OPPOSITE                         = Constant.of("OPPOSITE", sr -> DObserved.of(Pair.of(sr, "OPPOSITE"), Set.of(), () -> DNode.REFERENCE.get(sr), null, null, () -> sr.getDeclarationNode().getReference(), synthetic));
+    @SuppressWarnings({ "deprecation", "removal" })
+    // Map of MPS runtime references to the opposites of their Dclare runtime equivalents:
+    //  a DObserved from the reference's target node to each node contaning the reference
+    public static final Constant<SReferenceLink, DObserved<DNode, Set<DNode>>>                               OPPOSITE                         = Constant.of("OPPOSITE", sr -> DObserved.of(Pair.of(sr, "OPPOSITE"), Set.of(),
+                                                                                                                                                        () -> DNode.REFERENCE.get(sr),
+                                                                                                                                                        null,
+                                                                                                                                                //         dNode -> {
+                                                                                                                                                //     SNode orig = dNode.tryOriginal();
+                                                                                                                                                //     if(orig == null) return Set.of();
+
+                                                                                                                                                //     //old
+                                                                                                                                                //     // Set<DNode> opposites_ = Set.of(
+                                                                                                                                                //     // SModelOperations.nodesIncludingImported(orig.getModel(), sr.getOwner()).stream().filter(targetNode -> {
+                                                                                                                                                //     //     SReference ref = targetNode.getReference(sr);
+                                                                                                                                                //     //     return ref != null && ref.getTargetNodeId().equals(orig.getNodeId());
+                                                                                                                                                //     // }).map(DNode::of).collect(Collectors.toSet()));
+                                                                                                                                                //     //return opposites_;
+
+                                                                                                                                                //     //Get all external models dependent on internal models
+                                                                                                                                                //     java.util.Set<DModel> models = new java.util.HashSet<DModel>();
+                                                                                                                                                //     DRepository repo = dNode.getModel().getRepository();
+                                                                                                                                                //     for(SModule module : repo.getModules()) { //For all internal modules
+                                                                                                                                                //         //For each model in any of these modules:
+                                                                                                                                                //         for(SModel model : module.getModels()) {
+                                                                                                                                                //             DNode.collectAllImportedModels(models, (DModel)model);
+                                                                                                                                                //         }
+                                                                                                                                                //     }
+
+                                                                                                                                                //     //Filter out models that do not use the owner's language and depend on the target's model
+                                                                                                                                                //     SAbstractConcept ownerConcept = sr.getOwner();
+                                                                                                                                                //     SLanguage ownerLanguage = ownerConcept.getLanguage();
+                                                                                                                                                //     for(DModel model : Set.of(models)) {
+                                                                                                                                                //         if(!(
+                                                                                                                                                //             model.getUsedLanguages().contains(ownerLanguage) &&
+                                                                                                                                                //             model.getUsedModels().contains(dNode.getModel())
+                                                                                                                                                //         )) {
+                                                                                                                                                //             models.remove(model);
+                                                                                                                                                //         }
+                                                                                                                                                //     }
+                                                                                                                                                //     //Search each external model for opposites
+                                                                                                                                                //     java.util.Set<DNode> opposites = Set.<DNode>of().toMutable();
+                                                                                                                                                //     for(SModel model : models) {
+                                                                                                                                                //         for(SNode ownerNode : SModelOperations.nodes(model, ownerConcept)) {
+                                                                                                                                                //             SReference ref = ownerNode.getReference(sr);
+                                                                                                                                                //             if(ref != null && ref.getTargetNodeId().equals(dNode.getNodeId())) {
+                                                                                                                                                //                 opposites.add(DNode.of(ownerNode));
+                                                                                                                                                //             }
+                                                                                                                                                //         }
+                                                                                                                                                //     }
+                                                                                                                                                //     return Set.of(opposites);
+                                                                                                                                                // },
+                                                                                                                                                null, () -> sr.getDeclarationNode().getReference(), synthetic));
 
     private static final Observer<DNode>                                                                     MODEL_RULE                       = DMutable.observer(MODEL, o -> {
                                                                                                                                                   DNode p = o.getAncestor(DNode.class);
@@ -1265,6 +1329,24 @@ public class DNode extends DNewable<DNode, SNodeReference, SNode> implements SNo
             if (pair != null) {
                 Action.<DMutable> of(Triple.of(this, pair.a(), pair.b()), ACTIVATOR).trigger(pair.a());
                 pair.a().doActivate();
+            }
+        }
+    }
+
+    // Collect all (external) models in the given model's dependency tree, pruned on
+    // internal models, stub models, MPS/Dclare platform models
+    public static void collectAllImportedModels(java.util.Set<DModel> collectedModels, DModel model) {     
+        for(SModel dependency : model.getUsedModels()) {
+            DModel ddependecy = (DModel) dependency;
+            SModelName depName = ddependecy.getName();
+            if(ddependecy.isExternal() && !(
+                depName.getStereotype().equals("java_stub") ||
+                depName.getLongName().startsWith("jetbrains.mps.") ||
+                depName.getLongName().startsWith("Dclare")
+            )) {
+                if(collectedModels.add(ddependecy)) { //collect the model
+                    DNode.collectAllImportedModels(collectedModels, ddependecy); //if not already seen; recurse
+                }
             }
         }
     }

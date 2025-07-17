@@ -96,6 +96,7 @@ import jetbrains.mps.smodel.adapter.structure.language.SLanguageAdapter;
 import jetbrains.mps.smodel.language.LanguageRegistry;
 import jetbrains.mps.smodel.language.LanguageRuntime;
 
+/**Represents the runtime instance of DClare for a single MPS project*/
 @SuppressWarnings({"unused", "RedundantSuppression"})
 public class DClareMPS implements Universe, UncaughtExceptionHandler {
 
@@ -302,6 +303,7 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
         return config.isRemoteModelSynchronization() && config.getRemoteModelSynchronizationServer() != null && !config.getRemoteModelSynchronizationServer().isBlank();
     }
 
+    /**First Action executed by nascent universe (should realy be renamed to 'bigBang()') */
     @Override
     public void init() {
         Universe.super.init();
@@ -329,7 +331,8 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
             }
         }
     }
-
+    
+    /**Main entrypoint: starts this DclareForMPS*/
     protected void start() {
         running = true;
         if (config.isTraceDclare()) {
