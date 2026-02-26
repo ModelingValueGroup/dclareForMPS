@@ -38,7 +38,7 @@ jobs:
 
       ################################################################################
       - name: "bootstrap"
-        run: ./gradlew --build-file bootstrap.gradle.kts
+        run: ./gradlew -p bootstrap
 
       - name: "build"
         run: ./gradlew --info --scan

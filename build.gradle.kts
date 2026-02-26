@@ -19,21 +19,22 @@
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 defaultTasks(
-    "mvgcorrector",
-    "build",
-    "mvgtagger",
-    "mvguploader",
-)
+        "mvgcorrector",
+        "build",
+        "mvgtagger",
+        "mvguploader",
+            )
 plugins {
-    id("org.modelingvalue.gradle.mvgplugin") version "1.1.3"
+    id("org.modelingvalue.gradle.mvgplugin") version "2.3.15"
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // import ant file:
 try {
+    @Suppress("LocalVariableName")
     val version_mps: String by project
     if (!mvgmps.mpsInstallDir.isDirectory)
-        throw GradleException("You need to first run './gradlew --build-file bootstrap.gradle.kts' to download MPS")
+        throw GradleException("You need to first run './gradlew download-MPS' to download MPS")
 
     ant.lifecycleLogLevel = AntBuilder.AntMessagePriority.INFO
     ant.setProperty("mps_home", mvgmps.mpsInstallDir.toString())
@@ -47,7 +48,6 @@ try {
         it + if (it.matches(Regex(".*<jvmargs>$"))) "<arg value=\"-Dfile.encoding=UTF8\"/>" else ""
     })
 // WORKAROUND END
-    @Suppress("UnstableApiUsage")
     ant.importBuild(antScript, gradle.rootProject.projectDir.absolutePath) {
         "mpsant-$it"
     }
@@ -71,7 +71,7 @@ try {
             ant.setProperty("versionStamp", mvgmps.versionStamp)
         }
     }
-    val clean_gen_dirs = tasks.create("clean_gen_dirs") {
+    val cleanGenDirs = tasks.register("clean_gen_dirs") {
         group = "build"
         doLast {
             listOf("languages", "solutions").forEach {
@@ -91,20 +91,29 @@ try {
             }
         }
     }
-    tasks.create("build") {
+    tasks.register("build") {
         group = "build"
         dependsOn(tasks.named("mpsant-build"))
     }
-    tasks.create("clean") {
+    tasks.register("clean") {
         group = "build"
-        dependsOn(clean_gen_dirs)
+        dependsOn(cleanGenDirs)
     }
-    tasks.create("publish") {
+    tasks.register("publish") {
         group = "publishing"
         dependsOn(tasks.named("mpsant-assemble"))
     }
 } catch (e: Exception) {
     println("problem with import of ant file mps_build.xml: " + e)
+}
+///////////////////////////////////////////////////////////////////////////////////////////////
+// download MPS (replaces the old bootstrap.gradle.kts / bootstrap/ approach)
+tasks.register<DefaultTask>("download-MPS") {
+    group = "modelingvaluegroup"
+    doLast {
+        @Suppress("UNCHECKED_CAST")
+        (org.modelingvalue.gradle.mvgplugin.MvgPlugin.singleton.resolveMpsDependency("mps-boot") as Iterable<File>).toList()
+    }
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // upload plugin to jetbrains
