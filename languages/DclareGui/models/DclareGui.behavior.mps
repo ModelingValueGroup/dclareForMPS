@@ -606,7 +606,7 @@
                           <ref role="3cqZAo" node="7Jbvyda_GZI" resolve="concepts" />
                         </node>
                         <node concept="13MTOL" id="7Jbvyda__WA" role="2OqNvi">
-                          <ref role="13MTZf" to="tpce:f_TKVDF" />
+                          <ref role="13MTZf" to="tpce:f_TKVDF" resolve="linkDeclaration" />
                         </node>
                       </node>
                       <node concept="3QWeyG" id="7JbvydaB22G" role="2OqNvi">
@@ -615,7 +615,7 @@
                             <ref role="3cqZAo" node="7Jbvyda_GZI" resolve="concepts" />
                           </node>
                           <node concept="13MTOL" id="7JbvydaBBlk" role="2OqNvi">
-                            <ref role="13MTZf" to="tpce:f_TKVDG" />
+                            <ref role="13MTZf" to="tpce:f_TKVDG" resolve="propertyDeclaration" />
                           </node>
                         </node>
                       </node>

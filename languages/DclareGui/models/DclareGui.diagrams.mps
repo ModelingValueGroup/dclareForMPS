@@ -292,7 +292,7 @@
         <ref role="2iyNli" to="7ggn:6aMI9gI2xPM" resolve="IAttributeSource" />
       </node>
       <node concept="2iyNll" id="1kiV8EE8538" role="2iyNmk">
-        <ref role="2iyNli" to="7ggn:35Jy4LMD1u3" />
+        <ref role="2iyNli" to="7ggn:35Jy4LMD1u3" resolve="attribute" />
       </node>
     </node>
     <node concept="2iyNl8" id="1kiV8EE852J" role="2iyNln">
@@ -303,7 +303,7 @@
         <ref role="2iyNli" to="7ggn:6aMI9gI2xPM" resolve="IAttributeSource" />
       </node>
       <node concept="2iyNll" id="1kiV8EE853n" role="2iyNmk">
-        <ref role="2iyNli" to="7ggn:4$MeK2bvUeg" />
+        <ref role="2iyNli" to="7ggn:4$MeK2bvUeg" resolve="attribute" />
       </node>
     </node>
     <node concept="2iyNl8" id="1kiV8EE852K" role="2iyNln">
@@ -314,7 +314,7 @@
         <ref role="2iyNli" to="7ggn:6aMI9gI2xPM" resolve="IAttributeSource" />
       </node>
       <node concept="2iyNll" id="1kiV8EE853s" role="2iyNmk">
-        <ref role="2iyNli" to="7ggn:4wbMdoKd7ex" />
+        <ref role="2iyNli" to="7ggn:4wbMdoKd7ex" resolve="attribute" />
       </node>
     </node>
     <node concept="2iyNl8" id="5pf0b7PZnVZ" role="2iyNln">
@@ -446,7 +446,7 @@
       <property role="2iyNlR" value="1799" />
       <ref role="2iyNl9" to="7ggn:41CotWWrJg$" resolve="Issue" />
       <node concept="2iyNll" id="5pf0b7PZnYn" role="2iyNmk">
-        <ref role="2iyNli" to="7ggn:7cCgEMkno8n" />
+        <ref role="2iyNli" to="7ggn:7cCgEMkno8n" resolve="severity" />
       </node>
     </node>
     <node concept="2iyNl8" id="5pf0b7PZnWj" role="2iyNln">
@@ -477,7 +477,7 @@
       <property role="2iyNlR" value="1389" />
       <ref role="2iyNl9" to="7ggn:3uCFKuPHfh_" resolve="MethodCall" />
       <node concept="2iyNll" id="1kiV8EE853h" role="2iyNmk">
-        <ref role="2iyNli" to="7ggn:2_KHFK2vWEv" />
+        <ref role="2iyNli" to="7ggn:2_KHFK2vWEv" resolve="method" />
       </node>
     </node>
     <node concept="2iyNl8" id="1kiV8EE852N" role="2iyNln">
@@ -485,7 +485,7 @@
       <property role="2iyNlR" value="1447" />
       <ref role="2iyNl9" to="7ggn:6wxUpFc$a2F" resolve="MethodCallOperation" />
       <node concept="2iyNll" id="1kiV8EE8539" role="2iyNmk">
-        <ref role="2iyNli" to="7ggn:2_KHFK2mnX$" />
+        <ref role="2iyNli" to="7ggn:2_KHFK2mnX$" resolve="method" />
       </node>
     </node>
     <node concept="2iyNl8" id="5pf0b7PZnWn" role="2iyNln">
@@ -493,7 +493,7 @@
       <property role="2iyNlR" value="1116" />
       <ref role="2iyNl9" to="7ggn:7x27w4ybBDN" resolve="ModelBuilder" />
       <node concept="2iyNll" id="5pf0b7PZnXK" role="2iyNmk">
-        <ref role="2iyNli" to="7ggn:7x27w4ybBDU" />
+        <ref role="2iyNli" to="7ggn:7x27w4ybBDU" resolve="members" />
       </node>
     </node>
     <node concept="2iyNl8" id="5pf0b7PZnWo" role="2iyNln">
@@ -667,7 +667,7 @@
         <ref role="2iyNli" to="7ggn:4ONkEkNmEtk" resolve="group" />
       </node>
       <node concept="2iyNll" id="5pf0b7PZnYe" role="2iyNmk">
-        <ref role="2iyNli" to="7ggn:5Hwm38JY61d" />
+        <ref role="2iyNli" to="7ggn:5Hwm38JY61d" resolve="handlers" />
       </node>
     </node>
     <node concept="2iyNl8" id="5pf0b7PZnWF" role="2iyNln">
@@ -680,7 +680,7 @@
       <property role="2iyNlR" value="1501" />
       <ref role="2iyNl9" to="7ggn:5Hwm38JY610" resolve="NativeFieldOperation" />
       <node concept="2iyNll" id="1kiV8EE853f" role="2iyNmk">
-        <ref role="2iyNli" to="7ggn:5Hwm38JY613" />
+        <ref role="2iyNli" to="7ggn:5Hwm38JY613" resolve="nativeField" />
       </node>
     </node>
     <node concept="2iyNl8" id="1kiV8EE852Q" role="2iyNln">
@@ -688,7 +688,7 @@
       <property role="2iyNlR" value="1642" />
       <ref role="2iyNl9" to="7ggn:3ANOQoW2vOk" resolve="NativeFieldReference" />
       <node concept="2iyNll" id="1kiV8EE853q" role="2iyNmk">
-        <ref role="2iyNli" to="7ggn:3ANOQoW2vOl" />
+        <ref role="2iyNli" to="7ggn:3ANOQoW2vOl" resolve="nativeField" />
       </node>
     </node>
     <node concept="2iyNl8" id="5pf0b7PZnWG" role="2iyNln">
@@ -737,7 +737,7 @@
       <property role="2iyNlR" value="638" />
       <ref role="2iyNl9" to="7ggn:6lcsnaNYYP3" resolve="NodeBuilderInitFeature" />
       <node concept="2iyNll" id="5pf0b7PZnY9" role="2iyNmk">
-        <ref role="2iyNli" to="7ggn:6lcsnaNYZs8" />
+        <ref role="2iyNli" to="7ggn:6lcsnaNYZs8" resolve="feature" />
       </node>
     </node>
     <node concept="2iyNl8" id="1kiV8EE852R" role="2iyNln">
@@ -772,7 +772,7 @@
       <property role="2iyNlR" value="1647" />
       <ref role="2iyNl9" to="7ggn:7QGAU2f1le0" resolve="OfStructTypeOperation" />
       <node concept="2iyNll" id="1kiV8EE853c" role="2iyNmk">
-        <ref role="2iyNli" to="7ggn:7QGAU2f1tGM" />
+        <ref role="2iyNli" to="7ggn:7QGAU2f1tGM" resolve="class" />
       </node>
     </node>
     <node concept="2iyNl8" id="5pf0b7PZnWP" role="2iyNln">
@@ -877,7 +877,7 @@
         <ref role="2iyNli" to="7ggn:55f2HNAp5cR" resolve="aspect" />
       </node>
       <node concept="2iyNll" id="5pf0b7PZnXn" role="2iyNmk">
-        <ref role="2iyNli" to="7ggn:6_R8J$2ChSl" />
+        <ref role="2iyNli" to="7ggn:6_R8J$2ChSl" resolve="members" />
       </node>
     </node>
     <node concept="2iyNl8" id="5pf0b7PZnWZ" role="2iyNln">
@@ -898,7 +898,7 @@
       <property role="2iyNlR" value="969" />
       <ref role="2iyNl9" to="7ggn:F_kCLyp1WG" resolve="RuleSetReference" />
       <node concept="2iyNll" id="1kiV8EE853g" role="2iyNmk">
-        <ref role="2iyNli" to="7ggn:F_kCLyp1WH" />
+        <ref role="2iyNli" to="7ggn:F_kCLyp1WH" resolve="ruleSet" />
       </node>
     </node>
     <node concept="2iyNl8" id="5pf0b7PZnX1" role="2iyNln">
@@ -932,7 +932,7 @@
       <property role="2iyNlR" value="1694" />
       <ref role="2iyNl9" to="7ggn:2xAA8jfON9c" resolve="StructAncestorOperation" />
       <node concept="2iyNll" id="1kiV8EE853e" role="2iyNmk">
-        <ref role="2iyNli" to="7ggn:2xAA8jfP4pi" />
+        <ref role="2iyNli" to="7ggn:2xAA8jfP4pi" resolve="class" />
       </node>
     </node>
     <node concept="2iyNl8" id="5pf0b7PZnX5" role="2iyNln">
@@ -943,7 +943,7 @@
         <ref role="2iyNli" to="7ggn:4$bpWrNHOXa" resolve="class" />
       </node>
       <node concept="2iyNll" id="5pf0b7PZnXM" role="2iyNmk">
-        <ref role="2iyNli" to="7ggn:4fD99RQo2bn" />
+        <ref role="2iyNli" to="7ggn:4fD99RQo2bn" resolve="parts" />
       </node>
     </node>
     <node concept="2iyNl8" id="5pf0b7PZnX6" role="2iyNln">
@@ -992,7 +992,7 @@
         <ref role="2iyNli" to="7ggn:4$bpWrNHVkZ" resolve="IAttributeOwner" />
       </node>
       <node concept="2iyNll" id="5pf0b7PZnXw" role="2iyNmk">
-        <ref role="2iyNli" to="7ggn:4$bpWrNHODa" />
+        <ref role="2iyNli" to="7ggn:4$bpWrNHODa" resolve="extends" />
         <node concept="2iyNlg" id="5Y0My$3P2xK" role="2iyKN2">
           <property role="30jCVK" value="0" />
           <property role="2iyKNf" value="1653" />
@@ -1000,7 +1000,7 @@
         </node>
       </node>
       <node concept="2iyNll" id="5pf0b7PZnXx" role="2iyNmk">
-        <ref role="2iyNli" to="7ggn:4$bpWrNHOX5" />
+        <ref role="2iyNli" to="7ggn:4$bpWrNHOX5" resolve="identity" />
       </node>
     </node>
     <node concept="2iyNl8" id="5pf0b7PZnXa" role="2iyNln">
@@ -1013,7 +1013,7 @@
       <property role="2iyNlR" value="1834" />
       <ref role="2iyNl9" to="7ggn:4$bpWrNHOD7" resolve="StructClassReference" />
       <node concept="2iyNll" id="1kiV8EE8534" role="2iyNmk">
-        <ref role="2iyNli" to="7ggn:4$bpWrNHOD8" />
+        <ref role="2iyNli" to="7ggn:4$bpWrNHOD8" resolve="class" />
         <node concept="2iyNlg" id="1kiV8EE8535" role="2iyKN2">
           <property role="2iyKNf" value="1619" />
           <property role="2iyKN1" value="1523" />
@@ -1034,7 +1034,7 @@
         <ref role="2iyNli" to="7ggn:4kJ$pn7gUED" resolve="ContextType" />
       </node>
       <node concept="2iyNll" id="1kiV8EE853b" role="2iyNmk">
-        <ref role="2iyNli" to="7ggn:4kJ$pn7hask" />
+        <ref role="2iyNli" to="7ggn:4kJ$pn7hask" resolve="structClass" />
       </node>
     </node>
     <node concept="2iyNl8" id="1kiV8EE8533" role="2iyNln">
@@ -1042,7 +1042,7 @@
       <property role="2iyNlR" value="1525" />
       <ref role="2iyNl9" to="7ggn:7QGAU2f1kyq" resolve="StructIsInstanceOfOperation" />
       <node concept="2iyNll" id="1kiV8EE853p" role="2iyNmk">
-        <ref role="2iyNli" to="7ggn:7QGAU2f1tGO" />
+        <ref role="2iyNli" to="7ggn:7QGAU2f1tGO" resolve="class" />
       </node>
     </node>
     <node concept="2iyNl8" id="5pf0b7PZnXc" role="2iyNln">
@@ -1066,7 +1066,7 @@
       <property role="2iyNlR" value="1320" />
       <ref role="2iyNl9" to="7ggn:3Qetf3cPPAL" resolve="StructType" />
       <node concept="2iyNll" id="5pf0b7PZnXZ" role="2iyNmk">
-        <ref role="2iyNli" to="7ggn:4$bpWrOFXcp" />
+        <ref role="2iyNli" to="7ggn:4$bpWrOFXcp" resolve="class" />
       </node>
     </node>
     <node concept="2iyNl8" id="5pf0b7PZnXf" role="2iyNln">
@@ -1074,7 +1074,7 @@
       <property role="2iyNlR" value="1284" />
       <ref role="2iyNl9" to="7ggn:7QGAU2f1kbx" resolve="StructTypeCastExpression" />
       <node concept="2iyNll" id="5pf0b7PZnYi" role="2iyNmk">
-        <ref role="2iyNli" to="7ggn:7QGAU2f1tGQ" />
+        <ref role="2iyNli" to="7ggn:7QGAU2f1tGQ" resolve="class" />
       </node>
     </node>
     <node concept="2iyNl8" id="5pf0b7PZnXg" role="2iyNln">
@@ -1591,13 +1591,13 @@
       <ref role="3z7$6z" to="q3xn:67eN9QkfT0n" resolve="LinkLine" />
     </node>
     <node concept="3z7$6w" id="1h9n_fgFyZU" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:1h9n_fgFyZQ" />
+      <ref role="3z7$6z" to="q3xn:1h9n_fgFyZQ" resolve="RuleFeature" />
     </node>
     <node concept="3z7$6w" id="E9JPNpuJYv" role="3z7$1E">
       <ref role="3z7$6z" to="q3xn:E9JPNpuJYr" resolve="RulesCanvas" />
     </node>
     <node concept="3z7$6w" id="1h9n_fg$DEt" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:1h9n_fg$DEp" />
+      <ref role="3z7$6z" to="q3xn:1h9n_fg$DEp" resolve="RulesMethod" />
     </node>
     <node concept="3z7$6w" id="E9JPNqGmnq" role="3z7$1E">
       <ref role="3z7$6z" to="q3xn:E9JPNqGmnm" resolve="RulesReadLine" />
@@ -1609,16 +1609,16 @@
       <ref role="3z7$6z" to="q3xn:E9JPNqG1J9" resolve="RulesRuleCircle" />
     </node>
     <node concept="3z7$6w" id="E9JPNpuWO1" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:E9JPNpuWNX" resolve="RulesDiagramVariable" />
+      <ref role="3z7$6z" to="q3xn:E9JPNpuWNX" resolve="RulesVariable" />
     </node>
     <node concept="3z7$6w" id="E9JPNqGb2b" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:E9JPNqGb26" resolve="RVariableRectangle" />
+      <ref role="3z7$6z" to="q3xn:E9JPNqGb26" resolve="RulesVariableRectangle" />
     </node>
     <node concept="3z7$6w" id="E9JPNqGmrs" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:E9JPNqGmro" />
+      <ref role="3z7$6z" to="q3xn:E9JPNqGmro" resolve="RulesWriteLine" />
     </node>
     <node concept="3z7$6w" id="E9JPNorpAG" role="3z7$1E">
-      <ref role="3z7$6z" to="q3xn:2QCHpowuQyh" resolve="StructDiagramCanvas" />
+      <ref role="3z7$6z" to="q3xn:2QCHpowuQyh" resolve="StructCanvas" />
     </node>
     <node concept="3z7$6w" id="E9JPNorpAH" role="3z7$1E">
       <ref role="3z7$6z" to="q3xn:2QCHpowuSLJ" resolve="StructRectangle" />
@@ -1629,7 +1629,7 @@
     <node concept="2iyNl8" id="E9JPNorpBq" role="2iyNln">
       <property role="2iyNlD" value="1081" />
       <property role="2iyNlR" value="1472" />
-      <ref role="2iyNl9" to="q3xn:3HJBHARsh7U" resolve="ConceptDiagramCanvas" />
+      <ref role="2iyNl9" to="q3xn:3HJBHARsh7U" resolve="ConceptCanvas" />
       <node concept="2iyNll" id="E9JPNorpCx" role="2iyNmk">
         <ref role="2iyNli" to="q3xn:3OZjsowr30i" resolve="DDiagramCanvas" />
       </node>
@@ -2065,7 +2065,7 @@
     <node concept="2iyNl8" id="E9JPNorpC0" role="2iyNln">
       <property role="2iyNlD" value="1332" />
       <property role="2iyNlR" value="1352" />
-      <ref role="2iyNl9" to="q3xn:2QCHpowuQyh" resolve="StructDiagramCanvas" />
+      <ref role="2iyNl9" to="q3xn:2QCHpowuQyh" resolve="StructCanvas" />
       <node concept="2iyNll" id="E9JPNorpCy" role="2iyNmk">
         <ref role="2iyNli" to="q3xn:3OZjsowr30i" resolve="DDiagramCanvas" />
       </node>
@@ -2142,7 +2142,7 @@
     <node concept="2iyNl8" id="6URAbZVh4O_" role="2iyNln">
       <property role="2iyNlD" value="380" />
       <property role="2iyNlR" value="329" />
-      <ref role="2iyNl9" to="q3xn:1kiV8EEiDdQ" />
+      <ref role="2iyNl9" to="q3xn:1kiV8EEiDdQ" resolve="DShape_GUI_14" />
       <node concept="2iyNll" id="6URAbZVh4ZP" role="2iyNmk">
         <ref role="2iyNli" to="q3xn:5uiQOXmd7mf" resolve="isMousePositionIn" />
       </node>
@@ -2159,7 +2159,7 @@
     <node concept="2iyNl8" id="6URAbZVh4OA" role="2iyNln">
       <property role="2iyNlD" value="345" />
       <property role="2iyNlR" value="581" />
-      <ref role="2iyNl9" to="q3xn:2ihDbyJQ8ew" />
+      <ref role="2iyNl9" to="q3xn:2ihDbyJQ8ew" resolve="DShape_GUI_15" />
       <node concept="2iyNll" id="6URAbZVh4Zt" role="2iyNmk">
         <ref role="2iyNli" to="q3xn:76QCTJD2lco" resolve="isLeftMouseDown" />
       </node>
@@ -2182,7 +2182,7 @@
     <node concept="2iyNl8" id="6URAbZVh4OB" role="2iyNln">
       <property role="2iyNlD" value="443" />
       <property role="2iyNlR" value="729" />
-      <ref role="2iyNl9" to="q3xn:2cgTHFOzNds" />
+      <ref role="2iyNl9" to="q3xn:2cgTHFOzNds" resolve="DShape_GUI_16" />
       <node concept="2iyNll" id="6URAbZVh4SG" role="2iyNmk">
         <ref role="2iyNli" to="q3xn:76QCTJD2lco" resolve="isLeftMouseDown" />
       </node>
@@ -2242,7 +2242,7 @@
     <node concept="2iyNl8" id="6URAbZVh4Pf" role="2iyNln">
       <property role="2iyNlD" value="843" />
       <property role="2iyNlR" value="427" />
-      <ref role="2iyNl9" to="q3xn:1kiV8EEqLhJ" />
+      <ref role="2iyNl9" to="q3xn:1kiV8EEqLhJ" resolve="DCanvas_GUI_5" />
       <node concept="2iyNll" id="6URAbZVh4Yw" role="2iyNmk">
         <ref role="2iyNli" to="q3xn:1kiV8EEqr4E" resolve="isControlPressed" />
       </node>
@@ -2256,7 +2256,7 @@
     <node concept="2iyNl8" id="6URAbZVh4Pg" role="2iyNln">
       <property role="2iyNlD" value="810" />
       <property role="2iyNlR" value="722" />
-      <ref role="2iyNl9" to="q3xn:1efB8VJwX21" />
+      <ref role="2iyNl9" to="q3xn:1efB8VJwX21" resolve="DCanvas_GUI_7" />
       <node concept="2iyNll" id="6URAbZVh4SS" role="2iyNmk">
         <ref role="2iyNli" to="q3xn:7ypR234gWrk" resolve="dragged" />
         <node concept="2iyNlg" id="6URAbZVh4SX" role="2iyKN2">
