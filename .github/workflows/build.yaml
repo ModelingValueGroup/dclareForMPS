@@ -33,7 +33,7 @@ jobs:
 
       - uses: actions/setup-java@v4
         with:
-          java-version: 17
+          java-version: 21
           distribution: temurin
 
       ################################################################################
@@ -41,7 +41,7 @@ jobs:
         run: ./gradlew -p bootstrap
 
       - name: "build"
-        run: ./gradlew --info --scan
+        run: ./gradlew --info
 
       - name: "upload zip"
         uses: actions/upload-artifact@v4
