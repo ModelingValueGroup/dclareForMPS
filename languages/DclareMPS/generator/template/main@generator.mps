@@ -45,6 +45,8 @@
     <import index="w1kc" ref="6ed54515-acc8-4d1e-a16c-9fd6cfe951ea/java:jetbrains.mps.smodel(MPS.Core/)" />
     <import index="zrbp" ref="e584ff77-930e-4637-8df0-b4c8d3b6de91/java:org.modelingvalue.collections(DclareRuntime/)" />
     <import index="kag7" ref="e584ff77-930e-4637-8df0-b4c8d3b6de91/java:org.modelingvalue.dclare(DclareRuntime/)" />
+    <import index="tp2r" ref="r:00000000-0000-4000-0000-011c8959032f(jetbrains.mps.baseLanguage.collections.generator.baseLanguage.template.main@generator)" />
+    <import index="tp2k" ref="r:00000000-0000-4000-0000-011c89590330(jetbrains.mps.baseLanguage.collections.generator.baseLanguage.template.util)" />
     <import index="tpcu" ref="r:00000000-0000-4000-0000-011c89590282(jetbrains.mps.lang.core.behavior)" implicit="true" />
     <import index="tpcn" ref="r:00000000-0000-4000-0000-011c8959028b(jetbrains.mps.lang.structure.behavior)" implicit="true" />
     <import index="tpce" ref="r:00000000-0000-4000-0000-011c89590292(jetbrains.mps.lang.structure.structure)" implicit="true" />
@@ -8148,6 +8150,12 @@
                           </node>
                         </node>
                       </node>
+                      <node concept="2ZW3vV" id="7wgVVmtiaOD" role="3K4Cdx">
+                        <node concept="37vLTw" id="7wgVVmtiaOE" role="2ZW6bz">
+                          <ref role="3cqZAo" node="7wgVVmu7Znh" resolve="e" />
+                        </node>
+                        <node concept="A3Dl8" id="7wgVVmtMtb8" role="2ZW6by" />
+                      </node>
                       <node concept="2ShNRf" id="7wgVVmtiaOl" role="3K4GZi">
                         <node concept="2HTt$P" id="7wgVVmtiaOm" role="2ShVmc">
                           <node concept="10QFUN" id="7wgVVmtiaOn" role="2HTEbv">
@@ -8190,12 +8198,6 @@
                             </node>
                           </node>
                         </node>
-                      </node>
-                      <node concept="2ZW3vV" id="7wgVVmtiaOD" role="3K4Cdx">
-                        <node concept="37vLTw" id="7wgVVmtiaOE" role="2ZW6bz">
-                          <ref role="3cqZAo" node="7wgVVmu7Znh" resolve="e" />
-                        </node>
-                        <node concept="A3Dl8" id="7wgVVmtMtb8" role="2ZW6by" />
                       </node>
                     </node>
                   </node>
@@ -23910,12 +23912,12 @@
             <property role="P3scX" value="f3061a53-9226-4cc5-a443-f952ceaf5816/1204053956946/1068499141037" />
             <node concept="3$xsQk" id="2kn12rDbWRo" role="3$ytzL">
               <node concept="3clFbS" id="2kn12rDbWRp" role="2VODD2">
-                <node concept="3clFbF" id="2kn12rDbXsW" role="3cqZAp">
-                  <node concept="2OqwBi" id="2kn12rDbXsY" role="3clFbG">
-                    <node concept="1iwH7S" id="2kn12rDbXsZ" role="2Oq$k0" />
-                    <node concept="1iwH70" id="2kn12rDbXt0" role="2OqNvi">
+                <node concept="3clFbF" id="RYcXTVWoZm" role="3cqZAp">
+                  <node concept="2OqwBi" id="RYcXTVSxYb" role="3clFbG">
+                    <node concept="1iwH7S" id="RYcXTVSxYc" role="2Oq$k0" />
+                    <node concept="1iwH70" id="RYcXTVSxYd" role="2OqNvi">
                       <ref role="1iwH77" node="2kn12rDbqHQ" resolve="fixpointGroupConstructor" />
-                      <node concept="30H73N" id="2kn12rDbXt1" role="1iwH7V" />
+                      <node concept="30H73N" id="RYcXTVSxYe" role="1iwH7V" />
                     </node>
                   </node>
                 </node>

@@ -50,16 +50,6 @@ public class DTempModel extends EditableModelDescriptor implements EditableSMode
     }
 
     @Override
-    @Deprecated
-    public void updateTimestamp() {
-    }
-
-    @Override
-    public boolean needsReloading() {
-        return false;
-    }
-
-    @Override
     protected ModelLoadResult<jetbrains.mps.smodel.SModel> createModel() {
         jetbrains.mps.smodel.SModel smodel = new jetbrains.mps.smodel.SModel(getReference()) {
             @Override

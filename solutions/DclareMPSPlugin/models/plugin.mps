@@ -10,8 +10,8 @@
     <use id="69b8a993-9b87-4d96-bf0c-3559f4bb0c63" name="jetbrains.mps.lang.slanguage" version="0" />
     <use id="aee9cad2-acd4-4608-aef2-0004f6a1cdbd" name="jetbrains.mps.lang.actions" version="4" />
     <use id="3ecd7c84-cde3-45de-886c-135ecc69b742" name="jetbrains.mps.lang.refactoring" version="0" />
-    <use id="982eb8df-2c96-4bd7-9963-11712ea622e5" name="jetbrains.mps.lang.resources" version="2" />
-    <use id="18bc6592-03a6-4e29-a83a-7ff23bde13ba" name="jetbrains.mps.lang.editor" version="14" />
+    <use id="982eb8df-2c96-4bd7-9963-11712ea622e5" name="jetbrains.mps.lang.resources" version="4" />
+    <use id="18bc6592-03a6-4e29-a83a-7ff23bde13ba" name="jetbrains.mps.lang.editor" version="15" />
     <use id="fbc14279-5e2a-4c87-a5d1-5f7061e6c456" name="jetbrains.mps.debugger.api.lang" version="1" />
     <use id="64d34fcd-ad02-4e73-aff8-a581124c2e30" name="jetbrains.mps.lang.findUsages" version="0" />
     <use id="443f4c36-fcf5-4eb6-9500-8d06ed259e3e" name="jetbrains.mps.baseLanguage.classifiers" version="0" />
@@ -77,7 +77,6 @@
     <import index="7ggn" ref="r:38c3b7db-3776-47fb-ba27-a4f002c4edc7(DclareMPS.structure)" />
     <import index="pexp" ref="r:97d6b60a-b381-42e8-9ea4-402ec93eaf11(jetbrains.mps.ide.refactoring.plugin)" />
     <import index="z1c5" ref="86441d7a-e194-42da-81a5-2161ec62a379/java:jetbrains.mps.project(MPS.Workbench/)" />
-    <import index="7e0v" ref="r:afc499bf-658e-47de-983c-b73f835c87e1(jetbrains.mps.ide.devkit.editor)" />
     <import index="s19t" ref="r:fa4569a3-1bd4-4159-97bc-db03b3aeff88(jetbrains.mps.java.platform.highlighters)" />
     <import index="kpve" ref="1ed103c3-3aa6-49b7-9c21-6765ee11f224/java:jetbrains.mps.openapi.editor.message(MPS.Editor/)" />
     <import index="n70j" ref="1ed103c3-3aa6-49b7-9c21-6765ee11f224/java:jetbrains.mps.nodeEditor.checking(MPS.Editor/)" />
@@ -106,6 +105,9 @@
     <import index="lzb2" ref="498d89d2-c2e9-11e2-ad49-6cf049e62fe5/java:com.intellij.ui(MPS.IDEA/)" />
     <import index="3iga" ref="498d89d2-c2e9-11e2-ad49-6cf049e62fe5/java:com.intellij.ui.icons(MPS.IDEA/)" />
     <import index="bd8o" ref="498d89d2-c2e9-11e2-ad49-6cf049e62fe5/java:com.intellij.openapi.application(MPS.IDEA/)" />
+    <import index="i8bi" ref="r:c3548bac-30eb-4a2a-937c-0111d5697309(jetbrains.mps.lang.smodel.generator.smodelAdapter)" />
+    <import index="i51s" ref="6ed54515-acc8-4d1e-a16c-9fd6cfe951ea/java:jetbrains.mps.lang.smodel.generator.smodelAdapter(MPS.Core/)" />
+    <import index="qqrq" ref="498d89d2-c2e9-11e2-ad49-6cf049e62fe5/java:com.intellij.ui.components(MPS.IDEA/)" />
   </imports>
   <registry>
     <language id="982eb8df-2c96-4bd7-9963-11712ea622e5" name="jetbrains.mps.lang.resources">
@@ -151,12 +153,6 @@
         <reference id="1204992316090" name="point" index="2f8Tey" />
         <reference id="1203092736097" name="modifiedGroup" index="tU$_T" />
       </concept>
-      <concept id="2450897840534683979" name="jetbrains.mps.lang.plugin.structure.EditorTabReference" flags="nn" index="2vPdvi">
-        <reference id="2450897840534683980" name="editorTab" index="2vPdvl" />
-      </concept>
-      <concept id="2450897840534683975" name="jetbrains.mps.lang.plugin.structure.Order" flags="ng" index="2vPdvu">
-        <child id="2450897840534683977" name="tab" index="2vPdvg" />
-      </concept>
       <concept id="1213888653896" name="jetbrains.mps.lang.plugin.structure.InitBlock" flags="in" index="2xpIHi" />
       <concept id="1213888677711" name="jetbrains.mps.lang.plugin.structure.DisposeBlock" flags="in" index="2xpOpl" />
       <concept id="1213888797251" name="jetbrains.mps.lang.plugin.structure.ConceptFunctionParameter_Project" flags="nn" index="2xqhHp" />
@@ -166,7 +162,6 @@
         <reference id="3743831881070611760" name="baseNodeConcept" index="2E2WTM" />
         <child id="3743831881070657666" name="isApplicableBlock" index="2E2Kf0" />
         <child id="3743831881070611762" name="baseNodeBlock" index="2E2WTK" />
-        <child id="3743831881070613126" name="order" index="2E2X74" />
         <child id="3743831881070612960" name="nodesBlock" index="2E2Xay" />
         <child id="1640281869714699888" name="createTabBlock" index="1D6cnr" />
       </concept>
@@ -10548,30 +10543,31 @@
                   </node>
                 </node>
               </node>
-              <node concept="3clFbF" id="7wzKMsIVx55" role="3cqZAp">
-                <node concept="37vLTI" id="7wzKMsJ3PCJ" role="3clFbG">
-                  <node concept="37vLTw" id="7wzKMsJ3P1z" role="37vLTJ">
-                    <ref role="3cqZAo" node="7NjRQfy0ZHn" resolve="aspectModel" />
-                  </node>
-                  <node concept="2YIFZM" id="7wzKMsIVyw6" role="37vLTx">
-                    <ref role="1Pybhc" to="z1c4:~SModuleOperations" resolve="SModuleOperations" />
-                    <ref role="37wK5l" to="z1c4:~SModuleOperations.createModelWithAdjustments(java.lang.String,org.jetbrains.mps.openapi.persistence.ModelRoot)" resolve="createModelWithAdjustments" />
-                    <node concept="3cpWs3" id="7wzKMsIV_zI" role="37wK5m">
-                      <node concept="2OqwBi" id="7wzKMsIV$ir" role="3uHU7B">
-                        <node concept="37vLTw" id="7wzKMsIVzQ_" role="2Oq$k0">
-                          <ref role="3cqZAo" node="2$SWsiCtx0g" resolve="l" />
-                        </node>
-                        <node concept="liA8E" id="7wzKMsIV_3A" role="2OqNvi">
-                          <ref role="37wK5l" to="z1c4:~AbstractModule.getModuleName()" resolve="getModuleName" />
-                        </node>
-                      </node>
-                      <node concept="Xl_RD" id="7wzKMsIV_zO" role="3uHU7w">
-                        <property role="Xl_RC" value=".rules" />
-                      </node>
-                    </node>
-                    <node concept="37vLTw" id="7wzKMsIVzyc" role="37wK5m">
+              <node concept="3clFbF" id="7ZV1F13V64T" role="3cqZAp">
+                <node concept="37vLTI" id="7ZV1F13V882" role="3clFbG">
+                  <node concept="2OqwBi" id="7ZV1F13Vaml" role="37vLTx">
+                    <node concept="37vLTw" id="7ZV1F13V8rd" role="2Oq$k0">
                       <ref role="3cqZAo" node="7wzKMsIVpuZ" resolve="root" />
                     </node>
+                    <node concept="liA8E" id="7ZV1F13VaKT" role="2OqNvi">
+                      <ref role="37wK5l" to="dush:~ModelRoot.createModel(java.lang.String)" resolve="createModel" />
+                      <node concept="3cpWs3" id="7ZV1F13VeVx" role="37wK5m">
+                        <node concept="Xl_RD" id="7ZV1F13VeV_" role="3uHU7w">
+                          <property role="Xl_RC" value=".rules" />
+                        </node>
+                        <node concept="2OqwBi" id="7ZV1F13VbFk" role="3uHU7B">
+                          <node concept="37vLTw" id="7ZV1F13Vb4o" role="2Oq$k0">
+                            <ref role="3cqZAo" node="2$SWsiCtx0g" resolve="l" />
+                          </node>
+                          <node concept="liA8E" id="7ZV1F13Ve1i" role="2OqNvi">
+                            <ref role="37wK5l" to="z1c4:~AbstractModule.getModuleName()" resolve="getModuleName" />
+                          </node>
+                        </node>
+                      </node>
+                    </node>
+                  </node>
+                  <node concept="37vLTw" id="7ZV1F13V64R" role="37vLTJ">
+                    <ref role="3cqZAo" node="7NjRQfy0ZHn" resolve="aspectModel" />
                   </node>
                 </node>
               </node>
@@ -10884,53 +10880,6 @@
             </node>
           </node>
         </node>
-      </node>
-    </node>
-    <node concept="2vPdvu" id="7POWRVZLtOx" role="2E2X74">
-      <node concept="2vPdvi" id="4kOIfQjJz4B" role="2vPdvg">
-        <ref role="2vPdvl" to="7e0v:7POWRVZMxkx" resolve="Structure" />
-      </node>
-      <node concept="2vPdvi" id="7POWRVZLtOz" role="2vPdvg">
-        <ref role="2vPdvl" to="7e0v:2erTeUVF9WV" resolve="Editor" />
-      </node>
-      <node concept="2vPdvi" id="7POWRVZLtO$" role="2vPdvg">
-        <ref role="2vPdvl" to="7e0v:2erTeUVFa2t" resolve="Constraints" />
-      </node>
-      <node concept="2vPdvi" id="7POWRVZLtO_" role="2vPdvg">
-        <ref role="2vPdvl" to="7e0v:2erTeUVEQFB" resolve="Behavior" />
-      </node>
-      <node concept="2vPdvi" id="7POWRVZLtOA" role="2vPdvg">
-        <ref role="2vPdvl" to="7e0v:7POWRVZLtP_" resolve="Typesystem" />
-      </node>
-      <node concept="2vPdvi" id="7mKDvraibVy" role="2vPdvg">
-        <ref role="2vPdvl" node="7mKDvraibOE" resolve="Structs" />
-      </node>
-      <node concept="2vPdvi" id="4kJ$pn79yGS" role="2vPdvg">
-        <ref role="2vPdvl" node="4kJ$pn77NcB" resolve="Aspects" />
-      </node>
-      <node concept="2vPdvi" id="3Qetf3cPeDq" role="2vPdvg">
-        <ref role="2vPdvl" node="3E71z7ucbEa" resolve="Rules" />
-      </node>
-      <node concept="2vPdvi" id="7POWRVZLtOB" role="2vPdvg">
-        <ref role="2vPdvl" to="7e0v:2$SWsiCu1P0" resolve="Actions" />
-      </node>
-      <node concept="2vPdvi" id="7POWRVZLtOC" role="2vPdvg">
-        <ref role="2vPdvl" to="7e0v:7POWRVZLtD_" resolve="Refactorings" />
-      </node>
-      <node concept="2vPdvi" id="7POWRVZLtOD" role="2vPdvg">
-        <ref role="2vPdvl" to="7e0v:2erTeUVFcrJ" resolve="Intentions" />
-      </node>
-      <node concept="2vPdvi" id="7POWRVZLtOE" role="2vPdvg">
-        <ref role="2vPdvl" to="7e0v:2erTeUVFaZh" resolve="Find Usages" />
-      </node>
-      <node concept="2vPdvi" id="7POWRVZLtOF" role="2vPdvg">
-        <ref role="2vPdvl" to="7e0v:2erTeUVFaEE" resolve="Data Flow" />
-      </node>
-      <node concept="2vPdvi" id="7POWRVZLtOG" role="2vPdvg">
-        <ref role="2vPdvl" to="7e0v:2erTeUVF2dY" resolve="Generator" />
-      </node>
-      <node concept="2vPdvi" id="7POWRVZLtOH" role="2vPdvg">
-        <ref role="2vPdvl" to="7e0v:7POWRVZLtO0" resolve="Textgen" />
       </node>
     </node>
     <node concept="1bb2R6" id="6aMI9gIMtPZ" role="2E2Xay">

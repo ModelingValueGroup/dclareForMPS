@@ -214,7 +214,7 @@ public class DModel extends DNewable<DModel, SModelReference, SModel> implements
     private static boolean isExternal(SModel sModel) {
         if (sModel.getName().hasStereotype()) {
             return true;
-        } else if (dClareMPS().project.getPath(sModel.getModule()) == null) {
+        } else if (!dClareMPS().project.isProjectModule(sModel.getModule())) {
             return true;
         } else {
             SModule sModule = sModel.getModule();

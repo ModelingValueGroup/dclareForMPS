@@ -1403,7 +1403,7 @@ public class DClareMPS implements Universe, UncaughtExceptionHandler {
     private class NodeCheckerInEditor extends AbstractNodeCheckerInEditor {
 
         @Override
-        protected void checkNodeInEditor(SNode sNode, LanguageErrorsCollector errorsCollector, SRepository repository) {
+        public void checkNodeInEditor(SNode sNode, LanguageErrorsCollector errorsCollector, SRepository repository) {
             if (isRunning()) {
                 mpsTransaction.state().run(() -> {
                     for (DIssue issue : DMutable.DCLARE_ISSUES.get(DNode.of(sNode))) {

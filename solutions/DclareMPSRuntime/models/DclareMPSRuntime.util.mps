@@ -9,7 +9,7 @@
     <use id="760a0a8c-eabb-4521-8bfd-65db761a9ba3" name="jetbrains.mps.baseLanguage.logging" version="0" />
     <use id="c7fb639f-be78-4307-89b0-b5959c3fa8c8" name="jetbrains.mps.lang.text" version="0" />
     <use id="ceab5195-25ea-4f22-9b92-103b95ca8c0c" name="jetbrains.mps.lang.core" version="2" />
-    <use id="18bc6592-03a6-4e29-a83a-7ff23bde13ba" name="jetbrains.mps.lang.editor" version="14" />
+    <use id="18bc6592-03a6-4e29-a83a-7ff23bde13ba" name="jetbrains.mps.lang.editor" version="15" />
   </languages>
   <imports>
     <import index="mhbf" ref="8865b7a8-5271-43d3-884c-6fd1d9cfdd34/java:org.jetbrains.mps.openapi.model(MPS.OpenAPI/)" />
@@ -48,9 +48,9 @@
     <import index="hyam" ref="6354ebe7-c22a-4a0f-ac54-50b52ab9b065/java:java.awt.event(JDK/)" />
     <import index="wvnl" ref="1ed103c3-3aa6-49b7-9c21-6765ee11f224/java:jetbrains.mps.openapi.editor.extensions(MPS.Editor/)" />
     <import index="dush" ref="8865b7a8-5271-43d3-884c-6fd1d9cfdd34/java:org.jetbrains.mps.openapi.persistence(MPS.OpenAPI/)" />
-    <import index="18ew" ref="3a8d80d2-32d9-f1f2-4443-6a1111e12ef3/java:jetbrains.mps.util(MPS.Boot/)" />
     <import index="xx25" ref="6ed54515-acc8-4d1e-a16c-9fd6cfe951ea/java:jetbrains.mps.smodel.adapter.structure.types(MPS.Core/)" />
     <import index="ni5j" ref="6354ebe7-c22a-4a0f-ac54-50b52ab9b065/java:java.util.regex(JDK/)" />
+    <import index="zn9m" ref="498d89d2-c2e9-11e2-ad49-6cf049e62fe5/java:com.intellij.openapi.util(MPS.IDEA/)" />
   </imports>
   <registry>
     <language id="f3061a53-9226-4cc5-a443-f952ceaf5816" name="jetbrains.mps.baseLanguage">
@@ -8455,6 +8455,19 @@
       <node concept="3Tm1VV" id="3jCDJ5bpxkD" role="1B3o_S" />
       <node concept="3Tqbb2" id="3jCDJ5bw_4w" role="3clF45" />
     </node>
+    <node concept="2tJIrI" id="7SdOQiwr57l" role="jymVt" />
+    <node concept="2YIFZL" id="7SdOQiwsRbx" role="jymVt">
+      <property role="TrG5h" value="dummy" />
+      <node concept="3clFbS" id="7SdOQiwsRb$" role="3clF47">
+        <node concept="3cpWs6" id="7SdOQiwtpju" role="3cqZAp">
+          <node concept="10Nm6u" id="7SdOQiwtKcP" role="3cqZAk" />
+        </node>
+      </node>
+      <node concept="3Tm1VV" id="7SdOQiwrN$0" role="1B3o_S" />
+      <node concept="3uibUv" id="7SdOQiws$iw" role="3clF45">
+        <ref role="3uigEE" to="wyt6:~Object" resolve="Object" />
+      </node>
+    </node>
     <node concept="2tJIrI" id="3jCDJ5bztgC" role="jymVt" />
   </node>
   <node concept="2ABs$o" id="rTfv3HeNOH">
@@ -8645,8 +8658,8 @@
               <node concept="3clFbS" id="5PFtE$ppMIT" role="3clF47">
                 <node concept="3clFbF" id="5PFtE$ppMIW" role="3cqZAp">
                   <node concept="10M0yZ" id="5PFtE$pqgfs" role="3clFbG">
-                    <ref role="3cqZAo" to="18ew:~SystemInfo.isMac" resolve="isMac" />
-                    <ref role="1PxDUh" to="18ew:~SystemInfo" resolve="SystemInfo" />
+                    <ref role="3cqZAo" to="zn9m:~SystemInfo.isMac" resolve="isMac" />
+                    <ref role="1PxDUh" to="zn9m:~SystemInfo" resolve="SystemInfo" />
                   </node>
                 </node>
               </node>
@@ -8662,8 +8675,8 @@
                 <node concept="3clFbF" id="5PFtE$ppStw" role="3cqZAp">
                   <node concept="3fqX7Q" id="5PFtE$pqeHb" role="3clFbG">
                     <node concept="10M0yZ" id="5PFtE$pqeHd" role="3fr31v">
-                      <ref role="3cqZAo" to="18ew:~SystemInfo.isMac" resolve="isMac" />
-                      <ref role="1PxDUh" to="18ew:~SystemInfo" resolve="SystemInfo" />
+                      <ref role="3cqZAo" to="zn9m:~SystemInfo.isMac" resolve="isMac" />
+                      <ref role="1PxDUh" to="zn9m:~SystemInfo" resolve="SystemInfo" />
                     </node>
                   </node>
                 </node>
@@ -8696,9 +8709,9 @@
               <node concept="10P_77" id="5PFtE$pqkZv" role="3clF45" />
               <node concept="3clFbS" id="5PFtE$pqkZw" role="3clF47">
                 <node concept="3clFbF" id="5PFtE$pqkZx" role="3cqZAp">
-                  <node concept="10M0yZ" id="5PFtE$pqkZy" role="3clFbG">
-                    <ref role="3cqZAo" to="18ew:~SystemInfo.isMac" resolve="isMac" />
-                    <ref role="1PxDUh" to="18ew:~SystemInfo" resolve="SystemInfo" />
+                  <node concept="10M0yZ" id="7ZV1F1307w_" role="3clFbG">
+                    <ref role="3cqZAo" to="zn9m:~SystemInfo.isMac" resolve="isMac" />
+                    <ref role="1PxDUh" to="zn9m:~SystemInfo" resolve="SystemInfo" />
                   </node>
                 </node>
               </node>
@@ -8714,8 +8727,8 @@
                 <node concept="3clFbF" id="5PFtE$pqjoo" role="3cqZAp">
                   <node concept="3fqX7Q" id="5PFtE$pqjop" role="3clFbG">
                     <node concept="10M0yZ" id="5PFtE$pqjoq" role="3fr31v">
-                      <ref role="3cqZAo" to="18ew:~SystemInfo.isMac" resolve="isMac" />
-                      <ref role="1PxDUh" to="18ew:~SystemInfo" resolve="SystemInfo" />
+                      <ref role="3cqZAo" to="zn9m:~SystemInfo.isMac" resolve="isMac" />
+                      <ref role="1PxDUh" to="zn9m:~SystemInfo" resolve="SystemInfo" />
                     </node>
                   </node>
                 </node>

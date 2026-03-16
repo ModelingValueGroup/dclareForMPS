@@ -33,7 +33,6 @@ dependencies {
     compileOnly(mpsJar("mps-behavior-runtime"))
     compileOnly(mpsJar("mps-closures"))
     compileOnly(mpsJar("mps-core"))
-    compileOnly(mpsJar("mps-debugger-api"))
     compileOnly(mpsJar("mps-editor"))
     compileOnly(mpsJar("mps-openapi"))
     compileOnly(mpsJar("mps-platform"))

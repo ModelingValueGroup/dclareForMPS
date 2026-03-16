@@ -3,7 +3,7 @@
   <persistence version="9" />
   <languages>
     <use id="798100da-4f0a-421a-b991-71f8c50ce5d2" name="jetbrains.mps.build" version="0" />
-    <use id="0cf935df-4699-4e9c-a132-fa109541cba3" name="jetbrains.mps.build.mps" version="7" />
+    <use id="0cf935df-4699-4e9c-a132-fa109541cba3" name="jetbrains.mps.build.mps" version="8" />
   </languages>
   <imports>
     <import index="ffeo" ref="r:874d959d-e3b4-4d04-b931-ca849af130dd(jetbrains.mps.ide.build)" />
@@ -363,8 +363,11 @@
       <node concept="m$_yC" id="6dxB28$ZXTI" role="m$_yJ">
         <ref role="m$_y1" to="ffeo:5HVSRHdVm9a" resolve="jetbrains.mps.build" />
       </node>
-      <node concept="m$_yC" id="78KS2572QCd" role="m$_yJ">
+      <node concept="m$_yC" id="7ZV1F14ea3w" role="m$_yJ">
         <ref role="m$_y1" to="ffeo:4O0hKJpjIV3" resolve="jetbrains.mps.ide.devkit" />
+      </node>
+      <node concept="m$_yC" id="7ZV1F14aHAE" role="m$_yJ">
+        <ref role="m$_y1" to="ffeo:6WtY9M1bDO_" resolve="jetbrains.mps.ide.java" />
       </node>
       <node concept="m$_yC" id="13bz6S$OL82" role="m$_yJ">
         <ref role="m$_y1" to="ffeo:4k71ibbLe59" resolve="com.intellij.modules.mps" />
@@ -398,13 +401,13 @@
         <node concept="2pNUuL" id="ffBaz0uMOz" role="2pNNFR">
           <property role="2pNUuO" value="since-build" />
           <node concept="2pMdtt" id="ffBaz0uMO$" role="2pMdts">
-            <property role="2pMdty" value="233.0000.0000" />
+            <property role="2pMdty" value="253.0000.0000" />
           </node>
         </node>
         <node concept="2pNUuL" id="ffBaz0uMP9" role="2pNNFR">
           <property role="2pNUuO" value="until-build" />
           <node concept="2pMdtt" id="ffBaz0uMPa" role="2pMdts">
-            <property role="2pMdty" value="234.0000.0000" />
+            <property role="2pMdty" value="254.0000.0000" />
           </node>
         </node>
       </node>
@@ -559,6 +562,11 @@
           <node concept="1SiIV0" id="3CVeTM8qMWf" role="3bR37C">
             <node concept="3bR9La" id="3CVeTM8qMWg" role="1SiIV1">
               <ref role="3bR37D" to="ffeo:1TaHNgiIbIQ" resolve="MPS.Core" />
+            </node>
+          </node>
+          <node concept="1SiIV0" id="7z_TR$gxq6W" role="3bR37C">
+            <node concept="3bR9La" id="7z_TR$gxq6X" role="1SiIV1">
+              <ref role="3bR37D" to="ffeo:7YI57w6K09t" resolve="jetbrains.mps.baseLanguage.collections#1151699677197" />
             </node>
           </node>
         </node>
@@ -1242,20 +1250,10 @@
             <ref role="3bR37D" to="ffeo:2eDSGe9d1q1" resolve="MPS.Workbench" />
           </node>
         </node>
-        <node concept="1SiIV0" id="2Iz8eNNHbc_" role="3bR37C">
-          <node concept="3bR9La" id="2Iz8eNNHbcA" role="1SiIV1">
-            <ref role="3bR37D" to="ffeo:6xsKswgwdcs" resolve="jetbrains.mps.ide.devkit.editor" />
-          </node>
-        </node>
         <node concept="1SiIV0" id="4WWts61d9sU" role="3bR37C">
           <node concept="3bR9La" id="4WWts61d9sV" role="1SiIV1">
             <property role="3bR36h" value="true" />
             <ref role="3bR37D" to="ffeo:5xwbQ0eEV3B" resolve="jetbrains.mps.java.platform" />
-          </node>
-        </node>
-        <node concept="1SiIV0" id="4J_z_mjNn7l" role="3bR37C">
-          <node concept="3bR9La" id="4J_z_mjNn7m" role="1SiIV1">
-            <ref role="3bR37D" to="ffeo:2ucthr8W_1x" resolve="jetbrains.mps.java.core" />
           </node>
         </node>
         <node concept="1SiIV0" id="5qfa16hGOtp" role="3bR37C">
@@ -1284,6 +1282,16 @@
             <node concept="3qWCbU" id="GnIwx79TXl" role="3LXTna">
               <property role="3qWCbO" value="**/*.svg" />
             </node>
+          </node>
+        </node>
+        <node concept="1SiIV0" id="7ZV1F148Btc" role="3bR37C">
+          <node concept="3bR9La" id="7ZV1F148Btd" role="1SiIV1">
+            <ref role="3bR37D" to="ffeo:7Kfy9QB6Lg8" resolve="jetbrains.mps.runtime" />
+          </node>
+        </node>
+        <node concept="1SiIV0" id="7ZV1F14aH_K" role="3bR37C">
+          <node concept="3bR9La" id="7ZV1F14aH_L" role="1SiIV1">
+            <ref role="3bR37D" to="ffeo:2ucthr8W_1x" resolve="jetbrains.mps.java.core" />
           </node>
         </node>
       </node>

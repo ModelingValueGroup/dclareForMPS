@@ -109,7 +109,7 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
 
     @Override
     public boolean isExternal() {
-        return dClareMPS().project.getPath(original()) == null;
+        return !dClareMPS().project.isProjectModule(original());
     }
 
     @Override
