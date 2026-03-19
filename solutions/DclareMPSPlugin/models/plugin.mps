@@ -178,6 +178,7 @@
       <concept id="1205681243813" name="jetbrains.mps.lang.plugin.structure.IsApplicableBlock" flags="in" index="2ScWuX" />
       <concept id="1214307303872" name="jetbrains.mps.lang.plugin.structure.GetComponentBlock" flags="in" index="2UmK3q" />
       <concept id="6547237850567458268" name="jetbrains.mps.lang.plugin.structure.BaseToolDeclaration" flags="ng" index="2XNcJY">
+        <property id="43535111852086466" name="isAvailableOnStartup" index="tEvSQ" />
         <property id="6547237850567462620" name="caption" index="2XNbzY" />
         <child id="8096638938275469615" name="toolDisposeBlock" index="uR5co" />
         <child id="8096638938275469614" name="toolInitBlock" index="uR5cp" />
@@ -13036,6 +13037,7 @@
   <node concept="sEfby" id="3OqCb4$v3q7">
     <property role="TrG5h" value="DClareMessages" />
     <property role="2XNbzY" value="Status" />
+    <property role="tEvSQ" value="true" />
     <node concept="2XrIbr" id="1btc0vAiaOy" role="2XNbBy">
       <property role="TrG5h" value="on" />
       <property role="DiZV1" value="true" />
@@ -13531,14 +13533,6 @@
                             <node concept="37vLTw" id="22ExA6fHms8" role="37wK5m">
                               <ref role="3cqZAo" node="1sOlkZtG42m" resolve="mpsProject" />
                             </node>
-                          </node>
-                        </node>
-                      </node>
-                      <node concept="3clFbF" id="1sOlkZtGuBZ" role="3cqZAp">
-                        <node concept="2OqwBi" id="1sOlkZtGuL7" role="3clFbG">
-                          <node concept="2WthIp" id="1sOlkZtGuBY" role="2Oq$k0" />
-                          <node concept="liA8E" id="1sOlkZtGuWm" role="2OqNvi">
-                            <ref role="37wK5l" to="71xd:~BaseTool.makeAvailableLater()" resolve="makeAvailableLater" />
                           </node>
                         </node>
                       </node>
@@ -15581,6 +15575,7 @@
   <node concept="sEfby" id="cEL$G_Lser">
     <property role="TrG5h" value="DClareModelChecks" />
     <property role="2XNbzY" value="Checker" />
+    <property role="tEvSQ" value="true" />
     <node concept="2BZ0e9" id="cEL$G_Lwnu" role="2XNbBz">
       <property role="TrG5h" value="viewer" />
       <node concept="3Tm6S6" id="cEL$G_Lwnv" role="1B3o_S" />
@@ -15880,33 +15875,6 @@
                   <ref role="37wK5l" to="u4ym:3z4syYPRmGX" resolve="getEngine" />
                   <ref role="1Pybhc" to="u4ym:30fQumnG8Au" resolve="DclareUtil" />
                   <node concept="2xqhHp" id="6ogFS0mUQHo" role="37wK5m" />
-                </node>
-              </node>
-            </node>
-            <node concept="3clFbF" id="4fajGPApyE$" role="3cqZAp">
-              <node concept="2OqwBi" id="4fajGPApyE_" role="3clFbG">
-                <node concept="2OqwBi" id="4fajGPApyEA" role="2Oq$k0">
-                  <node concept="37vLTw" id="4fajGPApyEB" role="2Oq$k0">
-                    <ref role="3cqZAo" node="cEL$G_PW8_" resolve="mpsProject" />
-                  </node>
-                  <node concept="liA8E" id="4fajGPApyEC" role="2OqNvi">
-                    <ref role="37wK5l" to="z1c4:~Project.getModelAccess()" resolve="getModelAccess" />
-                  </node>
-                </node>
-                <node concept="liA8E" id="4fajGPApyED" role="2OqNvi">
-                  <ref role="37wK5l" to="lui2:~ModelAccess.executeCommandInEDT(java.lang.Runnable)" resolve="executeCommandInEDT" />
-                  <node concept="1bVj0M" id="4fajGPApyEE" role="37wK5m">
-                    <node concept="3clFbS" id="4fajGPApyEF" role="1bW5cS">
-                      <node concept="3clFbF" id="4fajGPApyEO" role="3cqZAp">
-                        <node concept="2OqwBi" id="4fajGPApyEP" role="3clFbG">
-                          <node concept="2WthIp" id="4fajGPApyEQ" role="2Oq$k0" />
-                          <node concept="liA8E" id="4fajGPApyER" role="2OqNvi">
-                            <ref role="37wK5l" to="71xd:~BaseTool.makeAvailableLater()" resolve="makeAvailableLater" />
-                          </node>
-                        </node>
-                      </node>
-                    </node>
-                  </node>
                 </node>
               </node>
             </node>

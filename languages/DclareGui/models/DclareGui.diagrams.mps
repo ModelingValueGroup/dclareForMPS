@@ -75,29 +75,29 @@
     <property role="1l01NS" value="true" />
     <property role="mcfiE" value="true" />
     <node concept="2iyNl8" id="2HxV8y$I9dQ" role="2iyNln">
-      <property role="2iyNlD" value="621" />
-      <property role="2iyNlR" value="766" />
+      <property role="2iyNlD" value="629" />
+      <property role="2iyNlR" value="763" />
       <ref role="2iyNl9" to="53d4:67eN9QkffP5" resolve="ConceptDiagram" />
       <node concept="2iyNll" id="2HxV8y$I9f8" role="2iyNmk">
         <ref role="2iyNli" to="53d4:3psr82$eZ54" resolve="IDiagram" />
       </node>
     </node>
     <node concept="2iyNl8" id="6URAbZV6w$Q" role="2iyNln">
-      <property role="2iyNlD" value="1272" />
-      <property role="2iyNlR" value="354" />
+      <property role="2iyNlD" value="1288" />
+      <property role="2iyNlR" value="349" />
       <ref role="2iyNl9" to="53d4:1h9n_fg6T52" resolve="DummyVariables" />
     </node>
     <node concept="2iyNl8" id="2HxV8y$I9eW" role="2iyNln">
-      <property role="2iyNlD" value="836" />
-      <property role="2iyNlR" value="246" />
+      <property role="2iyNlD" value="820" />
+      <property role="2iyNlR" value="249" />
       <ref role="2iyNl9" to="53d4:31sbKqyPLDj" resolve="EdgeLayout" />
       <node concept="2iyNll" id="2HxV8y$I9fe" role="2iyNmk">
         <ref role="2iyNli" to="53d4:31sbKqyPMf4" resolve="joints" />
       </node>
     </node>
     <node concept="2iyNl8" id="2HxV8y$I9eX" role="2iyNln">
-      <property role="2iyNlD" value="669" />
-      <property role="2iyNlR" value="514" />
+      <property role="2iyNlD" value="674" />
+      <property role="2iyNlR" value="512" />
       <ref role="2iyNl9" to="53d4:3psr82$eZ54" resolve="IDiagram" />
       <node concept="2iyNll" id="2HxV8y$I9fb" role="2iyNmk">
         <ref role="2iyNli" to="53d4:3psr82$c6ii" resolve="ISingleRootComponent" />
@@ -107,42 +107,42 @@
       </node>
     </node>
     <node concept="2iyNl8" id="2HxV8y$I9eY" role="2iyNln">
-      <property role="2iyNlD" value="268" />
-      <property role="2iyNlR" value="201" />
+      <property role="2iyNlD" value="252" />
+      <property role="2iyNlR" value="204" />
       <ref role="2iyNl9" to="53d4:7jkrzkVxKBQ" resolve="IRootComponentContainer" />
     </node>
     <node concept="2iyNl8" id="2HxV8y$I9eZ" role="2iyNln">
-      <property role="2iyNlD" value="464" />
-      <property role="2iyNlR" value="356" />
+      <property role="2iyNlD" value="461" />
+      <property role="2iyNlR" value="357" />
       <ref role="2iyNl9" to="53d4:3psr82$c6ii" resolve="ISingleRootComponent" />
       <node concept="2iyNll" id="2HxV8y$I9fa" role="2iyNmk">
         <ref role="2iyNli" to="53d4:7jkrzkVxKBQ" resolve="IRootComponentContainer" />
       </node>
     </node>
     <node concept="2iyNl8" id="2HxV8y$I9f0" role="2iyNln">
-      <property role="2iyNlD" value="600" />
-      <property role="2iyNlR" value="133" />
+      <property role="2iyNlD" value="584" />
+      <property role="2iyNlR" value="136" />
       <ref role="2iyNl9" to="53d4:31sbKqyPLDm" resolve="JointLayout" />
     </node>
     <node concept="2iyNl8" id="2HxV8y$I9f1" role="2iyNln">
-      <property role="2iyNlD" value="968" />
-      <property role="2iyNlR" value="435" />
+      <property role="2iyNlD" value="981" />
+      <property role="2iyNlR" value="423" />
       <ref role="2iyNl9" to="53d4:31sbKqyPLDe" resolve="NodeLayout" />
       <node concept="2iyNll" id="2HxV8y$I9fd" role="2iyNmk">
         <ref role="2iyNli" to="53d4:31sbKqyPLEi" resolve="edges" />
       </node>
     </node>
     <node concept="2iyNl8" id="E9JPNpn5YF" role="2iyNln">
-      <property role="2iyNlD" value="382" />
-      <property role="2iyNlR" value="645" />
+      <property role="2iyNlD" value="387" />
+      <property role="2iyNlR" value="641" />
       <ref role="2iyNl9" to="53d4:E9JPNpn5VC" resolve="RulesDiagram" />
       <node concept="2iyNll" id="E9JPNpn5YG" role="2iyNmk">
         <ref role="2iyNli" to="53d4:3psr82$eZ54" resolve="IDiagram" />
       </node>
     </node>
     <node concept="2iyNl8" id="2HxV8y$I9dR" role="2iyNln">
-      <property role="2iyNlD" value="903" />
-      <property role="2iyNlR" value="679" />
+      <property role="2iyNlD" value="913" />
+      <property role="2iyNlR" value="677" />
       <ref role="2iyNl9" to="53d4:5hEUvARta2y" resolve="StructDiagram" />
       <node concept="2iyNll" id="2HxV8y$I9f9" role="2iyNmk">
         <ref role="2iyNli" to="53d4:3psr82$eZ54" resolve="IDiagram" />
@@ -2117,6 +2117,58 @@
     <property role="mcfiE" value="true" />
     <ref role="3jPiJQ" to="q3xn:3HJBHARsh6E" resolve="DIAGRAM" />
     <ref role="3jPkfH" to="q3xn:7ypR234gP0F" resolve="dragging" />
+    <node concept="2iyNl8" id="6URAbZVh4PD" role="2iyNln">
+      <property role="2iyNlD" value="640" />
+      <property role="2iyNlR" value="558" />
+      <ref role="2iyNl9" to="q3xn:76QCTJD2RMW" resolve="deviceInput" />
+      <node concept="2iyNll" id="6URAbZVh4Xi" role="2iyNmk">
+        <ref role="2iyNli" to="q3xn:76QCTJD2RMW" resolve="deviceInput" />
+      </node>
+    </node>
+    <node concept="2iyNl8" id="6URAbZVh4Pf" role="2iyNln">
+      <property role="2iyNlD" value="843" />
+      <property role="2iyNlR" value="427" />
+      <ref role="2iyNl9" to="q3xn:1kiV8EEqLhJ" resolve="DCanvas_GUI_5" />
+      <node concept="2iyNll" id="6URAbZVh4Yw" role="2iyNmk">
+        <ref role="2iyNli" to="q3xn:1kiV8EEqr4E" resolve="isControlPressed" />
+      </node>
+      <node concept="2iyNll" id="6URAbZVh4Yx" role="2iyNmk">
+        <ref role="2iyNli" to="q3xn:76QCTJD2RMW" resolve="deviceInput" />
+      </node>
+      <node concept="2iyNll" id="6URAbZVh4Yy" role="2iyNmk">
+        <ref role="2iyNli" to="q3xn:76QCTJD2lWZ" resolve="pressedKeys" />
+      </node>
+    </node>
+    <node concept="2iyNl8" id="6URAbZVh4Pg" role="2iyNln">
+      <property role="2iyNlD" value="810" />
+      <property role="2iyNlR" value="722" />
+      <ref role="2iyNl9" to="q3xn:1efB8VJwX21" resolve="DCanvas_GUI_7" />
+      <node concept="2iyNll" id="6URAbZVh4SS" role="2iyNmk">
+        <ref role="2iyNli" to="q3xn:7ypR234gWrk" resolve="dragged" />
+        <node concept="2iyNlg" id="6URAbZVh4SX" role="2iyKN2">
+          <property role="2iyKN1" value="1002" />
+          <property role="2iyKNf" value="687" />
+          <property role="30jCVK" value="0" />
+        </node>
+      </node>
+      <node concept="2iyNll" id="6URAbZVh4ST" role="2iyNmk">
+        <ref role="2iyNli" to="q3xn:7ypR234gWrk" resolve="dragged" />
+        <node concept="2iyNlg" id="6URAbZVh4Te" role="2iyKN2">
+          <property role="2iyKN1" value="792" />
+          <property role="2iyKNf" value="574" />
+          <property role="30jCVK" value="0" />
+        </node>
+      </node>
+      <node concept="2iyNll" id="6URAbZVh4SU" role="2iyNmk">
+        <ref role="2iyNli" to="q3xn:1kiV8EEqr4E" resolve="isControlPressed" />
+      </node>
+      <node concept="2iyNll" id="6URAbZVh4SV" role="2iyNmk">
+        <ref role="2iyNli" to="q3xn:7nNrlO1Gveo" resolve="shapes" />
+      </node>
+      <node concept="2iyNll" id="6URAbZVh4SW" role="2iyNmk">
+        <ref role="2iyNli" to="q3xn:3nsHMGrYX5W" resolve="hitLeft" />
+      </node>
+    </node>
     <node concept="2iyNl8" id="6URAbZVh4Ox" role="2iyNln">
       <property role="2iyNlD" value="925" />
       <property role="2iyNlR" value="117" />
@@ -2203,8 +2255,8 @@
       <node concept="2iyNll" id="6URAbZVh4SK" role="2iyNmk">
         <ref role="2iyNli" to="q3xn:3nsHMGrYX5W" resolve="hitLeft" />
         <node concept="2iyNlg" id="6URAbZVh4SN" role="2iyKN2">
-          <property role="2iyKN1" value="626" />
-          <property role="2iyKNf" value="824" />
+          <property role="2iyKN1" value="639" />
+          <property role="2iyKNf" value="821" />
           <property role="30jCVK" value="0" />
         </node>
       </node>
@@ -2219,8 +2271,8 @@
       <node concept="2iyNll" id="6URAbZVh4SM" role="2iyNmk">
         <ref role="2iyNli" to="q3xn:2cgTHFOzwuc" resolve="hitRight" />
         <node concept="2iyNlg" id="6URAbZVh4Up" role="2iyKN2">
-          <property role="2iyKN1" value="517" />
-          <property role="2iyKNf" value="878" />
+          <property role="2iyKN1" value="510" />
+          <property role="2iyKNf" value="883" />
           <property role="30jCVK" value="0" />
         </node>
       </node>
@@ -2239,122 +2291,40 @@
         <ref role="2iyNli" to="q3xn:7ypR234gP0F" resolve="dragging" />
       </node>
     </node>
-    <node concept="2iyNl8" id="6URAbZVh4PD" role="2iyNln">
-      <property role="2iyNlD" value="655" />
-      <property role="2iyNlR" value="539" />
-      <ref role="2iyNl9" to="q3xn:76QCTJD2RMW" resolve="deviceInput" />
-      <node concept="2iyNll" id="6URAbZVh4Xi" role="2iyNmk">
-        <ref role="2iyNli" to="q3xn:76QCTJD2RMW" resolve="deviceInput" />
-      </node>
-    </node>
-    <node concept="2iyNl8" id="6URAbZVh4Pf" role="2iyNln">
-      <property role="2iyNlD" value="843" />
-      <property role="2iyNlR" value="427" />
-      <ref role="2iyNl9" to="q3xn:1kiV8EEqLhJ" resolve="DCanvas_GUI_5" />
-      <node concept="2iyNll" id="6URAbZVh4Yw" role="2iyNmk">
-        <ref role="2iyNli" to="q3xn:1kiV8EEqr4E" resolve="isControlPressed" />
-      </node>
-      <node concept="2iyNll" id="6URAbZVh4Yx" role="2iyNmk">
-        <ref role="2iyNli" to="q3xn:76QCTJD2RMW" resolve="deviceInput" />
-      </node>
-      <node concept="2iyNll" id="6URAbZVh4Yy" role="2iyNmk">
-        <ref role="2iyNli" to="q3xn:76QCTJD2lWZ" resolve="pressedKeys" />
-      </node>
-    </node>
-    <node concept="2iyNl8" id="6URAbZVh4Pg" role="2iyNln">
-      <property role="2iyNlD" value="810" />
-      <property role="2iyNlR" value="722" />
-      <ref role="2iyNl9" to="q3xn:1efB8VJwX21" resolve="DCanvas_GUI_7" />
-      <node concept="2iyNll" id="6URAbZVh4SS" role="2iyNmk">
-        <ref role="2iyNli" to="q3xn:7ypR234gWrk" resolve="dragged" />
-        <node concept="2iyNlg" id="6URAbZVh4SX" role="2iyKN2">
-          <property role="2iyKN1" value="1002" />
-          <property role="2iyKNf" value="687" />
-          <property role="30jCVK" value="0" />
-        </node>
-      </node>
-      <node concept="2iyNll" id="6URAbZVh4ST" role="2iyNmk">
-        <ref role="2iyNli" to="q3xn:7ypR234gWrk" resolve="dragged" />
-        <node concept="2iyNlg" id="6URAbZVh4Te" role="2iyKN2">
-          <property role="2iyKN1" value="791" />
-          <property role="2iyKNf" value="574" />
-          <property role="30jCVK" value="0" />
-        </node>
-      </node>
-      <node concept="2iyNll" id="6URAbZVh4SU" role="2iyNmk">
-        <ref role="2iyNli" to="q3xn:1kiV8EEqr4E" resolve="isControlPressed" />
-      </node>
-      <node concept="2iyNll" id="6URAbZVh4SV" role="2iyNmk">
-        <ref role="2iyNli" to="q3xn:7nNrlO1Gveo" resolve="shapes" />
-      </node>
-      <node concept="2iyNll" id="6URAbZVh4SW" role="2iyNmk">
-        <ref role="2iyNli" to="q3xn:3nsHMGrYX5W" resolve="hitLeft" />
-      </node>
-    </node>
-    <node concept="2iyNl8" id="6URAbZVh4QB" role="2iyNln">
-      <property role="2iyNlD" value="829" />
-      <property role="2iyNlR" value="248" />
-      <ref role="2iyNl9" to="q3xn:2xAA8jfQBlZ" resolve="canvas" />
-    </node>
     <node concept="2iyNl8" id="6URAbZVh4QC" role="2iyNln">
-      <property role="2iyNlD" value="668" />
+      <property role="2iyNlD" value="666" />
       <property role="2iyNlR" value="469" />
       <ref role="2iyNl9" to="q3xn:76QCTJD2RMW" resolve="deviceInput" />
     </node>
-    <node concept="2iyNl8" id="6URAbZVh4R3" role="2iyNln">
-      <property role="2iyNlD" value="476" />
-      <property role="2iyNlR" value="481" />
-      <ref role="2iyNl9" to="q3xn:1kiV8EEj1Y4" resolve="deviceInput" />
-    </node>
-    <node concept="2iyNl8" id="6URAbZVh4R4" role="2iyNln">
-      <property role="2iyNlD" value="478" />
-      <property role="2iyNlR" value="192" />
-      <ref role="2iyNl9" to="q3xn:5uiQOXmd7mf" resolve="isMousePositionIn" />
-    </node>
-    <node concept="2iyNl8" id="6URAbZVh4QD" role="2iyNln">
-      <property role="2iyNlD" value="220" />
-      <property role="2iyNlR" value="235" />
-      <ref role="2iyNl9" to="q3xn:76QCTJD2e4Z" resolve="mousePosition" />
-    </node>
-    <node concept="2iyNl8" id="6URAbZVh4R5" role="2iyNln">
-      <property role="2iyNlD" value="236" />
-      <property role="2iyNlR" value="437" />
-      <ref role="2iyNl9" to="q3xn:1kiV8EEiodW" resolve="isMousePositionIn" />
-    </node>
-    <node concept="2iyNl8" id="6URAbZVh4R6" role="2iyNln">
-      <property role="2iyNlD" value="192" />
-      <property role="2iyNlR" value="718" />
-      <ref role="2iyNl9" to="q3xn:76QCTJD2lco" resolve="isLeftMouseDown" />
-    </node>
-    <node concept="2iyNl8" id="6URAbZVh4R7" role="2iyNln">
-      <property role="2iyNlD" value="146" />
-      <property role="2iyNlR" value="594" />
-      <ref role="2iyNl9" to="q3xn:5uiQOXmb7jt" resolve="isRightMouseDown" />
-    </node>
-    <node concept="2iyNl8" id="6URAbZVh4R8" role="2iyNln">
-      <property role="2iyNlD" value="601" />
-      <property role="2iyNlR" value="645" />
-      <ref role="2iyNl9" to="q3xn:3nsHMGrYX5W" resolve="hitLeft" />
-    </node>
-    <node concept="2iyNl8" id="6URAbZVh4R9" role="2iyNln">
-      <property role="2iyNlD" value="286" />
-      <property role="2iyNlR" value="822" />
-      <ref role="2iyNl9" to="q3xn:2cgTHFOzwuc" resolve="hitRight" />
-    </node>
-    <node concept="2iyNl8" id="6URAbZVh4R0" role="2iyNln">
-      <property role="2iyNlD" value="1071" />
-      <property role="2iyNlR" value="513" />
-      <ref role="2iyNl9" to="q3xn:7ypR234gWrk" resolve="dragged" />
+    <node concept="2iyNl8" id="6URAbZVh4Rl" role="2iyNln">
+      <property role="2iyNlD" value="911" />
+      <property role="2iyNlR" value="860" />
+      <ref role="2iyNl9" to="q3xn:7nNrlO1Gveo" resolve="shapes" />
     </node>
     <node concept="2iyNl8" id="6URAbZVh4Q_" role="2iyNln">
       <property role="2iyNlD" value="1266" />
       <property role="2iyNlR" value="306" />
       <ref role="2iyNl9" to="q3xn:7ypR234gP0F" resolve="dragging" />
     </node>
-    <node concept="2iyNl8" id="6URAbZVh4Rl" role="2iyNln">
-      <property role="2iyNlD" value="911" />
-      <property role="2iyNlR" value="860" />
-      <ref role="2iyNl9" to="q3xn:7nNrlO1Gveo" resolve="shapes" />
+    <node concept="2iyNl8" id="6URAbZVh4QB" role="2iyNln">
+      <property role="2iyNlD" value="829" />
+      <property role="2iyNlR" value="248" />
+      <ref role="2iyNl9" to="q3xn:2xAA8jfQBlZ" resolve="canvas" />
+    </node>
+    <node concept="2iyNl8" id="6URAbZVh4QD" role="2iyNln">
+      <property role="2iyNlD" value="220" />
+      <property role="2iyNlR" value="235" />
+      <ref role="2iyNl9" to="q3xn:76QCTJD2e4Z" resolve="mousePosition" />
+    </node>
+    <node concept="2iyNl8" id="6URAbZVh4R6" role="2iyNln">
+      <property role="2iyNlD" value="192" />
+      <property role="2iyNlR" value="718" />
+      <ref role="2iyNl9" to="q3xn:76QCTJD2lco" resolve="isLeftMouseDown" />
+    </node>
+    <node concept="2iyNl8" id="6URAbZVh4R4" role="2iyNln">
+      <property role="2iyNlD" value="478" />
+      <property role="2iyNlR" value="192" />
+      <ref role="2iyNl9" to="q3xn:5uiQOXmd7mf" resolve="isMousePositionIn" />
     </node>
     <node concept="2iyNl8" id="6URAbZVh4RJ" role="2iyNln">
       <property role="2iyNlD" value="953" />
@@ -2365,6 +2335,36 @@
       <property role="2iyNlD" value="904" />
       <property role="2iyNlR" value="596" />
       <ref role="2iyNl9" to="q3xn:1kiV8EEqr4E" resolve="isControlPressed" />
+    </node>
+    <node concept="2iyNl8" id="6URAbZVh4R8" role="2iyNln">
+      <property role="2iyNlD" value="601" />
+      <property role="2iyNlR" value="646" />
+      <ref role="2iyNl9" to="q3xn:3nsHMGrYX5W" resolve="hitLeft" />
+    </node>
+    <node concept="2iyNl8" id="6URAbZVh4R0" role="2iyNln">
+      <property role="2iyNlD" value="1071" />
+      <property role="2iyNlR" value="513" />
+      <ref role="2iyNl9" to="q3xn:7ypR234gWrk" resolve="dragged" />
+    </node>
+    <node concept="2iyNl8" id="6URAbZVh4R5" role="2iyNln">
+      <property role="2iyNlD" value="236" />
+      <property role="2iyNlR" value="437" />
+      <ref role="2iyNl9" to="q3xn:1kiV8EEiodW" resolve="isMousePositionIn" />
+    </node>
+    <node concept="2iyNl8" id="6URAbZVh4R3" role="2iyNln">
+      <property role="2iyNlD" value="476" />
+      <property role="2iyNlR" value="479" />
+      <ref role="2iyNl9" to="q3xn:1kiV8EEj1Y4" resolve="deviceInput" />
+    </node>
+    <node concept="2iyNl8" id="6URAbZVh4R7" role="2iyNln">
+      <property role="2iyNlD" value="146" />
+      <property role="2iyNlR" value="594" />
+      <ref role="2iyNl9" to="q3xn:5uiQOXmb7jt" resolve="isRightMouseDown" />
+    </node>
+    <node concept="2iyNl8" id="6URAbZVh4R9" role="2iyNln">
+      <property role="2iyNlD" value="286" />
+      <property role="2iyNlR" value="822" />
+      <ref role="2iyNl9" to="q3xn:2cgTHFOzwuc" resolve="hitRight" />
     </node>
   </node>
 </model>
