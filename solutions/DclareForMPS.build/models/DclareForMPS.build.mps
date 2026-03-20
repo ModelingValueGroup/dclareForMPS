@@ -1273,9 +1273,7 @@
                 <property role="2Ry0Am" value="solutions" />
                 <node concept="2Ry0Ak" id="GnIwx79TXk" role="2Ry0An">
                   <property role="2Ry0Am" value="DclareMPSPlugin" />
-                  <node concept="2Ry0Ak" id="GnIwx79TYn" role="2Ry0An">
-                    <property role="2Ry0Am" value="source_gen" />
-                  </node>
+                  <node concept="2Ry0Ak" id="GnIwx79TYn" role="2Ry0An" />
                 </node>
               </node>
             </node>
