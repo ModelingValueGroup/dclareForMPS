@@ -24548,8 +24548,11 @@
               <node concept="3clFbF" id="4ek7XpPgC63" role="3cqZAp">
                 <node concept="2OqwBi" id="4ek7XpOVHnl" role="3clFbG">
                   <node concept="2YIFZM" id="4ek7XpOVH07" role="2Oq$k0">
-                    <ref role="37wK5l" to="kz9k:~NavigationSupport.getInstance()" resolve="getInstance" />
+                    <ref role="37wK5l" to="kz9k:~NavigationSupport.getInstance(jetbrains.mps.project.Project)" resolve="getInstance" />
                     <ref role="1Pybhc" to="kz9k:~NavigationSupport" resolve="NavigationSupport" />
+                    <node concept="37vLTw" id="7M6eljkDMLq" role="37wK5m">
+                      <ref role="3cqZAo" node="1lu3ecRDzio" resolve="project" />
+                    </node>
                   </node>
                   <node concept="liA8E" id="4ek7XpOVLIo" role="2OqNvi">
                     <ref role="37wK5l" to="kz9k:~NavigationSupport.openNode(jetbrains.mps.project.Project,org.jetbrains.mps.openapi.model.SNode,boolean,boolean)" resolve="openNode" />
