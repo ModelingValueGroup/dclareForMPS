@@ -22,7 +22,7 @@ package org.modelingvalue.dclare.mps;
 
 import java.util.Arrays;
 
-import org.modelingvalue.collections.util.Age;
+import org.modelingvalue.collections.util.IdentityRank;
 
 public abstract class DIdentifiedValue implements DIdentified {
 
@@ -52,7 +52,7 @@ public abstract class DIdentifiedValue implements DIdentified {
             } else if (!Arrays.equals(identity, other.identity)) {
                 return false;
             } else {
-                if (Age.age(identity) > Age.age(other.identity)) {
+                if (IdentityRank.rank(identity) < IdentityRank.rank(other.identity)) {
                     other.identity = identity;
                 } else {
                     identity = other.identity;

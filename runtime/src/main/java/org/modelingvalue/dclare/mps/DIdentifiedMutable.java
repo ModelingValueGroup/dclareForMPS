@@ -26,7 +26,7 @@ import java.util.function.Supplier;
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
-import org.modelingvalue.collections.util.Age;
+import org.modelingvalue.collections.util.IdentityRank;
 import org.modelingvalue.dclare.ActionTransaction;
 import org.modelingvalue.dclare.Construction;
 import org.modelingvalue.dclare.Construction.Reason;
@@ -62,7 +62,7 @@ public abstract class DIdentifiedMutable extends DMutable implements DIdentified
             } else if (!Arrays.equals(identity, other.identity)) {
                 return false;
             } else {
-                if (Age.age(identity) > Age.age(other.identity)) {
+                if (IdentityRank.rank(identity) < IdentityRank.rank(other.identity)) {
                     other.identity = identity;
                 } else {
                     identity = other.identity;
@@ -81,10 +81,12 @@ public abstract class DIdentifiedMutable extends DMutable implements DIdentified
     }
 
     public Set<SLanguage> getAnonymousLanguages() {
-        return deriveReasons().filter(DQuotation.class).map(DDerive::aspect).flatMap(d -> IAspect.ALL_DEPENDENCIES.get(d)).map(IAspect::getLanguage).asSet();
+        return deriveReasons().filter(DQuotation.class).map(DDerive::aspect)
+                .flatMap(d -> IAspect.ALL_DEPENDENCIES.get(d)).map(IAspect::getLanguage).asSet();
     }
 
-    protected static <D extends DIdentifiedMutable> D quotationConstruct(IRuleSet ruleSet, String anonymousType, Object[] ctx, Supplier<D> supplier) {
+    protected static <D extends DIdentifiedMutable> D quotationConstruct(IRuleSet ruleSet, String anonymousType,
+            Object[] ctx, Supplier<D> supplier) {
         LeafTransaction tx = LeafTransaction.getCurrent();
         return tx.construct(new DQuotation(tx.mutable(), ruleSet, anonymousType, ctx), supplier);
     }
@@ -97,7 +99,8 @@ public abstract class DIdentifiedMutable extends DMutable implements DIdentified
             if (c != null) {
                 return (V) c.get(attr.index());
             } else {
-                throw new NullPointerException("No Aanonymous Type " + attr.anonymousType() + " found when trying to read " + this + "." + attr);
+                throw new NullPointerException("No Aanonymous Type " + attr.anonymousType()
+                        + " found when trying to read " + this + "." + attr);
             }
         } else {
             return (V) identity[attr.index()];
@@ -131,8 +134,11 @@ public abstract class DIdentifiedMutable extends DMutable implements DIdentified
     protected DMutable getContextObject() {
         LeafTransaction tx = LeafTransaction.getCurrent();
         return tx instanceof ActionTransaction && tx.mutable() instanceof DMutable ? (DMutable) tx.mutable() : //
-                tx instanceof IdentityDerivationTransaction && ((IdentityDerivationTransaction) tx).getContextMutable() instanceof DMutable ? (DMutable) ((IdentityDerivationTransaction) tx).getContextMutable() : //
-                        DClareMPS.instance(tx).getRepository();
+                tx instanceof IdentityDerivationTransaction
+                        && ((IdentityDerivationTransaction) tx).getContextMutable() instanceof DMutable
+                                ? (DMutable) ((IdentityDerivationTransaction) tx).getContextMutable()
+                                : //
+                                DClareMPS.instance(tx).getRepository();
     }
 
 }
