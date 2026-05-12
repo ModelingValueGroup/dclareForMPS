@@ -29274,6 +29274,7 @@
     <ref role="2RaPBF" node="7BfPuGAwBQZ" resolve="ARCHITECTURE_DIAGRAM" />
     <node concept="32q3_s" id="7BfPuGAyBBu" role="1FPzNG">
       <property role="TrG5h" value="architecture" />
+      <property role="KodbT" value="true" />
       <node concept="2OqwBi" id="7BfPuGAyBBy" role="33vP2m">
         <node concept="3TrEf2" id="7BfPuGAyVno" role="2OqNvi">
           <ref role="3Tt5mk" to="53d4:7BfPuGAwmiW" resolve="architecture" />
