@@ -67,6 +67,9 @@
       <concept id="4836112446988635817" name="jetbrains.mps.baseLanguage.structure.UndefinedType" flags="in" index="2jxLKc" />
       <concept id="1202948039474" name="jetbrains.mps.baseLanguage.structure.InstanceMethodCallOperation" flags="nn" index="liA8E" />
       <concept id="1465982738277781862" name="jetbrains.mps.baseLanguage.structure.PlaceholderMember" flags="nn" index="2tJIrI" />
+      <concept id="5279705229678483897" name="jetbrains.mps.baseLanguage.structure.FloatingPointFloatConstant" flags="nn" index="2$xPTn">
+        <property id="5279705229678483899" name="value" index="2$xPTl" />
+      </concept>
       <concept id="1076505808687" name="jetbrains.mps.baseLanguage.structure.WhileStatement" flags="nn" index="2$JKZl">
         <child id="1076505808688" name="condition" index="2$JKZa" />
       </concept>
@@ -9265,6 +9268,9 @@
       </node>
     </node>
     <node concept="2tJIrI" id="6tKTfWOmcIa" role="jymVt" />
+    <node concept="2tJIrI" id="7BfPuGBYpBm" role="jymVt" />
+    <node concept="2tJIrI" id="7BfPuGBYpBn" role="jymVt" />
+    <node concept="2tJIrI" id="7BfPuGBYpBo" role="jymVt" />
     <node concept="2YIFZL" id="6tKTfWOmdZc" role="jymVt">
       <property role="TrG5h" value="setLineWidth" />
       <node concept="37vLTG" id="6tKTfWOmeoD" role="3clF46">
@@ -9301,7 +9307,66 @@
       <node concept="3Tm1VV" id="6tKTfWOmdil" role="1B3o_S" />
       <node concept="3cqZAl" id="6tKTfWOmdVv" role="3clF45" />
     </node>
-    <node concept="2tJIrI" id="7wc8RN4MMx6" role="jymVt" />
+    <node concept="2tJIrI" id="7BfPuGBY245" role="jymVt" />
+    <node concept="2YIFZL" id="7BfPuGBY4PW" role="jymVt">
+      <property role="TrG5h" value="setDashedLineWidth" />
+      <node concept="37vLTG" id="7BfPuGBY4PX" role="3clF46">
+        <property role="TrG5h" value="g" />
+        <node concept="3uibUv" id="7BfPuGBY4PY" role="1tU5fm">
+          <ref role="3uigEE" to="z60i:~Graphics2D" resolve="Graphics2D" />
+        </node>
+      </node>
+      <node concept="37vLTG" id="7BfPuGBY4PZ" role="3clF46">
+        <property role="TrG5h" value="lineWidth" />
+        <node concept="10OMs4" id="7BfPuGBY4Q0" role="1tU5fm" />
+      </node>
+      <node concept="3clFbS" id="7BfPuGBY4Q1" role="3clF47">
+        <node concept="3clFbF" id="7BfPuGBY4Q2" role="3cqZAp">
+          <node concept="2OqwBi" id="7BfPuGBY4Q3" role="3clFbG">
+            <node concept="37vLTw" id="7BfPuGBY4Q4" role="2Oq$k0">
+              <ref role="3cqZAo" node="7BfPuGBY4PX" resolve="g" />
+            </node>
+            <node concept="liA8E" id="7BfPuGBY4Q5" role="2OqNvi">
+              <ref role="37wK5l" to="z60i:~Graphics2D.setStroke(java.awt.Stroke)" resolve="setStroke" />
+              <node concept="2ShNRf" id="7BfPuGBY4Q6" role="37wK5m">
+                <node concept="1pGfFk" id="7BfPuGBY4Q7" role="2ShVmc">
+                  <property role="373rjd" value="true" />
+                  <ref role="37wK5l" to="z60i:~BasicStroke.&lt;init&gt;(float,int,int,float,float[],float)" resolve="BasicStroke" />
+                  <node concept="37vLTw" id="7BfPuGBY4Q8" role="37wK5m">
+                    <ref role="3cqZAo" node="7BfPuGBY4PZ" resolve="lineWidth" />
+                  </node>
+                  <node concept="10M0yZ" id="7BfPuGBYtih" role="37wK5m">
+                    <ref role="3cqZAo" to="z60i:~BasicStroke.CAP_BUTT" resolve="CAP_BUTT" />
+                    <ref role="1PxDUh" to="z60i:~BasicStroke" resolve="BasicStroke" />
+                  </node>
+                  <node concept="10M0yZ" id="7BfPuGBYtFy" role="37wK5m">
+                    <ref role="3cqZAo" to="z60i:~BasicStroke.JOIN_MITER" resolve="JOIN_MITER" />
+                    <ref role="1PxDUh" to="z60i:~BasicStroke" resolve="BasicStroke" />
+                  </node>
+                  <node concept="2$xPTn" id="7BfPuGBYuQX" role="37wK5m">
+                    <property role="2$xPTl" value="10.0f" />
+                  </node>
+                  <node concept="2ShNRf" id="7BfPuGBYvg8" role="37wK5m">
+                    <node concept="3g6Rrh" id="7BfPuGBYMZM" role="2ShVmc">
+                      <node concept="10OMs4" id="7BfPuGBYMCG" role="3g7fb8" />
+                      <node concept="2$xPTn" id="7BfPuGBYOE6" role="3g7hyw">
+                        <property role="2$xPTl" value="10.0f" />
+                      </node>
+                    </node>
+                  </node>
+                  <node concept="2$xPTn" id="7BfPuGBYPfM" role="37wK5m">
+                    <property role="2$xPTl" value="0.0f" />
+                  </node>
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+      <node concept="3Tm1VV" id="7BfPuGBY4Q9" role="1B3o_S" />
+      <node concept="3cqZAl" id="7BfPuGBY4Qa" role="3clF45" />
+    </node>
+    <node concept="2tJIrI" id="7BfPuGBY4Hs" role="jymVt" />
     <node concept="2YIFZL" id="6tKTfWOZ8hJ" role="jymVt">
       <property role="TrG5h" value="drawRoundRect" />
       <node concept="37vLTG" id="6tKTfWOZ8hK" role="3clF46">
