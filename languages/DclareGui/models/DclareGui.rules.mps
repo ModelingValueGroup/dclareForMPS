@@ -29548,6 +29548,89 @@
         </node>
       </node>
     </node>
+    <node concept="32q3_s" id="7BfPuGE9ROn" role="1FPzNG">
+      <property role="TrG5h" value="baseColor" />
+      <node concept="3uibUv" id="7BfPuGE9UI5" role="1tU5fm">
+        <ref role="3uigEE" to="z60i:~Color" resolve="Color" />
+      </node>
+      <node concept="3K4zz7" id="7BfPuGEakzb" role="33vP2m">
+        <node concept="1Wc70l" id="7BfPuGEkLVs" role="3K4Cdx">
+          <node concept="3y3z36" id="7BfPuGEaj8$" role="3uHU7B">
+            <node concept="2OqwBi" id="7BfPuGEabYG" role="3uHU7B">
+              <node concept="1SfVH9" id="7BfPuGEabeH" role="2Oq$k0">
+                <ref role="3cqZAo" node="7BfPuGA$rXz" resolve="model" />
+              </node>
+              <node concept="3TrEf2" id="7BfPuGEad2s" role="2OqNvi">
+                <ref role="3Tt5mk" to="53d4:7BfPuGAwmJf" resolve="metaModel" />
+              </node>
+            </node>
+            <node concept="10Nm6u" id="7BfPuGEak9X" role="3uHU7w" />
+          </node>
+          <node concept="3y3z36" id="7BfPuGEkOg1" role="3uHU7w">
+            <node concept="1SfVH9" id="7BfPuGEkOUN" role="3uHU7w">
+              <ref role="3cqZAo" node="7BfPuGA$rXz" resolve="model" />
+            </node>
+            <node concept="2OqwBi" id="7BfPuGEkMGr" role="3uHU7B">
+              <node concept="1SfVH9" id="7BfPuGEkMGs" role="2Oq$k0">
+                <ref role="3cqZAo" node="7BfPuGA$rXz" resolve="model" />
+              </node>
+              <node concept="3TrEf2" id="7BfPuGEkMGt" role="2OqNvi">
+                <ref role="3Tt5mk" to="53d4:7BfPuGAwmJf" resolve="metaModel" />
+              </node>
+            </node>
+          </node>
+        </node>
+        <node concept="3K4zz7" id="7BfPuGEax2J" role="3K4GZi">
+          <node concept="2OqwBi" id="7BfPuGEax2K" role="3K4Cdx">
+            <node concept="1SfVH9" id="7BfPuGEax2L" role="2Oq$k0">
+              <ref role="3cqZAo" node="7BfPuGA$rXz" resolve="model" />
+            </node>
+            <node concept="3TrcHB" id="7BfPuGEax2M" role="2OqNvi">
+              <ref role="3TsBF5" to="53d4:7BfPuGAwmr1" resolve="concrete" />
+            </node>
+          </node>
+          <node concept="10M0yZ" id="7BfPuGEax2N" role="3K4E3e">
+            <ref role="3cqZAo" node="1CjrrCLv7bc" resolve="lightYellow" />
+            <ref role="1PxDUh" node="1CjrrCLv78O" resolve="Colors" />
+          </node>
+          <node concept="10M0yZ" id="7BfPuGEax2O" role="3K4GZi">
+            <ref role="3cqZAo" node="HeoZc4zGJi" resolve="lightBlue" />
+            <ref role="1PxDUh" node="1CjrrCLv78O" resolve="Colors" />
+          </node>
+        </node>
+        <node concept="2YIFZM" id="7BfPuGEv0Ao" role="3K4E3e">
+          <ref role="37wK5l" to="u4ym:7BfPuGEun36" resolve="darker" />
+          <ref role="1Pybhc" to="u4ym:7wc8RN4MMv1" resolve="D2D" />
+          <node concept="2OqwBi" id="7BfPuGEashY" role="37wK5m">
+            <node concept="1eOMI4" id="7BfPuGEara6" role="2Oq$k0">
+              <node concept="3KEV6E" id="7BfPuGEalId" role="1eOMHV">
+                <ref role="2UJ2yc" node="7BfPuGAyfhp" resolve="ModelRectangle" />
+                <node concept="2Pygp_" id="7BfPuGEalIe" role="2Pygpa">
+                  <ref role="2Pygpw" node="3HJBHARurzj" resolve="diagram" />
+                  <node concept="1SfVH9" id="7BfPuGEamaF" role="2PygpA">
+                    <ref role="3cqZAo" node="3HJBHARurzj" resolve="diagram" />
+                  </node>
+                </node>
+                <node concept="2Pygp_" id="7BfPuGEalIf" role="2Pygpa">
+                  <ref role="2Pygpw" node="3OZjsowptDh" resolve="node" />
+                  <node concept="2OqwBi" id="7BfPuGEanjX" role="2PygpA">
+                    <node concept="1SfVH9" id="7BfPuGEamIS" role="2Oq$k0">
+                      <ref role="3cqZAo" node="7BfPuGA$rXz" resolve="model" />
+                    </node>
+                    <node concept="3TrEf2" id="7BfPuGEapZr" role="2OqNvi">
+                      <ref role="3Tt5mk" to="53d4:7BfPuGAwmJf" resolve="metaModel" />
+                    </node>
+                  </node>
+                </node>
+              </node>
+            </node>
+            <node concept="32jkxy" id="7BfPuGEatnI" role="2OqNvi">
+              <ref role="3cqZAo" node="7BfPuGE9ROn" resolve="baseColor" />
+            </node>
+          </node>
+        </node>
+      </node>
+    </node>
     <node concept="3tBE6w" id="7BfPuGA$rWR" role="1FPzNG">
       <node concept="3clFbF" id="7BfPuGA$rWS" role="30jUnX">
         <node concept="E34o$" id="7BfPuGA$rWT" role="3clFbG">
@@ -29559,23 +29642,8 @@
               <ref role="3cqZAo" node="1kiV8EEyG_w" resolve="ligthRed" />
               <ref role="1PxDUh" node="1CjrrCLv78O" resolve="Colors" />
             </node>
-            <node concept="3K4zz7" id="7BfPuGA$rWX" role="3K4GZi">
-              <node concept="2OqwBi" id="7BfPuGA$rWY" role="3K4Cdx">
-                <node concept="1SfVH9" id="7BfPuGA$rWZ" role="2Oq$k0">
-                  <ref role="3cqZAo" node="7BfPuGA$rXz" resolve="model" />
-                </node>
-                <node concept="3TrcHB" id="7BfPuGA$FrA" role="2OqNvi">
-                  <ref role="3TsBF5" to="53d4:7BfPuGAwmr1" resolve="concrete" />
-                </node>
-              </node>
-              <node concept="10M0yZ" id="7BfPuGA$rX2" role="3K4E3e">
-                <ref role="3cqZAo" node="1CjrrCLv7bc" resolve="lightYellow" />
-                <ref role="1PxDUh" node="1CjrrCLv78O" resolve="Colors" />
-              </node>
-              <node concept="10M0yZ" id="7BfPuGA$rX3" role="3K4GZi">
-                <ref role="3cqZAo" node="HeoZc4zGJi" resolve="lightBlue" />
-                <ref role="1PxDUh" node="1CjrrCLv78O" resolve="Colors" />
-              </node>
+            <node concept="1SfVH9" id="7BfPuGA$rWZ" role="3K4GZi">
+              <ref role="3cqZAo" node="7BfPuGE9ROn" resolve="baseColor" />
             </node>
             <node concept="1SfVH9" id="7BfPuGA$rX4" role="3K4Cdx">
               <ref role="3cqZAo" node="2xAA8jfCGgn" resolve="highlighted" />

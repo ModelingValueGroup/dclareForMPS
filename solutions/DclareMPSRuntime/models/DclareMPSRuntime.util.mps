@@ -134,6 +134,7 @@
       <concept id="1070534058343" name="jetbrains.mps.baseLanguage.structure.NullLiteral" flags="nn" index="10Nm6u" />
       <concept id="1070534370425" name="jetbrains.mps.baseLanguage.structure.IntegerType" flags="in" index="10Oyi0" />
       <concept id="1070534436861" name="jetbrains.mps.baseLanguage.structure.FloatType" flags="in" index="10OMs4" />
+      <concept id="1070534513062" name="jetbrains.mps.baseLanguage.structure.DoubleType" flags="in" index="10P55v" />
       <concept id="1070534644030" name="jetbrains.mps.baseLanguage.structure.BooleanType" flags="in" index="10P_77" />
       <concept id="1070534760951" name="jetbrains.mps.baseLanguage.structure.ArrayType" flags="in" index="10Q1$e">
         <child id="1070534760952" name="componentType" index="10Q1$1" />
@@ -178,6 +179,9 @@
       </concept>
       <concept id="4269842503726207156" name="jetbrains.mps.baseLanguage.structure.LongLiteral" flags="nn" index="1adDum">
         <property id="4269842503726207157" name="value" index="1adDun" />
+      </concept>
+      <concept id="1111509017652" name="jetbrains.mps.baseLanguage.structure.FloatingPointConstant" flags="nn" index="3b6qkQ">
+        <property id="1113006610751" name="value" index="$nhwW" />
       </concept>
       <concept id="1068580123132" name="jetbrains.mps.baseLanguage.structure.BaseMethodDeclaration" flags="ng" index="3clF44">
         <property id="4276006055363816570" name="isSynchronized" index="od$2w" />
@@ -9268,9 +9272,114 @@
       </node>
     </node>
     <node concept="2tJIrI" id="6tKTfWOmcIa" role="jymVt" />
-    <node concept="2tJIrI" id="7BfPuGBYpBm" role="jymVt" />
+    <node concept="Wx3nA" id="7BfPuGEuAKL" role="jymVt">
+      <property role="TrG5h" value="FACTOR" />
+      <property role="3TUv4t" value="true" />
+      <node concept="3Tm6S6" id="7BfPuGEuzg8" role="1B3o_S" />
+      <node concept="10P55v" id="7BfPuGEuAEx" role="1tU5fm" />
+      <node concept="3b6qkQ" id="7BfPuGEuDHL" role="33vP2m">
+        <property role="$nhwW" value="0.9" />
+      </node>
+    </node>
+    <node concept="2tJIrI" id="7BfPuGEuwlu" role="jymVt" />
+    <node concept="2YIFZL" id="7BfPuGEun36" role="jymVt">
+      <property role="TrG5h" value="darker" />
+      <node concept="3clFbS" id="7BfPuGEun39" role="3clF47">
+        <node concept="3cpWs6" id="7BfPuGEusPx" role="3cqZAp">
+          <node concept="2ShNRf" id="7BfPuGEut6k" role="3cqZAk">
+            <node concept="1pGfFk" id="7BfPuGEut2E" role="2ShVmc">
+              <ref role="37wK5l" to="z60i:~Color.&lt;init&gt;(int,int,int)" resolve="Color" />
+              <node concept="2YIFZM" id="7BfPuGEuFyy" role="37wK5m">
+                <ref role="37wK5l" to="wyt6:~Math.max(int,int)" resolve="max" />
+                <ref role="1Pybhc" to="wyt6:~Math" resolve="Math" />
+                <node concept="10QFUN" id="7BfPuGEuGPh" role="37wK5m">
+                  <node concept="10Oyi0" id="7BfPuGEuH9N" role="10QFUM" />
+                  <node concept="1eOMI4" id="7BfPuGEuGHD" role="10QFUP">
+                    <node concept="17qRlL" id="7BfPuGEWEFu" role="1eOMHV">
+                      <node concept="2OqwBi" id="7BfPuGEuIB5" role="3uHU7B">
+                        <node concept="37vLTw" id="7BfPuGEuI1S" role="2Oq$k0">
+                          <ref role="3cqZAo" node="7BfPuGEupNS" resolve="color" />
+                        </node>
+                        <node concept="liA8E" id="7BfPuGEuJ10" role="2OqNvi">
+                          <ref role="37wK5l" to="z60i:~Color.getRed()" resolve="getRed" />
+                        </node>
+                      </node>
+                      <node concept="37vLTw" id="7BfPuGEuKu6" role="3uHU7w">
+                        <ref role="3cqZAo" node="7BfPuGEuAKL" resolve="FACTOR" />
+                      </node>
+                    </node>
+                  </node>
+                </node>
+                <node concept="3cmrfG" id="7BfPuGEuGnh" role="37wK5m">
+                  <property role="3cmrfH" value="0" />
+                </node>
+              </node>
+              <node concept="2YIFZM" id="7BfPuGEuLeP" role="37wK5m">
+                <ref role="37wK5l" to="wyt6:~Math.max(int,int)" resolve="max" />
+                <ref role="1Pybhc" to="wyt6:~Math" resolve="Math" />
+                <node concept="10QFUN" id="7BfPuGEuLeQ" role="37wK5m">
+                  <node concept="10Oyi0" id="7BfPuGEuLeR" role="10QFUM" />
+                  <node concept="1eOMI4" id="7BfPuGEuLeS" role="10QFUP">
+                    <node concept="17qRlL" id="7BfPuGEWFlo" role="1eOMHV">
+                      <node concept="2OqwBi" id="7BfPuGEuLeU" role="3uHU7B">
+                        <node concept="37vLTw" id="7BfPuGEuLeV" role="2Oq$k0">
+                          <ref role="3cqZAo" node="7BfPuGEupNS" resolve="color" />
+                        </node>
+                        <node concept="liA8E" id="7BfPuGEuLeW" role="2OqNvi">
+                          <ref role="37wK5l" to="z60i:~Color.getGreen()" resolve="getGreen" />
+                        </node>
+                      </node>
+                      <node concept="37vLTw" id="7BfPuGEuLf3" role="3uHU7w">
+                        <ref role="3cqZAo" node="7BfPuGEuAKL" resolve="FACTOR" />
+                      </node>
+                    </node>
+                  </node>
+                </node>
+                <node concept="3cmrfG" id="7BfPuGEuLeX" role="37wK5m">
+                  <property role="3cmrfH" value="0" />
+                </node>
+              </node>
+              <node concept="2YIFZM" id="7BfPuGEuOLz" role="37wK5m">
+                <ref role="37wK5l" to="wyt6:~Math.max(int,int)" resolve="max" />
+                <ref role="1Pybhc" to="wyt6:~Math" resolve="Math" />
+                <node concept="10QFUN" id="7BfPuGEuOL$" role="37wK5m">
+                  <node concept="10Oyi0" id="7BfPuGEuOL_" role="10QFUM" />
+                  <node concept="1eOMI4" id="7BfPuGEuOLA" role="10QFUP">
+                    <node concept="17qRlL" id="7BfPuGEWFxX" role="1eOMHV">
+                      <node concept="2OqwBi" id="7BfPuGEuOLC" role="3uHU7B">
+                        <node concept="37vLTw" id="7BfPuGEuOLD" role="2Oq$k0">
+                          <ref role="3cqZAo" node="7BfPuGEupNS" resolve="color" />
+                        </node>
+                        <node concept="liA8E" id="7BfPuGEuOLE" role="2OqNvi">
+                          <ref role="37wK5l" to="z60i:~Color.getBlue()" resolve="getBlue" />
+                        </node>
+                      </node>
+                      <node concept="37vLTw" id="7BfPuGEuOLL" role="3uHU7w">
+                        <ref role="3cqZAo" node="7BfPuGEuAKL" resolve="FACTOR" />
+                      </node>
+                    </node>
+                  </node>
+                </node>
+                <node concept="3cmrfG" id="7BfPuGEuOLF" role="37wK5m">
+                  <property role="3cmrfH" value="0" />
+                </node>
+              </node>
+            </node>
+          </node>
+        </node>
+      </node>
+      <node concept="3Tm1VV" id="7BfPuGEuhbf" role="1B3o_S" />
+      <node concept="3uibUv" id="7BfPuGEuku5" role="3clF45">
+        <ref role="3uigEE" to="z60i:~Color" resolve="Color" />
+      </node>
+      <node concept="37vLTG" id="7BfPuGEupNS" role="3clF46">
+        <property role="TrG5h" value="color" />
+        <node concept="3uibUv" id="7BfPuGEupNR" role="1tU5fm">
+          <ref role="3uigEE" to="z60i:~Color" resolve="Color" />
+        </node>
+      </node>
+    </node>
     <node concept="2tJIrI" id="7BfPuGBYpBn" role="jymVt" />
-    <node concept="2tJIrI" id="7BfPuGBYpBo" role="jymVt" />
     <node concept="2YIFZL" id="6tKTfWOmdZc" role="jymVt">
       <property role="TrG5h" value="setLineWidth" />
       <node concept="37vLTG" id="6tKTfWOmeoD" role="3clF46">
