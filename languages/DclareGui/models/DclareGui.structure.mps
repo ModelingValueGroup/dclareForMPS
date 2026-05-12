@@ -521,7 +521,6 @@
     <node concept="1TJgyj" id="7BfPuGAwmLV" role="1TKVEi">
       <property role="IQ2ns" value="8777469404708433019" />
       <property role="20kJfa" value="metaModel" />
-      <property role="20lbJX" value="fLJekj4/_1" />
       <ref role="20lvS9" node="7BfPuGAwmlC" resolve="AModel" />
     </node>
   </node>
