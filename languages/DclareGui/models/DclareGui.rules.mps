@@ -29968,8 +29968,24 @@
           <node concept="1SfVH9" id="7BfPuGA$Lnt" role="37vLTJ">
             <ref role="3cqZAo" node="3nsHMGrXC3n" resolve="radius" />
           </node>
-          <node concept="3b6qkQ" id="7BfPuGA$Lnu" role="37vLTx">
-            <property role="$nhwW" value="20.0d" />
+          <node concept="3K4zz7" id="2ieXr53Tt63" role="37vLTx">
+            <node concept="3b6qkQ" id="2ieXr53TzAD" role="3K4GZi">
+              <property role="$nhwW" value="10.0d" />
+            </node>
+            <node concept="3y3z36" id="2ieXr53TrSh" role="3K4Cdx">
+              <node concept="10Nm6u" id="2ieXr53TsUh" role="3uHU7w" />
+              <node concept="2OqwBi" id="2ieXr53Tq0l" role="3uHU7B">
+                <node concept="1SfVH9" id="2ieXr53Tpl5" role="2Oq$k0">
+                  <ref role="3cqZAo" node="7BfPuGBpCFm" resolve="transformation" />
+                </node>
+                <node concept="3TrEf2" id="2ieXr53Tr6b" role="2OqNvi">
+                  <ref role="3Tt5mk" to="53d4:7BfPuGAwmLV" resolve="metaModel" />
+                </node>
+              </node>
+            </node>
+            <node concept="3b6qkQ" id="2ieXr53Tw9_" role="3K4E3e">
+              <property role="$nhwW" value="20.0d" />
+            </node>
           </node>
         </node>
       </node>
