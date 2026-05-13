@@ -523,6 +523,11 @@
       <property role="20kJfa" value="metaModel" />
       <ref role="20lvS9" node="7BfPuGAwmlC" resolve="AModel" />
     </node>
+    <node concept="1TJgyi" id="2ieXr53Bf0T" role="1TKVEl">
+      <property role="IQ2nx" value="2634312973750693945" />
+      <property role="TrG5h" value="bidirectional" />
+      <ref role="AX2Wp" to="tpck:fKAQMTB" resolve="boolean" />
+    </node>
   </node>
   <node concept="1TIwiD" id="7BfPuGAwmwd">
     <property role="EcuMT" value="8777469404708431885" />
