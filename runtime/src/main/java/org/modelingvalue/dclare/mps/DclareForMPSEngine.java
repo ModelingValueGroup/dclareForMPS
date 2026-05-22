@@ -1,17 +1,22 @@
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// (C) Copyright 2018-2023 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
-//                                                                                                                     ~
-// Licensed under the GNU Lesser General Public License v3.0 (the 'License'). You may not use this file except in      ~
-// compliance with the License. You may obtain a copy of the License at: https://choosealicense.com/licenses/lgpl-3.0  ~
-// Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on ~
-// an 'AS IS' BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the  ~
-// specific language governing permissions and limitations under the License.                                          ~
-//                                                                                                                     ~
-// Maintainers:                                                                                                        ~
-//     Wim Bast, Tom Brus, Ronald Krijgsheld                                                                           ~
-// Contributors:                                                                                                       ~
-//     Arjan Kok, Carel Bast                                                                                           ~
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//  (C) Copyright 2018-2026 Modeling Value Group B.V. (http://modelingvalue.org)                                         ~
+//                                                                                                                       ~
+//  Licensed under the GNU Lesser General Public License v3.0 (the 'License'). You may not use this file except in       ~
+//  compliance with the License. You may obtain a copy of the License at: https://choosealicense.com/licenses/lgpl-3.0   ~
+//  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on  ~
+//  an 'AS IS' BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the   ~
+//  specific language governing permissions and limitations under the License.                                           ~
+//                                                                                                                       ~
+//  Maintainers:                                                                                                         ~
+//      Wim Bast, Tom Brus                                                                                               ~
+//                                                                                                                       ~
+//  Contributors:                                                                                                        ~
+//      Ronald Krijgsheld ✝, Arjan Kok, Carel Bast                                                                       ~
+// --------------------------------------------------------------------------------------------------------------------- ~
+//  In Memory of Ronald Krijgsheld, 1972 - 2023                                                                          ~
+//      Ronald was suddenly and unexpectedly taken from us. He was not only our long-term colleague and team member      ~
+//      but also our friend. "He will live on in many of the lines of code you see below."                               ~
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 package org.modelingvalue.dclare.mps;
 
@@ -22,7 +27,6 @@ import java.util.WeakHashMap;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Consumer;
 import java.util.function.Function;
 
 import org.jetbrains.mps.openapi.model.SNode;
@@ -55,19 +59,14 @@ import jetbrains.mps.project.ProjectBase;
 public class DclareForMPSEngine implements DeployListener, IBreakpointManagerListener {
 
     private static Function<MPSProject, EngineStatusHandler>         STATUS_HANDLER_FUNCTION;
-    private static Consumer<DclareForMPSEngine>                      NEW_ENGINE_CONSUMER;
     private static final WeakHashMap<MPSProject, DclareForMPSEngine> ENGINE_MAP                = new WeakHashMap<>();
 
     private static final boolean                                     TRACE_ENGINE              = Boolean.getBoolean("TRACE_ENGINE");
-    public static final int                                          MAX_NR_OF_HISTORY_FOR_MPS = Integer.getInteger("MAX_NR_OF_HISTORY_FOR_MPS", 4) + 3;
+    public static final int                                          MAX_NR_OF_HISTORY_FOR_MPS = Integer.getInteger("MAX_NR_OF_HISTORY_FOR_MPS", 16) + 3;
     private static final AtomicInteger                               COUNTER                   = new AtomicInteger(0);
 
     public static void setStatusHandlerFunction(Function<MPSProject, EngineStatusHandler> function) {
         STATUS_HANDLER_FUNCTION = function;
-    }
-
-    public static void setEngineConsumer(Consumer<DclareForMPSEngine> consumer) {
-        NEW_ENGINE_CONSUMER = consumer;
     }
 
     public static DclareForMPSEngine getEngine(MPSProject project) {
@@ -106,7 +105,6 @@ public class DclareForMPSEngine implements DeployListener, IBreakpointManagerLis
         moodUpdaterThread = new MoodUpdaterThread();
         newDClareMPS(project, new DclareForMpsConfig().withMaxNrOfHistory(MAX_NR_OF_HISTORY_FOR_MPS).withStatusHandler(engineStatusHandler));
         moodUpdaterThread.start();
-        NEW_ENGINE_CONSUMER.accept(this);
     }
 
     public MPSProject project() {
@@ -225,6 +223,11 @@ public class DclareForMPSEngine implements DeployListener, IBreakpointManagerLis
 
     public static void breakpoint() {
         System.err.println(DclareTrace.getLineStart("BRKPNT", LeafTransaction.getCurrent()));
+    }
+
+    public static <T> T breakpoint(T val) {
+        breakpoint();
+        return val;
     }
 
     public static <T> T print(Object ctx, T val) {

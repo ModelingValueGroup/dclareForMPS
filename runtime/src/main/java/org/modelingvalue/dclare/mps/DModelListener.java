@@ -1,17 +1,22 @@
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// (C) Copyright 2018-2023 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
-//                                                                                                                     ~
-// Licensed under the GNU Lesser General Public License v3.0 (the 'License'). You may not use this file except in      ~
-// compliance with the License. You may obtain a copy of the License at: https://choosealicense.com/licenses/lgpl-3.0  ~
-// Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on ~
-// an 'AS IS' BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the  ~
-// specific language governing permissions and limitations under the License.                                          ~
-//                                                                                                                     ~
-// Maintainers:                                                                                                        ~
-//     Wim Bast, Tom Brus, Ronald Krijgsheld                                                                           ~
-// Contributors:                                                                                                       ~
-//     Arjan Kok, Carel Bast                                                                                           ~
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//  (C) Copyright 2018-2026 Modeling Value Group B.V. (http://modelingvalue.org)                                         ~
+//                                                                                                                       ~
+//  Licensed under the GNU Lesser General Public License v3.0 (the 'License'). You may not use this file except in       ~
+//  compliance with the License. You may obtain a copy of the License at: https://choosealicense.com/licenses/lgpl-3.0   ~
+//  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on  ~
+//  an 'AS IS' BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the   ~
+//  specific language governing permissions and limitations under the License.                                           ~
+//                                                                                                                       ~
+//  Maintainers:                                                                                                         ~
+//      Wim Bast, Tom Brus                                                                                               ~
+//                                                                                                                       ~
+//  Contributors:                                                                                                        ~
+//      Ronald Krijgsheld ✝, Arjan Kok, Carel Bast                                                                       ~
+// --------------------------------------------------------------------------------------------------------------------- ~
+//  In Memory of Ronald Krijgsheld, 1972 - 2023                                                                          ~
+//      Ronald was suddenly and unexpectedly taken from us. He was not only our long-term colleague and team member      ~
+//      but also our friend. "He will live on in many of the lines of code you see below."                               ~
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 package org.modelingvalue.dclare.mps;
 
@@ -50,7 +55,7 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
         b().handleMPSChange(() -> {
             DNode changed = DNode.of(event.getNode());
             DObserved<DNode, String> dObserved = DNode.PROPERTY.get(event.getProperty());
-            if (a().isShared() || DObject.READ_OBSERVEDS.get(changed).contains(dObserved)) {
+            if (a().isShared() || DMutable.READ_OBSERVEDS.get(changed).contains(dObserved)) {
                 dObserved.set(changed, event.getNewValue());
             }
         });
@@ -61,7 +66,7 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
         b().handleMPSChange(() -> {
             DNode changed = DNode.of(event.getNode());
             DObserved<DNode, DNode> dObserved = DNode.REFERENCE.get(event.getAssociationLink());
-            if (a().isShared() || DObject.READ_OBSERVEDS.get(changed).contains(dObserved)) {
+            if (a().isShared() || DMutable.READ_OBSERVEDS.get(changed).contains(dObserved)) {
                 SReference ref = event.getNewValue();
                 SNode sNode = ref != null ? ref.getTargetNode() : null;
                 DNode dNode = sNode != null ? DNode.of(sNode) : ref != null ? DNode.referenceConstruct(ref.getTargetNodeReference(), null) : null;
@@ -77,7 +82,7 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
             DNode dNode = DNode.of(sNode);
             if (event.isRoot()) {
                 DModel dModel = DModel.of(event.getModel());
-                if (a().isShared() || DObject.READ_OBSERVEDS.get(dModel).contains(DModel.ROOTS)) {
+                if (a().isShared() || DMutable.READ_OBSERVEDS.get(dModel).contains(DModel.ROOTS)) {
                     DModel.ROOTS.set(dModel, Set::add, dNode);
                 }
             } else {
@@ -85,7 +90,7 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
                 DNode changed = DNode.of(event.getParent());
                 if (al.isMultiple()) {
                     DObserved<DNode, List<DNode>> dObserved = DNode.MANY_CONTAINMENT.get(al);
-                    if (a().isShared() || DObject.READ_OBSERVEDS.get(changed).contains(dObserved)) {
+                    if (a().isShared() || DMutable.READ_OBSERVEDS.get(changed).contains(dObserved)) {
                         int index = DNode.children(event.getParent(), al).firstIndexOf(sNode);
                         if (index >= 0) {
                             dObserved.set(changed, (l, e) -> {
@@ -96,7 +101,7 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
                     }
                 } else {
                     DObserved<DNode, DNode> dObserved = DNode.SINGLE_CONTAINMENT.get(al);
-                    if (a().isShared() || DObject.READ_OBSERVEDS.get(changed).contains(dObserved)) {
+                    if (a().isShared() || DMutable.READ_OBSERVEDS.get(changed).contains(dObserved)) {
                         dObserved.set(changed, dNode);
                     }
                 }
@@ -112,7 +117,7 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
             DNode dNode = DNode.of(sNode.getConcept(), ref, sNode);
             if (event.isRoot()) {
                 DModel dModel = DModel.of(event.getModel());
-                if (a().isShared() || DObject.READ_OBSERVEDS.get(dModel).contains(DModel.ROOTS) || dNode.isActive()) {
+                if (a().isShared() || DMutable.READ_OBSERVEDS.get(dModel).contains(DModel.ROOTS) || dNode.isActive()) {
                     DModel.ROOTS.set(dModel, Set::remove, dNode);
                 }
             } else {
@@ -120,12 +125,12 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
                 DNode changed = DNode.of(event.getParent());
                 if (al.isMultiple()) {
                     DObserved<DNode, List<DNode>> dObserved = DNode.MANY_CONTAINMENT.get(al);
-                    if (a().isShared() || DObject.READ_OBSERVEDS.get(changed).contains(dObserved) || dNode.isActive()) {
+                    if (a().isShared() || DMutable.READ_OBSERVEDS.get(changed).contains(dObserved) || dNode.isActive()) {
                         dObserved.set(changed, List::remove, dNode);
                     }
                 } else {
                     DObserved<DNode, DNode> dObserved = DNode.SINGLE_CONTAINMENT.get(al);
-                    if (a().isShared() || DObject.READ_OBSERVEDS.get(changed).contains(dObserved) || dNode.isActive()) {
+                    if (a().isShared() || DMutable.READ_OBSERVEDS.get(changed).contains(dObserved) || dNode.isActive()) {
                         dObserved.set(changed, (v, e) -> e.equals(v) ? null : v, dNode);
                     }
                 }
@@ -136,7 +141,7 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
     @Override
     public void modelLoaded(SModel model, boolean partially) {
         b().handleMPSChange(() -> {
-            if (!partially && DObject.READ_OBSERVEDS.get(a()).contains(DModel.LOADED)) {
+            if (!partially && DMutable.READ_OBSERVEDS.get(a()).contains(DModel.LOADED)) {
                 b().handleMPSChange(() -> DModel.LOADED.set(a(), Boolean.TRUE));
             }
         });
@@ -145,14 +150,14 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
     @Override
     public void modelReplaced(SModel model) {
         b().handleMPSChange(() -> {
-            DNewableObject.READ_OBSERVED_DEEP.trigger(DModel.of(model));
+            DNewable.READ_OBSERVED_DEEP.trigger(DModel.of(model));
         });
     }
 
     @Override
     public void modelUnloaded(SModel model) {
         b().handleMPSChange(() -> {
-            if (DObject.READ_OBSERVEDS.get(a()).contains(DModel.LOADED)) {
+            if (DMutable.READ_OBSERVEDS.get(a()).contains(DModel.LOADED)) {
                 b().handleMPSChange(() -> DModel.LOADED.set(a(), Boolean.FALSE));
             }
         });
@@ -182,7 +187,7 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
     public void languageAdded(SModelLanguageEvent event) {
         b().handleMPSChange(() -> {
             DModel dModel = DModel.of(event.getModel());
-            if (a().isShared() || DObject.READ_OBSERVEDS.get(dModel).contains(DModel.USED_LANGUAGES)) {
+            if (a().isShared() || DMutable.READ_OBSERVEDS.get(dModel).contains(DModel.USED_LANGUAGES)) {
                 DModel.USED_LANGUAGES.set(dModel, Set::add, event.getEventLanguage());
             }
         });
@@ -192,7 +197,7 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
     public void languageRemoved(SModelLanguageEvent event) {
         b().handleMPSChange(() -> {
             DModel dModel = DModel.of(event.getModel());
-            if (a().isShared() || DObject.READ_OBSERVEDS.get(dModel).contains(DModel.USED_LANGUAGES)) {
+            if (a().isShared() || DMutable.READ_OBSERVEDS.get(dModel).contains(DModel.USED_LANGUAGES)) {
                 DModel.USED_LANGUAGES.set(dModel, Set::remove, event.getEventLanguage());
             }
         });
@@ -202,7 +207,7 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
     public void importAdded(SModelImportEvent event) {
         b().handleMPSChange(() -> {
             DModel dModel = DModel.of(event.getModel());
-            if (a().isShared() || DObject.READ_OBSERVEDS.get(dModel).contains(DModel.USED_MODELS)) {
+            if (a().isShared() || DMutable.READ_OBSERVEDS.get(dModel).contains(DModel.USED_MODELS)) {
                 DModel add = DModel.of(event.getModelUID().resolve(null));
                 DModel.USED_MODELS.set(dModel, Set::add, add);
             }
@@ -213,7 +218,7 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
     public void importRemoved(SModelImportEvent event) {
         b().handleMPSChange(() -> {
             DModel dModel = DModel.of(event.getModel());
-            if (a().isShared() || DObject.READ_OBSERVEDS.get(dModel).contains(DModel.USED_MODELS)) {
+            if (a().isShared() || DMutable.READ_OBSERVEDS.get(dModel).contains(DModel.USED_MODELS)) {
                 DModel rem = DModel.of(event.getModelUID().resolve(null));
                 DModel.USED_MODELS.set(dModel, Set::remove, rem);
             }
@@ -224,7 +229,7 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
     public void devkitAdded(SModelDevKitEvent event) {
         b().handleMPSChange(() -> {
             DModel dModel = DModel.of(event.getModel());
-            if (a().isShared() || DObject.READ_OBSERVEDS.get(dModel).contains(DModel.USED_DEVKITS)) {
+            if (a().isShared() || DMutable.READ_OBSERVEDS.get(dModel).contains(DModel.USED_DEVKITS)) {
                 @SuppressWarnings({"deprecation", "removal"})
                 DevKit devkit = (DevKit) event.getDevkitNamespace().resolve(MPSModuleRepository.getInstance());
                 DModel.USED_DEVKITS.set(dModel, Set::add, devkit);
@@ -236,7 +241,7 @@ public class DModelListener extends Pair<DModel, DClareMPS> implements SNodeChan
     public void devkitRemoved(SModelDevKitEvent event) {
         b().handleMPSChange(() -> {
             DModel dModel = DModel.of(event.getModel());
-            if (a().isShared() || DObject.READ_OBSERVEDS.get(dModel).contains(DModel.USED_DEVKITS)) {
+            if (a().isShared() || DMutable.READ_OBSERVEDS.get(dModel).contains(DModel.USED_DEVKITS)) {
                 @SuppressWarnings({"deprecation", "removal"})
                 DevKit devkit = (DevKit) event.getDevkitNamespace().resolve(MPSModuleRepository.getInstance());
                 DModel.USED_DEVKITS.set(dModel, Set::remove, devkit);

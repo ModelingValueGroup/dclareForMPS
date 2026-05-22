@@ -19,18 +19,18 @@ on: [ push, workflow_dispatch ]
 
 jobs:
   copy-to-wiki:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, '[no-ci]')"
     env:
       ALLREP_TOKEN: "${{secrets.ALLREP_TOKEN}}"
       TOKEN: "${{secrets.ALLREP_TOKEN}}"
       CI: "true"
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           path: 'source'
 
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           repository: "${{github.repository}}.wiki"
           ref: master

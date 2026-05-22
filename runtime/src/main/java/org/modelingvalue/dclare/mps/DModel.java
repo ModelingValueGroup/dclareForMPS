@@ -1,17 +1,22 @@
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// (C) Copyright 2018-2023 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
-//                                                                                                                     ~
-// Licensed under the GNU Lesser General Public License v3.0 (the 'License'). You may not use this file except in      ~
-// compliance with the License. You may obtain a copy of the License at: https://choosealicense.com/licenses/lgpl-3.0  ~
-// Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on ~
-// an 'AS IS' BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the  ~
-// specific language governing permissions and limitations under the License.                                          ~
-//                                                                                                                     ~
-// Maintainers:                                                                                                        ~
-//     Wim Bast, Tom Brus, Ronald Krijgsheld                                                                           ~
-// Contributors:                                                                                                       ~
-//     Arjan Kok, Carel Bast                                                                                           ~
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//  (C) Copyright 2018-2026 Modeling Value Group B.V. (http://modelingvalue.org)                                         ~
+//                                                                                                                       ~
+//  Licensed under the GNU Lesser General Public License v3.0 (the 'License'). You may not use this file except in       ~
+//  compliance with the License. You may obtain a copy of the License at: https://choosealicense.com/licenses/lgpl-3.0   ~
+//  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on  ~
+//  an 'AS IS' BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the   ~
+//  specific language governing permissions and limitations under the License.                                           ~
+//                                                                                                                       ~
+//  Maintainers:                                                                                                         ~
+//      Wim Bast, Tom Brus                                                                                               ~
+//                                                                                                                       ~
+//  Contributors:                                                                                                        ~
+//      Ronald Krijgsheld ✝, Arjan Kok, Carel Bast                                                                       ~
+// --------------------------------------------------------------------------------------------------------------------- ~
+//  In Memory of Ronald Krijgsheld, 1972 - 2023                                                                          ~
+//      Ronald was suddenly and unexpectedly taken from us. He was not only our long-term colleague and team member      ~
+//      but also our friend. "He will live on in many of the lines of code you see below."                               ~
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 package org.modelingvalue.dclare.mps;
 
@@ -20,7 +25,6 @@ import static org.modelingvalue.dclare.CoreSetableModifier.plumbing;
 import static org.modelingvalue.dclare.mps.DServerMetaData.SHARED_MODELS;
 
 import java.util.Collections;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -35,7 +39,12 @@ import org.jetbrains.mps.openapi.persistence.ModelRoot;
 import org.modelingvalue.collections.Collection;
 import org.modelingvalue.collections.Set;
 import org.modelingvalue.collections.util.Pair;
-import org.modelingvalue.dclare.*;
+import org.modelingvalue.dclare.Constant;
+import org.modelingvalue.dclare.LeafTransaction;
+import org.modelingvalue.dclare.Observed;
+import org.modelingvalue.dclare.Observer;
+import org.modelingvalue.dclare.Setable;
+import org.modelingvalue.dclare.State;
 
 import jetbrains.mps.errors.item.ModelReportItem;
 import jetbrains.mps.extapi.model.SModelBase;
@@ -50,10 +59,7 @@ import jetbrains.mps.smodel.MPSModuleRepository;
 import jetbrains.mps.smodel.SModelInternal;
 
 @SuppressWarnings("unused")
-public class DModel extends DNewableObject<DModel, SModelReference, SModel> implements SModel {
-
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    private static final Consumer<DModel>                                        INIT_ROOT_CONSUMER         = m -> m.addRoot(((Pair<String, DNode>) ((Action) LeafTransaction.getCurrent().leaf()).id()).b());
+public class DModel extends DNewable<DModel, SModelReference, SModel> implements SModel {
 
     protected static final Constant<SModel, Boolean>                             EXTERNAL                   = Constant.of("EXTERNAL", DModel::isExternal);
 
@@ -103,7 +109,7 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
     @SuppressWarnings({"deprecation", "removal"})
     public static final DObserved<DModel, Set<DevKit>>                           USED_DEVKITS               = DObserved.of("USED_DEVKITS", Set.of(), dModel -> {
                                                                                                                 SModelInternal sModel = (SModelInternal) dModel.tryOriginal();
-                                                                                                                return sModel != null ? Collection.of(sModel.importedDevkits()).                                                                                //
+                                                                                                                return sModel != null ? Collection.of(sModel.importedDevkits()).                                                                          //
                                                                                                                         map(r -> r.resolve(MPSModuleRepository.getInstance())).filter(DevKit.class).asSet() : Set.of();
                                                                                                             }, (dModel, pre, post) -> {
                                                                                                                 SModelInternal sModel = (SModelInternal) dModel.tryOriginal();
@@ -114,7 +120,7 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
 
     public static final DObserved<DModel, Set<DModel>>                           USED_MODELS                = DObserved.of("USED_MODELS", Set.of(), dModel -> {
                                                                                                                 SModelInternal sModel = (SModelInternal) dModel.tryOriginal();
-                                                                                                                return sModel != null ? Collection.of(((SModelInternal) sModel).getModelImports()).                                                             //
+                                                                                                                return sModel != null ? Collection.of(((SModelInternal) sModel).getModelImports()).                                                       //
                                                                                                                         map(r -> r.resolve(null)).notNull().map(DModel::of).asSet() : Set.of();
                                                                                                             }, (o, pre, post) -> {
                                                                                                                 SModelInternal sModel = (SModelInternal) o.tryOriginal();
@@ -143,9 +149,9 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
                                                                                                                 }
                                                                                                             }, plumbing);
 
-    private static final Observer<DModel>                                        USED_DCLARE_LANGUAGES_RULE = DObject.observer(USED_DCLARE_LANGUAGES, DModel::allUsedDClareLanguages);
+    private static final Observer<DModel>                                        USED_DCLARE_LANGUAGES_RULE = DMutable.observer(USED_DCLARE_LANGUAGES, DModel::allUsedDClareLanguages);
 
-    private static final Observer<DModel>                                        ACTIVATE_RULE              = DObject.observer("$MODEL_ACTIVATE_RULE", m -> {
+    private static final Observer<DModel>                                        ACTIVATE_RULE              = DMutable.observer("$MODEL_ACTIVATE_RULE", m -> {
                                                                                                                 if (!m.isExternal()) {
                                                                                                                     boolean shared = SHARED.get(m);
                                                                                                                     if (shared || (!USED_DCLARE_LANGUAGES.get(m).isEmpty() && LOADED.get(m))) {
@@ -161,22 +167,14 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
                                                                                                                 }
                                                                                                             });
     @SuppressWarnings("rawtypes")
-    protected static final Set<Observer>                                         OBSERVERS                  = DNewableObject.OBSERVERS.addAll(Set.of(ACTIVATE_RULE, USED_DCLARE_LANGUAGES_RULE));
+    protected static final Set<Observer>                                         OBSERVERS                  = DNewable.OBSERVERS.addAll(Set.of(ACTIVATE_RULE, USED_DCLARE_LANGUAGES_RULE));
 
     @SuppressWarnings("rawtypes")
-    protected static final Set<Setable>                                          SETABLES                   = DNewableObject.SETABLES.addAll(Set.of(NAME, ROOTS, MODEL_ROOT, USED_MODELS, USED_LANGUAGES, USED_DEVKITS, LOADED, SHARED, USED_DCLARE_LANGUAGES));
+    protected static final Set<Setable>                                          SETABLES                   = DNewable.SETABLES.addAll(Set.of(NAME, ROOTS, MODEL_ROOT, USED_MODELS, USED_LANGUAGES, USED_DEVKITS, LOADED, SHARED, USED_DCLARE_LANGUAGES));
 
     public static DModel of(IRuleSet ruleSet, String anonymousType, Object[] identity, boolean temporal) {
         return quotationConstruct(ruleSet, anonymousType, identity, //
                 () -> new DModel(new Object[]{DClareMPS.uniqueLong(), temporal, false}));
-    }
-
-    protected void triggerAddRoot(DNode root) {
-        Action.of(Pair.of("$ADD_ROOT", root), INIT_ROOT_CONSUMER, LeafModifier.preserved, LeafModifier.read).trigger(this);
-    }
-
-    private Object addRoot(DNode b) {
-        return ROOTS.add(this, b);
     }
 
     @SuppressWarnings("deprecation")
@@ -216,7 +214,7 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
     private static boolean isExternal(SModel sModel) {
         if (sModel.getName().hasStereotype()) {
             return true;
-        } else if (dClareMPS().project.getPath(sModel.getModule()) == null) {
+        } else if (!dClareMPS().project.isProjectModule(sModel.getModule())) {
             return true;
         } else {
             SModule sModule = sModel.getModule();
@@ -302,7 +300,11 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
                 accessoryLanguages = DRepository.CONTAINED_LANGUAGES_WITH_RULES.get(getRepository());
             }
         }
-        return Collection.concat(accessoryLanguages, USED_LANGUAGES.get(this), USED_DEVKITS.get(this).flatMap(dk -> DClareMPS.DEVKIT_LANGUAGES.get(dk))).filter(l -> !DClareMPS.ACTIVE_RULE_SETS.get(l).isEmpty()).asSet();
+        Set<SLanguage> set = Collection.concat(accessoryLanguages, //
+                USED_LANGUAGES.get(this), //
+                USED_DEVKITS.get(this).flatMap(dk -> DClareMPS.DEVKIT_LANGUAGES.get(dk))).asSet();
+        set = set.addAll(set.flatMap(DClareMPS.EXTENDED_LANGUAGES::get));
+        return set.filter(l -> !DClareMPS.ACTIVE_RULE_SETS.get(l).isEmpty()).asSet();
     }
 
     public java.util.Set<SLanguage> getUsedLanguages() {
@@ -351,7 +353,7 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
     @Override
     @SuppressWarnings("rawtypes")
     protected void readObservedDeep() {
-        Set<Observed> read = DNewableObject.READ_OBSERVEDS.get(this);
+        Set<Observed> read = DNewable.READ_OBSERVEDS.get(this);
         readObserved(read, NAME);
         readObserved(read, LOADED);
         readObserved(read, USED_LANGUAGES);
@@ -604,7 +606,7 @@ public class DModel extends DNewableObject<DModel, SModelReference, SModel> impl
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
-    protected Pair<DObject, DObserved<DObject, ?>> readParent() {
+    protected Pair<DMutable, DObserved<DMutable, ?>> readParent() {
         SModule sModule = dClareMPS().read(() -> tryOriginal().getModule());
         return sModule != null ? (Pair) Pair.of(DModule.of(sModule), DModule.MODELS) : null;
     }

@@ -1,34 +1,40 @@
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// (C) Copyright 2018-2023 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
-//                                                                                                                     ~
-// Licensed under the GNU Lesser General Public License v3.0 (the 'License'). You may not use this file except in      ~
-// compliance with the License. You may obtain a copy of the License at: https://choosealicense.com/licenses/lgpl-3.0  ~
-// Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on ~
-// an 'AS IS' BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the  ~
-// specific language governing permissions and limitations under the License.                                          ~
-//                                                                                                                     ~
-// Maintainers:                                                                                                        ~
-//     Wim Bast, Tom Brus, Ronald Krijgsheld                                                                           ~
-// Contributors:                                                                                                       ~
-//     Arjan Kok, Carel Bast                                                                                           ~
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//  (C) Copyright 2018-2026 Modeling Value Group B.V. (http://modelingvalue.org)                                         ~
+//                                                                                                                       ~
+//  Licensed under the GNU Lesser General Public License v3.0 (the 'License'). You may not use this file except in       ~
+//  compliance with the License. You may obtain a copy of the License at: https://choosealicense.com/licenses/lgpl-3.0   ~
+//  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on  ~
+//  an 'AS IS' BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the   ~
+//  specific language governing permissions and limitations under the License.                                           ~
+//                                                                                                                       ~
+//  Maintainers:                                                                                                         ~
+//      Wim Bast, Tom Brus                                                                                               ~
+//                                                                                                                       ~
+//  Contributors:                                                                                                        ~
+//      Ronald Krijgsheld ✝, Arjan Kok, Carel Bast                                                                       ~
+// --------------------------------------------------------------------------------------------------------------------- ~
+//  In Memory of Ronald Krijgsheld, 1972 - 2023                                                                          ~
+//      Ronald was suddenly and unexpectedly taken from us. He was not only our long-term colleague and team member      ~
+//      but also our friend. "He will live on in many of the lines of code you see below."                               ~
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 defaultTasks(
-    "mvgcorrector",
-    "build",
-    "mvgtagger",
-    "mvguploader",
-)
+        "mvgcorrector",
+        "build",
+        "mvgtagger",
+        "mvguploader",
+            )
 plugins {
-    id("org.modelingvalue.gradle.mvgplugin") version "1.1.3"
+    id("org.modelingvalue.gradle.mvgplugin") version "2.3.21"
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // import ant file:
 try {
+    @Suppress("LocalVariableName")
     val version_mps: String by project
     if (!mvgmps.mpsInstallDir.isDirectory)
-        throw GradleException("You need to first run './gradlew --build-file bootstrap.gradle.kts' to download MPS")
+        throw GradleException("You need to first run './gradlew download-MPS' to download MPS")
 
     ant.lifecycleLogLevel = AntBuilder.AntMessagePriority.INFO
     ant.setProperty("mps_home", mvgmps.mpsInstallDir.toString())
@@ -42,7 +48,6 @@ try {
         it + if (it.matches(Regex(".*<jvmargs>$"))) "<arg value=\"-Dfile.encoding=UTF8\"/>" else ""
     })
 // WORKAROUND END
-    @Suppress("UnstableApiUsage")
     ant.importBuild(antScript, gradle.rootProject.projectDir.absolutePath) {
         "mpsant-$it"
     }
@@ -66,7 +71,7 @@ try {
             ant.setProperty("versionStamp", mvgmps.versionStamp)
         }
     }
-    val clean_gen_dirs = tasks.create("clean_gen_dirs") {
+    val cleanGenDirs = tasks.register("clean_gen_dirs") {
         group = "build"
         doLast {
             listOf("languages", "solutions").forEach {
@@ -86,20 +91,29 @@ try {
             }
         }
     }
-    tasks.create("build") {
+    tasks.register("build") {
         group = "build"
         dependsOn(tasks.named("mpsant-build"))
     }
-    tasks.create("clean") {
+    tasks.register("clean") {
         group = "build"
-        dependsOn(clean_gen_dirs)
+        dependsOn(cleanGenDirs)
     }
-    tasks.create("publish") {
+    tasks.register("publish") {
         group = "publishing"
         dependsOn(tasks.named("mpsant-assemble"))
     }
 } catch (e: Exception) {
     println("problem with import of ant file mps_build.xml: " + e)
+}
+///////////////////////////////////////////////////////////////////////////////////////////////
+// download MPS (replaces the old bootstrap.gradle.kts / bootstrap/ approach)
+tasks.register<DefaultTask>("download-MPS") {
+    group = "modelingvaluegroup"
+    doLast {
+        @Suppress("UNCHECKED_CAST")
+        (org.modelingvalue.gradle.mvgplugin.MvgPlugin.singleton.resolveMpsDependency("mps-boot") as Iterable<File>).toList()
+    }
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////
 // upload plugin to jetbrains

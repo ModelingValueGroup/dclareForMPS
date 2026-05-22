@@ -1,17 +1,22 @@
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// (C) Copyright 2018-2023 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
-//                                                                                                                     ~
-// Licensed under the GNU Lesser General Public License v3.0 (the 'License'). You may not use this file except in      ~
-// compliance with the License. You may obtain a copy of the License at: https://choosealicense.com/licenses/lgpl-3.0  ~
-// Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on ~
-// an 'AS IS' BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the  ~
-// specific language governing permissions and limitations under the License.                                          ~
-//                                                                                                                     ~
-// Maintainers:                                                                                                        ~
-//     Wim Bast, Tom Brus, Ronald Krijgsheld                                                                           ~
-// Contributors:                                                                                                       ~
-//     Arjan Kok, Carel Bast                                                                                           ~
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//  (C) Copyright 2018-2026 Modeling Value Group B.V. (http://modelingvalue.org)                                         ~
+//                                                                                                                       ~
+//  Licensed under the GNU Lesser General Public License v3.0 (the 'License'). You may not use this file except in       ~
+//  compliance with the License. You may obtain a copy of the License at: https://choosealicense.com/licenses/lgpl-3.0   ~
+//  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on  ~
+//  an 'AS IS' BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the   ~
+//  specific language governing permissions and limitations under the License.                                           ~
+//                                                                                                                       ~
+//  Maintainers:                                                                                                         ~
+//      Wim Bast, Tom Brus                                                                                               ~
+//                                                                                                                       ~
+//  Contributors:                                                                                                        ~
+//      Ronald Krijgsheld ✝, Arjan Kok, Carel Bast                                                                       ~
+// --------------------------------------------------------------------------------------------------------------------- ~
+//  In Memory of Ronald Krijgsheld, 1972 - 2023                                                                          ~
+//      Ronald was suddenly and unexpectedly taken from us. He was not only our long-term colleague and team member      ~
+//      but also our friend. "He will live on in many of the lines of code you see below."                               ~
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 package org.modelingvalue.dclare.mps;
 
@@ -58,16 +63,16 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
     public static final DObserved<DModule, Set<DModel>>        MODELS               = DObserved.of("MODELS", Set.of(), m -> {
                                                                                         return m.models().map(DModel::of).asSet();
                                                                                     }, (m, pre, post) -> {
-                                                                                        if (m.isSolution()) {
+                                                                                        if (!m.isExternal()) {
                                                                                             SModule sModule = m.original();
-                                                                                            Setable.<Set<DModel>, DModel> diff(pre, post,                                          //
+                                                                                            Setable.<Set<DModel>, DModel> diff(pre, post,                                             //
                                                                                                     a -> {
                                                                                                         SModel sModel = a.original();
                                                                                                         if (sModel.getModule() != sModule) {
                                                                                                             ((SModuleBase) sModule).registerModel((SModelBase) sModel);
                                                                                                         }
                                                                                                         a.init(sModel);
-                                                                                                    },                                                                             //
+                                                                                                    },                                                                                //
                                                                                                     r -> new ModelDeleteHelper(r.tryOriginal()).delete());
                                                                                         }
                                                                                     }, containment);
@@ -76,18 +81,23 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
                                                                                         return Collection.of(m.original().getUsedLanguages()).asSet();
                                                                                     }, null);
 
+    public static final Constant<DModule, Set<SLanguage>>      ALL_LANGUAGES        = Constant.of("ALL_LANGUAGES", Set.of(), m -> {
+                                                                                        Set<SLanguage> set = LANGUAGES.get(m);
+                                                                                        return set.addAll(set.flatMap(DClareMPS.EXTENDED_LANGUAGES::get));
+                                                                                    });
+
     public static final DObserved<DModule, Set<DDependency>>   DEPENDENCIES         = DObserved.of("DEPENDENCIES", Set.of(), m -> {
                                                                                         return Collection.of(m.original().getDeclaredDependencies()).map(DDependency::new).asSet();
                                                                                     }, null);
 
     public static final Constant<DModule, Set<SLanguage>>      LANGUAGES_WITH_RULES = Constant.of("LANGUAGES_WITH_RULE_ASPECT", Set.of(), m -> {
-                                                                                        return LANGUAGES.get(m).filter(l -> !DClareMPS.ACTIVE_RULE_SETS.get(l).isEmpty()).asSet();
+                                                                                        return ALL_LANGUAGES.get(m).filter(l -> !DClareMPS.ACTIVE_RULE_SETS.get(l).isEmpty()).asSet();
                                                                                     });
     @SuppressWarnings("rawtypes")
-    protected static final Set<Observer>                       OBSERVERS            = DObject.OBSERVERS;
+    protected static final Set<Observer>                       OBSERVERS            = DMutable.OBSERVERS;
 
     @SuppressWarnings("rawtypes")
-    protected static final Set<Setable>                        SETABLES             = DObject.SETABLES.addAll(Set.of(MODELS, LANGUAGES, DEPENDENCIES, LANGUAGES_WITH_RULES));
+    protected static final Set<Setable>                        SETABLES             = DMutable.SETABLES.addAll(Set.of(MODELS, LANGUAGES, DEPENDENCIES, LANGUAGES_WITH_RULES));
 
     public static DModule of(SModule original) {
         return original instanceof DModule ? (DModule) original : DMODULE.get(original);
@@ -99,7 +109,7 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
 
     @Override
     public boolean isExternal() {
-        return dClareMPS().project.getPath(original()) == null;
+        return !dClareMPS().project.isProjectModule(original());
     }
 
     @Override
@@ -140,9 +150,9 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
     protected void read(DClareMPS dClareMPS) {
         if (!isExternal()) {
             CONTAINED.set(this, Boolean.TRUE);
-            MODELS.triggerInitRead(this);
             LANGUAGES.triggerInitRead(this);
             DEPENDENCIES.triggerInitRead(this);
+            MODELS.triggerInitRead(this);
         }
     }
 
@@ -280,7 +290,7 @@ public class DModule extends DFromOriginalObject<SModule> implements SModule {
 
     @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
-    protected Pair<DObject, DObserved<DObject, ?>> readParent() {
+    protected Pair<DMutable, DObserved<DMutable, ?>> readParent() {
         return (Pair) Pair.of(dClareMPS().getRepository(), DRepository.MODULES);
     }
 

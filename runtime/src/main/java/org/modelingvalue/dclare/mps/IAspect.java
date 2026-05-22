@@ -1,21 +1,27 @@
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// (C) Copyright 2018-2023 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
-//                                                                                                                     ~
-// Licensed under the GNU Lesser General Public License v3.0 (the 'License'). You may not use this file except in      ~
-// compliance with the License. You may obtain a copy of the License at: https://choosealicense.com/licenses/lgpl-3.0  ~
-// Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on ~
-// an 'AS IS' BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the  ~
-// specific language governing permissions and limitations under the License.                                          ~
-//                                                                                                                     ~
-// Maintainers:                                                                                                        ~
-//     Wim Bast, Tom Brus, Ronald Krijgsheld                                                                           ~
-// Contributors:                                                                                                       ~
-//     Arjan Kok, Carel Bast                                                                                           ~
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//  (C) Copyright 2018-2026 Modeling Value Group B.V. (http://modelingvalue.org)                                         ~
+//                                                                                                                       ~
+//  Licensed under the GNU Lesser General Public License v3.0 (the 'License'). You may not use this file except in       ~
+//  compliance with the License. You may obtain a copy of the License at: https://choosealicense.com/licenses/lgpl-3.0   ~
+//  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on  ~
+//  an 'AS IS' BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the   ~
+//  specific language governing permissions and limitations under the License.                                           ~
+//                                                                                                                       ~
+//  Maintainers:                                                                                                         ~
+//      Wim Bast, Tom Brus                                                                                               ~
+//                                                                                                                       ~
+//  Contributors:                                                                                                        ~
+//      Ronald Krijgsheld ✝, Arjan Kok, Carel Bast                                                                       ~
+// --------------------------------------------------------------------------------------------------------------------- ~
+//  In Memory of Ronald Krijgsheld, 1972 - 2023                                                                          ~
+//      Ronald was suddenly and unexpectedly taken from us. He was not only our long-term colleague and team member      ~
+//      but also our friend. "He will live on in many of the lines of code you see below."                               ~
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 package org.modelingvalue.dclare.mps;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 import org.jetbrains.mps.openapi.language.SLanguage;
 import org.modelingvalue.collections.Collection;
@@ -30,9 +36,15 @@ public interface IAspect {
         return DClareMPS.ASPECT_MAP.get(language).get(id);
     }
 
-    Constant<IAspect, Direction>    DIRECTION        = Constant.of("DIRECTION", a -> Direction.of(a, a.isOnDemand(), () -> {
-                                                         return Collection.of(a.getOpposites()).sequential().map(o -> IAspect.DIRECTION.get(o)).asSet();
-                                                     }));
+    Constant<IAspect, Direction>    DIRECTION        = Constant.of("DIRECTION", a -> {
+                                                         IFixPointGroup fpg = a.fixpointGroup();
+                                                         Supplier<Set<Direction>> sd = () -> Collection.of(a.getOpposites()).sequential().map(o -> IAspect.DIRECTION.get(o)).asSet();
+                                                         if (fpg != null) {
+                                                             return Direction.of(a, a.isOnDemand(), IFixPointGroup.FIXPOINT_GROUP.get(fpg), sd);
+                                                         } else {
+                                                             return Direction.of(a, a.isOnDemand(), sd);
+                                                         }
+                                                     });
 
     Constant<IAspect, Set<IAspect>> ALL_DEPENDENCIES = Constant.of("ALL_DEPENDENCIES", a -> {
                                                          return Collection.of(a.getDependencies()).flatMap(d -> IAspect.ALL_DEPENDENCIES.get(d)).asSet().add(a);
@@ -51,5 +63,7 @@ public interface IAspect {
     boolean isAllwaysOn();
 
     boolean isOnDemand();
+
+    IFixPointGroup fixpointGroup();
 
 }

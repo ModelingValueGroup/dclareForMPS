@@ -1,17 +1,22 @@
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// (C) Copyright 2018-2023 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
-//                                                                                                                     ~
-// Licensed under the GNU Lesser General Public License v3.0 (the 'License'). You may not use this file except in      ~
-// compliance with the License. You may obtain a copy of the License at: https://choosealicense.com/licenses/lgpl-3.0  ~
-// Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on ~
-// an 'AS IS' BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the  ~
-// specific language governing permissions and limitations under the License.                                          ~
-//                                                                                                                     ~
-// Maintainers:                                                                                                        ~
-//     Wim Bast, Tom Brus, Ronald Krijgsheld                                                                           ~
-// Contributors:                                                                                                       ~
-//     Arjan Kok, Carel Bast                                                                                           ~
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//  (C) Copyright 2018-2026 Modeling Value Group B.V. (http://modelingvalue.org)                                         ~
+//                                                                                                                       ~
+//  Licensed under the GNU Lesser General Public License v3.0 (the 'License'). You may not use this file except in       ~
+//  compliance with the License. You may obtain a copy of the License at: https://choosealicense.com/licenses/lgpl-3.0   ~
+//  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on  ~
+//  an 'AS IS' BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the   ~
+//  specific language governing permissions and limitations under the License.                                           ~
+//                                                                                                                       ~
+//  Maintainers:                                                                                                         ~
+//      Wim Bast, Tom Brus                                                                                               ~
+//                                                                                                                       ~
+//  Contributors:                                                                                                        ~
+//      Ronald Krijgsheld ✝, Arjan Kok, Carel Bast                                                                       ~
+// --------------------------------------------------------------------------------------------------------------------- ~
+//  In Memory of Ronald Krijgsheld, 1972 - 2023                                                                          ~
+//      Ronald was suddenly and unexpectedly taken from us. He was not only our long-term colleague and team member      ~
+//      but also our friend. "He will live on in many of the lines of code you see below."                               ~
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 package org.modelingvalue.dclare.mps;
 
@@ -42,10 +47,10 @@ import jetbrains.mps.smodel.adapter.structure.property.InvalidProperty;
 public interface DAttribute<O, T> extends DFeature {
 
     @SuppressWarnings("unchecked")
-    static <C, V> DAttribute<C, V> of(String id, String name, IRuleSet ruleSet, boolean syn, boolean optional, boolean composite, int identifyingNr, boolean isPublic, Function<C, Object> def, Class<?> cls, SLanguage oppositeLanguage, String opposite, Supplier<SNodeReference> source, Function<C, V> deriver) {
+    static <C, V> DAttribute<C, V> of(String id, String name, IRuleSet ruleSet, boolean syn, boolean optional, boolean composite, int identifyingNr, boolean isPublic, boolean doMatch, Function<C, Object> def, Class<?> cls, SLanguage oppositeLanguage, String opposite, Supplier<SNodeReference> source, Function<C, V> deriver) {
         boolean idAttr = identifyingNr >= 0 && (ruleSet == null || ruleSet.getAnonymousType() != null);
-        SetableModifier[] mods = {synthetic.iff(syn), mandatory.iff(idAttr || (!optional && identifyingNr < 0)), containment.iff(composite), ruleSet == null ? null : IAspect.DIRECTION.get(ruleSet.getAspect())};
-        return idAttr ? new DIdentifyingAttribute(id, name, ruleSet, identifyingNr, cls, source, mods) : //
+        SetableModifier[] mods = {synthetic.iff(syn), mandatory.iff(idAttr || (!optional && identifyingNr < 0)), containment.iff(composite), match.iff(doMatch), ruleSet == null ? null : IAspect.DIRECTION.get(ruleSet.getAspect())};
+        return idAttr ? new DIdentifyingAttribute(id, name, ruleSet, identifyingNr, cls, source, optional, mods) : //
                 deriver != null ? new DConstant(id, name, ruleSet, cls, source, deriver, mods) : //
                         new DObservedAttribute(id, name, ruleSet, identifyingNr >= 0, isPublic, def, cls, opposite != null ? () -> of(oppositeLanguage, opposite) : null, source, mods);
     }
@@ -99,7 +104,7 @@ public interface DAttribute<O, T> extends DFeature {
         return null;
     }
 
-    final class DObservedAttribute<C extends DObject, V> extends DObserved<C, V> implements DAttribute<C, V> {
+    final class DObservedAttribute<C extends DMutable, V> extends DObserved<C, V> implements DAttribute<C, V> {
 
         private final String    name;
         private final Class<?>  cls;
@@ -170,10 +175,7 @@ public interface DAttribute<O, T> extends DFeature {
 
         @Override
         public V get(C object) {
-            if (object == null) {
-                throw new NullPointerException("attempt to read null." + this);
-            }
-            LeafTransaction tx = LeafTransaction.getCurrent();
+            LeafTransaction tx = currentLeaf(object);
             if (sProperty != null && object instanceof DNode && DClareMPS.GET_FROM_MPS.get() && !AbstractDerivationTransaction.isDeriving()) {
                 SNode sNode = ((DNode) object).tryOriginal();
                 if (sNode != null) {
@@ -213,21 +215,23 @@ public interface DAttribute<O, T> extends DFeature {
 
     }
 
-    final class DIdentifyingAttribute<C extends DIdentifiedObject, V> extends Setable<C, V> implements DAttribute<C, V> {
+    final class DIdentifyingAttribute<C extends DIdentified, V> extends Setable<C, V> implements DAttribute<C, V> {
 
         private final String                   name;
         private final int                      index;
         private final Supplier<SNodeReference> source;
         private final Class<?>                 cls;
         private final IRuleSet                 ruleSet;
+        private final boolean                  optional;
 
-        public DIdentifyingAttribute(String id, String name, IRuleSet ruleSet, int index, Class<?> cls, Supplier<SNodeReference> source, SetableModifier... modifiers) {
+        public DIdentifyingAttribute(String id, String name, IRuleSet ruleSet, int index, Class<?> cls, Supplier<SNodeReference> source, boolean optional, SetableModifier... modifiers) {
             super(id, null, null, null, null, modifiers);
             this.name = name;
             this.index = index;
             this.source = source;
             this.cls = cls;
             this.ruleSet = ruleSet;
+            this.optional = optional;
         }
 
         @Override
@@ -236,7 +240,7 @@ public interface DAttribute<O, T> extends DFeature {
                 throw new NullPointerException("attempt to read null." + this);
             }
             V result = object.get(this);
-            if (result == null) {
+            if (result == null && isMandatory()) {
                 throw new NullPointerException(object + "." + this + "=" + result);
             }
             return result;
@@ -278,7 +282,7 @@ public interface DAttribute<O, T> extends DFeature {
 
         @Override
         public boolean isMandatory() {
-            return true;
+            return !optional;
         }
 
         @Override
@@ -317,7 +321,7 @@ public interface DAttribute<O, T> extends DFeature {
 
         @Override
         public void activate(C object) {
-            changed(LeafTransaction.getCurrent(), object, null, get(object));
+            changed(currentLeaf(object), object, null, get(object));
         }
 
     }

@@ -1,17 +1,22 @@
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// (C) Copyright 2018-2023 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
-//                                                                                                                     ~
-// Licensed under the GNU Lesser General Public License v3.0 (the 'License'). You may not use this file except in      ~
-// compliance with the License. You may obtain a copy of the License at: https://choosealicense.com/licenses/lgpl-3.0  ~
-// Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on ~
-// an 'AS IS' BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the  ~
-// specific language governing permissions and limitations under the License.                                          ~
-//                                                                                                                     ~
-// Maintainers:                                                                                                        ~
-//     Wim Bast, Tom Brus, Ronald Krijgsheld                                                                           ~
-// Contributors:                                                                                                       ~
-//     Arjan Kok, Carel Bast                                                                                           ~
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//  (C) Copyright 2018-2026 Modeling Value Group B.V. (http://modelingvalue.org)                                         ~
+//                                                                                                                       ~
+//  Licensed under the GNU Lesser General Public License v3.0 (the 'License'). You may not use this file except in       ~
+//  compliance with the License. You may obtain a copy of the License at: https://choosealicense.com/licenses/lgpl-3.0   ~
+//  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on  ~
+//  an 'AS IS' BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the   ~
+//  specific language governing permissions and limitations under the License.                                           ~
+//                                                                                                                       ~
+//  Maintainers:                                                                                                         ~
+//      Wim Bast, Tom Brus                                                                                               ~
+//                                                                                                                       ~
+//  Contributors:                                                                                                        ~
+//      Ronald Krijgsheld ✝, Arjan Kok, Carel Bast                                                                       ~
+// --------------------------------------------------------------------------------------------------------------------- ~
+//  In Memory of Ronald Krijgsheld, 1972 - 2023                                                                          ~
+//      Ronald was suddenly and unexpectedly taken from us. He was not only our long-term colleague and team member      ~
+//      but also our friend. "He will live on in many of the lines of code you see below."                               ~
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 package org.modelingvalue.dclare.mps;
 
@@ -126,21 +131,48 @@ public class DclareModelCheckerBuilder extends ModelCheckerBuilder {
             public String invoke(SModule m) {
                 return dClareMPS.read(() -> m.getModuleName());
             }
-        });
+        }) {
+            @Override
+            public void check(SModule toCheck, SRepository repository, Consumer<? super IssueKindReportItem> errorCollector, ProgressMonitor monitor) {
+                for (IChecker<SModule, ? extends IssueKindReportItem> c : moduleCheckers) {
+                    c.check(toCheck, repository, errorCollector, monitor);
+                }
+            }
+        };
 
-        IAbstractChecker<SModel, ? extends IssueKindReportItem> generalModelChecker = skipNullModules(new AggregatingChecker<SModel>(modelCheckers, new _FunctionTypes._return_P1_E0<String, SModel>() {
+        IAbstractChecker<SModel, ? extends IssueKindReportItem> generalModelChecker = new AggregatingChecker<SModel>(modelCheckers, new _FunctionTypes._return_P1_E0<String, SModel>() {
             @Override
             public String invoke(SModel m) {
                 return dClareMPS.read(() -> m.getName().getLongName());
             }
-        }));
+        }) {
+            @Override
+            public void check(SModel toCheck, SRepository repository, Consumer<? super IssueKindReportItem> errorCollector, ProgressMonitor monitor) {
+                SModule module = toCheck.getModule();
+                if (module != null) {
+                    for (IChecker<SModel, ? extends IssueKindReportItem> c : modelCheckers) {
+                        c.check(toCheck, repository, errorCollector, monitor);
+                    }
+                }
+            }
+        };
 
         IAbstractChecker<SNode, ? extends IssueKindReportItem> generalNodeChecker = new AggregatingChecker<SNode>(rootCheckers, new _FunctionTypes._return_P1_E0<String, SNode>() {
             @Override
             public String invoke(SNode n) {
                 return dClareMPS.read(() -> n.getName());
             }
-        });
+        }) {
+            @Override
+            public void check(SNode toCheck, SRepository repository, Consumer<? super IssueKindReportItem> errorCollector, ProgressMonitor monitor) {
+                SModel model = toCheck.getModel();
+                if (model != null) {
+                    for (IChecker<SNode, ? extends IssueKindReportItem> c : rootCheckers) {
+                        c.check(toCheck, repository, errorCollector, monitor);
+                    }
+                }
+            }
+        };
 
         return new IAbstractChecker<ItemsToCheck, IssueKindReportItem>() {
 

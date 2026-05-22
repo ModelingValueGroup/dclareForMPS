@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="3d0a9a33-aedd-4e16-946d-867f27efde24" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../.mps/migration.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.mps/migration.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../gradle.properties" beforeDir="false" afterPath="$PROJECT_DIR$/../gradle.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../languages/DclareGui/DclareGui.mpl" beforeDir="false" afterPath="$PROJECT_DIR$/../languages/DclareGui/DclareGui.mpl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../languages/DclareMPS/DclareMPS.mpl" beforeDir="false" afterPath="$PROJECT_DIR$/../languages/DclareMPS/DclareMPS.mpl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../languages/DclareMessages/DclareMessages.mpl" beforeDir="false" afterPath="$PROJECT_DIR$/../languages/DclareMessages/DclareMessages.mpl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../mps_build.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../mps_build.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/modelingvalue/dclare/mps/DClareMPS.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/modelingvalue/dclare/mps/DClareMPS.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/modelingvalue/dclare/mps/DIdentifiedObject.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/modelingvalue/dclare/mps/DIdentifiedObject.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/modelingvalue/dclare/mps/DModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/modelingvalue/dclare/mps/DModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/modelingvalue/dclare/mps/DModelType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/modelingvalue/dclare/mps/DModelType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/modelingvalue/dclare/mps/DModule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/modelingvalue/dclare/mps/DModule.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/modelingvalue/dclare/mps/DModuleType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/modelingvalue/dclare/mps/DModuleType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/modelingvalue/dclare/mps/DNewableObject.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/modelingvalue/dclare/mps/DNewableObject.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/modelingvalue/dclare/mps/DNode.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/modelingvalue/dclare/mps/DNode.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/modelingvalue/dclare/mps/DNodeType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/modelingvalue/dclare/mps/DNodeType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/modelingvalue/dclare/mps/DObject.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/modelingvalue/dclare/mps/DObject.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/modelingvalue/dclare/mps/DObjectType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/modelingvalue/dclare/mps/DObjectType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/modelingvalue/dclare/mps/DRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/modelingvalue/dclare/mps/DRepository.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/modelingvalue/dclare/mps/DRepositoryType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/modelingvalue/dclare/mps/DRepositoryType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/modelingvalue/dclare/mps/DRule.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/modelingvalue/dclare/mps/DRule.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/modelingvalue/dclare/mps/DStructClass.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/modelingvalue/dclare/mps/DStructClass.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/modelingvalue/dclare/mps/DclareForMPSEngine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/modelingvalue/dclare/mps/DclareForMPSEngine.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/org/modelingvalue/dclare/mps/IAspect.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/org/modelingvalue/dclare/mps/IAspect.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../solutions/DclareForMPS.build/DclareForMPS.build.msd" beforeDir="false" afterPath="$PROJECT_DIR$/../solutions/DclareForMPS.build/DclareForMPS.build.msd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../solutions/DclareMPSPlugin/DclareMPSPlugin.msd" beforeDir="false" afterPath="$PROJECT_DIR$/../solutions/DclareMPSPlugin/DclareMPSPlugin.msd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../solutions/DclareMPSPlugin/models/plugin.mps" beforeDir="false" afterPath="$PROJECT_DIR$/../solutions/DclareMPSPlugin/models/plugin.mps" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../solutions/DclareMPSRuntime/DclareMPSRuntime.msd" beforeDir="false" afterPath="$PROJECT_DIR$/../solutions/DclareMPSRuntime/DclareMPSRuntime.msd" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../solutions/DclareRuntime/DclareRuntime.msd" beforeDir="false" afterPath="$PROJECT_DIR$/../solutions/DclareRuntime/DclareRuntime.msd" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
+  </component>
+  <component name="ProjectId" id="2IM2nnD0PI9uS87GNhBr6Sn3WgW" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="3d0a9a33-aedd-4e16-946d-867f27efde24" name="Changes" comment="" />
+      <created>1669977305552</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1669977305552</updated>
+      <workItem from="1669977319693" duration="3000" />
+      <workItem from="1669981396537" duration="3000" />
+      <workItem from="1692194314443" duration="9000" />
+      <workItem from="1692198296939" duration="1000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

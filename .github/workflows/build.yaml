@@ -19,7 +19,7 @@ on: [ push, workflow_dispatch ]
 
 jobs:
   build:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, '[no-ci]')"
     env:
       ALLREP_TOKEN: "${{secrets.ALLREP_TOKEN}}"
@@ -27,24 +27,24 @@ jobs:
       JETBRAINS_PUBLISH_TOKEN: "${{secrets.JETBRAINS_PUBLISH_TOKEN}}"
       CI: "true"
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-java@v3
+      - uses: actions/setup-java@v4
         with:
-          java-version: 17
+          java-version: 21
           distribution: temurin
 
       ################################################################################
-      - name: "bootstrap"
-        run: ./gradlew --build-file bootstrap.gradle.kts
+      - name: "download-MPS"
+        run: ./gradlew download-MPS
 
       - name: "build"
-        run: ./gradlew --info --scan
+        run: ./gradlew --info
 
       - name: "upload zip"
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: "DclareForMPS.zip"
           path: build/artifacts/DclareForMPS/DclareForMPS.zip

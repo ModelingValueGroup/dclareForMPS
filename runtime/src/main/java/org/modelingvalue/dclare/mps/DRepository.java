@@ -1,17 +1,22 @@
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// (C) Copyright 2018-2023 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
-//                                                                                                                     ~
-// Licensed under the GNU Lesser General Public License v3.0 (the 'License'). You may not use this file except in      ~
-// compliance with the License. You may obtain a copy of the License at: https://choosealicense.com/licenses/lgpl-3.0  ~
-// Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on ~
-// an 'AS IS' BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the  ~
-// specific language governing permissions and limitations under the License.                                          ~
-//                                                                                                                     ~
-// Maintainers:                                                                                                        ~
-//     Wim Bast, Tom Brus, Ronald Krijgsheld                                                                           ~
-// Contributors:                                                                                                       ~
-//     Arjan Kok, Carel Bast                                                                                           ~
-//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+//  (C) Copyright 2018-2026 Modeling Value Group B.V. (http://modelingvalue.org)                                         ~
+//                                                                                                                       ~
+//  Licensed under the GNU Lesser General Public License v3.0 (the 'License'). You may not use this file except in       ~
+//  compliance with the License. You may obtain a copy of the License at: https://choosealicense.com/licenses/lgpl-3.0   ~
+//  Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on  ~
+//  an 'AS IS' BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the   ~
+//  specific language governing permissions and limitations under the License.                                           ~
+//                                                                                                                       ~
+//  Maintainers:                                                                                                         ~
+//      Wim Bast, Tom Brus                                                                                               ~
+//                                                                                                                       ~
+//  Contributors:                                                                                                        ~
+//      Ronald Krijgsheld ✝, Arjan Kok, Carel Bast                                                                       ~
+// --------------------------------------------------------------------------------------------------------------------- ~
+//  In Memory of Ronald Krijgsheld, 1972 - 2023                                                                          ~
+//      Ronald was suddenly and unexpectedly taken from us. He was not only our long-term colleague and team member      ~
+//      but also our friend. "He will live on in many of the lines of code you see below."                               ~
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 package org.modelingvalue.dclare.mps;
 
@@ -59,7 +64,7 @@ public class DRepository extends DFromOriginalObject<ProjectRepository> implemen
                                                                                                                       });
 
     public static final Constant<DRepository, Set<SLanguage>>                     ALL_LANGUAGES                       = Constant.of("ALL_LANGUAGES", Set.of(), r -> {
-                                                                                                                          return MODULES.get(r).flatMap(m -> DModule.LANGUAGES.get(m)).asSet();
+                                                                                                                          return MODULES.get(r).flatMap(m -> DModule.ALL_LANGUAGES.get(m)).asSet();
                                                                                                                       });
     @SuppressWarnings({"unchecked", "rawtypes"})
     protected static final Observed<DRepository, Set<SLanguage>>                  CONTAINED_LANGUAGES_WITH_RULES      = Observed.of("CONTAINED_LANGUAGES_WITH_RULES", Set.of());
@@ -77,15 +82,15 @@ public class DRepository extends DFromOriginalObject<ProjectRepository> implemen
 
     protected static final Setable<DRepository, Set<IssueKindReportItem>>         ALL_MPS_ISSUES                      = Setable.of("$ALL_MPS_ISSUES", Set.of());
 
-    private static final Observer<DRepository>                                    CONTAINED_LANGUAGES_WITH_RULES_RULE = DObject.observer(CONTAINED_LANGUAGES_WITH_RULES, r -> {
+    private static final Observer<DRepository>                                    CONTAINED_LANGUAGES_WITH_RULES_RULE = DMutable.observer(CONTAINED_LANGUAGES_WITH_RULES, r -> {
                                                                                                                           return ALL_LANGUAGES_WITH_RULES.get(r).filter(r::isContainedLanguage).asSet();
                                                                                                                       });
 
     @SuppressWarnings("rawtypes")
-    protected static final Set<Observer>                                          OBSERVERS                           = DObject.OBSERVERS.add(CONTAINED_LANGUAGES_WITH_RULES_RULE);
+    protected static final Set<Observer>                                          OBSERVERS                           = DMutable.OBSERVERS.add(CONTAINED_LANGUAGES_WITH_RULES_RULE);
 
     @SuppressWarnings("rawtypes")
-    protected static final Set<Setable>                                           SETABLES                            = DObject.SETABLES.addAll(Set.of(MODULES, ALL_MPS_ISSUES, CONTAINED_LANGUAGES_WITH_RULES));
+    protected static final Set<Setable>                                           SETABLES                            = DMutable.SETABLES.addAll(Set.of(MODULES, ALL_MPS_ISSUES, CONTAINED_LANGUAGES_WITH_RULES));
 
     protected DRepository(ProjectRepository original) {
         super(original);
@@ -186,7 +191,7 @@ public class DRepository extends DFromOriginalObject<ProjectRepository> implemen
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
-    protected Pair<DObject, DObserved<DObject, ?>> readParent() {
+    protected Pair<DMutable, DObserved<DMutable, ?>> readParent() {
         return (Pair) Pair.of(dClareMPS(), DClareMPS.REPOSITORY_CONTAINER);
     }
 
