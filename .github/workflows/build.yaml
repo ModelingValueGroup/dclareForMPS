@@ -37,8 +37,8 @@ jobs:
           distribution: temurin
 
       ################################################################################
-      - name: "bootstrap"
-        run: ./gradlew -p bootstrap
+      - name: "download-MPS"
+        run: ./gradlew download-MPS
 
       - name: "build"
         run: ./gradlew --info
