@@ -72,6 +72,7 @@ val gatherTask1 = tasks.register<Copy>("gatherRuntimeJars-part1") {
             .replaceFirst(Regex("[a-zA-Z_]*-[0-9a-z]*-SNAPSHOT[.]jar"), ".jar") // for backwards compat.... remove later
             .replaceFirst(Regex("[0-9a-zA-Z_]*-[0-9a-zA-Z_]*-[0-9a-zA-Z_]*-SNAPSHOT[.]jar"), ".jar")
             .replaceFirst(Regex("-[0-9.]*[.]jar"), ".jar")
+            .replaceFirst(Regex("-dev[.]jar$"), ".jar") // mvgplugin 3.0.0 names local jars <name>-dev.jar
     }
     eachFile {
         println(String.format("   - GATHER %s", relativePath))
@@ -96,6 +97,7 @@ val gatherTask2 = tasks.register<Copy>("gatherRuntimeJars-part2") {
             .replaceFirst(Regex("[a-zA-Z_]*-[0-9a-z]*-SNAPSHOT[.]jar"), ".jar") // for backwards compat.... remove later
             .replaceFirst(Regex("[0-9a-zA-Z_]*-[0-9a-zA-Z_]*-[0-9a-zA-Z_]*-SNAPSHOT[.]jar"), ".jar")
             .replaceFirst(Regex("-[0-9.]*[.]jar"), ".jar")
+            .replaceFirst(Regex("-dev[.]jar$"), ".jar") // mvgplugin 3.0.0 names local jars <name>-dev.jar
     }
     eachFile {
         println(String.format("   - GATHER %s", relativePath))
