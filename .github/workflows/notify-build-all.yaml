@@ -1,0 +1,29 @@
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+## (C) Copyright 2018-2026 Modeling Value Group B.V. (http://modelingvalue.org)                                        ~
+## Licensed under the GNU Lesser General Public License v3.0 (the 'License').                                          ~
+##~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Drop-in workflow for a project-train subproject. On a push to master/develop it pings the
+# build-all aggregate so it re-runs the integration build for that branch.
+#
+# Install: copy to <subproject>/.github/workflows/notify-build-all.yaml (see ci/install-subproject-dispatch.sh).
+# Requires the repo secret ALLREP_TOKEN to have permission to POST a dispatch to ModelingValueGroup/build-all
+# (classic PAT: 'repo' scope; fine-grained: Contents read/write on build-all).
+
+name: notify-build-all
+
+on:
+  push:
+    branches: [ master, develop ]
+
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    if: "!contains(github.event.head_commit.message, '[no-ci]')"
+    steps:
+      - name: "trigger build-all aggregate build"
+        run: |
+          curl -sSf -X POST \
+            -H "Authorization: token ${{ secrets.ALLREP_TOKEN }}" \
+            -H "Accept: application/vnd.github+json" \
+            https://api.github.com/repos/ModelingValueGroup/build-all/dispatches \
+            -d "{\"event_type\":\"subproject-changed\",\"client_payload\":{\"branch\":\"${GITHUB_REF_NAME}\",\"repo\":\"${GITHUB_REPOSITORY}\"}}"
