@@ -25,7 +25,7 @@ defaultTasks(
         "mvguploader",
             )
 plugins {
-    id("org.modelingvalue.gradle.mvgplugin") version "3.0.0"
+    id("org.modelingvalue.gradle.mvgplugin") version "3.0.1"
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
